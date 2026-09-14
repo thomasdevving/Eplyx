@@ -1,0 +1,115 @@
+{
+  "id": "moderate-016",
+  "category": "moderate",
+  "scenario": "withdraw 2 SOL collateral",
+  "notes": "Mid leverage, whole-SOL collateral. Expected identical under both builds.",
+  "keypairs": [
+    {
+      "label": "payer",
+      "seed": "a7058035acbf8a04f4038035acbe8a040d098035acc18a045a078035acc08a04",
+      "address": "7rRF4a8GHF4nZX9Sos5uiBvPiGSLKBFnsYxN27H4LVo6"
+    },
+    {
+      "label": "owner",
+      "seed": "f173c0e08d6c89d83e72c0e08d6b89d88b70c0e08d6a89d8d86ec0e08d6989d8",
+      "address": "5Hs5uKpgRX4YaUxZTrSK99zXkszww5NM29ib5a4oQtZ3"
+    },
+    {
+      "label": "authority",
+      "seed": "dfed38b5d83e9a772cec38b5d83d9a7745f138b5d8409a7792ef38b5d83f9a77",
+      "address": "Dff6WwSd3xaf4XzN4irpAJTSdv4F11SN5NS417Bhp2jK"
+    }
+  ],
+  "accounts": [
+    {
+      "label": "market",
+      "address": "HjrHbsfhLCD5b1PfiEA15Dr7LoVKAmU7Xd7BfJ73iwVn",
+      "account": {
+        "lamports": 1489440,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "0101bc33635cd850d5ad43e7594b93d985840b154b3d5fc8daa9a99ee07168d9dd52e314038a4cbe4f24e50b3934bd18a7a0c3bb1e88a46b3c775204858f838ec7fa00e1f50500000000401f4c1d0100000000000000",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "position",
+      "address": "5nAaZAuu3iapqehKmPAPshAQoMyZUTSUMCA1bndNQWJu",
+      "account": {
+        "lamports": 1656480,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "02013fc0abe0b790012a549165344f97ef86602e17787e75f57c1acb3319ada20506f8b51ce847d4f7a5abb71ce847d5f7a55eb91ce847d6f7a511bb1ce847d7f7a50048ca8e1300000000394ee10000000000e1f50500000000401f4c1d71201b00000000000000000000000000",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "vault",
+      "address": "GHRFNLrpptP6U4aGU8DbCnXxiqJNgHK5kcpDo8YvBJt9",
+      "account": {
+        "lamports": 84000890880,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "owner",
+      "address": "5Hs5uKpgRX4YaUxZTrSK99zXkszww5NM29ib5a4oQtZ3",
+      "account": {
+        "lamports": 5000000000000,
+        "owner": "11111111111111111111111111111111",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "payer",
+      "address": "7rRF4a8GHF4nZX9Sos5uiBvPiGSLKBFnsYxN27H4LVo6",
+      "account": {
+        "lamports": 100000000000,
+        "owner": "11111111111111111111111111111111",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    }
+  ],
+  "fee_payer": "payer",
+  "signers": [
+    "owner"
+  ],
+  "instruction": {
+    "program": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+    "accounts": [
+      {
+        "address": "5nAaZAuu3iapqehKmPAPshAQoMyZUTSUMCA1bndNQWJu",
+        "is_signer": false,
+        "is_writable": true
+      },
+      {
+        "address": "HjrHbsfhLCD5b1PfiEA15Dr7LoVKAmU7Xd7BfJ73iwVn",
+        "is_signer": false,
+        "is_writable": false
+      },
+      {
+        "address": "GHRFNLrpptP6U4aGU8DbCnXxiqJNgHK5kcpDo8YvBJt9",
+        "is_signer": false,
+        "is_writable": true
+      },
+      {
+        "address": "5Hs5uKpgRX4YaUxZTrSK99zXkszww5NM29ib5a4oQtZ3",
+        "is_signer": true,
+        "is_writable": true
+      }
+    ],
+    "data": "050094357700000000"
+  },
+  "watch": [
+    "position",
+    "vault",
+    "owner"
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "id": "withdraw-boundary-004",
+  "category": "withdraw-boundary",
+  "scenario": "withdraw 0.5 SOL collateral",
+  "notes": "Withdrawal of 0.5 SOL. Fixtures 003-006 carry debt above V2's reduced borrow capacity, so the same withdrawal reverts under V2.",
+  "keypairs": [
+    {
+      "label": "payer",
+      "seed": "c0c62df197672a2573c82df197682a2526ca2df197692a25d9cb2df1976a2a25",
+      "address": "94c91aCj16Zg68xThLcNbRt6WgfFhhHuz1pvCnLy3tKn"
+    },
+    {
+      "label": "owner",
+      "seed": "fe3c698b838e80a2b13e698b838f80a29839698b838c80a24b3b698b838d80a2",
+      "address": "1TnSn86MksPU1NbJMjbKLvMhxcCoTQJH48h7exTEoFH"
+    },
+    {
+      "label": "authority",
+      "seed": "30961d833e8969f4e3971d833e8a69f496991d833e8b69f4499b1d833e8c69f4",
+      "address": "MtRM3EkmKkKHhQeFm6q1rKNuYes1hVAJz2SwXdz381U"
+    }
+  ],
+  "accounts": [
+    {
+      "label": "market",
+      "address": "BLyNmbNMphfe2gS8h4Zub55t3CKw2ByREGcLTFLba1ke",
+      "account": {
+        "lamports": 1489440,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "01010559c1b5a6dd5db5e74187987daf18a67fdb5d17497dee5f5e7f4811562b44f79f685cffd858ea8f69e07045b5137afd59ca37be4d73b4f5d6490a85c7a3644d00e1f50500000000401f4c1d0100000000000000",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "position",
+      "address": "ENaVRY4JvqVM3QBujjTMCaEjVroFwp2yk8yNv3rL1RjD",
+      "account": {
+        "lamports": 1656480,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "0201001e48c32e44849713058017b6b47b4e9f508940b1e383734faa78f2e5d48cfc99b2a5fec7de6d8be6b0a5fec7dd6d8b33afa5fec7dc6d8b80ada5fec7db6d8b00e8764817000000006475bb0100000000e1f50500000000401f4c1d44681000000000000000000000000000",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "vault",
+      "address": "BjG89yRMJ1bRKyNgKqp2rWqZyAnaE3GYj3yf8H5vZtpk",
+      "account": {
+        "lamports": 100000890880,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "owner",
+      "address": "1TnSn86MksPU1NbJMjbKLvMhxcCoTQJH48h7exTEoFH",
+      "account": {
+        "lamports": 5000000000000,
+        "owner": "11111111111111111111111111111111",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "payer",
+      "address": "94c91aCj16Zg68xThLcNbRt6WgfFhhHuz1pvCnLy3tKn",
+      "account": {
+        "lamports": 100000000000,
+        "owner": "11111111111111111111111111111111",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    }
+  ],
+  "fee_payer": "payer",
+  "signers": [
+    "owner"
+  ],
+  "instruction": {
+    "program": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+    "accounts": [
+      {
+        "address": "ENaVRY4JvqVM3QBujjTMCaEjVroFwp2yk8yNv3rL1RjD",
+        "is_signer": false,
+        "is_writable": true
+      },
+      {
+        "address": "BLyNmbNMphfe2gS8h4Zub55t3CKw2ByREGcLTFLba1ke",
+        "is_signer": false,
+        "is_writable": false
+      },
+      {
+        "address": "BjG89yRMJ1bRKyNgKqp2rWqZyAnaE3GYj3yf8H5vZtpk",
+        "is_signer": false,
+        "is_writable": true
+      },
+      {
+        "address": "1TnSn86MksPU1NbJMjbKLvMhxcCoTQJH48h7exTEoFH",
+        "is_signer": true,
+        "is_writable": true
+      }
+    ],
+    "data": "050065cd1d00000000"
+  },
+  "watch": [
+    "position",
+    "vault",
+    "owner"
+  ]
+}

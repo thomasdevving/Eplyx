@@ -1,0 +1,103 @@
+{
+  "id": "fractional-015",
+  "category": "fractional",
+  "scenario": "refresh position",
+  "notes": "Fractional-SOL collateral with comfortable headroom: the cached health factor shifts under V2 but no threshold is crossed.",
+  "keypairs": [
+    {
+      "label": "payer",
+      "seed": "f4326ed96eac5304a7346ed96ead53045a366ed96eae53040d386ed96eaf5304",
+      "address": "H5rbsnhrq54W9zQNhh8KTzX6Xwq7LYFxcWH6fNET27LZ"
+    },
+    {
+      "label": "owner",
+      "seed": "2aa859273dcc8889dda959273dcd8889c4a459273dca888977a659273dcb8889",
+      "address": "D4kA8uu9wsTQeMZVTQUvgKsiSxZwhcPXnBkoddgEChdy"
+    },
+    {
+      "label": "authority",
+      "seed": "7c2d28f3f9c067a82f2f28f3f9c167a8e23028f3f9c267a8953228f3f9c367a8",
+      "address": "8SNUWmY5pbLKdmjH4zy8vobAbnZnbJWHYfzwRPVXjQSK"
+    }
+  ],
+  "accounts": [
+    {
+      "label": "market",
+      "address": "C8AxKDsCdpZSHDchEFSGkND4gVG5pEQhbAD6Fvt6n9cg",
+      "account": {
+        "lamports": 1489440,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "01016e819c1f6e648f415f91e58dbcbf95e8a0c63f226bcba6c3235ed11976b159685d077f11a7edfda1395b3d7c034aa61e5a49bfed5c396862467dca72065a402d00e1f50500000000401f4c1d0100000000000000",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "position",
+      "address": "5zduLsZcZMkGmCLzdvjSeQRWqeupLat3gSDdHWdzQmdP",
+      "account": {
+        "lamports": 1656480,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "0201b341c8ae7286eb9d9734265a48b45342d2dc51696de8f229499dbee8f0ee61e8a546e0643c5749adf244e0643c5649ad3f43e0643c5549ad8c41e0643c5449ad0071064c0f0000008010b7c10000000000e1f50500000000401f4c1d4ead1800000000000000000000000000",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "vault",
+      "address": "7G9YenEEVU9EDwxd6Tynk99P5FP6us5PCXyXmaK87wCx",
+      "account": {
+        "lamports": 65700890880,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "owner",
+      "address": "D4kA8uu9wsTQeMZVTQUvgKsiSxZwhcPXnBkoddgEChdy",
+      "account": {
+        "lamports": 5000000000000,
+        "owner": "11111111111111111111111111111111",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "payer",
+      "address": "H5rbsnhrq54W9zQNhh8KTzX6Xwq7LYFxcWH6fNET27LZ",
+      "account": {
+        "lamports": 100000000000,
+        "owner": "11111111111111111111111111111111",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    }
+  ],
+  "fee_payer": "payer",
+  "signers": [],
+  "instruction": {
+    "program": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+    "accounts": [
+      {
+        "address": "5zduLsZcZMkGmCLzdvjSeQRWqeupLat3gSDdHWdzQmdP",
+        "is_signer": false,
+        "is_writable": true
+      },
+      {
+        "address": "C8AxKDsCdpZSHDchEFSGkND4gVG5pEQhbAD6Fvt6n9cg",
+        "is_signer": false,
+        "is_writable": false
+      }
+    ],
+    "data": "07"
+  },
+  "watch": [
+    "position",
+    "vault",
+    "owner"
+  ]
+}

@@ -1,0 +1,38 @@
+[package]
+name = "fixture-lending"
+version = "0.1.0"
+edition = "2021"
+description = "Minimal lending-style Solana program used as the differential-testing fixture. Not a production protocol."
+license = "MIT"
+
+# Own workspace root: this crate is built for the SBF target by cargo-build-sbf,
+# separately from the host-side engine workspace.
+[workspace]
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[features]
+default = ["v1"]
+# Exactly one of `v1` / `v2` must be enabled. See src/math.rs.
+v1 = []
+v2 = []
+custom-heap = []
+custom-panic = []
+no-entrypoint = []
+
+[dependencies]
+fixture-lending-interface = { path = "../../interface" }
+solana-program = "4.1"
+# `system_instruction` moved out of solana-program; the builders live here now.
+solana-system-interface = { version = "3.3", features = ["bincode"] }
+borsh = { version = "1.5", features = ["derive"] }
+
+# `target_os = "solana"` only exists under cargo-build-sbf; declaring it here
+# keeps host-target builds and clippy warning-free.
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_os, values("solana"))'] }
+
+[profile.release]
+overflow-checks = true
+codegen-units = 1

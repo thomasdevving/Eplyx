@@ -1,0 +1,52 @@
+[workspace]
+resolver = "2"
+members = ["interface", "engine"]
+# The on-chain program is intentionally *not* a workspace member. It is compiled
+# for the SBF target by `cargo-build-sbf` with the platform-tools toolchain, and
+# its `solana-program` dependency tree does not co-resolve with litesvm's. Giving
+# it a separate lockfile keeps both graphs free to move independently.
+exclude = ["programs/fixture-lending"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+
+[workspace.dependencies]
+fixture-lending-interface = { path = "interface" }
+
+borsh = { version = "1.5", features = ["derive"] }
+
+# Host-side execution. The `solana-*` pins below are deliberately identical to
+# litesvm 0.16's own requirements: these crates appear in litesvm's public API,
+# so a second semver-incompatible copy in the graph would produce two distinct
+# `Address`/`Instruction` types and fail to compile. `cargo tree -d` guards this.
+litesvm = "0.16"
+solana-account = "4.3.0"
+solana-address = "2.6.1"
+solana-clock = "3.1.1"
+solana-hash = "4.5.0"
+solana-instruction = "3.4.0"
+solana-keypair = "3.1.2"
+solana-message = "4.2.4"
+solana-native-token = "3.0.0"
+solana-rent = "4.3.0"
+solana-signer = "3.0.1"
+solana-system-interface = "3.2.0"
+solana-transaction = "4.1.5"
+solana-transaction-error = "3.3.1"
+solana-instruction-error = "2.4.0"
+
+anyhow = "1.0"
+clap = { version = "4.5", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+[profile.release]
+overflow-checks = true
+
+# Keep SBF artefacts reproducible and small.
+[profile.release.build-override]
+opt-level = 3
+incremental = false
+codegen-units = 1

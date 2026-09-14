@@ -1,0 +1,9 @@
+[package]
+name = "fixture-lending-interface"
+version = "0.1.0"
+edition = "2021"
+description = "Wire format (instructions + account layouts) shared by the fixture program and the differential engine."
+license = "MIT"
+
+[dependencies]
+borsh = { workspace = true }

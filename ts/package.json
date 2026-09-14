@@ -1,0 +1,7 @@
+{
+  "name": "@upgrade-impact/report-check",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Validates the machine-readable JSON report contract."
+}
