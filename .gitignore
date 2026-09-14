@@ -1,0 +1,11 @@
+# Rust build output
+/target/
+programs/fixture-lending/target/
+
+# Compiled program artefacts: reproduced by ./scripts/build-programs.sh
+/artifacts/
+
+# Node
+node_modules/
+
+.DS_Store

@@ -1,0 +1,103 @@
+{
+  "id": "near-liquidation-001",
+  "category": "near-liquidation",
+  "scenario": "refresh position",
+  "notes": "Fractional collateral close to, but not at, the liquidation threshold.",
+  "keypairs": [
+    {
+      "label": "payer",
+      "seed": "08448e3aca8e58b6bb458e3aca8f58b66e478e3aca9058b621498e3aca9158b6",
+      "address": "5HVmiLiyqiF84PueTjN8TyMVR14R6X7vZdbKWQBr5dT8"
+    },
+    {
+      "label": "owner",
+      "seed": "3639508db06e3074e93a508db06f3074d035508db06c30748337508db06d3074",
+      "address": "4aDzBEj4NoMtMstLWZM2iqZDpTTKxE6BJ3Y7C59Hgob9"
+    },
+    {
+      "label": "authority",
+      "seed": "2820e50982cedfc5db21e50982cfdfc58e23e50982d0dfc54125e50982d1dfc5",
+      "address": "Aq3ojbtjv8ne7DTiXwheMkqKFXNby3DdNCrZC2V8Wccu"
+    }
+  ],
+  "accounts": [
+    {
+      "label": "market",
+      "address": "64LTXT3Em2UWmZ5Tv7ymK2ycEyMrwoD7CiBctG2fmW3",
+      "account": {
+        "lamports": 1489440,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "010192083bd16927d17983a950b56a4913d13eee7cd4e94b06e5bc3a547335fc4b46ee638f706064c65dd8accfce9bf87093d878ed8003118dec76eba1d554432b0400e1f50500000000401f4c1d0100000000000000",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "position",
+      "address": "Fyd3WoqFy1grhzVug4gjQvwmFZuz9VC1ZaqL3VTCi7xw",
+      "account": {
+        "lamports": 1656480,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "02013515e91b32407afdacf334ebc853105ac8d00f33e31158ae9e438d833149e6cc014bacebe7ec7a644e49acebe7eb7a649b47acebe7ea7a64e845acebe7e97a64004fc7f912000000b1deac750100000000e1f50500000000401f4c1d80de0f00000000000000000000000000",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "vault",
+      "address": "H3a5rbaEY4rpdwoRXbMun6ki7ogAd5W3QNwFRR7x9Arw",
+      "account": {
+        "lamports": 81500890880,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "owner",
+      "address": "4aDzBEj4NoMtMstLWZM2iqZDpTTKxE6BJ3Y7C59Hgob9",
+      "account": {
+        "lamports": 5000000000000,
+        "owner": "11111111111111111111111111111111",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "payer",
+      "address": "5HVmiLiyqiF84PueTjN8TyMVR14R6X7vZdbKWQBr5dT8",
+      "account": {
+        "lamports": 100000000000,
+        "owner": "11111111111111111111111111111111",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    }
+  ],
+  "fee_payer": "payer",
+  "signers": [],
+  "instruction": {
+    "program": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+    "accounts": [
+      {
+        "address": "Fyd3WoqFy1grhzVug4gjQvwmFZuz9VC1ZaqL3VTCi7xw",
+        "is_signer": false,
+        "is_writable": true
+      },
+      {
+        "address": "64LTXT3Em2UWmZ5Tv7ymK2ycEyMrwoD7CiBctG2fmW3",
+        "is_signer": false,
+        "is_writable": false
+      }
+    ],
+    "data": "07"
+  },
+  "watch": [
+    "position",
+    "vault",
+    "owner"
+  ]
+}

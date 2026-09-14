@@ -1,0 +1,103 @@
+{
+  "id": "boundary-position-004",
+  "category": "boundary",
+  "scenario": "refresh position",
+  "notes": "Health factor recomputed against an unchanged price. Fixtures 017-020 sit inside the ($7,920, $7,960] window where V1 reports healthy and V2 reports liquidatable.",
+  "keypairs": [
+    {
+      "label": "payer",
+      "seed": "f514d9dd0a2044e24213d9dd0a1f44e28f11d9dd0a1e44e2dc0fd9dd0a1d44e2",
+      "address": "8BUHjYQuZf2Rdi7kak6Byrv85q3trfz1v6PZK3EXKgVN"
+    },
+    {
+      "label": "owner",
+      "seed": "f338c6ccc8ee0d704037c6ccc8ed0d70593cc6ccc8f00d70a63ac6ccc8ef0d70",
+      "address": "E6sCbSx7eNR65Du6kRBzodoR7EjJQp2c2ZjbeHq8AeBH"
+    },
+    {
+      "label": "authority",
+      "seed": "119ab6745236699f5e98b6745235699fab96b6745234699ff894b6745233699f",
+      "address": "DptCE155BHyfkmr83TCCLrxry4va3wXBcCWa7WxeXXKK"
+    }
+  ],
+  "accounts": [
+    {
+      "label": "market",
+      "address": "6FiCPcpiFCBLKQdYc8FY3dHg8rE9NjEXCtF2CZr7Q4ZX",
+      "account": {
+        "lamports": 1489440,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "0101be906d03df4a4d3ce513a5c2269a5de357e933183cd7e3493d5c216f2f6ab2fe20da4d919da96beb4d87a5aa933ea68a6688c1b470be397fa9d36384d7b5e65400e1f50500000000401f4c1d0100000000000000",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "position",
+      "address": "42hR69iph2gJXSGUKdLc1eWUTLHPREHXqkS2cGs9KK5N",
+      "account": {
+        "lamports": 1656480,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "0201c2a89864f3b40694843b4651478ba84a320663440527e10d339b6c8d34eca3e04e0f259821dec6e20111259821dfc6e2e80b259821dcc6e29b0d259821ddc6e20083a92a17000000008eead00100000000e1f50500000000401f4c1d60920f00000000000000000000000000",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "vault",
+      "address": "3DF7eYzDZ7T4wqihBHGucUZTb11wx2KAZ3R25C1To42X",
+      "account": {
+        "lamports": 99500890880,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "owner",
+      "address": "E6sCbSx7eNR65Du6kRBzodoR7EjJQp2c2ZjbeHq8AeBH",
+      "account": {
+        "lamports": 5000000000000,
+        "owner": "11111111111111111111111111111111",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "payer",
+      "address": "8BUHjYQuZf2Rdi7kak6Byrv85q3trfz1v6PZK3EXKgVN",
+      "account": {
+        "lamports": 100000000000,
+        "owner": "11111111111111111111111111111111",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    }
+  ],
+  "fee_payer": "payer",
+  "signers": [],
+  "instruction": {
+    "program": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+    "accounts": [
+      {
+        "address": "42hR69iph2gJXSGUKdLc1eWUTLHPREHXqkS2cGs9KK5N",
+        "is_signer": false,
+        "is_writable": true
+      },
+      {
+        "address": "6FiCPcpiFCBLKQdYc8FY3dHg8rE9NjEXCtF2CZr7Q4ZX",
+        "is_signer": false,
+        "is_writable": false
+      }
+    ],
+    "data": "07"
+  },
+  "watch": [
+    "position",
+    "vault",
+    "owner"
+  ]
+}

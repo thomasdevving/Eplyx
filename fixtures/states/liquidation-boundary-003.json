@@ -1,0 +1,132 @@
+{
+  "id": "liquidation-boundary-003",
+  "category": "liquidation-boundary",
+  "scenario": "liquidate, repaying 1000 USD",
+  "notes": "Third-party liquidation attempt. V1 rejects it (PositionHealthy); under V2 the same transaction succeeds and seizes collateral.",
+  "keypairs": [
+    {
+      "label": "payer",
+      "seed": "fa9e0b7b11b500caada00b7b11b600ca949b0b7b11b300ca479d0b7b11b400ca",
+      "address": "HPkbh4vZpW4T9sabDQth4AmVUV1rS1GRAv6Q9kA8PtP8"
+    },
+    {
+      "label": "owner",
+      "seed": "6401b4311e2a8bbb1703b4311e2b8bbbca04b4311e2c8bbb7d06b4311e2d8bbb",
+      "address": "GwHG2anMdg7ZUiTyrohFEE43cB4YWzFxDYqFQCmB8Ftz"
+    },
+    {
+      "label": "authority",
+      "seed": "36721aee0715735be9731aee0716735bd06e1aee0713735b83701aee0714735b",
+      "address": "2B4f8exiNV4tLaYFFrLo9xvubftc3fqqnSmDjCS63R26"
+    },
+    {
+      "label": "liquidator",
+      "seed": "6feac525ac373658bce8c525ac363658d5edc525ac39365822ecc525ac383658",
+      "address": "8euy4y6CoGCHM8hsN6LR5M1j18WPZDEtwMAQxvCUFjtw"
+    }
+  ],
+  "accounts": [
+    {
+      "label": "market",
+      "address": "Htxe5fLMbL6hLryjdimSXnQKyv5QwDZyTjrP9AJ3T9XT",
+      "account": {
+        "lamports": 1489440,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "0101116fa168e0822df9d3ef8afea5cd543720467c39fefb67087a73a993fac07b9fcf8bcfcb229059024a9a3360656a498a9e78f6fb5ec3f8680e5ac5243c8e765800e1f50500000000401f4c1d0100000000000000",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "position",
+      "address": "HAWFLcF55etsEuAvi42kjWrvWeSbDghNXKhbVvy6EHHp",
+      "account": {
+        "lamports": 1656480,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "0201ecc70d42a66f3d161145dc4c432111abdc9dc38f685ff6574627e2a2a223e537fb0a860e997a16164809860e99791616610e860e997c1616ae0c860e997b16160083a92a1700000000f673da0100000000e1f50500000000401f4c1d40420f00000000000000000000000000",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "vault",
+      "address": "EyB3XhEf6wVaiawF8rBvCe11Vv7d7NqbV8iBXZRUBCRV",
+      "account": {
+        "lamports": 99500890880,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "owner",
+      "address": "GwHG2anMdg7ZUiTyrohFEE43cB4YWzFxDYqFQCmB8Ftz",
+      "account": {
+        "lamports": 5000000000000,
+        "owner": "11111111111111111111111111111111",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "payer",
+      "address": "HPkbh4vZpW4T9sabDQth4AmVUV1rS1GRAv6Q9kA8PtP8",
+      "account": {
+        "lamports": 100000000000,
+        "owner": "11111111111111111111111111111111",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "liquidator",
+      "address": "8euy4y6CoGCHM8hsN6LR5M1j18WPZDEtwMAQxvCUFjtw",
+      "account": {
+        "lamports": 1000000000000,
+        "owner": "11111111111111111111111111111111",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    }
+  ],
+  "fee_payer": "payer",
+  "signers": [
+    "liquidator"
+  ],
+  "instruction": {
+    "program": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+    "accounts": [
+      {
+        "address": "HAWFLcF55etsEuAvi42kjWrvWeSbDghNXKhbVvy6EHHp",
+        "is_signer": false,
+        "is_writable": true
+      },
+      {
+        "address": "Htxe5fLMbL6hLryjdimSXnQKyv5QwDZyTjrP9AJ3T9XT",
+        "is_signer": false,
+        "is_writable": false
+      },
+      {
+        "address": "EyB3XhEf6wVaiawF8rBvCe11Vv7d7NqbV8iBXZRUBCRV",
+        "is_signer": false,
+        "is_writable": true
+      },
+      {
+        "address": "8euy4y6CoGCHM8hsN6LR5M1j18WPZDEtwMAQxvCUFjtw",
+        "is_signer": true,
+        "is_writable": true
+      }
+    ],
+    "data": "0600ca9a3b00000000"
+  },
+  "watch": [
+    "position",
+    "vault",
+    "owner",
+    "liquidator"
+  ]
+}

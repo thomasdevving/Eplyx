@@ -1,0 +1,110 @@
+{
+  "id": "small-011",
+  "category": "small",
+  "scenario": "repay 5 USD",
+  "notes": "Dust-scale position, whole-SOL collateral.",
+  "keypairs": [
+    {
+      "label": "payer",
+      "seed": "da64abcdff3a61568d66abcdff3b61567461abcdff3861562763abcdff396156",
+      "address": "577iJvWZeGkqNxSBcDEyskwkaSmPQLVVSeWNuS1nfUKA"
+    },
+    {
+      "label": "owner",
+      "seed": "44d5bcbb8eda49a0f7d6bcbb8edb49a0aad8bcbb8edc49a05ddabcbb8edd49a0",
+      "address": "E7uKq2xQw4KitJ5CxmY5Nv7PeaHtd8ZDks9kqi2Ms5GL"
+    },
+    {
+      "label": "authority",
+      "seed": "164aa81cca342806c94ba81cca352806b046a81cca3228066348a81cca332806",
+      "address": "34KggL2ZQATjwzpsTvyG8vReZiFyt1vN6Y15wNUy1te3"
+    }
+  ],
+  "accounts": [
+    {
+      "label": "market",
+      "address": "FmU2J4tYH4kNpeotexzUre9xTSkxKHs8KEVr6LcEF6nw",
+      "account": {
+        "lamports": 1489440,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "01011e913e1225cd225c349ae555c89a484e7ac69f21ce3a1e3e5466a2a5db315c301bba77a9641fd0858b207451fa935a8141ebaa80457736a7c2b7f4796b9b519400e1f50500000000401f4c1d0100000000000000",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "position",
+      "address": "F1LUCbggfkoEwznM3crBpPrEBazn7ndjLLo3BrdscX3s",
+      "account": {
+        "lamports": 1656480,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "0201c2ec941b090c563f9ec32372671f44528885d3ae410ea822afe52791f5b601f9db67ba0f5e61413c2866ba0f5e60413c416bba0f5e63413c8e69ba0f5e62413c00aea68f020000008066ab130000000000e1f50500000000401f4c1daab02800000000000000000000000000",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "vault",
+      "address": "2sEvPpvW4FzZEgxbgCGTUrCxCe2jAKCSio8nM813GLMh",
+      "account": {
+        "lamports": 11000890880,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "owner",
+      "address": "E7uKq2xQw4KitJ5CxmY5Nv7PeaHtd8ZDks9kqi2Ms5GL",
+      "account": {
+        "lamports": 5000000000000,
+        "owner": "11111111111111111111111111111111",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "label": "payer",
+      "address": "577iJvWZeGkqNxSBcDEyskwkaSmPQLVVSeWNuS1nfUKA",
+      "account": {
+        "lamports": 100000000000,
+        "owner": "11111111111111111111111111111111",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 0
+      }
+    }
+  ],
+  "fee_payer": "payer",
+  "signers": [
+    "owner"
+  ],
+  "instruction": {
+    "program": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+    "accounts": [
+      {
+        "address": "F1LUCbggfkoEwznM3crBpPrEBazn7ndjLLo3BrdscX3s",
+        "is_signer": false,
+        "is_writable": true
+      },
+      {
+        "address": "FmU2J4tYH4kNpeotexzUre9xTSkxKHs8KEVr6LcEF6nw",
+        "is_signer": false,
+        "is_writable": false
+      },
+      {
+        "address": "E7uKq2xQw4KitJ5CxmY5Nv7PeaHtd8ZDks9kqi2Ms5GL",
+        "is_signer": true,
+        "is_writable": false
+      }
+    ],
+    "data": "04404b4c0000000000"
+  },
+  "watch": [
+    "position",
+    "vault",
+    "owner"
+  ]
+}

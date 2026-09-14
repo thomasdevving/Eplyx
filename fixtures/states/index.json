@@ -1,0 +1,707 @@
+[
+  {
+    "category": "healthy",
+    "id": "healthy-001",
+    "scenario": "withdraw 2 SOL collateral"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-002",
+    "scenario": "borrow 50 USD"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-003",
+    "scenario": "repay 10 USD"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-004",
+    "scenario": "deposit 2 SOL collateral"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-005",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-006",
+    "scenario": "withdraw 1 SOL collateral"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-007",
+    "scenario": "borrow 50 USD"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-008",
+    "scenario": "repay 10 USD"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-009",
+    "scenario": "deposit 2 SOL collateral"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-010",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-011",
+    "scenario": "withdraw 3 SOL collateral"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-012",
+    "scenario": "borrow 50 USD"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-013",
+    "scenario": "repay 10 USD"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-014",
+    "scenario": "deposit 2 SOL collateral"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-015",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-016",
+    "scenario": "withdraw 2 SOL collateral"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-017",
+    "scenario": "borrow 50 USD"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-018",
+    "scenario": "repay 10 USD"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-019",
+    "scenario": "deposit 2 SOL collateral"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-020",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-021",
+    "scenario": "withdraw 1 SOL collateral"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-022",
+    "scenario": "borrow 50 USD"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-023",
+    "scenario": "repay 10 USD"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-024",
+    "scenario": "deposit 2 SOL collateral"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-025",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-026",
+    "scenario": "withdraw 3 SOL collateral"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-027",
+    "scenario": "borrow 50 USD"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-028",
+    "scenario": "repay 10 USD"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-029",
+    "scenario": "deposit 2 SOL collateral"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-030",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-031",
+    "scenario": "withdraw 2 SOL collateral"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-032",
+    "scenario": "borrow 50 USD"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-033",
+    "scenario": "repay 10 USD"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-034",
+    "scenario": "deposit 2 SOL collateral"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-035",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-036",
+    "scenario": "withdraw 1 SOL collateral"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-037",
+    "scenario": "borrow 50 USD"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-038",
+    "scenario": "repay 10 USD"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-039",
+    "scenario": "deposit 2 SOL collateral"
+  },
+  {
+    "category": "healthy",
+    "id": "healthy-040",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-001",
+    "scenario": "withdraw 2 SOL collateral"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-002",
+    "scenario": "borrow 100 USD"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-003",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-004",
+    "scenario": "withdraw 2 SOL collateral"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-005",
+    "scenario": "borrow 100 USD"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-006",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-007",
+    "scenario": "withdraw 2 SOL collateral"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-008",
+    "scenario": "borrow 100 USD"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-009",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-010",
+    "scenario": "withdraw 2 SOL collateral"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-011",
+    "scenario": "borrow 100 USD"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-012",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-013",
+    "scenario": "withdraw 2 SOL collateral"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-014",
+    "scenario": "borrow 100 USD"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-015",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-016",
+    "scenario": "withdraw 2 SOL collateral"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-017",
+    "scenario": "borrow 100 USD"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-018",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-019",
+    "scenario": "withdraw 2 SOL collateral"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-020",
+    "scenario": "borrow 100 USD"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-021",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-022",
+    "scenario": "withdraw 2 SOL collateral"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-023",
+    "scenario": "borrow 100 USD"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-024",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "moderate",
+    "id": "moderate-025",
+    "scenario": "withdraw 2 SOL collateral"
+  },
+  {
+    "category": "small",
+    "id": "small-001",
+    "scenario": "repay 5 USD"
+  },
+  {
+    "category": "small",
+    "id": "small-002",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "small",
+    "id": "small-003",
+    "scenario": "repay 5 USD"
+  },
+  {
+    "category": "small",
+    "id": "small-004",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "small",
+    "id": "small-005",
+    "scenario": "repay 5 USD"
+  },
+  {
+    "category": "small",
+    "id": "small-006",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "small",
+    "id": "small-007",
+    "scenario": "repay 5 USD"
+  },
+  {
+    "category": "small",
+    "id": "small-008",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "small",
+    "id": "small-009",
+    "scenario": "repay 5 USD"
+  },
+  {
+    "category": "small",
+    "id": "small-010",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "small",
+    "id": "small-011",
+    "scenario": "repay 5 USD"
+  },
+  {
+    "category": "small",
+    "id": "small-012",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "large",
+    "id": "large-001",
+    "scenario": "withdraw 10 SOL collateral"
+  },
+  {
+    "category": "large",
+    "id": "large-002",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "large",
+    "id": "large-003",
+    "scenario": "withdraw 10 SOL collateral"
+  },
+  {
+    "category": "large",
+    "id": "large-004",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "large",
+    "id": "large-005",
+    "scenario": "withdraw 10 SOL collateral"
+  },
+  {
+    "category": "large",
+    "id": "large-006",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "large",
+    "id": "large-007",
+    "scenario": "withdraw 10 SOL collateral"
+  },
+  {
+    "category": "large",
+    "id": "large-008",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "large",
+    "id": "large-009",
+    "scenario": "withdraw 10 SOL collateral"
+  },
+  {
+    "category": "large",
+    "id": "large-010",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "large",
+    "id": "large-011",
+    "scenario": "withdraw 10 SOL collateral"
+  },
+  {
+    "category": "large",
+    "id": "large-012",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "fractional",
+    "id": "fractional-001",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "fractional",
+    "id": "fractional-002",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "fractional",
+    "id": "fractional-003",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "fractional",
+    "id": "fractional-004",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "fractional",
+    "id": "fractional-005",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "fractional",
+    "id": "fractional-006",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "fractional",
+    "id": "fractional-007",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "fractional",
+    "id": "fractional-008",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "fractional",
+    "id": "fractional-009",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "fractional",
+    "id": "fractional-010",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "fractional",
+    "id": "fractional-011",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "fractional",
+    "id": "fractional-012",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "fractional",
+    "id": "fractional-013",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "fractional",
+    "id": "fractional-014",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "fractional",
+    "id": "fractional-015",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "near-liquidation",
+    "id": "near-liquidation-001",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "near-liquidation",
+    "id": "near-liquidation-002",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "near-liquidation",
+    "id": "near-liquidation-003",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "near-liquidation",
+    "id": "near-liquidation-004",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "near-liquidation",
+    "id": "near-liquidation-005",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "near-liquidation",
+    "id": "near-liquidation-006",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "near-liquidation",
+    "id": "near-liquidation-007",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "near-liquidation",
+    "id": "near-liquidation-008",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "boundary",
+    "id": "boundary-position-001",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "boundary",
+    "id": "boundary-position-002",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "boundary",
+    "id": "boundary-position-003",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "boundary",
+    "id": "boundary-position-004",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "boundary",
+    "id": "boundary-position-005",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "boundary",
+    "id": "boundary-position-006",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "boundary",
+    "id": "boundary-position-007",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "boundary",
+    "id": "boundary-position-008",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "boundary",
+    "id": "boundary-position-009",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "boundary",
+    "id": "boundary-position-010",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "boundary",
+    "id": "boundary-position-011",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "boundary",
+    "id": "boundary-position-012",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "boundary",
+    "id": "boundary-position-013",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "boundary",
+    "id": "boundary-position-014",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "boundary",
+    "id": "boundary-position-015",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "boundary",
+    "id": "boundary-position-016",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "boundary",
+    "id": "boundary-position-017",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "boundary",
+    "id": "boundary-position-018",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "boundary",
+    "id": "boundary-position-019",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "boundary",
+    "id": "boundary-position-020",
+    "scenario": "refresh position"
+  },
+  {
+    "category": "withdraw-boundary",
+    "id": "withdraw-boundary-001",
+    "scenario": "withdraw 0.5 SOL collateral"
+  },
+  {
+    "category": "withdraw-boundary",
+    "id": "withdraw-boundary-002",
+    "scenario": "withdraw 0.5 SOL collateral"
+  },
+  {
+    "category": "withdraw-boundary",
+    "id": "withdraw-boundary-003",
+    "scenario": "withdraw 0.5 SOL collateral"
+  },
+  {
+    "category": "withdraw-boundary",
+    "id": "withdraw-boundary-004",
+    "scenario": "withdraw 0.5 SOL collateral"
+  },
+  {
+    "category": "withdraw-boundary",
+    "id": "withdraw-boundary-005",
+    "scenario": "withdraw 0.5 SOL collateral"
+  },
+  {
+    "category": "withdraw-boundary",
+    "id": "withdraw-boundary-006",
+    "scenario": "withdraw 0.5 SOL collateral"
+  },
+  {
+    "category": "liquidation-boundary",
+    "id": "liquidation-boundary-001",
+    "scenario": "liquidate, repaying 1000 USD"
+  },
+  {
+    "category": "liquidation-boundary",
+    "id": "liquidation-boundary-002",
+    "scenario": "liquidate, repaying 1000 USD"
+  },
+  {
+    "category": "liquidation-boundary",
+    "id": "liquidation-boundary-003",
+    "scenario": "liquidate, repaying 1000 USD"
+  }
+]

@@ -1,0 +1,117 @@
+//! Deterministic differential execution for Solana program upgrades.
+//!
+//! The engine answers one question: *given identical initial state and an
+//! identical transaction, what changes solely because the program version
+//! changed?*
+//!
+//! Layering, outermost to innermost:
+//!
+//! ```text
+//!   corpus     protocol-specific: builds fixtures (state + transaction)
+//!   executor   protocol-agnostic: runs one fixture against one program build
+//!   diff       protocol-agnostic: structural comparison of two results
+//!   interpret  protocol-specific: turns byte deltas into economic meaning
+//!   report     protocol-agnostic: text / JSON rendering
+//! ```
+//!
+//! `executor`, `diff` and `report` know nothing about lending. Everything that
+//! understands what a health factor *is* lives in `corpus` and `interpret`,
+//! which is the seam a protocol adapter would plug into in a later phase.
+
+pub mod corpus;
+pub mod diff;
+pub mod executor;
+pub mod hexfmt;
+pub mod interpret;
+pub mod report;
+pub mod types;
+
+use std::path::{Path, PathBuf};
+
+use anyhow::Result;
+use solana_address::Address;
+
+pub use diff::{Classification, Difference, Severity, StateDiff};
+pub use executor::{ExecutionResult, ProgramVersion};
+pub use report::Report;
+pub use types::{AccountSnapshot, Category, Fixture, InstructionSpec};
+
+/// Program ID of the fixture protocol.
+///
+/// V1 and V2 deliberately share an address: they are never loaded side by side,
+/// only into separate VM instances, so an identical ID is both possible and the
+/// honest representation of an in-place upgrade.
+pub const FIXTURE_PROGRAM_ID: &str = include_str!("../../fixtures/program-id.txt");
+
+pub fn fixture_program_id() -> Address {
+    FIXTURE_PROGRAM_ID
+        .trim()
+        .parse()
+        .expect("fixtures/program-id.txt must contain a valid base58 address")
+}
+
+/// Repository root, resolved from the crate location rather than the working
+/// directory so the CLI and the test suite agree regardless of where they run.
+pub fn repo_root() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .expect("engine crate always has a parent directory")
+        .to_path_buf()
+}
+
+pub fn default_artifact(version: &str) -> PathBuf {
+    repo_root().join(format!("artifacts/fixture_lending_{version}.so"))
+}
+
+/// Load both program builds from disk.
+pub fn load_versions(v1: &Path, v2: &Path) -> Result<(ProgramVersion, ProgramVersion)> {
+    Ok((
+        ProgramVersion::from_file("v1", v1)?,
+        ProgramVersion::from_file("v2", v2)?,
+    ))
+}
+
+/// Execute one fixture against both builds and diff the results.
+///
+/// Each side gets a freshly constructed VM seeded from the same fixture, which
+/// is what makes "reset to identical initial state" a structural property rather
+/// than a procedure that could drift.
+pub fn compare_fixture(
+    fixture: &Fixture,
+    program_id: &Address,
+    v1: &ProgramVersion,
+    v2: &ProgramVersion,
+) -> Result<StateDiff> {
+    let result_v1 = executor::execute(fixture, program_id, v1)?;
+    let result_v2 = executor::execute(fixture, program_id, v2)?;
+    Ok(diff::compare(fixture, result_v1, result_v2))
+}
+
+pub fn compare_all(
+    fixtures: &[Fixture],
+    program_id: &Address,
+    v1: &ProgramVersion,
+    v2: &ProgramVersion,
+) -> Result<Vec<StateDiff>> {
+    fixtures
+        .iter()
+        .map(|fixture| compare_fixture(fixture, program_id, v1, v2))
+        .collect()
+}
+
+/// Convenience used by the test suite: generate the corpus, load the default
+/// artefacts, and compare everything.
+pub fn compare_default_corpus() -> Result<Report> {
+    let program_id = fixture_program_id();
+    let fixtures = corpus::generate(&program_id);
+    let v1_path = default_artifact("v1");
+    let v2_path = default_artifact("v2");
+    let (v1, v2) = load_versions(&v1_path, &v2_path)?;
+    let diffs = compare_all(&fixtures, &program_id, &v1, &v2)?;
+    Ok(Report::new(
+        program_id.to_string(),
+        v1_path.display().to_string(),
+        v2_path.display().to_string(),
+        diffs,
+    ))
+}
