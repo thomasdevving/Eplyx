@@ -9,7 +9,10 @@ use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
 
 use crate::diff::{Classification, Difference, Severity, StateDiff};
-use crate::types::Category;
+use crate::impact::{
+    evaluate_all, summarize, EconomicConsequence, EconomicImpactSummary, FixtureEconomics,
+};
+use crate::types::{Category, Fixture};
 
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CategorySummary {
@@ -21,16 +24,17 @@ pub struct CategorySummary {
 }
 
 /// Compute is tracked on its own axis; see `diff::Classification`.
-#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ComputeSummary {
     pub fixtures_with_delta: usize,
-    pub min_pct: f64,
-    pub max_pct: f64,
+    /// Basis points; see [`crate::diff::format_bps`].
+    pub min_pct_bps: i32,
+    pub max_pct_bps: i32,
     /// Fixtures whose compute moved far enough to be an operational risk.
     pub above_regression_threshold: usize,
 }
 
-#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Summary {
     pub fixtures_tested: usize,
     /// No difference whatsoever, compute included.
@@ -52,7 +56,12 @@ pub struct Report {
     pub program_id: String,
     pub v1_artifact: String,
     pub v2_artifact: String,
+    /// Behavioural result: what changed.
     pub summary: Summary,
+    /// Economic result: how much it matters, across the corpus.
+    pub economics: EconomicImpactSummary,
+    /// Per-position economic detail, parallel to `diffs` and matched by ID.
+    pub fixture_economics: Vec<FixtureEconomics>,
     pub diffs: Vec<StateDiff>,
 }
 
@@ -61,6 +70,7 @@ impl Report {
         program_id: String,
         v1_artifact: String,
         v2_artifact: String,
+        fixtures: &[Fixture],
         diffs: Vec<StateDiff>,
     ) -> Self {
         let mut summary = Summary {
@@ -73,8 +83,8 @@ impl Report {
                 .insert(category.as_str().to_string(), CategorySummary::default());
         }
 
-        let mut min_pct = f64::INFINITY;
-        let mut max_pct = f64::NEG_INFINITY;
+        let mut min_pct_bps = i32::MAX;
+        let mut max_pct_bps = i32::MIN;
 
         for diff in &diffs {
             let entry = summary
@@ -83,11 +93,11 @@ impl Report {
                 .or_default();
             entry.tested += 1;
 
-            if let Some((_, _, pct)) = diff.compute_delta() {
+            if let Some((_, _, pct_bps)) = diff.compute_delta() {
                 summary.compute.fixtures_with_delta += 1;
-                min_pct = min_pct.min(pct);
-                max_pct = max_pct.max(pct);
-                if pct.abs() >= crate::diff::COMPUTE_REGRESSION_PCT {
+                min_pct_bps = min_pct_bps.min(pct_bps);
+                max_pct_bps = max_pct_bps.max(pct_bps);
+                if pct_bps.abs() >= crate::diff::COMPUTE_REGRESSION_BPS {
                     summary.compute.above_regression_threshold += 1;
                 }
             }
@@ -119,20 +129,31 @@ impl Report {
         }
 
         if summary.compute.fixtures_with_delta > 0 {
-            summary.compute.min_pct = min_pct;
-            summary.compute.max_pct = max_pct;
+            summary.compute.min_pct_bps = min_pct_bps;
+            summary.compute.max_pct_bps = max_pct_bps;
         }
 
         // Empty categories only add noise.
         summary.by_category.retain(|_, v| v.tested > 0);
+
+        let fixture_economics = evaluate_all(fixtures, &diffs);
+        let economics = summarize(&fixture_economics);
 
         Self {
             program_id,
             v1_artifact,
             v2_artifact,
             summary,
+            economics,
+            fixture_economics,
             diffs,
         }
+    }
+
+    pub fn economics_for(&self, fixture_id: &str) -> Option<&FixtureEconomics> {
+        self.fixture_economics
+            .iter()
+            .find(|e| e.fixture_id == fixture_id)
     }
 
     pub fn critical(&self) -> Vec<&StateDiff> {
@@ -223,13 +244,19 @@ fn render_difference(difference: &Difference) -> Vec<String> {
             "{tag:<8}  CPI sequence changed\n              V1: {:?}\n              V2: {:?}",
             v1, v2
         )],
-        Difference::ComputeChanged { v1, v2, delta, pct } => vec![format!(
-            "{tag:<8}  compute units  {v1} -> {v2}  (delta {delta}, {pct:+.2}%)"
+        Difference::ComputeChanged {
+            v1,
+            v2,
+            delta,
+            pct_bps,
+        } => vec![format!(
+            "{tag:<8}  compute units  {v1} -> {v2}  (delta {delta}, {})",
+            crate::diff::format_bps(*pct_bps)
         )],
     }
 }
 
-fn render_fixture(diff: &StateDiff, indent: &str) -> String {
+fn render_fixture(diff: &StateDiff, economics: Option<&FixtureEconomics>, indent: &str) -> String {
     let mut out = String::new();
     out.push_str(&format!(
         "{indent}{}  [{}]\n",
@@ -242,43 +269,125 @@ fn render_fixture(diff: &StateDiff, indent: &str) -> String {
             out.push_str(&format!("{indent}  {line}\n"));
         }
     }
+    // Economic context, derived from fixture state only - no estimates.
+    if let Some(economics) = economics {
+        let baseline = &economics.baseline;
+        out.push_str(&format!(
+            "{indent}  position value: collateral {} ({}), debt {}, net {}\n",
+            baseline.collateral_value_usd.format_dollars(),
+            baseline.collateral_display,
+            baseline.debt_value_usd.format_dollars(),
+            baseline.net_value_usd.format_dollars(),
+        ));
+        for consequence in &economics.consequences {
+            out.push_str(&format!(
+                "{indent}  economic consequence: {}\n",
+                consequence.describe()
+            ));
+        }
+    }
     out
+}
+
+fn render_capital_row(label: &str, group: &crate::impact::CapitalGroup) -> String {
+    format!(
+        "  {:<28} {:>5}   collateral {:>16}   debt {:>16}\n",
+        label,
+        group.positions,
+        group.collateral_value_usd.format_dollars(),
+        group.debt_value_usd.format_dollars()
+    )
 }
 
 pub fn render_text(report: &Report) -> String {
     let s = &report.summary;
+    let e = &report.economics;
     let mut out = String::new();
 
-    out.push_str("UPGRADE IMPACT REPORT\n");
-    out.push_str("=====================\n\n");
+    out.push_str("EPLYX UPGRADE IMPACT\n");
+    out.push_str("====================\n\n");
     out.push_str(&format!("program:  {}\n", report.program_id));
     out.push_str(&format!("V1:       {}\n", report.v1_artifact));
     out.push_str(&format!("V2:       {}\n\n", report.v2_artifact));
 
-    out.push_str(&format!("Fixtures tested:    {}\n", s.fixtures_tested));
+    out.push_str("BEHAVIOUR\n");
+    out.push_str(&format!("  Fixtures tested:    {}\n", s.fixtures_tested));
     out.push_str(&format!(
-        "Outcome identical:  {}   (state, balances, result and CPI shape unchanged)\n",
+        "  Outcome identical:  {}   (state, balances, result and CPI shape unchanged)\n",
         s.outcome_identical
     ));
-    out.push_str(&format!("Outcome changed:    {}\n", s.changed));
-    out.push_str(&format!("  critical:         {}\n", s.critical));
-    out.push_str(&format!("  high:             {}\n", s.high));
-    out.push_str(&format!("  warning:          {}\n", s.warning));
+    out.push_str(&format!("  Outcome changed:    {}\n", s.changed));
+    out.push_str(&format!("    critical:         {}\n", s.critical));
+    out.push_str(&format!("    high:             {}\n", s.high));
+    out.push_str(&format!("    warning:          {}\n", s.warning));
 
-    out.push_str("\nCompute units (tracked separately - any recompilation moves these)\n");
+    out.push_str("\n  Compute units (tracked separately - any recompilation moves these)\n");
     if s.compute.fixtures_with_delta == 0 {
-        out.push_str("  no differences\n");
+        out.push_str("    no differences\n");
     } else {
         out.push_str(&format!(
-            "  {} of {} fixtures differ, range {:+.2}% .. {:+.2}%\n",
-            s.compute.fixtures_with_delta, s.fixtures_tested, s.compute.min_pct, s.compute.max_pct
+            "    {} of {} fixtures differ, range {} .. {}\n",
+            s.compute.fixtures_with_delta,
+            s.fixtures_tested,
+            crate::diff::format_bps(s.compute.min_pct_bps),
+            crate::diff::format_bps(s.compute.max_pct_bps)
         ));
         out.push_str(&format!(
-            "  above the {:.0}% operational-risk threshold: {}\n",
-            crate::diff::COMPUTE_REGRESSION_PCT,
+            "    above the {} operational-risk threshold: {}\n",
+            crate::diff::format_bps(crate::diff::COMPUTE_REGRESSION_BPS),
             s.compute.above_regression_threshold
         ));
     }
+
+    out.push_str("\nECONOMIC COVERAGE  (synthetic corpus, valued from fixture state)\n");
+    out.push_str(&format!(
+        "  Positions valued:        {}\n",
+        e.positions_valued
+    ));
+    out.push_str(&format!(
+        "  Collateral represented:  {:>16}\n",
+        e.total_collateral_value_usd.format_dollars()
+    ));
+    out.push_str(&format!(
+        "  Debt represented:        {:>16}\n",
+        e.total_debt_value_usd.format_dollars()
+    ));
+    out.push_str(&format!(
+        "  Net represented:         {:>16}\n",
+        e.total_net_value_usd.format_dollars()
+    ));
+
+    out.push_str("\nAFFECTED  (positions with a non-compute difference)\n");
+    out.push_str(&render_capital_row("affected", &e.affected));
+    out.push_str(&render_capital_row("of which critical", &e.critical));
+    out.push_str(&format!(
+        "  {:<28} {:>5}\n",
+        "unaffected",
+        e.unaffected_positions()
+    ));
+
+    out.push_str("\nBY ECONOMIC CONSEQUENCE\n");
+    for consequence in EconomicConsequence::ALL {
+        if let Some(group) = e.by_consequence.get(consequence.as_str()) {
+            if group.positions > 0 {
+                out.push_str(&render_capital_row(consequence.as_str(), group));
+            }
+        }
+    }
+
+    out.push_str("\nNEWLY LIQUIDATABLE  (healthy under V1, liquidatable under V2)\n");
+    out.push_str(&format!(
+        "  Positions:               {}\n",
+        e.newly_liquidatable.positions
+    ));
+    out.push_str(&format!(
+        "  Collateral:              {:>16}\n",
+        e.newly_liquidatable.collateral_value_usd.format_dollars()
+    ));
+    out.push_str(&format!(
+        "  Debt:                    {:>16}\n",
+        e.newly_liquidatable.debt_value_usd.format_dollars()
+    ));
 
     out.push_str("\nBy category\n");
     out.push_str(&format!(
@@ -304,7 +413,11 @@ pub fn render_text(report: &Report) -> String {
             "-".repeat(70)
         ));
         for diff in &critical {
-            out.push_str(&render_fixture(diff, ""));
+            out.push_str(&render_fixture(
+                diff,
+                report.economics_for(&diff.fixture_id),
+                "",
+            ));
             out.push_str(&format!("  why: {}\n\n", diff.notes));
         }
     }
@@ -321,7 +434,11 @@ pub fn render_text(report: &Report) -> String {
             "-".repeat(70)
         ));
         for diff in &other {
-            out.push_str(&render_fixture(diff, ""));
+            out.push_str(&render_fixture(
+                diff,
+                report.economics_for(&diff.fixture_id),
+                "",
+            ));
             out.push('\n');
         }
     }
@@ -330,6 +447,13 @@ pub fn render_text(report: &Report) -> String {
         out.push_str(&format!(
             "\nVERDICT: {} critical economic regression(s) detected. Do not deploy V2.\n",
             s.critical
+        ));
+        out.push_str(&format!(
+            "         {} of {} positions affected; {} newly liquidatable ({} collateral).\n",
+            e.affected.positions,
+            e.positions_valued,
+            e.newly_liquidatable.positions,
+            e.newly_liquidatable.collateral_value_usd.format_dollars()
         ));
     } else if s.changed > 0 {
         out.push_str(
@@ -369,10 +493,11 @@ pub fn render_reproduction(diff: &StateDiff) -> String {
             {
                 let economics = crate::interpret::economics(&position);
                 out.push_str(&format!(
-                    "  {account}: collateral {} SOL (${}), debt ${}, health {}, liquidatable {}\n",
-                    economics.collateral_sol,
-                    economics.collateral_value_usd,
-                    economics.debt_usd,
+                    "  {account}: collateral {} ({}), debt {}, net {}, health {}, liquidatable {}\n",
+                    economics.collateral_display,
+                    economics.collateral_value_usd.format_dollars(),
+                    economics.debt_value_usd.format_dollars(),
+                    economics.net_value_usd.format_dollars(),
                     economics.health_display,
                     economics.liquidatable
                 ));

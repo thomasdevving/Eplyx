@@ -31,6 +31,17 @@ pub const HEALTH_SCALE: u64 = 1_000_000;
 /// Health factor reported for a position carrying no debt.
 pub const HEALTH_INFINITE: u64 = u64::MAX;
 
+/// Decimal exponent of the collateral asset (SOL: 1e9 lamports per SOL).
+pub const COLLATERAL_DECIMALS: u8 = 9;
+
+/// Decimal exponent of the debt asset (USD-denominated, 1e6 per whole unit).
+pub const DEBT_DECIMALS: u8 = 6;
+
+/// The fixture protocol's debt asset is USD-pegged: one whole unit is $1.00,
+/// expressed in micro-USD. Held as a constant rather than per-position state
+/// because it is a property of the asset, not of any individual position.
+pub const DEBT_PRICE_MICRO_USD: u64 = 1_000_000;
+
 pub const ACCOUNT_TAG_MARKET: u8 = 1;
 pub const ACCOUNT_TAG_POSITION: u8 = 2;
 
@@ -113,9 +124,31 @@ pub enum LendingInstruction {
 pub mod reference {
     use super::*;
 
+    /// Normalise a token amount into micro-USD.
+    ///
+    /// `amount` is in the asset's smallest unit, `decimals` is that asset's
+    /// decimal exponent, and `price_micro_usd` is the price of one *whole*
+    /// unit, itself in micro-USD. Multiplying before dividing keeps the full
+    /// precision of the product through the scale conversion - the same
+    /// discipline whose absence is the seeded V2 regression.
+    ///
+    /// Integer-only by construction: there is no floating point anywhere in
+    /// this path.
+    pub fn value_micro_usd(amount: u64, decimals: u8, price_micro_usd: u64) -> u128 {
+        let scale = 10u128.pow(decimals as u32);
+        (amount as u128) * (price_micro_usd as u128) / scale
+    }
+
     /// Collateral value in micro-USD.
     pub fn collateral_value(collateral_lamports: u64, price: u64) -> u128 {
-        (collateral_lamports as u128) * (price as u128) / LAMPORTS_PER_SOL
+        value_micro_usd(collateral_lamports, COLLATERAL_DECIMALS, price)
+    }
+
+    /// Debt value in micro-USD. The debt asset is USD-pegged, so this is an
+    /// identity today; it is routed through the same normalisation so that a
+    /// non-pegged debt asset would need no new code path.
+    pub fn debt_value(debt_amount: u64) -> u128 {
+        value_micro_usd(debt_amount, DEBT_DECIMALS, DEBT_PRICE_MICRO_USD)
     }
 
     /// Risk-adjusted collateral in micro-USD.
@@ -181,6 +214,33 @@ mod tests {
         let health = reference::health_factor(99_500_000_000, 7_945_700_000, 100_000_000, 8_000);
         assert_eq!(health, 1_001_799);
         assert!(!reference::is_liquidatable(health));
+    }
+
+    #[test]
+    fn value_normalisation_handles_arbitrary_decimals() {
+        // 9 decimals: 99.5 SOL at $100.00 is $9,950.00.
+        assert_eq!(
+            reference::value_micro_usd(99_500_000_000, 9, 100_000_000),
+            9_950_000_000
+        );
+        // 6 decimals: a USD-pegged unit values to itself.
+        assert_eq!(
+            reference::value_micro_usd(7_930_000_000, 6, 1_000_000),
+            7_930_000_000
+        );
+        // 8 decimals: 1.5 units at $60,000.00 is $90,000.00.
+        assert_eq!(
+            reference::value_micro_usd(150_000_000, 8, 60_000_000_000),
+            90_000_000_000
+        );
+        // 0 decimals: 3 units at $2.50 is $7.50.
+        assert_eq!(reference::value_micro_usd(3, 0, 2_500_000), 7_500_000);
+    }
+
+    #[test]
+    fn debt_valuation_matches_the_pegged_amount() {
+        assert_eq!(reference::debt_value(7_930_000_000), 7_930_000_000);
+        assert_eq!(reference::debt_value(0), 0);
     }
 
     #[test]

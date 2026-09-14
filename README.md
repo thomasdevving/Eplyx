@@ -21,10 +21,23 @@ keeps its interface. A program can satisfy all of that and still change what
 specific existing accounts are worth. This tool executes identical transactions
 against identical state under both program versions and reports the difference.
 
-**Phase 1 scope.** Deterministic V1/V2 execution, structured diffing, economic
-interpretation and reporting, against a synthetic corpus and a purpose-built
-fixture protocol. No mainnet ingestion, no dashboard, no CI integration, no AI,
-no third-party protocol support. Those are later phases.
+Eplyx reports in two layers, and keeps them distinct:
+
+| Layer | Question | Unit |
+| --- | --- | --- |
+| **Behavioural regression** | Did anything change? | fixtures, differences, severity |
+| **Economic impact aggregation** | How much does it matter? | positions, collateral, debt |
+
+The first is a statement about code. The second is a statement about capital -
+but only about the capital in this corpus. See
+[Economic impact aggregation](#economic-impact-aggregation) for exactly what is
+and is not being claimed.
+
+**Current scope.** Deterministic V1/V2 execution, structured diffing, economic
+interpretation, corpus-wide impact aggregation, and reporting - against a
+synthetic corpus and a purpose-built fixture protocol. No mainnet ingestion, no
+dashboard, no CI integration, no AI, no third-party protocol support. Those are
+later phases.
 
 ---
 
@@ -49,28 +62,46 @@ the toolchain is installed, no database, no container.
 ## What it found
 
 ```text
-Fixtures tested:    141
-Outcome identical:  89   (state, balances, result and CPI shape unchanged)
-Outcome changed:    52
-  critical:         11
-  high:             41
-  warning:          0
+BEHAVIOUR
+  Fixtures tested:    141
+  Outcome identical:  89   (state, balances, result and CPI shape unchanged)
+  Outcome changed:    52
+    critical:         11
+    high:             41
+    warning:          0
 
-Compute units (tracked separately - any recompilation moves these)
-  141 of 141 fixtures differ, range -52.33% .. +133.17%
-  above the 30% operational-risk threshold: 7
+  Compute units (tracked separately - any recompilation moves these)
+    141 of 141 fixtures differ, range -52.32% .. +133.17%
+    above the +30.00% operational-risk threshold: 7
 
-By category
-  category                tested  identical  changed  critical
-  boundary                    20          0       20         4
-  fractional                  15          0       15         0
-  healthy                     40         40        0         0
-  large                       12         12        0         0
-  liquidation-boundary         3          0        3         3
-  moderate                    25         25        0         0
-  near-liquidation             8          0        8         0
-  small                       12         12        0         0
-  withdraw-boundary            6          0        6         4
+ECONOMIC COVERAGE  (synthetic corpus, valued from fixture state)
+  Positions valued:        141
+  Collateral represented:     $6,182,370.00
+  Debt represented:           $2,531,638.09
+  Net represented:            $3,650,731.91
+
+AFFECTED  (positions with a non-compute difference)
+  affected                        52   collateral      $444,570.00   debt      $318,298.09
+  of which critical               11   collateral      $109,650.00   debt       $85,410.00
+  unaffected                      89
+
+BY ECONOMIC CONSEQUENCE
+  newly_liquidatable               4   collateral       $39,800.00   debt       $31,780.00
+  transaction_now_reverts          4   collateral       $40,000.00   debt       $29,780.00
+  transaction_now_succeeds         3   collateral       $29,850.00   debt       $23,850.00
+  value_changed                   41   collateral      $334,920.00   debt      $232,888.09
+
+NEWLY LIQUIDATABLE  (healthy under V1, liquidatable under V2)
+  Positions:               4
+  Collateral:                    $39,800.00
+  Debt:                          $31,780.00
+```
+
+and at the end:
+
+```text
+VERDICT: 11 critical economic regression(s) detected. Do not deploy V2.
+         52 of 141 positions affected; 4 newly liquidatable ($39,800.00 collateral).
 ```
 
 The flagship counterexample - both transactions succeed, and the position
@@ -83,6 +114,8 @@ boundary-position-017  [boundary]
               health factor 1.003783 -> 0.998738
   HIGH      position.health_factor  1.003783 -> 0.998738  (delta -5045)
               position crosses below the liquidation threshold
+  position value: collateral $9,950.00 (99.500000000 SOL), debt $7,930.00, net $2,020.00
+  economic consequence: position becomes newly liquidatable
 ```
 
 The same arithmetic reaches users three different ways. A withdrawal that works
@@ -192,16 +225,21 @@ bytecode diff. It only appears when the new code executes against that state.
                       ┌───────────────┐
                       │  interpreter  │   protocol-aware
                       └───────┬───────┘   bytes → health factor,
-                              ↓            liquidation status
+                              ↓            liquidation status, position value
+                      ┌───────────────┐
+                      │    impact     │   protocol-aware
+                      └───────┬───────┘   per-position economics → corpus totals
+                              ↓            (integer fixed-point USD)
                       ┌───────────────┐
                       │    report     │   text / JSON
                       └───────────────┘
 ```
 
-The layering is the point. `executor`, `diff` and `report` know nothing about
-lending; they deal in accounts, bytes, balances and compute. Everything that
-understands what a *health factor* is lives in `corpus` and `interpret`. That
-boundary is where a protocol adapter would plug in later.
+The layering is the point. `executor`, `diff`, `money` and `report` know nothing
+about lending; they deal in accounts, bytes, balances, compute and USD.
+Everything that understands what a *health factor* or a *position* is lives in
+`corpus`, `interpret` and `impact`. That boundary is where a protocol adapter
+would plug in later.
 
 ### Repository layout
 
@@ -223,7 +261,9 @@ boundary is where a protocol adapter would plug in later.
 │   │   ├── corpus.rs        deterministic corpus generation  (protocol-aware)
 │   │   ├── executor.rs      one fixture × one build → ExecutionResult
 │   │   ├── diff.rs          ExecutionResult × ExecutionResult → StateDiff
-│   │   ├── interpret.rs     bytes → named fields → economic meaning (protocol-aware)
+│   │   ├── interpret.rs     bytes → named fields → position economics (protocol-aware)
+│   │   ├── impact.rs        corpus-wide economic aggregation    (protocol-aware)
+│   │   ├── money.rs         integer-only fixed-point USD
 │   │   ├── report.rs        text and JSON rendering
 │   │   └── main.rs          the `eplyx` CLI
 │   └── tests/
@@ -242,6 +282,96 @@ boundary is where a protocol adapter would plug in later.
 
 ---
 
+## Economic impact aggregation
+
+The diff engine answers *did behaviour change?* The impact layer answers *how
+much does that change matter?*
+
+### What a position is worth
+
+Every value is normalised to micro-USD by one integer function, so an asset with
+different decimals needs no new code path:
+
+```text
+value_micro_usd = amount * price_micro_usd / 10^decimals
+```
+
+The inputs are read straight out of account state rather than duplicated into
+the fixture - `collateral_amount`, `debt_amount` and `collateral_price` are
+already on the position. Only the asset metadata (decimals, and the debt asset's
+USD peg) is added, as protocol-level constants in the shared interface crate.
+
+```text
+boundary-position-017
+  collateral   99.5 SOL  @ $100.000000   ->  $9,950.00
+  debt         $7,930.00 (USD-pegged)    ->  $7,930.00
+  net                                        $2,020.00
+```
+
+### Integer arithmetic, end to end
+
+`Usd` and `SignedUsd` are fixed-point integers with six decimal places. There is
+no `From<f64>`, no `as f64`, and no path that leaves the integer domain: past
+2^53 micro-USD a double can no longer represent every value, and a report that
+silently rounded there would be wrong in a way nobody would notice.
+
+JSON encodes them as decimal **strings** (`"6182370.000000"`), not numbers - a
+JSON number would be parsed as a double by most consumers, reintroducing exactly
+the loss the types exist to prevent. A test enforces that no `f64` appears
+anywhere in the valuation or reporting path, and the compute-unit percentage is
+carried as integer basis points for the same reason.
+
+### What counts as affected
+
+A position's capital counts as affected when the fixture shows **any
+non-compute difference**.
+
+Compute-only changes never count. Every recompilation moves compute units -
+including on all 89 fixtures whose state is byte-identical - so letting compute
+mark capital as affected would report the entire corpus as economically
+impacted, which would be false.
+
+```text
+V1 100,000 CU -> V2 105,000 CU, state identical   affected: no
+V1 withdraw succeeds -> V2 withdraw reverts       affected: yes
+V1 liquidatable=false -> V2 liquidatable=true     affected: yes
+```
+
+Each affected position is tagged with the consequences actually observed,
+derived from the diff rather than from parsing scenario text:
+
+| Consequence | Meaning |
+| --- | --- |
+| `newly_liquidatable` | healthy under V1, liquidatable under V2 |
+| `no_longer_liquidatable` | the reverse |
+| `transaction_now_reverts` | succeeded under V1, reverts under V2 |
+| `transaction_now_succeeds` | rejected under V1, succeeds under V2 |
+| `value_changed` | balances or fields differ, no threshold crossed |
+
+### What is *not* being claimed
+
+There is no `capital_at_risk` field, and the reporting layer never uses the
+phrase. The engine has not proven that any real capital is at risk, and the
+vocabulary is deliberately factual:
+
+- **"collateral represented"** - the value the corpus covers.
+- **"affected collateral"** - collateral belonging to positions whose behaviour
+  changed. Not a loss estimate; most of these positions merely shift a health
+  factor by a few thousandths.
+- **"newly liquidatable collateral"** - collateral in positions that are healthy
+  under V1 and liquidatable under V2. This is the narrowest and strongest claim
+  the engine makes, and it is still a claim about the synthetic corpus.
+
+This phase does not touch mainnet. Nothing here says anything about deployed
+capital, because the corpus is not derived from deployed state. Making that
+possible is a later phase, and it is what would turn "affected collateral in the
+corpus" into "affected collateral in production".
+
+Aggregates are computed from the **baseline** valuation - the position as the
+corpus holds it before the transaction runs, valued with the reference
+arithmetic rather than either candidate build, so the seeded regression cannot
+influence the figures that measure it.
+
 ## What the engine compares
 
 | Signal | Source | Severity |
@@ -253,6 +383,7 @@ boundary is where a protocol adapter would plug in later.
 | CPI sequence | structured inner instructions, not log scraping | high |
 | Raw account bytes | fallback when an account does not decode | warning |
 | Compute units | VM metering | separate axis (see below) |
+| Position value | decoded position + asset metadata | economic layer, not severity |
 
 **Compute is deliberately kept off the pass/fail axis.** Every recompilation
 moves compute units - all 141 fixtures differ here, including the 89 whose state
@@ -318,6 +449,43 @@ cargo run -p eplyx-engine -- list --category withdraw-boundary
 and every difference - which is the beginning of the "executable evidence"
 property the product is aiming at.
 
+### JSON shape
+
+```json
+{
+  "economics": {
+    "positions_valued": 141,
+    "total_collateral_value_usd": "6182370.000000",
+    "total_debt_value_usd": "2531638.086646",
+    "total_net_value_usd": "3650731.913354",
+    "affected":           { "positions": 52, "collateral_value_usd": "444570.000000", "debt_value_usd": "318298.086646" },
+    "critical":           { "positions": 11, "collateral_value_usd": "109650.000000", "debt_value_usd": "85410.000000" },
+    "newly_liquidatable": { "positions": 4,  "collateral_value_usd": "39800.000000",  "debt_value_usd": "31780.000000" },
+    "by_consequence": { "newly_liquidatable": { "positions": 4, "...": "..." } }
+  },
+  "fixture_economics": [
+    {
+      "fixture_id": "boundary-position-017",
+      "baseline": {
+        "collateral_amount": 99500000000,
+        "collateral_decimals": 9,
+        "collateral_price_usd": "100.000000",
+        "collateral_value_usd": "9950.000000",
+        "debt_value_usd": "7930.000000",
+        "net_value_usd": "2020.000000",
+        "liquidatable": false
+      },
+      "affected": true,
+      "critical": true,
+      "consequences": ["newly_liquidatable"]
+    }
+  ]
+}
+```
+
+The report round-trips through `serde_json` exactly, which is asserted by a test:
+the schema is a contract, not merely something that happens to serialise.
+
 Optional JSON contract check (requires Node ≥ 22.6; no dependencies to install):
 
 ```bash
@@ -332,11 +500,11 @@ pnpm install && pnpm verify:report
 make test
 ```
 
-- **15 unit tests**: 3 in the shared interface crate, 12 in the engine (corpus,
-  diff, interpreter, hex codec).
+- **33 unit tests**: 5 in the shared interface crate, 28 in the engine (corpus,
+  diff, interpreter, impact aggregation, fixed-point money, hex codec).
 - **7 program tests per build flavour**, run twice (V1 and V2) - these assert
   the seeded regression exists and is confined to fractional collateral.
-- **18 end-to-end differential tests** that execute real bytecode.
+- **28 end-to-end differential tests** that execute real bytecode.
 
 The end-to-end suite covers the seven properties this phase had to demonstrate:
 
@@ -355,6 +523,23 @@ The end-to-end suite covers the seven properties this phase had to demonstrate:
 6. `repeated_execution_of_a_fixture_is_bit_identical`.
 7. `the_text_report_names_the_fixture_and_the_changed_fields` and
    `the_json_report_is_valid_and_carries_the_findings`.
+
+The economic layer adds its own:
+
+8. `no_floating_point_in_the_valuation_or_reporting_path` scans the non-test,
+   non-comment source of every module that touches a value and fails on `f64`.
+9. `aggregates_equal_the_sum_of_their_member_positions` recomputes every total
+   from the per-position records, so a summary cannot drift from its members.
+10. `compute_only_and_unchanged_positions_contribute_no_affected_capital`
+    pins the definition of "affected" against all 89 unaffected fixtures -
+    every one of which *does* differ on compute.
+11. `newly_liquidatable_capital_is_counted_from_the_expected_positions` asserts
+    the exact fixture set and the exact dollar figures.
+12. `the_json_report_round_trips` deserialises the report back into itself.
+
+`ts/check-report.ts` independently recomputes the aggregates in TypeScript using
+`BigInt`, so the totals are verified by an implementation that shares no code
+with the engine.
 
 The expected numbers are derived from the arithmetic documented in `corpus.rs`,
 not recorded from a previous run. A change that shifted them fails the suite
@@ -430,6 +615,22 @@ These are real and deliberate for Phase 1.
 - `LendingError::MathOverflow` is **unreachable** for u64 inputs once widened to
   u128; the `checked_mul` calls are defensive. A test asserts this so the claim
   stays honest if a type is ever narrowed.
+
+**Economic aggregation**
+
+- Every figure describes the **synthetic corpus only**. Nothing here measures
+  deployed capital, and no field claims to.
+- Valuation uses a single static price per market. There is no oracle
+  uncertainty, no price path, no slippage, and no liquidation-penalty modelling,
+  so "affected collateral" is a measure of exposure, not of expected loss.
+- The debt asset is USD-pegged at exactly $1.00, so debt valuation is currently
+  an identity. It is routed through the same normalisation as collateral so that
+  a non-pegged asset would need no new code path, but that path is untested
+  against a real second price.
+- `newly_liquidatable` is measured from the *post-execution* liquidation flag.
+  A position whose liquidation *eligibility* changed without its stored flag
+  flipping is reported under `transaction_now_succeeds` instead - a distinction
+  worth understanding before quoting either number.
 
 **Reporting**
 
