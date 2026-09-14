@@ -47,10 +47,10 @@ function check(condition: boolean, message: string): void {
   if (!condition) failures.push(message);
 }
 
-console.log("running: ripcord compare --format json");
+console.log("running: eplyx compare --format json");
 const raw = execFileSync(
   "cargo",
-  ["run", "-q", "-p", "ripcord-engine", "--", "compare", "--format", "json"],
+  ["run", "-q", "-p", "eplyx-engine", "--", "compare", "--format", "json"],
   { cwd: repoRoot, encoding: "utf8", maxBuffer: 256 * 1024 * 1024 },
 );
 

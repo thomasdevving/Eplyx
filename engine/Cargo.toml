@@ -1,12 +1,12 @@
 [package]
-name = "ripcord-engine"
+name = "eplyx-engine"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
 description = "Deterministic differential execution and impact analysis for Solana program upgrades."
 
 [[bin]]
-name = "ripcord"
+name = "eplyx"
 path = "src/main.rs"
 
 [dependencies]

@@ -341,7 +341,7 @@ pub fn render_text(report: &Report) -> String {
     out
 }
 
-/// Detailed single-fixture view, used by `ripcord reproduce`.
+/// Detailed single-fixture view, used by `eplyx reproduce`.
 pub fn render_reproduction(diff: &StateDiff) -> String {
     let mut out = String::new();
     out.push_str(&format!("FIXTURE  {}\n", diff.fixture_id));

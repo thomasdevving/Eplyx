@@ -104,7 +104,7 @@ impl Category {
 /// to replay against both program versions.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Fixture {
-    /// Stable identifier. Reports and `ripcord reproduce` key off this.
+    /// Stable identifier. Reports and `eplyx reproduce` key off this.
     pub id: String,
     pub category: Category,
     /// Human-readable description of the action being replayed.
