@@ -96,7 +96,7 @@ pub fn variant(base: &Fixture, collateral: u64, debt: u64) -> Option<Fixture> {
             }
             "vault" => {
                 // The vault custodies exactly the collateral plus its own rent.
-                account.account.lamports = vault_floor.saturating_add(collateral);
+                account.account.lamports = vault_floor.checked_add(collateral)?;
             }
             _ => {}
         }
@@ -174,6 +174,10 @@ pub fn minimize(
     v2: &ProgramVersion,
     config: ShrinkConfig,
 ) -> Result<Option<MinimizedCase>> {
+    anyhow::ensure!(
+        config.collateral_granularity > 0 && config.debt_granularity > 0,
+        "minimization granularity must be positive"
+    );
     let Some(original) = read_position(base) else {
         return Ok(None);
     };

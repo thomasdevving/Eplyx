@@ -245,11 +245,13 @@ bytecode diff. It only appears when the new code executes against that state.
                       └───────────────┘
 ```
 
-The layering is the point. `executor`, `diff`, `money` and `report` know nothing
-about lending; they deal in accounts, bytes, balances, compute and USD.
-Everything that understands what a *health factor* or a *position* is lives in
-`corpus`, `interpret` and `impact`. That boundary is where a protocol adapter
-would plug in later.
+Execution loads bytecode without calling lending business logic. The adapter
+boundary is currently a module convention, not a formal trait: `executor`
+resolves lending error names, `diff` calls `interpret` for decoded fields and
+liquidation transitions, and reporting renders those findings. `money` remains
+protocol independent. Corpus construction, interpretation, impact, clustering
+and shrinking contain the lending-specific rules. Generic protocol support
+would require extracting this interpretation seam.
 
 ### Repository layout
 
@@ -440,7 +442,7 @@ did, the tool would be testing a host build rather than the deployable artefact.
 
 Eleven critical findings are not eleven bugs. The clustering layer groups
 findings that share a trigger, states the conditions they have in common, and
-shrinks one of them into the smallest example that still reproduces.
+shrinks one of them into a smaller witness that still reproduces.
 
 ### Grouping
 
@@ -462,7 +464,8 @@ value-changed--withdraw-collateral    2 fixtures              withdraw_collatera
 ```
 
 IDs are short where the consequence is unambiguous and qualified with the action
-only where that would otherwise collide, so they stay typeable.
+where that would otherwise collide; distinct field/transition classes sharing an
+action receive deterministic numeric suffixes. IDs are stable for the same corpus.
 
 ### Common conditions
 

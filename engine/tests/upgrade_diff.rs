@@ -1145,3 +1145,67 @@ fn the_json_report_carries_clusters_and_round_trips_with_minimized_cases() {
     let restored: Report = serde_json::from_str(&json).expect("deserialisable");
     assert_eq!(&restored, report);
 }
+
+#[test]
+fn audit_account_metadata_changes_are_not_silent() {
+    let fixture = corpus::generate(&eplyx_engine::fixture_program_id()).remove(0);
+    let original = diff_for(&fixture.id).v1.clone();
+    let mut altered = original.clone();
+    let account = altered.accounts.values_mut().next().unwrap();
+    account.owner = "11111111111111111111111111111111".into();
+    account.executable = !account.executable;
+    let diff = eplyx_engine::diff::compare(&fixture, original, altered);
+    assert!(!diff.outcome_differences().is_empty());
+}
+
+#[test]
+fn audit_cluster_ids_are_unique_for_same_action_different_fields() {
+    let mut fixtures = corpus::generate(&eplyx_engine::fixture_program_id());
+    fixtures.truncate(2);
+    let diffs: Vec<_> = fixtures
+        .iter()
+        .enumerate()
+        .map(|(index, fixture)| {
+            let mut diff = diff_for(&fixture.id).clone();
+            diff.differences = vec![Difference::FieldChanged {
+                account: "position".into(),
+                field: format!("field_{index}"),
+                v1: "0".into(),
+                v2: "1".into(),
+                delta: Some(1),
+                consequence: None,
+            }];
+            diff
+        })
+        .collect();
+    let economics = eplyx_engine::impact::evaluate_all(&fixtures, &diffs);
+    let clusters = eplyx_engine::cluster::build(&fixtures, &diffs, &economics);
+    assert_eq!(clusters.len(), 2);
+    assert_ne!(clusters[0].id, clusters[1].id);
+}
+
+#[test]
+fn audit_zero_granularity_is_rejected() {
+    let program_id = eplyx_engine::fixture_program_id();
+    let fixture = corpus::generate(&program_id).remove(0);
+    let diff = diff_for(&fixture.id);
+    let economics = eplyx_engine::impact::evaluate(&fixture, diff).unwrap();
+    let target = eplyx_engine::cluster::signature(&fixture, diff, &economics);
+    let (v1, v2) = eplyx_engine::load_versions(
+        &eplyx_engine::default_artifact("v1"),
+        &eplyx_engine::default_artifact("v2"),
+    )
+    .unwrap();
+    assert!(eplyx_engine::shrink::minimize(
+        &fixture,
+        target,
+        &program_id,
+        &v1,
+        &v2,
+        eplyx_engine::shrink::ShrinkConfig {
+            collateral_granularity: 0,
+            ..Default::default()
+        }
+    )
+    .is_err());
+}

@@ -46,7 +46,7 @@ fn parse_decimal(text: &str) -> Result<(bool, u128), String> {
         Some(rest) => (true, rest),
         None => (false, text.strip_prefix('+').unwrap_or(text)),
     };
-    if digits.is_empty() {
+    if digits.is_empty() || !digits.bytes().any(|b| b.is_ascii_digit()) {
         return Err("empty amount".to_string());
     }
     let (whole, fraction) = match digits.split_once('.') {
@@ -61,6 +61,9 @@ fn parse_decimal(text: &str) -> Result<(bool, u128), String> {
     let parse = |part: &str| -> Result<u128, String> {
         if part.is_empty() {
             return Ok(0);
+        }
+        if !part.bytes().all(|b| b.is_ascii_digit()) {
+            return Err(format!("invalid amount {text:?}"));
         }
         part.parse::<u128>()
             .map_err(|e| format!("invalid amount {text:?}: {e}"))
@@ -81,7 +84,7 @@ fn render_decimal(micro: u128) -> String {
 
 /// Round micro-USD to cents, half up, without leaving the integer domain.
 fn to_cents(micro: u128) -> u128 {
-    (micro + 5_000) / 10_000
+    micro / 10_000 + u128::from(micro % 10_000 >= 5_000)
 }
 
 /// A non-negative USD amount, in micro-USD.
@@ -113,9 +116,24 @@ impl Usd {
         self.0.checked_sub(other.0).map(Usd)
     }
 
-    /// Difference as a signed value; never underflows.
+    /// Checked signed difference, including values above i128::MAX.
+    pub fn checked_signed_sub(self, other: Usd) -> Option<SignedUsd> {
+        if self.0 >= other.0 {
+            i128::try_from(self.0 - other.0).ok().map(SignedUsd)
+        } else {
+            let magnitude = other.0 - self.0;
+            if magnitude == i128::MIN.unsigned_abs() {
+                Some(SignedUsd(i128::MIN))
+            } else {
+                i128::try_from(magnitude).ok().map(|v| SignedUsd(-v))
+            }
+        }
+    }
+
+    /// Fails explicitly if the difference cannot be represented; never wraps.
     pub fn signed_sub(self, other: Usd) -> SignedUsd {
-        SignedUsd(self.0 as i128 - other.0 as i128)
+        self.checked_signed_sub(other)
+            .expect("USD signed difference overflows")
     }
 
     pub fn is_zero(self) -> bool {
@@ -210,6 +228,9 @@ impl SignedUsd {
 
     pub fn parse(text: &str) -> Result<Self, String> {
         let (negative, micro) = parse_decimal(text)?;
+        if negative && micro == i128::MIN.unsigned_abs() {
+            return Ok(SignedUsd(i128::MIN));
+        }
         let magnitude = i128::try_from(micro).map_err(|_| format!("{text:?} overflows"))?;
         Ok(SignedUsd(if negative { -magnitude } else { magnitude }))
     }
@@ -250,6 +271,20 @@ impl<'de> Deserialize<'de> for SignedUsd {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn integer_boundaries_and_malformed_decimals() {
+        let max = Usd::from_micro(u128::MAX);
+        assert_eq!(Usd::parse(&max.to_plain_string()).unwrap(), max);
+        assert!(!max.format_dollars().is_empty());
+        assert_eq!(max.signed_sub(Usd::from_micro(u128::MAX - 1)).micro(), 1);
+        assert!(max.checked_signed_sub(Usd::ZERO).is_none());
+        let min = SignedUsd::from_micro(i128::MIN);
+        assert_eq!(SignedUsd::parse(&min.to_plain_string()).unwrap(), min);
+        for invalid in [".", "-.", "1.+2", "++1", "1.-2"] {
+            assert!(Usd::parse(invalid).is_err(), "{invalid}");
+        }
+    }
 
     #[test]
     fn renders_full_precision_for_json() {
