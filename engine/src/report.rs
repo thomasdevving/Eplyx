@@ -8,6 +8,7 @@ use std::collections::BTreeMap;
 
 use serde::{Deserialize, Serialize};
 
+use crate::cluster::{self, RegressionCluster};
 use crate::diff::{Classification, Difference, Severity, StateDiff};
 use crate::impact::{
     evaluate_all, summarize, EconomicConsequence, EconomicImpactSummary, FixtureEconomics,
@@ -62,6 +63,11 @@ pub struct Report {
     pub economics: EconomicImpactSummary,
     /// Per-position economic detail, parallel to `diffs` and matched by ID.
     pub fixture_economics: Vec<FixtureEconomics>,
+    /// Findings grouped by shared trigger, with common conditions and a
+    /// representative example. Minimized counterexamples are filled in by
+    /// `crate::minimize_clusters`, which needs to execute and so cannot run
+    /// during construction.
+    pub clusters: Vec<RegressionCluster>,
     pub diffs: Vec<StateDiff>,
 }
 
@@ -138,6 +144,7 @@ impl Report {
 
         let fixture_economics = evaluate_all(fixtures, &diffs);
         let economics = summarize(&fixture_economics);
+        let clusters = cluster::build(fixtures, &diffs, &fixture_economics);
 
         Self {
             program_id,
@@ -146,8 +153,18 @@ impl Report {
             summary,
             economics,
             fixture_economics,
+            clusters,
             diffs,
         }
+    }
+
+    pub fn cluster(&self, id: &str) -> Option<&RegressionCluster> {
+        let id = id.strip_prefix("regression-group:").unwrap_or(id);
+        self.clusters.iter().find(|c| c.id == id)
+    }
+
+    pub fn diff_for(&self, fixture_id: &str) -> Option<&StateDiff> {
+        self.diffs.iter().find(|d| d.fixture_id == fixture_id)
     }
 
     pub fn economics_for(&self, fixture_id: &str) -> Option<&FixtureEconomics> {
@@ -299,6 +316,180 @@ fn render_capital_row(label: &str, group: &crate::impact::CapitalGroup) -> Strin
     )
 }
 
+/// One cluster, compact enough for a CI log.
+fn render_cluster(index: usize, cluster: &RegressionCluster) -> String {
+    let mut out = String::new();
+    out.push_str(&format!(
+        "{}. {:<38} {}\n",
+        index + 1,
+        cluster.id,
+        if cluster.critical { "[CRITICAL]" } else { "" }
+    ));
+    out.push_str(&format!("   action:         {}\n", cluster.action));
+
+    let shown: Vec<&str> = cluster
+        .fixture_ids
+        .iter()
+        .take(3)
+        .map(String::as_str)
+        .collect();
+    let remainder = cluster.fixture_count().saturating_sub(shown.len());
+    out.push_str(&format!(
+        "   fixtures:       {}  ({}{})\n",
+        cluster.fixture_count(),
+        shown.join(", "),
+        if remainder > 0 {
+            format!(", +{remainder} more")
+        } else {
+            String::new()
+        }
+    ));
+    out.push_str(&format!(
+        "   capital:        collateral {}   debt {}\n",
+        cluster.collateral_value_usd.format_dollars(),
+        cluster.debt_value_usd.format_dollars()
+    ));
+
+    out.push_str("   common conditions:\n");
+    for condition in &cluster.common_conditions {
+        out.push_str(&format!("     {} = {}\n", condition.field, condition.value));
+    }
+    for range in cluster.informative_ranges() {
+        if range.min == range.max {
+            out.push_str(&format!("     {} = {}\n", range.field, range.min_display));
+        } else {
+            out.push_str(&format!(
+                "     {} in {} .. {}\n",
+                range.field, range.min_display, range.max_display
+            ));
+        }
+    }
+
+    out.push_str(&format!(
+        "   representative: {}\n",
+        cluster.representative_fixture_id
+    ));
+
+    if let Some(case) = &cluster.minimized_counterexample {
+        out.push_str(&format!(
+            "   minimized counterexample ({} reductions in {} probes):\n",
+            case.reductions, case.probes
+        ));
+        out.push_str(&format!(
+            "     collateral: {} ({})\n",
+            case.collateral_display,
+            case.collateral_value_usd.format_dollars()
+        ));
+        out.push_str(&format!("     debt:       {}\n", case.debt_display));
+        out.push_str(&format!(
+            "     V1: {}, health {}, liquidatable {}\n",
+            case.v1_outcome, case.v1_health, case.v1_liquidatable
+        ));
+        out.push_str(&format!(
+            "     V2: {}, health {}, liquidatable {}\n",
+            case.v2_outcome, case.v2_health, case.v2_liquidatable
+        ));
+    }
+    out
+}
+
+/// Full detail for one cluster, used by `eplyx reproduce <cluster-id>`.
+pub fn render_cluster_reproduction(report: &Report, cluster: &RegressionCluster) -> String {
+    let mut out = String::new();
+    out.push_str(&format!("REGRESSION GROUP  {}\n", cluster.id));
+    out.push_str(&format!("{}\n\n", "=".repeat(70)));
+    out.push_str(&format!(
+        "consequences:   {}\n",
+        cluster
+            .consequences
+            .iter()
+            .map(|c| c.as_str())
+            .collect::<Vec<_>>()
+            .join(", ")
+    ));
+    out.push_str(&format!("action:         {}\n", cluster.action));
+    out.push_str(&format!(
+        "difference kinds: {}\n",
+        cluster.difference_kinds.join(", ")
+    ));
+    out.push_str(&format!("critical:       {}\n\n", cluster.critical));
+
+    out.push_str(&format!(
+        "Affected fixtures ({}):\n",
+        cluster.fixture_count()
+    ));
+    for id in &cluster.fixture_ids {
+        out.push_str(&format!("  {id}\n"));
+    }
+
+    out.push_str("\nCommon conditions:\n");
+    for condition in &cluster.common_conditions {
+        out.push_str(&format!("  {} = {}\n", condition.field, condition.value));
+    }
+
+    out.push_str("\nParameter ranges across the group:\n");
+    for range in &cluster.ranges {
+        out.push_str(&format!(
+            "  {:<20} {} .. {}{}\n",
+            range.field,
+            range.min_display,
+            range.max_display,
+            if range.informative {
+                ""
+            } else {
+                "   (too wide to be a condition)"
+            }
+        ));
+    }
+
+    out.push_str(&format!(
+        "\nRepresentative fixture:\n  {}\n",
+        cluster.representative_fixture_id
+    ));
+    if let Some(diff) = report.diff_for(&cluster.representative_fixture_id) {
+        out.push_str(&format!("  action: {}\n", diff.scenario));
+        for difference in diff.material_differences() {
+            for line in render_difference(difference) {
+                out.push_str(&format!("  {line}\n"));
+            }
+        }
+    }
+
+    match &cluster.minimized_counterexample {
+        Some(case) => {
+            out.push_str(&format!(
+                "\nMinimized counterexample (from {}, {} reductions in {} probes):\n",
+                case.derived_from, case.reductions, case.probes
+            ));
+            out.push_str(&format!(
+                "  collateral: {} ({})\n",
+                case.collateral_display,
+                case.collateral_value_usd.format_dollars()
+            ));
+            out.push_str(&format!(
+                "  debt:       {} ({})\n",
+                case.debt_display,
+                case.debt_value_usd.format_dollars()
+            ));
+            out.push_str(&format!(
+                "\n  V1: {}\n      health {}, liquidatable {}\n",
+                case.v1_outcome, case.v1_health, case.v1_liquidatable
+            ));
+            out.push_str(&format!(
+                "  V2: {}\n      health {}, liquidatable {}\n",
+                case.v2_outcome, case.v2_health, case.v2_liquidatable
+            ));
+            out.push_str(
+                "\n  This is a witness, not a proof of minimality: the search is\n                   greedy, bounded, and varies only collateral and debt.\n",
+            );
+        }
+        None => {
+            out.push_str("\nNo minimized counterexample: no configured simplification preserved\nthe regression class.\n");
+        }
+    }
+    out
+}
+
 pub fn render_text(report: &Report) -> String {
     let s = &report.summary;
     let e = &report.economics;
@@ -403,6 +594,18 @@ pub fn render_text(report: &Report) -> String {
             c.changed,
             c.critical
         ));
+    }
+
+    if !report.clusters.is_empty() {
+        out.push_str(&format!(
+            "\n\nREGRESSION CLUSTERS  ({})\n{}\n\n",
+            report.clusters.len(),
+            "-".repeat(70)
+        ));
+        for (index, cluster) in report.clusters.iter().enumerate() {
+            out.push_str(&render_cluster(index, cluster));
+            out.push('\n');
+        }
     }
 
     let critical = report.critical();

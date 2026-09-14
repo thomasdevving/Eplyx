@@ -29,7 +29,8 @@ enum Command {
     Compare(CompareArgs),
     /// Write the generated fixture corpus to disk as JSON.
     Generate(GenerateArgs),
-    /// Replay a single fixture and print a detailed side-by-side view.
+    /// Replay a single fixture, or a regression group and its minimized
+    /// counterexample, and print a detailed side-by-side view.
     Reproduce(ReproduceArgs),
     /// List the fixtures in the corpus.
     List(ListArgs),
@@ -63,6 +64,9 @@ struct CompareArgs {
     /// Exit non-zero when critical regressions are found (for CI gates).
     #[arg(long)]
     fail_on_critical: bool,
+    /// Skip counterexample minimization, which re-executes candidate states.
+    #[arg(long)]
+    no_minimize: bool,
 }
 
 #[derive(Parser)]
@@ -74,12 +78,16 @@ struct GenerateArgs {
 
 #[derive(Parser)]
 struct ReproduceArgs {
-    /// Fixture ID, e.g. boundary-position-017.
-    fixture: String,
+    /// Fixture ID (e.g. boundary-position-017) or regression group ID
+    /// (e.g. newly-liquidatable, or regression-group:newly-liquidatable).
+    target: String,
     #[arg(long)]
     v1: Option<PathBuf>,
     #[arg(long)]
     v2: Option<PathBuf>,
+    /// Skip minimization when reproducing a regression group.
+    #[arg(long)]
+    no_minimize: bool,
 }
 
 #[derive(Parser)]
@@ -144,13 +152,23 @@ fn compare(args: CompareArgs) -> Result<ExitCode> {
     let (v1, v2) = load_versions(&v1_path, &v2_path)?;
 
     let diffs = compare_all(&fixtures, &program_id, &v1, &v2)?;
-    let report = Report::new(
+    let mut report = Report::new(
         program_id.to_string(),
         v1_path.display().to_string(),
         v2_path.display().to_string(),
         &fixtures,
         diffs,
     );
+    if !args.no_minimize {
+        eplyx_engine::minimize_clusters(
+            &mut report,
+            &fixtures,
+            &program_id,
+            &v1,
+            &v2,
+            eplyx_engine::shrink::ShrinkConfig::default(),
+        )?;
+    }
 
     let rendered = match args.format {
         Format::Text => render_text(&report),
@@ -206,18 +224,66 @@ fn generate(args: GenerateArgs) -> Result<ExitCode> {
 fn reproduce(args: ReproduceArgs) -> Result<ExitCode> {
     let program_id = fixture_program_id();
     let fixtures = corpus::generate(&program_id);
-    let fixture = fixtures
-        .iter()
-        .find(|f| f.id == args.fixture)
-        .ok_or_else(|| anyhow!("no fixture with id {:?}", args.fixture))?;
-
     let v1_path = args.v1.unwrap_or_else(|| default_artifact("v1"));
     let v2_path = args.v2.unwrap_or_else(|| default_artifact("v2"));
     let (v1, v2) = load_versions(&v1_path, &v2_path)?;
 
-    let diff = eplyx_engine::compare_fixture(fixture, &program_id, &v1, &v2)?;
-    println!("{}", eplyx_engine::report::render_reproduction(&diff));
-    Ok(ExitCode::SUCCESS)
+    let target = args
+        .target
+        .strip_prefix("regression-group:")
+        .unwrap_or(&args.target)
+        .to_string();
+
+    // A single fixture needs two executions; a regression group needs the whole
+    // corpus, so try the cheap resolution first.
+    if let Some(fixture) = fixtures.iter().find(|f| f.id == target) {
+        let diff = eplyx_engine::compare_fixture(fixture, &program_id, &v1, &v2)?;
+        println!("{}", eplyx_engine::report::render_reproduction(&diff));
+        return Ok(ExitCode::SUCCESS);
+    }
+
+    let diffs = compare_all(&fixtures, &program_id, &v1, &v2)?;
+    let mut report = Report::new(
+        program_id.to_string(),
+        v1_path.display().to_string(),
+        v2_path.display().to_string(),
+        &fixtures,
+        diffs,
+    );
+    if !args.no_minimize {
+        eplyx_engine::minimize_clusters(
+            &mut report,
+            &fixtures,
+            &program_id,
+            &v1,
+            &v2,
+            eplyx_engine::shrink::ShrinkConfig::default(),
+        )?;
+    }
+
+    match report.cluster(&target) {
+        Some(cluster) => {
+            println!(
+                "{}",
+                eplyx_engine::report::render_cluster_reproduction(&report, cluster)
+            );
+            Ok(ExitCode::SUCCESS)
+        }
+        None => Err(anyhow!(
+            "no fixture or regression group {target:?}\n\navailable regression groups:\n{}",
+            report
+                .clusters
+                .iter()
+                .map(|c| format!(
+                    "  {:<34} {} fixtures{}",
+                    c.id,
+                    c.fixture_count(),
+                    if c.critical { "  [CRITICAL]" } else { "" }
+                ))
+                .collect::<Vec<_>>()
+                .join("\n")
+        )),
+    }
 }
 
 fn list(args: ListArgs) -> Result<ExitCode> {

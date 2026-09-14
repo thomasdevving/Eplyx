@@ -143,6 +143,20 @@ impl Difference {
     pub fn is_compute_only(&self) -> bool {
         matches!(self, Difference::ComputeChanged { .. })
     }
+
+    /// Stable tag identifying the shape of the difference. Matches the `kind`
+    /// discriminator in the JSON schema.
+    pub fn kind(&self) -> &'static str {
+        match self {
+            Difference::SuccessChanged { .. } => "success_changed",
+            Difference::LiquidationStatusChanged { .. } => "liquidation_status_changed",
+            Difference::FieldChanged { .. } => "field_changed",
+            Difference::RawDataChanged { .. } => "raw_data_changed",
+            Difference::BalanceChanged { .. } => "balance_changed",
+            Difference::CpiChanged { .. } => "cpi_changed",
+            Difference::ComputeChanged { .. } => "compute_changed",
+        }
+    }
 }
 
 /// Headline bucket for a fixture.

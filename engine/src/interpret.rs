@@ -214,6 +214,25 @@ pub fn economics(position: &Position) -> PositionEconomics {
     }
 }
 
+/// Name of the instruction an encoded payload invokes.
+///
+/// Borsh encodes an enum as a leading u8 discriminant, so the first byte of the
+/// instruction data identifies the action without decoding the whole payload.
+pub fn instruction_name(data: &[u8]) -> &'static str {
+    match data.first() {
+        Some(0) => "initialize_market",
+        Some(1) => "create_position",
+        Some(2) => "deposit_collateral",
+        Some(3) => "borrow",
+        Some(4) => "repay",
+        Some(5) => "withdraw_collateral",
+        Some(6) => "liquidate",
+        Some(7) => "refresh_position",
+        Some(8) => "set_price",
+        _ => "unknown",
+    }
+}
+
 /// Decode a position out of raw account data, if it is one.
 pub fn position_economics(data: &[u8]) -> Option<PositionEconomics> {
     match decode(data) {
@@ -322,6 +341,28 @@ mod tests {
         assert!(economics.net_value_usd.is_negative());
         assert_eq!(economics.net_value_usd.to_plain_string(), "-150.000000");
         assert!(economics.liquidatable);
+    }
+
+    #[test]
+    fn instruction_names_match_the_wire_encoding() {
+        use fixture_lending_interface::LendingInstruction;
+        let cases = [
+            (LendingInstruction::RefreshPosition, "refresh_position"),
+            (
+                LendingInstruction::WithdrawCollateral { amount: 1 },
+                "withdraw_collateral",
+            ),
+            (
+                LendingInstruction::Liquidate { repay_amount: 1 },
+                "liquidate",
+            ),
+            (LendingInstruction::Borrow { amount: 1 }, "borrow"),
+        ];
+        for (instruction, expected) in cases {
+            let encoded = borsh::to_vec(&instruction).unwrap();
+            assert_eq!(instruction_name(&encoded), expected);
+        }
+        assert_eq!(instruction_name(&[]), "unknown");
     }
 
     #[test]

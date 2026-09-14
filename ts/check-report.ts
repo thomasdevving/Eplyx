@@ -64,6 +64,45 @@ type FixtureEconomics = {
   consequences: string[];
 };
 
+type NumericRange = {
+  field: string;
+  metric: string;
+  min: number;
+  max: number;
+  min_display: string;
+  max_display: string;
+  informative: boolean;
+};
+
+type MinimizedCase = {
+  derived_from: string;
+  collateral_lamports: number;
+  debt_micro_usd: number;
+  collateral_value_usd: UsdString;
+  debt_value_usd: UsdString;
+  v1_liquidatable: boolean;
+  v2_liquidatable: boolean;
+  v1_outcome: string;
+  v2_outcome: string;
+  probes: number;
+  reductions: number;
+};
+
+type RegressionCluster = {
+  id: string;
+  consequences: string[];
+  action: string;
+  difference_kinds: string[];
+  critical: boolean;
+  fixture_ids: string[];
+  collateral_value_usd: UsdString;
+  debt_value_usd: UsdString;
+  common_conditions: Array<{ field: string; value: string }>;
+  ranges: NumericRange[];
+  representative_fixture_id: string;
+  minimized_counterexample: MinimizedCase | null;
+};
+
 type Report = {
   program_id: string;
   v1_artifact: string;
@@ -82,6 +121,7 @@ type Report = {
   };
   economics: Economics;
   fixture_economics: FixtureEconomics[];
+  clusters: RegressionCluster[];
   diffs: Diff[];
 };
 
@@ -240,6 +280,80 @@ if (flagship) {
   check(flip?.v1 === false && flip?.v2 === true, "flagship flip direction is wrong");
 }
 
+// ---- regression clustering contract ---------------------------------------
+
+const clusters = report.clusters;
+check(Array.isArray(clusters) && clusters.length > 0, "clusters missing");
+
+if (Array.isArray(clusters)) {
+  const ids = new Set<string>();
+  const clustered: string[] = [];
+
+  for (const cluster of clusters) {
+    check(!ids.has(cluster.id), `duplicate cluster id: ${cluster.id}`);
+    ids.add(cluster.id);
+
+    check(cluster.fixture_ids.length > 0, `${cluster.id}: empty cluster`);
+    check(
+      cluster.fixture_ids.includes(cluster.representative_fixture_id),
+      `${cluster.id}: representative is not a member`,
+    );
+    check(cluster.consequences.length > 0, `${cluster.id}: no consequence`);
+    check(
+      typeof cluster.collateral_value_usd === "string",
+      `${cluster.id}: collateral must be a decimal string`,
+    );
+
+    // Cluster capital must equal the sum of its members, recomputed here.
+    const memberTotal = cluster.fixture_ids.reduce((total, id) => {
+      const entry = report.fixture_economics.find((e) => e.fixture_id === id);
+      return entry === undefined ? total : total + toMicroUsd(entry.baseline.collateral_value_usd);
+    }, 0n);
+    check(
+      memberTotal === toMicroUsd(cluster.collateral_value_usd),
+      `${cluster.id}: collateral does not equal the sum of its members`,
+    );
+
+    for (const range of cluster.ranges) {
+      check(range.min <= range.max, `${cluster.id}: range ${range.field} is inverted`);
+    }
+
+    // Minimization only runs for critical clusters, and only when enabled.
+    const minimized = cluster.minimized_counterexample;
+    if (minimized !== null && minimized !== undefined) {
+      check(cluster.critical, `${cluster.id}: non-critical cluster was minimized`);
+      check(
+        minimized.derived_from === cluster.representative_fixture_id,
+        `${cluster.id}: minimized case derived from a non-representative fixture`,
+      );
+      check(minimized.reductions > 0, `${cluster.id}: minimized case reduced nothing`);
+      check(
+        minimized.probes >= minimized.reductions,
+        `${cluster.id}: fewer probes than reductions`,
+      );
+      check(
+        typeof minimized.collateral_value_usd === "string",
+        `${cluster.id}: minimized values must be decimal strings`,
+      );
+    }
+
+    clustered.push(...cluster.fixture_ids);
+  }
+
+  // Clusters must partition the changed fixtures: no overlap, no omission.
+  check(
+    new Set(clustered).size === clustered.length,
+    "a fixture appears in more than one cluster",
+  );
+  check(
+    clustered.length === summary.changed,
+    `clusters cover ${clustered.length} fixtures but ${summary.changed} changed`,
+  );
+
+  const criticalClusters = clusters.filter((c) => c.critical);
+  check(criticalClusters.length > 0, "expected at least one critical cluster");
+}
+
 for (const diff of report.diffs) {
   check(typeof diff.fixture_id === "string" && diff.fixture_id.length > 0, "diff without an id");
   for (const difference of diff.differences) {
@@ -270,5 +384,14 @@ console.log(
     `  debt represented:       ${formatUsd(econ.total_debt_value_usd)}`,
     `  affected collateral:    ${formatUsd(econ.affected.collateral_value_usd)} across ${econ.affected.positions} positions`,
     `  newly liquidatable:     ${formatUsd(econ.newly_liquidatable.collateral_value_usd)} across ${econ.newly_liquidatable.positions} positions`,
+    "",
+    `  regression clusters:    ${clusters.length} (${clusters.filter((c) => c.critical).length} critical)`,
+    ...clusters.map(
+      (c) =>
+        `    ${c.id.padEnd(34)} ${String(c.fixture_ids.length).padStart(3)} fixtures` +
+        (c.minimized_counterexample
+          ? `  minimized in ${c.minimized_counterexample.probes} probes`
+          : ""),
+    ),
   ].join("\n"),
 );

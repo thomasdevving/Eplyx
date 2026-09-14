@@ -776,3 +776,372 @@ fn the_json_report_round_trips() {
     let restored: eplyx_engine::Report = serde_json::from_str(&json).expect("deserialisable");
     assert_eq!(&restored, report());
 }
+
+// ---------------------------------------------------------------------------
+// Phase 3: regression clustering and counterexample minimization
+// ---------------------------------------------------------------------------
+
+use eplyx_engine::cluster::{self, RegressionCluster};
+use eplyx_engine::shrink;
+
+fn cluster_by_id(id: &str) -> &'static RegressionCluster {
+    report()
+        .cluster(id)
+        .unwrap_or_else(|| panic!("no regression cluster {id}"))
+}
+
+/// Minimization re-executes candidate states, so it is computed once and shared.
+fn minimized_report() -> &'static Report {
+    static REPORT: OnceLock<Report> = OnceLock::new();
+    REPORT.get_or_init(|| {
+        eplyx_engine::compare_default_corpus_minimized()
+            .expect("minimized corpus run; build programs first")
+    })
+}
+
+#[test]
+fn clusters_partition_the_changed_fixtures_exactly() {
+    let clusters = &report().clusters;
+    let mut ids: Vec<&str> = clusters
+        .iter()
+        .flat_map(|c| c.fixture_ids.iter().map(String::as_str))
+        .collect();
+    let total = ids.len();
+    ids.sort_unstable();
+    ids.dedup();
+    assert_eq!(total, ids.len(), "a fixture appears in two clusters");
+    assert_eq!(
+        total,
+        report().summary.changed,
+        "clusters do not cover every changed fixture"
+    );
+    assert_eq!(clusters.len(), 5, "expected 5 clusters");
+}
+
+#[test]
+fn fixtures_sharing_a_consequence_and_action_cluster_together() {
+    let newly = cluster_by_id("newly-liquidatable");
+    assert_eq!(
+        newly.fixture_ids,
+        vec![
+            "boundary-position-017",
+            "boundary-position-018",
+            "boundary-position-019",
+            "boundary-position-020",
+        ]
+    );
+    assert_eq!(newly.action, "refresh_position");
+    assert!(newly.critical);
+
+    // The 39 fixtures whose health factor merely shifts are one group, and it
+    // does not absorb the four that cross the threshold.
+    let shifted = cluster_by_id("value-changed--refresh-position");
+    assert_eq!(shifted.fixture_count(), 39);
+    assert!(!shifted.critical);
+    for id in &newly.fixture_ids {
+        assert!(
+            !shifted.fixture_ids.contains(id),
+            "{id} is in both the threshold-crossing and value-shift clusters"
+        );
+    }
+}
+
+#[test]
+fn unrelated_regression_classes_stay_separate() {
+    let reverts = cluster_by_id("transaction-now-reverts");
+    let succeeds = cluster_by_id("transaction-now-succeeds");
+
+    assert_eq!(reverts.action, "withdraw_collateral");
+    assert_eq!(succeeds.action, "liquidate");
+    assert_eq!(reverts.fixture_count(), 4);
+    assert_eq!(succeeds.fixture_count(), 3);
+    assert_ne!(reverts.consequences, succeeds.consequences);
+
+    // Both are critical; severity alone must not have merged them.
+    assert!(reverts.critical && succeeds.critical);
+
+    // Two clusters share the `value_changed` consequence but differ by action,
+    // and are therefore qualified rather than merged.
+    assert!(report()
+        .cluster("value-changed--withdraw-collateral")
+        .is_some());
+    assert!(report().cluster("value-changed").is_none());
+}
+
+#[test]
+fn ranges_describe_the_trigger_and_wide_ones_are_not_promoted() {
+    let newly = cluster_by_id("newly-liquidatable");
+    let range = |field: &str| {
+        newly
+            .ranges
+            .iter()
+            .find(|r| r.field == field)
+            .unwrap_or_else(|| panic!("no range for {field}"))
+    };
+
+    let debt = range("debt");
+    assert_eq!(debt.min, 7_930_000_000);
+    assert_eq!(debt.max, 7_960_000_000);
+    assert_eq!(debt.min_display, "$7,930.00");
+    assert_eq!(debt.max_display, "$7,960.00");
+    assert!(debt.informative);
+
+    let collateral = range("collateral");
+    assert_eq!(collateral.min, collateral.max);
+    assert_eq!(collateral.min_display, "99.500000000 SOL");
+
+    let health = range("health_factor_v1");
+    assert_eq!(health.min_display, "1.000000");
+    assert_eq!(health.max_display, "1.003783");
+    assert!(health.informative);
+
+    let health_v2 = range("health_factor_v2");
+    assert_eq!(health_v2.max_display, "0.998738");
+
+    // The 39-fixture group spans the corpus, so its numeric spans must not be
+    // presented as a trigger condition.
+    let shifted = cluster_by_id("value-changed--refresh-position");
+    let debt = shifted.ranges.iter().find(|r| r.field == "debt").unwrap();
+    assert!(
+        !debt.informative,
+        "a $2.5k-$8k debt span describes the corpus, not a trigger"
+    );
+    assert!(shifted.informative_ranges().iter().all(|r| r.min == r.max));
+}
+
+#[test]
+fn representative_selection_is_deterministic_and_derived_from_data() {
+    let program_id = eplyx_engine::fixture_program_id();
+    let fixtures = corpus::generate(&program_id);
+    let first = cluster::build(&fixtures, &report().diffs, &report().fixture_economics);
+    let second = cluster::build(&fixtures, &report().diffs, &report().fixture_economics);
+    assert_eq!(first, second, "clustering is not deterministic");
+
+    // The chosen representative must carry the smallest economic magnitude in
+    // its group, since no member has extra edge properties.
+    for cluster in &first {
+        let representative = report()
+            .economics_for(&cluster.representative_fixture_id)
+            .expect("representative economics");
+        let smallest = cluster
+            .fixture_ids
+            .iter()
+            .filter_map(|id| report().economics_for(id))
+            .map(|e| e.baseline.collateral_value_usd.micro() + e.baseline.debt_value_usd.micro())
+            .min()
+            .expect("non-empty cluster");
+        let chosen = representative.baseline.collateral_value_usd.micro()
+            + representative.baseline.debt_value_usd.micro();
+        assert_eq!(
+            chosen, smallest,
+            "{}: representative {} is not the smallest example",
+            cluster.id, cluster.representative_fixture_id
+        );
+    }
+
+    assert_eq!(
+        cluster_by_id("newly-liquidatable").representative_fixture_id,
+        "boundary-position-017"
+    );
+}
+
+#[test]
+fn every_critical_cluster_produces_a_smaller_counterexample() {
+    let report = minimized_report();
+    let critical: Vec<&RegressionCluster> = report.clusters.iter().filter(|c| c.critical).collect();
+    assert_eq!(critical.len(), 3);
+
+    for cluster in critical {
+        let case = cluster
+            .minimized_counterexample
+            .as_ref()
+            .unwrap_or_else(|| panic!("{}: no minimized counterexample", cluster.id));
+        let original = report
+            .economics_for(&cluster.representative_fixture_id)
+            .expect("representative economics");
+
+        assert_eq!(case.derived_from, cluster.representative_fixture_id);
+        assert!(case.reductions > 0, "{}: nothing was reduced", cluster.id);
+        assert!(
+            case.collateral_lamports < original.baseline.collateral_amount
+                || case.debt_micro_usd < original.baseline.debt_amount,
+            "{}: minimized case is not smaller",
+            cluster.id
+        );
+        assert!(case.probes >= case.reductions);
+    }
+}
+
+/// The core safety property of the shrinker: a minimized case must reproduce
+/// *the same* regression, not merely some regression.
+#[test]
+fn minimized_cases_preserve_the_exact_regression_class() {
+    let report = minimized_report();
+    let program_id = eplyx_engine::fixture_program_id();
+    let fixtures = corpus::generate(&program_id);
+    let (v1, v2) = eplyx_engine::load_versions(
+        &eplyx_engine::default_artifact("v1"),
+        &eplyx_engine::default_artifact("v2"),
+    )
+    .expect("artefacts");
+
+    for cluster in report.clusters.iter().filter(|c| c.critical) {
+        let case = cluster.minimized_counterexample.as_ref().expect("case");
+        let base = fixtures
+            .iter()
+            .find(|f| f.id == cluster.representative_fixture_id)
+            .expect("representative fixture");
+
+        // Signature of the original finding.
+        let original_diff = report.diff_for(&base.id).expect("diff");
+        let original_economics =
+            eplyx_engine::impact::evaluate(base, original_diff).expect("economics");
+        let target = cluster::signature(base, original_diff, &original_economics);
+
+        // Signature of the minimized case, recomputed from a fresh execution.
+        let candidate =
+            shrink::variant(base, case.collateral_lamports, case.debt_micro_usd).expect("variant");
+        let candidate_diff =
+            eplyx_engine::compare_fixture(&candidate, &program_id, &v1, &v2).expect("execute");
+        let candidate_economics =
+            eplyx_engine::impact::evaluate(&candidate, &candidate_diff).expect("economics");
+
+        assert_eq!(
+            cluster::signature(&candidate, &candidate_diff, &candidate_economics),
+            target,
+            "{}: minimized case drifted into a different regression class",
+            cluster.id
+        );
+        assert_eq!(
+            candidate_economics.consequences, cluster.consequences,
+            "{}: minimized case has different economic consequences",
+            cluster.id
+        );
+
+        // And the reported observations match what a fresh run produces.
+        assert_eq!(
+            candidate_diff.v1.success,
+            !case.v1_outcome.starts_with("reverted")
+        );
+        assert_eq!(
+            candidate_diff.v2.success,
+            !case.v2_outcome.starts_with("reverted")
+        );
+    }
+}
+
+#[test]
+fn reproducing_a_minimized_case_is_deterministic() {
+    let report = minimized_report();
+    let program_id = eplyx_engine::fixture_program_id();
+    let fixtures = corpus::generate(&program_id);
+    let (v1, v2) = eplyx_engine::load_versions(
+        &eplyx_engine::default_artifact("v1"),
+        &eplyx_engine::default_artifact("v2"),
+    )
+    .expect("artefacts");
+
+    let cluster = report.cluster("newly-liquidatable").expect("cluster");
+    let case = cluster.minimized_counterexample.as_ref().expect("case");
+    let base = fixtures
+        .iter()
+        .find(|f| f.id == cluster.representative_fixture_id)
+        .expect("fixture");
+
+    let candidate = shrink::variant(base, case.collateral_lamports, case.debt_micro_usd).unwrap();
+    let first = eplyx_engine::compare_fixture(&candidate, &program_id, &v1, &v2).unwrap();
+    let second = eplyx_engine::compare_fixture(&candidate, &program_id, &v1, &v2).unwrap();
+    assert_eq!(first, second);
+
+    // And the search itself is reproducible: re-running it from the same
+    // starting fixture lands on exactly the same case.
+    let original_diff = report.diff_for(&base.id).expect("diff");
+    let original_economics =
+        eplyx_engine::impact::evaluate(base, original_diff).expect("economics");
+    let target = cluster::signature(base, original_diff, &original_economics);
+    let again = shrink::minimize(
+        base,
+        target,
+        &program_id,
+        &v1,
+        &v2,
+        shrink::ShrinkConfig::default(),
+    )
+    .expect("minimize");
+    assert_eq!(
+        again.as_ref(),
+        cluster.minimized_counterexample.as_ref(),
+        "minimization is not deterministic"
+    );
+}
+
+#[test]
+fn the_cluster_section_renders_and_reproduction_resolves_by_group_id() {
+    let report = minimized_report();
+    let rendered = report::render_text(report);
+    assert!(rendered.contains("REGRESSION CLUSTERS"));
+    assert!(rendered.contains("newly-liquidatable"));
+    assert!(rendered.contains("common conditions:"));
+    assert!(rendered.contains("minimized counterexample"));
+
+    let cluster = report.cluster("newly-liquidatable").expect("cluster");
+    let detail = report::render_cluster_reproduction(report, cluster);
+    assert!(detail.contains("REGRESSION GROUP  newly-liquidatable"));
+    assert!(detail.contains("boundary-position-017"));
+    assert!(detail.contains("Minimized counterexample"));
+    assert!(detail.contains("witness, not a proof of minimality"));
+
+    // The `regression-group:` prefix resolves to the same cluster.
+    assert_eq!(
+        report
+            .cluster("regression-group:newly-liquidatable")
+            .map(|c| &c.id),
+        Some(&cluster.id)
+    );
+}
+
+#[test]
+fn clustering_does_not_disturb_the_economic_totals() {
+    // Phase 3 explains existing findings; it must not redefine them.
+    let plain = report();
+    let minimized = minimized_report();
+    assert_eq!(plain.economics, minimized.economics);
+    assert_eq!(plain.summary, minimized.summary);
+    assert_eq!(
+        plain.economics.total_collateral_value_usd,
+        Usd::from_micro(6_182_370_000_000)
+    );
+    assert_eq!(plain.economics.newly_liquidatable.positions, 4);
+    assert_eq!(plain.summary.critical, 11);
+}
+
+#[test]
+fn the_json_report_carries_clusters_and_round_trips_with_minimized_cases() {
+    let report = minimized_report();
+    let json = report.to_json().expect("serialisable");
+    let parsed: serde_json::Value = serde_json::from_str(&json).expect("valid JSON");
+
+    let clusters = parsed["clusters"].as_array().expect("clusters array");
+    assert_eq!(clusters.len(), 5);
+
+    let newly = clusters
+        .iter()
+        .find(|c| c["id"] == "newly-liquidatable")
+        .expect("newly-liquidatable cluster");
+    assert_eq!(newly["critical"], true);
+    assert_eq!(newly["fixture_ids"].as_array().unwrap().len(), 4);
+    assert_eq!(newly["representative_fixture_id"], "boundary-position-017");
+    // Monetary values remain decimal strings.
+    assert_eq!(newly["collateral_value_usd"], "39800.000000");
+    assert_eq!(newly["debt_value_usd"], "31780.000000");
+
+    let case = &newly["minimized_counterexample"];
+    assert!(case.is_object(), "minimized counterexample missing");
+    assert_eq!(case["derived_from"], "boundary-position-017");
+    assert!(case["collateral_value_usd"].is_string());
+    assert_eq!(case["v1_liquidatable"], false);
+    assert_eq!(case["v2_liquidatable"], true);
+
+    let restored: Report = serde_json::from_str(&json).expect("deserialisable");
+    assert_eq!(&restored, report);
+}
