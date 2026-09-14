@@ -11,9 +11,11 @@
 
 use borsh::BorshDeserialize;
 use fixture_lending_interface::{
-    reference, Market, Position, ACCOUNT_TAG_MARKET, ACCOUNT_TAG_POSITION, HEALTH_INFINITE,
-    HEALTH_SCALE, MARKET_LEN, POSITION_LEN,
+    reference, Market, Position, ACCOUNT_TAG_MARKET, ACCOUNT_TAG_POSITION, COLLATERAL_DECIMALS,
+    DEBT_DECIMALS, DEBT_PRICE_MICRO_USD, HEALTH_INFINITE, HEALTH_SCALE, MARKET_LEN, POSITION_LEN,
 };
+
+use crate::money::{SignedUsd, Usd};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Decoded {
@@ -146,30 +148,77 @@ pub fn fields(decoded: &Decoded) -> Vec<(&'static str, FieldValue)> {
     }
 }
 
-/// A human- and machine-readable economic summary of a position.
+/// The economic view of a single position.
+///
+/// The raw inputs are read straight out of the position account rather than
+/// duplicated into the fixture: `collateral_amount`, `debt_amount` and
+/// `collateral_price` are already part of the on-chain state, and the decimal
+/// exponents and the debt peg are protocol-level constants in the shared
+/// interface crate. Only the *derived* values are new.
+///
+/// Every value here is computed with integer arithmetic. See [`crate::money`].
 #[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct PositionEconomics {
-    pub collateral_lamports: u64,
-    pub collateral_sol: String,
-    pub collateral_value_usd: String,
-    pub debt_usd: String,
+    // --- inputs, as they appear in account state ---
+    pub collateral_amount: u64,
+    pub collateral_decimals: u8,
+    pub collateral_price_usd: Usd,
+    pub debt_amount: u64,
+    pub debt_decimals: u8,
+    pub debt_price_usd: Usd,
+
+    // --- normalised values ---
+    pub collateral_value_usd: Usd,
+    pub debt_value_usd: Usd,
+    /// Collateral minus debt. Negative when the position is underwater.
+    pub net_value_usd: SignedUsd,
+
+    // --- risk ---
     pub health_factor: u64,
     pub health_display: String,
     pub liquidatable: bool,
+
+    // --- presentation ---
+    pub collateral_display: String,
 }
 
 pub fn economics(position: &Position) -> PositionEconomics {
+    let collateral_value = Usd::from_micro(reference::value_micro_usd(
+        position.collateral_amount,
+        COLLATERAL_DECIMALS,
+        position.collateral_price,
+    ));
+    let debt_value = Usd::from_micro(reference::value_micro_usd(
+        position.debt_amount,
+        DEBT_DECIMALS,
+        DEBT_PRICE_MICRO_USD,
+    ));
+
     PositionEconomics {
-        collateral_lamports: position.collateral_amount,
-        collateral_sol: format_sol(position.collateral_amount),
-        collateral_value_usd: format_usd_u128(reference::collateral_value(
-            position.collateral_amount,
-            position.collateral_price,
-        )),
-        debt_usd: format_usd(position.debt_amount),
+        collateral_amount: position.collateral_amount,
+        collateral_decimals: COLLATERAL_DECIMALS,
+        collateral_price_usd: Usd::from_micro(position.collateral_price as u128),
+        debt_amount: position.debt_amount,
+        debt_decimals: DEBT_DECIMALS,
+        debt_price_usd: Usd::from_micro(DEBT_PRICE_MICRO_USD as u128),
+
+        collateral_value_usd: collateral_value,
+        debt_value_usd: debt_value,
+        net_value_usd: collateral_value.signed_sub(debt_value),
+
         health_factor: position.health_factor,
         health_display: format_health(position.health_factor),
         liquidatable: is_liquidatable(position.health_factor),
+
+        collateral_display: format!("{} SOL", format_sol(position.collateral_amount)),
+    }
+}
+
+/// Decode a position out of raw account data, if it is one.
+pub fn position_economics(data: &[u8]) -> Option<PositionEconomics> {
+    match decode(data) {
+        Decoded::Position(position) => Some(economics(&position)),
+        _ => None,
     }
 }
 
@@ -221,6 +270,58 @@ mod tests {
     fn liquidation_threshold_is_exactly_one() {
         assert!(!is_liquidatable(HEALTH_SCALE));
         assert!(is_liquidatable(HEALTH_SCALE - 1));
+    }
+
+    #[test]
+    fn valuation_uses_account_state_and_protocol_constants() {
+        // 99.5 SOL at $100.00 against $7,930.00 of debt.
+        let position = Position {
+            tag: ACCOUNT_TAG_POSITION,
+            version: 1,
+            owner: [1u8; 32],
+            market: [2u8; 32],
+            collateral_amount: 99_500_000_000,
+            debt_amount: 7_930_000_000,
+            collateral_price: 100_000_000,
+            liquidation_threshold_bps: 8_000,
+            max_ltv_bps: 7_500,
+            health_factor: 1_003_783,
+            last_update_slot: 0,
+        };
+        let economics = economics(&position);
+
+        assert_eq!(
+            economics.collateral_value_usd,
+            Usd::from_micro(9_950_000_000)
+        );
+        assert_eq!(economics.collateral_value_usd.format_dollars(), "$9,950.00");
+        assert_eq!(economics.debt_value_usd, Usd::from_micro(7_930_000_000));
+        assert_eq!(economics.debt_value_usd.format_dollars(), "$7,930.00");
+        assert_eq!(economics.net_value_usd.format_dollars(), "$2,020.00");
+        assert_eq!(economics.collateral_decimals, COLLATERAL_DECIMALS);
+        assert_eq!(economics.debt_decimals, DEBT_DECIMALS);
+        assert!(!economics.liquidatable);
+    }
+
+    #[test]
+    fn an_underwater_position_has_negative_net_value() {
+        let position = Position {
+            tag: ACCOUNT_TAG_POSITION,
+            version: 1,
+            owner: [1u8; 32],
+            market: [2u8; 32],
+            collateral_amount: 1_000_000_000, // 1 SOL = $100
+            debt_amount: 250_000_000,         // $250
+            collateral_price: 100_000_000,
+            liquidation_threshold_bps: 8_000,
+            max_ltv_bps: 7_500,
+            health_factor: 320_000,
+            last_update_slot: 0,
+        };
+        let economics = economics(&position);
+        assert!(economics.net_value_usd.is_negative());
+        assert_eq!(economics.net_value_usd.to_plain_string(), "-150.000000");
+        assert!(economics.liquidatable);
     }
 
     #[test]

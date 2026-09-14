@@ -35,13 +35,20 @@ impl Severity {
 
 /// Compute deltas below this magnitude are background noise: any recompilation
 /// moves compute a little, and a few hundred CU on a 200k budget changes
-/// nothing operationally.
-pub const COMPUTE_NOISE_PCT: f64 = 5.0;
+/// nothing operationally. Basis points: 500 = 5%.
+pub const COMPUTE_NOISE_BPS: i32 = 500;
 
 /// Above this, a compute change is an operational risk in its own right - the
 /// transaction may still succeed in isolation while becoming fragile inside a
-/// larger transaction or under a tighter budget.
-pub const COMPUTE_REGRESSION_PCT: f64 = 30.0;
+/// larger transaction or under a tighter budget. Basis points: 3000 = 30%.
+pub const COMPUTE_REGRESSION_BPS: i32 = 3_000;
+
+/// Render basis points as a signed percentage: `-523` becomes `-5.23%`.
+pub fn format_bps(bps: i32) -> String {
+    let sign = if bps < 0 { "-" } else { "+" };
+    let magnitude = bps.unsigned_abs();
+    format!("{sign}{}.{:02}%", magnitude / 100, magnitude % 100)
+}
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
@@ -67,7 +74,12 @@ pub enum Difference {
         field: String,
         v1: String,
         v2: String,
-        delta: Option<i128>,
+        /// i64 rather than i128: `Difference` is an internally-tagged enum, and
+        /// serde buffers those through a representation with no 128-bit integer
+        /// variant, so an i128 here would serialise but refuse to deserialise.
+        /// The JSON shape is unchanged, and no account field in reach of this
+        /// engine produces a delta outside i64.
+        delta: Option<i64>,
         consequence: Option<String>,
     },
     /// An account changed but could not be decoded; reported as raw bytes.
@@ -82,7 +94,9 @@ pub enum Difference {
         account: String,
         v1: u64,
         v2: u64,
-        delta: i128,
+        /// See the note on `FieldChanged::delta`. A lamport delta is bounded by
+        /// total supply, far inside i64.
+        delta: i64,
     },
     /// The cross-program invocation sequence differs.
     CpiChanged { v1: Vec<String>, v2: Vec<String> },
@@ -90,7 +104,12 @@ pub enum Difference {
         v1: u64,
         v2: u64,
         delta: i64,
-        pct: f64,
+        /// Relative change in basis points (100 = 1%).
+        ///
+        /// Integer rather than a float so the report is exactly reproducible and
+        /// survives a JSON round trip: an `f64` here did not, which is the same
+        /// class of silent loss the monetary types exist to avoid.
+        pct_bps: i32,
     },
 }
 
@@ -108,11 +127,11 @@ impl Difference {
                 _ => Severity::Warning,
             },
             Difference::RawDataChanged { .. } => Severity::Warning,
-            Difference::ComputeChanged { pct, .. } => {
-                let magnitude = pct.abs();
-                if magnitude < COMPUTE_NOISE_PCT {
+            Difference::ComputeChanged { pct_bps, .. } => {
+                let magnitude = pct_bps.abs();
+                if magnitude < COMPUTE_NOISE_BPS {
                     Severity::Info
-                } else if magnitude < COMPUTE_REGRESSION_PCT {
+                } else if magnitude < COMPUTE_REGRESSION_BPS {
                     Severity::Warning
                 } else {
                     Severity::High
@@ -178,9 +197,11 @@ impl StateDiff {
             .max()
     }
 
-    pub fn compute_delta(&self) -> Option<(u64, u64, f64)> {
+    pub fn compute_delta(&self) -> Option<(u64, u64, i32)> {
         self.differences.iter().find_map(|d| match d {
-            Difference::ComputeChanged { v1, v2, pct, .. } => Some((*v1, *v2, *pct)),
+            Difference::ComputeChanged {
+                v1, v2, pct_bps, ..
+            } => Some((*v1, *v2, *pct_bps)),
             _ => None,
         })
     }
@@ -257,7 +278,7 @@ pub fn compare(fixture: &Fixture, v1: ExecutionResult, v2: ExecutionResult) -> S
                 account: label.clone(),
                 v1: before.lamports,
                 v2: after.lamports,
-                delta: after.lamports as i128 - before.lamports as i128,
+                delta: (after.lamports as i128 - before.lamports as i128) as i64,
             });
         }
 
@@ -290,7 +311,7 @@ pub fn compare(fixture: &Fixture, v1: ExecutionResult, v2: ExecutionResult) -> S
                 continue;
             }
             let delta = match (value_before.numeric(), value_after.numeric()) {
-                (Some(a), Some(b)) => Some(b - a),
+                (Some(a), Some(b)) => i64::try_from(b - a).ok(),
                 _ => None,
             };
             differences.push(Difference::FieldChanged {
@@ -338,16 +359,17 @@ pub fn compare(fixture: &Fixture, v1: ExecutionResult, v2: ExecutionResult) -> S
 
     if let (Some(a), Some(b)) = (v1.compute_units, v2.compute_units) {
         if a != b {
-            let pct = if a == 0 {
-                100.0
+            // Integer basis points: (b - a) / a, scaled by 10_000.
+            let pct_bps = if a == 0 {
+                10_000
             } else {
-                (b as f64 - a as f64) / a as f64 * 100.0
+                (((b as i128 - a as i128) * 10_000) / a as i128) as i32
             };
             differences.push(Difference::ComputeChanged {
                 v1: a,
                 v2: b,
                 delta: b as i64 - a as i64,
-                pct,
+                pct_bps,
             });
         }
     }
@@ -380,7 +402,7 @@ mod tests {
             v1: 10_000,
             v2: 10_100,
             delta: 100,
-            pct: 1.0,
+            pct_bps: 100,
         };
         assert_eq!(difference.severity(), Severity::Info);
     }
@@ -391,7 +413,7 @@ mod tests {
             v1: 140_000,
             v2: 240_000,
             delta: 100_000,
-            pct: 71.4,
+            pct_bps: 7_140,
         };
         assert_eq!(difference.severity(), Severity::High);
     }
@@ -417,7 +439,7 @@ mod tests {
                 v1: 4205,
                 v2: 3968,
                 delta: -237,
-                pct: -5.64,
+                pct_bps: -564,
             }],
             v1: execution(4205),
             v2: execution(3968),

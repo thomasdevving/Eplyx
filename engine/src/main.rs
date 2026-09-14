@@ -148,6 +148,7 @@ fn compare(args: CompareArgs) -> Result<ExitCode> {
         program_id.to_string(),
         v1_path.display().to_string(),
         v2_path.display().to_string(),
+        &fixtures,
         diffs,
     );
 

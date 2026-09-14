@@ -11,18 +11,23 @@
 //!   executor   protocol-agnostic: runs one fixture against one program build
 //!   diff       protocol-agnostic: structural comparison of two results
 //!   interpret  protocol-specific: turns byte deltas into economic meaning
+//!   impact     protocol-specific: aggregates economics across the corpus
+//!   money      protocol-agnostic: integer-only fixed-point USD
 //!   report     protocol-agnostic: text / JSON rendering
 //! ```
 //!
-//! `executor`, `diff` and `report` know nothing about lending. Everything that
-//! understands what a health factor *is* lives in `corpus` and `interpret`,
-//! which is the seam a protocol adapter would plug into in a later phase.
+//! `executor`, `diff`, `money` and `report` know nothing about lending.
+//! Everything that understands what a health factor or a position *is* lives in
+//! `corpus`, `interpret` and `impact`, which is the seam a protocol adapter
+//! would plug into in a later phase.
 
 pub mod corpus;
 pub mod diff;
 pub mod executor;
 pub mod hexfmt;
+pub mod impact;
 pub mod interpret;
+pub mod money;
 pub mod report;
 pub mod types;
 
@@ -33,6 +38,8 @@ use solana_address::Address;
 
 pub use diff::{Classification, Difference, Severity, StateDiff};
 pub use executor::{ExecutionResult, ProgramVersion};
+pub use impact::{EconomicConsequence, EconomicImpactSummary, FixtureEconomics};
+pub use money::{SignedUsd, Usd};
 pub use report::Report;
 pub use types::{AccountSnapshot, Category, Fixture, InstructionSpec};
 
@@ -112,6 +119,7 @@ pub fn compare_default_corpus() -> Result<Report> {
         program_id.to_string(),
         v1_path.display().to_string(),
         v2_path.display().to_string(),
+        &fixtures,
         diffs,
     ))
 }
