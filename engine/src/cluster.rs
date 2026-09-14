@@ -120,6 +120,7 @@ struct ClusterKey {
     difference_kinds: Vec<&'static str>,
     changed_fields: Vec<String>,
     outcome_transition: (bool, bool),
+    liquidation_transitions: Vec<(String, bool, bool)>,
 }
 
 fn cluster_key(fixture: &Fixture, diff: &StateDiff, economics: &FixtureEconomics) -> ClusterKey {
@@ -137,6 +138,24 @@ fn cluster_key(fixture: &Fixture, diff: &StateDiff, economics: &FixtureEconomics
         difference_kinds: difference_kinds.into_iter().collect(),
         changed_fields: changed_fields.into_iter().collect(),
         outcome_transition: (diff.v1.success, diff.v2.success),
+        liquidation_transitions: {
+            let mut transitions: Vec<_> = diff
+                .outcome_differences()
+                .into_iter()
+                .filter_map(|d| {
+                    if let Difference::LiquidationStatusChanged {
+                        account, v1, v2, ..
+                    } = d
+                    {
+                        Some((account.clone(), *v1, *v2))
+                    } else {
+                        None
+                    }
+                })
+                .collect();
+            transitions.sort();
+            transitions
+        },
     }
 }
 
@@ -465,6 +484,7 @@ pub fn build(
     }
 
     let mut clusters = Vec::new();
+    let mut used_ids = BTreeMap::<String, usize>::new();
     for (key, mut members) in groups {
         members.sort_by_key(|m| m.fixture.id.clone());
 
@@ -480,6 +500,15 @@ pub fn build(
             base
         };
 
+        // Distinct field/transition signatures can share consequence and action.
+        // BTreeMap traversal gives deterministic suffixes without merging them.
+        let count = used_ids.entry(id.clone()).or_default();
+        *count += 1;
+        let id = if *count == 1 {
+            id
+        } else {
+            format!("{id}--{count}")
+        };
         let (common_conditions, ranges) = conditions_and_ranges(&members);
         let representative = members
             .iter()

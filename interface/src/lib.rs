@@ -135,7 +135,11 @@ pub mod reference {
     /// Integer-only by construction: there is no floating point anywhere in
     /// this path.
     pub fn value_micro_usd(amount: u64, decimals: u8, price_micro_usd: u64) -> u128 {
-        let scale = 10u128.pow(decimals as u32);
+        // A u64*u64 product is below 10^39. Higher decimal exponents
+        // therefore round to zero without constructing an overflowing scale.
+        let Some(scale) = 10u128.checked_pow(decimals as u32) else {
+            return 0;
+        };
         (amount as u128) * (price_micro_usd as u128) / scale
     }
 
@@ -314,5 +318,22 @@ impl LendingError {
             14 => Self::InvalidPrice,
             _ => return None,
         })
+    }
+}
+
+#[cfg(test)]
+mod audit_tests {
+    #[test]
+    fn valuation_handles_all_decimal_exponents() {
+        assert_eq!(
+            super::reference::value_micro_usd(u64::MAX, 0, u64::MAX),
+            u64::MAX as u128 * u64::MAX as u128
+        );
+        for decimals in 39..=255 {
+            assert_eq!(
+                super::reference::value_micro_usd(u64::MAX, decimals, u64::MAX),
+                0
+            );
+        }
     }
 }

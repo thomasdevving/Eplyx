@@ -128,10 +128,10 @@ impl Difference {
             },
             Difference::RawDataChanged { .. } => Severity::Warning,
             Difference::ComputeChanged { pct_bps, .. } => {
-                let magnitude = pct_bps.abs();
-                if magnitude < COMPUTE_NOISE_BPS {
+                let magnitude = pct_bps.unsigned_abs();
+                if magnitude < COMPUTE_NOISE_BPS as u32 {
                     Severity::Info
-                } else if magnitude < COMPUTE_REGRESSION_BPS {
+                } else if magnitude < COMPUTE_REGRESSION_BPS as u32 {
                     Severity::Warning
                 } else {
                     Severity::High
@@ -294,6 +294,31 @@ pub fn compare(fixture: &Fixture, v1: ExecutionResult, v2: ExecutionResult) -> S
                 v2: after.lamports,
                 delta: (after.lamports as i128 - before.lamports as i128) as i64,
             });
+        }
+
+        for (field, a, b) in [
+            ("owner", before.owner.clone(), after.owner.clone()),
+            (
+                "executable",
+                before.executable.to_string(),
+                after.executable.to_string(),
+            ),
+            (
+                "rent_epoch",
+                before.rent_epoch.to_string(),
+                after.rent_epoch.to_string(),
+            ),
+        ] {
+            if a != b {
+                differences.push(Difference::FieldChanged {
+                    account: label.clone(),
+                    field: field.into(),
+                    v1: a,
+                    v2: b,
+                    delta: None,
+                    consequence: None,
+                });
+            }
         }
 
         if before.data == after.data {
