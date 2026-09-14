@@ -15,15 +15,15 @@ programs build:
 
 ## Build both versions and report what changed. The headline command.
 compare: build
-	$(CARGO) run -q -p ripcord-engine -- compare
+	$(CARGO) run -q -p eplyx-engine -- compare
 
 ## Same, as machine-readable JSON for a CI gate.
 report: build
-	$(CARGO) run -q -p ripcord-engine -- compare --format json --out report.json
+	$(CARGO) run -q -p eplyx-engine -- compare --format json --out report.json
 
 ## Regenerate the checked-in fixture corpus.
 fixtures:
-	$(CARGO) run -q -p ripcord-engine -- generate
+	$(CARGO) run -q -p eplyx-engine -- generate
 
 ## Everything: program unit tests plus the differential suite.
 test: build test-programs test-engine

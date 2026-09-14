@@ -11,17 +11,17 @@
 
 use std::sync::OnceLock;
 
+use eplyx_engine::diff::{Classification, Difference, Severity};
+use eplyx_engine::interpret::{decode, Decoded};
+use eplyx_engine::{corpus, report, Report, StateDiff};
 use fixture_lending_interface::reference;
-use ripcord_engine::diff::{Classification, Difference, Severity};
-use ripcord_engine::interpret::{decode, Decoded};
-use ripcord_engine::{corpus, report, Report, StateDiff};
 
 /// The whole corpus is executed once and shared: 141 fixtures x 2 builds is
 /// cheap, but not so cheap that every test should repeat it.
 fn report() -> &'static Report {
     static REPORT: OnceLock<Report> = OnceLock::new();
     REPORT.get_or_init(|| {
-        ripcord_engine::compare_default_corpus().expect(
+        eplyx_engine::compare_default_corpus().expect(
             "could not run the corpus; run ./scripts/build-programs.sh to compile V1 and V2",
         )
     })
@@ -112,8 +112,8 @@ fn v2_disagrees_with_the_reference_somewhere() {
 /// measuring nothing.
 #[test]
 fn the_two_artifacts_differ() {
-    let v1 = std::fs::read(ripcord_engine::default_artifact("v1")).expect("v1 artefact");
-    let v2 = std::fs::read(ripcord_engine::default_artifact("v2")).expect("v2 artefact");
+    let v1 = std::fs::read(eplyx_engine::default_artifact("v1")).expect("v1 artefact");
+    let v2 = std::fs::read(eplyx_engine::default_artifact("v2")).expect("v2 artefact");
     assert_ne!(v1, v2, "V1 and V2 bytecode is identical");
 }
 
@@ -162,7 +162,7 @@ fn v2_accepts_the_same_instruction_encoding_and_layout() {
 /// interface" is a claim about the whole surface rather than one code path.
 #[test]
 fn the_corpus_exercises_the_instruction_surface() {
-    let fixtures = corpus::generate(&ripcord_engine::fixture_program_id());
+    let fixtures = corpus::generate(&eplyx_engine::fixture_program_id());
     let mut seen: Vec<u8> = fixtures
         .iter()
         .map(|f| f.instruction.data[0])
@@ -347,26 +347,26 @@ fn every_critical_finding_is_a_threshold_crossing_or_a_reverted_transaction() {
 
 #[test]
 fn repeated_execution_of_a_fixture_is_bit_identical() {
-    let program_id = ripcord_engine::fixture_program_id();
+    let program_id = eplyx_engine::fixture_program_id();
     let fixtures = corpus::generate(&program_id);
     let fixture = fixtures
         .iter()
         .find(|f| f.id == "boundary-position-017")
         .expect("flagship fixture");
-    let (v1, v2) = ripcord_engine::load_versions(
-        &ripcord_engine::default_artifact("v1"),
-        &ripcord_engine::default_artifact("v2"),
+    let (v1, v2) = eplyx_engine::load_versions(
+        &eplyx_engine::default_artifact("v1"),
+        &eplyx_engine::default_artifact("v2"),
     )
     .expect("artefacts");
 
-    let first = ripcord_engine::compare_fixture(fixture, &program_id, &v1, &v2).unwrap();
-    let second = ripcord_engine::compare_fixture(fixture, &program_id, &v1, &v2).unwrap();
+    let first = eplyx_engine::compare_fixture(fixture, &program_id, &v1, &v2).unwrap();
+    let second = eplyx_engine::compare_fixture(fixture, &program_id, &v1, &v2).unwrap();
     assert_eq!(first, second, "identical inputs produced different results");
 }
 
 #[test]
 fn corpus_generation_is_reproducible() {
-    let program_id = ripcord_engine::fixture_program_id();
+    let program_id = eplyx_engine::fixture_program_id();
     assert_eq!(corpus::generate(&program_id), corpus::generate(&program_id));
 }
 
@@ -423,16 +423,16 @@ fn reproduction_output_shows_both_sides() {
 /// generator is the source of truth. This test keeps them from drifting.
 #[test]
 fn checked_in_fixtures_match_the_generator() {
-    let dir = ripcord_engine::repo_root().join("fixtures/states");
+    let dir = eplyx_engine::repo_root().join("fixtures/states");
     assert!(
         dir.is_dir(),
         "fixtures/states is missing; run `make fixtures`"
     );
-    for fixture in corpus::generate(&ripcord_engine::fixture_program_id()) {
+    for fixture in corpus::generate(&eplyx_engine::fixture_program_id()) {
         let path = dir.join(format!("{}.json", fixture.id));
         let text = std::fs::read_to_string(&path)
             .unwrap_or_else(|e| panic!("reading {}: {e}", path.display()));
-        let on_disk: ripcord_engine::Fixture = serde_json::from_str(&text)
+        let on_disk: eplyx_engine::Fixture = serde_json::from_str(&text)
             .unwrap_or_else(|e| panic!("parsing {}: {e}", path.display()));
         assert_eq!(
             on_disk, fixture,

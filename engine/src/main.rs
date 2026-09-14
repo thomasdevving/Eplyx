@@ -1,18 +1,18 @@
-//! `ripcord` - command line entry point.
+//! `eplyx` - command line entry point.
 
 use std::path::PathBuf;
 use std::process::ExitCode;
 
 use anyhow::{anyhow, Context, Result};
 use clap::{Parser, Subcommand, ValueEnum};
-use ripcord_engine::{
+use eplyx_engine::{
     compare_all, corpus, default_artifact, fixture_program_id, load_versions, report::render_text,
     report::Report, types::Category,
 };
 
 #[derive(Parser)]
 #[command(
-    name = "ripcord",
+    name = "eplyx",
     about = "Deterministic differential execution for Solana program upgrades",
     long_about = "Executes identical transactions against two builds of the same Solana program \
                   over a corpus of account states, and reports what changed solely because the \
@@ -176,7 +176,7 @@ fn generate(args: GenerateArgs) -> Result<ExitCode> {
     let fixtures = corpus::generate(&program_id);
     let out = args
         .out
-        .unwrap_or_else(|| ripcord_engine::repo_root().join("fixtures/states"));
+        .unwrap_or_else(|| eplyx_engine::repo_root().join("fixtures/states"));
     std::fs::create_dir_all(&out).with_context(|| format!("creating {}", out.display()))?;
 
     for fixture in &fixtures {
@@ -214,8 +214,8 @@ fn reproduce(args: ReproduceArgs) -> Result<ExitCode> {
     let v2_path = args.v2.unwrap_or_else(|| default_artifact("v2"));
     let (v1, v2) = load_versions(&v1_path, &v2_path)?;
 
-    let diff = ripcord_engine::compare_fixture(fixture, &program_id, &v1, &v2)?;
-    println!("{}", ripcord_engine::report::render_reproduction(&diff));
+    let diff = eplyx_engine::compare_fixture(fixture, &program_id, &v1, &v2)?;
+    println!("{}", eplyx_engine::report::render_reproduction(&diff));
     Ok(ExitCode::SUCCESS)
 }
 

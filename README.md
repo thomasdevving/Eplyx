@@ -1,11 +1,17 @@
-# Upgrade Impact CI
+# Eplyx
 
-> **Working name.** Branding, naming and final positioning are not decided. The
-> name appears only in the CLI binary and the engine's package name; it is kept
-> out of the program ID, the wire format, the fixture format and every core type
-> so that renaming later is a rename, not a migration.
+Upgrade Impact CI for Solana programs.
 
-A pre-deployment safety system for Solana programs. It answers one question:
+Eplyx deterministically executes the same transactions and account states
+against the current and proposed versions of a Solana program to detect
+state-dependent behavioral and economic regressions before deployment.
+
+> **Working name.** *Eplyx* appears only in the CLI binary and the engine's
+> package name. It is kept out of the program ID, the wire format, the fixture
+> format, the report schema and every core type, so that renaming later stays a
+> rename rather than a migration.
+
+It answers one question:
 
 > **What will actually change for users, positions and capital if this new
 > program version is deployed?**
@@ -219,7 +225,7 @@ boundary is where a protocol adapter would plug in later.
 │   │   ├── diff.rs          ExecutionResult × ExecutionResult → StateDiff
 │   │   ├── interpret.rs     bytes → named fields → economic meaning (protocol-aware)
 │   │   ├── report.rs        text and JSON rendering
-│   │   └── main.rs          the `ripcord` CLI
+│   │   └── main.rs          the `eplyx` CLI
 │   └── tests/
 │       └── upgrade_diff.rs  end-to-end differential suite
 ├── fixtures/
@@ -300,12 +306,12 @@ make fmt lint         # rustfmt and clippy across both workspaces
 Directly:
 
 ```bash
-cargo run -p ripcord-engine -- compare
-cargo run -p ripcord-engine -- compare --format json
-cargo run -p ripcord-engine -- compare --category boundary
-cargo run -p ripcord-engine -- compare --fail-on-critical      # exit 1 for a CI gate
-cargo run -p ripcord-engine -- reproduce boundary-position-017 # full side-by-side
-cargo run -p ripcord-engine -- list --category withdraw-boundary
+cargo run -p eplyx-engine -- compare
+cargo run -p eplyx-engine -- compare --format json
+cargo run -p eplyx-engine -- compare --category boundary
+cargo run -p eplyx-engine -- compare --fail-on-critical      # exit 1 for a CI gate
+cargo run -p eplyx-engine -- reproduce boundary-position-017 # full side-by-side
+cargo run -p eplyx-engine -- list --category withdraw-boundary
 ```
 
 `reproduce` prints both executions in full - decoded position economics, logs

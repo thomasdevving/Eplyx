@@ -1098,6 +1098,31 @@ dependencies = [
 ]
 
 [[package]]
+name = "eplyx-engine"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "borsh",
+ "clap",
+ "fixture-lending-interface",
+ "litesvm",
+ "serde",
+ "serde_json",
+ "solana-account",
+ "solana-address 2.6.1",
+ "solana-clock",
+ "solana-instruction",
+ "solana-instruction-error",
+ "solana-keypair",
+ "solana-message",
+ "solana-rent",
+ "solana-signer",
+ "solana-system-interface",
+ "solana-transaction",
+ "solana-transaction-error",
+]
+
+[[package]]
 name = "equivalent"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1936,31 +1961,6 @@ checksum = "f8dd2a808d456c4a54e300a23e9f5a67e122c3024119acbfd73e3bf664491cb2"
 dependencies = [
  "hmac",
  "subtle",
-]
-
-[[package]]
-name = "ripcord-engine"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "borsh",
- "clap",
- "fixture-lending-interface",
- "litesvm",
- "serde",
- "serde_json",
- "solana-account",
- "solana-address 2.6.1",
- "solana-clock",
- "solana-instruction",
- "solana-instruction-error",
- "solana-keypair",
- "solana-message",
- "solana-rent",
- "solana-signer",
- "solana-system-interface",
- "solana-transaction",
- "solana-transaction-error",
 ]
 
 [[package]]
