@@ -27,6 +27,7 @@ Eplyx reports in two layers, and keeps them distinct:
 | --- | --- | --- |
 | **Behavioural regression** | Did anything change? | fixtures, differences, severity |
 | **Economic impact aggregation** | How much does it matter? | positions, collateral, debt |
+| **Regression clustering** | What triggers it, and what is the smallest example? | groups, conditions, counterexamples |
 
 The first is a statement about code. The second is a statement about capital -
 but only about the capital in this corpus. See
@@ -34,10 +35,11 @@ but only about the capital in this corpus. See
 and is not being claimed.
 
 **Current scope.** Deterministic V1/V2 execution, structured diffing, economic
-interpretation, corpus-wide impact aggregation, and reporting - against a
-synthetic corpus and a purpose-built fixture protocol. No mainnet ingestion, no
-dashboard, no CI integration, no AI, no third-party protocol support. Those are
-later phases.
+interpretation, corpus-wide impact aggregation, regression clustering and
+counterexample minimization - against a synthetic corpus and a purpose-built
+fixture protocol. No mainnet ingestion, no dashboard, no CI integration, no AI,
+no third-party protocol support, no multi-instruction sequences. Those are later
+phases.
 
 ---
 
@@ -231,6 +233,14 @@ bytecode diff. It only appears when the new code executes against that state.
                       └───────┬───────┘   per-position economics → corpus totals
                               ↓            (integer fixed-point USD)
                       ┌───────────────┐
+                      │    cluster    │   protocol-aware
+                      └───────┬───────┘   group by trigger, derive conditions
+                              ↓
+                      ┌───────────────┐   re-executes candidates through
+                      │    shrink     │──▶ the executor above, checking the
+                      └───────┬───────┘   regression signature is preserved
+                              ↓
+                      ┌───────────────┐
                       │    report     │   text / JSON
                       └───────────────┘
 ```
@@ -263,6 +273,8 @@ would plug in later.
 │   │   ├── diff.rs          ExecutionResult × ExecutionResult → StateDiff
 │   │   ├── interpret.rs     bytes → named fields → position economics (protocol-aware)
 │   │   ├── impact.rs        corpus-wide economic aggregation    (protocol-aware)
+│   │   ├── cluster.rs       grouping, conditions, representatives (protocol-aware)
+│   │   ├── shrink.rs        bounded counterexample minimization  (protocol-aware)
 │   │   ├── money.rs         integer-only fixed-point USD
 │   │   ├── report.rs        text and JSON rendering
 │   │   └── main.rs          the `eplyx` CLI
@@ -424,6 +436,122 @@ did, the tool would be testing a host build rather than the deployable artefact.
 
 ---
 
+## Regression clustering and minimization
+
+Eleven critical findings are not eleven bugs. The clustering layer groups
+findings that share a trigger, states the conditions they have in common, and
+shrinks one of them into the smallest example that still reproduces.
+
+### Grouping
+
+Findings are grouped by a signature built from what was actually observed: the
+economic consequences, the instruction, the kinds of difference present, the
+specific account fields that changed, and the success/failure transition.
+
+Severity is deliberately **not** part of the signature. Two unrelated
+regressions that happen to be critical are not the same bug.
+
+The 52 changed fixtures fall into five groups:
+
+```text
+newly-liquidatable                    4 fixtures  [CRITICAL]  refresh_position
+transaction-now-reverts               4 fixtures  [CRITICAL]  withdraw_collateral
+transaction-now-succeeds              3 fixtures  [CRITICAL]  liquidate
+value-changed--refresh-position      39 fixtures              refresh_position
+value-changed--withdraw-collateral    2 fixtures              withdraw_collateral
+```
+
+IDs are short where the consequence is unambiguous and qualified with the action
+only where that would otherwise collide, so they stay typeable.
+
+### Common conditions
+
+For each group, categorical values shared by *every* member are reported exactly,
+and numeric parameters are reduced to ranges:
+
+```text
+1. newly-liquidatable                     [CRITICAL]
+   action:         refresh_position
+   fixtures:       4  (boundary-position-017, boundary-position-018, ...)
+   capital:        collateral $39,800.00   debt $31,780.00
+   common conditions:
+     collateral_asset = SOL
+     fractional_collateral = true
+     v1_liquidatable = false
+     v2_liquidatable = true
+     collateral = 99.500000000 SOL
+     debt in $7,930.00 .. $7,960.00
+     health_factor_v1 in 1.000000 .. 1.003783
+     health_factor_v2 in 0.994974 .. 0.998738
+   representative: boundary-position-017
+```
+
+A range is promoted to a *condition* only when its members sit within 20% of
+each other. The 39-fixture group spans $2,500 to $7,960 of debt, so its ranges
+are recorded in JSON but not presented as a trigger: "debt between $2,500 and
+$7,960" would describe the corpus rather than the bug, which is worse than
+saying nothing.
+
+### Representative selection
+
+Derived from fixture data, never hardcoded, in this order: fewest awkward
+properties (whale-scale, dust-scale, zero-debt, or already failing under V1),
+then smallest economic magnitude, then closest to the decision boundary, then
+fixture ID as a total-order tie-breaker. For the current corpus this picks
+`boundary-position-017`, but only because it carries the smallest debt in its
+group.
+
+### Counterexample minimization
+
+For each critical group, a bounded delta-debugging search shrinks the
+representative fixture while re-executing both builds and checking that the
+regression *signature* still matches.
+
+Collateral and debt are coupled near a threshold - neither can move alone
+without leaving the regression class - so the move set scales both together
+(1/2, then 3/4, then 7/8) before refining each field with a halving descent.
+Each candidate is a self-consistent state: the cached health factor is
+recomputed with the reference arithmetic and the vault balance is adjusted to
+match the collateral it custodies.
+
+```text
+   minimized counterexample (23 reductions in 32 probes):
+     collateral: 0.001000000 SOL ($0.10)
+     debt:       $0.01
+     V1: success, health 8.000000, liquidatable false
+     V2: success, health 0.000000, liquidatable true
+```
+
+The 99.5 SOL position shrinks to 0.001 SOL: under V2 *any* sub-1-SOL collateral
+is valued at zero, so the position is instantly liquidatable while V1 reports it
+eight times over-collateralised.
+
+```bash
+eplyx reproduce newly-liquidatable                  # or regression-group:newly-liquidatable
+```
+
+### What minimization does not prove
+
+- **It is not formal verification.** It is a search over a corpus, not a proof
+  about the program. It finds a witness; it says nothing about states it never
+  tried.
+- **It is not minimal.** The search is greedy and bounded (96 probes per
+  cluster), stops at a configured granularity (0.001 SOL, $0.01), and varies
+  only collateral and debt. A case it cannot shrink further is a local stopping
+  point, not a proven boundary.
+- **It does not shrink instruction parameters.** The `transaction-now-succeeds`
+  group stops at 13 SOL because its liquidation repays a fixed $1,000; below
+  that the repayment exceeds the debt and the transaction fails for an unrelated
+  reason. The shrinker correctly refuses that candidate rather than reporting a
+  different bug as a minimized version of this one.
+- **The conditions describe the corpus, not the program.** "debt in $7,930 ..
+  $7,960" is the span of the fixtures that happened to be generated, not the
+  true mathematical boundary. The boundary is documented separately in
+  `corpus.rs`, where it was derived by hand.
+
+Minimization re-executes candidates, so it adds roughly 20 seconds to a full
+run. `--no-minimize` skips it.
+
 ## Commands
 
 ```bash
@@ -441,7 +569,9 @@ cargo run -p eplyx-engine -- compare
 cargo run -p eplyx-engine -- compare --format json
 cargo run -p eplyx-engine -- compare --category boundary
 cargo run -p eplyx-engine -- compare --fail-on-critical      # exit 1 for a CI gate
-cargo run -p eplyx-engine -- reproduce boundary-position-017 # full side-by-side
+cargo run -p eplyx-engine -- compare --no-minimize              # skip the shrink search
+cargo run -p eplyx-engine -- reproduce boundary-position-017    # one fixture, side by side
+cargo run -p eplyx-engine -- reproduce newly-liquidatable       # a whole regression group
 cargo run -p eplyx-engine -- list --category withdraw-boundary
 ```
 
@@ -500,11 +630,12 @@ pnpm install && pnpm verify:report
 make test
 ```
 
-- **33 unit tests**: 5 in the shared interface crate, 28 in the engine (corpus,
-  diff, interpreter, impact aggregation, fixed-point money, hex codec).
+- **40 unit tests**: 5 in the shared interface crate, 35 in the engine (corpus,
+  diff, interpreter, impact aggregation, clustering, shrinking, fixed-point
+  money, hex codec).
 - **7 program tests per build flavour**, run twice (V1 and V2) - these assert
   the seeded regression exists and is confined to fractional collateral.
-- **28 end-to-end differential tests** that execute real bytecode.
+- **39 end-to-end differential tests** that execute real bytecode.
 
 The end-to-end suite covers the seven properties this phase had to demonstrate:
 
@@ -537,9 +668,22 @@ The economic layer adds its own:
     the exact fixture set and the exact dollar figures.
 12. `the_json_report_round_trips` deserialises the report back into itself.
 
-`ts/check-report.ts` independently recomputes the aggregates in TypeScript using
-`BigInt`, so the totals are verified by an implementation that shares no code
-with the engine.
+Clustering and minimization add:
+
+13. `clusters_partition_the_changed_fixtures_exactly` - no overlap, no omission.
+14. `unrelated_regression_classes_stay_separate` - two critical groups with the
+    same severity must not merge.
+15. `minimized_cases_preserve_the_exact_regression_class` - the core safety
+    property: a minimized case is re-executed from scratch and its signature
+    must equal the original's, so the shrinker cannot wander into a different
+    bug and present it as a minimized version of this one.
+16. `reproducing_a_minimized_case_is_deterministic` - re-running the search from
+    the same fixture lands on exactly the same case.
+
+`ts/check-report.ts` independently recomputes the aggregates and cluster capital
+in TypeScript using `BigInt`, and re-checks that clusters partition the changed
+set - so the totals are verified by an implementation that shares no code with
+the engine.
 
 The expected numbers are derived from the arithmetic documented in `corpus.rs`,
 not recorded from a previous run. A change that shifted them fails the suite
@@ -631,6 +775,18 @@ These are real and deliberate for Phase 1.
   A position whose liquidation *eligibility* changed without its stored flag
   flipping is reported under `transaction_now_succeeds` instead - a distinction
   worth understanding before quoting either number.
+
+**Clustering and minimization**
+
+- Grouping is exact-signature based, so a fixture that differs in one extra
+  field forms its own group. This errs toward over-fragmentation rather than
+  merging unrelated findings, which is the safer failure for a security tool but
+  means group counts can be larger than a human would draw them.
+- Common conditions are computed over group members only. A condition shared by
+  the whole corpus (`collateral_asset = SOL`) is reported even though it
+  discriminates nothing.
+- Minimization varies only collateral and debt, and only for critical clusters.
+  See "What minimization does not prove" above.
 
 **Reporting**
 
