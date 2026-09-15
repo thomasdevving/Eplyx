@@ -36,10 +36,12 @@ and is not being claimed.
 
 **Current scope.** Deterministic V1/V2 execution, structured diffing, economic
 interpretation, corpus-wide impact aggregation, regression clustering and
-counterexample minimization - against a synthetic corpus and a purpose-built
-fixture protocol. No mainnet ingestion, no dashboard, no CI integration, no AI,
-no third-party protocol support, no multi-instruction sequences. Those are later
-phases.
+counterexample minimization against a synthetic corpus, plus standard Solana RPC
+activity ingestion and exact controlled snapshot replay for the purpose-built
+fixture protocol. Historical inputs are normalized and cached; selected records
+replay offline with a V1 fidelity gate. No arbitrary mainnet pre-state
+reconstruction, dashboard, CI integration, AI, third-party decoding or sequence
+search. See [Phase 4](docs/phase-4-replay.md) for supported inputs and limits.
 
 ---
 
@@ -56,10 +58,25 @@ make
 ```
 
 `make` compiles V1 and V2 to SBF bytecode and runs the full corpus through both.
-Nothing else is required: no RPC endpoint, no API key, no network access after
+For this default synthetic comparison, nothing else is required: no RPC endpoint,
+no API key, no network access after
 the toolchain is installed, no database, no container.
 
 ---
+
+## Controlled Solana replay
+
+```bash
+make demo-replay
+```
+
+This starts a temporary local validator, executes real SBF transactions, ingests
+21 interactions via RPC and selects three exact snapshots. It stops the validator,
+then compares V1/V2 offline twice: three exact V1 replays, two newly-liquidatable
+regressions, and one unaffected control. No wallet or public-network funds are
+needed. [Workflow, format, actual results and limitations](docs/phase-4-replay.md).
+
+[Phase 1–3 audit and all 40 requirements](docs/phase-1-3-audit.md).
 
 ## What it found
 
@@ -728,17 +745,19 @@ crate.
 
 ## Known limitations
 
-These are real and deliberate for Phase 1.
+These boundaries apply to the current Phase 1–4 implementation.
 
 **Scope**
 
-- The corpus is **synthetic**. No mainnet state, no historical transaction
-  replay, no archival RPC. Production-state ingestion is a later phase.
+- The default corpus is **synthetic**. A second path ingests real transactions
+  from an isolated local validator and replays controlled pre-state snapshots.
+  Standard public/archive RPC can provide activity, but arbitrary historical
+  account pre-state reconstruction is not implemented.
 - Only the **fixture protocol** is supported. `corpus.rs` and `interpret.rs`
   hardcode its layouts. The adapter seam exists as a module boundary but is not
   yet a trait.
-- No CI integration, dashboard, impact aggregation over capital, counterexample
-  minimisation, or AI-assisted explanation.
+- No CI integration, dashboard, or AI-assisted explanation. Economic aggregation,
+  clustering and synthetic-corpus counterexample minimization are implemented.
 
 **Execution model**
 
@@ -765,8 +784,9 @@ These are real and deliberate for Phase 1.
 
 **Economic aggregation**
 
-- Every figure describes the **synthetic corpus only**. Nothing here measures
-  deployed capital, and no field claims to.
+- Figures describe the selected synthetic positions or controlled replay
+  observations. Repeated interactions are not deduplicated into unique TVL.
+  Nothing here measures deployed capital or expected loss.
 - Valuation uses a single static price per market. There is no oracle
   uncertainty, no price path, no slippage, and no liquidation-penalty modelling,
   so "affected collateral" is a measure of exposure, not of expected loss.

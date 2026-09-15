@@ -18,7 +18,8 @@
 //!   report     protocol-agnostic: text / JSON rendering
 //! ```
 //!
-//! `executor`, `diff`, `money` and `report` know nothing about lending.
+//! Execution is bytecode-based; executor error naming and diff interpretation
+//! currently use the fixture protocol. The adapter seam is a module convention.
 //! Everything that understands what a health factor or a position *is* lives in
 //! `corpus`, `interpret` and `impact`, which is the seam a protocol adapter
 //! would plug into in a later phase.
@@ -29,8 +30,10 @@ pub mod diff;
 pub mod executor;
 pub mod hexfmt;
 pub mod impact;
+pub mod ingest;
 pub mod interpret;
 pub mod money;
+pub mod replay;
 pub mod report;
 pub mod shrink;
 pub mod types;

@@ -5,7 +5,7 @@
 SHELL := /bin/bash
 CARGO := cargo
 
-.PHONY: all build programs compare report fixtures test test-engine test-programs fmt fmt-check lint clean
+.PHONY: all build programs compare report fixtures test test-engine test-programs fmt fmt-check lint clean demo-replay
 
 all: compare
 
@@ -53,3 +53,7 @@ clean:
 	$(CARGO) clean
 	$(CARGO) clean --manifest-path programs/fixture-lending/Cargo.toml
 	rm -rf artifacts report.json
+
+## Real local-validator capture, RPC ingestion and offline replay demonstration.
+demo-replay:
+	./scripts/demo-real-replay.sh

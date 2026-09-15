@@ -135,18 +135,36 @@ pub fn execute(
     program_id: &Address,
     program: &ProgramVersion,
 ) -> Result<ExecutionResult> {
-    let mut svm = LiteSVM::new();
+    execute_in_environment(
+        fixture,
+        program_id,
+        program,
+        Clock {
+            slot: FIXED_SLOT,
+            epoch_start_timestamp: FIXED_UNIX_TIMESTAMP,
+            epoch: FIXED_EPOCH,
+            leader_schedule_epoch: FIXED_EPOCH + 1,
+            unix_timestamp: FIXED_UNIX_TIMESTAMP,
+        },
+        None,
+    )
+}
 
-    // Pin the clock. Left at its default this is still deterministic, but an
-    // explicit value documents that slot-dependent logic is controlled rather
-    // than merely stable by accident.
-    svm.set_sysvar(&Clock {
-        slot: FIXED_SLOT,
-        epoch_start_timestamp: FIXED_UNIX_TIMESTAMP,
-        epoch: FIXED_EPOCH,
-        leader_schedule_epoch: FIXED_EPOCH + 1,
-        unix_timestamp: FIXED_UNIX_TIMESTAMP,
-    });
+/// Historical replay supplies a normalized message without requiring wallet
+/// keys. Signature and recent-blockhash checks are disabled only in this local
+/// execution path; message signer privileges and runtime account checks remain.
+pub fn execute_in_environment(
+    fixture: &Fixture,
+    program_id: &Address,
+    program: &ProgramVersion,
+    clock: Clock,
+    historical_message: Option<Message>,
+) -> Result<ExecutionResult> {
+    let historical = historical_message.is_some();
+    let mut svm = LiteSVM::new()
+        .with_sigverify(!historical)
+        .with_blockhash_check(!historical);
+    svm.set_sysvar(&clock);
 
     svm.add_program(*program_id, &program.bytes)
         .map_err(|e| anyhow!("failed to load program {}: {e:?}", program.label))?;
@@ -160,51 +178,12 @@ pub fn execute(
             .map_err(|e| anyhow!("failed to seed account {:?}: {e:?}", named.label))?;
     }
 
-    let fee_payer = keypair_for(fixture, &fixture.fee_payer)?;
-    let mut signers: Vec<Keypair> = vec![fee_payer];
-    for label in &fixture.signers {
-        if *label == fixture.fee_payer {
-            continue;
-        }
-        let candidate = keypair_for(fixture, label)?;
-        if signers.iter().any(|s| s.pubkey() == candidate.pubkey()) {
-            continue;
-        }
-        signers.push(candidate);
-    }
-
-    let metas = fixture
-        .instruction
-        .accounts
-        .iter()
-        .map(|meta| {
-            let address: Address = meta
-                .address
-                .parse()
-                .map_err(|e| anyhow!("invalid meta address {:?}: {e}", meta.address))?;
-            Ok(AccountMeta {
-                pubkey: address,
-                is_signer: meta.is_signer,
-                is_writable: meta.is_writable,
-            })
-        })
-        .collect::<Result<Vec<_>>>()?;
-
-    let instruction = Instruction {
-        program_id: fixture
-            .instruction
-            .program
-            .parse()
-            .map_err(|e| anyhow!("invalid instruction program id: {e}"))?,
-        accounts: metas,
-        data: fixture.instruction.data.clone(),
+    let transaction = if let Some(message) = historical_message {
+        Transaction::new_unsigned(message)
+    } else {
+        fixture_transaction(fixture, svm.latest_blockhash())?
     };
-
-    let payer_pubkey = signers[0].pubkey();
-    let message = Message::new(&[instruction], Some(&payer_pubkey));
-    let account_keys = message.account_keys.clone();
-    let signer_refs: Vec<&Keypair> = signers.iter().collect();
-    let transaction = Transaction::new(&signer_refs, message, svm.latest_blockhash());
+    let account_keys = transaction.message.account_keys.clone();
 
     let (success, error, meta) = match svm.send_transaction(transaction) {
         Ok(meta) => (true, None, meta),
@@ -249,4 +228,53 @@ pub fn execute(
         cpi_calls,
         accounts,
     })
+}
+
+/// Build the controlled signed transaction; used by the local-validator capture
+/// workflow as well as the synthetic fixture executor.
+pub fn fixture_transaction(fixture: &Fixture, blockhash: solana_hash::Hash) -> Result<Transaction> {
+    let fee_payer = keypair_for(fixture, &fixture.fee_payer)?;
+    let mut signers: Vec<Keypair> = vec![fee_payer];
+    for label in &fixture.signers {
+        if *label == fixture.fee_payer {
+            continue;
+        }
+        let candidate = keypair_for(fixture, label)?;
+        if signers.iter().any(|s| s.pubkey() == candidate.pubkey()) {
+            continue;
+        }
+        signers.push(candidate);
+    }
+
+    let metas = fixture
+        .instruction
+        .accounts
+        .iter()
+        .map(|meta| {
+            let address: Address = meta
+                .address
+                .parse()
+                .map_err(|e| anyhow!("invalid meta address {:?}: {e}", meta.address))?;
+            Ok(AccountMeta {
+                pubkey: address,
+                is_signer: meta.is_signer,
+                is_writable: meta.is_writable,
+            })
+        })
+        .collect::<Result<Vec<_>>>()?;
+
+    let instruction = Instruction {
+        program_id: fixture
+            .instruction
+            .program
+            .parse()
+            .map_err(|e| anyhow!("invalid instruction program id: {e}"))?,
+        accounts: metas,
+        data: fixture.instruction.data.clone(),
+    };
+
+    let payer_pubkey = signers[0].pubkey();
+    let message = Message::new(&[instruction], Some(&payer_pubkey));
+    let signer_refs: Vec<&Keypair> = signers.iter().collect();
+    Ok(Transaction::new(&signer_refs, message, blockhash))
 }

@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "id": "controlled-001",
+  "program_id": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+  "genesis_hash": "9Tg6KuW1uEbtTMh1BjpwAitZ3goSGD6WTJCAgbhHcBWh",
+  "transaction": {
+    "signature": "3BPeovBpk5egJGzPqmEp4duRMpqQWXYY9wWz8Kd82jaA2h8sGMV35Npq1oHUA7BubEbfbAFvjFuVDVxLVGzz3XVy",
+    "slot": 17,
+    "block_time": 1789419750,
+    "version": "legacy",
+    "recent_blockhash": "EjTVu5yEap8kRwG4dNt1zBsAhi1cVT2giCPw5q95dypH",
+    "payer": "8btrAnZzbhjt81uvpBLUTNSC3BFgpe4Psj9pHeEriAj9",
+    "account_keys": [
+      {
+        "address": "8btrAnZzbhjt81uvpBLUTNSC3BFgpe4Psj9pHeEriAj9",
+        "is_signer": true,
+        "is_writable": true
+      },
+      {
+        "address": "4iYyFsDwqZ7TgGxtNYEGX5Cv1jzauXaEaQMhptnuQjY9",
+        "is_signer": false,
+        "is_writable": true
+      },
+      {
+        "address": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "is_signer": false,
+        "is_writable": false
+      },
+      {
+        "address": "J7rB6EyzSGwUQz1xdY7JTYgcmeXzwfntrWXyxT59Tnnm",
+        "is_signer": false,
+        "is_writable": false
+      }
+    ],
+    "instructions": [
+      {
+        "program": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "accounts": [
+          {
+            "address": "4iYyFsDwqZ7TgGxtNYEGX5Cv1jzauXaEaQMhptnuQjY9",
+            "is_signer": false,
+            "is_writable": true
+          },
+          {
+            "address": "J7rB6EyzSGwUQz1xdY7JTYgcmeXzwfntrWXyxT59Tnnm",
+            "is_signer": false,
+            "is_writable": false
+          }
+        ],
+        "data": "07"
+      }
+    ],
+    "inner_instructions": [],
+    "success": true,
+    "error": null,
+    "fee": 5000,
+    "compute_units": 2884,
+    "logs": [
+      "Program HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq invoke [1]",
+      "Program log: build=v1 health_factor=1003783 collateral=99500000000 debt=7930000000",
+      "Program HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq consumed 2884 of 200000 compute units",
+      "Program HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq success"
+    ]
+  },
+  "accounts": [
+    {
+      "label": "payer",
+      "address": "8btrAnZzbhjt81uvpBLUTNSC3BFgpe4Psj9pHeEriAj9",
+      "account": {
+        "lamports": 4999999945000,
+        "owner": "11111111111111111111111111111111",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 18446744073709551615
+      }
+    },
+    {
+      "label": "position",
+      "address": "4iYyFsDwqZ7TgGxtNYEGX5Cv1jzauXaEaQMhptnuQjY9",
+      "account": {
+        "lamports": 1656480,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "02014377fa9b26f6468cc6f0ff587d9d94a5348cd62d40af390d5f9475f5c92b4373fe57c387b705e300a8b4b3d3573f193268657118ad5e19a586384bf6d5a714c20083a92a170000008032aad80100000000e1f50500000000401f4c1d07510f00000000001000000000000000",
+        "executable": false,
+        "rent_epoch": 18446744073709551615
+      }
+    },
+    {
+      "label": "market",
+      "address": "J7rB6EyzSGwUQz1xdY7JTYgcmeXzwfntrWXyxT59Tnnm",
+      "account": {
+        "lamports": 1489440,
+        "owner": "HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq",
+        "data": "0101abc43c1558bac3f28fe116fcb414e1aaf0f74b8e2e535a90b4c9239a8b33287cac8f95f7d0fd13131cff76100063effa6b4614a405dbdd315cf1005ab1467a1f00e1f50500000000401f4c1d0100000000000000",
+        "executable": false,
+        "rent_epoch": 18446744073709551615
+      }
+    }
+  ],
+  "clock": {
+    "slot": 17,
+    "epoch_start_timestamp": 0,
+    "epoch": 0,
+    "leader_schedule_epoch": 1,
+    "unix_timestamp": 1789419750
+  },
+  "state_source": "controlled_snapshot",
+  "pre_state_hash": "df0b81da16731ea9b17defdf4b556ccd90feeee0307d00838f4469eadddeaa89",
+  "original": {
+    "success": true,
+    "fee": 5000,
+    "post_state_hash": "f89ab587fac97ab68223ce184016aeb0a69492f46210f845a2f37c1d40825f95"
+  },
+  "current_program_sha256": "b307faa27e09fc74fee9e8087263f249bef565a6998f49fd5e562d2932bf1641",
+  "assumptions": [
+    "isolated local validator; no concurrent account writers",
+    "fixture protocol reads only Clock.slot; remaining sysvars use pinned LiteSVM defaults",
+    "fidelity checks all captured account fields, transaction outcome and fee; CU/log text not expected to match across runtimes"
+  ]
+}

@@ -27,6 +27,18 @@ struct Cli {
 enum Command {
     /// Run the corpus against both program builds and report the differences.
     Compare(CompareArgs),
+    /// Ingest program activity via standard Solana RPC into a local cache.
+    Ingest(IngestArgs),
+    /// Select captured transactions into a durable offline replay corpus.
+    Corpus {
+        #[command(subcommand)]
+        command: CorpusCommand,
+    },
+    /// Isolated local-validator setup and snapshot capture for the demo.
+    Controlled {
+        #[command(subcommand)]
+        command: ControlledCommand,
+    },
     /// Write the generated fixture corpus to disk as JSON.
     Generate(GenerateArgs),
     /// Replay a single fixture, or a regression group and its minimized
@@ -44,11 +56,14 @@ enum Format {
 
 #[derive(Parser)]
 struct CompareArgs {
-    /// Path to the V1 program artefact.
+    /// Durable replay corpus JSON. Runs offline with a V1 fidelity gate.
     #[arg(long)]
+    corpus: Option<PathBuf>,
+    /// Path to the V1 program artefact.
+    #[arg(long, alias = "current")]
     v1: Option<PathBuf>,
     /// Path to the V2 program artefact.
-    #[arg(long)]
+    #[arg(long, alias = "candidate")]
     v2: Option<PathBuf>,
     #[arg(long, value_enum, default_value_t = Format::Text)]
     format: Format,
@@ -81,9 +96,9 @@ struct ReproduceArgs {
     /// Fixture ID (e.g. boundary-position-017) or regression group ID
     /// (e.g. newly-liquidatable, or regression-group:newly-liquidatable).
     target: String,
-    #[arg(long)]
+    #[arg(long, alias = "current")]
     v1: Option<PathBuf>,
-    #[arg(long)]
+    #[arg(long, alias = "candidate")]
     v2: Option<PathBuf>,
     /// Skip minimization when reproducing a regression group.
     #[arg(long)]
@@ -94,6 +109,84 @@ struct ReproduceArgs {
 struct ListArgs {
     #[arg(long)]
     category: Option<String>,
+}
+
+#[derive(Parser)]
+struct IngestArgs {
+    #[arg(long)]
+    program: String,
+    /// Falls back to SOLANA_RPC_URL; endpoint is never persisted in reports.
+    #[arg(long)]
+    rpc_url: Option<String>,
+    #[arg(long)]
+    start_slot: u64,
+    #[arg(long)]
+    end_slot: u64,
+    /// Use a separate cache directory per chain/endpoint.
+    #[arg(long)]
+    cache: PathBuf,
+}
+#[derive(Subcommand)]
+enum CorpusCommand {
+    Build {
+        #[arg(long)]
+        cache: PathBuf,
+        #[arg(long)]
+        snapshots: PathBuf,
+        #[arg(long)]
+        out: PathBuf,
+        #[arg(long)]
+        limit: Option<usize>,
+    },
+}
+#[derive(Subcommand)]
+enum ControlledCommand {
+    Prepare {
+        #[arg(long)]
+        dir: PathBuf,
+    },
+    Capture {
+        #[arg(long)]
+        dir: PathBuf,
+        #[arg(long)]
+        snapshots: PathBuf,
+        #[arg(long)]
+        rpc_url: String,
+        #[arg(long)]
+        current: PathBuf,
+    },
+}
+fn endpoint(explicit: Option<String>) -> Result<String> {
+    explicit
+        .or_else(|| std::env::var("SOLANA_RPC_URL").ok())
+        .context("provide --rpc-url or SOLANA_RPC_URL")
+}
+fn ingest_command(args: IngestArgs) -> Result<ExitCode> {
+    let start = std::time::Instant::now();
+    let url = endpoint(args.rpc_url)?;
+    // Endpoint namespace prevents cache reuse across networks without storing
+    // credentials. Changing credentials creates a new transport cache.
+    let namespace = eplyx_engine::replay::hash_bytes(url.as_bytes());
+    let rpc = eplyx_engine::ingest::rpc::HttpRpc::new(url)?;
+    let cached = eplyx_engine::ingest::CachedRpc {
+        provider: &rpc,
+        root: args.cache.join(namespace),
+    };
+    let manifest = eplyx_engine::ingest::ingest(
+        &cached,
+        &args.cache,
+        &args.program,
+        args.start_slot,
+        args.end_slot,
+    )?;
+    println!(
+        "Ingested {} transactions in {} ms; slots {}..{}; current account samples are APPROXIMATE",
+        manifest.transactions.len(),
+        start.elapsed().as_millis(),
+        args.start_slot,
+        args.end_slot
+    );
+    Ok(ExitCode::SUCCESS)
 }
 
 fn parse_category(name: &str) -> Result<Category> {
@@ -126,6 +219,54 @@ fn run() -> Result<ExitCode> {
     let cli = Cli::parse();
     match cli.command {
         Command::Compare(args) => compare(args),
+        Command::Ingest(args) => ingest_command(args),
+        Command::Corpus {
+            command:
+                CorpusCommand::Build {
+                    cache,
+                    snapshots,
+                    out,
+                    limit,
+                },
+        } => {
+            let start = std::time::Instant::now();
+            let count = eplyx_engine::ingest::build_corpus(&cache, &snapshots, &out, limit)?;
+            println!(
+                "Built {count} replay records in {} ms: {}",
+                start.elapsed().as_millis(),
+                out.display()
+            );
+            Ok(ExitCode::SUCCESS)
+        }
+        Command::Controlled { command } => {
+            match command {
+                ControlledCommand::Prepare { dir } => {
+                    eplyx_engine::ingest::controlled::prepare(&dir)?
+                }
+                ControlledCommand::Capture {
+                    dir,
+                    snapshots,
+                    rpc_url,
+                    current,
+                } => {
+                    anyhow::ensure!(
+                        rpc_url.starts_with("http://127.0.0.1:")
+                            || rpc_url.starts_with("http://localhost:"),
+                        "controlled capture is local-validator only"
+                    );
+                    let rpc = eplyx_engine::ingest::rpc::HttpRpc::new(rpc_url)?;
+                    let (start, end) = eplyx_engine::ingest::controlled::capture(
+                        &rpc, &dir, &snapshots, &current,
+                    )?;
+                    eplyx_engine::ingest::write_json(
+                        &dir.join("window.json"),
+                        &serde_json::json!({"start_slot":start,"end_slot":end}),
+                    )?;
+                    println!("Captured three controlled interactions; slots {start}..{end}");
+                }
+            }
+            Ok(ExitCode::SUCCESS)
+        }
         Command::Generate(args) => generate(args),
         Command::Reproduce(args) => reproduce(args),
         Command::List(args) => list(args),
@@ -133,6 +274,51 @@ fn run() -> Result<ExitCode> {
 }
 
 fn compare(args: CompareArgs) -> Result<ExitCode> {
+    if let Some(path) = &args.corpus {
+        anyhow::ensure!(
+            args.fixture.is_none() && args.category.is_none(),
+            "select replay records with corpus build --limit"
+        );
+        let records = eplyx_engine::replay::load_corpus(path)?;
+        let (v1, v2) = load_versions(
+            &args.v1.clone().unwrap_or_else(|| default_artifact("v1")),
+            &args.v2.clone().unwrap_or_else(|| default_artifact("v2")),
+        )?;
+        let start = std::time::Instant::now();
+        let report = eplyx_engine::replay::compare(&records, &v1, &v2)?;
+        let elapsed = start.elapsed().as_micros();
+        let rendered = match args.format {
+            Format::Json => serde_json::to_string_pretty(&report)?,
+            Format::Text => {
+                let mut text=String::from("OFFLINE CONTROLLED REPLAY\nCapital represents interaction observations, not unique TVL.\n");
+                for item in &report.observations {
+                    text.push_str(&format!("{} | slot {} | {:?} | fidelity {:?}\n  source {}\n  pre {}\n  V1  {} (matches original)\n  V2  {}\n",item.id,item.source_slot,item.state_source,item.fidelity,item.source_signature,item.pre_state_hash,item.post_v1_state_hash,item.post_v2_state_hash));
+                }
+                text.push_str(&render_text(&report.analysis).replace(
+                    "synthetic corpus, valued from fixture state",
+                    "replay observations, valued from captured state",
+                ));
+                text
+            }
+        };
+        if let Some(out) = &args.out {
+            std::fs::write(out, rendered)?;
+        } else {
+            println!("{rendered}");
+        }
+        eprintln!(
+            "Replay performance: total {elapsed} us; mean V1/V2 pair {} us; {} VM executions",
+            elapsed / records.len() as u128,
+            records.len() * 2
+        );
+        return Ok(
+            if args.fail_on_critical && report.analysis.summary.critical > 0 {
+                ExitCode::from(1)
+            } else {
+                ExitCode::SUCCESS
+            },
+        );
+    }
     let program_id = fixture_program_id();
     let mut fixtures = corpus::generate(&program_id);
 
