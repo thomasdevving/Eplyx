@@ -57,11 +57,38 @@ impl ProgramVersion {
     }
 }
 
+/// One executable dependency the replay environment must provide.
+///
+/// The loader is carried because it is not cosmetic: the runtime charges
+/// different loading costs and applies different verification per loader, so
+/// loading a legacy-loader program under the upgradeable loader would shift
+/// compute away from what mainnet actually metered.
+#[derive(Clone, Debug)]
+pub struct LoadedProgram {
+    pub program_id: Address,
+    pub loader: Address,
+    pub bytes: Vec<u8>,
+}
+
 /// A single cross-program invocation observed during execution.
+///
+/// Carries enough of the invoked instruction to compare two graphs without
+/// comparing the instruction data itself: the depth it ran at, which top-level
+/// instruction it descends from, and the shape of the call. A changed
+/// discriminant or account count is a different call even when the program and
+/// the count are unchanged.
 #[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct CpiCall {
     pub program: String,
     pub stack_height: u8,
+    #[serde(default)]
+    pub outer_index: u8,
+    #[serde(default)]
+    pub account_count: u8,
+    #[serde(default)]
+    pub data_len: u32,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub discriminant: Option<u8>,
 }
 
 /// Everything observable about one execution.
@@ -147,6 +174,7 @@ pub fn execute(
             unix_timestamp: FIXED_UNIX_TIMESTAMP,
         },
         None,
+        &[],
     )
 }
 
@@ -159,12 +187,29 @@ pub fn execute_in_environment(
     program: &ProgramVersion,
     clock: Clock,
     historical_message: Option<Message>,
+    dependencies: &[LoadedProgram],
 ) -> Result<ExecutionResult> {
     let historical = historical_message.is_some();
     let mut svm = LiteSVM::new()
         .with_sigverify(!historical)
         .with_blockhash_check(!historical);
     svm.set_sysvar(&clock);
+
+    // Dependencies first, so the artefact under test always wins if a caller
+    // passes a dependency entry for the program being compared. The candidate
+    // is the one thing the run is allowed to vary.
+    for dependency in dependencies {
+        if dependency.program_id == *program_id {
+            continue;
+        }
+        svm.add_program_with_loader(dependency.program_id, &dependency.bytes, dependency.loader)
+            .map_err(|e| {
+                anyhow!(
+                    "failed to load dependency program {}: {e:?}",
+                    dependency.program_id
+                )
+            })?;
+    }
 
     svm.add_program(*program_id, &program.bytes)
         .map_err(|e| anyhow!("failed to load program {}: {e:?}", program.label))?;
@@ -193,7 +238,7 @@ pub fn execute_in_environment(
     // Structured CPI capture from inner instructions rather than log scraping:
     // a change in the invocation shape is a regression class of its own.
     let mut cpi_calls = Vec::new();
-    for outer in &meta.inner_instructions {
+    for (outer_index, outer) in meta.inner_instructions.iter().enumerate() {
         for inner in outer {
             let index = inner.instruction.program_id_index as usize;
             let program_key = account_keys
@@ -203,6 +248,10 @@ pub fn execute_in_environment(
             cpi_calls.push(CpiCall {
                 program: program_key,
                 stack_height: inner.stack_height,
+                outer_index: u8::try_from(outer_index).unwrap_or(u8::MAX),
+                account_count: u8::try_from(inner.instruction.accounts.len()).unwrap_or(u8::MAX),
+                data_len: u32::try_from(inner.instruction.data.len()).unwrap_or(u32::MAX),
+                discriminant: inner.instruction.data.first().copied(),
             });
         }
     }

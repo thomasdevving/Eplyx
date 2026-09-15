@@ -339,9 +339,9 @@ pub fn capture(
             epoch_start_timestamp: 0,
             leader_schedule_epoch: epoch["epoch"].as_u64().context("epoch")? + 1,
         };
-        let record=ReplayRecord {schema_version:1,id:base.id.clone(),program_id:crate::fixture_program_id().to_string(),genesis_hash:genesis.clone(),
+        let record=ReplayRecord {dependencies:Default::default(),acquisitions:Vec::new(),slot_screening:None,schema_version:1,id:base.id.clone(),program_id:crate::fixture_program_id().to_string(),genesis_hash:genesis.clone(),
             current_program_sha256:program_hash.clone(),clock,state_source:ReplayStateSource::ControlledSnapshot,
-            pre_state_hash:state_hash(&pre)?,original:Some(OriginalExecution{success:transaction.success,fee:transaction.fee,post_state_hash:state_hash(&post)?}),
+            pre_state_hash:state_hash(&pre)?,original:Some(OriginalExecution{cpi_invocations:Vec::new(),success:transaction.success,fee:transaction.fee,post_state_hash:state_hash(&post)?}),
             accounts:pre,transaction,assumptions:vec!["isolated local validator; no concurrent account writers".into(),"fixture protocol reads only Clock.slot; remaining sysvars use pinned LiteSVM defaults".into(),"fidelity checks all captured account fields, transaction outcome and fee; CU/log text not expected to match across runtimes".into()]};
         record.validate()?;
         last = last.max(record.transaction.slot);
