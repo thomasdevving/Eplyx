@@ -460,6 +460,9 @@ fn no_floating_point_in_the_valuation_or_reporting_path() {
     let sources = [
         "interface/src/lib.rs",
         "engine/src/money.rs",
+        "engine/src/protocol/mod.rs",
+        "engine/src/protocol/token2022.rs",
+        "engine/src/protocol/stake_pool.rs",
         "engine/src/interpret.rs",
         "engine/src/impact.rs",
         "engine/src/diff.rs",

@@ -40,10 +40,13 @@ START="$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["start_s
 END="$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["end_slot"])' "$TASK_DIR/window.json")"
 "$EP" ingest --program "$(cat fixtures/program-id.txt)" --rpc-url "$RPC" --start-slot "$START" --end-slot "$END" --cache "$OUT/cache"
 "$EP" corpus build --cache "$OUT/cache" --snapshots "$OUT/snapshots" --out "$OUT/corpus.json"
+"$EP" discovery build --cache "$OUT/cache" --snapshots "$OUT/snapshots" --out "$OUT/discovery-corpus-1.json" --corpus-size 12 >/dev/null
 kill "$VALIDATOR_PID"; wait "$VALIDATOR_PID" 2>/dev/null || true; VALIDATOR_PID=""
 echo 'Validator stopped: the following analysis is offline.'
 # Repeat ingestion from cache with RPC unavailable, then run the corpus twice.
 "$EP" ingest --program "$(cat fixtures/program-id.txt)" --rpc-url "$RPC" --start-slot "$START" --end-slot "$END" --cache "$OUT/cache"
+"$EP" discovery build --cache "$OUT/cache" --snapshots "$OUT/snapshots" --out "$OUT/discovery-corpus-2.json" --corpus-size 12 >/dev/null
+cmp "$OUT/discovery-corpus-1.json" "$OUT/discovery-corpus-2.json"
 "$EP" compare --corpus "$OUT/corpus.json" --format json --out "$OUT/report-1.json"
 "$EP" compare --corpus "$OUT/corpus.json" --format json --out "$OUT/report-2.json"
 cmp "$OUT/report-1.json" "$OUT/report-2.json"

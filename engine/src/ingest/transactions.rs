@@ -4,6 +4,66 @@ use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
+/// One validator-observed SPL token balance, in message-key order.
+///
+/// This is the stateful analogue of `preBalances`/`postBalances`: for accounts
+/// owned by a token program the validator records the exact base-unit amount on
+/// both sides of the transaction, which is what lets an archived snapshot of a
+/// token account be proved rather than merely trusted.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TokenBalance {
+    pub account_index: usize,
+    pub mint: String,
+    pub program_id: String,
+    /// Base units. Kept as a string exactly as the RPC reports it, because a
+    /// u64 token amount does not survive a JSON double.
+    pub amount: u64,
+    pub decimals: u8,
+}
+
+/// One validator-observed cross-program invocation.
+///
+/// [`HistoricalTransaction::inner_instructions`] flattens every CPI group into
+/// one list, which is enough to know *that* a transaction used CPI and enough
+/// to discover which programs it needs. It is not enough to check that a replay
+/// reproduced the same invocation graph: flattening drops the depth each call
+/// ran at and which top-level instruction it belonged to. Those are kept here,
+/// alongside the shape of the invoked instruction, so the original graph can be
+/// compared against the replayed one as part of the fidelity gate.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct CpiFrame {
+    /// Index of the top-level instruction this call descends from.
+    pub outer_index: u8,
+    /// Invocation depth. A top-level instruction is 1, so CPI starts at 2.
+    pub stack_height: u8,
+    pub program: String,
+    pub account_count: u8,
+    pub data_len: u32,
+    /// First instruction byte, which is the discriminant for every program in
+    /// the supported contract. Absent for empty instruction data.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub discriminant: Option<u8>,
+}
+
+impl CpiFrame {
+    pub fn new(
+        outer_index: u8,
+        stack_height: u8,
+        program: String,
+        accounts: usize,
+        data: &[u8],
+    ) -> Self {
+        Self {
+            outer_index,
+            stack_height,
+            program,
+            account_count: u8::try_from(accounts).unwrap_or(u8::MAX),
+            data_len: u32::try_from(data.len()).unwrap_or(u32::MAX),
+            discriminant: data.first().copied(),
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct HistoricalTransaction {
     pub signature: String,
@@ -15,10 +75,33 @@ pub struct HistoricalTransaction {
     pub account_keys: Vec<AccountMetaSpec>,
     pub instructions: Vec<InstructionSpec>,
     pub inner_instructions: Vec<InstructionSpec>,
+    /// Structured CPI frames for the same calls. Kept beside the flattened list
+    /// rather than replacing it so records written before CPI replay existed
+    /// stay loadable unchanged.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub inner_instruction_frames: Vec<CpiFrame>,
     pub success: bool,
     pub error: Option<Value>,
     pub fee: u64,
     pub compute_units: Option<u64>,
+    /// Validator-observed balances in message-key order. These are retained as
+    /// independent evidence for historical account-provider qualification.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub pre_balances: Option<Vec<u64>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub post_balances: Option<Vec<u64>>,
+    /// Validator-observed token balances. Absent for transactions that touch no
+    /// token accounts; an empty vector and `None` therefore mean different
+    /// things and are kept distinct.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub pre_token_balances: Option<Vec<TokenBalance>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub post_token_balances: Option<Vec<TokenBalance>>,
+    /// Half the sum of absolute native balance changes. This is a transaction
+    /// activity signal, not protocol value or TVL. It is absent when an RPC
+    /// response omits complete pre/post native balances.
+    #[serde(default)]
+    pub native_value_lamports: Option<u64>,
     pub logs: Vec<String>,
 }
 fn number(value: &Value) -> Result<usize> {
@@ -69,6 +152,33 @@ fn instructions(value: &Value, keys: &[AccountMetaSpec]) -> Result<Vec<Instructi
         })
         .collect()
 }
+fn token_balances(value: &Value) -> Result<Option<Vec<TokenBalance>>> {
+    let Some(entries) = value.as_array() else {
+        return Ok(None);
+    };
+    entries
+        .iter()
+        .map(|entry| {
+            Ok(TokenBalance {
+                account_index: number(&entry["accountIndex"])?,
+                mint: address(&entry["mint"])?,
+                program_id: address(&entry["programId"])?,
+                // The RPC reports the base-unit amount as a decimal string
+                // precisely so it survives JSON; parse it rather than reading
+                // the lossy `uiAmount` double alongside it.
+                amount: entry["uiTokenAmount"]["amount"]
+                    .as_str()
+                    .context("missing token amount")?
+                    .parse()
+                    .context("invalid token amount")?,
+                decimals: u8::try_from(number(&entry["uiTokenAmount"]["decimals"])?)
+                    .context("invalid token decimals")?,
+            })
+        })
+        .collect::<Result<Vec<_>>>()
+        .map(Some)
+}
+
 pub fn normalize(value: &Value) -> Result<HistoricalTransaction> {
     anyhow::ensure!(
         !value.is_null(),
@@ -149,10 +259,43 @@ pub fn normalize(value: &Value) -> Result<HistoricalTransaction> {
     }
     let outer = instructions(&message["instructions"], &keys)?;
     let mut inner = Vec::new();
+    let mut frames = Vec::new();
+    let mut complete = true;
     if let Some(groups) = meta["innerInstructions"].as_array() {
         for group in groups {
-            inner.extend(instructions(&group["instructions"], &keys)?);
+            let outer_index =
+                u8::try_from(number(&group["index"])?).context("outer index too large")?;
+            let decoded = instructions(&group["instructions"], &keys)?;
+            let raw = group["instructions"]
+                .as_array()
+                .context("missing inner instructions")?;
+            for (instruction, entry) in decoded.iter().zip(raw) {
+                // A validator that omits stackHeight cannot be distinguished
+                // from one reporting depth 0, so the absence is not defaulted:
+                // the whole frame list is dropped, leaving the flattened view
+                // intact for discovery and leaving any replay contract that
+                // needs the graph to reject the transaction for the real reason.
+                let Some(stack_height) = entry["stackHeight"]
+                    .as_u64()
+                    .and_then(|height| u8::try_from(height).ok())
+                    .filter(|height| *height >= 2)
+                else {
+                    complete = false;
+                    continue;
+                };
+                frames.push(CpiFrame::new(
+                    outer_index,
+                    stack_height,
+                    instruction.program.clone(),
+                    instruction.accounts.len(),
+                    &instruction.data,
+                ));
+            }
+            inner.extend(decoded);
         }
+    }
+    if !complete {
+        frames.clear();
     }
     let signatures = value["transaction"]["signatures"]
         .as_array()
@@ -169,6 +312,36 @@ pub fn normalize(value: &Value) -> Result<HistoricalTransaction> {
         bs58::decode(&signature).into_vec()?.len() == 64,
         "invalid signature length"
     );
+    let pre_balances = meta["preBalances"]
+        .as_array()
+        .map(|values| {
+            values
+                .iter()
+                .map(|value| value.as_u64().context("invalid preBalance"))
+                .collect::<Result<Vec<_>>>()
+        })
+        .transpose()?;
+    let post_balances = meta["postBalances"]
+        .as_array()
+        .map(|values| {
+            values
+                .iter()
+                .map(|value| value.as_u64().context("invalid postBalance"))
+                .collect::<Result<Vec<_>>>()
+        })
+        .transpose()?;
+    let native_value_lamports = match (&pre_balances, &post_balances) {
+        (Some(pre), Some(post)) if pre.len() == keys.len() && post.len() == keys.len() => {
+            let movement = pre.iter().zip(post).fold(0_u128, |sum, (before, after)| {
+                sum + (*before as u128).abs_diff(*after as u128)
+            });
+            // Every transfer normally appears once as a debit and once as a
+            // credit. Fees and account creation make this only a structural
+            // magnitude signal, so no economic semantics are attached to it.
+            Some(u64::try_from(movement / 2).context("native balance movement overflow")?)
+        }
+        _ => None,
+    };
     Ok(HistoricalTransaction {
         signature,
         slot: value["slot"].as_u64().context("missing slot")?,
@@ -182,6 +355,7 @@ pub fn normalize(value: &Value) -> Result<HistoricalTransaction> {
         account_keys: keys,
         instructions: outer,
         inner_instructions: inner,
+        inner_instruction_frames: frames,
         success: meta["err"].is_null(),
         error: if meta["err"].is_null() {
             None
@@ -190,6 +364,11 @@ pub fn normalize(value: &Value) -> Result<HistoricalTransaction> {
         },
         fee: meta["fee"].as_u64().context("missing fee")?,
         compute_units: meta["computeUnitsConsumed"].as_u64(),
+        pre_balances,
+        post_balances,
+        pre_token_balances: token_balances(&meta["preTokenBalances"])?,
+        post_token_balances: token_balances(&meta["postTokenBalances"])?,
+        native_value_lamports,
         logs: serde_json::from_value(meta["logMessages"].clone()).unwrap_or_default(),
     })
 }

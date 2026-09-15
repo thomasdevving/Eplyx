@@ -36,12 +36,23 @@ and is not being claimed.
 
 **Current scope.** Deterministic V1/V2 execution, structured diffing, economic
 interpretation, corpus-wide impact aggregation, regression clustering and
-counterexample minimization against a synthetic corpus, plus standard Solana RPC
-activity ingestion and exact controlled snapshot replay for the purpose-built
-fixture protocol. Historical inputs are normalized and cached; selected records
-replay offline with a V1 fidelity gate. No arbitrary mainnet pre-state
-reconstruction, dashboard, CI integration, AI, third-party decoding or sequence
-search. See [Phase 4](docs/phase-4-replay.md) for supported inputs and limits.
+counterexample minimization against a synthetic corpus; exact controlled replay;
+and deterministic discovery, classification, clustering and representative
+selection for real public-program activity; and one exact slot-archive path for
+a bounded real mainnet System-transfer/Memo interaction. Discovery and replay
+corpora are separate, provenance and replay eligibility are explicit, and
+current account samples remain approximate; and one exact CPI-aware path for a
+real stateful protocol interaction, with every dependency binary pinned to the
+deployment live at the transaction's slot. No arbitrary mainnet pre-state
+reconstruction, universal CPI replay, arbitrary DeFi support, dashboard, CI
+integration, AI, third-party decoding or sequence search. See
+[Phase 4](docs/phase-4-replay.md) for controlled replay,
+[Phase 5](docs/phase-5-mainnet-discovery.md) for discovery,
+[Phase 6](docs/phase-6-historical-state.md) for historical state,
+[Phase 7](docs/phase-7-production-protocol-upgrade.md) for a real production
+protocol upgrade replayed against the binaries mainnet actually ran, and
+[Phase 8](docs/phase-8-cpi-mainnet-replay.md) for the same with cross-program
+invocation.
 
 ---
 
@@ -77,6 +88,114 @@ regressions, and one unaffected control. No wallet or public-network funds are
 needed. [Workflow, format, actual results and limitations](docs/phase-4-replay.md).
 
 [Phase 1–3 audit and all 40 requirements](docs/phase-1-3-audit.md).
+
+## Mainnet discovery
+
+```bash
+make demo-discovery
+# or
+./scripts/demo-mainnet-discovery.sh <PROGRAM_ID>
+```
+
+This bounded, non-semantic workflow discovers real activity, distinguishes
+direct/CPI interactions, fingerprints and clusters recurring shapes, selects an
+explainable representative discovery corpus, then proves byte-identical output
+from the same cache. It performs no candidate comparison without sufficient
+historical state provenance. [Design, CLI, policy and limitations](docs/phase-5-mainnet-discovery.md).
+
+## Exact mainnet replay
+
+```bash
+make demo-mainnet-replay
+```
+
+This acquires a fixed real mainnet System-transfer/Memo transaction from a
+slot-addressable account archive, proves both account boundaries against
+validator metadata, extracts the immutable historical Memo SBF as V1, and then
+replays entirely offline. A deliberately regressed Memo-compatible candidate
+rejects the historical 88-byte memo and prevents the exact 19,661-lamport
+transfer. No fiat estimate is attached. [Provider boundary, proof and measured
+result](docs/phase-6-historical-state.md).
+
+## A real production protocol upgrade
+
+```bash
+make demo-token2022-upgrade
+```
+
+This replays one real historical PYUSD payment — a direct `TransferChecked` of
+10.000000 PYUSD at slot 427146982 — against the two Token-2022 binaries actually
+deployed to mainnet on either side of a real upgrade. The V1 side is the
+deployment that was live at that slot, resolved from ProgramData, so "V1
+reproduces the original outcome" is a genuine check rather than a tautology.
+
+```text
+V1  deployed at slot 395047597   post-state matches mainnet exactly
+V2  deployed at slot 427147035   post-state identical
+
+protocol economics   no field differs
+compute              3,800 → 3,848 units (+1.26%), off the pass/fail axis
+```
+
+The real upgrade preserved behaviour, which is what a pre-deployment gate should
+report for a compatible release. Because that alone cannot show a *changed*
+outcome would be caught, the same interaction also runs against a deliberately
+regressed candidate, which credits the destination one basis point short:
+
+```text
+destination amount   V1 66,675.509183 → V2 66,675.508183   delta -0.001000 PYUSD
+CI gate              exit 1 (blocked)
+```
+
+[Version resolution, exactness boundary and measured
+result](docs/phase-7-production-protocol-upgrade.md).
+
+## A real upgrade, with cross-program invocation
+
+```bash
+make demo-cpi-mainnet-replay
+```
+
+This replays one real historical SPL Stake Pool `DepositSol` — 0.423 SOL at slot
+429878778, 3,339 slots before a real stake-pool upgrade — against the two
+stake-pool binaries mainnet actually deployed on either side of it. The deposit
+moves lamports through the System program and mints pool tokens through the SPL
+Token program, and how many tokens it mints is *computed* from pool state rather
+than named in the instruction.
+
+Every program the transaction reaches is pinned to the deployment that was live
+at that slot, including the one it reaches only by invocation:
+
+```text
+SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy  historical  deployed at slot 370300186
+TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA  historical  deployed at slot 419472000
+11111111111111111111111111111111             builtin     implemented by the runtime
+ComputeBudget111111111111111111111111111111  builtin     implemented by the runtime
+```
+
+The gate now checks the invocation graph as well as the fee and the post-state,
+and the block is screened so that no other transaction in the slot wrote a
+required account:
+
+```text
+same-slot screening   6 required accounts against 1,503 transactions; no conflicts
+V1 replay             fee, invocation graph and post-state all match mainnet
+pool tokens received  0.395906603 under both builds
+protocol economics    no field differs
+compute               -1.44%, off the pass/fail axis
+```
+
+Against a deliberately regressed candidate — one that caches the exchange rate at
+four decimal places instead of dividing last — both builds still succeed and make
+the same two calls, and the depositor receives less:
+
+```text
+pool tokens received  V1 0.395906603 → V2 0.395885700   delta -0.000020903
+CI gate               exit 1 (blocked)
+```
+
+[CPI graph, dependency versioning, screening and
+limitations](docs/phase-8-cpi-mainnet-replay.md).
 
 ## What it found
 
@@ -580,6 +699,19 @@ make test             # program unit tests + differential suite
 make report           # same comparison as JSON, to report.json
 make fixtures         # regenerate the checked-in corpus
 make fmt lint         # rustfmt and clippy across both workspaces
+
+make demo-token2022-upgrade    # a real Token-2022 upgrade over a real PYUSD transfer
+make demo-cpi-mainnet-replay   # a real stake-pool upgrade over a real CPI deposit
+```
+
+Mainnet paths, which need an archive endpoint:
+
+```bash
+eplyx versions upgrades --program <ID> --start-slot <A> --end-slot <B> --output <DIR>
+eplyx versions resolve  --program <ID> --slot <S> --output <DIR> [--out v1.so]
+eplyx historical acquire --signature <SIG> --program <ID> --output <DIR> [--offline]
+eplyx compare --corpus <DIR>/corpus.json --current v1.so --candidate v2.so \
+  [--dependencies <DIR>/dependencies] [--fail-on-critical]
 ```
 
 Directly:
@@ -745,17 +877,24 @@ crate.
 
 ## Known limitations
 
-These boundaries apply to the current Phase 1–4 implementation.
+These boundaries apply to the default synthetic corpus and the fixture protocol.
+The mainnet paths carry their own, narrower boundaries: see
+[Phase 7](docs/phase-7-production-protocol-upgrade.md#limitations) and
+[Phase 8](docs/phase-8-cpi-mainnet-replay.md#limitations).
 
 **Scope**
 
-- The default corpus is **synthetic**. A second path ingests real transactions
-  from an isolated local validator and replays controlled pre-state snapshots.
-  Standard public/archive RPC can provide activity, but arbitrary historical
-  account pre-state reconstruction is not implemented.
-- Only the **fixture protocol** is supported. `corpus.rs` and `interpret.rs`
-  hardcode its layouts. The adapter seam exists as a module boundary but is not
-  yet a trait.
+- The default corpus is **synthetic**. Other paths ingest real transactions from
+  an isolated local validator, and from mainnet through a slot-addressable
+  archive. Arbitrary historical account pre-state reconstruction is not
+  implemented: each mainnet path states exactly which transaction shapes it can
+  reproduce exactly, and rejects everything else.
+- The **protocol adapter seam is a trait**, with Token-2022 and SPL Stake Pool
+  implementations. `corpus.rs`, `interpret.rs`, `impact.rs`, `cluster.rs` and
+  `shrink.rs` remain fixture-lending-specific and are not reached by adapter
+  records.
+- **CPI replay is not general.** One protocol, one instruction, one level of
+  invocation into two known programs. Anything else is rejected.
 - No CI integration, dashboard, or AI-assisted explanation. Economic aggregation,
   clustering and synthetic-corpus counterexample minimization are implemented.
 
@@ -767,7 +906,8 @@ These boundaries apply to the current Phase 1–4 implementation.
   in-place upgrade but not a migration where the ID changes.
 - The runtime **feature set is whatever litesvm defaults to**, and both sides get
   the same one. Differential testing across feature-gate activations is not
-  supported.
+  supported. For a historical replay this is an approximation of the set that was
+  active at the slot, bounded by V1 reproducing the original outcome.
 - **Logs are captured but not diffed.** They are derivative of state and error
   outcome here, and diffing them would duplicate findings. CPI shape is compared
   structurally instead.

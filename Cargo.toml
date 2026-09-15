@@ -5,7 +5,7 @@ members = ["interface", "engine"]
 # for the SBF target by `cargo-build-sbf` with the platform-tools toolchain, and
 # its `solana-program` dependency tree does not co-resolve with litesvm's. Giving
 # it a separate lockfile keeps both graphs free to move independently.
-exclude = ["programs/fixture-lending"]
+exclude = ["programs/fixture-lending", "programs/fixture-memo-candidate"]
 
 [workspace.package]
 version = "0.1.0"

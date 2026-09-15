@@ -1,0 +1,578 @@
+{
+  "schema_version": 1,
+  "id": "mainnet-spl-stake-pool-e8ff02974848b698",
+  "program_id": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+  "genesis_hash": "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d",
+  "transaction": {
+    "signature": "58d7oY3zMFRSjcbEZErYYjxEuLEWzNSXphvHBfGNZ78hVznzmLnY1hPNhG8LpV83EYcha8wQn6XifPS53bxR1pgs",
+    "slot": 429878778,
+    "block_time": 1782822645,
+    "version": "legacy",
+    "recent_blockhash": "7CCwgSu39vjfzrTe81nHKfMNy4f6N4oYXhR1QkCqcYna",
+    "payer": "9DtcNyxn2JNFK4kuWiS99pbFpHefNtxpHz9pHjyjRsQB",
+    "account_keys": [
+      {
+        "address": "9DtcNyxn2JNFK4kuWiS99pbFpHefNtxpHz9pHjyjRsQB",
+        "is_signer": true,
+        "is_writable": true
+      },
+      {
+        "address": "4WFPz6trfkGobb7gAsVxoLEM6kwxF3f2xMvmXFH33gY8",
+        "is_signer": true,
+        "is_writable": true
+      },
+      {
+        "address": "7cBuurYDdaqxnem7KyMTci6SWhjJKroZ6NUjqH2ewEPB",
+        "is_signer": false,
+        "is_writable": true
+      },
+      {
+        "address": "93eSDRCdrbN6sYDyvnHzoSYUkSgchGsU5ZzFvQrCqD3e",
+        "is_signer": false,
+        "is_writable": true
+      },
+      {
+        "address": "CV6bkrUksMwcEC4jfLTJsbHwF3Y2YurZdWWua95Fpbtd",
+        "is_signer": false,
+        "is_writable": true
+      },
+      {
+        "address": "EpomeRdrhUeAmVyECwima2gBpY3jUoA6cee89EcADaPT",
+        "is_signer": false,
+        "is_writable": true
+      },
+      {
+        "address": "uR3aXvCwZ5WnhNfXYYaeWvrg1ZTnF5uuAVpLDeDzFcB",
+        "is_signer": false,
+        "is_writable": true
+      },
+      {
+        "address": "11111111111111111111111111111111",
+        "is_signer": false,
+        "is_writable": false
+      },
+      {
+        "address": "ComputeBudget111111111111111111111111111111",
+        "is_signer": false,
+        "is_writable": false
+      },
+      {
+        "address": "ECVFhdhHYpVmHDUD7b6N4Y38HGL2GXHj4wnmqPmjZ4U4",
+        "is_signer": false,
+        "is_writable": false
+      },
+      {
+        "address": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+        "is_signer": false,
+        "is_writable": false
+      },
+      {
+        "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "is_signer": false,
+        "is_writable": false
+      }
+    ],
+    "instructions": [
+      {
+        "program": "ComputeBudget111111111111111111111111111111",
+        "accounts": [],
+        "data": "031027000000000000"
+      },
+      {
+        "program": "ComputeBudget111111111111111111111111111111",
+        "accounts": [],
+        "data": "02801a0600"
+      },
+      {
+        "program": "11111111111111111111111111111111",
+        "accounts": [
+          {
+            "address": "9DtcNyxn2JNFK4kuWiS99pbFpHefNtxpHz9pHjyjRsQB",
+            "is_signer": true,
+            "is_writable": true
+          },
+          {
+            "address": "4WFPz6trfkGobb7gAsVxoLEM6kwxF3f2xMvmXFH33gY8",
+            "is_signer": true,
+            "is_writable": true
+          }
+        ],
+        "data": "02000000c077361900000000"
+      },
+      {
+        "program": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+        "accounts": [
+          {
+            "address": "CV6bkrUksMwcEC4jfLTJsbHwF3Y2YurZdWWua95Fpbtd",
+            "is_signer": false,
+            "is_writable": true
+          },
+          {
+            "address": "ECVFhdhHYpVmHDUD7b6N4Y38HGL2GXHj4wnmqPmjZ4U4",
+            "is_signer": false,
+            "is_writable": false
+          },
+          {
+            "address": "uR3aXvCwZ5WnhNfXYYaeWvrg1ZTnF5uuAVpLDeDzFcB",
+            "is_signer": false,
+            "is_writable": true
+          },
+          {
+            "address": "4WFPz6trfkGobb7gAsVxoLEM6kwxF3f2xMvmXFH33gY8",
+            "is_signer": true,
+            "is_writable": true
+          },
+          {
+            "address": "EpomeRdrhUeAmVyECwima2gBpY3jUoA6cee89EcADaPT",
+            "is_signer": false,
+            "is_writable": true
+          },
+          {
+            "address": "93eSDRCdrbN6sYDyvnHzoSYUkSgchGsU5ZzFvQrCqD3e",
+            "is_signer": false,
+            "is_writable": true
+          },
+          {
+            "address": "EpomeRdrhUeAmVyECwima2gBpY3jUoA6cee89EcADaPT",
+            "is_signer": false,
+            "is_writable": true
+          },
+          {
+            "address": "7cBuurYDdaqxnem7KyMTci6SWhjJKroZ6NUjqH2ewEPB",
+            "is_signer": false,
+            "is_writable": true
+          },
+          {
+            "address": "11111111111111111111111111111111",
+            "is_signer": false,
+            "is_writable": false
+          },
+          {
+            "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "is_signer": false,
+            "is_writable": false
+          }
+        ],
+        "data": "0ec077361900000000"
+      }
+    ],
+    "inner_instructions": [
+      {
+        "program": "11111111111111111111111111111111",
+        "accounts": [
+          {
+            "address": "4WFPz6trfkGobb7gAsVxoLEM6kwxF3f2xMvmXFH33gY8",
+            "is_signer": true,
+            "is_writable": true
+          },
+          {
+            "address": "uR3aXvCwZ5WnhNfXYYaeWvrg1ZTnF5uuAVpLDeDzFcB",
+            "is_signer": false,
+            "is_writable": true
+          }
+        ],
+        "data": "02000000c077361900000000"
+      },
+      {
+        "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "accounts": [
+          {
+            "address": "7cBuurYDdaqxnem7KyMTci6SWhjJKroZ6NUjqH2ewEPB",
+            "is_signer": false,
+            "is_writable": true
+          },
+          {
+            "address": "EpomeRdrhUeAmVyECwima2gBpY3jUoA6cee89EcADaPT",
+            "is_signer": false,
+            "is_writable": true
+          },
+          {
+            "address": "ECVFhdhHYpVmHDUD7b6N4Y38HGL2GXHj4wnmqPmjZ4U4",
+            "is_signer": false,
+            "is_writable": false
+          }
+        ],
+        "data": "072b0e991700000000"
+      }
+    ],
+    "inner_instruction_frames": [
+      {
+        "outer_index": 3,
+        "stack_height": 2,
+        "program": "11111111111111111111111111111111",
+        "account_count": 2,
+        "data_len": 12,
+        "discriminant": 2
+      },
+      {
+        "outer_index": 3,
+        "stack_height": 2,
+        "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "account_count": 3,
+        "data_len": 9,
+        "discriminant": 7
+      }
+    ],
+    "success": true,
+    "error": null,
+    "fee": 14000,
+    "compute_units": 12368,
+    "pre_balances": [
+      128727023739,
+      0,
+      1461628,
+      2039280,
+      5143440,
+      2039298,
+      237464026804,
+      1,
+      1,
+      0,
+      153141440,
+      43712780
+    ],
+    "post_balances": [
+      128304009739,
+      0,
+      1461628,
+      2039280,
+      5143440,
+      2039298,
+      237887026804,
+      1,
+      1,
+      0,
+      153141440,
+      43712780
+    ],
+    "pre_token_balances": [
+      {
+        "account_index": 3,
+        "mint": "7cBuurYDdaqxnem7KyMTci6SWhjJKroZ6NUjqH2ewEPB",
+        "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "amount": 2109226759,
+        "decimals": 9
+      },
+      {
+        "account_index": 5,
+        "mint": "7cBuurYDdaqxnem7KyMTci6SWhjJKroZ6NUjqH2ewEPB",
+        "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "amount": 1064121614,
+        "decimals": 9
+      }
+    ],
+    "post_token_balances": [
+      {
+        "account_index": 3,
+        "mint": "7cBuurYDdaqxnem7KyMTci6SWhjJKroZ6NUjqH2ewEPB",
+        "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "amount": 2109226759,
+        "decimals": 9
+      },
+      {
+        "account_index": 5,
+        "mint": "7cBuurYDdaqxnem7KyMTci6SWhjJKroZ6NUjqH2ewEPB",
+        "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "amount": 1460028217,
+        "decimals": 9
+      }
+    ],
+    "native_value_lamports": 423007000,
+    "logs": [
+      "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+      "Program ComputeBudget111111111111111111111111111111 success",
+      "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+      "Program ComputeBudget111111111111111111111111111111 success",
+      "Program 11111111111111111111111111111111 invoke [1]",
+      "Program 11111111111111111111111111111111 success",
+      "Program SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy invoke [1]",
+      "Program log: Instruction: DepositSol",
+      "Program 11111111111111111111111111111111 invoke [2]",
+      "Program 11111111111111111111111111111111 success",
+      "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [2]",
+      "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 120 of 389524 compute units",
+      "Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success",
+      "Program SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy consumed 11918 of 399550 compute units",
+      "Program SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy success"
+    ]
+  },
+  "accounts": [
+    {
+      "label": "payer",
+      "address": "9DtcNyxn2JNFK4kuWiS99pbFpHefNtxpHz9pHjyjRsQB",
+      "account": {
+        "lamports": 128727023739,
+        "owner": "11111111111111111111111111111111",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 18446744073709551615
+      }
+    },
+    {
+      "label": "pool-mint",
+      "address": "7cBuurYDdaqxnem7KyMTci6SWhjJKroZ6NUjqH2ewEPB",
+      "account": {
+        "lamports": 1461628,
+        "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "data": "01000000c41943e60f899dccfe8c219d36d30db9423c8975da9705e6131c2e6be23e1e2de352638e750901000901000000000000000000000000000000000000000000000000000000000000000000000000",
+        "executable": false,
+        "rent_epoch": 18446744073709551615
+      }
+    },
+    {
+      "label": "manager-fee",
+      "address": "93eSDRCdrbN6sYDyvnHzoSYUkSgchGsU5ZzFvQrCqD3e",
+      "account": {
+        "lamports": 2039280,
+        "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "data": "6229c9d552e5411596570907d7022d2b582d430070b0a42b4446e2c292d08d3a76bc0810d69bd8dd1a2b974d0f21148a3064dc6e70dd3ae3159893211a3b2d29073fb87d00000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "executable": false,
+        "rent_epoch": 18446744073709551615
+      }
+    },
+    {
+      "label": "stake-pool",
+      "address": "CV6bkrUksMwcEC4jfLTJsbHwF3Y2YurZdWWua95Fpbtd",
+      "account": {
+        "lamports": 5143440,
+        "owner": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+        "data": "0176bc0810d69bd8dd1a2b974d0f21148a3064dc6e70dd3ae3159893211a3b2d2976bc0810d69bd8dd1a2b974d0f21148a3064dc6e70dd3ae3159893211a3b2d295121c1ff970b404740fdbcc590370166a00b0eefd515254e75bfb995cdf75289fd32ba5f9152770d6912c67369291c862fd25d32d52f75158235a03669c40dbb450d6d63a3e008ddeb3c907424018aefb778a9f4df27ead228b022004918514d386229c9d552e5411596570907d7022d2b582d430070b0a42b4446e2c292d08d3a778afc0f4972865758fb52ad1373875d77de699f4e7a10f1a9c36b84768cbd5906ddf6e1d765a193d9cbe146ceeb79ac1cb485ed5f5b37913a8cf5857eff00a9dbe49026a01b0100e352638e75090100e30300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010270000000000000100000000000000000000e8030000000000000000000000000000a0860100000000002300000000000000000000e80300000000000000000000000000000001d676420984d64b95eaaca9d718d48aab78243c760834dc357adb72b508c5c9fa40420f000000000001000000000000000084d46fe6800901008323653c961b0100fd4be0bcdb19010042a6e392f72501000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "executable": false,
+        "rent_epoch": 18446744073709551615
+      }
+    },
+    {
+      "label": "destination-pool-token",
+      "address": "EpomeRdrhUeAmVyECwima2gBpY3jUoA6cee89EcADaPT",
+      "account": {
+        "lamports": 2039298,
+        "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "data": "6229c9d552e5411596570907d7022d2b582d430070b0a42b4446e2c292d08d3a7a2ad21a4446eda70a8d3dbc0bb71fc5d9b6850a94cf38b3483ef5f285150b280e356d3f000000000000000075b04c9ba5857499ee75ff58d94180c3087b949f1103213a3f55027a5282c354010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "executable": false,
+        "rent_epoch": 18446744073709551615
+      }
+    },
+    {
+      "label": "reserve-stake",
+      "address": "uR3aXvCwZ5WnhNfXYYaeWvrg1ZTnF5uuAVpLDeDzFcB",
+      "account": {
+        "lamports": 237464026804,
+        "owner": "Stake11111111111111111111111111111111111111",
+        "data": "0100000080d5220000000000c41943e60f899dccfe8c219d36d30db9423c8975da9705e6131c2e6be23e1e2dc41943e60f899dccfe8c219d36d30db9423c8975da9705e6131c2e6be23e1e2d00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "executable": false,
+        "rent_epoch": 18446744073709551615
+      }
+    }
+  ],
+  "clock": {
+    "slot": 429878778,
+    "epoch_start_timestamp": 0,
+    "epoch": 0,
+    "leader_schedule_epoch": 0,
+    "unix_timestamp": 1782822645
+  },
+  "state_source": "historical_archive",
+  "pre_state_hash": "1d548060540eacae2c559d856bd85a6267c3717082a15d40e168e9f1519715ec",
+  "original": {
+    "success": true,
+    "fee": 14000,
+    "post_state_hash": "12b142de86457abc3207f24919c0964d46ffb77a0652c425d41b5f14b7594918",
+    "cpi_invocations": [
+      {
+        "outer_index": 3,
+        "stack_height": 2,
+        "program": "11111111111111111111111111111111",
+        "account_count": 2,
+        "data_len": 12,
+        "discriminant": 2
+      },
+      {
+        "outer_index": 3,
+        "stack_height": 2,
+        "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "account_count": 3,
+        "data_len": 9,
+        "discriminant": 7
+      }
+    ]
+  },
+  "current_program_sha256": "a8571c781982c72c2531f5957aab7d902df35cb3c1ed0d34829f03f9f0166770",
+  "dependencies": {
+    "programs": [
+      {
+        "program_id": "11111111111111111111111111111111",
+        "source": "builtin",
+        "observed_slot": 429878777,
+        "discovered_by": [
+          "top_level_instruction",
+          "inner_instruction",
+          "execution_log",
+          "adapter_declared"
+        ],
+        "note": "owned by the native loader at this slot; the validator implements it and no artefact is loaded"
+      },
+      {
+        "program_id": "ComputeBudget111111111111111111111111111111",
+        "source": "builtin",
+        "observed_slot": 429878777,
+        "discovered_by": [
+          "top_level_instruction",
+          "execution_log"
+        ],
+        "note": "owned by the native loader at this slot; the validator implements it and no artefact is loaded"
+      },
+      {
+        "program_id": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+        "source": "historical_mainnet",
+        "loader": "upgradeable",
+        "deployed_slot": 370300186,
+        "binary_sha256": "a8571c781982c72c2531f5957aab7d902df35cb3c1ed0d34829f03f9f0166770",
+        "binary_len": 1080464,
+        "observed_slot": 429878777,
+        "discovered_by": [
+          "program_under_test",
+          "top_level_instruction",
+          "execution_log"
+        ]
+      },
+      {
+        "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "source": "historical_mainnet",
+        "loader": "upgradeable",
+        "deployed_slot": 419472000,
+        "binary_sha256": "8190d3f7ceb6cb7a7a8d8924bff89f9f611e15ce1f806f2b6237f3311a98f697",
+        "binary_len": 108600,
+        "observed_slot": 429878777,
+        "discovered_by": [
+          "inner_instruction",
+          "execution_log",
+          "adapter_declared"
+        ]
+      }
+    ]
+  },
+  "acquisitions": [
+    {
+      "address": "9DtcNyxn2JNFK4kuWiS99pbFpHefNtxpHz9pHjyjRsQB",
+      "label": "payer",
+      "discovered_by": [
+        "instruction_meta"
+      ],
+      "source": "historical_archive",
+      "context_slot": 429878777,
+      "method": "getAccountInfo at exact slot, honored by the archive, at S-1 and S"
+    },
+    {
+      "address": "4WFPz6trfkGobb7gAsVxoLEM6kwxF3f2xMvmXFH33gY8",
+      "label": "depositor",
+      "discovered_by": [
+        "instruction_meta",
+        "inner_instruction",
+        "adapter_dependency"
+      ],
+      "source": "absent_at_both_boundaries",
+      "context_slot": 429878777,
+      "method": "getAccountInfo at exact slots S-1 and S returned no account; validator balances confirm it held nothing"
+    },
+    {
+      "address": "7cBuurYDdaqxnem7KyMTci6SWhjJKroZ6NUjqH2ewEPB",
+      "label": "pool-mint",
+      "discovered_by": [
+        "instruction_meta",
+        "inner_instruction",
+        "adapter_dependency"
+      ],
+      "source": "historical_archive",
+      "context_slot": 429878777,
+      "method": "getAccountInfo at exact slot, honored by the archive, at S-1 and S"
+    },
+    {
+      "address": "93eSDRCdrbN6sYDyvnHzoSYUkSgchGsU5ZzFvQrCqD3e",
+      "label": "manager-fee",
+      "discovered_by": [
+        "instruction_meta",
+        "adapter_dependency"
+      ],
+      "source": "historical_archive",
+      "context_slot": 429878777,
+      "method": "getAccountInfo at exact slot, honored by the archive, at S-1 and S"
+    },
+    {
+      "address": "CV6bkrUksMwcEC4jfLTJsbHwF3Y2YurZdWWua95Fpbtd",
+      "label": "stake-pool",
+      "discovered_by": [
+        "instruction_meta",
+        "adapter_dependency"
+      ],
+      "source": "historical_archive",
+      "context_slot": 429878777,
+      "method": "getAccountInfo at exact slot, honored by the archive, at S-1 and S"
+    },
+    {
+      "address": "EpomeRdrhUeAmVyECwima2gBpY3jUoA6cee89EcADaPT",
+      "label": "destination-pool-token",
+      "discovered_by": [
+        "instruction_meta",
+        "inner_instruction",
+        "adapter_dependency"
+      ],
+      "source": "historical_archive",
+      "context_slot": 429878777,
+      "method": "getAccountInfo at exact slot, honored by the archive, at S-1 and S"
+    },
+    {
+      "address": "uR3aXvCwZ5WnhNfXYYaeWvrg1ZTnF5uuAVpLDeDzFcB",
+      "label": "reserve-stake",
+      "discovered_by": [
+        "instruction_meta",
+        "inner_instruction",
+        "adapter_dependency"
+      ],
+      "source": "historical_archive",
+      "context_slot": 429878777,
+      "method": "getAccountInfo at exact slot, honored by the archive, at S-1 and S"
+    },
+    {
+      "address": "ECVFhdhHYpVmHDUD7b6N4Y38HGL2GXHj4wnmqPmjZ4U4",
+      "label": "withdraw-authority",
+      "discovered_by": [
+        "instruction_meta",
+        "inner_instruction",
+        "adapter_dependency"
+      ],
+      "source": "absent_at_both_boundaries",
+      "context_slot": 429878777,
+      "method": "getAccountInfo at exact slots S-1 and S returned no account; validator balances confirm it held nothing"
+    }
+  ],
+  "slot_screening": {
+    "slot": 429878778,
+    "target_signature": "58d7oY3zMFRSjcbEZErYYjxEuLEWzNSXphvHBfGNZ78hVznzmLnY1hPNhG8LpV83EYcha8wQn6XifPS53bxR1pgs",
+    "target_index": 67,
+    "transactions_in_slot": 1503,
+    "required_accounts": [
+      "7cBuurYDdaqxnem7KyMTci6SWhjJKroZ6NUjqH2ewEPB",
+      "93eSDRCdrbN6sYDyvnHzoSYUkSgchGsU5ZzFvQrCqD3e",
+      "9DtcNyxn2JNFK4kuWiS99pbFpHefNtxpHz9pHjyjRsQB",
+      "CV6bkrUksMwcEC4jfLTJsbHwF3Y2YurZdWWua95Fpbtd",
+      "EpomeRdrhUeAmVyECwima2gBpY3jUoA6cee89EcADaPT",
+      "uR3aXvCwZ5WnhNfXYYaeWvrg1ZTnF5uuAVpLDeDzFcB"
+    ],
+    "conflicts": []
+  },
+  "assumptions": [
+    "2 token account balance(s) at S-1 and S match the validator-observed pre/post token balances",
+    "every snapshot's lamports match validator-observed pre/post balances",
+    "the pool's total_lamports change equals the validator-observed lamport change of the reserve stake account",
+    "the pool's pool_token_supply change equals the validator-observed change in holdings of the pool mint",
+    "read-only accounts are byte-identical across the boundary; validator metadata records no account data, so their bytes rest on the archive and on V1 reproducing the original outcome",
+    "the reserve stake account's delegation state is carried through unchanged: a SOL deposit credits its lamports and does not invoke the stake program",
+    "supported contract is one DepositSol into a pool with no SOL deposit authority, with cross-program invocation into the System and SPL Token programs only",
+    "the pool's own share arithmetic reads no Clock; the pinned replay clock reproduces the transaction's slot and block time",
+    "2 message key(s) held no account at either boundary and the validator recorded a zero balance for each; the runtime materializes them as empty System-owned accounts, matching the original execution",
+    "V1 is the slot-370300186 deployment live at slot 429878778, read from ProgramData at slot 429878777",
+    "1 dependency program(s) are loaded from the deployment live at slot 429878777, not from today's; 2 are implemented by the runtime and nothing is substituted for them",
+    "no other transaction among the 1503 in slot 429878778 takes any of the 6 required accounts as writable",
+    "the runtime feature set is LiteSVM's mainnet snapshot rather than a slot-accurate reconstruction; both builds run under the identical set, and V1 reproducing the original outcome - its fee, its invocation graph and its post-state - is what rules out a material difference"
+  ]
+}

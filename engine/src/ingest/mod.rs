@@ -14,6 +14,7 @@ use serde_json::{json, Value};
 use std::{
     collections::BTreeSet,
     path::{Path, PathBuf},
+    sync::atomic::{AtomicU64, Ordering},
 };
 use transactions::HistoricalTransaction;
 
@@ -56,6 +57,46 @@ impl RpcProvider for CachedRpc<'_> {
         Ok(value)
     }
 }
+
+#[derive(Default)]
+pub struct CacheMetrics {
+    hits: AtomicU64,
+    misses: AtomicU64,
+}
+
+impl CacheMetrics {
+    pub fn hits(&self) -> u64 {
+        self.hits.load(Ordering::Relaxed)
+    }
+
+    pub fn misses(&self) -> u64 {
+        self.misses.load(Ordering::Relaxed)
+    }
+}
+
+/// Cache adapter with explicit per-run metrics. Kept separate from `CachedRpc`
+/// so Phase 4's minimal API and behavior remain unchanged.
+pub struct MeasuredCachedRpc<'a> {
+    pub provider: &'a dyn RpcProvider,
+    pub root: PathBuf,
+    pub metrics: &'a CacheMetrics,
+}
+
+impl RpcProvider for MeasuredCachedRpc<'_> {
+    fn call(&self, method: &str, params: Value) -> Result<Value> {
+        let path = cache_path(&self.root, method, &params);
+        if path.exists() {
+            self.metrics.hits.fetch_add(1, Ordering::Relaxed);
+            return read_json(&path);
+        }
+        self.metrics.misses.fetch_add(1, Ordering::Relaxed);
+        let value = self.provider.call(method, params)?;
+        if !value.is_null() {
+            write_json(&path, &value)?;
+        }
+        Ok(value)
+    }
+}
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct IngestManifest {
     pub schema_version: u32,
@@ -73,8 +114,37 @@ pub fn discover(
     start: u64,
     end: u64,
 ) -> Result<IngestManifest> {
+    discover_bounded_with_concurrency(rpc, program, start, end, None, 1)
+}
+
+/// As [`discover`], with a deterministic cap on normalized interactions. The
+/// newest matching signatures in the slot window are retained, then sorted in
+/// canonical slot/signature order.
+pub fn discover_bounded(
+    rpc: &dyn RpcProvider,
+    program: &str,
+    start: u64,
+    end: u64,
+    max_transactions: Option<usize>,
+) -> Result<IngestManifest> {
+    discover_bounded_with_concurrency(rpc, program, start, end, max_transactions, 1)
+}
+
+pub fn discover_bounded_with_concurrency(
+    rpc: &dyn RpcProvider,
+    program: &str,
+    start: u64,
+    end: u64,
+    max_transactions: Option<usize>,
+    concurrency: usize,
+) -> Result<IngestManifest> {
     program.parse::<solana_address::Address>()?;
     anyhow::ensure!(start <= end, "start_slot must be <= end_slot");
+    anyhow::ensure!(
+        max_transactions != Some(0),
+        "transaction limit must be positive"
+    );
+    anyhow::ensure!(concurrency > 0, "RPC concurrency must be positive");
     let genesis_hash = rpc
         .call("getGenesisHash", json!([]))?
         .as_str()
@@ -94,11 +164,15 @@ pub fn discover(
             break;
         }
         let mut reached_start = false;
+        let mut candidates = Vec::new();
         for item in page {
             let slot = item["slot"].as_u64().context("signature missing slot")?;
-            let signature = item["signature"].as_str().context("missing signature")?;
+            let signature = item["signature"]
+                .as_str()
+                .context("missing signature")?
+                .to_string();
             anyhow::ensure!(
-                seen.insert(signature.to_string()),
+                seen.insert(signature.clone()),
                 "RPC pagination repeated a signature"
             );
             if slot < start {
@@ -108,23 +182,51 @@ pub fn discover(
             if slot > end {
                 continue;
             }
-            let raw=rpc.call("getTransaction",json!([signature,{"encoding":"json","commitment":"confirmed","maxSupportedTransactionVersion":0}]))?;
-            let tx = transactions::normalize(&raw)
-                .with_context(|| format!("normalizing {signature}"))?;
-            anyhow::ensure!(
-                tx.signature == signature && tx.slot == slot,
-                "transaction identity differs from discovery"
-            );
-            if tx
-                .instructions
-                .iter()
-                .chain(tx.inner_instructions.iter())
-                .any(|i| i.program == program)
-            {
-                txs.push(tx);
+            candidates.push((signature, slot));
+        }
+        let mut reached_limit = false;
+        for chunk in candidates.chunks(concurrency) {
+            let results: Vec<_> = std::thread::scope(|scope| {
+                let handles: Vec<_> = chunk
+                    .iter()
+                    .map(|(signature, slot)| {
+                        scope.spawn(move || {
+                            let raw=rpc.call("getTransaction",json!([signature,{"encoding":"json","commitment":"confirmed","maxSupportedTransactionVersion":0}]))?;
+                            let tx = transactions::normalize(&raw)
+                                .with_context(|| format!("normalizing {signature}"))?;
+                            anyhow::ensure!(
+                                tx.signature == *signature && tx.slot == *slot,
+                                "transaction identity differs from discovery"
+                            );
+                            Ok::<_, anyhow::Error>(tx)
+                        })
+                    })
+                    .collect();
+                handles
+                    .into_iter()
+                    .map(|handle| handle.join().expect("RPC worker panicked"))
+                    .collect()
+            });
+            for result in results {
+                let tx = result?;
+                if tx
+                    .instructions
+                    .iter()
+                    .chain(tx.inner_instructions.iter())
+                    .any(|i| i.program == program)
+                {
+                    txs.push(tx);
+                    if max_transactions.is_some_and(|limit| txs.len() >= limit) {
+                        reached_limit = true;
+                        break;
+                    }
+                }
+            }
+            if reached_limit {
+                break;
             }
         }
-        if reached_start {
+        if reached_start || reached_limit {
             break;
         }
         before = Some(
@@ -183,7 +285,31 @@ pub fn ingest(
     start: u64,
     end: u64,
 ) -> Result<IngestManifest> {
-    let manifest = discover(rpc, program, start, end)?;
+    ingest_bounded(rpc, root, program, start, end, None)
+}
+
+pub fn ingest_bounded(
+    rpc: &dyn RpcProvider,
+    root: &Path,
+    program: &str,
+    start: u64,
+    end: u64,
+    max_transactions: Option<usize>,
+) -> Result<IngestManifest> {
+    ingest_bounded_with_concurrency(rpc, root, program, start, end, max_transactions, 1)
+}
+
+pub fn ingest_bounded_with_concurrency(
+    rpc: &dyn RpcProvider,
+    root: &Path,
+    program: &str,
+    start: u64,
+    end: u64,
+    max_transactions: Option<usize>,
+    concurrency: usize,
+) -> Result<IngestManifest> {
+    let manifest =
+        discover_bounded_with_concurrency(rpc, program, start, end, max_transactions, concurrency)?;
     for tx in &manifest.transactions {
         write_json(
             &root

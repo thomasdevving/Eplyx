@@ -1,0 +1,32 @@
+[package]
+name = "fixture-stake-pool-candidate"
+version = "0.1.0"
+edition = "2021"
+description = "Deliberately regressed SPL-Stake-Pool-compatible candidate used for CPI-aware historical replay demonstration."
+license = "MIT"
+
+[workspace]
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[features]
+default = []
+# Builds the share calculation without the defect. It exists so the
+# cross-program execution path can be exercised locally, against the real SPL
+# Token program, without downloading a mainnet binary - not as a reimplementation
+# of the stake pool and not as anything to deploy.
+reference = []
+custom-heap = []
+custom-panic = []
+no-entrypoint = []
+
+[dependencies]
+solana-program = "4.1"
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_os, values("solana"))'] }
+
+[profile.release]
+overflow-checks = true
+codegen-units = 1

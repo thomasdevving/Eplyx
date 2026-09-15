@@ -8,9 +8,8 @@ use eplyx_engine::{
 };
 use serde_json::{json, Value};
 use std::{
-    cell::Cell,
     path::PathBuf,
-    sync::atomic::{AtomicU64, Ordering},
+    sync::atomic::{AtomicU64, AtomicUsize, Ordering},
 };
 
 fn fixture() -> engine::Fixture {
@@ -66,12 +65,16 @@ fn record() -> ReplayRecord {
         },
         original: None,
         current_program_sha256: hash_bytes(&v1.bytes),
+        dependencies: Default::default(),
+        acquisitions: vec![],
+        slot_screening: None,
         assumptions: vec!["offline test".into()],
     };
     record.original = Some(OriginalExecution {
         success: original.success,
         fee: original.fee,
         post_state_hash: record.post_hash(&original).unwrap(),
+        cpi_invocations: cpi_graph(&original.cpi_calls),
     });
     record
 }
@@ -104,6 +107,22 @@ fn normalization_preserves_order_privileges_and_instruction_bytes() {
     assert_eq!(tx.version, "legacy");
     assert_eq!(tx.slot, executor::FIXED_SLOT);
     assert_eq!(tx.instructions[0].data, vec![7]);
+}
+
+#[test]
+fn normalization_derives_native_movement_without_calling_it_economic_value() {
+    let mut raw = raw_transaction();
+    let count = raw["transaction"]["message"]["accountKeys"]
+        .as_array()
+        .unwrap()
+        .len();
+    let pre = vec![100_u64; count];
+    let mut post = pre.clone();
+    post[0] = 90;
+    post[1] = 110;
+    raw["meta"]["preBalances"] = json!(pre);
+    raw["meta"]["postBalances"] = json!(post);
+    assert_eq!(normalize(&raw).unwrap().native_value_lamports, Some(10));
 }
 #[test]
 fn v0_resolves_loaded_accounts_and_preserves_duplicate_metas() {
@@ -177,11 +196,11 @@ fn canonical_hash_ignores_order_and_labels_but_covers_every_account_field() {
     assert!(state_hash(&duplicate).is_err());
 }
 struct CountingRpc {
-    calls: Cell<usize>,
+    calls: AtomicUsize,
 }
 impl RpcProvider for CountingRpc {
     fn call(&self, _: &str, params: Value) -> Result<Value> {
-        self.calls.set(self.calls.get() + 1);
+        self.calls.fetch_add(1, Ordering::Relaxed);
         Ok(params)
     }
 }
@@ -189,7 +208,7 @@ impl RpcProvider for CountingRpc {
 fn cache_paths_are_deterministic_and_roundtrip_without_rpc() {
     let temp = Temp::new();
     let rpc = CountingRpc {
-        calls: Cell::new(0),
+        calls: AtomicUsize::new(0),
     };
     let cache = ingest::CachedRpc {
         provider: &rpc,
@@ -207,10 +226,10 @@ fn cache_paths_are_deterministic_and_roundtrip_without_rpc() {
         cache.call("getTransaction", params.clone()).unwrap(),
         params
     );
-    assert_eq!(rpc.calls.get(), 1);
+    assert_eq!(rpc.calls.load(Ordering::Relaxed), 1);
     std::fs::write(a, b"bad json").unwrap();
     assert!(cache.call("getTransaction", params).is_err());
-    assert_eq!(rpc.calls.get(), 1);
+    assert_eq!(rpc.calls.load(Ordering::Relaxed), 1);
 }
 #[test]
 fn exact_offline_replay_uses_fresh_state_and_detects_candidate_regression() {
@@ -220,9 +239,9 @@ fn exact_offline_replay_uses_fresh_state_and_detects_candidate_regression() {
     let restored: ReplayRecord = serde_json::from_slice(&serialized).unwrap();
     assert_eq!(restored, record);
     assert!(!String::from_utf8(serialized).unwrap().contains("seed"));
-    let first = record.execute(&v1).unwrap();
-    let candidate = record.execute(&v2).unwrap();
-    let second = record.execute(&v1).unwrap();
+    let first = record.execute(&v1, &DependencyBundle::empty()).unwrap();
+    let candidate = record.execute(&v2, &DependencyBundle::empty()).unwrap();
+    let second = record.execute(&v1, &DependencyBundle::empty()).unwrap();
     assert_eq!(first, second);
     assert_eq!(record.fidelity(&first).unwrap(), ReplayFidelity::Exact);
     assert_ne!(
@@ -242,7 +261,7 @@ fn exact_offline_replay_uses_fresh_state_and_detects_candidate_regression() {
 fn fidelity_mismatch_blocks_candidate_and_unknown_is_not_exact() {
     let mut record = record();
     let (v1, _) = versions();
-    let original = record.execute(&v1).unwrap();
+    let original = record.execute(&v1, &DependencyBundle::empty()).unwrap();
     record.original.as_mut().unwrap().post_state_hash = "wrong".into();
     assert_eq!(
         record.fidelity(&original).unwrap(),
@@ -321,8 +340,73 @@ fn corpus_build_matches_capture_to_discovery_and_loads_offline() {
 }
 
 struct WindowRpc {
-    pages: Cell<usize>,
+    pages: AtomicUsize,
     raw: Value,
+}
+
+struct ParallelRpc {
+    pages: AtomicUsize,
+    active: AtomicUsize,
+    max_active: AtomicUsize,
+    raw: Value,
+    signatures: Vec<String>,
+}
+impl RpcProvider for ParallelRpc {
+    fn call(&self, method: &str, params: Value) -> Result<Value> {
+        match method {
+            "getGenesisHash" => Ok(json!("test-genesis")),
+            "getSignaturesForAddress" => {
+                if self.pages.fetch_add(1, Ordering::Relaxed) == 0 {
+                    Ok(Value::Array(
+                        self.signatures
+                            .iter()
+                            .map(|signature| {
+                                json!({"signature":signature,"slot":executor::FIXED_SLOT})
+                            })
+                            .collect(),
+                    ))
+                } else {
+                    Ok(json!([]))
+                }
+            }
+            "getTransaction" => {
+                let active = self.active.fetch_add(1, Ordering::SeqCst) + 1;
+                self.max_active.fetch_max(active, Ordering::SeqCst);
+                std::thread::sleep(std::time::Duration::from_millis(15));
+                let mut raw = self.raw.clone();
+                raw["transaction"]["signatures"][0] = params[0].clone();
+                self.active.fetch_sub(1, Ordering::SeqCst);
+                Ok(raw)
+            }
+            _ => anyhow::bail!("unexpected RPC method"),
+        }
+    }
+}
+
+#[test]
+fn discovery_respects_configured_parallel_transaction_fetches() {
+    let signatures: Vec<_> = (1..=4)
+        .map(|byte| bs58::encode([byte; 64]).into_string())
+        .collect();
+    let rpc = ParallelRpc {
+        pages: AtomicUsize::new(0),
+        active: AtomicUsize::new(0),
+        max_active: AtomicUsize::new(0),
+        raw: raw_transaction(),
+        signatures,
+    };
+    let manifest = ingest::discover_bounded_with_concurrency(
+        &rpc,
+        &engine::fixture_program_id().to_string(),
+        executor::FIXED_SLOT,
+        executor::FIXED_SLOT,
+        Some(4),
+        4,
+    )
+    .unwrap();
+    assert_eq!(manifest.transactions.len(), 4);
+    assert!(rpc.max_active.load(Ordering::SeqCst) > 1);
+    assert!(rpc.max_active.load(Ordering::SeqCst) <= 4);
 }
 impl RpcProvider for WindowRpc {
     fn call(&self, method: &str, params: Value) -> Result<Value> {
@@ -330,8 +414,7 @@ impl RpcProvider for WindowRpc {
             "getGenesisHash" => Ok(json!("test-genesis")),
             "getTransaction" => Ok(self.raw.clone()),
             "getSignaturesForAddress" => {
-                let page = self.pages.get();
-                self.pages.set(page + 1);
+                let page = self.pages.fetch_add(1, Ordering::Relaxed);
                 if page == 0 {
                     assert!(params[1].get("before").is_none());
                     Ok(
@@ -352,7 +435,7 @@ impl RpcProvider for WindowRpc {
 #[test]
 fn discovery_paginates_inclusive_window_and_filters_program_interaction() {
     let rpc = WindowRpc {
-        pages: Cell::new(0),
+        pages: AtomicUsize::new(0),
         raw: raw_transaction(),
     };
     let manifest = ingest::discover(
@@ -363,9 +446,9 @@ fn discovery_paginates_inclusive_window_and_filters_program_interaction() {
     )
     .unwrap();
     assert_eq!(manifest.transactions.len(), 1);
-    assert_eq!(rpc.pages.get(), 2);
+    assert_eq!(rpc.pages.load(Ordering::Relaxed), 2);
     let rpc = WindowRpc {
-        pages: Cell::new(0),
+        pages: AtomicUsize::new(0),
         raw: raw_transaction(),
     };
     let manifest = ingest::discover(

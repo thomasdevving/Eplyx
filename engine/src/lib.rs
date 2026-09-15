@@ -26,17 +26,23 @@
 
 pub mod cluster;
 pub mod corpus;
+pub mod dependencies;
 pub mod diff;
+pub mod discovery;
 pub mod executor;
 pub mod hexfmt;
+pub mod historical;
 pub mod impact;
 pub mod ingest;
 pub mod interpret;
 pub mod money;
+pub mod protocol;
 pub mod replay;
 pub mod report;
+pub mod screening;
 pub mod shrink;
 pub mod types;
+pub mod versions;
 
 use std::path::{Path, PathBuf};
 

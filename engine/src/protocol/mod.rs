@@ -1,0 +1,533 @@
+//! The protocol adapter seam.
+//!
+//! Through Phase 6 this was a module convention: `corpus`, `interpret` and
+//! `impact` knew what a health factor was, and the mainnet path bolted a second
+//! hard-coded contract next to the fixture one. Two protocols is where that
+//! stops scaling, so the seam is a trait from here on.
+//!
+//! An adapter owns exactly the knowledge that is specific to one program: which
+//! transactions it can replay exactly, what its accounts mean, how an archived
+//! snapshot is proved against validator metadata, and what an execution
+//! difference means economically. Everything it hands back is protocol-agnostic,
+//! which keeps `executor`, `diff` and `report` unable to learn protocol
+//! semantics by accident.
+//!
+//! Quantities stay integer. A token amount is base units plus the mint's
+//! decimal count, never a scaled float, and it serializes as a decimal string
+//! for the same reason [`crate::money::Usd`] does: a JSON number becomes a
+//! double in most consumers, and a u64 token amount does not survive that.
+
+pub mod stake_pool;
+pub mod token2022;
+
+use crate::{
+    executor::ExecutionResult,
+    ingest::transactions::HistoricalTransaction,
+    types::{AccountSnapshot, NamedAccount},
+};
+use anyhow::Result;
+use serde::{Deserialize, Serialize};
+use std::fmt;
+
+/// An integer token amount, interpreted against its mint's decimal count.
+///
+/// Decimals travel with the value because they are a property of the mint, not
+/// of the protocol: the same adapter handles a 6-decimal stablecoin and an
+/// 8-decimal tokenized equity in the same run.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TokenQuantity {
+    pub base_units: u64,
+    pub decimals: u8,
+}
+
+fn render(base_units: u128, decimals: u8) -> String {
+    if decimals == 0 {
+        return base_units.to_string();
+    }
+    let scale = 10_u128.pow(u32::from(decimals));
+    format!(
+        "{}.{:0width$}",
+        base_units / scale,
+        base_units % scale,
+        width = usize::from(decimals)
+    )
+}
+
+impl TokenQuantity {
+    pub fn new(base_units: u64, decimals: u8) -> Self {
+        Self {
+            base_units,
+            decimals,
+        }
+    }
+
+    /// Signed difference `self - other`, in base units.
+    ///
+    /// Returns `None` when the two sides carry different decimal counts: that
+    /// means they came from different mints and subtracting them would be
+    /// meaningless rather than merely imprecise.
+    pub fn delta(self, other: Self) -> Option<SignedTokenQuantity> {
+        if self.decimals != other.decimals {
+            return None;
+        }
+        Some(SignedTokenQuantity {
+            base_units: i128::from(self.base_units) - i128::from(other.base_units),
+            decimals: self.decimals,
+        })
+    }
+}
+
+impl fmt::Display for TokenQuantity {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(&render(u128::from(self.base_units), self.decimals))
+    }
+}
+
+/// A signed token delta.
+///
+/// The magnitude is `i128` internally so that a full-range `u64` decrease is
+/// representable, but it is never serialized inside an internally-tagged enum -
+/// see [`crate::diff::Difference`] - so the report path renders it as a string.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct SignedTokenQuantity {
+    pub base_units: i128,
+    pub decimals: u8,
+}
+
+impl SignedTokenQuantity {
+    pub fn is_zero(self) -> bool {
+        self.base_units == 0
+    }
+}
+
+impl fmt::Display for SignedTokenQuantity {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let sign = if self.base_units < 0 { "-" } else { "+" };
+        write!(
+            f,
+            "{sign}{}",
+            render(self.base_units.unsigned_abs(), self.decimals)
+        )
+    }
+}
+
+impl Serialize for SignedTokenQuantity {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.serialize_str(&self.to_string())
+    }
+}
+
+/// Parse the decimal-string form back. The fraction's digit count *is* the
+/// decimal count, so a value round-trips without carrying the mint's decimals
+/// separately.
+impl<'de> Deserialize<'de> for SignedTokenQuantity {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        use serde::de::Error as _;
+        let text = String::deserialize(deserializer)?;
+        let (negative, digits) = match text.strip_prefix('-') {
+            Some(rest) => (true, rest),
+            None => (false, text.strip_prefix('+').unwrap_or(&text)),
+        };
+        let (whole, fraction) = match digits.split_once('.') {
+            Some((whole, fraction)) => (whole, fraction),
+            None => (digits, ""),
+        };
+        if whole.is_empty()
+            || !whole.bytes().all(|b| b.is_ascii_digit())
+            || !fraction.bytes().all(|b| b.is_ascii_digit())
+        {
+            return Err(D::Error::custom(format!("invalid token amount {text:?}")));
+        }
+        let decimals = u8::try_from(fraction.len())
+            .map_err(|_| D::Error::custom("implausible decimal count"))?;
+        let combined = format!("{whole}{fraction}");
+        let magnitude: i128 = combined
+            .parse()
+            .map_err(|_| D::Error::custom(format!("token amount {text:?} overflows")))?;
+        Ok(Self {
+            base_units: if negative { -magnitude } else { magnitude },
+            decimals,
+        })
+    }
+}
+
+/// One decoded protocol-level field.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize)]
+#[serde(tag = "type", rename_all = "snake_case")]
+pub enum FieldValue {
+    /// A token amount. Rendered as a decimal string, never a JSON number.
+    Quantity {
+        #[serde(serialize_with = "quantity_as_string")]
+        amount: TokenQuantity,
+        base_units: u64,
+        decimals: u8,
+    },
+    Address(String),
+    Flag(bool),
+    Count(u64),
+    Text(String),
+}
+
+fn quantity_as_string<S: serde::Serializer>(
+    value: &TokenQuantity,
+    serializer: S,
+) -> Result<S::Ok, S::Error> {
+    serializer.serialize_str(&value.to_string())
+}
+
+impl FieldValue {
+    pub fn quantity(base_units: u64, decimals: u8) -> Self {
+        Self::Quantity {
+            amount: TokenQuantity::new(base_units, decimals),
+            base_units,
+            decimals,
+        }
+    }
+
+    pub fn as_quantity(&self) -> Option<TokenQuantity> {
+        match self {
+            Self::Quantity { amount, .. } => Some(*amount),
+            _ => None,
+        }
+    }
+
+    pub fn render(&self) -> String {
+        match self {
+            Self::Quantity { amount, .. } => amount.to_string(),
+            Self::Address(address) => address.clone(),
+            Self::Flag(flag) => flag.to_string(),
+            Self::Count(count) => count.to_string(),
+            Self::Text(text) => text.clone(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize)]
+pub struct SemanticField {
+    pub name: String,
+    pub value: FieldValue,
+    /// Whether a change in this field moves money. Compute and bookkeeping
+    /// fields are decoded for context but must not drive an economic verdict.
+    pub economic: bool,
+}
+
+/// One account, decoded into protocol terms.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize)]
+pub struct SemanticAccount {
+    pub kind: String,
+    pub fields: Vec<SemanticField>,
+}
+
+impl SemanticAccount {
+    pub fn field(&self, name: &str) -> Option<&SemanticField> {
+        self.fields.iter().find(|field| field.name == name)
+    }
+}
+
+/// One protocol quantity reported for both builds, whether or not it differs.
+///
+/// Distinct from [`EconomicChange`], which exists only when something changed.
+/// A preserved economic outcome is a real result and has to be visible as one:
+/// "both builds minted 0.077645365 pool tokens" is the answer a behaviour-
+/// preserving upgrade should produce, and an empty change list alone does not
+/// say it.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct EconomicObservation {
+    pub field: String,
+    pub v1: String,
+    pub v2: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delta: Option<SignedTokenQuantity>,
+    /// Whether a change in this quantity would move money.
+    pub economic: bool,
+}
+
+/// One economically meaningful difference between the two builds.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct EconomicChange {
+    pub account_label: String,
+    pub account_kind: String,
+    pub field: String,
+    pub v1: String,
+    pub v2: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub delta: Option<SignedTokenQuantity>,
+}
+
+/// What an adapter knows about one program.
+pub trait ProtocolAdapter: Sync {
+    fn name(&self) -> &'static str;
+
+    fn program_id(&self) -> &'static str;
+
+    /// Reject any transaction outside the contract this adapter replays exactly.
+    ///
+    /// The bar is exactness, not best effort: a shape this adapter cannot prove
+    /// is an error, never a silently approximated replay.
+    fn accept(&self, transaction: &HistoricalTransaction) -> Result<()>;
+
+    /// Whether this adapter's contract admits cross-program invocation.
+    ///
+    /// Defaults to `false`, so an adapter written before CPI replay existed
+    /// keeps its narrower guarantee rather than inheriting a wider one.
+    fn supports_cpi(&self) -> bool {
+        false
+    }
+
+    /// Programs the supported contract is known to reach, directly or by CPI.
+    ///
+    /// This is a floor, not the resolved set: dependencies are discovered from
+    /// the transaction itself and this list only adds what the protocol knows
+    /// it needs. Declaring a program here never causes it to execute; it causes
+    /// it to be resolved at the historical slot and recorded.
+    fn dependency_programs(&self) -> &'static [&'static str] {
+        &[]
+    }
+
+    /// Stable semantic label for the message key at `index`.
+    ///
+    /// Labels are how diffs and reports name accounts, so they must be derived
+    /// from the transaction's structure rather than from an address, and must be
+    /// unique within one record.
+    fn label(&self, transaction: &HistoricalTransaction, index: usize) -> String;
+
+    /// Decode an account's bytes. `None` for accounts this adapter does not own.
+    fn decode(&self, account: &AccountSnapshot) -> Option<SemanticAccount>;
+
+    /// Accounts the protocol knows this transaction depends on.
+    ///
+    /// A discovery route of its own, beside the message's instruction metas and
+    /// the validator's inner instructions: what a program reads is protocol
+    /// knowledge, and an account reached only that way would otherwise be
+    /// acquired without anything recording why it was needed.
+    fn required_accounts(&self, _transaction: &HistoricalTransaction) -> Vec<String> {
+        Vec::new()
+    }
+
+    /// Prove archived boundary snapshots against validator-observed metadata.
+    ///
+    /// Returns the human-readable assumptions the proof rests on, which are
+    /// recorded in the replay record so a reader can see what was and was not
+    /// established independently of the replay itself.
+    fn prove_boundaries(
+        &self,
+        transaction: &HistoricalTransaction,
+        pre: &[NamedAccount],
+        post: &[NamedAccount],
+    ) -> Result<Vec<String>>;
+
+    /// Economic interpretation of one V1/V2 execution pair.
+    fn interpret(
+        &self,
+        accounts: &[NamedAccount],
+        v1: &ExecutionResult,
+        v2: &ExecutionResult,
+    ) -> Vec<EconomicChange>;
+
+    /// Headline protocol quantities produced by one execution.
+    ///
+    /// These are what the protocol's users would recognize - the amount
+    /// deposited, the shares received - rather than the account fields they are
+    /// derived from. Reported for both builds side by side, so a preserved
+    /// outcome is stated rather than inferred from silence. Empty by default:
+    /// an adapter that has nothing to derive reports nothing rather than
+    /// inventing a summary.
+    fn summarize(
+        &self,
+        _accounts: &[NamedAccount],
+        _result: &ExecutionResult,
+    ) -> Vec<SemanticField> {
+        Vec::new()
+    }
+}
+
+/// Pair two summaries field by field into one comparison.
+///
+/// Fields are matched by name and reported in the order the V1 summary produced
+/// them, which keeps the rendering stable across runs. A field only one side
+/// produced is dropped rather than compared against a blank: the adapters here
+/// derive the same fields from either execution, so a missing one means the
+/// candidate failed before producing it, and the failure is reported elsewhere.
+pub fn pair_summaries(v1: &[SemanticField], v2: &[SemanticField]) -> Vec<EconomicObservation> {
+    v1.iter()
+        .filter_map(|field| {
+            let other = v2.iter().find(|candidate| candidate.name == field.name)?;
+            Some(EconomicObservation {
+                field: field.name.clone(),
+                v1: field.value.render(),
+                v2: other.value.render(),
+                delta: match (field.value.as_quantity(), other.value.as_quantity()) {
+                    (Some(before), Some(after)) => after.delta(before),
+                    _ => None,
+                },
+                economic: field.economic,
+            })
+        })
+        .collect()
+}
+
+/// Every adapter the engine knows about.
+///
+/// Deliberately a lookup rather than a registration hook: an adapter that is
+/// not compiled in cannot be selected by a corpus file, so a record can never
+/// name a protocol this build cannot actually reason about.
+pub fn adapter_for(program_id: &str) -> Option<&'static dyn ProtocolAdapter> {
+    const TOKEN_2022: token2022::Token2022Adapter = token2022::Token2022Adapter;
+    const STAKE_POOL: stake_pool::StakePoolAdapter = stake_pool::StakePoolAdapter;
+    if program_id == TOKEN_2022.program_id() {
+        return Some(&TOKEN_2022);
+    }
+    if program_id == STAKE_POOL.program_id() {
+        return Some(&STAKE_POOL);
+    }
+    None
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn quantities_render_against_their_mints_decimals() {
+        assert_eq!(TokenQuantity::new(7_157, 8).to_string(), "0.00007157");
+        assert_eq!(TokenQuantity::new(50_000_000, 6).to_string(), "50.000000");
+        assert_eq!(TokenQuantity::new(42, 0).to_string(), "42");
+    }
+
+    #[test]
+    fn deltas_carry_a_sign_and_keep_full_u64_range() {
+        let before = TokenQuantity::new(u64::MAX, 6);
+        let after = TokenQuantity::new(0, 6);
+        let delta = after.delta(before).expect("same mint");
+        assert_eq!(delta.base_units, -i128::from(u64::MAX));
+        assert!(delta.to_string().starts_with('-'));
+    }
+
+    /// Subtracting amounts from different mints is meaningless, not imprecise.
+    #[test]
+    fn quantities_from_different_mints_do_not_subtract() {
+        assert!(TokenQuantity::new(1, 6)
+            .delta(TokenQuantity::new(1, 8))
+            .is_none());
+    }
+
+    #[test]
+    fn quantities_serialize_as_strings_not_json_numbers() {
+        let json = serde_json::to_string(&FieldValue::quantity(7_157, 8)).unwrap();
+        assert!(json.contains("\"0.00007157\""), "{json}");
+    }
+
+    #[test]
+    fn signed_quantities_round_trip_through_their_string_form() {
+        for value in [
+            SignedTokenQuantity {
+                base_units: -10_000_000,
+                decimals: 6,
+            },
+            SignedTokenQuantity {
+                base_units: 7_157,
+                decimals: 8,
+            },
+            SignedTokenQuantity {
+                base_units: 0,
+                decimals: 0,
+            },
+            SignedTokenQuantity {
+                base_units: -i128::from(u64::MAX),
+                decimals: 9,
+            },
+        ] {
+            let json = serde_json::to_string(&value).unwrap();
+            let parsed: SignedTokenQuantity = serde_json::from_str(&json).unwrap();
+            assert_eq!(parsed, value, "round trip of {json}");
+        }
+    }
+
+    #[test]
+    fn summaries_pair_by_name_and_keep_v1_order() {
+        let v1 = vec![
+            SemanticField {
+                name: "pool_tokens_received".into(),
+                value: FieldValue::quantity(77_645_365, 9),
+                economic: true,
+            },
+            SemanticField {
+                name: "sol_deposited".into(),
+                value: FieldValue::quantity(100_000_000, 9),
+                economic: true,
+            },
+        ];
+        let v2 = vec![
+            SemanticField {
+                name: "sol_deposited".into(),
+                value: FieldValue::quantity(100_000_000, 9),
+                economic: true,
+            },
+            SemanticField {
+                name: "pool_tokens_received".into(),
+                value: FieldValue::quantity(77_567_719, 9),
+                economic: true,
+            },
+        ];
+        let paired = pair_summaries(&v1, &v2);
+        assert_eq!(paired[0].field, "pool_tokens_received");
+        assert_eq!(paired[0].v1, "0.077645365");
+        assert_eq!(paired[0].v2, "0.077567719");
+        assert_eq!(paired[0].delta.unwrap().base_units, -77_646);
+        assert_eq!(paired[1].field, "sol_deposited");
+        assert!(paired[1].delta.unwrap().is_zero());
+    }
+
+    /// A preserved quantity is still reported. Silence is not a result.
+    #[test]
+    fn an_unchanged_summary_field_is_still_reported() {
+        let field = vec![SemanticField {
+            name: "pool_tokens_received".into(),
+            value: FieldValue::quantity(77_645_365, 9),
+            economic: true,
+        }];
+        let paired = pair_summaries(&field, &field);
+        assert_eq!(paired.len(), 1);
+        assert_eq!(paired[0].v1, paired[0].v2);
+        assert!(paired[0].delta.unwrap().is_zero());
+    }
+
+    #[test]
+    fn an_economic_change_round_trips() {
+        let change = EconomicChange {
+            account_label: "source".into(),
+            account_kind: "token-account".into(),
+            field: "amount".into(),
+            v1: "0.000000".into(),
+            v2: "1.000000".into(),
+            delta: Some(SignedTokenQuantity {
+                base_units: 1_000_000,
+                decimals: 6,
+            }),
+        };
+        let json = serde_json::to_string(&change).unwrap();
+        assert_eq!(
+            serde_json::from_str::<EconomicChange>(&json).unwrap(),
+            change
+        );
+    }
+
+    #[test]
+    fn an_unknown_program_has_no_adapter() {
+        assert!(adapter_for("11111111111111111111111111111111").is_none());
+        assert!(adapter_for(token2022::PROGRAM_ID).is_some());
+        assert!(adapter_for(stake_pool::PROGRAM_ID).is_some());
+    }
+
+    /// The CPI contract is opt-in per adapter. Token-2022's path was proved
+    /// without it and keeps the narrower guarantee.
+    #[test]
+    fn cpi_support_is_declared_per_adapter() {
+        assert!(!adapter_for(token2022::PROGRAM_ID).unwrap().supports_cpi());
+        assert!(adapter_for(stake_pool::PROGRAM_ID).unwrap().supports_cpi());
+        assert!(adapter_for(token2022::PROGRAM_ID)
+            .unwrap()
+            .dependency_programs()
+            .is_empty());
+    }
+}

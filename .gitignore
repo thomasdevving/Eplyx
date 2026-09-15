@@ -1,6 +1,9 @@
 # Rust build output
 /target/
 programs/fixture-lending/target/
+programs/fixture-memo-candidate/target/
+programs/fixture-token2022-candidate/target/
+programs/fixture-stake-pool-candidate/target/
 
 # Compiled program artefacts: reproduced by ./scripts/build-programs.sh
 /artifacts/

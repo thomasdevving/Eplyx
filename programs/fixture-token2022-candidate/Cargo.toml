@@ -1,0 +1,27 @@
+[package]
+name = "fixture-token2022-candidate"
+version = "0.1.0"
+edition = "2021"
+description = "Deliberately regressed Token-2022-compatible candidate used for historical replay demonstration."
+license = "MIT"
+
+[workspace]
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[features]
+default = []
+custom-heap = []
+custom-panic = []
+no-entrypoint = []
+
+[dependencies]
+solana-program = "4.1"
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_os, values("solana"))'] }
+
+[profile.release]
+overflow-checks = true
+codegen-units = 1
