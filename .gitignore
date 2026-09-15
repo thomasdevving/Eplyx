@@ -9,3 +9,14 @@ programs/fixture-lending/target/
 node_modules/
 
 .DS_Store
+
+# External data, local validators and credentials
+/data/
+.env
+.env.*
+!.env.example
+*-keypair.json
+*-wallet.json
+/test-ledger/
+/report.json
+private-setup.json

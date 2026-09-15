@@ -1,0 +1,110 @@
+OFFLINE CONTROLLED REPLAY
+Capital represents interaction observations, not unique TVL.
+controlled-000 | slot 10 | ControlledSnapshot | fidelity Exact
+  source 34QavD95vNQkgohwaJRRtRvmyedNjSEJwptiaMjMmkEMQTsyJX9tJDcF1pBKG1qRCjFpgoQt13n3NfDjwKjek9Ev
+  pre 600d55a3446135076f21de8df9e50475cbf60c5ae686d9354221484a9694323e
+  V1  bf51b3d203208a0636aadcd0a6fa98d048113d967b14c326f85a17c9a9ede984 (matches original)
+  V2  bf51b3d203208a0636aadcd0a6fa98d048113d967b14c326f85a17c9a9ede984
+controlled-001 | slot 17 | ControlledSnapshot | fidelity Exact
+  source 3BPeovBpk5egJGzPqmEp4duRMpqQWXYY9wWz8Kd82jaA2h8sGMV35Npq1oHUA7BubEbfbAFvjFuVDVxLVGzz3XVy
+  pre df0b81da16731ea9b17defdf4b556ccd90feeee0307d00838f4469eadddeaa89
+  V1  f89ab587fac97ab68223ce184016aeb0a69492f46210f845a2f37c1d40825f95 (matches original)
+  V2  6e46ec2b91503e6aa5ed488810a9cd46c8919b3d76cd901127124204caa43266
+controlled-002 | slot 24 | ControlledSnapshot | fidelity Exact
+  source 2we1xv5BoTXqy5uwGoapjn37UrGzB1rXNyi8jFMSsmsVuS5bs1uGedgsDWXHB2stdcFJUPAjYJGJzWQQipV2MX9Q
+  pre 880ca721b4ff4def8f19fb59c4746c79d9a65938e3f72b78e3c50b6fa561888d
+  V1  8695978783167ac899e56728a005a565dd754a3d1198dfad50464ebbc7cfe0b6 (matches original)
+  V2  b20ed656a057ebd264795dcdeeb1af095b9c434aaed2dcc3ebe0a7ee639c9657
+EPLYX UPGRADE IMPACT
+====================
+
+program:  HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq
+V1:       v1
+V2:       v2
+
+BEHAVIOUR
+  Fixtures tested:    3
+  Outcome identical:  1   (state, balances, result and CPI shape unchanged)
+  Outcome changed:    2
+    critical:         2
+    high:             0
+    warning:          0
+
+  Compute units (tracked separately - any recompilation moves these)
+    3 of 3 fixtures differ, range -4.43% .. -4.12%
+    above the +30.00% operational-risk threshold: 0
+
+ECONOMIC COVERAGE  (replay observations, valued from captured state)
+  Positions valued:        3
+  Collateral represented:        $29,900.00
+  Debt represented:              $23,810.00
+  Net represented:                $6,090.00
+
+AFFECTED  (positions with a non-compute difference)
+  affected                         2   collateral       $19,900.00   debt       $15,880.00
+  of which critical                2   collateral       $19,900.00   debt       $15,880.00
+  unaffected                       1
+
+BY ECONOMIC CONSEQUENCE
+  newly_liquidatable               2   collateral       $19,900.00   debt       $15,880.00
+
+NEWLY LIQUIDATABLE  (healthy under V1, liquidatable under V2)
+  Positions:               2
+  Collateral:                    $19,900.00
+  Debt:                          $15,880.00
+
+By category
+  category                tested  identical  changed  critical
+  boundary                     3          1        2         2
+
+
+REGRESSION CLUSTERS  (1)
+----------------------------------------------------------------------
+
+1. newly-liquidatable                     [CRITICAL]
+   action:         refresh_position
+   fixtures:       2  (controlled-001, controlled-002)
+   capital:        collateral $19,900.00   debt $15,880.00
+   common conditions:
+     action = refresh_position
+     collateral_asset = SOL
+     fractional_collateral = true
+     collateral_price = $100.00
+     v1_liquidatable = false
+     v2_liquidatable = true
+     transaction_outcome = V1 success / V2 success
+     collateral = 99.500000000 SOL
+     debt in $7,930.00 .. $7,950.00
+     collateral_value = $9,950.00
+     health_factor_v1 in 1.001257 .. 1.003783
+     health_factor_v2 in 0.996226 .. 0.998738
+   representative: controlled-001
+
+
+
+CRITICAL  (2 fixtures)
+----------------------------------------------------------------------
+
+controlled-001  [boundary]
+  action: historical controlled interaction
+  CRITICAL  position.liquidatable  false -> true
+              health factor 1.003783 -> 0.998738
+  HIGH      position.health_factor  1.003783 -> 0.998738  (delta -5045)
+              position crosses below the liquidation threshold
+  position value: collateral $9,950.00 (99.500000000 SOL), debt $7,930.00, net $2,020.00
+  economic consequence: position becomes newly liquidatable
+  why: Capital represents replay observations, not unique positions or deployed TVL
+
+controlled-002  [boundary]
+  action: historical controlled interaction
+  CRITICAL  position.liquidatable  false -> true
+              health factor 1.001257 -> 0.996226
+  HIGH      position.health_factor  1.001257 -> 0.996226  (delta -5031)
+              position crosses below the liquidation threshold
+  position value: collateral $9,950.00 (99.500000000 SOL), debt $7,950.00, net $2,000.00
+  economic consequence: position becomes newly liquidatable
+  why: Capital represents replay observations, not unique positions or deployed TVL
+
+
+VERDICT: 2 critical economic regression(s) detected. Do not deploy V2.
+         2 of 3 positions affected; 2 newly liquidatable ($19,900.00 collateral).

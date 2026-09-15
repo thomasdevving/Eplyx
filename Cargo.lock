@@ -1102,15 +1102,19 @@ name = "eplyx-engine"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "base64",
  "borsh",
+ "bs58",
  "clap",
  "fixture-lending-interface",
  "litesvm",
  "serde",
  "serde_json",
+ "sha2 0.10.9",
  "solana-account",
  "solana-address 2.6.1",
  "solana-clock",
+ "solana-hash",
  "solana-instruction",
  "solana-instruction-error",
  "solana-keypair",
@@ -1120,6 +1124,7 @@ dependencies = [
  "solana-system-interface",
  "solana-transaction",
  "solana-transaction-error",
+ "wincode",
 ]
 
 [[package]]
