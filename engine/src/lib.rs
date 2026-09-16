@@ -41,6 +41,7 @@ pub mod protocol;
 pub mod replay;
 pub mod report;
 pub mod screening;
+pub mod select;
 pub mod shrink;
 pub mod types;
 pub mod versions;

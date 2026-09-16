@@ -312,6 +312,24 @@ enum DiscoveryCommand {
         corpus_size: u64,
     },
 }
+#[derive(Parser)]
+struct CorpusSelectArgs {
+    /// Directory holding a durable corpus: manifest.json, records/, corpus.json.
+    #[arg(long)]
+    corpus: PathBuf,
+    /// How many observations to select. Never padded by duplication.
+    #[arg(long, default_value_t = 10)]
+    target_size: usize,
+    /// Optional discovery counts as JSON, e.g. {"deposit":681,"withdraw":200}.
+    /// An absent count is reported as not measured rather than as zero.
+    #[arg(long)]
+    observed: Option<String>,
+    #[arg(long, value_enum, default_value_t = Format::Text)]
+    format: Format,
+    #[arg(long)]
+    out: Option<PathBuf>,
+}
+
 #[derive(Subcommand)]
 enum CorpusCommand {
     Build {
@@ -324,6 +342,8 @@ enum CorpusCommand {
         #[arg(long)]
         limit: Option<usize>,
     },
+    /// Select a deterministic production-derived regression corpus.
+    Select(CorpusSelectArgs),
 }
 #[derive(Subcommand)]
 enum ControlledCommand {
@@ -944,6 +964,9 @@ fn run() -> Result<ExitCode> {
             }
         },
         Command::Corpus {
+            command: CorpusCommand::Select(select_args),
+        } => corpus_select(select_args),
+        Command::Corpus {
             command:
                 CorpusCommand::Build {
                     cache,
@@ -1380,5 +1403,34 @@ fn list(args: ListArgs) -> Result<ExitCode> {
         );
     }
     println!("\n{} fixtures", fixtures.len());
+    Ok(ExitCode::SUCCESS)
+}
+
+/// Select a deterministic regression corpus from validated replay records.
+fn corpus_select(args: CorpusSelectArgs) -> Result<ExitCode> {
+    let store = eplyx_engine::corpus_store::CorpusStore::open(&args.corpus)?;
+    let records = store.load()?;
+    anyhow::ensure!(
+        !records.is_empty(),
+        "no validated records in {}",
+        args.corpus.display()
+    );
+    let observed: eplyx_engine::select::ObservedCounts = match &args.observed {
+        Some(text) => serde_json::from_str(text).context("--observed must be a JSON object")?,
+        None => Default::default(),
+    };
+    let corpus = eplyx_engine::select::select(&records, args.target_size, &observed)?;
+    let rendered = match args.format {
+        Format::Text => eplyx_engine::select::render(&corpus),
+        Format::Json => serde_json::to_string_pretty(&corpus)?,
+    };
+    match &args.out {
+        Some(path) => {
+            std::fs::write(path, &rendered)
+                .with_context(|| format!("writing {}", path.display()))?;
+            eprintln!("wrote {}", path.display());
+        }
+        None => println!("{rendered}"),
+    }
     Ok(ExitCode::SUCCESS)
 }
