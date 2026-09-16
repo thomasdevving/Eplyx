@@ -54,7 +54,10 @@ protocol upgrade replayed against the binaries mainnet actually ran, and
 [Phase 8](docs/phase-8-cpi-mainnet-replay.md) for the same with cross-program
 invocation, and
 [Phase 9](docs/phase-9-production-corpus.md) for the validated
-production-derived corpus a gate runs on.
+production-derived corpus a gate runs on, and
+[Phase 10](docs/phase-10-hosted-ci.md) for the CI gate and its hosted API
+([pilot onboarding](docs/pilot-onboarding.md),
+[Railway deployment](docs/railway-deployment.md)).
 
 ---
 

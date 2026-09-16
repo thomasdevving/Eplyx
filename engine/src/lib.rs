@@ -26,6 +26,7 @@
 
 pub mod bundle;
 pub mod ci;
+pub mod ci_markdown;
 pub mod cluster;
 pub mod corpus;
 pub mod corpus_store;
