@@ -9,6 +9,8 @@ use crate::{
     versions::{ProgramLoader, LEGACY_BPF_LOADER_ID, UPGRADEABLE_LOADER_ID},
     Report,
 };
+use std::fmt;
+
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -65,6 +67,13 @@ pub struct OriginalExecution {
     pub success: bool,
     pub fee: u64,
     pub post_state_hash: String,
+    /// Per-account post-state, recorded so a failed gate can name the account
+    /// that differs instead of only two hashes. Digests rather than bytes: the
+    /// point is to localize a mismatch, not to double the size of every record.
+    /// Empty in records written before this existed, which keeps them loadable
+    /// and simply falls back to the hash-only message.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub post_accounts: Vec<PostAccountDigest>,
     /// The invocation graph the validator recorded, in execution order.
     ///
     /// For a transaction with no CPI this is empty and the gate is unchanged
@@ -73,6 +82,91 @@ pub struct OriginalExecution {
     /// can reproduce the same sequence of calls at the same depths.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub cpi_invocations: Vec<CpiFrame>,
+}
+
+/// A lamport credit the local runtime refuses but mainnet accepted.
+///
+/// Solana forbids an account that is below its rent-exempt minimum from being
+/// credited while staying below it: `post_lamports` must not exceed
+/// `pre_lamports`. Mainnet accepted the transactions this describes, and the
+/// replay runtime rejects them, so the divergence is in runtime semantics
+/// rather than in the reconstructed state. Recorded as its own reason so it
+/// never again surfaces as an unexplained post-state mismatch.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct RentPayingCredit {
+    pub address: String,
+    pub label: String,
+    pub owner: String,
+    pub pre_lamports: u64,
+    pub post_lamports: u64,
+    pub credited: u64,
+    pub rent_exempt_minimum: u64,
+}
+
+impl fmt::Display for RentPayingCredit {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{} ({}) owned by {}: {} -> {} lamports (credited {}), rent-exempt minimum {}",
+            self.label,
+            self.address,
+            self.owner,
+            self.pre_lamports,
+            self.post_lamports,
+            self.credited,
+            self.rent_exempt_minimum
+        )
+    }
+}
+
+/// One account's post-state, reduced to what identifies a difference.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct PostAccountDigest {
+    pub label: String,
+    pub address: String,
+    pub owner: String,
+    pub lamports: u64,
+    pub data_len: u64,
+    pub data_sha256: String,
+}
+
+impl PostAccountDigest {
+    pub fn of(named: &NamedAccount) -> Self {
+        Self {
+            label: named.label.clone(),
+            address: named.address.clone(),
+            owner: named.account.owner.clone(),
+            lamports: named.account.lamports,
+            data_len: named.account.data.len() as u64,
+            data_sha256: hash_bytes(&named.account.data),
+        }
+    }
+
+    /// Human-readable differences against a replayed account, empty when they
+    /// agree on everything this digest records.
+    pub fn differences(&self, replayed: &AccountSnapshot) -> Vec<String> {
+        let mut out = Vec::new();
+        if self.owner != replayed.owner {
+            out.push(format!("owner {} -> {}", self.owner, replayed.owner));
+        }
+        if self.lamports != replayed.lamports {
+            let delta = replayed.lamports as i128 - self.lamports as i128;
+            out.push(format!(
+                "lamports {} -> {} ({delta:+})",
+                self.lamports, replayed.lamports
+            ));
+        }
+        if self.data_len != replayed.data.len() as u64 {
+            out.push(format!(
+                "data length {} -> {}",
+                self.data_len,
+                replayed.data.len()
+            ));
+        } else if self.data_sha256 != hash_bytes(&replayed.data) {
+            out.push(format!("data differs ({} bytes)", self.data_len));
+        }
+        out
+    }
 }
 
 /// How an account came to be in the required set.
@@ -100,6 +194,31 @@ pub enum AccountStateSource {
     /// Held nothing at either boundary, which the validator's balances confirm.
     /// The runtime materializes it, exactly as it did originally.
     AbsentAtBothBoundaries,
+    /// Boundary established from the transaction's own `preBalances` and
+    /// `postBalances` rather than from an archive snapshot.
+    ///
+    /// Admissible only for an account whose entire state *is* its lamport
+    /// balance - System-owned, non-executable, zero-length data - because for
+    /// such an account the validator's per-transaction balances are exact
+    /// evidence of its boundary, and nothing else about it can have changed.
+    /// This is what lets a transaction survive a same-slot write to a shared
+    /// fee payer: the archive snapshot is ambiguous, the transaction metadata
+    /// is not.
+    TransactionBalanceMetadata,
+}
+
+/// Whether an account's boundary can rest on transaction balance metadata.
+///
+/// Deliberately narrow. Any data at all disqualifies it, which excludes nonce
+/// accounts (System-owned but 80 bytes), token accounts, mints, stake accounts
+/// and every program account. A non-System owner disqualifies it, which
+/// excludes PDAs, sysvars and the Jito tip accounts. Both boundaries must agree,
+/// so an account that another transaction allocated or reassigned mid-slot is
+/// rejected rather than reconstructed.
+pub fn reconstructable_from_balances(pre: &AccountSnapshot, post: &AccountSnapshot) -> bool {
+    [pre, post].into_iter().all(|account| {
+        account.owner == SYSTEM_PROGRAM_ID && !account.executable && account.data.is_empty()
+    })
 }
 
 /// Provenance for one acquired account.
@@ -263,6 +382,46 @@ fn manifest_is_empty(manifest: &DependencyManifest) -> bool {
 pub fn hash_bytes(bytes: &[u8]) -> String {
     crate::hexfmt::encode(&Sha256::digest(bytes))
 }
+/// Accounts the runtime writes on its own schedule rather than the program
+/// under test writing them.
+///
+/// Their *pre*-state is real input and stays under `state_hash`. Their
+/// post-state is not evidence about the candidate: the Clock advances every
+/// slot no matter what executed, so hashing it into the fidelity gate asks a
+/// replay to reproduce mainnet's wall clock, which nothing can do. Listed
+/// explicitly rather than matched on the `Sysvar` prefix, because a ground
+/// vanity address could otherwise exclude itself from the gate.
+const RUNTIME_MANAGED: [&str; 8] = [
+    "SysvarC1ock11111111111111111111111111111111",
+    "SysvarStakeHistory1111111111111111111111111",
+    "SysvarRent111111111111111111111111111111111",
+    "SysvarS1otHashes111111111111111111111111111",
+    "SysvarRecentB1ockHashes11111111111111111111",
+    "SysvarEpochSchedu1e111111111111111111111111",
+    "SysvarEpochRewards1111111111111111111111111",
+    "SysvarLastRestartS1ot1111111111111111111111",
+];
+
+pub fn is_runtime_managed(address: &str) -> bool {
+    RUNTIME_MANAGED.contains(&address)
+}
+
+/// Hash of the accounts a replay is answerable for.
+///
+/// Identical to [`state_hash`] except that runtime-managed accounts are
+/// dropped. Used for the post-state fidelity comparison on both sides - the
+/// original and the replay - so the two are compared over the same set by
+/// construction. A record naming no such account hashes exactly as before,
+/// which is why existing corpora are unaffected.
+pub fn outcome_hash(accounts: &[NamedAccount]) -> Result<String> {
+    let retained: Vec<NamedAccount> = accounts
+        .iter()
+        .filter(|a| !is_runtime_managed(&a.address))
+        .cloned()
+        .collect();
+    state_hash(&retained)
+}
+
 /// Canonical binary encoding with explicit lengths, sorted by address. Labels
 /// are presentation only. Hash includes rent_epoch as well as required fields.
 pub fn state_hash(accounts: &[NamedAccount]) -> Result<String> {
@@ -352,10 +511,28 @@ impl ReplayRecord {
                 "original evidence differs from transaction metadata"
             );
         }
-        anyhow::ensure!(
-            self.transaction.version == "legacy",
-            "v0 is normalized but execution is not yet supported"
-        );
+        // A v0 message that resolved no lookup tables has exactly the static
+        // key list, and `message()` rebuilds both it and a legacy message into
+        // the same legacy `Message`, so the two execute identically. One that
+        // did resolve tables is still refused.
+        crate::protocol::require_executable_message(&self.transaction)?;
+        // A known runtime-semantics divergence, reported as itself rather than
+        // as an unexplained post-state mismatch several stages later. Phase 9
+        // does not emulate validator rent behaviour; it names the gap.
+        let credits = self.rent_paying_credits();
+        if !credits.is_empty() {
+            anyhow::bail!(
+                "unsupported_runtime_semantics: rent_paying_account_credited. Mainnet accepted \
+                 this transaction, but the replay runtime refuses to credit an account that \
+                 stays below its rent-exempt minimum, so V1 cannot reproduce the original \
+                 outcome:\n  - {}",
+                credits
+                    .iter()
+                    .map(RentPayingCredit::to_string)
+                    .collect::<Vec<_>>()
+                    .join("\n  - ")
+            );
+        }
         if let Some(adapter) = self.adapter() {
             adapter.accept(&self.transaction)?;
         } else if self.is_fixture_lending() {
@@ -767,8 +944,53 @@ impl ReplayRecord {
                 })
             })
             .collect::<Result<Vec<_>>>()?;
-        state_hash(&accounts)
+        outcome_hash(&accounts)
     }
+    /// Credits to rent-paying accounts that the local runtime will refuse.
+    ///
+    /// Evidence required before reporting one: the account was already below
+    /// its rent-exempt minimum, the transaction credited it, it stayed below
+    /// the minimum, and the original transaction succeeded on mainnet. Absent
+    /// any of those this returns nothing, so an ordinary rent-exempt account or
+    /// a debit is never implicated.
+    pub fn rent_paying_credits(&self) -> Vec<RentPayingCredit> {
+        let Some(original) = &self.original else {
+            return Vec::new();
+        };
+        if !original.success {
+            return Vec::new();
+        }
+        let rent = solana_rent::Rent::default();
+        let mut out = Vec::new();
+        for before in &self.accounts {
+            let Some(after) = original
+                .post_accounts
+                .iter()
+                .find(|d| d.address == before.address)
+            else {
+                continue;
+            };
+            let minimum = rent.minimum_balance(before.account.data.len());
+            let credited = after.lamports > before.account.lamports;
+            let stays_rent_paying = before.account.lamports < minimum && after.lamports < minimum;
+            // A resize would be a different transition; this reason is only for
+            // the credit case, where size is unchanged.
+            let same_size = after.data_len == before.account.data.len() as u64;
+            if credited && stays_rent_paying && same_size {
+                out.push(RentPayingCredit {
+                    address: before.address.clone(),
+                    label: before.label.clone(),
+                    owner: before.account.owner.clone(),
+                    pre_lamports: before.account.lamports,
+                    post_lamports: after.lamports,
+                    credited: after.lamports - before.account.lamports,
+                    rent_exempt_minimum: minimum,
+                });
+            }
+        }
+        out
+    }
+
     /// Why a replay failed the gate, in the order the criteria are checked.
     ///
     /// Reported rather than summarized because "mismatch" alone is unusable:
@@ -815,6 +1037,33 @@ impl ReplayRecord {
         }
         let hash = self.post_hash(result)?;
         if hash != original.post_state_hash {
+            // Name the accounts, when the record carries enough to do so. A
+            // runtime-managed account is reported as excluded rather than
+            // omitted, so a reader can see it was considered.
+            for digest in &original.post_accounts {
+                let Some(replayed) = result.accounts.get(&digest.label) else {
+                    failures.push(format!(
+                        "post-state: {} ({}) missing from the replay",
+                        digest.label, digest.address
+                    ));
+                    continue;
+                };
+                let differences = digest.differences(replayed);
+                if differences.is_empty() {
+                    continue;
+                }
+                failures.push(format!(
+                    "post-state: {} ({}) {}{}",
+                    digest.label,
+                    digest.address,
+                    differences.join(", "),
+                    if is_runtime_managed(&digest.address) {
+                        " [runtime-managed; excluded from the gate]"
+                    } else {
+                        ""
+                    }
+                ));
+            }
             failures.push(format!(
                 "post-state: original {}, replay {hash}",
                 original.post_state_hash
@@ -1101,3 +1350,323 @@ pub fn load_dependencies(records: &[ReplayRecord], directory: &Path) -> Result<D
 
 /// State snapshots in external captures are keyed by public address.
 pub type AccountMap = BTreeMap<String, AccountSnapshot>;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn snapshot(owner: &str, data: Vec<u8>, executable: bool) -> AccountSnapshot {
+        AccountSnapshot {
+            lamports: 1_000,
+            owner: owner.into(),
+            data,
+            executable,
+            rent_epoch: 0,
+        }
+    }
+
+    /// The only account whose whole state is its lamport balance.
+    #[test]
+    fn only_an_empty_system_account_may_rest_on_balance_metadata() {
+        let payer = snapshot(SYSTEM_PROGRAM_ID, vec![], false);
+        assert!(reconstructable_from_balances(&payer, &payer));
+    }
+
+    /// Every class the reconstruction must never admit. Each is excluded for a
+    /// stated reason, and each is a real account shape this corpus encounters.
+    #[test]
+    fn ineligible_account_classes_cannot_enter_the_reconstruction_path() {
+        let cases: Vec<(&str, AccountSnapshot)> = vec![
+            // Non-System owner: the Jito tip account that produced the known
+            // rent-state divergence. Program-owned and data-bearing.
+            (
+                "jito tip account",
+                snapshot(
+                    "T1pyyaTNZsKv2WcRAB8oVnk93mLJw2XzjtVYqCsaHqt",
+                    vec![0; 8],
+                    false,
+                ),
+            ),
+            (
+                "token account",
+                snapshot(
+                    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                    vec![0; 165],
+                    false,
+                ),
+            ),
+            (
+                "token-2022 account",
+                snapshot(
+                    "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                    vec![0; 165],
+                    false,
+                ),
+            ),
+            (
+                "mint",
+                snapshot(
+                    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                    vec![0; 82],
+                    false,
+                ),
+            ),
+            (
+                "stake account",
+                snapshot(
+                    "Stake11111111111111111111111111111111111111",
+                    vec![0; 200],
+                    false,
+                ),
+            ),
+            (
+                "pool PDA",
+                snapshot(
+                    "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+                    vec![0; 611],
+                    false,
+                ),
+            ),
+            (
+                "clock sysvar",
+                snapshot(
+                    "Sysvar1111111111111111111111111111111111111",
+                    vec![0; 40],
+                    false,
+                ),
+            ),
+            (
+                "program account",
+                snapshot(
+                    "BPFLoaderUpgradeab1e11111111111111111111111",
+                    vec![0; 36],
+                    true,
+                ),
+            ),
+            // System-owned but stateful: a durable nonce carries 80 bytes, so
+            // its lamports do not describe it.
+            (
+                "durable nonce",
+                snapshot(SYSTEM_PROGRAM_ID, vec![0; 80], false),
+            ),
+            // System-owned and empty but executable, which no real account is -
+            // included so the executable guard is proved independently.
+            (
+                "executable system account",
+                snapshot(SYSTEM_PROGRAM_ID, vec![], true),
+            ),
+        ];
+        for (name, account) in cases {
+            assert!(
+                !reconstructable_from_balances(&account, &account),
+                "{name} must not be reconstructable from balance metadata"
+            );
+        }
+    }
+
+    /// Both boundaries must agree. An account another transaction allocated or
+    /// reassigned inside the slot is refused rather than reconstructed.
+    #[test]
+    fn a_boundary_disagreement_blocks_reconstruction() {
+        let empty = snapshot(SYSTEM_PROGRAM_ID, vec![], false);
+        let allocated = snapshot(SYSTEM_PROGRAM_ID, vec![0; 1], false);
+        let reassigned = snapshot("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA", vec![], false);
+        assert!(
+            !reconstructable_from_balances(&empty, &allocated),
+            "allocated mid-slot"
+        );
+        assert!(
+            !reconstructable_from_balances(&allocated, &empty),
+            "freed mid-slot"
+        );
+        assert!(
+            !reconstructable_from_balances(&empty, &reassigned),
+            "reassigned mid-slot"
+        );
+        assert!(
+            !reconstructable_from_balances(&reassigned, &empty),
+            "reassigned mid-slot"
+        );
+    }
+
+    /// A real account's post-state is exactly what the gate exists to check.
+    #[test]
+    fn a_changed_protocol_account_post_state_must_change_the_outcome_hash() {
+        let pool = account(
+            "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+            10,
+            vec![1, 2, 3],
+        );
+        let moved = account(
+            "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+            11,
+            vec![1, 2, 3],
+        );
+        let rewritten = account(
+            "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+            10,
+            vec![1, 2, 4],
+        );
+        let base = outcome_hash(&[pool]).unwrap();
+        assert_ne!(
+            base,
+            outcome_hash(&[moved]).unwrap(),
+            "a lamport change must be caught"
+        );
+        assert_ne!(
+            base,
+            outcome_hash(&[rewritten]).unwrap(),
+            "a data change must be caught"
+        );
+    }
+
+    /// Pre-state integrity is unchanged: it still hashes every account, sysvars
+    /// included, so a record whose Clock input was altered fails before any
+    /// replay runs. The exclusion applies to the *post*-state only.
+    #[test]
+    fn a_changed_clock_pre_state_still_breaks_record_integrity() {
+        let pool = account(
+            "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+            10,
+            vec![1, 2, 3],
+        );
+        let clock = account("SysvarC1ock11111111111111111111111111111111", 1, vec![4, 5]);
+        let tampered = account("SysvarC1ock11111111111111111111111111111111", 1, vec![4, 6]);
+        assert_ne!(
+            state_hash(&[pool.clone(), clock]).unwrap(),
+            state_hash(&[pool, tampered]).unwrap(),
+            "pre-state hashing must still cover the sysvar the program reads"
+        );
+    }
+
+    /// An account that merely looks like a sysvar must not exclude itself. Only
+    /// the enumerated addresses are dropped, so a ground vanity address is
+    /// still fully covered by the gate.
+    #[test]
+    fn a_vanity_lookalike_account_is_not_excluded() {
+        // A real, valid address one byte away from the Clock sysvar: the
+        // closest thing an attacker could grind to something that "looks like"
+        // a sysvar. Exclusion is by exact identity, so it must not apply.
+        let clock: solana_address::Address = "SysvarC1ock11111111111111111111111111111111"
+            .parse()
+            .unwrap();
+        let mut bytes = clock.to_bytes();
+        bytes[31] ^= 1;
+        let lookalike = solana_address::Address::new_from_array(bytes).to_string();
+
+        assert_ne!(lookalike, clock.to_string());
+        assert!(
+            !is_runtime_managed(&lookalike),
+            "{lookalike} must not be excluded"
+        );
+        assert_ne!(
+            outcome_hash(&[account(&lookalike, 1, vec![1])]).unwrap(),
+            outcome_hash(&[account(&lookalike, 2, vec![1])]).unwrap(),
+            "a sysvar lookalike must still be covered by the outcome hash"
+        );
+        // And the genuine Clock still is excluded, so the two are distinguished
+        // by identity rather than by resemblance.
+        assert!(is_runtime_managed(&clock.to_string()));
+    }
+
+    /// The exclusion list is part of what a fidelity result means. Changing it
+    /// changes the claim every archive record makes, so it is pinned here: if
+    /// this fails, bump `REPLAY_SCHEMA`, restate the assumption the adapters
+    /// emit, and rebuild affected corpora deliberately.
+    #[test]
+    fn the_runtime_managed_list_is_pinned_to_the_recorded_schema() {
+        assert_eq!(
+            RUNTIME_MANAGED,
+            [
+                "SysvarC1ock11111111111111111111111111111111",
+                "SysvarStakeHistory1111111111111111111111111",
+                "SysvarRent111111111111111111111111111111111",
+                "SysvarS1otHashes111111111111111111111111111",
+                "SysvarRecentB1ockHashes11111111111111111111",
+                "SysvarEpochSchedu1e111111111111111111111111",
+                "SysvarEpochRewards1111111111111111111111111",
+                "SysvarLastRestartS1ot1111111111111111111111",
+            ],
+            "the set of accounts excluded from the post-state gate changed"
+        );
+        assert_eq!(
+            REPLAY_SCHEMA, 1,
+            "schema must be bumped alongside the list above"
+        );
+    }
+
+    fn account(address: &str, lamports: u64, data: Vec<u8>) -> NamedAccount {
+        NamedAccount {
+            label: address.to_string(),
+            address: address.to_string(),
+            account: AccountSnapshot {
+                lamports,
+                owner: "11111111111111111111111111111111".into(),
+                data,
+                executable: false,
+                rent_epoch: 0,
+            },
+        }
+    }
+
+    /// The post-state gate must ask only about accounts the candidate is
+    /// answerable for. A record naming no runtime-managed account has to hash
+    /// exactly as before, or every corpus written by an earlier phase would
+    /// silently change meaning.
+    #[test]
+    fn the_outcome_hash_drops_runtime_managed_accounts_only() {
+        let pool = account(
+            "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+            10,
+            vec![1, 2, 3],
+        );
+        let clock = account("SysvarC1ock11111111111111111111111111111111", 1, vec![4, 5]);
+
+        let plain = vec![pool.clone()];
+        assert_eq!(
+            outcome_hash(&plain).unwrap(),
+            state_hash(&plain).unwrap(),
+            "a record with no runtime-managed account must hash unchanged"
+        );
+
+        let with_clock = vec![pool.clone(), clock];
+        assert_ne!(
+            outcome_hash(&with_clock).unwrap(),
+            state_hash(&with_clock).unwrap()
+        );
+        assert_eq!(
+            outcome_hash(&with_clock).unwrap(),
+            state_hash(&plain).unwrap()
+        );
+
+        // The clock's own value cannot move the outcome hash, which is the
+        // point: no replay reproduces mainnet's wall clock.
+        let advanced = account(
+            "SysvarC1ock11111111111111111111111111111111",
+            4_242,
+            vec![9, 9],
+        );
+        assert_eq!(
+            outcome_hash(&with_clock).unwrap(),
+            outcome_hash(&[pool, advanced]).unwrap()
+        );
+    }
+
+    #[test]
+    fn runtime_managed_recognises_the_sysvars_a_withdrawal_reads() {
+        assert!(is_runtime_managed(
+            "SysvarC1ock11111111111111111111111111111111"
+        ));
+        assert!(is_runtime_managed(
+            "SysvarStakeHistory1111111111111111111111111"
+        ));
+        // Matched by exact identity, not by prefix: a ground vanity address must
+        // not be able to exclude itself from the fidelity gate.
+        assert!(!is_runtime_managed(
+            "SysvarFakeButGroundVanityAddress1111111111"
+        ));
+        assert!(!is_runtime_managed(
+            "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy"
+        ));
+    }
+}

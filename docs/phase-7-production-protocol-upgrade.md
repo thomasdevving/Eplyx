@@ -154,7 +154,7 @@ program              TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb (Token-2022)
 ProgramData          DoU57AYuPFu2QU514RktNPG22QhApEjnKxnBcu4BHDTY
 upgrade authority    AeLmXCbPaQHGWRLr2saFsEVfmMNuKnxRAbWCT9P5twgz
 asset                2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo (PYUSD, 6 decimals)
-state source         historical_archive / ExactReady
+state source         historical_archive / HistoricalStateReady
 fee                  10,000 lamports
 pre-state SHA-256    7ea7c0d62622b5c9bfb8241df2adcabeb1e7cb17ec877e692e67e6d969ce3e7c
 ```

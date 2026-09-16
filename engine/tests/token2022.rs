@@ -314,16 +314,67 @@ fn a_snapshot_contradicting_validator_metadata_is_refused() {
 
 #[test]
 fn a_lamport_boundary_mismatch_names_the_side_it_failed_on() {
+    // A data-bearing account, whose boundary rests on the archive. The fee
+    // payer would no longer serve here: it is System-owned and empty, so its
+    // lamports come from this transaction's own balance metadata and the
+    // archive's value for it is never consulted.
     let mut archive = Archive::new();
     archive.accounts.insert(
-        (authority(), SLOT),
-        snapshot_json(994_000, "11111111111111111111111111111111", &[], false),
+        (source(), SLOT),
+        snapshot_json(
+            2_039_000,
+            TOKEN_2022,
+            &token_account(&mint(), &authority(), SOURCE_BEFORE - TRANSFER),
+            false,
+        ),
     );
     let error = acquire(&archive).expect_err("must refuse").to_string();
     assert!(
         error.contains("slot-end state is not this transaction's post-state"),
         "{error}"
     );
+}
+
+/// The converse, and the point of the reconstruction: an empty System account's
+/// boundary comes from transaction metadata, so a same-slot write that makes
+/// the archive snapshot ambiguous cannot spoil the record.
+#[test]
+fn an_empty_system_account_takes_its_boundary_from_transaction_metadata() {
+    let mut archive = Archive::new();
+    // Archive reports a balance that belongs to some other transaction in the
+    // slot. The record must still be exact, and must say where it got the value.
+    archive.accounts.insert(
+        (authority(), SLOT),
+        snapshot_json(123_456, "11111111111111111111111111111111", &[], false),
+    );
+    let acquired = acquire(&archive).expect("metadata establishes the boundary");
+    use eplyx_engine::replay::AccountStateSource;
+    let acquisition = acquired
+        .record
+        .acquisitions
+        .iter()
+        .find(|a| a.address == authority())
+        .expect("fee payer acquired");
+    assert_eq!(
+        acquisition.source,
+        AccountStateSource::TransactionBalanceMetadata
+    );
+    assert!(acquisition.method.contains("preBalances/postBalances"));
+    // And the value used is the validator's, not the archive's.
+    let digest = acquired
+        .record
+        .original
+        .as_ref()
+        .expect("original")
+        .post_accounts
+        .iter()
+        .find(|d| d.address == authority())
+        .expect("post digest");
+    assert_eq!(
+        digest.lamports, 995_000,
+        "post balance from transaction metadata"
+    );
+    assert_ne!(digest.lamports, 123_456, "not the ambiguous archive value");
 }
 
 #[test]
@@ -367,16 +418,22 @@ struct UnsupportedShape {
 fn unsupported_transaction_shapes_are_refused() {
     let cases = [
         UnsupportedShape {
-            // Well-formed v0 with nothing actually loaded, so normalization
-            // succeeds and the adapter is what refuses it. Address lookup
-            // tables are normalized but never executed.
-            name: "versioned message",
+            // A v0 message that actually resolves a lookup table. The addresses
+            // are normalized for inspection, but the lookup is never executed,
+            // so replaying it would put an unproved account list under an
+            // exactness claim.
+            name: "versioned message resolving a lookup table",
             mutate: |raw| {
                 raw["version"] = json!(0);
-                raw["transaction"]["message"]["addressTableLookups"] = json!([]);
-                raw["meta"]["loadedAddresses"] = json!({"writable": [], "readonly": []});
+                raw["transaction"]["message"]["addressTableLookups"] = json!([{
+                    "accountKey": address(210),
+                    "writableIndexes": [0],
+                    "readonlyIndexes": [],
+                }]);
+                raw["meta"]["loadedAddresses"] =
+                    json!({"writable": [address(211)], "readonly": []});
             },
-            expected: "legacy",
+            expected: "address lookup table",
         },
         UnsupportedShape {
             name: "cross-program invocation",
@@ -389,14 +446,27 @@ fn unsupported_transaction_shapes_are_refused() {
             expected: "CPI",
         },
         UnsupportedShape {
-            name: "unsupported instruction",
+            // CloseAccount. Phase 9 widened the contract to nine balance and
+            // delegation instructions; account closure stays outside it, because
+            // replaying a closure means modelling account deletion.
+            name: "an instruction family outside the contract",
+            mutate: |raw| {
+                raw["transaction"]["message"]["instructions"][0]["data"] =
+                    json!(bs58::encode([9_u8]).into_string());
+            },
+            expected: "found instruction variant 9",
+        },
+        UnsupportedShape {
+            // A supported family still has to arrive in its exact shape: this is
+            // a Transfer discriminant wearing TransferChecked's four accounts.
+            name: "a supported family in the wrong shape",
             mutate: |raw| {
                 let mut data = vec![3_u8];
                 data.extend_from_slice(&TRANSFER.to_le_bytes());
                 raw["transaction"]["message"]["instructions"][0]["data"] =
                     json!(bs58::encode(&data).into_string());
             },
-            expected: "TransferChecked only",
+            expected: "Transfer with 4 accounts is outside the supported shape",
         },
         UnsupportedShape {
             name: "extra accounts implying a hook or multisig",
@@ -502,7 +572,7 @@ fn economic_interpretation_reports_the_token_delta_with_mint_decimals() {
 
 /// The real mainnet artefact the phase was measured on.
 #[test]
-fn committed_mainnet_record_is_exact_ready_and_self_consistent() {
+fn committed_mainnet_record_is_historical_state_ready_and_self_consistent() {
     let record: ReplayRecord = serde_json::from_str(include_str!(
         "../../docs/examples/mainnet-token2022-record.json"
     ))
@@ -524,7 +594,7 @@ fn committed_mainnet_record_is_exact_ready_and_self_consistent() {
         .expect("committed transaction is inside the supported contract");
 
     // Every snapshot the validator recorded a token balance for must decode to
-    // exactly that amount; this is the proof that made the record ExactReady.
+    // exactly that amount; this is the proof that made the record HistoricalStateReady.
     let balances = record
         .transaction
         .pre_token_balances
@@ -561,5 +631,29 @@ fn committed_mainnet_record_is_exact_ready_and_self_consistent() {
     assert_eq!(
         eplyx_engine::protocol::token2022::mint_decimals(&mint.account.data),
         Some(6)
+    );
+}
+
+/// The other half of the lookup-table rule. A v0 message that resolves no
+/// tables has exactly the static key list, and `replay::message()` rebuilds it
+/// and a legacy message into the same legacy `Message`, so refusing it would
+/// discard replayable production traffic for no gain in exactness.
+#[test]
+fn a_versioned_message_resolving_no_lookup_tables_replays() {
+    let mut archive = Archive::new();
+    archive.transaction["version"] = json!(0);
+    archive.transaction["transaction"]["message"]["addressTableLookups"] = json!([]);
+    archive.transaction["meta"]["loadedAddresses"] = json!({"writable": [], "readonly": []});
+
+    let acquisition = acquire(&archive).expect("v0 without lookups must be replayable");
+    assert_eq!(acquisition.record.transaction.version, "v0");
+    assert_eq!(acquisition.record.transaction.loaded_address_count, 0);
+    assert_eq!(
+        acquisition.record.transaction.account_keys.len(),
+        Archive::new().transaction["transaction"]["message"]["accountKeys"]
+            .as_array()
+            .expect("static keys")
+            .len(),
+        "no addresses should have been appended"
     );
 }

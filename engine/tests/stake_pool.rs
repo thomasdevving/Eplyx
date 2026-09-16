@@ -764,10 +764,36 @@ fn a_clean_screen_is_recorded_on_the_record() {
     assert_eq!(screening.slot, SLOT);
     assert_eq!(screening.target_index, 1);
     assert_eq!(screening.transactions_in_slot, 3);
+    // Screening covers exactly the accounts whose boundary rests on the
+    // archive. An account reconstructed from this transaction's own balance
+    // metadata is deliberately excluded: its boundary is already exact for this
+    // transaction, so another writer in the same slot cannot spoil it.
+    use eplyx_engine::replay::AccountStateSource;
+    let archive_backed = acquired
+        .record
+        .acquisitions
+        .iter()
+        .filter(|a| a.source == AccountStateSource::HistoricalArchive)
+        .count();
+    let reconstructed: Vec<&str> = acquired
+        .record
+        .acquisitions
+        .iter()
+        .filter(|a| a.source == AccountStateSource::TransactionBalanceMetadata)
+        .map(|a| a.address.as_str())
+        .collect();
+    assert_eq!(screening.required_accounts.len(), archive_backed);
     assert_eq!(
-        screening.required_accounts.len(),
-        acquired.record.accounts.len()
+        archive_backed + reconstructed.len(),
+        acquired.record.accounts.len(),
+        "every acquired account is either archive-backed or metadata-reconstructed"
     );
+    for address in reconstructed {
+        assert!(
+            !screening.required_accounts.iter().any(|a| a == address),
+            "{address} is reconstructed and must not be screened"
+        );
+    }
 }
 
 /// A CPI-admitting record without screening evidence does not validate: the
@@ -1015,6 +1041,7 @@ fn local_scenario() -> (
         original.error, original.logs
     );
     record.original = Some(OriginalExecution {
+        post_accounts: Vec::new(),
         success: original.success,
         fee: original.fee,
         post_state_hash: record.post_hash(&original).unwrap(),

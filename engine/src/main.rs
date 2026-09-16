@@ -160,6 +160,10 @@ struct DiscoverArgs {
     /// Falls back to SOLANA_RPC_URL; never persisted.
     #[arg(long)]
     rpc_url: Option<String>,
+    /// Origin header for endpoints with an allowlist. Falls back to
+    /// SOLANA_RPC_ORIGIN and is never persisted.
+    #[arg(long)]
+    rpc_origin: Option<String>,
     /// Defaults to a bounded 5,000-slot window ending at cached getSlot.
     #[arg(long)]
     start_slot: Option<u64>,
@@ -186,7 +190,7 @@ struct DiscoverArgs {
 
 #[derive(Subcommand)]
 enum HistoricalCommand {
-    /// Build one ExactReady System-transfer/Memo replay record and V1 artifact.
+    /// Build one HistoricalStateReady System-transfer/Memo replay record and V1 artifact.
     Acquire(HistoricalAcquireArgs),
 }
 
@@ -568,10 +572,12 @@ fn historical_acquire(args: HistoricalAcquireArgs) -> Result<ExitCode> {
         &snapshots.join(format!("{}.json", args.signature)),
         &acquired.record,
     )?;
-    eplyx_engine::ingest::write_json(
-        &args.output.join("corpus.json"),
-        &vec![acquired.record.clone()],
-    )?;
+    // Durable, append-only: the record lands under its own stable id and the
+    // canonical index is rebuilt from what is stored, so acquiring a second
+    // observation into the same directory accumulates rather than replaces.
+    let store = eplyx_engine::corpus_store::CorpusStore::open(&args.output)?;
+    let insert = store.insert(&acquired.record)?;
+    let manifest = store.publish()?;
     let artifact_name = match eplyx_engine::protocol::adapter_for(&acquired.record.program_id) {
         Some(adapter) => format!("{}-mainnet-v1.so", adapter.name()),
         None => "memo-mainnet-v1.so".to_string(),
@@ -602,7 +608,15 @@ fn historical_acquire(args: HistoricalAcquireArgs) -> Result<ExitCode> {
         ),
     };
     println!(
-        "ExactReady mainnet replay: {} at slot {}\nState source: historical_archive\n{}\nV1 SHA-256: {}\nCorpus: {}\nV1 artifact: {}\nAcquisition: {} ms{}",
+        // Deliberately not "Exact". Acquisition establishes that exact
+        // historical state was obtained, its boundaries proved and its slot
+        // screened - it does not run the V1 fidelity gate, which happens at
+        // comparison time and yields `Matched` for an archive record. `Exact`
+        // stays reserved for the controlled-snapshot contract, where every
+        // proof condition is actually held.
+        "Historical mainnet replay record: {} at slot {}\nState source: historical_archive \
+         (V1 post-state fidelity is checked at comparison time)\n{}\nV1 SHA-256: {}\n\
+         Corpus: {}\nV1 artifact: {}\nAcquisition: {} ms{}",
         acquired.record.transaction.signature,
         acquired.record.transaction.slot,
         value_line,
@@ -610,7 +624,20 @@ fn historical_acquire(args: HistoricalAcquireArgs) -> Result<ExitCode> {
         args.output.join("corpus.json").display(),
         v1_path.display(),
         start.elapsed().as_millis(),
-        if args.offline { " (offline cache only)" } else { "" },
+        if args.offline {
+            " (offline cache only)"
+        } else {
+            ""
+        },
+    );
+    println!(
+        "Corpus: {} record(s) ({}), canonical hash {}",
+        manifest.record_count,
+        match insert {
+            eplyx_engine::corpus_store::Insert::Added => "this observation added",
+            eplyx_engine::corpus_store::Insert::AlreadyPresent => "already present, unchanged",
+        },
+        manifest.canonical_hash
     );
     render_dependencies(&acquired.record);
     if let Some(screening) = &acquired.record.slot_screening {
@@ -707,7 +734,14 @@ fn discover_command(args: DiscoverArgs) -> Result<ExitCode> {
     let overall = std::time::Instant::now();
     let url = endpoint(args.rpc_url)?;
     let namespace = eplyx_engine::replay::hash_bytes(url.as_bytes());
-    let rpc = eplyx_engine::ingest::rpc::HttpRpc::new(url)?;
+    let mut rpc = eplyx_engine::ingest::rpc::HttpRpc::new(url)?;
+    if let Some(origin) = args
+        .rpc_origin
+        .clone()
+        .or_else(|| std::env::var("SOLANA_RPC_ORIGIN").ok())
+    {
+        rpc = rpc.with_origin(origin)?;
+    }
     let retrying = eplyx_engine::ingest::rpc::RetryingRpc {
         provider: &rpc,
         max_retries: args.retries,

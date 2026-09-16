@@ -48,8 +48,8 @@ fn raw_transaction() -> Value {
             "computeUnitsConsumed": 2_700,
             "innerInstructions": [],
             "logMessages": [],
-            "preBalances": [1_000_000, 5, 1, 523_015_135],
-            "postBalances": [994_900, 105, 1, 523_015_135]
+            "preBalances": [1_000_000, 890_880, 1, 523_015_135],
+            "postBalances": [994_900, 890_980, 1, 523_015_135]
         }
     })
 }
@@ -109,7 +109,7 @@ impl RpcProvider for ArchiveRpc {
             snapshot(lamports, SYSTEM_PROGRAM_ID, b"", false)
         } else if key == address(2) {
             snapshot(
-                if requested == 199 { 5 } else { 105 },
+                if requested == 199 { 890_880 } else { 890_980 },
                 SYSTEM_PROGRAM_ID,
                 b"",
                 false,
@@ -199,7 +199,7 @@ fn extra_instruction_or_cpi_is_refused_before_state_is_claimed() {
 }
 
 #[test]
-fn committed_mainnet_record_is_exact_ready_and_self_consistent() {
+fn committed_mainnet_record_is_historical_state_ready_and_self_consistent() {
     let record: eplyx_engine::replay::ReplayRecord = serde_json::from_str(include_str!(
         "../../docs/examples/mainnet-replay-record.json"
     ))
@@ -213,6 +213,6 @@ fn committed_mainnet_record_is_exact_ready_and_self_consistent() {
             MEMO_PROGRAM_ID,
             Some(&record.state_source)
         ),
-        ReplayEligibility::ExactReady
+        ReplayEligibility::HistoricalStateReady
     );
 }

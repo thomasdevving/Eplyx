@@ -13,9 +13,9 @@ use crate::{
         transactions::{self, HistoricalTransaction},
     },
     replay::{
-        hash_bytes, state_hash, AccountAcquisition, AccountDiscovery, AccountStateSource,
-        OriginalExecution, ReplayClock, ReplayRecord, ReplayStateSource, MEMO_PROGRAM_ID,
-        REPLAY_SCHEMA, SYSTEM_PROGRAM_ID,
+        hash_bytes, outcome_hash, state_hash, AccountAcquisition, AccountDiscovery,
+        AccountStateSource, OriginalExecution, PostAccountDigest, ReplayClock, ReplayRecord,
+        ReplayStateSource, MEMO_PROGRAM_ID, REPLAY_SCHEMA, SYSTEM_PROGRAM_ID,
     },
     screening,
     types::{AccountSnapshot, NamedAccount},
@@ -226,7 +226,8 @@ impl HistoricalStateProvider for SlotAccountArchiveProvider<'_> {
             original: Some(OriginalExecution {
                 success: transaction.success,
                 fee: transaction.fee,
-                post_state_hash: state_hash(&post_accounts)?,
+                post_state_hash: outcome_hash(&post_accounts)?,
+                post_accounts: post_accounts.iter().map(PostAccountDigest::of).collect(),
                 cpi_invocations: Vec::new(),
             }),
             current_program_sha256: hash_bytes(&program.data),
@@ -436,13 +437,45 @@ impl HistoricalStateProvider for ProtocolArchiveProvider<'_> {
                 "state account {} is executable",
                 key.address
             );
+
+            // An account whose whole state is its lamport balance can take that
+            // balance from the transaction's own metadata, which is exact for
+            // this transaction even when the slot-boundary snapshot is not.
+            // Everything else about it - owner, emptiness - still comes from the
+            // archive and must agree on both sides.
+            let balance_at = |balances: Option<&Vec<u64>>| -> Option<u64> {
+                balances.and_then(|values| values.get(index)).copied()
+            };
+            let (mut pre, mut post) = (pre, post);
+            let metadata = crate::replay::reconstructable_from_balances(&pre, &post)
+                .then(|| {
+                    balance_at(transaction.pre_balances.as_ref())
+                        .zip(balance_at(transaction.post_balances.as_ref()))
+                })
+                .flatten();
+            let source = match metadata {
+                Some((pre_lamports, post_lamports)) => {
+                    pre.lamports = pre_lamports;
+                    post.lamports = post_lamports;
+                    AccountStateSource::TransactionBalanceMetadata
+                }
+                None => AccountStateSource::HistoricalArchive,
+            };
             acquisitions.push(AccountAcquisition {
                 address: key.address.clone(),
                 label: label.clone(),
                 discovered_by,
-                source: AccountStateSource::HistoricalArchive,
+                source,
                 context_slot: pre_slot,
-                method: "getAccountInfo at exact slot, honored by the archive, at S-1 and S".into(),
+                method: match source {
+                    AccountStateSource::TransactionBalanceMetadata => {
+                        "System-owned, non-executable and empty at both archive boundaries; \
+                         lamports taken from this transaction's preBalances/postBalances"
+                            .into()
+                    }
+                    _ => "getAccountInfo at exact slot, honored by the archive, at S-1 and S"
+                        .to_string(),
+                },
             });
             pre_accounts.push(NamedAccount {
                 label: label.clone(),
@@ -459,9 +492,20 @@ impl HistoricalStateProvider for ProtocolArchiveProvider<'_> {
         // Screen the slot before proving boundaries, so a rejection names the
         // conflicting transaction rather than only the account whose numbers
         // failed to line up.
+        // Only accounts whose boundary rests on the archive need an
+        // unambiguous slot. One reconstructed from transaction metadata is
+        // already exact for this transaction, so another writer in the same
+        // slot cannot spoil it and screening it would reject a record that is
+        // fully evidenced.
+        let reconstructed: BTreeSet<&str> = acquisitions
+            .iter()
+            .filter(|a| a.source == AccountStateSource::TransactionBalanceMetadata)
+            .map(|a| a.address.as_str())
+            .collect();
         let required: BTreeSet<String> = pre_accounts
             .iter()
             .map(|named| named.address.clone())
+            .filter(|address| !reconstructed.contains(address.as_str()))
             .collect();
         let slot_screening = match self.block_rpc {
             Some(rpc) => {
@@ -563,7 +607,8 @@ impl HistoricalStateProvider for ProtocolArchiveProvider<'_> {
             original: Some(OriginalExecution {
                 success: transaction.success,
                 fee: transaction.fee,
-                post_state_hash: state_hash(&post_accounts)?,
+                post_state_hash: outcome_hash(&post_accounts)?,
+                post_accounts: post_accounts.iter().map(PostAccountDigest::of).collect(),
                 cpi_invocations: transaction.inner_instruction_frames.clone(),
             }),
             current_program_sha256: v1.sha256.clone(),

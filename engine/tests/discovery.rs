@@ -49,6 +49,7 @@ fn tx(index: u64, shape: u8, cpi: bool, success: bool) -> HistoricalTransaction 
         recent_blockhash: "blockhash".into(),
         payer: format!("account-{shape}-a"),
         account_keys: meta(shape),
+        loaded_address_count: 0,
         instructions: vec![if cpi { wrapper } else { target.clone() }],
         inner_instructions: if cpi { vec![target] } else { vec![] },
         inner_instruction_frames: vec![],
@@ -238,7 +239,7 @@ fn replay_eligibility_preserves_phase_four_boundaries() {
             PROGRAM,
             Some(&ReplayStateSource::ControlledSnapshot)
         ),
-        ReplayEligibility::ExactReady
+        ReplayEligibility::HistoricalStateReady
     );
     assert_eq!(
         replay_eligibility(&direct, PROGRAM, Some(&ReplayStateSource::Reconstructed)),
@@ -260,10 +261,25 @@ fn replay_eligibility_preserves_phase_four_boundaries() {
         replay_eligibility(&tx(2, 1, true, true), PROGRAM, None),
         ReplayEligibility::UnsupportedCpi
     );
-    let mut v0 = direct;
-    v0.version = "v0".into();
+    // A v0 message that resolved no lookup tables carries exactly the static
+    // key list and replays like a legacy one, so it stays eligible.
+    let mut v0_without_lookups = direct.clone();
+    v0_without_lookups.version = "v0".into();
     assert_eq!(
-        replay_eligibility(&v0, PROGRAM, None),
+        replay_eligibility(
+            &v0_without_lookups,
+            PROGRAM,
+            Some(&ReplayStateSource::ControlledSnapshot)
+        ),
+        ReplayEligibility::HistoricalStateReady
+    );
+    // One that resolved a table does not: the addresses are normalized for
+    // inspection, but the lookup itself is never executed.
+    let mut v0_with_lookups = direct;
+    v0_with_lookups.version = "v0".into();
+    v0_with_lookups.loaded_address_count = 2;
+    assert_eq!(
+        replay_eligibility(&v0_with_lookups, PROGRAM, None),
         ReplayEligibility::UnsupportedTransaction
     );
 }

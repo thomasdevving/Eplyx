@@ -30,7 +30,15 @@ pub enum InteractionType {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum ReplayEligibility {
-    ExactReady,
+    /// Exact historical state is available for this interaction.
+    ///
+    /// Named for the *state*, not the fidelity outcome: whether a replay
+    /// reproduces the original is decided later by `ReplayFidelity`, and an
+    /// archive record that does reproduce it is `Matched`, never `Exact`.
+    /// The old `exact_ready` spelling is accepted on read so records written
+    /// before the rename still load.
+    #[serde(alias = "exact_ready")]
+    HistoricalStateReady,
     ReconstructedReady,
     ApproximateOnly,
     MissingState,
@@ -187,7 +195,8 @@ impl SelectionPolicy {
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct EligibilityStatistics {
-    pub exact_ready: u64,
+    #[serde(alias = "exact_ready")]
+    pub historical_state_ready: u64,
     pub reconstructed_ready: u64,
     pub approximate_only: u64,
     pub missing_state: u64,
@@ -419,8 +428,10 @@ pub fn replay_eligibility(
         && transaction.instructions.len() == 2
         && transaction.instructions[0].program == crate::replay::SYSTEM_PROGRAM_ID
         && transaction.instructions[1].program == program;
+    let executable_message =
+        transaction.version == "legacy" || transaction.loaded_address_count == 0;
     if kind == InteractionType::Unknown
-        || transaction.version != "legacy"
+        || !executable_message
         || !transaction.success
         || (transaction.instructions.len() != 1 && !bounded_memo_transfer)
     {
@@ -428,7 +439,7 @@ pub fn replay_eligibility(
     }
     match source {
         Some(ReplayStateSource::ControlledSnapshot | ReplayStateSource::HistoricalArchive) => {
-            ReplayEligibility::ExactReady
+            ReplayEligibility::HistoricalStateReady
         }
         Some(ReplayStateSource::Reconstructed) => ReplayEligibility::ReconstructedReady,
         Some(ReplayStateSource::CurrentApproximation) => ReplayEligibility::ApproximateOnly,
@@ -877,7 +888,7 @@ fn select(
 
 fn eligibility_statistics(selected: &[SelectedInteraction]) -> EligibilityStatistics {
     let mut result = EligibilityStatistics {
-        exact_ready: 0,
+        historical_state_ready: 0,
         reconstructed_ready: 0,
         approximate_only: 0,
         missing_state: 0,
@@ -886,7 +897,7 @@ fn eligibility_statistics(selected: &[SelectedInteraction]) -> EligibilityStatis
     };
     for item in selected {
         match item.interaction.replay_eligibility {
-            ReplayEligibility::ExactReady => result.exact_ready += 1,
+            ReplayEligibility::HistoricalStateReady => result.historical_state_ready += 1,
             ReplayEligibility::ReconstructedReady => result.reconstructed_ready += 1,
             ReplayEligibility::ApproximateOnly => result.approximate_only += 1,
             ReplayEligibility::MissingState => result.missing_state += 1,
@@ -1223,7 +1234,7 @@ pub fn render_text(corpus: &DiscoveryCorpus) -> String {
         corpus.coverage.rare_clusters_total,
         corpus.coverage.historical_failures_selected,
         corpus.coverage.historical_failures_discovered,
-        eligibility.exact_ready,
+        eligibility.historical_state_ready,
         eligibility.reconstructed_ready,
         eligibility.approximate_only,
         eligibility.missing_state,
