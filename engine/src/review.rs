@@ -108,8 +108,15 @@ pub enum BoundBreach {
 pub enum UnevaluableCause {
     /// No observation in this corpus can measure the declared subject.
     SubjectNotCovered { subject: String },
-    /// The finding was measured, but its bound has no defined value.
-    BoundUndefined { detail: String },
+    /// Some matching observation's bound has no defined value, so the bound
+    /// as a whole cannot be said to hold.
+    BoundUndefined {
+        detail: String,
+        /// How many matching observations could not be judged.
+        unevaluable: usize,
+        /// How many matching observations there were in total.
+        matching: usize,
+    },
 }
 
 /// One fingerprint, aggregated across the observations that produced it.
@@ -149,12 +156,41 @@ pub struct UnmatchedExpectation {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum FailureReason {
-    /// A change nothing declared, or one larger than declared.
-    UndeclaredChange,
-    /// A declaration for behaviour that no longer happens.
-    StaleExpectation,
-    /// A declaration this corpus cannot judge.
+    /// A declaration this corpus cannot judge. Eplyx cannot prove whether the
+    /// approval still applies.
     UnevaluableExpectation,
+    /// A declaration for behaviour that no longer happens. The approval file
+    /// contains something that is no longer true.
+    StaleExpectation,
+    /// A change nothing declared, or one larger than declared. The candidate
+    /// did something nobody approved.
+    UndeclaredChange,
+}
+
+impl FailureReason {
+    /// The process exit code this reason summarises to.
+    ///
+    /// Three different actions for a team, so three different codes:
+    /// 1 is "the candidate did something you did not approve", 3 is "your
+    /// approval file contains something that no longer happens", and 5 is
+    /// "Eplyx cannot prove whether your approval still applies". Codes 2 and 4
+    /// belong to failures that happen *before* review - a configuration or
+    /// fidelity error, and a bundle or baseline incompatibility - and abort it.
+    pub fn exit_code(self) -> u8 {
+        match self {
+            Self::UnevaluableExpectation => 5,
+            Self::StaleExpectation => 3,
+            Self::UndeclaredChange => 1,
+        }
+    }
+
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::UnevaluableExpectation => "unevaluable_expectation",
+            Self::StaleExpectation => "stale_expectation",
+            Self::UndeclaredChange => "undeclared_change",
+        }
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -162,12 +198,28 @@ pub struct Review {
     pub findings: Vec<ReviewedFinding>,
     pub unmatched: Vec<UnmatchedExpectation>,
     /// Every reason the gate failed, most significant first. Empty means pass.
+    ///
+    /// All of them are reported. The exit code is only a deterministic summary
+    /// of this list, never a replacement for it.
     pub failures: Vec<FailureReason>,
 }
 
 impl Review {
     pub fn passed(&self) -> bool {
         self.failures.is_empty()
+    }
+
+    /// One code for a shell, chosen by precedence: coverage uncertainty outranks
+    /// a stale declaration, which outranks an undeclared change.
+    ///
+    /// Uncertainty wins because it says the analysis was incomplete, and a team
+    /// that cannot tell an incomplete analysis from a clean finding will
+    /// eventually act on the wrong one. The full list stays in `failures`.
+    pub fn exit_code(&self) -> u8 {
+        self.failures
+            .first()
+            .map(|reason| reason.exit_code())
+            .unwrap_or(0)
     }
 
     pub fn count(&self, status: ReviewStatus) -> usize {
@@ -182,8 +234,14 @@ struct Aggregate {
     observations: BTreeSet<String>,
     entities: BTreeSet<String>,
     severity: Option<Severity>,
+    /// Largest magnitude among the observations that *could* be measured.
     max_delta_bps: Option<i64>,
-    undefined: Option<UndefinedBound>,
+    /// Observations whose relative delta has no defined value, and why.
+    ///
+    /// Kept per observation rather than as a single flag because the report
+    /// has to say how much of the evidence was unjudgeable: "1 of 10" is a
+    /// different situation from "10 of 10".
+    undefined: BTreeMap<String, UndefinedBound>,
 }
 
 /// Review measured findings against declared expectations.
@@ -228,7 +286,9 @@ pub fn review(
                 }
             }
             Some(RelativeDelta::Undefined(cause)) => {
-                aggregate.undefined.get_or_insert(cause);
+                aggregate
+                    .undefined
+                    .insert(entry.observation_id.clone(), cause);
             }
             None => {}
         }
@@ -294,16 +354,17 @@ pub fn review(
         |status: ReviewStatus, findings: &[ReviewedFinding], un: &[UnmatchedExpectation]| {
             findings.iter().any(|f| f.status == status) || un.iter().any(|e| e.status == status)
         };
-    if failed(ReviewStatus::Unexpected, &findings, &unmatched)
-        || failed(ReviewStatus::ExpectedButExceeded, &findings, &unmatched)
-    {
-        failures.push(FailureReason::UndeclaredChange);
+    // Precedence order, so `failures.first()` is the exit code.
+    if failed(ReviewStatus::Unevaluable, &findings, &unmatched) {
+        failures.push(FailureReason::UnevaluableExpectation);
     }
     if failed(ReviewStatus::Stale, &findings, &unmatched) {
         failures.push(FailureReason::StaleExpectation);
     }
-    if failed(ReviewStatus::Unevaluable, &findings, &unmatched) {
-        failures.push(FailureReason::UnevaluableExpectation);
+    if failed(ReviewStatus::Unexpected, &findings, &unmatched)
+        || failed(ReviewStatus::ExpectedButExceeded, &findings, &unmatched)
+    {
+        failures.push(FailureReason::UndeclaredChange);
     }
 
     Review {
@@ -338,6 +399,21 @@ fn judge(
     let mut breaches = Vec::new();
 
     if let Some(limit) = change.max_delta_bps {
+        // A bound passes only if *every* matching observation is evaluable and
+        // every matching observation is within it. Nine measurable observations
+        // at 12 bps do not vouch for a tenth whose baseline was zero: that one
+        // is unjudged, so the bound is unproven rather than satisfied.
+        if let Some((_, cause)) = aggregate.undefined.iter().next() {
+            return (
+                ReviewStatus::Unevaluable,
+                breaches,
+                Some(UnevaluableCause::BoundUndefined {
+                    detail: cause.as_str().to_string(),
+                    unevaluable: aggregate.undefined.len(),
+                    matching: aggregate.observations.len(),
+                }),
+            );
+        }
         match aggregate.max_delta_bps {
             Some(observed) if observed.unsigned_abs() > u64::from(limit) => {
                 breaches.push(BoundBreach::RelativeDelta {
@@ -346,17 +422,15 @@ fn judge(
                 });
             }
             Some(_) => {}
-            // A bound that cannot be computed is never quietly satisfied.
             None => {
-                let detail = aggregate
-                    .undefined
-                    .unwrap_or(UndefinedBound::NotMeasured)
-                    .as_str()
-                    .to_string();
                 return (
                     ReviewStatus::Unevaluable,
                     breaches,
-                    Some(UnevaluableCause::BoundUndefined { detail }),
+                    Some(UnevaluableCause::BoundUndefined {
+                        detail: UndefinedBound::NotMeasured.as_str().to_string(),
+                        unevaluable: aggregate.observations.len(),
+                        matching: aggregate.observations.len(),
+                    }),
                 );
             }
         }
@@ -694,10 +768,12 @@ reason = "WithdrawSol is intentionally removed in upgrade v3"
         assert_eq!(
             review.failures,
             vec![
-                FailureReason::StaleExpectation,
-                FailureReason::UnevaluableExpectation
-            ]
+                FailureReason::UnevaluableExpectation,
+                FailureReason::StaleExpectation
+            ],
+            "reported most significant first"
         );
+        assert_eq!(review.exit_code(), 5, "coverage uncertainty outranks stale");
     }
 
     /// With nothing reporting coverage, every unmatched declaration is
@@ -727,7 +803,9 @@ reason = "WithdrawSol is intentionally removed in upgrade v3"
         assert_eq!(
             reviewed.unevaluable,
             Some(UnevaluableCause::BoundUndefined {
-                detail: "baseline quantity is zero".to_string()
+                detail: "baseline quantity is zero".to_string(),
+                unevaluable: 1,
+                matching: 1,
             })
         );
         assert_eq!(review.failures, vec![FailureReason::UnevaluableExpectation]);
@@ -806,6 +884,144 @@ reason = "WithdrawSol is intentionally removed in upgrade v3"
         assert!(review.passed());
         assert!(review.findings.is_empty());
         assert!(review.unmatched.is_empty());
+    }
+
+    /// Nine measurable observations do not vouch for a tenth that could not be
+    /// judged. The bound is unproven, not satisfied.
+    #[test]
+    fn one_unevaluable_observation_makes_the_whole_bound_unevaluable() {
+        let mut observations: Vec<ObservedFinding> = (0..9)
+            .map(|i| {
+                observed(
+                    SHARES,
+                    Severity::Warning,
+                    // 12 bps, comfortably inside the declared 25.
+                    Some((100_000, 99_880)),
+                    &format!("o{i}"),
+                    &format!("e{i}"),
+                )
+            })
+            .collect();
+        observations.push(observed(
+            SHARES,
+            Severity::Warning,
+            Some((0, 500)),
+            "o9",
+            "e9",
+        ));
+
+        let review = review(
+            &observations,
+            &[coverage("o0", &[SHARES])],
+            &expectations(DECLARE_SHARES),
+        );
+        let reviewed = &review.findings[0];
+        assert_eq!(
+            reviewed.status,
+            ReviewStatus::Unevaluable,
+            "must not pass on the strength of the nine that were measurable"
+        );
+        assert_eq!(
+            reviewed.unevaluable,
+            Some(UnevaluableCause::BoundUndefined {
+                detail: "baseline quantity is zero".to_string(),
+                unevaluable: 1,
+                matching: 10,
+            })
+        );
+        assert_eq!(review.exit_code(), 5);
+    }
+
+    /// The same rule for every way a bound can be undefined.
+    #[test]
+    fn any_undefined_bound_cause_blocks_the_whole_bound() {
+        for (label, bad) in [
+            (
+                "incomparable scales",
+                NamedFinding {
+                    fingerprint: fingerprint(SHARES),
+                    baseline: Some(SemanticValue::quantity(100_000, 9)),
+                    candidate: Some(SemanticValue::quantity(99_900, 6)),
+                    relative_delta_bps: None,
+                    severity: Severity::Warning,
+                },
+            ),
+            (
+                "not a quantity",
+                NamedFinding {
+                    fingerprint: fingerprint(SHARES),
+                    baseline: Some(SemanticValue::Flag { value: true }),
+                    candidate: Some(SemanticValue::Flag { value: false }),
+                    relative_delta_bps: None,
+                    severity: Severity::Warning,
+                },
+            ),
+            (
+                "not measured",
+                NamedFinding {
+                    fingerprint: fingerprint(SHARES),
+                    baseline: None,
+                    candidate: None,
+                    relative_delta_bps: None,
+                    severity: Severity::Warning,
+                },
+            ),
+        ] {
+            let observations = vec![
+                observed(
+                    SHARES,
+                    Severity::Warning,
+                    Some((100_000, 99_880)),
+                    "o0",
+                    "e0",
+                ),
+                ObservedFinding {
+                    observation_id: "o1".to_string(),
+                    entity: Some("e1".to_string()),
+                    finding: bad,
+                },
+            ];
+            let review = review(
+                &observations,
+                &[coverage("o0", &[SHARES])],
+                &expectations(DECLARE_SHARES),
+            );
+            assert_eq!(
+                review.findings[0].status,
+                ReviewStatus::Unevaluable,
+                "{label} must block the bound"
+            );
+        }
+    }
+
+    /// A declaration with no relative bound is unaffected by an undefined one:
+    /// the rule guards `max_delta_bps`, it does not invent a bound.
+    #[test]
+    fn an_undefined_delta_does_not_block_a_declaration_without_a_delta_bound() {
+        let declaration = DECLARE_SHARES.replace("max_delta_bps             = 25\n", "");
+        let review = review(
+            &[observed(
+                SHARES,
+                Severity::Warning,
+                Some((0, 500)),
+                "o1",
+                "e1",
+            )],
+            &[coverage("o1", &[SHARES])],
+            &expectations(&declaration),
+        );
+        assert_eq!(review.findings[0].status, ReviewStatus::Expected);
+        assert!(review.passed());
+    }
+
+    #[test]
+    fn exit_codes_are_distinct_and_stable() {
+        assert_eq!(FailureReason::UndeclaredChange.exit_code(), 1);
+        assert_eq!(FailureReason::StaleExpectation.exit_code(), 3);
+        assert_eq!(FailureReason::UnevaluableExpectation.exit_code(), 5);
+
+        let passing = review(&[], &[coverage("o1", &[SHARES])], &ExpectationFile::empty());
+        assert_eq!(passing.exit_code(), 0);
     }
 
     #[test]

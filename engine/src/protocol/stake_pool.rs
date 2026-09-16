@@ -168,7 +168,37 @@ impl PoolOp {
             Self::WithdrawSol => SemanticAction::Withdraw,
         }
     }
+
+    /// The precise action in the finding vocabulary.
+    ///
+    /// `deposit` groups DepositSol with a future DepositStake, which is what
+    /// the corpus selector wants. An expectation must not: `deposit_sol` names
+    /// one instruction and keeps naming one instruction.
+    fn action_id(self) -> &'static str {
+        match self {
+            Self::DepositSol => "deposit_sol",
+            Self::WithdrawSol => "withdraw_sol",
+        }
+    }
 }
+
+/// Quantities promoted to the public expectation surface.
+///
+/// Deliberately a short list. `summarize` derives more than this, but a field
+/// there is a reporting detail while a subject here is a compatibility
+/// commitment: the moment a team names one in their TOML, it has to keep
+/// meaning the same thing. Promoted only where the quantity is economically
+/// meaningful to a user, decoded from where value actually landed rather than
+/// from the instruction's stated amount, and produced identically from either
+/// build so a V1/V2 comparison is well defined.
+///
+/// Each entry pairs the `summarize` field name with the account whose presence
+/// makes it measurable at all.
+const PROMOTED_SUBJECTS: [(&str, &str); 3] = [
+    ("pool_tokens_received", "destination-pool-token"),
+    ("pool_tokens_burned", "source-pool-token"),
+    ("sol_received_by_user", "destination-lamports"),
+];
 
 const DEPOSIT_SOL_ROLES: [&str; DEPOSIT_SOL_ACCOUNTS] = [
     "stake-pool",
@@ -1360,6 +1390,149 @@ impl ProtocolAdapter for StakePoolAdapter {
         changes
     }
 
+    fn action_id(&self, transaction: &HistoricalTransaction) -> Option<crate::semantics::ActionId> {
+        let (op, _) = self.operation(transaction).ok()?;
+        crate::semantics::ActionId::new(op.action_id()).ok()
+    }
+
+    fn evaluable_subjects(
+        &self,
+        transaction: &HistoricalTransaction,
+        accounts: &[NamedAccount],
+    ) -> Vec<crate::semantics::EvaluableSubject> {
+        use crate::semantics::{EvaluableSubject, FindingDomain, SemanticSubject};
+
+        let (Some(protocol), Some(action)) = (self.protocol_id(), self.action_id(transaction))
+        else {
+            return Vec::new();
+        };
+        let subject = |domain, name: &str| {
+            Some(EvaluableSubject {
+                protocol: protocol.clone(),
+                action: action.clone(),
+                domain,
+                subject: SemanticSubject::new(name).ok()?,
+            })
+        };
+
+        // Whether the transaction runs at all is measurable for every accepted
+        // observation: the replay produces a result either way.
+        let mut subjects: Vec<EvaluableSubject> = subject(FindingDomain::Execution, "transaction")
+            .into_iter()
+            .collect();
+
+        // A quantity is measurable when the account it is read from is part of
+        // this observation. This is a property of the observation, not of
+        // whether anything about it changed.
+        for (name, required) in PROMOTED_SUBJECTS {
+            if accounts.iter().any(|named| named.label == required) {
+                subjects.extend(subject(FindingDomain::Economic, name));
+            }
+        }
+        subjects
+    }
+
+    fn named_findings(
+        &self,
+        transaction: &HistoricalTransaction,
+        accounts: &[NamedAccount],
+        v1: &ExecutionResult,
+        v2: &ExecutionResult,
+    ) -> Vec<crate::semantics::NamedFinding> {
+        use crate::semantics::{
+            ChangeKind, FindingDomain, FindingFingerprint, NamedFinding, SemanticSubject,
+            SemanticValue,
+        };
+
+        let (Some(protocol), Some(action)) = (self.protocol_id(), self.action_id(transaction))
+        else {
+            return Vec::new();
+        };
+        let print = |domain, name: &str, change| {
+            Some(FindingFingerprint {
+                protocol: protocol.clone(),
+                action: action.clone(),
+                domain,
+                subject: SemanticSubject::new(name).ok()?,
+                change,
+            })
+        };
+
+        // Whether it ran at all comes first, and when it differs it is the
+        // whole story. A candidate that rejects the instruction produced no
+        // quantities, so reporting the user's shares as having "decreased to
+        // zero" beside it would double-count one change as two and invite a
+        // team to declare it twice.
+        if v1.success != v2.success {
+            let change = if v1.success {
+                ChangeKind::NowReverts
+            } else {
+                ChangeKind::NowSucceeds
+            };
+            return print(FindingDomain::Execution, "transaction", change)
+                .map(|fingerprint| NamedFinding {
+                    fingerprint,
+                    baseline: None,
+                    candidate: None,
+                    relative_delta_bps: None,
+                    // Either direction is critical, matching how the generic
+                    // layer already rates a changed outcome: a withdrawal that
+                    // starts failing strands users, one that starts succeeding
+                    // bypasses a guard.
+                    severity: crate::diff::Severity::Critical,
+                })
+                .into_iter()
+                .collect();
+        }
+
+        let before = self.summarize(accounts, v1);
+        let after = self.summarize(accounts, v2);
+        let mut findings = Vec::new();
+        for (name, _) in PROMOTED_SUBJECTS {
+            let find = |fields: &[SemanticField]| {
+                fields
+                    .iter()
+                    .find(|field| field.name == name)
+                    .and_then(|field| field.value.as_quantity())
+            };
+            let (Some(baseline), Some(candidate)) = (find(&before), find(&after)) else {
+                continue;
+            };
+            let Some(delta) = candidate.delta(baseline) else {
+                continue;
+            };
+            if delta.base_units == 0 {
+                continue;
+            }
+            let Some(fingerprint) = print(
+                FindingDomain::Economic,
+                name,
+                ChangeKind::from_delta(delta.base_units),
+            ) else {
+                continue;
+            };
+            findings.push(NamedFinding {
+                fingerprint,
+                baseline: Some(SemanticValue::quantity(
+                    baseline.base_units,
+                    baseline.decimals,
+                )),
+                candidate: Some(SemanticValue::quantity(
+                    candidate.base_units,
+                    candidate.decimals,
+                )),
+                relative_delta_bps: None,
+                // A quantity a user receives is a balance, and the generic
+                // layer already rates a changed balance as High. Rating it
+                // lower here because these bytes happen to sit in a token
+                // account rather than in lamports would be the same
+                // under-reading `--fail-on-critical` exists to correct.
+                severity: crate::diff::Severity::High,
+            });
+        }
+        findings
+    }
+
     fn summarize(&self, accounts: &[NamedAccount], result: &ExecutionResult) -> Vec<SemanticField> {
         let decimals = self.pool_decimals(accounts);
         let before = |label: &str| accounts.iter().find(|named| named.label == label);
@@ -1850,5 +2023,250 @@ mod tests {
                 .decimals,
             9
         );
+    }
+}
+
+/// Tests for the expectation surface: what an observation can measure, and
+/// what a V1/V2 pair is named as having changed.
+#[cfg(test)]
+mod semantic_surface {
+    use super::*;
+    use crate::replay::ReplayRecord;
+    use crate::semantics::{ChangeKind, FindingDomain};
+    use std::collections::BTreeMap;
+
+    const ADAPTER: StakePoolAdapter = StakePoolAdapter;
+
+    fn deposit() -> ReplayRecord {
+        serde_json::from_str(include_str!(
+            "../../../docs/examples/mainnet-stake-pool-record.json"
+        ))
+        .expect("committed deposit record")
+    }
+
+    fn withdraw() -> ReplayRecord {
+        serde_json::from_str(include_str!(
+            "../../../docs/examples/mainnet-stake-pool-withdraw-record.json"
+        ))
+        .expect("committed withdraw record")
+    }
+
+    fn subjects(record: &ReplayRecord) -> Vec<String> {
+        ADAPTER
+            .evaluable_subjects(&record.transaction, &record.accounts)
+            .into_iter()
+            .map(|s| s.to_string())
+            .collect()
+    }
+
+    /// An execution result that leaves every account exactly as it started,
+    /// then applies one edit. The baseline is the record's own pre-state, so
+    /// the quantities under test are the ones the adapter really derives.
+    fn result(
+        record: &ReplayRecord,
+        success: bool,
+        edit: impl Fn(&str, &mut Vec<u8>),
+    ) -> ExecutionResult {
+        let mut accounts = BTreeMap::new();
+        for named in &record.accounts {
+            let mut data = named.account.data.clone();
+            edit(&named.label, &mut data);
+            accounts.insert(
+                named.label.clone(),
+                AccountSnapshot {
+                    lamports: named.account.lamports,
+                    owner: named.account.owner.clone(),
+                    executable: named.account.executable,
+                    rent_epoch: named.account.rent_epoch,
+                    data,
+                },
+            );
+        }
+        ExecutionResult {
+            version: "test".into(),
+            success,
+            error: (!success).then(|| "InstructionError(3, InvalidInstructionData)".to_string()),
+            compute_units: Some(1),
+            fee: 0,
+            logs: Vec::new(),
+            cpi_calls: Vec::new(),
+            accounts,
+        }
+    }
+
+    fn set_token_amount(data: &mut [u8], amount: u64) {
+        if data.len() == TOKEN_ACCOUNT_LEN {
+            data[64..72].copy_from_slice(&amount.to_le_bytes());
+        }
+    }
+
+    fn findings(record: &ReplayRecord, v1: &ExecutionResult, v2: &ExecutionResult) -> Vec<String> {
+        ADAPTER
+            .named_findings(&record.transaction, &record.accounts, v1, v2)
+            .into_iter()
+            .map(|f| f.fingerprint.to_string())
+            .collect()
+    }
+
+    #[test]
+    fn a_deposit_can_measure_the_shares_it_produces() {
+        let record = deposit();
+        let subjects = subjects(&record);
+        assert!(subjects.contains(&"spl-stake-pool/deposit_sol/execution/transaction".to_string()));
+        assert!(subjects
+            .contains(&"spl-stake-pool/deposit_sol/economic/pool_tokens_received".to_string()));
+        // A deposit burns nothing and credits no withdrawal destination, so it
+        // cannot speak about those at all.
+        assert!(!subjects.iter().any(|s| s.contains("pool_tokens_burned")));
+        assert!(!subjects.iter().any(|s| s.contains("sol_received_by_user")));
+    }
+
+    #[test]
+    fn a_withdrawal_can_measure_what_it_burns_and_pays_out() {
+        let record = withdraw();
+        let subjects = subjects(&record);
+        for expected in [
+            "spl-stake-pool/withdraw_sol/execution/transaction",
+            "spl-stake-pool/withdraw_sol/economic/pool_tokens_burned",
+            "spl-stake-pool/withdraw_sol/economic/sol_received_by_user",
+        ] {
+            assert!(
+                subjects.contains(&expected.to_string()),
+                "missing {expected}"
+            );
+        }
+        assert!(!subjects.iter().any(|s| s.contains("pool_tokens_received")));
+    }
+
+    /// The whole basis of the stale-versus-unevaluable split: capability comes
+    /// from the observation's shape, so it is the same whether or not the two
+    /// builds happened to differ.
+    #[test]
+    fn capability_does_not_depend_on_anything_changing() {
+        let record = deposit();
+        let unchanged = subjects(&record);
+        assert!(!unchanged.is_empty());
+        // The signature takes no execution results at all, which is what makes
+        // this structural rather than a convention to be remembered.
+        assert_eq!(unchanged, subjects(&deposit()));
+    }
+
+    /// No action id, no subjects. An observation the adapter cannot decode
+    /// must not claim it can measure anything about it.
+    #[test]
+    fn an_action_outside_the_contract_names_no_subjects() {
+        let mut record = deposit();
+        for instruction in &mut record.transaction.instructions {
+            if instruction.program == ADAPTER.program_id() {
+                instruction.data = vec![0];
+            }
+        }
+        assert!(ADAPTER.action_id(&record.transaction).is_none());
+        assert!(subjects(&record).is_empty());
+    }
+
+    #[test]
+    fn fewer_shares_for_the_same_deposit_is_named() {
+        let record = deposit();
+        let baseline = record
+            .accounts
+            .iter()
+            .find(|a| a.label == "destination-pool-token")
+            .and_then(|a| token_account_amount(&a.account.data))
+            .expect("a pool token account");
+
+        let v1 = result(&record, true, |label, data| {
+            if label == "destination-pool-token" {
+                set_token_amount(data, baseline + 1_000_000);
+            }
+        });
+        let v2 = result(&record, true, |label, data| {
+            if label == "destination-pool-token" {
+                set_token_amount(data, baseline + 999_000);
+            }
+        });
+
+        let named = ADAPTER.named_findings(&record.transaction, &record.accounts, &v1, &v2);
+        assert_eq!(named.len(), 1, "{named:#?}");
+        assert_eq!(
+            named[0].fingerprint.to_string(),
+            "spl-stake-pool/deposit_sol/economic/pool_tokens_received/decreased"
+        );
+        assert_eq!(named[0].fingerprint.domain, FindingDomain::Economic);
+        assert_eq!(named[0].fingerprint.change, ChangeKind::Decreased);
+        assert!(named[0].baseline.is_some() && named[0].candidate.is_some());
+        assert_eq!(named[0].severity, crate::diff::Severity::High);
+    }
+
+    #[test]
+    fn an_unchanged_outcome_is_named_as_nothing() {
+        let record = deposit();
+        let v1 = result(&record, true, |_, _| {});
+        let v2 = result(&record, true, |_, _| {});
+        assert!(findings(&record, &v1, &v2).is_empty());
+    }
+
+    /// A candidate that rejects the instruction produced no quantities.
+    /// Reporting the user's payout as having collapsed to zero beside the
+    /// revert would count one change twice and invite two declarations for it.
+    #[test]
+    fn a_rejected_instruction_is_one_finding_not_several() {
+        let record = withdraw();
+        let v1 = result(&record, true, |_, _| {});
+        let v2 = result(&record, false, |label, data| {
+            // The candidate did nothing, so the burn never happened - exactly
+            // the state that would look like a large economic change.
+            if label == "source-pool-token" {
+                set_token_amount(data, u64::MAX / 2);
+            }
+        });
+        assert_eq!(
+            findings(&record, &v1, &v2),
+            ["spl-stake-pool/withdraw_sol/execution/transaction/now_reverts"]
+        );
+    }
+
+    #[test]
+    fn an_instruction_that_starts_succeeding_is_also_named() {
+        let record = withdraw();
+        let v1 = result(&record, false, |_, _| {});
+        let v2 = result(&record, true, |_, _| {});
+        assert_eq!(
+            findings(&record, &v1, &v2),
+            ["spl-stake-pool/withdraw_sol/execution/transaction/now_succeeds"]
+        );
+    }
+
+    /// Every finding the adapter emits must be measurable by the observation
+    /// that produced it, or the review engine would call a real finding
+    /// unevaluable.
+    #[test]
+    fn every_emitted_finding_is_covered_by_a_declared_capability() {
+        let record = deposit();
+        let baseline = record
+            .accounts
+            .iter()
+            .find(|a| a.label == "destination-pool-token")
+            .and_then(|a| token_account_amount(&a.account.data))
+            .expect("a pool token account");
+        let v1 = result(&record, true, |label, data| {
+            if label == "destination-pool-token" {
+                set_token_amount(data, baseline + 10);
+            }
+        });
+        let v2 = result(&record, true, |label, data| {
+            if label == "destination-pool-token" {
+                set_token_amount(data, baseline + 5);
+            }
+        });
+
+        let capability: Vec<String> = subjects(&record);
+        for finding in ADAPTER.named_findings(&record.transaction, &record.accounts, &v1, &v2) {
+            let subject = finding.fingerprint.evaluable_subject().to_string();
+            assert!(
+                capability.contains(&subject),
+                "emitted {subject} but the observation does not declare it measurable"
+            );
+        }
     }
 }

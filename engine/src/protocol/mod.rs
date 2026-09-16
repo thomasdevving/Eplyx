@@ -598,6 +598,63 @@ pub trait ProtocolAdapter: Sync {
     ) -> Vec<SemanticField> {
         Vec::new()
     }
+
+    /// This protocol's stable id in the finding vocabulary.
+    ///
+    /// Defaults to [`ProtocolAdapter::name`], which is already the slug teams
+    /// see. `None` means this adapter does not participate in expectation
+    /// review at all, which is the safe default: a protocol whose subjects have
+    /// not been deliberately promoted should not have teams writing TOML
+    /// against them.
+    fn protocol_id(&self) -> Option<crate::semantics::ProtocolId> {
+        crate::semantics::ProtocolId::new(self.name()).ok()
+    }
+
+    /// The precise action in the finding vocabulary.
+    ///
+    /// Finer than [`ProtocolAdapter::semantic_action`], which is deliberately
+    /// coarse so the corpus selector can stratify on it. An expectation keys on
+    /// this one: `withdraw_sol` must not silently widen to cover a future
+    /// `withdraw_stake`.
+    fn action_id(
+        &self,
+        _transaction: &HistoricalTransaction,
+    ) -> Option<crate::semantics::ActionId> {
+        None
+    }
+
+    /// What this observation is *able* to measure, whether or not anything
+    /// changed.
+    ///
+    /// Derived from the observation's own shape - which instruction it is and
+    /// which accounts it names - and never from what happened to differ between
+    /// two builds. That is the whole point: it is what lets the review engine
+    /// tell "the candidate stopped doing this" from "this corpus cannot tell
+    /// you", and a capability computed from observed differences would collapse
+    /// the two.
+    fn evaluable_subjects(
+        &self,
+        _transaction: &HistoricalTransaction,
+        _accounts: &[NamedAccount],
+    ) -> Vec<crate::semantics::EvaluableSubject> {
+        Vec::new()
+    }
+
+    /// Named differences between one V1/V2 pair, in the finding vocabulary.
+    ///
+    /// Only subjects this adapter has deliberately promoted appear here. A
+    /// field in `summarize` is a reporting detail; a subject here is a
+    /// compatibility commitment, because teams will name it in a file they
+    /// expect to keep working.
+    fn named_findings(
+        &self,
+        _transaction: &HistoricalTransaction,
+        _accounts: &[NamedAccount],
+        _v1: &ExecutionResult,
+        _v2: &ExecutionResult,
+    ) -> Vec<crate::semantics::NamedFinding> {
+        Vec::new()
+    }
 }
 
 /// Pair two summaries field by field into one comparison.
