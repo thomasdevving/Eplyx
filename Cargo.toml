@@ -38,6 +38,12 @@ solana-transaction-error = "3.3.1"
 solana-instruction-error = "2.4.0"
 
 anyhow = "1.0"
+# The expectation file is written and reviewed by hand, so it wants comments
+# and clean diffs. Read-only: `default-features = false` drops the TOML writer,
+# because nothing here generates an expectation file - a team writes it.
+# The seven crates this adds to `cargo tree -d` are all TOML parsing machinery;
+# no `solana-*` crate is duplicated, so the litesvm type-identity pin holds.
+toml = { version = "0.9", default-features = false, features = ["parse", "serde", "std"] }
 clap = { version = "4.5", features = ["derive"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
