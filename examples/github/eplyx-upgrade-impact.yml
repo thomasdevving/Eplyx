@@ -1,0 +1,50 @@
+# Copy to .github/workflows/ in the protocol repository.
+#
+# Eplyx never builds your code. This workflow builds the candidate in your own
+# runner and uploads only the resulting SBF binary, so no build script of yours
+# ever executes inside Eplyx's infrastructure.
+name: Eplyx Upgrade Impact
+
+on:
+  pull_request:
+
+jobs:
+  upgrade-impact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the candidate program
+        run: cargo build-sbf
+
+      - name: Eplyx upgrade check
+        id: eplyx
+        continue-on-error: true     # the gate is enforced in its own step below
+        env:
+          EPLYX_TOKEN: ${{ secrets.EPLYX_TOKEN }}
+          EPLYX_PROJECT: ${{ vars.EPLYX_PROJECT }}
+          EPLYX_URL: ${{ vars.EPLYX_URL }}
+        run: ./scripts/eplyx-check.sh target/deploy/your_program.so .eplyx/expected-changes.toml
+
+      - name: Upload the Eplyx report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eplyx-upgrade-impact
+          path: |
+            eplyx-response.json
+            eplyx-report.json
+            eplyx-report.md
+          if-no-files-found: ignore
+
+      # Enforced separately so the report is always uploaded first, and so the
+      # job fails with Eplyx's own code rather than a generic one:
+      #   1 undeclared or out-of-bounds change
+      #   2 malformed configuration
+      #   3 stale declaration
+      #   4 bundle or baseline incompatibility
+      #   5 declaration this corpus cannot judge
+      #  70 the Eplyx API could not be reached — not a gate result
+      - name: Enforce the Eplyx gate
+        if: always()
+        run: exit ${{ steps.eplyx.outputs.exit_code || steps.eplyx.outcome == 'success' && 0 || 70 }}

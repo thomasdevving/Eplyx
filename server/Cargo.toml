@@ -1,0 +1,27 @@
+[package]
+name = "eplyx-server"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Hosted Eplyx CI API. A thin transport layer over the engine; it contains no analysis logic of its own."
+
+[[bin]]
+name = "eplyx-server"
+path = "src/main.rs"
+
+[dependencies]
+eplyx-engine = { path = "../engine" }
+anyhow = { workspace = true }
+axum = { workspace = true }
+clap = { workspace = true }
+hex = { workspace = true }
+rand = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+sha2 = "0.10.9"
+tokio = { workspace = true }
+tower-http = { workspace = true }
+tempfile = "3"
+
+[dev-dependencies]
+tempfile = "3"

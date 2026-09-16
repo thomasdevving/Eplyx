@@ -57,9 +57,17 @@ pub struct BundleRef {
     pub baseline_sha256: String,
     pub corpus_sha256: String,
     pub record_count: usize,
+    pub program_id: String,
     pub adapter: String,
     pub adapter_version: u32,
     pub semantic_schema_version: u32,
+    /// The production window the corpus was drawn from.
+    pub source_slot_range: crate::bundle::SlotRange,
+    /// What this corpus does not cover, carried from the bundle. A green result
+    /// must never hide these, so they travel inside the report rather than
+    /// being looked up somewhere else.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub limitations: Vec<crate::bundle::BundledLimitation>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -335,9 +343,12 @@ pub fn assemble(
             baseline_sha256: manifest.baseline_program_sha256.clone(),
             corpus_sha256: manifest.corpus_sha256.clone(),
             record_count: manifest.record_count,
+            program_id: manifest.program_id.clone(),
             adapter: bundle.adapter().name.clone(),
             adapter_version: bundle.adapter().version,
             semantic_schema_version: crate::semantics::SEMANTIC_SCHEMA_VERSION,
+            source_slot_range: manifest.source_slot_range,
+            limitations: bundle.adapter().limitations.clone(),
         },
         candidate: CandidateRef {
             sha256: candidate_sha256,
