@@ -168,7 +168,14 @@ pub fn screen(
                 "transactionDetails": "accounts",
                 "rewards": false,
                 "commitment": "finalized",
-                "maxSupportedTransactionVersion": 0
+                // Screening has to *see* every transaction in the slot to know
+                // whether one of them writes a required account. A block
+                // containing a version this client will not deserialize is
+                // refused wholesale, which would make a clean slot unscreenable.
+                // Raising the ceiling changes only what the RPC will return;
+                // which transactions may be *replayed* is decided by the
+                // adapter's own message rule, not here.
+                "maxSupportedTransactionVersion": 1
             }
         ]),
     )?;

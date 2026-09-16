@@ -284,6 +284,7 @@ mod tests {
             recent_blockhash: "hash".into(),
             payer: "payer".into(),
             account_keys: vec![],
+            loaded_address_count: 0,
             instructions: outer.iter().copied().map(instruction).collect(),
             inner_instructions: inner.iter().copied().map(instruction).collect(),
             inner_instruction_frames: inner

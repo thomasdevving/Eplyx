@@ -18,7 +18,7 @@ RPC activity → normalized interactions → clusters → representative selecti
 
 An approximate current account sample can make an observation useful for
 discovery. It does not make historical V1/V2 comparison trustworthy. Every
-selected interaction therefore carries one of `exact_ready`,
+selected interaction therefore carries one of `historical_state_ready`,
 `reconstructed_ready`, `approximate_only`, `missing_state`,
 `unsupported_transaction`, or `unsupported_cpi`. The `compare --corpus` path
 still accepts only the Phase 4 `ReplayRecord` contract and its fidelity gate.
@@ -71,7 +71,7 @@ eplyx discovery build --cache ./data/capture/cache \
 
 For a controlled Phase 4 session, pass `--snapshots ./data/capture/snapshots`.
 Each snapshot is validated against transaction, genesis, program, and the full
-ReplayRecord contract before its interaction can be labeled `exact_ready`.
+ReplayRecord contract before its interaction can be labeled `historical_state_ready`.
 
 Inspect an endpoint without equating transaction history with account archives:
 
@@ -185,7 +185,7 @@ replay. Repeated JSON was byte-identical, SHA-256
 
 The controlled Phase 4 cross-check discovered 21 transactions in 8 clusters and
 selected 12 with 8/8 cluster coverage. Validated snapshots made one selected
-interaction `exact_ready`; 8 were approximate-only and 3 retained unsupported
+interaction `historical_state_ready`; 8 were approximate-only and 3 retained unsupported
 CPI status. Selection repeated byte-identically after the validator stopped.
 The original replay remained 3 exact observations, 1 identical and 2 critical
 newly-liquidatable outcomes.

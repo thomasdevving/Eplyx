@@ -2,7 +2,7 @@
 
 Implemented: one slot-addressable historical-state provider, exact boundary
 proofs against validator transaction metadata, immutable historical V1 bytecode
-extraction, an `ExactReady` mainnet replay record, offline V1 fidelity validation,
+extraction, an `HistoricalStateReady` mainnet replay record, offline V1 fidelity validation,
 candidate V2 execution, native-value impact, immutable request caching and a
 transport-disabled cache replay.
 
@@ -107,7 +107,7 @@ slot `447218873`, finalized at `2026-09-15 09:44:44 UTC`. It transferred
 `19,661` lamports and then wrote an 88-byte Memo. Its exact evidence is:
 
 ```text
-state source        historical_archive / ExactReady
+state source        historical_archive / HistoricalStateReady
 fee                 5,000 lamports
 pre-state SHA-256   5b29e923314147626739e5f1a3af6ce22af68ed43601e77f0d789f31e1182687
 post-state SHA-256  c447c3c994cbdc7671153c353d4669b766984d88fd7f4e9d94d768636d58063a

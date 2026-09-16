@@ -254,9 +254,268 @@ pub struct EconomicChange {
     pub delta: Option<SignedTokenQuantity>,
 }
 
+/// Accept only a message whose executable account set is exactly its static keys.
+///
+/// A v0 message that resolves no address lookup tables has the same accounts,
+/// instructions and signers as a legacy one, and `replay` rebuilds both into the
+/// same legacy `Message`, so it executes identically. A message that *does*
+/// resolve tables is refused: the addresses are normalized for inspection, but
+/// the lookup itself is not replayed, and pretending otherwise would put an
+/// unproved account list under an exactness claim.
+pub fn require_executable_message(transaction: &HistoricalTransaction) -> Result<()> {
+    match transaction.version.as_str() {
+        "legacy" => Ok(()),
+        "v0" if transaction.loaded_address_count == 0 => Ok(()),
+        "v0" => anyhow::bail!(
+            "message resolves {} address lookup table entries; lookup tables are normalized \
+             but not executed",
+            transaction.loaded_address_count
+        ),
+        other => anyhow::bail!("unsupported message version {other}"),
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Phase 9: protocol semantics for production-corpus construction
+// ---------------------------------------------------------------------------
+
+/// What an interaction *does*, in the protocol's own vocabulary.
+///
+/// Classified by the adapter, which understands the supported protocol - never
+/// inferred from arbitrary bytecode, and never from a language model. The set is
+/// the union across supported protocols plus [`SemanticAction::Unknown`], so a
+/// corpus record's action stays a stable string across adapter versions.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum SemanticAction {
+    Transfer,
+    Mint,
+    Burn,
+    Approve,
+    Revoke,
+    Deposit,
+    Withdraw,
+    Stake,
+    Unstake,
+    Claim,
+    Rebalance,
+    Liquidate,
+    Swap,
+    /// The adapter recognized the transaction but has no name for it. A record
+    /// carrying this is still auditable; it simply cannot be stratified by action.
+    Unknown,
+}
+
+impl SemanticAction {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Transfer => "transfer",
+            Self::Mint => "mint",
+            Self::Burn => "burn",
+            Self::Approve => "approve",
+            Self::Revoke => "revoke",
+            Self::Deposit => "deposit",
+            Self::Withdraw => "withdraw",
+            Self::Stake => "stake",
+            Self::Unstake => "unstake",
+            Self::Claim => "claim",
+            Self::Rebalance => "rebalance",
+            Self::Liquidate => "liquidate",
+            Self::Swap => "swap",
+            Self::Unknown => "unknown",
+        }
+    }
+}
+
+impl fmt::Display for SemanticAction {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Stable identity of the economic entity an interaction touches.
+///
+/// This exists so that a hundred interactions with one token account are not
+/// counted as a hundred independent exposures. `kind` names what sort of entity
+/// it is in the protocol's terms; `id` is the address that identifies it.
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+pub struct EntityId {
+    pub kind: String,
+    pub id: String,
+}
+
+impl EntityId {
+    pub fn new(kind: impl Into<String>, id: impl Into<String>) -> Self {
+        Self {
+            kind: kind.into(),
+            id: id.into(),
+        }
+    }
+}
+
+impl fmt::Display for EntityId {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}:{}", self.kind, self.id)
+    }
+}
+
+/// A deterministic value extracted from historical state by the adapter.
+///
+/// Integer rather than floating point throughout: these feed selection ranking
+/// and the canonical corpus hash, both of which must reproduce exactly.
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(tag = "type", rename_all = "snake_case")]
+pub enum FeatureValue {
+    Integer { value: u128 },
+    Text { value: String },
+}
+
+impl FeatureValue {
+    pub fn integer(value: impl Into<u128>) -> Self {
+        Self::Integer {
+            value: value.into(),
+        }
+    }
+
+    pub fn text(value: impl Into<String>) -> Self {
+        Self::Text {
+            value: value.into(),
+        }
+    }
+
+    pub fn as_integer(&self) -> Option<u128> {
+        match self {
+            Self::Integer { value } => Some(*value),
+            Self::Text { .. } => None,
+        }
+    }
+
+    pub fn render(&self) -> String {
+        match self {
+            Self::Integer { value } => value.to_string(),
+            Self::Text { value } => value.clone(),
+        }
+    }
+}
+
+/// One named, protocol-defined observation about the historical state.
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+pub struct StateFeature {
+    pub name: String,
+    pub value: FeatureValue,
+}
+
+impl StateFeature {
+    pub fn integer(name: impl Into<String>, value: impl Into<u128>) -> Self {
+        Self {
+            name: name.into(),
+            value: FeatureValue::integer(value),
+        }
+    }
+
+    pub fn text(name: impl Into<String>, value: impl Into<String>) -> Self {
+        Self {
+            name: name.into(),
+            value: FeatureValue::text(value),
+        }
+    }
+}
+
+/// How close a historical state sits to an economic threshold the protocol
+/// actually defines.
+///
+/// Boundaries are declared by the adapter, never invented generically: a
+/// distance is only meaningful when something real happens on the other side of
+/// it. `distance_bps` is basis points of the reference quantity, so 0 means the
+/// state sits exactly on the boundary and 10_000 means it is a whole reference
+/// away.
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+pub struct BoundaryDistance {
+    pub name: String,
+    pub description: String,
+    pub distance_bps: u32,
+    /// The quantities the distance was computed from, so a reader can check it.
+    pub reference: String,
+    pub observed: String,
+}
+
+impl BoundaryDistance {
+    /// Distance between `observed` and `reference`, in basis points of
+    /// `reference`. A zero reference yields `10_000` - maximally far - rather
+    /// than a division by zero, since nothing can be near a boundary that has no
+    /// magnitude.
+    pub fn from_quantities(
+        name: impl Into<String>,
+        description: impl Into<String>,
+        observed: u128,
+        reference: u128,
+    ) -> Self {
+        let distance_bps = if reference == 0 {
+            10_000
+        } else {
+            let gap = observed.abs_diff(reference);
+            u32::try_from(gap.saturating_mul(10_000) / reference).unwrap_or(u32::MAX)
+        };
+        Self {
+            name: name.into(),
+            description: description.into(),
+            distance_bps,
+            reference: reference.to_string(),
+            observed: observed.to_string(),
+        }
+    }
+}
+
 /// What an adapter knows about one program.
 pub trait ProtocolAdapter: Sync {
     fn name(&self) -> &'static str;
+
+    /// Version of this adapter's semantic interpretation.
+    ///
+    /// Recorded in a corpus manifest and folded into the canonical hash, so a
+    /// corpus built under a materially different interpretation cannot silently
+    /// appear identical to an older one. Bump it whenever `semantic_action`,
+    /// `economic_entity_id`, `state_features` or `boundaries` change meaning.
+    fn adapter_version(&self) -> u32 {
+        1
+    }
+
+    /// What this interaction does, in the protocol's vocabulary.
+    fn semantic_action(&self, _transaction: &HistoricalTransaction) -> SemanticAction {
+        SemanticAction::Unknown
+    }
+
+    /// The economic entity this interaction primarily affects.
+    ///
+    /// `None` where the protocol has no stable notion of one, in which case the
+    /// corpus counts observations only and says so rather than inventing an
+    /// entity per transaction.
+    fn economic_entity_id(
+        &self,
+        _transaction: &HistoricalTransaction,
+        _accounts: &[NamedAccount],
+    ) -> Option<EntityId> {
+        None
+    }
+
+    /// Deterministic features of the historical pre-state, for ranking and
+    /// stratification.
+    fn state_features(
+        &self,
+        _transaction: &HistoricalTransaction,
+        _accounts: &[NamedAccount],
+    ) -> Vec<StateFeature> {
+        Vec::new()
+    }
+
+    /// Distances to economic thresholds this protocol defines.
+    fn boundaries(
+        &self,
+        _transaction: &HistoricalTransaction,
+        _accounts: &[NamedAccount],
+    ) -> Vec<BoundaryDistance> {
+        Vec::new()
+    }
 
     fn program_id(&self) -> &'static str;
 

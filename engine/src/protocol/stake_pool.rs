@@ -18,7 +18,8 @@
 //! authority, and the versioned lookup-table transactions most aggregators send.
 
 use super::{
-    EconomicChange, FieldValue, ProtocolAdapter, SemanticAccount, SemanticField, TokenQuantity,
+    BoundaryDistance, EconomicChange, EntityId, FieldValue, ProtocolAdapter, SemanticAccount,
+    SemanticAction, SemanticField, StateFeature, TokenQuantity,
 };
 use crate::{
     executor::ExecutionResult,
@@ -45,6 +46,11 @@ const SYSTEM_TRANSFER: u32 = 2;
 const SYSTEM_TRANSFER_LEN: usize = 12;
 /// `AssociatedTokenAccountInstruction::CreateIdempotent`.
 const CREATE_IDEMPOTENT: u8 = 1;
+/// SPL Token `Approve`: the delegation a withdrawing client grants so the pool
+/// can burn its pool tokens. Discriminant, then a u64 amount.
+const TOKEN_APPROVE: u8 = 4;
+const TOKEN_APPROVE_LEN: usize = 9;
+const TOKEN_APPROVE_ACCOUNTS: usize = 3;
 
 /// `AccountType::StakePool`.
 const ACCOUNT_TYPE_STAKE_POOL: u8 = 1;
@@ -55,6 +61,115 @@ const MINT_LEN: usize = 82;
 const STAKE_STATE_LEN: usize = 200;
 
 /// Roles, in the order `DepositSol` declares them.
+/// `WithdrawSol`: burn pool tokens, pay the manager fee, withdraw lamports from
+/// the reserve. Twelve accounts; a pool gated by a SOL withdraw authority passes
+/// that authority as a thirteenth and is not supported.
+const WITHDRAW_SOL: u8 = 16;
+const WITHDRAW_SOL_LEN: usize = 9;
+const WITHDRAW_SOL_ACCOUNTS: usize = 12;
+const CLOCK_SYSVAR_ID: &str = "SysvarC1ock11111111111111111111111111111111";
+const STAKE_HISTORY_SYSVAR_ID: &str = "SysvarStakeHistory1111111111111111111111111";
+
+const WITHDRAW_SOL_ROLES: [&str; WITHDRAW_SOL_ACCOUNTS] = [
+    "stake-pool",
+    "withdraw-authority",
+    "user-transfer-authority",
+    "source-pool-token",
+    "reserve-stake",
+    "destination-lamports",
+    "manager-fee",
+    "pool-mint",
+    "clock-sysvar",
+    "stake-history-sysvar",
+    "stake-program",
+    "token-program",
+];
+
+/// The stake-pool instructions this adapter replays exactly.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum PoolOp {
+    DepositSol,
+    WithdrawSol,
+}
+
+impl PoolOp {
+    fn from_discriminant(discriminant: u8) -> Option<Self> {
+        match discriminant {
+            DEPOSIT_SOL => Some(Self::DepositSol),
+            WITHDRAW_SOL => Some(Self::WithdrawSol),
+            _ => None,
+        }
+    }
+
+    fn name(self) -> &'static str {
+        match self {
+            Self::DepositSol => "DepositSol",
+            Self::WithdrawSol => "WithdrawSol",
+        }
+    }
+
+    fn roles(self) -> &'static [&'static str] {
+        match self {
+            Self::DepositSol => &DEPOSIT_SOL_ROLES,
+            Self::WithdrawSol => &WITHDRAW_SOL_ROLES,
+        }
+    }
+
+    fn data_len(self) -> usize {
+        match self {
+            Self::DepositSol => DEPOSIT_SOL_LEN,
+            Self::WithdrawSol => WITHDRAW_SOL_LEN,
+        }
+    }
+
+    /// Position of the account that must sign: the lamport source for a
+    /// deposit, the pool-token transfer authority for a withdrawal.
+    fn authority_position(self) -> usize {
+        match self {
+            Self::DepositSol => 3,
+            Self::WithdrawSol => 2,
+        }
+    }
+
+    /// Position of the pool-token account whose holding changes hands. That is
+    /// the economic entity: the wallet would conflate people sharing a fee
+    /// payer, and the pool would collapse every user into one.
+    fn entity_position(self) -> usize {
+        match self {
+            Self::DepositSol => 4,  // destination-pool-token
+            Self::WithdrawSol => 3, // source-pool-token
+        }
+    }
+
+    /// Programs the instruction names in fixed declared positions.
+    fn declared_programs(self) -> &'static [(usize, &'static str)] {
+        match self {
+            Self::DepositSol => &[(8, SYSTEM_PROGRAM_ID), (9, TOKEN_PROGRAM_ID)],
+            Self::WithdrawSol => &[
+                (8, CLOCK_SYSVAR_ID),
+                (9, STAKE_HISTORY_SYSVAR_ID),
+                (10, STAKE_PROGRAM_ID),
+                (11, TOKEN_PROGRAM_ID),
+            ],
+        }
+    }
+
+    /// Programs this operation's execution is defined to reach by CPI.
+    fn cpi_programs(self) -> &'static [&'static str] {
+        match self {
+            Self::DepositSol => &[SYSTEM_PROGRAM_ID, TOKEN_PROGRAM_ID],
+            Self::WithdrawSol => &[TOKEN_PROGRAM_ID, STAKE_PROGRAM_ID],
+        }
+    }
+
+    fn semantic_action(self) -> SemanticAction {
+        match self {
+            Self::DepositSol => SemanticAction::Deposit,
+            Self::WithdrawSol => SemanticAction::Withdraw,
+        }
+    }
+}
+
 const DEPOSIT_SOL_ROLES: [&str; DEPOSIT_SOL_ACCOUNTS] = [
     "stake-pool",
     "withdraw-authority",
@@ -185,6 +300,11 @@ pub struct StakePool {
     pub sol_deposit_authority: Option<String>,
     pub sol_deposit_fee: Fee,
     pub sol_referral_fee: u8,
+    /// Set when the pool gates SOL withdrawals behind an authority. Such a pool
+    /// passes that authority as a thirteenth account, which is outside the
+    /// supported `WithdrawSol` shape.
+    pub sol_withdraw_authority: Option<String>,
+    pub sol_withdrawal_fee: Fee,
     pub last_epoch_pool_token_supply: u64,
     pub last_epoch_total_lamports: u64,
 }
@@ -225,8 +345,8 @@ impl StakePool {
         let sol_deposit_authority = reader.option_address()?;
         let sol_deposit_fee = reader.fee()?;
         let sol_referral_fee = reader.u8()?;
-        let _sol_withdraw_authority = reader.option_address()?;
-        let _sol_withdrawal_fee = reader.fee()?;
+        let sol_withdraw_authority = reader.option_address()?;
+        let sol_withdrawal_fee = reader.fee()?;
         let _next_sol_withdrawal_fee = reader.future_fee()?;
         let last_epoch_pool_token_supply = reader.u64()?;
         let last_epoch_total_lamports = reader.u64()?;
@@ -242,9 +362,29 @@ impl StakePool {
             sol_deposit_authority,
             sol_deposit_fee,
             sol_referral_fee,
+            sol_withdraw_authority,
+            sol_withdrawal_fee,
             last_epoch_pool_token_supply,
             last_epoch_total_lamports,
         })
+    }
+
+    /// The program's `calc_lamports_withdraw_amount`.
+    ///
+    /// The mirror of the deposit path and, like it, reproduced only as the
+    /// reference the adapter reasons with - the reported numbers come from
+    /// running the real bytecode. Multiplication precedes division in u128,
+    /// which is the property a truncating candidate breaks.
+    pub fn lamports_for_withdrawal(&self, pool_tokens: u64) -> Option<u64> {
+        if self.pool_token_supply == 0 {
+            return Some(0);
+        }
+        u64::try_from(
+            u128::from(pool_tokens)
+                .checked_mul(u128::from(self.total_lamports))?
+                .checked_div(u128::from(self.pool_token_supply))?,
+        )
+        .ok()
     }
 
     /// The program's `calc_pool_tokens_for_deposit`.
@@ -296,7 +436,35 @@ pub fn mint_supply(data: &[u8]) -> Option<u64> {
 }
 
 impl StakePoolAdapter {
-    /// The single `DepositSol` this record exists to replay.
+    /// The single supported pool instruction this record exists to replay,
+    /// with the operation it encodes.
+    fn operation<'a>(
+        &self,
+        transaction: &'a HistoricalTransaction,
+    ) -> Result<(PoolOp, &'a InstructionSpec)> {
+        let instruction = self.deposit(transaction)?;
+        let discriminant = *instruction
+            .data
+            .first()
+            .context("empty SPL Stake Pool instruction data")?;
+        let op = PoolOp::from_discriminant(discriminant).with_context(|| {
+            format!(
+                "stake-pool replay supports DepositSol and WithdrawSol; \
+                 found instruction variant {discriminant}"
+            )
+        })?;
+        Ok((op, instruction))
+    }
+
+    /// Base-unit amount the operation names: lamports in, pool tokens out.
+    fn operation_amount(&self, transaction: &HistoricalTransaction) -> Option<u64> {
+        let (op, instruction) = self.operation(transaction).ok()?;
+        (instruction.data.len() == op.data_len())
+            .then(|| u64_at(&instruction.data, 1))
+            .flatten()
+    }
+
+    /// The single pool instruction this record exists to replay.
     fn deposit<'a>(&self, transaction: &'a HistoricalTransaction) -> Result<&'a InstructionSpec> {
         let mut found = transaction
             .instructions
@@ -323,8 +491,8 @@ impl StakePoolAdapter {
         let mut labels: Vec<String> = (0..transaction.account_keys.len())
             .map(|index| format!("key-{index}"))
             .collect();
-        if let Ok(instruction) = self.deposit(transaction) {
-            for (position, role) in DEPOSIT_SOL_ROLES.into_iter().enumerate() {
+        if let Ok((op, instruction)) = self.operation(transaction) {
+            for (position, role) in op.roles().iter().copied().enumerate() {
                 let Some(meta) = instruction.accounts.get(position) else {
                     continue;
                 };
@@ -411,77 +579,257 @@ impl ProtocolAdapter for StakePoolAdapter {
         &[SYSTEM_PROGRAM_ID, TOKEN_PROGRAM_ID]
     }
 
+    /// Widened in Phase 9 from `DepositSol` alone to `DepositSol` and
+    /// `WithdrawSol`, and given semantic classification.
+    fn adapter_version(&self) -> u32 {
+        2
+    }
+
+    fn semantic_action(&self, transaction: &HistoricalTransaction) -> SemanticAction {
+        self.operation(transaction)
+            .map(|(op, _)| op.semantic_action())
+            .unwrap_or(SemanticAction::Unknown)
+    }
+
+    /// The depositor's pool-token account: the position that gains the shares.
+    ///
+    /// The depositing wallet would conflate two people who happen to share a
+    /// fee payer, and the pool itself would collapse every depositor into one
+    /// entity. The destination pool-token account is the holding that actually
+    /// changes hands.
+    fn economic_entity_id(
+        &self,
+        transaction: &HistoricalTransaction,
+        _accounts: &[NamedAccount],
+    ) -> Option<EntityId> {
+        let (op, instruction) = self.operation(transaction).ok()?;
+        Some(EntityId::new(
+            "pool-token-account",
+            instruction
+                .accounts
+                .get(op.entity_position())?
+                .address
+                .clone(),
+        ))
+    }
+
+    fn state_features(
+        &self,
+        transaction: &HistoricalTransaction,
+        accounts: &[NamedAccount],
+    ) -> Vec<StateFeature> {
+        let action = self.semantic_action(transaction);
+        let mut features = vec![StateFeature::text("semantic_action", action.as_str())];
+        if let Some(amount) = self.operation_amount(transaction) {
+            // Lamports paid in for a deposit; pool tokens burned for a
+            // withdrawal. Named for what it is rather than a shared label.
+            let name = match action {
+                SemanticAction::Withdraw => "pool_tokens_burned",
+                _ => "deposit_lamports",
+            };
+            features.push(StateFeature::integer(name, amount as u128));
+        }
+        if let Ok((_, instruction)) = self.operation(transaction) {
+            features.push(StateFeature::text(
+                "pool",
+                instruction.accounts[0].address.clone(),
+            ));
+        }
+        // Pool-wide quantities come from the decoded stake-pool account, so they
+        // are whatever the adapter already proves it can read.
+        for named in accounts {
+            let Some(decoded) = self.decode(&named.account) else {
+                continue;
+            };
+            if decoded.kind != "stake-pool" {
+                continue;
+            }
+            for field in [
+                "total_lamports",
+                "pool_token_supply",
+                "sol_deposit_fee_basis_points",
+            ] {
+                if let Some(value) = decoded
+                    .field(field)
+                    .and_then(|f| f.value.as_quantity())
+                    .map(|q| q.base_units)
+                {
+                    features.push(StateFeature::integer(field, value as u128));
+                }
+            }
+        }
+        features
+    }
+
+    /// A deposit's share price is `total_lamports / pool_token_supply`, and the
+    /// interesting boundary is where the deposit is large enough relative to the
+    /// pool to move it. Nothing else in this contract has a threshold with a
+    /// branch behind it, so nothing else is claimed.
+    fn boundaries(
+        &self,
+        transaction: &HistoricalTransaction,
+        accounts: &[NamedAccount],
+    ) -> Vec<BoundaryDistance> {
+        let Some(amount) = self.operation_amount(transaction) else {
+            return Vec::new();
+        };
+        let action = self.semantic_action(transaction);
+        for named in accounts {
+            let Some(decoded) = self.decode(&named.account) else {
+                continue;
+            };
+            if decoded.kind != "stake-pool" {
+                continue;
+            }
+            if let Some(total) = decoded
+                .field("total_lamports")
+                .and_then(|f| f.value.as_quantity())
+                .map(|q| q.base_units)
+            {
+                // A deposit is denominated in lamports and compares directly
+                // against pool size. A withdrawal is denominated in pool tokens,
+                // so it is compared against the token supply instead; mixing the
+                // two would be an arithmetic category error.
+                let (reference, label) = match action {
+                    SemanticAction::Withdraw => (
+                        decoded
+                            .field("pool_token_supply")
+                            .and_then(|f| f.value.as_quantity())
+                            .map(|q| q.base_units)
+                            .unwrap_or(0),
+                        "withdrawal_against_pool_supply",
+                    ),
+                    _ => (total, "deposit_against_pool_size"),
+                };
+                return vec![BoundaryDistance::from_quantities(
+                    label,
+                    "interaction measured against the pool it moves; a small distance is an \
+                     interaction large enough to move the share price",
+                    u128::from(amount),
+                    u128::from(reference),
+                )];
+            }
+        }
+        Vec::new()
+    }
+
     fn accept(&self, transaction: &HistoricalTransaction) -> Result<()> {
-        anyhow::ensure!(
-            transaction.version == "legacy",
-            "stake-pool replay supports legacy messages only; address lookup tables are \
-             normalized but not executed"
-        );
+        super::require_executable_message(transaction)?;
         anyhow::ensure!(
             transaction.success && transaction.error.is_none(),
             "replay selects successfully captured original transactions"
         );
-        let deposit = self.deposit(transaction)?;
-        let discriminant = *deposit
-            .data
-            .first()
-            .context("empty SPL Stake Pool instruction data")?;
+        let (op, instruction) = self.operation(transaction)?;
         anyhow::ensure!(
-            discriminant == DEPOSIT_SOL,
-            "stake-pool replay supports DepositSol only, found instruction variant {discriminant}"
+            instruction.data.len() == op.data_len(),
+            "{} data must be the discriminant and a u64 amount",
+            op.name()
         );
         anyhow::ensure!(
-            deposit.data.len() == DEPOSIT_SOL_LEN,
-            "DepositSol data must be the discriminant and a u64 lamport amount"
+            instruction.accounts.len() == op.roles().len(),
+            "{} with {} accounts is outside the supported shape; a pool gated by a SOL \
+             deposit or withdraw authority passes that authority as an extra account and is \
+             not supported",
+            op.name(),
+            instruction.accounts.len()
         );
         anyhow::ensure!(
-            deposit.accounts.len() == DEPOSIT_SOL_ACCOUNTS,
-            "DepositSol with {} accounts is outside the supported shape; a pool gated by a \
-             SOL deposit authority passes that authority as an eleventh account and is not \
-             supported",
-            deposit.accounts.len()
+            instruction.accounts[op.authority_position()].is_signer,
+            "the {} must be a direct signer",
+            op.roles()[op.authority_position()]
         );
+        for (position, program) in op.declared_programs() {
+            anyhow::ensure!(
+                instruction.accounts[*position].address == *program,
+                "{} must name {} at declared position {position}",
+                op.name(),
+                op.roles()[*position]
+            );
+        }
         anyhow::ensure!(
-            deposit.accounts[3].is_signer,
-            "the depositing lamport source must be a direct signer"
-        );
-        anyhow::ensure!(
-            deposit.accounts[8].address == SYSTEM_PROGRAM_ID
-                && deposit.accounts[9].address == TOKEN_PROGRAM_ID,
-            "DepositSol must name the System program and the SPL Token program in their \
-             declared positions"
-        );
-        anyhow::ensure!(
-            self.deposit_lamports(transaction).is_some_and(|l| l > 0),
-            "DepositSol must deposit a non-zero amount"
+            self.operation_amount(transaction).is_some_and(|a| a > 0),
+            "{} must name a non-zero amount",
+            op.name()
         );
 
-        for (index, instruction) in transaction.instructions.iter().enumerate() {
-            match instruction.program.as_str() {
+        for (index, companion) in transaction.instructions.iter().enumerate() {
+            match companion.program.as_str() {
                 PROGRAM_ID | COMPUTE_BUDGET_PROGRAM_ID => {}
                 SYSTEM_PROGRAM_ID => {
+                    anyhow::ensure!(
+                        op == PoolOp::DepositSol,
+                        "a top-level System instruction accompanies a deposit, not a {}",
+                        op.name()
+                    );
                     // Plain transfers only. Account creation and allocation are
                     // outside the contract, and both are System instructions.
                     anyhow::ensure!(
-                        instruction.data.len() == SYSTEM_TRANSFER_LEN
+                        companion.data.len() == SYSTEM_TRANSFER_LEN
                             && u32::from_le_bytes(
-                                instruction.data[..4].try_into().expect("length checked")
+                                companion.data[..4].try_into().expect("length checked")
                             ) == SYSTEM_TRANSFER
-                            && instruction.accounts.len() == 2,
+                            && companion.accounts.len() == 2,
                         "top-level System instruction {index} is not a plain transfer; \
                          account creation and allocation are not supported"
                     );
                 }
+                TOKEN_PROGRAM_ID => {
+                    // A withdrawing client delegates its pool tokens to the
+                    // authority the pool will burn with. That delegation is part
+                    // of the withdrawal, and it is admitted only when it
+                    // provably is: same account, same delegate, same amount.
+                    // Anything else is an unrelated approval and is refused.
+                    anyhow::ensure!(
+                        op == PoolOp::WithdrawSol,
+                        "a top-level SPL Token instruction accompanies a withdrawal, not a {}",
+                        op.name()
+                    );
+                    anyhow::ensure!(
+                        companion.data.first() == Some(&TOKEN_APPROVE)
+                            && companion.data.len() == TOKEN_APPROVE_LEN,
+                        "the SPL Token program is supported for Approve only; top-level \
+                         instruction {index} is a different variant"
+                    );
+                    anyhow::ensure!(
+                        companion.accounts.len() == TOKEN_APPROVE_ACCOUNTS,
+                        "Approve with {} accounts is outside the supported shape; a multisig \
+                         owner passes additional signers",
+                        companion.accounts.len()
+                    );
+                    anyhow::ensure!(
+                        companion.accounts[0].address == instruction.accounts[3].address,
+                        "the Approve delegates {}, not the account this withdrawal burns from",
+                        companion.accounts[0].address
+                    );
+                    anyhow::ensure!(
+                        companion.accounts[1].address == instruction.accounts[2].address,
+                        "the Approve names a delegate other than the authority the withdrawal \
+                         burns with"
+                    );
+                    anyhow::ensure!(
+                        companion.accounts[2].is_signer,
+                        "the Approve owner must be a direct signer"
+                    );
+                    anyhow::ensure!(
+                        u64_at(&companion.data, 1) == u64_at(&instruction.data, 1),
+                        "the Approve delegates a different amount than the withdrawal burns"
+                    );
+                }
                 ASSOCIATED_TOKEN_PROGRAM_ID => {
                     anyhow::ensure!(
-                        instruction.data == [CREATE_IDEMPOTENT],
+                        op == PoolOp::DepositSol,
+                        "idempotent token-account creation accompanies a deposit, not a {}",
+                        op.name()
+                    );
+                    anyhow::ensure!(
+                        companion.data == [CREATE_IDEMPOTENT],
                         "the associated-token-account program is supported for \
                          CreateIdempotent only"
                     );
                     // Idempotent creation is only in scope when it provably had
                     // nothing to do: the validator recorded a token balance for
                     // the account on both sides, so it already existed.
-                    let target = instruction
+                    let target = companion
                         .accounts
                         .get(1)
                         .context("CreateIdempotent names no account to create")?;
@@ -506,13 +854,15 @@ impl ProtocolAdapter for StakePoolAdapter {
             }
         }
 
-        // CPI is supported, but only into the two programs the deposit path is
-        // defined to reach. Anything else means a different execution graph.
+        // CPI is supported, but only into the programs this operation is defined
+        // to reach. Anything else means a different execution graph. A deposit
+        // reaches System and Token; a withdrawal reaches Token and Stake.
         for frame in &transaction.inner_instruction_frames {
             anyhow::ensure!(
-                frame.program == SYSTEM_PROGRAM_ID || frame.program == TOKEN_PROGRAM_ID,
-                "unsupported cross-program invocation into {} during a stake-pool replay",
-                frame.program
+                op.cpi_programs().contains(&frame.program.as_str()),
+                "unsupported cross-program invocation into {} during a {} replay",
+                frame.program,
+                op.name()
             );
             anyhow::ensure!(
                 frame.stack_height == 2,
@@ -540,16 +890,25 @@ impl ProtocolAdapter for StakePoolAdapter {
     }
 
     fn required_accounts(&self, transaction: &HistoricalTransaction) -> Vec<String> {
-        // Every account `DepositSol` declares, programs excluded: those are the
-        // accounts the pool actually reads and writes.
-        let Ok(deposit) = self.deposit(transaction) else {
+        // Every account the operation declares, minus programs and sysvars:
+        // those are the accounts the pool actually reads and writes.
+        let Ok((_, instruction)) = self.operation(transaction) else {
             return Vec::new();
         };
-        deposit
+        instruction
             .accounts
             .iter()
             .map(|meta| meta.address.clone())
-            .filter(|address| address != SYSTEM_PROGRAM_ID && address != TOKEN_PROGRAM_ID)
+            .filter(|address| {
+                ![
+                    SYSTEM_PROGRAM_ID,
+                    TOKEN_PROGRAM_ID,
+                    STAKE_PROGRAM_ID,
+                    CLOCK_SYSVAR_ID,
+                    STAKE_HISTORY_SYSVAR_ID,
+                ]
+                .contains(&address.as_str())
+            })
             .collect()
     }
 
@@ -776,6 +1135,15 @@ impl ProtocolAdapter for StakePoolAdapter {
             if transaction.account_keys[index].is_writable {
                 continue;
             }
+            // Sysvars are read-only to the transaction but rewritten by the
+            // runtime every slot, so byte-identity across S-1 and S is not a
+            // property they have and cannot be evidence of anything. Only the
+            // two this contract's instructions actually name are exempted; any
+            // other sysvar appearing here is still treated as a real change,
+            // because the contract does not admit an instruction that reads one.
+            if named.address == CLOCK_SYSVAR_ID || named.address == STAKE_HISTORY_SYSVAR_ID {
+                continue;
+            }
             let after = post
                 .iter()
                 .find(|other| other.address == named.address)
@@ -802,11 +1170,22 @@ impl ProtocolAdapter for StakePoolAdapter {
                 .context("pre-state stake pool does not decode")?;
             let closing = StakePool::decode(&after.account.data)
                 .context("post-state stake pool does not decode")?;
-            anyhow::ensure!(
-                opening.sol_deposit_authority.is_none(),
-                "this pool gates SOL deposits behind an authority, which the supported \
-                 DepositSol shape does not carry"
-            );
+            // A pool that gates this direction behind an authority passes that
+            // authority as an extra account, so the shape we accepted could not
+            // have been produced by one. Checking the pool's own bytes is what
+            // turns that inference into evidence.
+            match self.operation(transaction)?.0 {
+                PoolOp::DepositSol => anyhow::ensure!(
+                    opening.sol_deposit_authority.is_none(),
+                    "this pool gates SOL deposits behind an authority, which the supported \
+                     DepositSol shape does not carry"
+                ),
+                PoolOp::WithdrawSol => anyhow::ensure!(
+                    opening.sol_withdraw_authority.is_none(),
+                    "this pool gates SOL withdrawals behind an authority, which the supported \
+                     WithdrawSol shape does not carry"
+                ),
+            }
 
             let reserve_index = index_of(&opening.reserve_stake)?;
             let observed_lamports =
@@ -872,16 +1251,55 @@ impl ProtocolAdapter for StakePoolAdapter {
              the original outcome"
                 .into(),
         );
-        assumptions.push(
-            "the reserve stake account's delegation state is carried through unchanged: a SOL \
-             deposit credits its lamports and does not invoke the stake program"
-                .into(),
-        );
-        assumptions.push(
-            "supported contract is one DepositSol into a pool with no SOL deposit authority, \
-             with cross-program invocation into the System and SPL Token programs only"
-                .into(),
-        );
+        if transaction
+            .account_keys
+            .iter()
+            .any(|key| key.address == CLOCK_SYSVAR_ID || key.address == STAKE_HISTORY_SYSVAR_ID)
+        {
+            assumptions.push(
+                "the Clock and StakeHistory sysvars are exempt from that byte-identity check: \
+                 the runtime rewrites them every slot, so they carry no boundary evidence and \
+                 are supplied to the replay at their acquired S-1 values"
+                    .into(),
+            );
+        }
+        match self.operation(transaction)?.0 {
+            PoolOp::DepositSol => {
+                assumptions.push(
+                    "the reserve stake account's delegation state is carried through \
+                     unchanged: a SOL deposit credits its lamports and does not invoke the \
+                     stake program"
+                        .into(),
+                );
+                assumptions.push(
+                    "supported contract is one DepositSol into a pool with no SOL deposit \
+                     authority, with cross-program invocation into the System and SPL Token \
+                     programs only"
+                        .into(),
+                );
+            }
+            PoolOp::WithdrawSol => {
+                assumptions.push(
+                    "the reserve stake account is debited through the Stake program's \
+                     Withdraw, which the runtime implements natively; its delegation state \
+                     and the rent-exempt floor it must retain are enforced by that program, \
+                     not by this adapter"
+                        .into(),
+                );
+                assumptions.push(
+                    "supported contract is one WithdrawSol from a pool with no SOL withdraw \
+                     authority, with cross-program invocation into the SPL Token and Stake \
+                     programs only"
+                        .into(),
+                );
+                assumptions.push(
+                    "the Clock and StakeHistory sysvars the withdrawal reads are acquired at \
+                     the historical boundary like any other account; the Stake program's \
+                     lockup and deactivation checks therefore see the slot's real values"
+                        .into(),
+                );
+            }
+        }
         assumptions.push(
             "the pool's own share arithmetic reads no Clock; the pinned replay clock reproduces \
              the transaction's slot and block time"
@@ -947,30 +1365,77 @@ impl ProtocolAdapter for StakePoolAdapter {
         let before = |label: &str| accounts.iter().find(|named| named.label == label);
         let mut fields = Vec::new();
 
-        // What the depositor paid, read from where it landed rather than from
-        // the instruction: the reserve's credit is the transfer that happened.
-        if let (Some(opening), Some(closing)) =
-            (before("reserve-stake"), self.after(result, "reserve-stake"))
-        {
+        // Every quantity below is read from where value actually landed rather
+        // than from the instruction's stated amount: what the reserve and the
+        // user's token account did is the transfer that happened, and a
+        // candidate that computes a different number cannot hide behind the
+        // argument it was handed.
+        let lamports_moved = |label: &str| -> Option<(u64, u64)> {
+            let opening = before(label)?;
+            let closing = self.after(result, label)?;
+            Some((opening.account.lamports, closing.lamports))
+        };
+        let tokens_moved = |label: &str| -> Option<(u64, u64)> {
+            let opening = before(label)?;
+            let closing = self.after(result, label)?;
+            Some((
+                token_account_amount(&opening.account.data).unwrap_or(0),
+                token_account_amount(&closing.data).unwrap_or(0),
+            ))
+        };
+
+        if let Some((opening, closing)) = lamports_moved("reserve-stake") {
+            // The reserve gains on a deposit and loses on a withdrawal, so the
+            // direction names the field rather than being asserted.
+            let (name, amount) = if closing >= opening {
+                ("sol_deposited", closing - opening)
+            } else {
+                ("sol_withdrawn", opening - closing)
+            };
             fields.push(SemanticField {
-                name: "sol_deposited".into(),
-                value: FieldValue::quantity(
-                    closing.lamports.saturating_sub(opening.account.lamports),
-                    LAMPORT_DECIMALS,
-                ),
+                name: name.into(),
+                value: FieldValue::quantity(amount, LAMPORT_DECIMALS),
                 economic: true,
             });
         }
-        if let (Some(opening), Some(closing)) = (
-            before("destination-pool-token"),
-            self.after(result, "destination-pool-token"),
-        ) {
-            let received = token_account_amount(&closing.data)
-                .unwrap_or(0)
-                .saturating_sub(token_account_amount(&opening.account.data).unwrap_or(0));
+        // What the withdrawing user actually received, which is the reserve's
+        // debit minus nothing: the destination is credited directly.
+        if let Some((opening, closing)) = lamports_moved("destination-lamports") {
+            fields.push(SemanticField {
+                name: "sol_received_by_user".into(),
+                value: FieldValue::quantity(closing.saturating_sub(opening), LAMPORT_DECIMALS),
+                economic: true,
+            });
+        }
+        if let Some((opening, closing)) = tokens_moved("destination-pool-token") {
             fields.push(SemanticField {
                 name: "pool_tokens_received".into(),
-                value: FieldValue::quantity(received, decimals),
+                value: FieldValue::quantity(closing.saturating_sub(opening), decimals),
+                economic: true,
+            });
+        }
+        if let Some((opening, closing)) = tokens_moved("source-pool-token") {
+            fields.push(SemanticField {
+                name: "pool_tokens_burned".into(),
+                value: FieldValue::quantity(opening.saturating_sub(closing), decimals),
+                economic: true,
+            });
+        }
+        // Supply is the pool-wide counterpart: a withdrawal must destroy the
+        // tokens it debited, less whatever became fee.
+        if let (Some(opening), Some(closing)) =
+            (before("pool-mint"), self.after(result, "pool-mint"))
+        {
+            let opened = mint_supply(&opening.account.data).unwrap_or(0);
+            let closed = mint_supply(&closing.data).unwrap_or(0);
+            let (name, amount) = if closed >= opened {
+                ("pool_token_supply_minted", closed - opened)
+            } else {
+                ("pool_token_supply_burned", opened - closed)
+            };
+            fields.push(SemanticField {
+                name: name.into(),
+                value: FieldValue::quantity(amount, decimals),
                 economic: true,
             });
         }
@@ -1053,6 +1518,10 @@ mod tests {
     /// Bytes of the JitoSOL pool account at slot 429,880,687, the predecessor of
     /// the slot this phase replays. Encoded as the fields the layout declares
     /// rather than pasted as a blob, so the test states what it is asserting.
+    fn bs58_of(bytes: &[u8; 32]) -> String {
+        solana_address::Address::new_from_array(*bytes).to_string()
+    }
+
     fn pool_bytes(total_lamports: u64, pool_token_supply: u64) -> Vec<u8> {
         let mut data = vec![ACCOUNT_TYPE_STAKE_POOL];
         for _ in 0..3 {
@@ -1090,6 +1559,150 @@ mod tests {
         // Stale bytes past the current encoding, as a real pool account carries.
         data.extend_from_slice(&[0_u8; 176]);
         data
+    }
+
+    // ---- Phase 9: WithdrawSol -------------------------------------------
+
+    #[test]
+    fn the_pool_layout_surfaces_the_withdrawal_side() {
+        let pool = StakePool::decode(&pool_bytes(10_281_588_458_642_360, 7_902_165_672_995_279))
+            .expect("pool decodes");
+        // The supported shape requires an ungated withdrawal path, and the
+        // pool's own bytes are what establish that rather than the account count.
+        assert_eq!(pool.sol_withdraw_authority, None);
+        assert_eq!(pool.sol_withdrawal_fee.numerator, 1);
+        assert_eq!(pool.sol_withdrawal_fee.denominator, 1_000);
+    }
+
+    #[test]
+    fn a_pool_gating_withdrawals_is_decoded_as_gated() {
+        let mut data = pool_bytes(1_000, 1_000);
+        // Flip `sol_withdraw_authority` from None to Some and shift the rest.
+        let offset =
+            1 + 32 * 3 + 1 + 32 * 5 + 8 * 3 + 48 + 16 + 1 + 1 + 1 + 16 + 16 + 1 + 1 + 1 + 16 + 1;
+        assert_eq!(
+            data[offset], 0,
+            "sol_withdraw_authority should start as None"
+        );
+        data[offset] = 1;
+        data.splice(offset + 1..offset + 1, [9_u8; 32]);
+        let pool = StakePool::decode(&data).expect("pool decodes");
+        assert_eq!(pool.sol_withdraw_authority, Some(bs58_of(&[9_u8; 32])));
+    }
+
+    #[test]
+    fn withdrawal_reference_math_multiplies_before_dividing() {
+        // A pool worth more than one lamport per token: 3 tokens against a
+        // 10/7 exchange rate truncates differently if the divide comes first.
+        let pool = StakePool::decode(&pool_bytes(10, 7)).expect("pool decodes");
+        // 3 * 10 / 7 == 4, whereas (3 / 7) * 10 == 0.
+        assert_eq!(pool.lamports_for_withdrawal(3), Some(4));
+        // The round trip is the deposit path's inverse at the same rate.
+        assert_eq!(pool.pool_tokens_for_deposit(4), Some(2));
+    }
+
+    #[test]
+    fn an_empty_pool_withdraws_nothing() {
+        let pool = StakePool::decode(&pool_bytes(0, 0)).expect("pool decodes");
+        assert_eq!(pool.lamports_for_withdrawal(5), Some(0));
+    }
+
+    #[test]
+    fn withdrawal_reference_math_survives_mainnet_scale() {
+        // Real Jito-scale numbers: the product overflows u64 and must be taken
+        // in u128, which is exactly what a narrowing candidate would break.
+        let pool = StakePool::decode(&pool_bytes(10_281_588_458_642_360, 7_902_165_672_995_279))
+            .expect("pool decodes");
+        let lamports = pool
+            .lamports_for_withdrawal(9_006_733_966)
+            .expect("no overflow");
+        let expected = (9_006_733_966_u128 * 10_281_588_458_642_360) / 7_902_165_672_995_279;
+        assert_eq!(u128::from(lamports), expected);
+        assert!(
+            lamports > 9_006_733_966,
+            "a staked pool is worth more than par"
+        );
+    }
+
+    #[test]
+    fn the_two_operations_have_distinct_shapes_and_meanings() {
+        assert_eq!(
+            PoolOp::from_discriminant(DEPOSIT_SOL),
+            Some(PoolOp::DepositSol)
+        );
+        assert_eq!(
+            PoolOp::from_discriminant(WITHDRAW_SOL),
+            Some(PoolOp::WithdrawSol)
+        );
+        assert_eq!(
+            PoolOp::from_discriminant(9),
+            None,
+            "DepositStake is out of contract"
+        );
+
+        let deposit = PoolOp::DepositSol;
+        let withdraw = PoolOp::WithdrawSol;
+        assert_eq!(deposit.roles().len(), DEPOSIT_SOL_ACCOUNTS);
+        assert_eq!(withdraw.roles().len(), WITHDRAW_SOL_ACCOUNTS);
+        assert_eq!(deposit.semantic_action(), SemanticAction::Deposit);
+        assert_eq!(withdraw.semantic_action(), SemanticAction::Withdraw);
+
+        // The signer differs: a depositor signs as the lamport source, while a
+        // withdrawer signs as the pool-token transfer authority.
+        assert_eq!(deposit.roles()[deposit.authority_position()], "depositor");
+        assert_eq!(
+            withdraw.roles()[withdraw.authority_position()],
+            "user-transfer-authority"
+        );
+        // The economic entity is the pool-token holding either way.
+        assert_eq!(
+            deposit.roles()[deposit.entity_position()],
+            "destination-pool-token"
+        );
+        assert_eq!(
+            withdraw.roles()[withdraw.entity_position()],
+            "source-pool-token"
+        );
+
+        // Each operation reaches a different pair of programs.
+        assert_eq!(
+            deposit.cpi_programs(),
+            &[SYSTEM_PROGRAM_ID, TOKEN_PROGRAM_ID]
+        );
+        assert_eq!(
+            withdraw.cpi_programs(),
+            &[TOKEN_PROGRAM_ID, STAKE_PROGRAM_ID]
+        );
+        // A withdrawal names the sysvars its Stake CPI reads.
+        let declared: Vec<&str> = withdraw
+            .declared_programs()
+            .iter()
+            .map(|(_, p)| *p)
+            .collect();
+        assert!(declared.contains(&CLOCK_SYSVAR_ID));
+        assert!(declared.contains(&STAKE_HISTORY_SYSVAR_ID));
+    }
+
+    #[test]
+    fn required_accounts_exclude_programs_and_sysvars() {
+        // Programs and sysvars are not protocol state: another transaction
+        // naming one writable changes nothing this record depends on, and
+        // counting them would reject clean candidates.
+        for op in [PoolOp::DepositSol, PoolOp::WithdrawSol] {
+            for (_, program) in op.declared_programs() {
+                assert!(
+                    [
+                        SYSTEM_PROGRAM_ID,
+                        TOKEN_PROGRAM_ID,
+                        STAKE_PROGRAM_ID,
+                        CLOCK_SYSVAR_ID,
+                        STAKE_HISTORY_SYSVAR_ID
+                    ]
+                    .contains(program),
+                    "{program} is declared but not in the excluded set"
+                );
+            }
+        }
     }
 
     #[test]

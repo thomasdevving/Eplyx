@@ -71,6 +71,7 @@ fn record() -> ReplayRecord {
         assumptions: vec!["offline test".into()],
     };
     record.original = Some(OriginalExecution {
+        post_accounts: Vec::new(),
         success: original.success,
         fee: original.fee,
         post_state_hash: record.post_hash(&original).unwrap(),
@@ -471,4 +472,80 @@ fn actual_validator_snapshot_matches_original_offline() {
     let report = compare(&[record], &v1, &v2).unwrap();
     assert_eq!(report.observations[0].fidelity, ReplayFidelity::Exact);
     assert_eq!(report.analysis.economics.newly_liquidatable.positions, 1);
+}
+
+/// Phase 9: the known runtime-semantics divergence is classified as itself.
+///
+/// Solana refuses to credit an account that stays below its rent-exempt
+/// minimum. Mainnet accepted transactions that do so - the Jito tip accounts
+/// that surfaced this - and the replay runtime does not, so the record is
+/// rejected up front under its own name rather than as an unexplained
+/// post-state mismatch several stages later.
+#[test]
+fn crediting_a_rent_paying_account_is_classified_not_left_as_a_mismatch() {
+    let mut record = record();
+    let target = record.accounts[0].clone();
+    let minimum = 890_880_u64; // rent-exempt minimum for a zero-data account
+
+    // Below the minimum before, credited, still below it after.
+    record.accounts[0].account.lamports = 5;
+    record.accounts[0].account.data = Vec::new();
+    record.pre_state_hash = eplyx_engine::replay::state_hash(&record.accounts).unwrap();
+    let original = record.original.as_mut().unwrap();
+    original.post_accounts = vec![eplyx_engine::replay::PostAccountDigest {
+        label: target.label.clone(),
+        address: target.address.clone(),
+        owner: record.accounts[0].account.owner.clone(),
+        lamports: 105,
+        data_len: 0,
+        data_sha256: eplyx_engine::replay::hash_bytes(&[]),
+    }];
+
+    let credits = record.rent_paying_credits();
+    assert_eq!(credits.len(), 1, "the credit must be identified");
+    let credit = &credits[0];
+    assert_eq!(credit.pre_lamports, 5);
+    assert_eq!(credit.post_lamports, 105);
+    assert_eq!(credit.credited, 100);
+    assert_eq!(credit.rent_exempt_minimum, minimum);
+    assert_eq!(credit.address, target.address);
+
+    let error = record.validate().expect_err("must be refused").to_string();
+    assert!(error.contains("unsupported_runtime_semantics: rent_paying_account_credited"));
+    assert!(error.contains(&target.address), "the account must be named");
+    assert!(
+        error.contains("890880"),
+        "the rent-exempt minimum must be reported"
+    );
+}
+
+/// The classification must not fire on ordinary accounts. A rent-exempt
+/// account may be credited freely, and a rent-paying account may be debited.
+#[test]
+fn ordinary_credits_and_debits_are_not_classified_as_rent_state_failures() {
+    let cases: [(u64, u64, &str); 3] = [
+        (1_000_000, 1_000_100, "rent-exempt account credited"),
+        (5, 4, "rent-paying account debited"),
+        (5, 5, "rent-paying account unchanged"),
+    ];
+    for (pre, post, name) in cases {
+        let mut record = record();
+        let target = record.accounts[0].clone();
+        record.accounts[0].account.lamports = pre;
+        record.accounts[0].account.data = Vec::new();
+        record.pre_state_hash = eplyx_engine::replay::state_hash(&record.accounts).unwrap();
+        record.original.as_mut().unwrap().post_accounts =
+            vec![eplyx_engine::replay::PostAccountDigest {
+                label: target.label.clone(),
+                address: target.address.clone(),
+                owner: record.accounts[0].account.owner.clone(),
+                lamports: post,
+                data_len: 0,
+                data_sha256: eplyx_engine::replay::hash_bytes(&[]),
+            }];
+        assert!(
+            record.rent_paying_credits().is_empty(),
+            "{name} must not be classified as a rent-state failure"
+        );
+    }
 }

@@ -73,6 +73,14 @@ pub struct HistoricalTransaction {
     pub recent_blockhash: String,
     pub payer: String,
     pub account_keys: Vec<AccountMetaSpec>,
+    /// Addresses appended from address lookup tables during normalization.
+    ///
+    /// Zero means the message resolved no tables, so `account_keys` is exactly
+    /// the static key list and the transaction executes identically to a legacy
+    /// message. Defaults to zero so records written before this field existed -
+    /// all of which are legacy - stay loadable and correct.
+    #[serde(default)]
+    pub loaded_address_count: usize,
     pub instructions: Vec<InstructionSpec>,
     pub inner_instructions: Vec<InstructionSpec>,
     /// Structured CPI frames for the same calls. Kept beside the flattened list
@@ -222,6 +230,7 @@ pub fn normalize(value: &Value) -> Result<HistoricalTransaction> {
             },
         });
     }
+    let keys_before_lookups = keys.len();
     if version == "v0" {
         let lookups = message["addressTableLookups"]
             .as_array()
@@ -347,6 +356,7 @@ pub fn normalize(value: &Value) -> Result<HistoricalTransaction> {
         slot: value["slot"].as_u64().context("missing slot")?,
         block_time: value["blockTime"].as_i64(),
         version: version.into(),
+        loaded_address_count: keys.len() - keys_before_lookups,
         recent_blockhash: message["recentBlockhash"]
             .as_str()
             .context("missing blockhash")?

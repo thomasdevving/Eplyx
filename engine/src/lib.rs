@@ -26,6 +26,7 @@
 
 pub mod cluster;
 pub mod corpus;
+pub mod corpus_store;
 pub mod dependencies;
 pub mod diff;
 pub mod discovery;
