@@ -56,6 +56,11 @@ enum Command {
         #[command(subcommand)]
         command: CorpusCommand,
     },
+    /// Check a candidate program against a pinned bundle. The CI gate.
+    Ci {
+        #[command(subcommand)]
+        command: CiCommand,
+    },
     /// Assemble and verify the offline CI bundle a gate runs against.
     Bundle {
         #[command(subcommand)]
@@ -350,6 +355,31 @@ enum CorpusCommand {
     /// Select a deterministic production-derived regression corpus.
     Select(CorpusSelectArgs),
 }
+#[derive(Subcommand)]
+enum CiCommand {
+    /// Replay a pinned corpus against a candidate and gate on the result.
+    Check(CiCheckArgs),
+}
+
+#[derive(Parser)]
+struct CiCheckArgs {
+    /// Directory holding the pinned, offline CI bundle.
+    #[arg(long)]
+    bundle: PathBuf,
+    /// The candidate program artefact under test.
+    #[arg(long)]
+    candidate: PathBuf,
+    /// Declared intentional changes. Omitted, nothing is declared and every
+    /// finding is unexpected, which is the correct default.
+    #[arg(long)]
+    expectations: Option<PathBuf>,
+    #[arg(long, value_enum, default_value_t = Format::Text)]
+    format: Format,
+    /// Write the report to a file instead of stdout.
+    #[arg(long)]
+    out: Option<PathBuf>,
+}
+
 #[derive(Subcommand)]
 enum BundleCommand {
     /// Assemble an offline-executable bundle from a validated corpus.
@@ -1010,6 +1040,9 @@ fn run() -> Result<ExitCode> {
         Command::Corpus {
             command: CorpusCommand::Select(select_args),
         } => corpus_select(select_args),
+        Command::Ci {
+            command: CiCommand::Check(check_args),
+        } => ci_check(check_args),
         Command::Bundle {
             command: BundleCommand::Build(build_args),
         } => bundle_build(build_args),
@@ -1454,6 +1487,167 @@ fn list(args: ListArgs) -> Result<ExitCode> {
     }
     println!("\n{} fixtures", fixtures.len());
     Ok(ExitCode::SUCCESS)
+}
+
+/// The CI gate: a pinned bundle, a candidate, and a declaration file.
+///
+/// Returns an exit code rather than an error for a completed review, so a
+/// failing gate is distinguishable from an analysis that could not run.
+fn ci_check(args: CiCheckArgs) -> Result<ExitCode> {
+    use eplyx_engine::ci;
+
+    let report = match ci::check(&args.bundle, &args.candidate, args.expectations.as_deref()) {
+        Ok(report) => report,
+        Err(error) => {
+            // Preflight failures abort rather than producing half a report.
+            eprintln!("EPLYX UPGRADE CHECK\n\nAnalysis could not run.\n\n{error}");
+            return Ok(ExitCode::from(error.exit_code()));
+        }
+    };
+
+    let rendered = match args.format {
+        Format::Json => serde_json::to_string_pretty(&report)?,
+        Format::Text => render_ci(&report),
+    };
+    match &args.out {
+        Some(path) => {
+            std::fs::write(path, format!("{rendered}\n"))?;
+            println!("wrote {}", path.display());
+        }
+        None => println!("{rendered}"),
+    }
+    Ok(ExitCode::from(report.exit_code()))
+}
+
+fn render_ci(report: &eplyx_engine::ci::CiReport) -> String {
+    use eplyx_engine::review::ReviewStatus;
+    use std::fmt::Write as _;
+
+    let mut text = String::from("EPLYX UPGRADE CHECK\n===================\n\n");
+    let _ = writeln!(text, "Baseline:   {}", report.bundle.baseline_sha256);
+    let _ = writeln!(text, "Candidate:  {}", report.candidate.sha256);
+    let _ = writeln!(
+        text,
+        "Bundle:     {} ({} @{})",
+        report.bundle.sha256, report.bundle.adapter, report.bundle.adapter_version
+    );
+    let _ = writeln!(
+        text,
+        "\nCorpus:     {} validated historical observations",
+        report.bundle.record_count
+    );
+
+    let _ = writeln!(text, "\nCOVERAGE");
+    for subject in &report.coverage {
+        let _ = writeln!(
+            text,
+            "  {:<58} {:>3} observations",
+            subject.subject, subject.observations
+        );
+    }
+
+    let _ = writeln!(text, "\nRESULTS");
+    let _ = writeln!(
+        text,
+        "  expected                     {:>3}",
+        report.summary.expected
+    );
+    let _ = writeln!(
+        text,
+        "  unexpected                   {:>3}",
+        report.summary.unexpected
+    );
+    let _ = writeln!(
+        text,
+        "  expected but exceeded        {:>3}",
+        report.summary.expected_but_exceeded
+    );
+    let _ = writeln!(
+        text,
+        "  stale declarations           {:>3}",
+        report.summary.stale
+    );
+    let _ = writeln!(
+        text,
+        "  unevaluable declarations     {:>3}",
+        report.summary.unevaluable
+    );
+
+    if !report.review.findings.is_empty() {
+        let _ = writeln!(text, "\nFINDINGS");
+        for finding in &report.review.findings {
+            // Severity and review status are two separate statements, and the
+            // report keeps them side by side rather than folding one into the
+            // other.
+            let _ = writeln!(
+                text,
+                "  {} / {}",
+                finding.severity.as_str(),
+                finding.status.as_str().to_uppercase()
+            );
+            let _ = writeln!(text, "    {}", finding.fingerprint);
+            let _ = writeln!(
+                text,
+                "    affected {} of {} observations that can measure it, {} entities",
+                finding.observations.len(),
+                finding.covered_observations,
+                finding.entities.len()
+            );
+            if let Some(bps) = finding.max_relative_delta_bps {
+                let _ = writeln!(text, "    largest change {bps} bps");
+            }
+            if let Some(reason) = &finding.reason {
+                let _ = writeln!(text, "    declared: {reason}");
+            }
+            for breach in &finding.breaches {
+                let _ = writeln!(text, "    exceeds: {breach:?}");
+            }
+            if let Some(cause) = &finding.unevaluable {
+                let _ = writeln!(text, "    cannot judge: {cause:?}");
+            }
+        }
+    }
+
+    if !report.review.unmatched.is_empty() {
+        let _ = writeln!(text, "\nDECLARATIONS THAT MATCHED NOTHING");
+        for entry in &report.review.unmatched {
+            let _ = writeln!(text, "  {}", entry.status.as_str().to_uppercase());
+            let _ = writeln!(text, "    {}", entry.fingerprint);
+            let _ = writeln!(text, "    declared: {}", entry.reason);
+            let _ = writeln!(
+                text,
+                "    {} observations in this corpus can measure it",
+                entry.covered_observations
+            );
+            if entry.status == ReviewStatus::Unevaluable {
+                let _ = writeln!(
+                    text,
+                    "    Eplyx cannot prove whether this declaration still applies."
+                );
+            }
+        }
+    }
+
+    let _ = writeln!(
+        text,
+        "\nGATE: {}",
+        if report.summary.passed {
+            "PASSED".to_string()
+        } else {
+            format!(
+                "FAILED ({})",
+                report
+                    .summary
+                    .failure_reasons
+                    .iter()
+                    .map(|reason| reason.as_str())
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            )
+        }
+    );
+    let _ = write!(text, "exit {}", report.summary.exit_code);
+    text
 }
 
 /// Assemble an offline-executable CI bundle.

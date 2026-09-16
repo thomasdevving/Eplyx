@@ -120,6 +120,14 @@ pub enum UnevaluableCause {
 }
 
 /// One fingerprint, aggregated across the observations that produced it.
+///
+/// `severity` is **descriptive metadata**. It is not part of the finding's
+/// identity, and the gate never consults it: every non-`Expected` status fails
+/// regardless of severity, and an `Expected` one passes regardless of severity.
+/// That separation is deliberate, because the current mapping is coarse - a 1 bp
+/// change and a 3,000 bp change are both `High` - and a better severity model
+/// must be able to land later without invalidating a single existing
+/// `expected-changes.toml`.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ReviewedFinding {
     pub fingerprint: String,
@@ -128,6 +136,13 @@ pub struct ReviewedFinding {
     pub status: ReviewStatus,
     pub observations: Vec<String>,
     pub entities: Vec<String>,
+    /// How many observations in the corpus can measure this subject at all.
+    ///
+    /// Reported beside `observations` so a change that is real but *not
+    /// uniform* is visible: "3 of 4 withdrawals now revert" reads very
+    /// differently from "withdrawals now revert", and a declaration bounded at
+    /// 4 would accept both.
+    pub covered_observations: usize,
     /// Largest relative change seen, by magnitude, across the observations.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub max_relative_delta_bps: Option<i64>,
@@ -146,6 +161,9 @@ pub struct UnmatchedExpectation {
     pub fingerprint: String,
     pub reason: String,
     pub status: ReviewStatus,
+    /// How many observations could have measured this declaration. Zero is
+    /// exactly why an unmatched declaration is unevaluable rather than stale.
+    pub covered_observations: usize,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub unevaluable: Option<UnevaluableCause>,
 }
@@ -257,11 +275,20 @@ pub fn review(
 ) -> Review {
     let declared = expectations.by_fingerprint();
 
-    // What this corpus is able to speak about at all.
-    let measurable: BTreeSet<EvaluableSubject> = coverage
-        .iter()
-        .flat_map(|c| c.subjects.iter().cloned())
-        .collect();
+    // What this corpus is able to speak about at all, and how widely. Counted
+    // from what each observation declares it can measure, never from what
+    // happened to differ.
+    let mut measurable: BTreeMap<EvaluableSubject, usize> = BTreeMap::new();
+    for observation in coverage {
+        for subject in observation
+            .subjects
+            .iter()
+            .cloned()
+            .collect::<BTreeSet<_>>()
+        {
+            *measurable.entry(subject).or_default() += 1;
+        }
+    }
 
     let mut aggregates: BTreeMap<FindingFingerprint, Aggregate> = BTreeMap::new();
     for entry in observed {
@@ -316,6 +343,10 @@ pub fn review(
             status,
             observations: aggregate.observations.iter().cloned().collect(),
             entities: aggregate.entities.iter().cloned().collect(),
+            covered_observations: measurable
+                .get(&fingerprint.evaluable_subject())
+                .copied()
+                .unwrap_or_default(),
             max_relative_delta_bps: aggregate.max_delta_bps,
             reason: declaration.map(|c| c.reason.clone()),
             breaches,
@@ -330,8 +361,9 @@ pub fn review(
             continue;
         }
         let subject = fingerprint.evaluable_subject();
+        let covered = measurable.get(&subject).copied().unwrap_or_default();
         // The distinction this whole module exists for.
-        let (status, cause) = if measurable.contains(&subject) {
+        let (status, cause) = if covered > 0 {
             (ReviewStatus::Stale, None)
         } else {
             (
@@ -345,6 +377,7 @@ pub fn review(
             fingerprint: fingerprint.to_string(),
             reason: change.reason.clone(),
             status,
+            covered_observations: covered,
             unevaluable: cause,
         });
     }
@@ -1022,6 +1055,136 @@ reason = "WithdrawSol is intentionally removed in upgrade v3"
 
         let passing = review(&[], &[coverage("o1", &[SHARES])], &ExpectationFile::empty());
         assert_eq!(passing.exit_code(), 0);
+    }
+
+    /// Severity is descriptive metadata. The gate runs on review status alone,
+    /// so a better severity model can land later without invalidating a single
+    /// existing expectation file.
+    #[test]
+    fn the_gate_never_consults_severity() {
+        for severity in [
+            Severity::Info,
+            Severity::Warning,
+            Severity::High,
+            Severity::Critical,
+        ] {
+            let undeclared = review(
+                &[observed(
+                    SHARES,
+                    severity,
+                    Some((100_000, 99_800)),
+                    "o1",
+                    "e1",
+                )],
+                &[coverage("o1", &[SHARES])],
+                &ExpectationFile::empty(),
+            );
+            assert!(
+                !undeclared.passed(),
+                "{severity:?} undeclared must fail like any other"
+            );
+            assert_eq!(undeclared.exit_code(), 1);
+            assert_eq!(
+                undeclared.findings[0].severity, severity,
+                "and is preserved"
+            );
+        }
+
+        // The converse: the most severe finding there is passes when it is
+        // declared and inside its bounds.
+        let declared = review(
+            &[observed(REVERTS, Severity::Critical, None, "o1", "e1")],
+            &[coverage("o1", &[REVERTS])],
+            &expectations(DECLARE_REMOVAL),
+        );
+        assert!(declared.passed());
+        assert_eq!(declared.findings[0].severity, Severity::Critical);
+    }
+
+    /// A change that is real but not uniform must not read as uniform. Three of
+    /// four withdrawals reverting is inside a bound of four, and the team still
+    /// needs to see that one production path still works.
+    #[test]
+    fn coverage_and_affected_counts_are_both_reported() {
+        let observed: Vec<ObservedFinding> = (0..3)
+            .map(|i| {
+                observed(
+                    REVERTS,
+                    Severity::Critical,
+                    None,
+                    &format!("w{i}"),
+                    &format!("e{i}"),
+                )
+            })
+            .collect();
+        let coverage: Vec<ObservationCoverage> = (0..4)
+            .map(|i| coverage(&format!("w{i}"), &[REVERTS]))
+            .collect();
+
+        let review = review(&observed, &coverage, &expectations(DECLARE_REMOVAL));
+        let reviewed = &review.findings[0];
+        assert_eq!(reviewed.observations.len(), 3, "affected");
+        assert_eq!(reviewed.covered_observations, 4, "measurable");
+        assert_eq!(
+            reviewed.status,
+            ReviewStatus::Expected,
+            "3 is inside the declared bound of 16"
+        );
+        assert!(review.passed());
+    }
+
+    /// Precedence chooses one exit code; it must never remove a failure from
+    /// the report.
+    #[test]
+    fn precedence_summarises_without_filtering() {
+        let all_three = format!(
+            "{}\n{}\n{}",
+            DECLARE_REMOVAL.trim(),
+            // stale: covered, not happening
+            DECLARE_SHARES.replace("version = 1", "").trim(),
+            r#"
+[[change]]
+protocol = "spl-stake-pool"
+action   = "deposit_sol"
+domain   = "economic"
+subject  = "sol_received_by_user"
+change   = "increased"
+reason   = "declared for a subject this corpus cannot measure"
+"#
+            .trim()
+        );
+        let undeclared = SHARES.replace("decreased", "increased");
+        let review = review(
+            // an undeclared change, plus a declaration for withdraw_sol that is
+            // covered but not happening, plus one nothing can measure
+            &[observed(
+                &undeclared,
+                Severity::High,
+                Some((100_000, 100_500)),
+                "o1",
+                "e1",
+            )],
+            &[coverage("o1", &[SHARES, REVERTS])],
+            &expectations(&all_three),
+        );
+
+        assert_eq!(
+            review.failures,
+            vec![
+                FailureReason::UnevaluableExpectation,
+                FailureReason::StaleExpectation,
+                FailureReason::UndeclaredChange,
+            ],
+            "all three survive into the report"
+        );
+        assert_eq!(
+            review.exit_code(),
+            5,
+            "the shell gets one deterministic code"
+        );
+        assert_eq!(review.count(ReviewStatus::Unexpected), 1);
+        assert_eq!(review.count(ReviewStatus::Stale), 2);
+        assert_eq!(review.count(ReviewStatus::Unevaluable), 1);
     }
 
     #[test]
