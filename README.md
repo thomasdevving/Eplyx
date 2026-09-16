@@ -52,7 +52,9 @@ integration, AI, third-party decoding or sequence search. See
 [Phase 7](docs/phase-7-production-protocol-upgrade.md) for a real production
 protocol upgrade replayed against the binaries mainnet actually ran, and
 [Phase 8](docs/phase-8-cpi-mainnet-replay.md) for the same with cross-program
-invocation.
+invocation, and
+[Phase 9](docs/phase-9-production-corpus.md) for the validated
+production-derived corpus a gate runs on.
 
 ---
 
