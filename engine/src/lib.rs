@@ -25,6 +25,7 @@
 //! would plug into in a later phase.
 
 pub mod bundle;
+pub mod ci;
 pub mod cluster;
 pub mod corpus;
 pub mod corpus_store;

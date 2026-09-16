@@ -1115,6 +1115,19 @@ pub struct ReplayObservation {
     /// they differ. A preserved economic outcome is a result, not an absence.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub economic_summary: Vec<EconomicObservation>,
+    /// The economic entity this observation belongs to, where the adapter names
+    /// one. Bounds on affected entities are counted from it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub economic_entity: Option<String>,
+    /// What this observation is *able* to measure, from the adapter, derived
+    /// from the observation's shape rather than from anything that differed.
+    /// This is the evidence that separates a stale declaration from one this
+    /// corpus simply cannot judge.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub evaluable_subjects: Vec<crate::semantics::EvaluableSubject>,
+    /// Differences named in the finding vocabulary, for expectation review.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub named_findings: Vec<crate::semantics::NamedFinding>,
     /// Programs the replay environment supplied, and where their bytes came
     /// from. Hashes are repeated here so a report is self-contained evidence of
     /// which binaries executed.
@@ -1256,6 +1269,25 @@ pub fn compare_with_dependencies(
                 Some(adapter) => protocol::pair_summaries(
                     &adapter.summarize(&record.accounts, &original),
                     &adapter.summarize(&record.accounts, &candidate),
+                ),
+                None => Vec::new(),
+            },
+            economic_entity: record
+                .adapter()
+                .and_then(|adapter| {
+                    adapter.economic_entity_id(&record.transaction, &record.accounts)
+                })
+                .map(|entity| entity.id),
+            evaluable_subjects: match record.adapter() {
+                Some(adapter) => adapter.evaluable_subjects(&record.transaction, &record.accounts),
+                None => Vec::new(),
+            },
+            named_findings: match record.adapter() {
+                Some(adapter) => adapter.named_findings(
+                    &record.transaction,
+                    &record.accounts,
+                    &original,
+                    &candidate,
                 ),
                 None => Vec::new(),
             },

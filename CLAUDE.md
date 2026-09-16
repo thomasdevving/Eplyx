@@ -64,6 +64,23 @@ eplyx compare --corpus <DIR>/corpus.json --current v1.so --candidate v2.so \
 id>.so`; `compare` finds them there by default and refuses a file whose hash
 differs from the one the record pins.
 
+The CI path is offline and needs no endpoint at all:
+
+```bash
+eplyx bundle build --corpus <DIR> --baseline v1.so --dependencies <DIR>/dependencies \
+  --target-size 10 [--observed '{"deposit":681,"withdraw":200}'] --out .eplyx/bundle
+eplyx bundle verify --bundle .eplyx/bundle
+eplyx ci check --bundle .eplyx/bundle --candidate target/deploy/program.so \
+  [--expectations .eplyx/expected-changes.toml] [--format json]
+```
+
+**Invoke the built binary, not `cargo run`, wherever the exit code matters.**
+`cargo run` replaces the child's exit status, which silently turns every gate
+result into the same code. Exit codes: 0 passed, 1 undeclared or out-of-bounds
+change, 2 configuration/fidelity error, 3 stale declaration, 4 bundle or
+baseline incompatibility, 5 unevaluable declaration. Codes 2 and 4 are preflight
+aborts and produce no report.
+
 `artifacts/*.so` is gitignored. Anything that executes requires `./scripts/build-programs.sh` (or `make`) first; tests fail with an explanatory message rather than skipping.
 
 ## Architecture
