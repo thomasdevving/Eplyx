@@ -56,6 +56,11 @@ enum Command {
         #[command(subcommand)]
         command: CorpusCommand,
     },
+    /// Assemble and verify the offline CI bundle a gate runs against.
+    Bundle {
+        #[command(subcommand)]
+        command: BundleCommand,
+    },
     /// Isolated local-validator setup and snapshot capture for the demo.
     Controlled {
         #[command(subcommand)]
@@ -345,6 +350,45 @@ enum CorpusCommand {
     /// Select a deterministic production-derived regression corpus.
     Select(CorpusSelectArgs),
 }
+#[derive(Subcommand)]
+enum BundleCommand {
+    /// Assemble an offline-executable bundle from a validated corpus.
+    Build(BundleBuildArgs),
+    /// Re-hash every byte a bundle pins and report what it covers.
+    Verify(BundleVerifyArgs),
+}
+
+#[derive(Parser)]
+struct BundleBuildArgs {
+    /// Directory holding a durable corpus: manifest.json, records/, corpus.json.
+    #[arg(long)]
+    corpus: PathBuf,
+    /// The V1 binary every record was validated against.
+    #[arg(long)]
+    baseline: PathBuf,
+    /// Directory holding the dependency artefacts the records pin. Defaults to
+    /// a `dependencies` directory beside the corpus.
+    #[arg(long)]
+    dependencies: Option<PathBuf>,
+    /// Select down to this many observations first. Omitted, every validated
+    /// record in the corpus is bundled.
+    #[arg(long)]
+    target_size: Option<usize>,
+    /// Optional discovery counts as JSON, e.g. {"deposit":681,"withdraw":200}.
+    #[arg(long)]
+    observed: Option<String>,
+    #[arg(long)]
+    out: PathBuf,
+}
+
+#[derive(Parser)]
+struct BundleVerifyArgs {
+    #[arg(long)]
+    bundle: PathBuf,
+    #[arg(long, value_enum, default_value_t = Format::Text)]
+    format: Format,
+}
+
 #[derive(Subcommand)]
 enum ControlledCommand {
     Prepare {
@@ -966,6 +1010,12 @@ fn run() -> Result<ExitCode> {
         Command::Corpus {
             command: CorpusCommand::Select(select_args),
         } => corpus_select(select_args),
+        Command::Bundle {
+            command: BundleCommand::Build(build_args),
+        } => bundle_build(build_args),
+        Command::Bundle {
+            command: BundleCommand::Verify(verify_args),
+        } => bundle_verify(verify_args),
         Command::Corpus {
             command:
                 CorpusCommand::Build {
@@ -1404,6 +1454,143 @@ fn list(args: ListArgs) -> Result<ExitCode> {
     }
     println!("\n{} fixtures", fixtures.len());
     Ok(ExitCode::SUCCESS)
+}
+
+/// Assemble an offline-executable CI bundle.
+fn bundle_build(args: BundleBuildArgs) -> Result<ExitCode> {
+    use eplyx_engine::bundle;
+
+    let store = eplyx_engine::corpus_store::CorpusStore::open(&args.corpus)?;
+    let all = store.load()?;
+    let dependencies = args
+        .dependencies
+        .clone()
+        .unwrap_or_else(|| args.corpus.join("dependencies"));
+
+    // Selecting first keeps the bundle small enough to run on every pull
+    // request; the policy and its stated limitations travel with it, so the
+    // gate can report what the corpus does not cover.
+    let (records, policy, policy_version, limitations) = match args.target_size {
+        Some(target) => {
+            let observed: eplyx_engine::select::ObservedCounts = match &args.observed {
+                Some(text) => {
+                    serde_json::from_str(text).context("--observed must be a JSON object")?
+                }
+                None => Default::default(),
+            };
+            let selected = eplyx_engine::select::select(&all, target, &observed)?;
+            let keep: std::collections::BTreeSet<&str> =
+                selected.selected.iter().map(|s| s.id.as_str()).collect();
+            let records: Vec<_> = all
+                .iter()
+                .filter(|r| keep.contains(r.id.as_str()))
+                .cloned()
+                .collect();
+            let limitations = selected
+                .limitations
+                .iter()
+                .map(|l| bundle::BundledLimitation {
+                    code: l.code.clone(),
+                    detail: l.detail.clone(),
+                })
+                .collect();
+            (
+                records,
+                Some(selected.selection_policy),
+                Some(selected.selection_policy_version),
+                limitations,
+            )
+        }
+        None => (all, None, None, Vec::new()),
+    };
+
+    let built = bundle::build(
+        bundle::BundleInputs {
+            records: &records,
+            baseline: &args.baseline,
+            dependencies: &dependencies,
+            selection_policy: policy,
+            selection_policy_version: policy_version,
+            limitations,
+        },
+        &args.out,
+    )?;
+    print_bundle(&built);
+    println!("\nwrote {}", args.out.display());
+    Ok(ExitCode::SUCCESS)
+}
+
+/// Re-hash every byte a bundle pins.
+fn bundle_verify(args: BundleVerifyArgs) -> Result<ExitCode> {
+    let bundle = eplyx_engine::bundle::CiBundle::open(&args.bundle)?;
+    match args.format {
+        Format::Json => println!("{}", serde_json::to_string_pretty(bundle.manifest())?),
+        Format::Text => {
+            print_bundle(&bundle);
+            println!("\nEvery hash verified against the bytes on disk.");
+        }
+    }
+    Ok(ExitCode::SUCCESS)
+}
+
+fn print_bundle(bundle: &eplyx_engine::bundle::CiBundle) {
+    let manifest = bundle.manifest();
+    let adapter = bundle.adapter();
+    println!("EPLYX CI BUNDLE");
+    println!("===============\n");
+    println!("program:           {}", manifest.program_id);
+    println!(
+        "adapter:           {}@{}{}",
+        adapter.name,
+        adapter.version,
+        if adapter.supports_cpi {
+            ", cross-program invocation"
+        } else {
+            ""
+        }
+    );
+    if let (Some(policy), Some(version)) = (
+        &manifest.selection_policy,
+        manifest.selection_policy_version,
+    ) {
+        println!("selection policy:  {policy} v{version}");
+    }
+    println!("\nbaseline sha256:   {}", manifest.baseline_program_sha256);
+    println!("corpus sha256:     {}", manifest.corpus_sha256);
+    println!("bundle sha256:     {}", manifest.bundle_sha256);
+    println!(
+        "\nrecords:           {} validated historical observations",
+        manifest.record_count
+    );
+    println!(
+        "production window: slots {} -> {}",
+        manifest.source_slot_range.first, manifest.source_slot_range.last
+    );
+    println!("\nCOVERAGE");
+    for action in &adapter.actions {
+        println!(
+            "  {:<16} {:>3} tested",
+            action.semantic_action, action.observations
+        );
+    }
+    if !manifest.dependencies.is_empty() {
+        println!("\nPINNED DEPENDENCIES");
+        for dependency in &manifest.dependencies {
+            println!(
+                "  {}  {}  {} bytes",
+                dependency.program_id,
+                &dependency.sha256[..16],
+                dependency.len
+            );
+        }
+    }
+    if !adapter.limitations.is_empty() {
+        println!("\nKNOWN LIMITATIONS");
+        for limitation in &adapter.limitations {
+            println!("  - {}", limitation.code);
+            println!("    {}", limitation.detail);
+        }
+    }
 }
 
 /// Select a deterministic regression corpus from validated replay records.

@@ -24,6 +24,7 @@
 //! `corpus`, `interpret` and `impact`, which is the seam a protocol adapter
 //! would plug into in a later phase.
 
+pub mod bundle;
 pub mod cluster;
 pub mod corpus;
 pub mod corpus_store;
