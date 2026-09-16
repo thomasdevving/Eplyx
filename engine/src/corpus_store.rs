@@ -150,8 +150,19 @@ impl CorpusStore {
     /// Write the canonical index and manifest from what is stored.
     pub fn publish(&self) -> Result<CorpusManifest> {
         let records = self.load()?;
+        let manifest = self.describe(&records)?;
+        crate::ingest::write_json(&self.corpus_path(), &records)?;
+        crate::ingest::write_json(&self.manifest_path(), &manifest)?;
+        Ok(manifest)
+    }
+
+    /// The manifest these records produce, without writing anything.
+    ///
+    /// Verifying a published corpus must not modify it: a reader that rewrites
+    /// what it reads cannot be used to check that a bundle is unchanged.
+    pub fn describe(&self, records: &[ReplayRecord]) -> Result<CorpusManifest> {
         let mut digest = Vec::new();
-        for record in &records {
+        for record in records {
             digest.extend_from_slice(hash_bytes(&canonical(record)?).as_bytes());
         }
         let first = records.first();
@@ -169,8 +180,6 @@ impl CorpusStore {
             record_ids: records.iter().map(|r| r.id.clone()).collect(),
             canonical_hash: hash_bytes(&digest),
         };
-        crate::ingest::write_json(&self.corpus_path(), &records)?;
-        crate::ingest::write_json(&self.manifest_path(), &manifest)?;
         Ok(manifest)
     }
 }
