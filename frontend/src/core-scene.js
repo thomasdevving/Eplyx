@@ -34,11 +34,15 @@ const rings = {
 };
 
 const orbitBody = (ring, [name, status, detail, metric, value], index) =>
-  `<button type="button" class="orbit-body orbit-body--${status}" data-ring="${ring}" data-index="${index}" data-status="${status === 'live' ? 'Live' : 'Planned'}" data-detail="${detail}"${metric ? ` data-metric="${metric}" data-value="${value}"` : ''}>
+  `<button type="button" class="orbit-body orbit-body--${status}" data-ring="${ring}" data-index="${index}" data-name="${name}" data-status="${status === 'live' ? 'Live' : 'Planned'}" data-detail="${detail}"${metric ? ` data-metric="${metric}" data-value="${value}"` : ''}>
+    <span class="orbit-body__rock orbit-body__rock--${index}" aria-hidden="true"></span>
+    <span class="visually-hidden">${name}. ${status === 'live' ? 'Live layer' : 'Planned layer'}. ${detail}</span>
+  </button>
+  <div class="orbit-label orbit-label--${status}" data-ring="${ring}" data-index="${index}" aria-hidden="true">
+    <svg class="orbit-label__leader"><path/><circle r="2"/></svg>
     <span class="orbit-body__name">${name}</span>
     <small class="orbit-body__status">${status === 'live' ? 'Live' : 'Planned'}</small>
-    <span class="visually-hidden">${status === 'live' ? 'Live layer' : 'Planned layer'}. ${detail}</span>
-  </button>`;
+  </div>`;
 
 const orbitPlane = side => `<svg class="orbit-plane orbit-plane--${side}" aria-hidden="true">
   ${side === 'front' ? `<defs>
@@ -46,7 +50,6 @@ const orbitPlane = side => `<svg class="orbit-plane orbit-plane--${side}" aria-h
     <linearGradient id="orbit-sheen"><stop offset="0" stop-color="#fffaff" stop-opacity=".1"/><stop offset=".45" stop-color="#fffaff" stop-opacity=".9"/><stop offset="1" stop-color="#f0dfff" stop-opacity=".15"/></linearGradient>
     <filter id="orbit-bloom" x="-25%" y="-70%" width="150%" height="240%"><feGaussianBlur stdDeviation="5"/></filter>
   </defs>` : ''}
-  <path class="orbit-line orbit-line--outer"/>
   ${side === 'front' ? '<path class="orbit-line orbit-line--bloom"/>' : ''}
   <path class="orbit-line orbit-line--main"/>
   ${side === 'front' ? '<path class="orbit-line orbit-line--sheen"/><path class="orbit-pulse" pathLength="1"/>' : ''}
@@ -82,12 +85,18 @@ export function attachCoreParallax() {
   const detail = scene.querySelector('.orbit-detail');
   const caption = scene.querySelector('.orbit-caption');
   const bodies = [...scene.querySelectorAll('.orbit-body')];
+  // Labels stay above the mark even when their rock travels behind it.
+  const labels = new Map(bodies.map(body => [body, {
+    element: scene.querySelector(`.orbit-label[data-ring="${body.dataset.ring}"][data-index="${body.dataset.index}"]`),
+    width: 0,
+    height: 0,
+  }]));
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   // The inclination is tweened on a switch, so line and bodies never disagree.
   const view = { tilt: rings.changes.tilt, from: rings.changes.tilt, to: rings.changes.tilt, swing: 1 };
   const listeners = [];
   let active = 'changes';
-  let width = 0, height = 0, bodyWidth = 154, spanX = 0, spanY = 0;
+  let width = 0, height = 0, bodyWidth = 126, spanX = 0, spanY = 0;
   let frame = 0, last = 0, elapsed = 0, held = null, onscreen = true;
 
   const point = (angle, spread = 1) => {
@@ -117,7 +126,6 @@ export function attachCoreParallax() {
       plane.setAttribute('viewBox', `0 0 ${width} ${height}`);
       const main = arc(from, to, 1);
       plane.querySelectorAll('.orbit-line--main, .orbit-line--sheen, .orbit-line--bloom, .orbit-pulse').forEach(path => path.setAttribute('d', main));
-      plane.querySelector('.orbit-line--outer').setAttribute('d', arc(from, to, 1.19));
     }
   };
 
@@ -129,8 +137,9 @@ export function attachCoreParallax() {
     const outward = x >= width / 2 ? 1 : -1;
     const span = Math.max(width - half - 2, half + 2);
     const left = Math.min(Math.max(x + outward * (bodyWidth / 2 - half), half + 2), span);
-    const below = y < height * .5 ? y + 40 + depth < height : y - 40 - depth < 0;
-    detail.style.transform = `translate(${left.toFixed(1)}px, ${(y + (below ? 40 : -40)).toFixed(1)}px) translate(-50%, ${below ? '0' : '-100%'})`;
+    const gap = bodyWidth / 2 + 12;
+    const below = y < height * .5 ? y + gap + depth < height : y - gap - depth < 0;
+    detail.style.transform = `translate(${left.toFixed(1)}px, ${(y + (below ? gap : -gap)).toFixed(1)}px) translate(-50%, ${below ? '0' : '-100%'})`;
   };
 
   const place = () => {
@@ -139,11 +148,42 @@ export function attachCoreParallax() {
     const turn = elapsed / ring.duration * Math.PI * 2 * ring.direction;
     for (const body of bodies) {
       if (body.dataset.ring !== active) continue;
-      const { x, y, depth } = point(turn + Number(body.dataset.index) / ring.bodies.length * Math.PI * 2);
+      const index = Number(body.dataset.index);
+      const angle = turn - 2.25 + index / ring.bodies.length * Math.PI * 2;
+      const { x, y, depth } = point(angle);
       const near = (depth + 1) / 2;
-      body.style.transform = `translate(-50%, -50%) translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) scale(${(.85 + near * .15).toFixed(3)})`;
+      const scale = .78 + near * .22;
+      body.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translate(-50%, -50%) scale(${scale.toFixed(3)})`;
       body.style.zIndex = depth > 0 ? 6 : 2;
       body.style.setProperty('--near', near.toFixed(3));
+      body.style.setProperty('--rock-turn', `${(Math.sin(elapsed * .12 + index * 1.7) * 9).toFixed(2)}deg`);
+      const label = labels.get(body);
+      const outwardX = (x - width / 2) / spanX;
+      const outwardY = (y - height / 2) / spanY;
+      const radius = bodyWidth * scale * .4;
+      const wantedX = x + outwardX * (radius + label.width / 2 + 12);
+      const labelX = Math.min(width - label.width / 2 - 8, Math.max(label.width / 2 + 8, wantedX));
+      // Blend continuously into an above/below placement at the edges.
+      // Hard edge and direction thresholds made the text jump mid-orbit.
+      const edge = Math.min(1, Math.abs(wantedX - labelX) / 36);
+      const blend = edge * edge * (3 - 2 * edge);
+      const vertical = outwardY + (Math.tanh((outwardY - .15) * 4) - outwardY) * blend;
+      const wantedY = y + vertical * (radius + label.height / 2 + 14);
+      const labelY = Math.min(height - label.height / 2 - 8, Math.max(label.height / 2 + 8, wantedY));
+      label.element.style.transform = `translate(${labelX.toFixed(1)}px, ${labelY.toFixed(1)}px) translate(-50%, -50%)`;
+      label.element.style.setProperty('--near', near.toFixed(3));
+      const reach = Math.hypot(labelX - x, labelY - y) || 1;
+      const dotX = x - labelX + (labelX - x) / reach * radius * .7;
+      const dotY = y - labelY + (labelY - y) / reach * radius * .7;
+      // Follow the nearest edge of the label, without flipping the leader
+      // abruptly between its top and bottom while the label moves past it.
+      const endScale = 1 / Math.max(Math.abs(x - labelX) / (label.width / 2 + 4), Math.abs(y - labelY) / (label.height / 2 + 4), 1);
+      const endX = (x - labelX) * endScale;
+      const endY = (y - labelY) * endScale;
+      label.element.querySelector('path').setAttribute('d', `M${dotX.toFixed(1)} ${dotY.toFixed(1)} L${endX.toFixed(1)} ${endY.toFixed(1)}`);
+      const dot = label.element.querySelector('circle');
+      dot.setAttribute('cx', dotX.toFixed(1));
+      dot.setAttribute('cy', dotY.toFixed(1));
       if (body === held) anchor(x, y);
     }
     scene.classList.add('is-placed');
@@ -180,15 +220,19 @@ export function attachCoreParallax() {
     width = rect.width;
     height = rect.height;
     bodyWidth = parseFloat(getComputedStyle(scene).getPropertyValue('--orbit-body')) || bodyWidth;
+    for (const label of labels.values()) {
+      label.width = label.element.offsetWidth;
+      label.height = label.element.offsetHeight;
+    }
     spanX = Math.min(width * .39, width / 2 - bodyWidth / 2 - 2);
-    spanY = height * .22;
+    spanY = height * .29;
     drawPlanes();
     place();
   };
 
   const show = body => {
     held = body;
-    detail.querySelector('.orbit-detail__name').textContent = body.querySelector('.orbit-body__name').textContent;
+    detail.querySelector('.orbit-detail__name').textContent = body.dataset.name;
     detail.querySelector('.orbit-detail__status').textContent = body.dataset.status;
     detail.querySelector('.orbit-detail__text').textContent = body.dataset.detail;
     const metric = detail.querySelector('.orbit-detail__metric');
@@ -231,9 +275,9 @@ export function attachCoreParallax() {
   };
 
   for (const body of bodies) {
-    bind(body, 'pointerenter', () => show(body));
-    bind(body, 'focus', () => show(body));
-    bind(body, 'pointerleave', hide);
+    bind(body, 'pointerenter', event => { if (event.pointerType !== 'touch') show(body); });
+    bind(body, 'focus', () => { if (body.matches(':focus-visible')) show(body); });
+    bind(body, 'pointerleave', event => { if (event.pointerType !== 'touch') hide(); });
     bind(body, 'blur', hide);
     bind(body, 'click', () => (held === body ? hide() : show(body)));
     bind(body, 'keydown', event => {
