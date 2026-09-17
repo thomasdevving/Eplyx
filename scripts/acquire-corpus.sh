@@ -25,13 +25,22 @@
 #   SOLANA_BLOCK_RPC_URL     blocks for same-slot screening (defaults to the above)
 #   EPLYX_START_SLOT         window start (default: a bounded recent window)
 #   EPLYX_END_SLOT           window end
+#   EPLYX_LIMIT              interactions to normalize    (default 500)
+#   EPLYX_CORPUS_SIZE        interactions to rank/select  (default 250)
 #   EPLYX_TARGET_SIZE        observations to bundle       (default 10)
 #   EPLYX_MAX_ACQUIRE        acquisitions to attempt      (default 40)
+#
+# Expect a narrow funnel. Measured on SPL Stake Pool over 700 blocks: 617
+# relevant, 94 in the supported instruction family, 34 boundary-clean, 23
+# replay-eligible. A window that yields nothing is ordinary; a window that
+# yields nothing twice means scanning further, not relaxing anything.
 set -uo pipefail
 
 PROGRAM="${1:?usage: acquire-corpus.sh <program-id> [out-dir]}"
 OUT="${2:-data/acquired-$(date +%Y%m%d-%H%M%S)}"
 TARGET_SIZE="${EPLYX_TARGET_SIZE:-10}"
+LIMIT="${EPLYX_LIMIT:-500}"
+CORPUS_SIZE="${EPLYX_CORPUS_SIZE:-250}"
 MAX_ACQUIRE="${EPLYX_MAX_ACQUIRE:-40}"
 CLI=./target/release/eplyx
 
@@ -52,16 +61,21 @@ WINDOW=()
 [ -n "${EPLYX_START_SLOT:-}" ] && WINDOW+=(--start-slot "$EPLYX_START_SLOT")
 [ -n "${EPLYX_END_SLOT:-}" ] && WINDOW+=(--end-slot "$EPLYX_END_SLOT")
 step "1. discover activity${EPLYX_START_SLOT:+ in slots $EPLYX_START_SLOT..${EPLYX_END_SLOT:-latest}}"
-"$CLI" discover --program "$PROGRAM" "${WINDOW[@]+"${WINDOW[@]}"}" --output "$SESSION" \
-  || die "discovery"
+"$CLI" discover \
+  --program "$PROGRAM" \
+  --limit "$LIMIT" \
+  --corpus-size "$CORPUS_SIZE" \
+  ${WINDOW[@]+"${WINDOW[@]}"} \
+  --output "$SESSION" || die "discovery"
 
 # Only interactions whose exact historical state is available can be acquired.
 # The rest are real activity that this contract cannot replay, and they stay
 # visible in the discovery report rather than disappearing from the count.
-CANDIDATES=()
-while IFS= read -r signature; do
-  [ -n "$signature" ] && CANDIDATES+=("$signature")
-done < <(python3 - "$SESSION/discovery-corpus.json" "$MAX_ACQUIRE" <<'PY'
+# Written to files rather than read through a process substitution: the bash
+# macOS ships mis-parses a heredoc inside one, and the funnel is worth keeping
+# on disk anyway — it is the honest record of what this window could not offer.
+python3 - "$SESSION/discovery-corpus.json" "$MAX_ACQUIRE" \
+  >"$OUT/candidates.txt" 2>"$OUT/eligibility.txt" <<'PY'
 import json, sys
 from collections import Counter
 
@@ -78,18 +92,33 @@ ready = [
     if s["interaction"].get("replay_eligibility") in READY
 ]
 breakdown = Counter(s["interaction"].get("replay_eligibility") for s in selected)
-print("\n".join(ready[: int(sys.argv[2])]))
-print(f"# {len(ready)} of {len(selected)} selected interactions have exact historical state",
+for signature in ready[: int(sys.argv[2])]:
+    print(signature)
+print(f"{len(ready)} of {len(selected)} selected interactions have exact historical state",
       file=sys.stderr)
 for label, count in breakdown.most_common():
-    print(f"#   {label}: {count}", file=sys.stderr)
+    print(f"  {label}: {count}", file=sys.stderr)
 PY
-)
+sed 's/^/  /' "$OUT/eligibility.txt"
+
+CANDIDATES=()
+while IFS= read -r signature; do
+  [ -n "$signature" ] && CANDIDATES+=("$signature")
+done < "$OUT/candidates.txt"
 echo "  ${#CANDIDATES[@]} candidate(s) to acquire"
 # Not a failure of the tool: observed-to-replayable yield is a real property of
 # the window, and is reported rather than engineered away. Widen the slot range,
 # or read the breakdown above for what this contract cannot replay.
-[ "${#CANDIDATES[@]}" -gt 0 ] || die "no interaction in this window has exact historical state"
+if [ "${#CANDIDATES[@]}" -eq 0 ]; then
+  echo
+  echo "  Nothing in this window can be replayed exactly. That is a property of"
+  echo "  the window and of the adapter's contract, not a failure here:"
+  echo "    · a transaction that failed on mainnet is observed, never replayed"
+  echo "    · this adapter replays DepositSol and WithdrawSol, and nothing else"
+  echo "  Widen the window with EPLYX_START_SLOT / EPLYX_END_SLOT, and raise"
+  echo "  --limit if discovery is truncating the window before it is scanned."
+  die "no interaction in this window has exact historical state"
+fi
 
 step "2. acquire exact historical state, one transaction at a time"
 # Each acquisition reads every message account at S-1 and S from the archive,
@@ -97,7 +126,7 @@ step "2. acquire exact historical state, one transaction at a time"
 # same-slot interference. A refusal here is the design working: a boundary that
 # cannot be proved is an error, never an approximation.
 acquired=0
-for signature in "${CANDIDATES[@]}"; do
+for signature in ${CANDIDATES[@]+"${CANDIDATES[@]}"}; do
   if "$CLI" historical acquire \
       --signature "$signature" \
       --program "$PROGRAM" \
