@@ -720,16 +720,23 @@ pub fn pair_summaries(v1: &[SemanticField], v2: &[SemanticField]) -> Vec<Economi
 /// Deliberately a lookup rather than a registration hook: an adapter that is
 /// not compiled in cannot be selected by a corpus file, so a record can never
 /// name a protocol this build cannot actually reason about.
-pub fn adapter_for(program_id: &str) -> Option<&'static dyn ProtocolAdapter> {
+/// Every adapter this build speaks.
+///
+/// A caller that needs to *show* what is supported — an onboarding surface
+/// naming the protocols a project may declare — would otherwise have to repeat
+/// this list, and a build that gained an adapter would quietly keep offering
+/// the old one.
+pub fn adapters() -> &'static [&'static dyn ProtocolAdapter] {
     const TOKEN_2022: token2022::Token2022Adapter = token2022::Token2022Adapter;
     const STAKE_POOL: stake_pool::StakePoolAdapter = stake_pool::StakePoolAdapter;
-    if program_id == TOKEN_2022.program_id() {
-        return Some(&TOKEN_2022);
-    }
-    if program_id == STAKE_POOL.program_id() {
-        return Some(&STAKE_POOL);
-    }
-    None
+    &[&TOKEN_2022, &STAKE_POOL]
+}
+
+pub fn adapter_for(program_id: &str) -> Option<&'static dyn ProtocolAdapter> {
+    adapters()
+        .iter()
+        .copied()
+        .find(|adapter| adapter.program_id() == program_id)
 }
 
 #[cfg(test)]

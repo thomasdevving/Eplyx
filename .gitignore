@@ -27,3 +27,6 @@ private-setup.json
 
 # Browser modules generated from the pinned Three.js dependency
 /frontend/public/vendor/
+
+# Written at build time from EPLYX_API_URL
+/frontend/public/runtime-config.js

@@ -3,8 +3,10 @@ import { readFile, stat } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { prepareVendorAssets } from './vendor.mjs';
+import { writeRuntimeConfig } from './runtime-config.mjs';
 
 await prepareVendorAssets();
+const apiUrl = await writeRuntimeConfig(fileURLToPath(new URL('./public/', import.meta.url)));
 
 const root = fileURLToPath(new URL('.', import.meta.url));
 const port = Number(process.env.PORT || 4173);
@@ -23,4 +25,4 @@ createServer(async (request, response) => {
   } catch {
     response.writeHead(404); response.end('Not found');
   }
-}).listen(port, '127.0.0.1', () => console.log(`Eplyx frontend: http://localhost:${port}`));
+}).listen(port, '127.0.0.1', () => console.log(`Eplyx frontend: http://localhost:${port}${apiUrl ? ` \u2192 API ${apiUrl}` : ' (API from the local default)'}`));

@@ -13,6 +13,9 @@ use anyhow::{Context, Result};
 /// Uploads are bounded so a malformed or hostile request cannot exhaust memory.
 const DEFAULT_MAX_CANDIDATE_BYTES: usize = 8 * 1024 * 1024;
 const DEFAULT_MAX_EXPECTATION_BYTES: usize = 256 * 1024;
+/// A bundle is a corpus, a baseline and every dependency binary, so it is the
+/// largest thing this service accepts by some distance.
+const DEFAULT_MAX_BUNDLE_BYTES: usize = 192 * 1024 * 1024;
 /// Replay is CPU-bound and synchronous. A small cap keeps a pilot host
 /// responsive without a queue, which is deliberately not built yet.
 const DEFAULT_MAX_CONCURRENT_RUNS: usize = 2;
@@ -27,10 +30,18 @@ pub struct Config {
     /// not enforce the same-origin policy — so an absent setting costs nothing
     /// and an over-broad one costs a lot.
     pub allowed_origins: Vec<String>,
+    /// The hosted dashboard's credential.
+    ///
+    /// Configured on the server, never issued by it, and absent by default:
+    /// with no operator token nothing can create a project or move a bundle
+    /// pointer over HTTP, which is the right posture for a service that has not
+    /// been given one. Project tokens are unaffected.
+    pub operator_token: Option<String>,
     pub data_dir: PathBuf,
     pub bind: SocketAddr,
     pub max_candidate_bytes: usize,
     pub max_expectation_bytes: usize,
+    pub max_bundle_bytes: usize,
     pub max_concurrent_runs: usize,
 }
 
@@ -72,6 +83,10 @@ fn bind_address() -> Result<SocketAddr> {
 impl Config {
     pub fn from_env() -> Result<Self> {
         Ok(Self {
+            operator_token: std::env::var("EPLYX_OPERATOR_TOKEN")
+                .ok()
+                .map(|token| token.trim().to_string())
+                .filter(|token| !token.is_empty()),
             allowed_origins: std::env::var("EPLYX_ALLOWED_ORIGINS")
                 .unwrap_or_default()
                 .split(',')
@@ -88,6 +103,7 @@ impl Config {
                 "EPLYX_MAX_EXPECTATION_BYTES",
                 DEFAULT_MAX_EXPECTATION_BYTES,
             )?,
+            max_bundle_bytes: var("EPLYX_MAX_BUNDLE_BYTES", DEFAULT_MAX_BUNDLE_BYTES)?,
             max_concurrent_runs: var("EPLYX_MAX_CONCURRENT_RUNS", DEFAULT_MAX_CONCURRENT_RUNS)?,
         })
     }

@@ -2,8 +2,10 @@ import { cp, mkdir, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { prepareVendorAssets } from './vendor.mjs';
+import { writeRuntimeConfig } from './runtime-config.mjs';
 
 await prepareVendorAssets();
+await writeRuntimeConfig(fileURLToPath(new URL('./public/', import.meta.url)));
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const out = join(root, 'dist');

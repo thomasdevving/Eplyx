@@ -397,3 +397,74 @@ section[id] { scroll-margin-top: 35px; }
   .hero .site-header { height: 64px; }
   .hero .site-header nav { top: 58px; }
 }
+
+/* Operator console: projects, bundles, tokens, run history. */
+.console-shell { max-width: 1100px; margin: auto; padding: 70px 48px 120px; }
+.console-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; padding-bottom: 46px; }
+.console-head h1 { margin: 0; font: 500 clamp(38px,4vw,58px)/1.05 'Manrope', sans-serif; letter-spacing: -.055em; }
+.console-head p { margin: 10px 0 0; color: rgba(255,255,255,.5); font-size: 13px; line-height: 1.6; }
+.console-section { margin-top: 44px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,.12); }
+.console-section h2 { margin: 0 0 6px; font: 500 19px 'Manrope', sans-serif; letter-spacing: -.03em; }
+.console-note { margin: 0 0 18px; color: rgba(255,255,255,.4); font-size: 11px; line-height: 1.7; }
+.callout { margin-bottom: 20px; padding: 16px 18px; border: 1px solid rgba(178,140,255,.3); background: rgba(130,77,226,.1); border-radius: 5px; color: #dcccff; font-size: 12px; line-height: 1.65; }
+.verify-result { margin: 18px 0; }
+.verify-result dl { display: grid; grid-template-columns: 120px 1fr; gap: 6px 16px; margin: 14px 0; font-size: 11px; }
+.verify-result dt { color: rgba(255,255,255,.45); }
+.verify-result dd { margin: 0; overflow-wrap: anywhere; }
+.callout--quiet { border-color: rgba(255,255,255,.14); background: rgba(255,255,255,.04); color: rgba(255,255,255,.55); }
+
+.project-list, .bundle-list, .run-list { border: 1px solid rgba(255,255,255,.12); border-radius: 6px; overflow: hidden; }
+.project-row, .bundle-row, .run-row { display: grid; align-items: center; gap: 18px; padding: 16px 20px; font-size: 12px; cursor: pointer; transition: background .18s; }
+.project-row { grid-template-columns: 1fr 130px 160px 120px; }
+.bundle-row { grid-template-columns: 1fr 170px 90px; cursor: default; }
+.run-row { grid-template-columns: 170px 120px 110px 80px 1fr; }
+.project-row + .project-row, .bundle-row + .bundle-row, .run-row + .run-row { border-top: 1px solid rgba(255,255,255,.08); }
+.project-row:hover, .run-row:hover { background: rgba(255,255,255,.04); }
+.project-row h3 { margin: 0 0 5px; font: 500 15px 'Manrope', sans-serif; letter-spacing: -.02em; }
+.project-row span.mono, .bundle-row span.mono, .run-row span.mono { color: rgba(255,255,255,.45); font-size: 11px; }
+.project-row__adapter { color: rgba(255,255,255,.4) !important; }
+.bundle-row.is-active { background: rgba(130,77,226,.08); }
+.bundle-row small { display: block; margin-top: 5px; color: rgba(255,255,255,.35); font-size: 10px; }
+
+.pill { justify-self: start; padding: 5px 10px; border-radius: 100px; font-size: 9px; text-transform: uppercase; letter-spacing: .1em; white-space: nowrap; }
+.pill--ready, .pill--passed { color: #8bdec0; background: rgba(47,147,108,.16); }
+.pill--setup, .pill--queued, .pill--running { color: #d6c2ff; background: rgba(140,87,240,.18); }
+.pill--disabled, .pill--execution_error { color: rgba(255,255,255,.5); background: rgba(255,255,255,.08); }
+.pill--failed { color: #f19ba0; background: rgba(231,85,93,.15); }
+
+.console-form { max-width: 520px; }
+.console-form h2 { margin: 0 0 24px; font: 500 26px 'Manrope', sans-serif; letter-spacing: -.04em; }
+.console-form label, .connect-panel label { display: block; margin-bottom: 18px; font-size: 11px; font-weight: 600; }
+.console-form input, .console-form select, .connect-panel input, .token-create input {
+  width: 100%; height: 44px; margin-top: 8px; padding: 0 12px; color: white; background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.16); border-radius: 4px; outline: none; font-size: 12px; }
+.console-form select option { color: #1a0f2b; }
+.console-form input:focus, .console-form select:focus, .connect-panel input:focus { border-color: #a274f5; }
+.console-form small { display: block; margin-top: 7px; color: rgba(255,255,255,.38); font-size: 10px; font-weight: 400; line-height: 1.6; }
+.console-form__actions { margin-top: 26px; }
+.connect-panel { max-width: 460px; }
+.connect-panel h2 { margin: 0 0 10px; font: 500 24px 'Manrope', sans-serif; letter-spacing: -.04em; }
+.connect-panel p { margin: 0 0 22px; color: rgba(255,255,255,.5); font-size: 12px; line-height: 1.7; }
+
+.token-create { display: flex; gap: 12px; align-items: center; max-width: 520px; }
+.token-create input { margin-top: 0; }
+.token-issued { margin-bottom: 20px; padding: 18px; border: 1px solid rgba(178,140,255,.35); background: rgba(130,77,226,.12); border-radius: 5px; }
+.token-issued p { margin: 0 0 12px; font-size: 12px; line-height: 1.6; }
+.token-issued code { display: block; margin-bottom: 12px; padding: 12px; overflow-wrap: anywhere; background: rgba(0,0,0,.3); border-radius: 4px; font-size: 11px; }
+
+.inner-page .empty-result { color: rgba(255,255,255,.5); background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); }
+.inner-page .empty-result.is-error { color: #f3a6ab; border-color: rgba(231,85,93,.3); background: rgba(231,85,93,.08); }
+.inner-page .empty-result .button { margin-top: 16px; }
+.console-shell .file-drop { color: white; border-color: rgba(255,255,255,.2); }
+.console-shell .file-drop strong { color: #d9c2ff; background: rgba(140,87,240,.2); }
+.console-shell .file-drop em { color: rgba(255,255,255,.4); }
+.console-shell .provenance-table b { overflow-wrap: anywhere; }
+
+@media (max-width: 760px) {
+  .console-shell { padding: 60px 20px 90px; }
+  .console-head { display: block; }
+  .console-head .button { margin-top: 20px; }
+  .project-row, .run-row { grid-template-columns: 1fr; gap: 8px; }
+  .bundle-row { grid-template-columns: 1fr; gap: 10px; }
+  .token-create { flex-direction: column; align-items: stretch; }
+}

@@ -39,7 +39,7 @@ use clap::{Parser, Subcommand};
 
 use eplyx_server::api::{self, AppState};
 use eplyx_server::config::Config;
-use eplyx_server::project::{generate_token, Project};
+use eplyx_server::project::{generate_token, AdapterId, Project, ProjectToken};
 use eplyx_server::registry::Registry;
 use eplyx_server::storage::Storage;
 
@@ -68,23 +68,36 @@ enum Command {
 
 #[derive(Subcommand)]
 enum AdminCommand {
-    /// Create a project and print its CI token once.
+    /// Create a project. Its id is minted here, never chosen.
     CreateProject {
-        #[arg(long)]
-        id: String,
         #[arg(long)]
         name: String,
         #[arg(long)]
         program_id: String,
+        /// Defaults to whatever adapter this build speaks for the program,
+        /// which is the only value the project may declare anyway.
+        #[arg(long)]
+        adapter: Option<String>,
     },
-    /// Verify a bundle and install it under its content hash.
-    InstallBundle {
+    /// List projects and where each one stands.
+    ListProjects,
+    /// Issue a project API token and print it once.
+    CreateToken {
+        #[arg(long)]
+        project: String,
+        #[arg(long, default_value = "operator")]
+        label: String,
+    },
+    /// Verify a bundle and register it to a project.
+    RegisterBundle {
+        #[arg(long)]
+        project: String,
         #[arg(long)]
         path: std::path::PathBuf,
     },
-    /// Point a project at an installed bundle. Deliberately a separate step
-    /// from installing one: a corpus change moves what every pull request is
-    /// measured against, so a human chooses when that happens.
+    /// Point a project at one of its registered bundles. Deliberately a
+    /// separate step from registering one: a corpus change moves what every
+    /// pull request is measured against, so a human chooses when that happens.
     ActivateBundle {
         #[arg(long)]
         project: String,
@@ -125,28 +138,74 @@ fn main() -> Result<()> {
 fn admin(command: AdminCommand, registry: &Registry) -> Result<()> {
     match command {
         AdminCommand::CreateProject {
-            id,
             name,
             program_id,
+            adapter,
         } => {
-            let token = generate_token();
-            let project = Project::new(&id, &name, &program_id, &token)?;
-            registry.save_project(&project)?;
+            let adapter_id = match adapter {
+                Some(text) => AdapterId::try_from(text)?,
+                None => AdapterId::for_program(&program_id),
+            };
+            let project_id = eplyx_server::ids::project();
+            let project = Project::new(&project_id, &name, &program_id, adapter_id)?;
+            registry.create_project(&project)?;
+            println!("project {project_id} created for program {program_id}");
+            println!("  adapter {}", project.adapter_id);
+            if !project.adapter_id.speaks_semantics() {
+                println!(
+                    "  note: this build speaks no semantics for that program, so every check \n\
+                     \twill report no semantic coverage and fail. That is the engine saying it \n\
+                     \tdid not look, not that nothing is wrong."
+                );
+            }
+            println!(
+                "\nNo bundle is active yet. Register one and activate it before checks can run."
+            );
+        }
+        AdminCommand::ListProjects => {
+            for project in registry.list_projects()? {
+                let active = project
+                    .active_bundle
+                    .as_ref()
+                    .map(|bundle| bundle.bundle_id.clone())
+                    .unwrap_or_else(|| "-".to_string());
+                println!(
+                    "{}  {:?}  {}  {}  {}",
+                    project.project_id, project.status, project.adapter_id, active, project.name
+                );
+            }
+        }
+        AdminCommand::CreateToken { project, label } => {
+            let secret = generate_token();
+            let token = ProjectToken::new(&eplyx_server::ids::token(), &project, &label, &secret)?;
+            registry.load_project(&project)?;
+            registry.create_token(&token)?;
             // Printed once and never stored in this form. There is no endpoint
             // that can hand it back.
-            println!("project {id} created for program {program_id}");
-            println!("\nCI token (shown once, store it as the EPLYX_TOKEN secret):\n\n  {token}\n");
-            println!("No bundle is active yet. Install one and activate it before checks can run.");
+            println!("token {} created for project {project}", token.token_id);
+            println!(
+                "\nAPI token (shown once, store it as the EPLYX_TOKEN secret):\n\n  {secret}\n"
+            );
         }
-        AdminCommand::InstallBundle { path } => {
-            let sha256 = registry.install_bundle(&path)?;
-            println!("installed bundle {sha256}");
+        AdminCommand::RegisterBundle { project, path } => {
+            let record = registry.load_project(&project)?;
+            let bundle = registry.register_bundle(&record, &path, None)?;
+            println!(
+                "registered bundle {} ({})",
+                bundle.bundle_id, bundle.bundle_sha256
+            );
             println!("It is not active. Activate it deliberately:");
-            println!("  eplyx-server admin activate-bundle --project <id> --bundle {sha256}");
+            println!(
+                "  eplyx-server admin activate-bundle --project {project} --bundle {}",
+                bundle.bundle_id
+            );
         }
         AdminCommand::ActivateBundle { project, bundle } => {
-            registry.activate_bundle(&project, &bundle)?;
-            println!("project {project} now checks against bundle {bundle}");
+            let updated = registry.activate_bundle(&project, &bundle)?;
+            println!(
+                "project {project} now checks against bundle {bundle} ({:?})",
+                updated.status
+            );
         }
     }
     Ok(())

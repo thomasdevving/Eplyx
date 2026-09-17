@@ -10,7 +10,7 @@ export function Header({ light = false } = {}) {
         <a href="/#evidence" data-link>Evidence</a>
         <a href="/#roles" data-link>Who it’s for</a>
         <a href="/#vision" data-link>Vision</a>
-        <a href="/analyse" data-link class="nav-cta">Analyse <span>↗</span></a>
+        <a href="/projects" data-link>Projects</a><a href="/analyse" data-link class="nav-cta">Analyse <span>↗</span></a>
       </nav>
       <button class="menu-button" type="button" aria-label="Open navigation" aria-controls="primary-navigation" aria-expanded="false"><span></span><span></span></button>
     </header>`;

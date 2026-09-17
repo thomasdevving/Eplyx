@@ -25,7 +25,11 @@ globalThis.sessionStorage = {
   removeItem: key => store.delete(key)
 };
 
+// The run page follows a run with the console's credential, not with anything
+// kept from a submission. That is what makes a run openable from history.
+globalThis.EPLYX_API_URL = 'http://api.test';
 const { ReportPage, attachReport } = await import('./src/report.js');
+const CONSOLE_KEY = 'eplyx-operator-token';
 
 const reportPath = process.argv[2];
 let realReport = null;
@@ -55,7 +59,7 @@ async function checkAsync(name, fn) {
 /** Follow one run to whatever the stubbed server says, and return the markup. */
 async function follow(id, run, report) {
   store.clear();
-  store.set(`eplyx-run-${id}`, JSON.stringify({ api: 'http://api.test', project: 'p', token: 't' }));
+  store.set(CONSOLE_KEY, 'operator-token');
   globalThis.fetch = async url => {
     if (String(url).endsWith(`/v1/runs/${id}`)) return { ok: true, status: 200, json: async () => run };
     if (String(url).endsWith('report.json')) {
@@ -73,7 +77,7 @@ async function follow(id, run, report) {
 }
 
 // --- an unknown run must not invent evidence ---------------------------
-check('an unknown run renders as unavailable, not as a result', () => {
+check('an unconnected console renders as unavailable, not as a result', () => {
   store.clear();
   const html = ReportPage('audit-not-found');
   assert.match(html, /not available in this browser/);
@@ -103,7 +107,7 @@ check('the demo route renders and is labelled a fixture', () => {
 // --- a run in flight is not a result -----------------------------------
 check('a followable run opens on its lifecycle, not on a verdict', () => {
   store.clear();
-  store.set('eplyx-run-r0', JSON.stringify({ api: 'http://api.test', project: 'p', token: 't' }));
+  store.set(CONSOLE_KEY, 'operator-token');
   const html = ReportPage('r0');
   // Not "queued": before the first poll answers, the state is unknown, and a
   // completed run reloaded from a link must not flash a queue it left long ago.
