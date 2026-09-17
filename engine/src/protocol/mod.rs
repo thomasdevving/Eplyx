@@ -40,9 +40,19 @@ pub struct TokenQuantity {
     pub decimals: u8,
 }
 
+/// Largest decimal count `u128` can scale by. `10^39` overflows it.
+const MAX_RENDERABLE_DECIMALS: u8 = 38;
+
 fn render(base_units: u128, decimals: u8) -> String {
     if decimals == 0 {
         return base_units.to_string();
+    }
+    // `decimals` is a `u8`, so a decoded mint can name more places than any
+    // scale can represent. Aborting the process over a field read from an
+    // account is the wrong failure: render it in base units and say what the
+    // scale was, which is honest and cannot panic.
+    if decimals > MAX_RENDERABLE_DECIMALS {
+        return format!("{base_units}e-{decimals}");
     }
     let scale = 10_u128.pow(u32::from(decimals));
     format!(
@@ -856,5 +866,28 @@ mod tests {
             .unwrap()
             .dependency_programs()
             .is_empty());
+    }
+}
+
+#[cfg(test)]
+mod malformed_input {
+    use super::*;
+
+    /// `decimals` is a `u8` read from an account, so it can name more places
+    /// than any scale can represent. That must not abort the process.
+    #[test]
+    fn an_unrepresentable_decimal_count_does_not_panic() {
+        for decimals in [MAX_RENDERABLE_DECIMALS, 39, 100, u8::MAX] {
+            let rendered = TokenQuantity::new(1_500, decimals).to_string();
+            assert!(!rendered.is_empty(), "{decimals} produced nothing");
+        }
+        // Past what a scale can hold, the value is stated in base units with
+        // its exponent rather than silently truncated.
+        assert_eq!(TokenQuantity::new(1_500, 39).to_string(), "1500e-39");
+        // And the ordinary path is unchanged.
+        assert_eq!(
+            TokenQuantity::new(1_500_000_000, 9).to_string(),
+            "1.500000000"
+        );
     }
 }

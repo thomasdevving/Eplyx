@@ -1499,9 +1499,32 @@ fn ci_check(args: CiCheckArgs) -> Result<ExitCode> {
     let report = match ci::check(&args.bundle, &args.candidate, args.expectations.as_deref()) {
         Ok(report) => report,
         Err(error) => {
-            // Preflight failures abort rather than producing half a report.
-            eprintln!("EPLYX UPGRADE CHECK\n\nAnalysis could not run.\n\n{error}");
-            return Ok(ExitCode::from(error.exit_code()));
+            // A preflight abort produces no analysis, but it must still answer
+            // in the format that was asked for. A consumer parsing JSON should
+            // not have to scrape stderr to learn why a run produced nothing.
+            let code = error.exit_code();
+            match args.format {
+                Format::Json => {
+                    let body = serde_json::json!({
+                        "schema_version": eplyx_engine::ci::CI_REPORT_SCHEMA,
+                        "status": "error",
+                        "exit_code": code,
+                        "error": format!("{error}"),
+                    });
+                    let rendered = serde_json::to_string_pretty(&body)?;
+                    match &args.out {
+                        Some(path) => {
+                            std::fs::write(path, format!("{rendered}\n"))?;
+                            eprintln!("wrote {}", path.display());
+                        }
+                        None => println!("{rendered}"),
+                    }
+                }
+                Format::Text => {
+                    eprintln!("EPLYX UPGRADE CHECK\n\nAnalysis could not run.\n\n{error}");
+                }
+            }
+            return Ok(ExitCode::from(code));
         }
     };
 

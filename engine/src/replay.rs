@@ -547,6 +547,14 @@ impl ReplayRecord {
                     .is_some_and(|amount| amount > 0),
                 "mainnet Memo replay requires one System transfer followed by one Memo"
             );
+            // A malformed record can name fewer keys than the contract needs.
+            // Indexing it would abort the process; a record that does not meet
+            // the contract is simply not replayable, and says so.
+            anyhow::ensure!(
+                self.transaction.account_keys.len() >= 2,
+                "mainnet Memo replay requires at least two account keys, found {}",
+                self.transaction.account_keys.len()
+            );
             let system = &self.transaction.instructions[0];
             let memo = &self.transaction.instructions[1];
             anyhow::ensure!(

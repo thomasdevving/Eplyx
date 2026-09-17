@@ -92,10 +92,16 @@ pub enum Difference {
     /// Lamport balance of a watched account differs.
     BalanceChanged {
         account: String,
+        /// Decimal strings. A lamport balance passes 2^53 well inside `u64` -
+        /// a pool holding 15 million SOL is 1.5e16 - and past that a JSON
+        /// number rounds in most parsers.
+        #[serde(with = "crate::numfmt::u64_string")]
         v1: u64,
+        #[serde(with = "crate::numfmt::u64_string")]
         v2: u64,
         /// See the note on `FieldChanged::delta`. A lamport delta is bounded by
         /// total supply, far inside i64.
+        #[serde(with = "crate::numfmt::i64_string")]
         delta: i64,
     },
     /// The cross-program invocation sequence differs.
@@ -244,6 +250,28 @@ impl StateDiff {
         out.sort_by_key(|d| std::cmp::Reverse(d.severity()));
         out
     }
+}
+
+/// The shape of one invocation, in full.
+///
+/// Program and depth alone are not the shape. A candidate that keeps the same
+/// programs at the same depths while changing which instruction it calls, how
+/// many accounts it passes, or how much data it sends has changed its
+/// invocation graph, and comparing only `program@depth` reported that as
+/// identical. The record's own fidelity gate already compares the richer frame;
+/// the V1/V2 diff was the one place still looking at less.
+fn invocation_key(call: &crate::executor::CpiCall) -> String {
+    format!(
+        "{}@{}#{}:{}/{}b:{}",
+        call.program,
+        call.stack_height,
+        call.outer_index,
+        call.account_count,
+        call.data_len,
+        call.discriminant
+            .map(|d| d.to_string())
+            .unwrap_or_else(|| "-".to_string()),
+    )
 }
 
 fn first_difference_offset(a: &[u8], b: &[u8]) -> usize {
@@ -431,16 +459,8 @@ pub fn compare_with_decoder(
         }
     }
 
-    let cpi_v1: Vec<String> = v1
-        .cpi_calls
-        .iter()
-        .map(|c| format!("{}@{}", c.program, c.stack_height))
-        .collect();
-    let cpi_v2: Vec<String> = v2
-        .cpi_calls
-        .iter()
-        .map(|c| format!("{}@{}", c.program, c.stack_height))
-        .collect();
+    let cpi_v1: Vec<String> = v1.cpi_calls.iter().map(invocation_key).collect();
+    let cpi_v2: Vec<String> = v2.cpi_calls.iter().map(invocation_key).collect();
     if cpi_v1 != cpi_v2 {
         differences.push(Difference::CpiChanged {
             v1: cpi_v1,
@@ -620,5 +640,97 @@ mod tests {
         assert_eq!(diff.classification(), Classification::ComputeOnly);
         assert!(!diff.is_critical());
         assert_eq!(diff.outcome_severity(), None);
+    }
+}
+
+#[cfg(test)]
+mod invocation_shape {
+    use super::*;
+    use crate::executor::CpiCall;
+
+    fn call(discriminant: u8, account_count: u8, data_len: u32) -> CpiCall {
+        CpiCall {
+            program: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA".into(),
+            stack_height: 2,
+            outer_index: 3,
+            account_count,
+            data_len,
+            discriminant: Some(discriminant),
+        }
+    }
+
+    /// Same program, same depth, different instruction. That is a changed
+    /// invocation graph and must not compare as identical.
+    #[test]
+    fn a_changed_discriminant_is_a_changed_invocation() {
+        assert_ne!(
+            invocation_key(&call(2, 3, 9)),
+            invocation_key(&call(3, 3, 9))
+        );
+    }
+
+    #[test]
+    fn account_count_and_data_length_are_part_of_the_shape() {
+        assert_ne!(
+            invocation_key(&call(2, 3, 9)),
+            invocation_key(&call(2, 4, 9))
+        );
+        assert_ne!(
+            invocation_key(&call(2, 3, 9)),
+            invocation_key(&call(2, 3, 12))
+        );
+    }
+
+    /// Which top-level instruction a call descends from is part of the shape
+    /// too: moving a mint from one instruction to another is a real change.
+    #[test]
+    fn the_owning_instruction_is_part_of_the_shape() {
+        let mut moved = call(2, 3, 9);
+        moved.outer_index = 4;
+        assert_ne!(invocation_key(&call(2, 3, 9)), invocation_key(&moved));
+    }
+
+    #[test]
+    fn an_identical_call_compares_equal() {
+        assert_eq!(
+            invocation_key(&call(2, 3, 9)),
+            invocation_key(&call(2, 3, 9))
+        );
+    }
+}
+
+#[cfg(test)]
+mod large_value_serialization {
+    use super::*;
+
+    /// `Difference` is internally tagged, which restricts what its variants can
+    /// carry. The string-serialized balances must still survive a round trip
+    /// through that representation, or the report would serialize and refuse to
+    /// deserialize.
+    #[test]
+    fn a_balance_past_two_to_the_fifty_third_round_trips() {
+        let difference = Difference::BalanceChanged {
+            account: "reserve".into(),
+            v1: 15_000_000_000_000_000,
+            v2: 15_000_000_000_000_001,
+            delta: 1,
+        };
+        let json = serde_json::to_string(&difference).unwrap();
+        assert!(json.contains(r#""15000000000000000""#), "{json}");
+        assert_eq!(
+            serde_json::from_str::<Difference>(&json).unwrap(),
+            difference
+        );
+    }
+
+    /// Reports written before this change must keep parsing.
+    #[test]
+    fn a_numeric_balance_is_still_read() {
+        let json = r#"{"kind":"balance_changed","account":"a","v1":1,"v2":2,"delta":1}"#;
+        let difference: Difference = serde_json::from_str(json).unwrap();
+        assert!(matches!(
+            difference,
+            Difference::BalanceChanged { v1: 1, v2: 2, .. }
+        ));
     }
 }

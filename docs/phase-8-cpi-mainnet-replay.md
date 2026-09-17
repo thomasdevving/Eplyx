@@ -389,13 +389,20 @@ deployment the CPI execution tests load, at
 What this phase supports is one transaction class against one protocol. Naming
 it precisely matters more than the result.
 
-- **One instruction, one protocol.** `DepositSol` into a pool with no SOL deposit
-  authority. `DepositStake`, `WithdrawStake`, `WithdrawSol`, the slippage
-  variants and the update instructions are all rejected, not approximated.
-- **One level of CPI, into two known programs.** Invocation into anything other
-  than the System and SPL Token programs, or at a depth greater than two, is
+- **Two instructions, one protocol.** `DepositSol` into a pool with no SOL
+  deposit authority, reaching the System and SPL Token programs; and
+  `WithdrawSol`, reaching SPL Token and the **deployed Stake program** - loaded
+  as the BPF deployment live at the transaction's slot, not assumed to be the
+  runtime builtin - and admitting a strictly-shaped top-level `Approve`
+  companion. One level of invocation. Anything else is rejected.
+- **One level of CPI, into known programs.** Invocation at a depth greater than
+  two, or into a program outside each instruction's declared set - System and
+  SPL Token for `DepositSol`, SPL Token and Stake for `WithdrawSol` - is
   rejected. This is not general CPI support.
-- **Legacy messages only.** Address lookup tables are normalized but not
+- **Legacy messages, or v0 that resolves no lookup addresses.** The reproduced
+  `WithdrawSol` is a v0 message with zero resolved lookup addresses, which
+  normalized replay executes. A v0 message that *does* resolve addresses through
+  a table is rejected. Address lookup tables are normalized but not
   executed, which excludes most aggregator traffic.
 - **No account creation or closure.** An associated-token-account
   `CreateIdempotent` is accepted only when the validator recorded a token balance

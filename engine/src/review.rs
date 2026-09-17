@@ -396,6 +396,12 @@ pub fn review(
         });
     }
 
+    // Canonical order, like the findings. Traversing the declaration file's own
+    // order would let two semantically identical expectation files produce
+    // reports that differ only in arrangement, and a diff between two runs
+    // should mean something.
+    unmatched.sort_by(|a, b| a.fingerprint.cmp(&b.fingerprint));
+
     let mut failures = Vec::new();
     let failed =
         |status: ReviewStatus, findings: &[ReviewedFinding], un: &[UnmatchedExpectation]| {
@@ -1211,6 +1217,22 @@ reason   = "declared for a subject this corpus cannot measure"
         assert_eq!(review.count(ReviewStatus::Unexpected), 1);
         assert_eq!(review.count(ReviewStatus::Stale), 2);
         assert_eq!(review.count(ReviewStatus::Unevaluable), 1);
+    }
+
+    /// Two declaration files that declare the same things in a different order
+    /// are the same contract, and must produce the same report.
+    #[test]
+    fn declaration_order_does_not_reach_the_report() {
+        let removal = declarations_only(DECLARE_REMOVAL);
+        let shares = declarations_only(DECLARE_SHARES);
+        let header = "version = 1\nsemantic_schema_version = 2\n";
+        let one = expectations(&format!("{header}{removal}\n{shares}"));
+        let other = expectations(&format!("{header}{shares}\n{removal}"));
+
+        let coverage = [coverage("o1", &[REVERTS])];
+        let a = review(&[], &coverage, &one);
+        let b = review(&[], &coverage, &other);
+        assert_eq!(a, b, "the same contract, written in a different order");
     }
 
     #[test]
