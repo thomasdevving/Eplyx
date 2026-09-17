@@ -315,6 +315,7 @@ fn corpus_build_matches_capture_to_discovery_and_loads_offline() {
         start_slot: record.transaction.slot,
         end_slot: record.transaction.slot,
         transactions: vec![record.transaction.clone()],
+        unreadable_transactions: Vec::new(),
     };
     ingest::write_json(&temp.0.join("manifest.json"), &manifest).unwrap();
     let snapshots = temp.0.join("snapshots");
