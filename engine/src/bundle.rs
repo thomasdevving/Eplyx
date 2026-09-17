@@ -111,6 +111,13 @@ pub struct BundleManifest {
     pub source_slot_range: SlotRange,
     pub dependencies: Vec<BundledProgram>,
     pub adapter_metadata_sha256: String,
+    /// The vocabulary this bundle's subjects were named under.
+    ///
+    /// Separate from the adapter version on purpose: an adapter bugfix must not
+    /// invalidate a bundle, but a change to what a subject *means* must. Without
+    /// this the bundle carried no record of its own semantics at all, and a
+    /// consumer could only be told the running engine's constant.
+    pub semantic_schema_version: u32,
     /// Which selector produced the corpus, where one did. A bundle built from a
     /// hand-assembled store has no policy and says so rather than implying one.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -241,6 +248,40 @@ impl CiBundle {
             );
         }
 
+        // A hash proves the bytes were not edited. It does not prove the
+        // manifest's *description* of them is true: `record_count` could claim
+        // 999 over one record and still hash consistently once recomputed. So
+        // the claims are checked against the content they describe.
+        if manifest.record_count != records.len() {
+            bail!(
+                "bundle manifest declares {} records but the corpus holds {}",
+                manifest.record_count,
+                records.len()
+            );
+        }
+        let actual_ids: Vec<&str> = records.iter().map(|r| r.id.as_str()).collect();
+        if manifest.record_ids != actual_ids {
+            bail!(
+                "bundle manifest lists different records than the corpus holds ({} declared, {} present)",
+                manifest.record_ids.len(),
+                actual_ids.len()
+            );
+        }
+        let slots: Vec<u64> = records.iter().map(|r| r.transaction.slot).collect();
+        let actual_range = SlotRange {
+            first: slots.iter().copied().min().unwrap_or_default(),
+            last: slots.iter().copied().max().unwrap_or_default(),
+        };
+        if manifest.source_slot_range != actual_range {
+            bail!(
+                "bundle manifest declares slots {}..{} but the corpus spans {}..{}",
+                manifest.source_slot_range.first,
+                manifest.source_slot_range.last,
+                actual_range.first,
+                actual_range.last
+            );
+        }
+
         let adapter_bytes = read(&Self::adapter_path(&root))?;
         let digest = hash_bytes(&adapter_bytes);
         if digest != manifest.adapter_metadata_sha256 {
@@ -338,6 +379,23 @@ pub fn build(inputs: BundleInputs<'_>, out: &Path) -> Result<CiBundle> {
         collect_dependencies(records, inputs.dependencies, &program_id, &baseline_sha256)?;
 
     // --- write the tree -------------------------------------------------
+    // The corpus store is append-only, so building into a directory that
+    // already holds a bundle keeps the old records and writes a manifest that
+    // describes only the new ones. The result reopens happily and is wrong.
+    // Building is therefore refused unless the destination is empty.
+    if out.exists()
+        && std::fs::read_dir(out)
+            .with_context(|| format!("reading {}", out.display()))?
+            .next()
+            .is_some()
+    {
+        bail!(
+            "{} is not empty. A bundle is immutable and content addressed: build into a fresh \
+             directory rather than over an existing one, and activate the new bundle when it is \
+             reviewed.",
+            out.display()
+        );
+    }
     std::fs::create_dir_all(out).with_context(|| format!("creating {}", out.display()))?;
     let store = CorpusStore::open(CiBundle::corpus_dir(out))?;
     for record in records {
@@ -374,7 +432,20 @@ pub fn build(inputs: BundleInputs<'_>, out: &Path) -> Result<CiBundle> {
                 observations,
             })
             .collect(),
-        limitations: inputs.limitations,
+        // A bundle built without selection still inherits every limit of the
+        // replay contract it was acquired under. Shipping an empty list would
+        // let a report imply there are none.
+        limitations: if inputs.limitations.is_empty() {
+            crate::select::contract_limitations()
+                .into_iter()
+                .map(|l| BundledLimitation {
+                    code: l.code,
+                    detail: l.detail,
+                })
+                .collect()
+        } else {
+            inputs.limitations
+        },
     };
     let adapter_bytes = serde_json::to_vec_pretty(&adapter).context("encoding adapter metadata")?;
     write_bytes(&CiBundle::adapter_path(out), &adapter_bytes)?;
@@ -395,6 +466,7 @@ pub fn build(inputs: BundleInputs<'_>, out: &Path) -> Result<CiBundle> {
         },
         dependencies: dependencies.iter().map(|(d, _)| d.clone()).collect(),
         adapter_metadata_sha256: hash_bytes(&adapter_bytes),
+        semantic_schema_version: crate::semantics::SEMANTIC_SCHEMA_VERSION,
         selection_policy: inputs.selection_policy,
         selection_policy_version: inputs.selection_policy_version,
         bundle_sha256: String::new(),
@@ -775,6 +847,100 @@ mod tests {
         };
         let error = build(inputs, &fixture.scratch.join("out")).expect_err("must refuse");
         assert!(error.to_string().contains("empty corpus"), "{error}");
+    }
+
+    /// A hash proves bytes were not edited. It does not prove the manifest's
+    /// description of them is true: this count hashes consistently and is a lie.
+    #[test]
+    fn a_manifest_that_miscounts_its_records_is_refused() {
+        let fixture = fixture("miscount");
+        let bundle = fixture.build("out").expect("build");
+        let mut manifest = bundle.manifest().clone();
+        manifest.record_count = 999;
+        manifest.bundle_sha256 = String::new();
+        manifest.bundle_sha256 = manifest.digest().unwrap();
+        crate::ingest::write_json(&CiBundle::manifest_path(bundle.root()), &manifest).unwrap();
+
+        let error = CiBundle::open(bundle.root()).expect_err("must refuse");
+        assert!(
+            format!("{error:#}").contains("declares 999 records"),
+            "{error:#}"
+        );
+    }
+
+    #[test]
+    fn a_manifest_that_lists_other_records_is_refused() {
+        let fixture = fixture("mislist");
+        let bundle = fixture.build("out").expect("build");
+        let mut manifest = bundle.manifest().clone();
+        manifest.record_ids = vec!["not-a-real-record".to_string(), "nor-this".to_string()];
+        manifest.bundle_sha256 = String::new();
+        manifest.bundle_sha256 = manifest.digest().unwrap();
+        crate::ingest::write_json(&CiBundle::manifest_path(bundle.root()), &manifest).unwrap();
+
+        let error = CiBundle::open(bundle.root()).expect_err("must refuse");
+        assert!(
+            format!("{error:#}").contains("different records"),
+            "{error:#}"
+        );
+    }
+
+    #[test]
+    fn a_manifest_that_misstates_its_slot_window_is_refused() {
+        let fixture = fixture("misslot");
+        let bundle = fixture.build("out").expect("build");
+        let mut manifest = bundle.manifest().clone();
+        manifest.source_slot_range = SlotRange { first: 1, last: 2 };
+        manifest.bundle_sha256 = String::new();
+        manifest.bundle_sha256 = manifest.digest().unwrap();
+        crate::ingest::write_json(&CiBundle::manifest_path(bundle.root()), &manifest).unwrap();
+
+        assert!(CiBundle::open(bundle.root()).is_err());
+    }
+
+    /// The corpus store is append-only, so building over an existing bundle
+    /// keeps its records while the new manifest describes only the new ones.
+    /// The result would reopen happily and be wrong.
+    #[test]
+    fn building_over_an_existing_bundle_is_refused() {
+        let fixture = fixture("rebuild");
+        fixture.build("out").expect("first build");
+        let error = fixture.build("out").expect_err("must refuse");
+        assert!(format!("{error:#}").contains("is not empty"), "{error:#}");
+    }
+
+    /// An adapter fix must not invalidate a bundle, but a change in what a
+    /// subject means must - and only a pin inside the bundle can say which
+    /// happened.
+    #[test]
+    fn the_bundle_pins_the_vocabulary_its_subjects_were_named_under() {
+        let fixture = fixture("schema-pin");
+        let bundle = fixture.build("out").expect("build");
+        assert_eq!(
+            bundle.manifest().semantic_schema_version,
+            crate::semantics::SEMANTIC_SCHEMA_VERSION
+        );
+    }
+
+    /// A bundle built without selection still inherits every limit of the
+    /// contract it was acquired under.
+    #[test]
+    fn a_bundle_without_selection_still_carries_contract_limitations() {
+        let fixture = fixture("no-selection");
+        let inputs = BundleInputs {
+            limitations: Vec::new(),
+            ..fixture.inputs()
+        };
+        let bundle = build(inputs, &fixture.scratch.join("out")).expect("build");
+        assert!(
+            !bundle.adapter().limitations.is_empty(),
+            "an empty list would imply there are none"
+        );
+        assert!(bundle
+            .adapter()
+            .limitations
+            .iter()
+            .any(|l| l.code == "failed_original_transactions_unsupported"));
     }
 
     /// A bundle that has lost its limitations is a bundle that overclaims.

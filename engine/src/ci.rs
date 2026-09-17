@@ -390,6 +390,32 @@ fn check_compatibility(
         }
     }
 
+    // The vocabulary the bundle's subjects were named under. Checked
+    // independently of the adapter version: an adapter fix must not invalidate
+    // a bundle, but a change in what a subject means must, and only this pin
+    // can say so.
+    if manifest.semantic_schema_version != crate::semantics::SEMANTIC_SCHEMA_VERSION {
+        anyhow::bail!(
+            "this bundle names its subjects under semantic schema {}, and this build speaks {}. \
+             A subject may no longer mean the same quantity, so the comparison is refused. \
+             Rebuild the bundle.",
+            manifest.semantic_schema_version,
+            crate::semantics::SEMANTIC_SCHEMA_VERSION
+        );
+    }
+    // The adapter name must also be the adapter that will actually run, or the
+    // bundle's metadata describes something else entirely.
+    if let Some(adapter) = crate::protocol::adapter_for(&manifest.program_id) {
+        if adapter.name() != adapter_metadata.name {
+            anyhow::bail!(
+                "bundle metadata names adapter {:?}, but program {} resolves to {:?}",
+                adapter_metadata.name,
+                manifest.program_id,
+                adapter.name()
+            );
+        }
+    }
+
     // The adapter decides what a subject means. A bundle built under a
     // different interpretation cannot be reviewed against declarations written
     // for this one.
@@ -495,7 +521,10 @@ pub fn assemble(
             program_id: manifest.program_id.clone(),
             adapter: bundle.adapter().name.clone(),
             adapter_version: bundle.adapter().version,
-            semantic_schema_version: crate::semantics::SEMANTIC_SCHEMA_VERSION,
+            // The bundle's own pin, not the running engine's constant: a
+            // report must say which vocabulary the result speaks, and preflight
+            // has already proved the two agree.
+            semantic_schema_version: manifest.semantic_schema_version,
             source_slot_range: manifest.source_slot_range,
             limitations: bundle.adapter().limitations.clone(),
         },
@@ -546,6 +575,7 @@ mod tests {
             },
             dependencies: Vec::new(),
             adapter_metadata_sha256: "adapter".into(),
+            semantic_schema_version: crate::semantics::SEMANTIC_SCHEMA_VERSION,
             selection_policy: None,
             selection_policy_version: None,
             bundle_sha256: "bundle".into(),
@@ -600,6 +630,36 @@ mod tests {
 
     /// The check that stops a pull request going green last week and red today
     /// because the interpretation moved underneath it.
+    /// A change in what a subject means invalidates a bundle even though the
+    /// adapter version has not moved.
+    #[test]
+    fn a_bundle_naming_subjects_under_another_vocabulary_is_refused() {
+        let record = record();
+        let mut manifest = manifest(&record);
+        manifest.semantic_schema_version = crate::semantics::SEMANTIC_SCHEMA_VERSION + 1;
+        let error = check_compatibility(
+            std::slice::from_ref(&record),
+            &manifest,
+            &adapter_metadata(),
+        )
+        .expect_err("refuse");
+        assert!(
+            format!("{error:#}").contains("semantic schema"),
+            "{error:#}"
+        );
+    }
+
+    #[test]
+    fn a_bundle_naming_the_wrong_adapter_is_refused() {
+        let record = record();
+        let mut metadata = adapter_metadata();
+        metadata.name = "some-other-protocol".to_string();
+        let error =
+            check_compatibility(std::slice::from_ref(&record), &manifest(&record), &metadata)
+                .expect_err("refuse");
+        assert!(format!("{error:#}").contains("resolves to"), "{error:#}");
+    }
+
     #[test]
     fn a_bundle_built_under_another_adapter_version_is_refused() {
         let record = record();

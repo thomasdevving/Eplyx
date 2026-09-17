@@ -605,7 +605,79 @@ impl ReplayRecord {
                     && screening.target_signature == self.transaction.signature,
                 "slot screening does not describe this transaction"
             );
+            // The screening result is only as good as the set it screened. A
+            // record that carries a clean verdict over an empty or narrowed
+            // required set proves nothing about the accounts the replay
+            // actually depends on, so the set is recomputed here rather than
+            // taken on the record's word.
+            let screened: BTreeSet<&str> = screening
+                .required_accounts
+                .iter()
+                .map(String::as_str)
+                .collect();
+            // Only accounts whose boundary came from the archive need this
+            // proof. An account reconstructed from the transaction's own
+            // balances carries its own exact evidence and is deliberately
+            // outside the screened set, and one the runtime materializes has no
+            // boundary to be spoiled.
+            let archived: BTreeSet<&str> = self
+                .acquisitions
+                .iter()
+                .filter(|a| a.source == AccountStateSource::HistoricalArchive)
+                .map(|a| a.address.as_str())
+                .collect();
+            for account in &self.accounts {
+                if is_runtime_managed(&account.address)
+                    || !archived.contains(account.address.as_str())
+                {
+                    continue;
+                }
+                anyhow::ensure!(
+                    screened.contains(account.address.as_str()),
+                    "slot screening omits required account {} ({}); its clean verdict does not \
+                     cover the state this replay depends on",
+                    account.label,
+                    account.address
+                );
+            }
             screening.ensure_unambiguous()?;
+        }
+
+        // Provenance describes the boundary this record was acquired at. A slot
+        // that is not the transaction's predecessor describes a different
+        // boundary, and a record cannot substantiate a claim its own fields
+        // contradict.
+        let predecessor = self.transaction.slot.saturating_sub(1);
+        for acquisition in &self.acquisitions {
+            anyhow::ensure!(
+                acquisition.context_slot == predecessor
+                    || acquisition.context_slot == self.transaction.slot,
+                "account {} was acquired at slot {}, which is neither the transaction's slot {} \
+                 nor its predecessor {predecessor}",
+                acquisition.label,
+                acquisition.context_slot,
+                self.transaction.slot
+            );
+        }
+        for dependency in &self.dependencies.programs {
+            if let Some(observed) = dependency.observed_slot {
+                anyhow::ensure!(
+                    observed == predecessor || observed == self.transaction.slot,
+                    "dependency {} was resolved at slot {observed}, which is neither the \
+                     transaction's slot {} nor its predecessor {predecessor}",
+                    dependency.program_id,
+                    self.transaction.slot
+                );
+            }
+            if let Some(deployed) = dependency.deployed_slot {
+                anyhow::ensure!(
+                    deployed <= self.transaction.slot,
+                    "dependency {} claims a deployment at slot {deployed}, after the transaction \
+                     at slot {}",
+                    dependency.program_id,
+                    self.transaction.slot
+                );
+            }
         }
         anyhow::ensure!(
             self.transaction
@@ -1712,5 +1784,100 @@ mod tests {
         assert!(!is_runtime_managed(
             "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy"
         ));
+    }
+}
+
+#[cfg(test)]
+mod provenance_tests {
+    use super::*;
+
+    fn stake_pool_record() -> ReplayRecord {
+        serde_json::from_str(include_str!(
+            "../../docs/examples/mainnet-stake-pool-record.json"
+        ))
+        .expect("committed record")
+    }
+
+    /// The real acquired records must still pass, or the new checks are
+    /// rejecting evidence rather than forgeries.
+    #[test]
+    fn the_committed_records_still_validate() {
+        for raw in [
+            include_str!("../../docs/examples/mainnet-stake-pool-record.json"),
+            include_str!("../../docs/examples/mainnet-stake-pool-withdraw-record.json"),
+            include_str!("../../docs/examples/mainnet-token2022-record.json"),
+            include_str!("../../docs/examples/mainnet-replay-record.json"),
+            include_str!("../../docs/examples/replay-record.json"),
+        ] {
+            let record: ReplayRecord = serde_json::from_str(raw).expect("parses");
+            record.validate().expect("a real record validates");
+        }
+    }
+
+    /// A clean verdict over a narrowed set proves nothing about the accounts the
+    /// replay actually depends on.
+    #[test]
+    fn screening_that_covers_fewer_accounts_than_the_replay_needs_is_refused() {
+        let mut record = stake_pool_record();
+        record
+            .slot_screening
+            .as_mut()
+            .expect("a screened record")
+            .required_accounts
+            .clear();
+        let error = record.validate().expect_err("must refuse");
+        assert!(
+            format!("{error:#}").contains("omits required account"),
+            "{error:#}"
+        );
+    }
+
+    /// Provenance that describes a different boundary cannot substantiate this
+    /// record's claims.
+    #[test]
+    fn acquisition_at_an_unrelated_slot_is_refused() {
+        let mut record = stake_pool_record();
+        let slot = record.transaction.slot;
+        record.acquisitions[0].context_slot = slot + 999;
+        let error = record.validate().expect_err("must refuse");
+        assert!(
+            format!("{error:#}").contains("was acquired at slot"),
+            "{error:#}"
+        );
+    }
+
+    #[test]
+    fn a_dependency_resolved_at_an_unrelated_slot_is_refused() {
+        let mut record = stake_pool_record();
+        let slot = record.transaction.slot;
+        for dependency in &mut record.dependencies.programs {
+            if dependency.observed_slot.is_some() {
+                dependency.observed_slot = Some(slot + 999);
+                break;
+            }
+        }
+        let error = record.validate().expect_err("must refuse");
+        assert!(
+            format!("{error:#}").contains("was resolved at slot"),
+            "{error:#}"
+        );
+    }
+
+    /// A program cannot have been deployed after the transaction that used it.
+    #[test]
+    fn a_dependency_deployed_after_the_transaction_is_refused() {
+        let mut record = stake_pool_record();
+        let slot = record.transaction.slot;
+        for dependency in &mut record.dependencies.programs {
+            if dependency.deployed_slot.is_some() {
+                dependency.deployed_slot = Some(slot + 1);
+                break;
+            }
+        }
+        let error = record.validate().expect_err("must refuse");
+        assert!(
+            format!("{error:#}").contains("after the transaction"),
+            "{error:#}"
+        );
     }
 }

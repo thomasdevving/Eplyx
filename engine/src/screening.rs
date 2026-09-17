@@ -127,15 +127,25 @@ fn writable_keys(transaction: &serde_json::Value) -> Result<BTreeSet<String>> {
         )?;
     let mut writable = BTreeSet::new();
     for key in keys {
+        let pubkey = key["pubkey"]
+            .as_str()
+            .context("block account key is not a string")?;
         // `writable` is reported per key and already accounts for the message
         // header and for any address-table resolution the validator performed.
-        if key["writable"].as_bool().unwrap_or(false) {
-            writable.insert(
-                key["pubkey"]
-                    .as_str()
-                    .context("block account key is not a string")?
-                    .to_string(),
+        //
+        // A key that does not report it is *not* read-only. This is a proof of
+        // no interference, and an absent write flag is absent evidence, not
+        // evidence of absence: defaulting it to false would let an incomplete
+        // provider response certify a boundary as clean.
+        let Some(is_writable) = key["writable"].as_bool() else {
+            anyhow::bail!(
+                "block evidence is incomplete: account {pubkey} reports no writable flag, so \
+                 this block cannot prove whether it was written. Request getBlock with \
+                 transactionDetails=accounts from a provider that reports it."
             );
+        };
+        if is_writable {
+            writable.insert(pubkey.to_string());
         }
     }
     Ok(writable)
