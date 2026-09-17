@@ -24,6 +24,9 @@ set -uo pipefail
 
 ARCHIVE="${1:?usage: probe-archive.sh <archive-url> [transaction-url] [corpus.json]}"
 TRANSACTION="${2:-}"
+case "$TRANSACTION" in ""|http://*|https://*) ;; *)
+  echo "second argument is not a URL: ${TRANSACTION}"; exit 2 ;;
+esac
 CORPUS="${3:-data/stake-pool-upgrade/session/corpus.json}"
 
 [ -r "$CORPUS" ] || { echo "no corpus at $CORPUS"; exit 2; }
@@ -70,12 +73,18 @@ for pair in "archive:$ARCHIVE" "transaction:${TRANSACTION:-}"; do
   [ -z "$url" ] && continue
   got=$(call "$url" getGenesisHash '[]' | python3 -c "
 import json,sys
-try: print(json.load(sys.stdin).get('result',''))
-except Exception: print('')
+try: d = json.load(sys.stdin)
+except Exception: print('unparseable:' + sys.stdin.read()[:90]); raise SystemExit
+if 'error' in d: print('refused:' + str(d['error'].get('message'))[:110])
+else: print('hash:' + str(d.get('result','')))
 ")
-  if [ "$got" = "$GENESIS" ]; then note ok "$label genesis matches the record"
-  elif [ -z "$got" ]; then note FAIL "$label did not answer getGenesisHash"
-  else note FAIL "$label is a different cluster ($got)"; fi
+  case "$got" in
+    "hash:$GENESIS") note ok "$label genesis matches the record" ;;
+    refused:*)       note FAIL "$label refused the call" "${got#refused:}" ;;
+    unparseable:*)   note FAIL "$label gave no JSON" "${got#unparseable:}" ;;
+    hash:)           note FAIL "$label did not answer" ;;
+    *)               note FAIL "$label is a different cluster" "${got#hash:}" ;;
+  esac
 done
 
 if [ -n "$TRANSACTION" ]; then
@@ -125,14 +134,23 @@ def rpc(address):
     except Exception:
         return {"error": {"message": (out.stdout or out.stderr).strip()[:120]}}
 
-exact = honored = compared = matched = 0
+exact = honored = compared = matched = gated = 0
 context_slots = set()
 
 for address, label in wanted:
     answer = rpc(address)
     short = f"{address[:8]}… {label:24}"
     if "error" in answer:
-        print(f"  FAIL  {short} {answer['error'].get('message')}")
+        message = str(answer["error"].get("message", ""))
+        # An endpoint that does not implement the slot selector ignores it and
+        # answers with current state. One that names a plan is telling us the
+        # opposite: it implements it, and this key may not use it.
+        if any(word in message.lower() for word in
+               ("tier", "upgrade to", "plan", "not entitled", "subscription")):
+            gated += 1
+            print(f"  gated {short} {message[:96]}")
+        else:
+            print(f"  FAIL  {short} {message[:96]}")
         continue
     result = answer.get("result") or {}
     context = (result.get("context") or {}).get("slot")
@@ -172,6 +190,14 @@ for address, label in wanted:
 
 print()
 print("== verdict ==")
+if honored == 0 and gated:
+    # The decisive distinction. A provider that lacks the feature ignores the
+    # slot and hands back today's state; this one refuses by name, which means
+    # the API Eplyx needs is there and this key cannot reach it.
+    print(f"  note  the slot selector is implemented but not enabled for this key ({gated}/{len(wanted)} accounts)")
+    print("  ok    this is the right endpoint on the wrong plan, not the wrong endpoint")
+    print("        Re-run on a plan that includes historical slot parameters.")
+    sys.exit(3)
 if honored == 0:
     print("  FAIL  the archive answered nothing usable; it cannot serve as account_archive_rpc")
     sys.exit(1)
@@ -206,5 +232,14 @@ PY
 rc=$?
 
 echo
-[ $fail -eq 0 ] && [ $rc -eq 0 ] && echo "probe completed" || echo "probe completed with failures"
-exit $(( fail || rc ))
+# Bash's `||` yields 1, which would collapse "not entitled" into "unusable".
+if [ $fail -ne 0 ]; then
+  echo "probe completed with failures"
+  exit 1
+fi
+case $rc in
+  0) echo "probe completed" ;;
+  3) echo "probe completed: the endpoint is right, the plan is not" ;;
+  *) echo "probe completed with failures" ;;
+esac
+exit $rc
