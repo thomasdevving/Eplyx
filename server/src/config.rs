@@ -5,7 +5,7 @@
 //! runs elsewhere, with its own credentials, and never on the path of a pull
 //! request.
 
-use std::net::SocketAddr;
+use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use std::path::PathBuf;
 
 use anyhow::{Context, Result};
@@ -46,6 +46,29 @@ where
     }
 }
 
+/// The address to listen on.
+///
+/// `EPLYX_BIND` wins when it is set, so a local run can still name its own
+/// address. Otherwise a platform-injected `PORT` is honoured: a managed host
+/// chooses the port and expects the process to follow, and a server that
+/// ignores it is simply unreachable there. Only then the local default.
+fn bind_address() -> Result<SocketAddr> {
+    const DEFAULT: SocketAddr = SocketAddr::new(IpAddr::V4(Ipv4Addr::UNSPECIFIED), 8080);
+    if std::env::var_os("EPLYX_BIND").is_some() {
+        return var("EPLYX_BIND", DEFAULT).context("EPLYX_BIND");
+    }
+    match std::env::var("PORT") {
+        Ok(port) => {
+            let port: u16 = port
+                .trim()
+                .parse()
+                .map_err(|error| anyhow::anyhow!("PORT: {error}"))?;
+            Ok(SocketAddr::new(IpAddr::V4(Ipv4Addr::UNSPECIFIED), port))
+        }
+        Err(_) => Ok(DEFAULT),
+    }
+}
+
 impl Config {
     pub fn from_env() -> Result<Self> {
         Ok(Self {
@@ -59,7 +82,7 @@ impl Config {
             data_dir: PathBuf::from(
                 std::env::var("EPLYX_DATA_DIR").unwrap_or_else(|_| "/data".to_string()),
             ),
-            bind: var("EPLYX_BIND", "0.0.0.0:8080".parse::<SocketAddr>()?).context("EPLYX_BIND")?,
+            bind: bind_address()?,
             max_candidate_bytes: var("EPLYX_MAX_CANDIDATE_BYTES", DEFAULT_MAX_CANDIDATE_BYTES)?,
             max_expectation_bytes: var(
                 "EPLYX_MAX_EXPECTATION_BYTES",

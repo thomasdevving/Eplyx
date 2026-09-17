@@ -1,0 +1,20 @@
+# Railway service definition for the hosted Eplyx CI API.
+#
+# Everything stateful lives on a volume mounted at /data: projects, their token
+# verifiers, installed bundles and every stored run. Attach one before the first
+# deploy — without it a redeploy discards the project a pilot is using.
+
+[build]
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+startCommand = "eplyx-server serve"
+healthcheckPath = "/health"
+healthcheckTimeout = 60
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3
+
+# One replica. The registry is a directory on that volume, so a second replica
+# would fork the state rather than share it.
+numReplicas = 1

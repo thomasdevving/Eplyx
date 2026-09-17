@@ -1,0 +1,28 @@
+# What the server build does not read.
+#
+# `programs/` is over a gigabyte of SBF build output, and `frontend/` changes far
+# more often than the server does — excluding it means a frontend commit leaves
+# the build context byte-identical and the cached image is reused whole.
+#
+# `fixtures/` stays: engine/src/lib.rs embeds fixtures/program-id.txt at compile
+# time. `docs/examples/` is embedded only by tests, which `cargo build` does not
+# compile, so it is excluded.
+
+.git
+.github
+target/
+node_modules/
+dist/
+artifacts/
+data/
+programs/
+frontend/
+docs/
+examples/
+scripts/
+test-ledger/
+*.md
+.env
+.env.*
+report.json
+.DS_Store
