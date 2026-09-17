@@ -19,6 +19,14 @@ const DEFAULT_MAX_CONCURRENT_RUNS: usize = 2;
 
 #[derive(Clone, Debug)]
 pub struct Config {
+    /// Browser origins allowed to call this API.
+    ///
+    /// Empty by default, which means no cross-origin browser access at all: a
+    /// page served from another origin cannot read this API unless somebody
+    /// deliberately names it. A CI runner is unaffected either way — `curl` does
+    /// not enforce the same-origin policy — so an absent setting costs nothing
+    /// and an over-broad one costs a lot.
+    pub allowed_origins: Vec<String>,
     pub data_dir: PathBuf,
     pub bind: SocketAddr,
     pub max_candidate_bytes: usize,
@@ -41,6 +49,13 @@ where
 impl Config {
     pub fn from_env() -> Result<Self> {
         Ok(Self {
+            allowed_origins: std::env::var("EPLYX_ALLOWED_ORIGINS")
+                .unwrap_or_default()
+                .split(',')
+                .map(str::trim)
+                .filter(|origin| !origin.is_empty())
+                .map(str::to_string)
+                .collect(),
             data_dir: PathBuf::from(
                 std::env::var("EPLYX_DATA_DIR").unwrap_or_else(|_| "/data".to_string()),
             ),

@@ -56,7 +56,7 @@ toml = { version = "0.9", default-features = false, features = ["parse", "serde"
 # native-tls so a container needs no system OpenSSL.
 axum = { version = "0.8", features = ["multipart"] }
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "signal", "sync", "fs"] }
-tower-http = { version = "0.6", features = ["limit", "trace"] }
+tower-http = { version = "0.6", features = ["cors", "limit", "trace"] }
 hex = "0.4"
 rand = "0.8"
 clap = { version = "4.5", features = ["derive"] }

@@ -15,13 +15,14 @@ use std::sync::Arc;
 
 use axum::body::Bytes;
 use axum::extract::{DefaultBodyLimit, Multipart, Path, State};
-use axum::http::{header, HeaderMap, StatusCode};
+use axum::http::{header, HeaderMap, Method, StatusCode};
 use axum::response::{IntoResponse, Response};
 use axum::routing::{get, post};
 use axum::{Json, Router};
 use eplyx_engine::ci::{self, CiReport};
 use serde::Serialize;
 use serde_json::json;
+use tower_http::cors::CorsLayer;
 
 use crate::config::Config;
 use crate::project::Project;
@@ -100,6 +101,23 @@ type ApiResult<T> = std::result::Result<T, ApiError>;
 
 pub fn router(state: Shared) -> Router {
     let limit = state.config.max_candidate_bytes + state.config.max_expectation_bytes + 64 * 1024;
+    // A browser sends a preflight for any request carrying an Authorization
+    // header, and without this the router answered it with 405 and no
+    // Access-Control-Allow-Origin, so the documented separate-origin frontend
+    // could not call the API at all. Named origins only: never a wildcard,
+    // because these requests are authenticated.
+    let cors = CorsLayer::new()
+        .allow_origin(
+            state
+                .config
+                .allowed_origins
+                .iter()
+                .filter_map(|origin| origin.parse::<axum::http::HeaderValue>().ok())
+                .collect::<Vec<_>>(),
+        )
+        .allow_methods([Method::GET, Method::POST])
+        .allow_headers([header::AUTHORIZATION, header::CONTENT_TYPE])
+        .max_age(std::time::Duration::from_secs(600));
     Router::new()
         .route("/health", get(health))
         .route("/ready", get(ready))
@@ -108,6 +126,7 @@ pub fn router(state: Shared) -> Router {
         .route("/v1/runs/{run_id}/report.json", get(get_report_json))
         .route("/v1/runs/{run_id}/report.md", get(get_report_markdown))
         .layer(DefaultBodyLimit::max(limit))
+        .layer(cors)
         .with_state(state)
 }
 

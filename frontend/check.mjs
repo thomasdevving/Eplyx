@@ -15,5 +15,19 @@ for (const id of ['crescent', 'wave']) {
   if (!brand.includes(path)) throw new Error(`src/brand.js has drifted from public/logo.svg for #${id}`);
 }
 
+// The page must not carry sample evidence it can fall back to. Real runs and
+// the demo are different things, and a fixture that leaks into a real render is
+// how "10 observations · Mainnet · fidelity matched" appeared for a run that did
+// not exist.
+const report = contents[files.indexOf('src/report.js')];
+const demoStart = report.indexOf('const DEMO =');
+if (demoStart < 0) throw new Error('src/report.js has no explicitly named demo fixture');
+// Comments explain these strings; only executable code may contain them.
+const live = report.slice(0, demoStart).replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+for (const invented of ['fidelity matched', 'Mainnet ·', '447338102', '60b7e1ac']) {
+  if (live.includes(invented)) throw new Error(`src/report.js falls back to invented evidence: ${invented}`);
+}
+if (live.includes('review?.findings')) throw new Error('src/report.js reads the pre-flattened report shape');
+
 for (const file of files) console.log(`✓ ${file}`);
 console.log('Frontend structure and required product claims verified.');

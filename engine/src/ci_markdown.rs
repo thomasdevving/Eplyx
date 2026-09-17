@@ -117,9 +117,9 @@ pub fn render(report: &CiReport) -> String {
         "A declared bound has no defined value for at least one matching observation.",
     );
 
-    if !report.review.unmatched.is_empty() {
+    if !report.unmatched.is_empty() {
         let _ = writeln!(out, "### Expectation health\n");
-        for entry in &report.review.unmatched {
+        for entry in &report.unmatched {
             let _ = writeln!(
                 out,
                 "**{}** — `{}`  ",
@@ -173,9 +173,9 @@ pub fn render(report: &CiReport) -> String {
         let _ = writeln!(out);
     }
 
-    if !report.review.failures.is_empty() {
+    if !report.failures.is_empty() {
         let _ = writeln!(out, "### Why this failed\n");
-        for reason in &report.review.failures {
+        for reason in &report.failures {
             let explanation = match reason {
                 crate::review::FailureReason::NoSemanticCoverage => {
                     "This bundle's adapter produced no semantic coverage, so a pass would mean \
@@ -229,7 +229,6 @@ fn render_group(
     blurb: &str,
 ) {
     let group: Vec<&ReviewedFinding> = report
-        .review
         .findings
         .iter()
         .filter(|finding| finding.status == status)
