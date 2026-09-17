@@ -113,9 +113,25 @@ fi
 echo
 echo "== account archive at slot $PRE_SLOT =="
 python3 - "$CORPUS" "$ARCHIVE" "$PRE_SLOT" <<'PY'
-import json, subprocess, sys
+import base64, json, subprocess, sys
 
 corpus, url, pre_slot = sys.argv[1], sys.argv[2], int(sys.argv[3])
+
+# The record and the wire disagree about how to write the same bytes. A record
+# stores account data as hex and lamports as a decimal string; getAccountInfo
+# answers base64 and a JSON number. Comparing the two representations directly
+# reports every account with any data as different, which is the most alarming
+# possible wrong answer: it condemns a correct archive.
+def record_bytes(value):
+    return bytes.fromhex(value or "")
+
+def wire_bytes(value):
+    if isinstance(value, list):
+        value = value[0] if value else ""
+    return base64.b64decode(value or "")
+
+def lamports(value):
+    return int(value) if value is not None else None
 record = json.load(open(corpus))[0]
 recorded = {a['address']: a['account'] for a in record['accounts']}
 wanted = [(a['address'], a.get('label', '')) for a in record['acquisitions']]
@@ -170,17 +186,29 @@ for address, label in wanted:
         if value is None:
             verdict = "  · archive says absent, record has state"
         else:
-            data = value.get("data")
-            data = data[0] if isinstance(data, list) else data
-            same = (value.get("lamports") == want["lamports"]
-                    and value.get("owner") == want["owner"]
-                    and (data or "") == (want.get("data") or "")
-                    and bool(value.get("executable")) == bool(want["executable"]))
-            if same:
+            differences = []
+            if lamports(value.get("lamports")) != lamports(want.get("lamports")):
+                differences.append(
+                    f"lamports {lamports(value.get('lamports'))} vs {lamports(want.get('lamports'))}")
+            if value.get("owner") != want.get("owner"):
+                differences.append(f"owner {value.get('owner')} vs {want.get('owner')}")
+            got, expected = wire_bytes(value.get("data")), record_bytes(want.get("data"))
+            if got != expected:
+                if len(got) != len(expected):
+                    differences.append(f"data {len(got)} bytes vs {len(expected)}")
+                else:
+                    at = next(i for i, (a, b) in enumerate(zip(got, expected)) if a != b)
+                    differences.append(f"data differs at byte {at} of {len(got)}")
+            if bool(value.get("executable")) != bool(want.get("executable")):
+                differences.append("executable")
+            if differences:
+                # Naming the field is the difference between "this archive is
+                # wrong" and "one of these two is an off-by-one, and here is
+                # which number moved".
+                verdict = "  · DIFFERS: " + ", ".join(differences)
+            else:
                 matched += 1
                 verdict = "  · bytes match the record"
-            else:
-                verdict = "  · BYTES DIFFER from the record"
     elif value is None:
         verdict = "  · absent (not in the replay state)"
     else:
