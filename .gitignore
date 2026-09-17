@@ -10,6 +10,7 @@ programs/fixture-stake-pool-candidate/target/
 
 # Node
 node_modules/
+/dist/
 
 .DS_Store
 
@@ -23,3 +24,6 @@ node_modules/
 /test-ledger/
 /report.json
 private-setup.json
+
+# Browser modules generated from the pinned Three.js dependency
+/frontend/public/vendor/

@@ -78,6 +78,22 @@ For this default synthetic comparison, nothing else is required: no RPC endpoint
 no API key, no network access after
 the toolchain is installed, no database, no container.
 
+### Public frontend
+
+The public product site explains the replay and gate model, includes a real
+Stake Pool demo report, and provides an `/analyse` form for an existing hosted
+project. The form calls the Phase 10 API directly; it does not create projects
+or invent an unauthenticated workflow.
+
+```bash
+pnpm dev              # http://localhost:4173
+pnpm check:frontend   # structure and product-copy checks
+pnpm build            # static output in dist/
+```
+
+The prepared routes are `/`, `/analyse`, and `/runs/:id`. A static host must
+rewrite those application routes to `index.html`.
+
 ---
 
 ## Controlled Solana replay

@@ -9,6 +9,12 @@
     "node": ">=22.6"
   },
   "scripts": {
+    "dev": "node frontend/dev-server.mjs",
+    "build": "node frontend/build.mjs",
+    "check:frontend": "node frontend/check.mjs",
     "verify:report": "node ts/check-report.ts"
+  },
+  "dependencies": {
+    "three": "^0.186.0"
   }
 }
