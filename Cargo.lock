@@ -1204,6 +1204,7 @@ dependencies = [
  "solana-system-interface",
  "solana-transaction",
  "solana-transaction-error",
+ "tempfile",
  "toml",
  "wincode",
 ]

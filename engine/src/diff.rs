@@ -253,8 +253,42 @@ fn first_difference_offset(a: &[u8], b: &[u8]) -> usize {
         .unwrap_or(a.len().min(b.len()))
 }
 
-/// Compare two executions of the same fixture.
+/// Whether this comparison may decode account bytes into named fields, and
+/// with whose layout.
+///
+/// Generic diffing owns bytes, balances, outcomes and invocation shape. It does
+/// **not** own economics, and it must never guess a layout. Dispatching on a
+/// leading discriminator byte alone is a guess: a real SPL Stake Pool state
+/// account begins with `1`, which is also this repository's synthetic
+/// `ACCOUNT_TAG_MARKET`, so it decoded as a lending `Market`, was compared over
+/// the first 86 of its 611 bytes, and reported as identical while
+/// `total_lamports` at offset 258 changed underneath.
+///
+/// So the decoder is supplied by the caller rather than inferred. The synthetic
+/// lending corpus passes its own; a replay record passes [`FieldDecoder::None`],
+/// because its protocol adapter owns that interpretation.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum FieldDecoder {
+    /// Bytes are opaque. A change is reported as changed bytes, in full.
+    None,
+    /// The fixture lending layout, for the synthetic corpus that defines it.
+    FixtureLending,
+}
+
+/// Compare two executions of the same fixture, decoding the synthetic lending
+/// layout. For anything that is not the fixture protocol, use
+/// [`compare_with_decoder`] with [`FieldDecoder::None`].
 pub fn compare(fixture: &Fixture, v1: ExecutionResult, v2: ExecutionResult) -> StateDiff {
+    compare_with_decoder(fixture, v1, v2, FieldDecoder::FixtureLending)
+}
+
+/// Compare two executions of the same fixture under an explicit decoder.
+pub fn compare_with_decoder(
+    fixture: &Fixture,
+    v1: ExecutionResult,
+    v2: ExecutionResult,
+    decoder: FieldDecoder,
+) -> StateDiff {
     let mut differences = Vec::new();
 
     if v1.success != v2.success {
@@ -325,8 +359,13 @@ pub fn compare(fixture: &Fixture, v1: ExecutionResult, v2: ExecutionResult) -> S
             continue;
         }
 
-        let decoded_before = interpret::decode(&before.data);
-        let decoded_after = interpret::decode(&after.data);
+        let (decoded_before, decoded_after) = match decoder {
+            FieldDecoder::FixtureLending => (
+                interpret::decode(&before.data),
+                interpret::decode(&after.data),
+            ),
+            FieldDecoder::None => (Decoded::Opaque, Decoded::Opaque),
+        };
 
         let comparable = !matches!(decoded_before, Decoded::Opaque)
             && std::mem::discriminant(&decoded_before) == std::mem::discriminant(&decoded_after);
@@ -339,6 +378,19 @@ pub fn compare(fixture: &Fixture, v1: ExecutionResult, v2: ExecutionResult) -> S
                 v2: crate::hexfmt::encode(&after.data),
             });
             continue;
+        }
+
+        // A decoded layout describes a prefix. Anything past it is still real
+        // state, and reporting only the fields would let a change outside the
+        // struct vanish from a comparison that called itself complete.
+        let decoded_len = interpret::decoded_len(&decoded_before);
+        if before.data.get(decoded_len..) != after.data.get(decoded_len..) {
+            differences.push(Difference::RawDataChanged {
+                account: label.clone(),
+                offset: first_difference_offset(&before.data, &after.data),
+                v1: crate::hexfmt::encode(&before.data),
+                v2: crate::hexfmt::encode(&after.data),
+            });
         }
 
         let fields_before = interpret::fields(&decoded_before);
@@ -426,6 +478,88 @@ pub fn compare(fixture: &Fixture, v1: ExecutionResult, v2: ExecutionResult) -> S
 
 #[cfg(test)]
 mod tests {
+
+    /// A real SPL Stake Pool state account begins with `1`, which is also this
+    /// repository's synthetic `ACCOUNT_TAG_MARKET`, and is 611 bytes against a
+    /// `MARKET_LEN` of 86. Decoding it as a lending `Market` compared the first
+    /// 86 bytes and called the account identical while `total_lamports` at
+    /// offset 258 changed underneath.
+    #[test]
+    fn a_foreign_account_is_not_decoded_as_a_lending_layout() {
+        use fixture_lending_interface::{ACCOUNT_TAG_MARKET, MARKET_LEN};
+
+        let mut before = vec![0_u8; 611];
+        before[0] = ACCOUNT_TAG_MARKET;
+        let mut after = before.clone();
+        // Past the lending prefix, where a stake pool keeps its own fields.
+        after[258] ^= 0x01;
+        assert!(after.len() > MARKET_LEN && 258 > MARKET_LEN);
+
+        let differences = data_differences(&before, &after, FieldDecoder::None);
+        assert!(
+            differences
+                .iter()
+                .any(|d| matches!(d, Difference::RawDataChanged { .. })),
+            "changed bytes must be reported, got {differences:?}"
+        );
+    }
+
+    /// Even where a decoder legitimately applies, it describes a prefix. Bytes
+    /// past it are still state, and must not vanish because the struct ended.
+    #[test]
+    fn changes_past_a_decoded_prefix_are_still_reported() {
+        use fixture_lending_interface::{ACCOUNT_TAG_MARKET, MARKET_LEN};
+
+        let mut before = vec![0_u8; MARKET_LEN + 64];
+        before[0] = ACCOUNT_TAG_MARKET;
+        let mut after = before.clone();
+        after[MARKET_LEN + 10] ^= 0xFF;
+
+        let differences = data_differences(&before, &after, FieldDecoder::FixtureLending);
+        assert!(
+            differences
+                .iter()
+                .any(|d| matches!(d, Difference::RawDataChanged { .. })),
+            "a suffix-only change must survive decoding, got {differences:?}"
+        );
+    }
+
+    /// Drive one account's data through `compare` and return what it reported.
+    fn data_differences(before: &[u8], after: &[u8], decoder: FieldDecoder) -> Vec<Difference> {
+        let snapshot = |data: &[u8]| crate::types::AccountSnapshot {
+            lamports: 1,
+            owner: "11111111111111111111111111111111".to_string(),
+            data: data.to_vec(),
+            executable: false,
+            rent_epoch: 0,
+        };
+        let mut fixture =
+            crate::corpus::generate(&solana_address::Address::new_from_array([3; 32]))
+                .into_iter()
+                .next()
+                .expect("a fixture");
+        fixture.accounts = vec![crate::types::NamedAccount {
+            label: "subject".into(),
+            address: "SubjectAccount".into(),
+            account: snapshot(before),
+        }];
+
+        let result = |data: &[u8]| {
+            let mut accounts = std::collections::BTreeMap::new();
+            accounts.insert("subject".to_string(), snapshot(data));
+            crate::executor::ExecutionResult {
+                version: "v".into(),
+                success: true,
+                error: None,
+                compute_units: Some(1),
+                fee: 0,
+                logs: Vec::new(),
+                cpi_calls: Vec::new(),
+                accounts,
+            }
+        };
+        compare_with_decoder(&fixture, result(before), result(after), decoder).differences
+    }
     use super::*;
 
     #[test]

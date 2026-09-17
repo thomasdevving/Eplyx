@@ -640,6 +640,17 @@ pub trait ProtocolAdapter: Sync {
         Vec::new()
     }
 
+    /// Which decoded economic fields this adapter has promoted to the public
+    /// vocabulary, as `(account label, field)`.
+    ///
+    /// The generic layer cannot tell a decoded change that `named_findings`
+    /// already speaks for from one it silently drops. This list is how an
+    /// adapter says which is which, so a change it decodes but does not name
+    /// fails the gate as undeclarable rather than disappearing.
+    fn promoted_economic_fields(&self) -> &'static [(&'static str, &'static str)] {
+        &[]
+    }
+
     /// Named differences between one V1/V2 pair, in the finding vocabulary.
     ///
     /// Only subjects this adapter has deliberately promoted appear here. A

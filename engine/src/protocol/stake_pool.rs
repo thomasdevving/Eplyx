@@ -194,10 +194,31 @@ impl PoolOp {
 ///
 /// Each entry pairs the `summarize` field name with the account whose presence
 /// makes it measurable at all.
-const PROMOTED_SUBJECTS: [(&str, &str); 3] = [
-    ("pool_tokens_received", "destination-pool-token"),
-    ("pool_tokens_burned", "source-pool-token"),
-    ("sol_received_by_user", "destination-lamports"),
+/// `(operation, subject, the account that makes it measurable)`.
+///
+/// The operation is part of the key, not decoration. `pool-mint` is present on
+/// a deposit as well as a withdrawal, so keying on the account alone would have
+/// a deposit claim it can measure `pool_tokens_burned` - and an expectation
+/// about burning would then be judged against an observation that only mints.
+const PROMOTED_SUBJECTS: [(PoolOp, &str, &str); 4] = [
+    (
+        PoolOp::DepositSol,
+        "pool_tokens_received",
+        "destination-pool-token",
+    ),
+    // The holder's debit, which on a withdrawal includes the manager fee.
+    (
+        PoolOp::WithdrawSol,
+        "pool_tokens_debited",
+        "source-pool-token",
+    ),
+    // The burn proper: the mint's supply decrease.
+    (PoolOp::WithdrawSol, "pool_tokens_burned", "pool-mint"),
+    (
+        PoolOp::WithdrawSol,
+        "sol_received_by_user",
+        "destination-lamports",
+    ),
 ];
 
 const DEPOSIT_SOL_ROLES: [&str; DEPOSIT_SOL_ACCOUNTS] = [
@@ -612,7 +633,9 @@ impl ProtocolAdapter for StakePoolAdapter {
     /// Widened in Phase 9 from `DepositSol` alone to `DepositSol` and
     /// `WithdrawSol`, and given semantic classification.
     fn adapter_version(&self) -> u32 {
-        2
+        // 3: `pool_tokens_burned` is the mint's supply decrease. Under 2 it was
+        // the source account's debit, which included transferred fees.
+        3
     }
 
     fn semantic_action(&self, transaction: &HistoricalTransaction) -> SemanticAction {
@@ -1424,12 +1447,24 @@ impl ProtocolAdapter for StakePoolAdapter {
         // A quantity is measurable when the account it is read from is part of
         // this observation. This is a property of the observation, not of
         // whether anything about it changed.
-        for (name, required) in PROMOTED_SUBJECTS {
-            if accounts.iter().any(|named| named.label == required) {
+        let (Ok((op, _)), _) = (self.operation(transaction), ()) else {
+            return subjects;
+        };
+        for (operation, name, required) in PROMOTED_SUBJECTS {
+            if operation == op && accounts.iter().any(|named| named.label == required) {
                 subjects.extend(subject(FindingDomain::Economic, name));
             }
         }
         subjects
+    }
+
+    fn promoted_economic_fields(&self) -> &'static [(&'static str, &'static str)] {
+        &[
+            ("destination-pool-token", "amount"),
+            ("source-pool-token", "amount"),
+            ("pool-mint", "supply"),
+            ("destination-lamports", "lamports"),
+        ]
     }
 
     fn named_findings(
@@ -1487,8 +1522,14 @@ impl ProtocolAdapter for StakePoolAdapter {
 
         let before = self.summarize(accounts, v1);
         let after = self.summarize(accounts, v2);
+        let Ok((op, _)) = self.operation(transaction) else {
+            return Vec::new();
+        };
         let mut findings = Vec::new();
-        for (name, _) in PROMOTED_SUBJECTS {
+        for (operation, name, _) in PROMOTED_SUBJECTS {
+            if operation != op {
+                continue;
+            }
             let find = |fields: &[SemanticField]| {
                 fields
                     .iter()
@@ -1587,12 +1628,33 @@ impl ProtocolAdapter for StakePoolAdapter {
                 economic: true,
             });
         }
+        // What the holder's account actually lost. On a withdrawal this is the
+        // burn *plus* any manager fee transferred out of the same account, so
+        // it is not the burn and must not be named as one.
         if let Some((opening, closing)) = tokens_moved("source-pool-token") {
             fields.push(SemanticField {
-                name: "pool_tokens_burned".into(),
+                name: "pool_tokens_debited".into(),
                 value: FieldValue::quantity(opening.saturating_sub(closing), decimals),
                 economic: true,
             });
+        }
+        // The burn itself is the mint's supply decrease. Reporting the source
+        // debit under this name counted transferred fees as burned tokens, and
+        // an expectation written against supply semantics would have been
+        // evaluated against a different quantity.
+        if let Some(opening) = before("pool-mint").and_then(|m| mint_supply(&m.account.data)) {
+            if let Some(closing) = self
+                .after(result, "pool-mint")
+                .and_then(|m| mint_supply(&m.data))
+            {
+                if closing < opening {
+                    fields.push(SemanticField {
+                        name: "pool_tokens_burned".into(),
+                        value: FieldValue::quantity(opening - closing, decimals),
+                        economic: true,
+                    });
+                }
+            }
         }
         // Supply is the pool-wide counterpart: a withdrawal must destroy the
         // tokens it debited, less whatever became fee.

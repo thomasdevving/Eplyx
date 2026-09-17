@@ -59,12 +59,36 @@ is reproducible without the customer storing the evidence.
 
 ```text
 0  passed
-1  an undeclared change, or one larger than declared
-2  malformed configuration, fidelity or internal analysis failure
+1  an undeclared change, one larger than declared, or one that cannot be declared
+2  malformed configuration, fidelity or internal analysis failure,
+   including a bundle whose adapter produced no semantic coverage at all
 3  a stale declaration
 4  bundle or baseline incompatibility
 5  a declaration this corpus cannot judge
 ```
+
+## Three layers of evidence, one declarable
+
+```text
+named semantic findings     declarable in expected-changes.toml
+decoded economic changes    the adapter decoded it but has not promoted it
+structural differences      bytes, balances, outcome, invocation shape
+```
+
+Only the first can be named by an expectation. The other two still fail the
+gate, as `undeclarable_change`. That is deliberate and conservative: the
+alternative is reporting a change as absent because the vocabulary could not
+name it, which is what an earlier version of this gate did — it consumed only
+the named layer, so a protocol with no semantic surface produced empty coverage,
+empty findings and a green check over a change the replay had detected.
+
+A consequence worth stating plainly: a legitimate upgrade that moves a quantity
+no adapter has promoted **cannot currently be made to pass**. The subject has to
+be promoted deliberately first. Failing in that direction is the safe error.
+
+Empty semantic coverage is never a pass. An adapter with no emission surface
+yields `no_semantic_coverage` and exit 2, because zero findings there means "we
+did not look", not "nothing changed".
 
 Three different actions for a team, so three different codes: 1 is "the
 candidate did something you did not approve", 3 is "your approval file contains
