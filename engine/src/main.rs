@@ -1706,6 +1706,10 @@ fn bundle_build(args: BundleBuildArgs) -> Result<ExitCode> {
             selection_policy: policy,
             selection_policy_version: policy_version,
             limitations,
+            // A corpus is acquired until something reproduces it. This is the
+            // first step holding the baseline and every dependency, so it is
+            // the first step that can make "validated" true.
+            validation: bundle::Validation::AgainstBaseline,
         },
         &args.out,
     )?;

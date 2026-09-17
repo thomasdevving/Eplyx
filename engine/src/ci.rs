@@ -701,6 +701,9 @@ mod tests {
                 selection_policy: None,
                 selection_policy_version: None,
                 limitations: Vec::new(),
+                validation: crate::bundle::Validation::Skip {
+                    reason: "this fixture pins a 512-byte stand-in, not an executable program",
+                },
             },
             &scratch.join("bundle"),
         )

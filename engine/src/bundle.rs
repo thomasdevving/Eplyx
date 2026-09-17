@@ -324,6 +324,21 @@ impl CiBundle {
     }
 }
 
+/// Whether assembling this bundle also reproduces its records.
+///
+/// Not a boolean and not defaulted: the caller has to name the choice, and
+/// `Skip` has to give a reason, so a reviewer reading a diff can see when a
+/// bundle was assembled without being validated.
+#[derive(Clone, Copy, Debug)]
+pub enum Validation {
+    /// Run V1 for every record and refuse the bundle unless the original
+    /// outcome comes back. What the product path always does.
+    AgainstBaseline,
+    /// Assemble only. For callers that have already validated, and for tests
+    /// whose binaries are not executable programs.
+    Skip { reason: &'static str },
+}
+
 /// Everything a bundle is built from.
 pub struct BundleInputs<'a> {
     pub records: &'a [ReplayRecord],
@@ -334,6 +349,7 @@ pub struct BundleInputs<'a> {
     pub selection_policy: Option<String>,
     pub selection_policy_version: Option<u32>,
     pub limitations: Vec<BundledLimitation>,
+    pub validation: Validation,
 }
 
 /// Assemble an offline-executable bundle.
@@ -377,6 +393,13 @@ pub fn build(inputs: BundleInputs<'_>, out: &Path) -> Result<CiBundle> {
 
     let dependencies =
         collect_dependencies(records, inputs.dependencies, &program_id, &baseline_sha256)?;
+
+    match inputs.validation {
+        Validation::AgainstBaseline => {
+            validate_against_baseline(records, &baseline_bytes, inputs.dependencies)?
+        }
+        Validation::Skip { .. } => {}
+    }
 
     // --- write the tree -------------------------------------------------
     // The corpus store is append-only, so building into a directory that
@@ -475,6 +498,60 @@ pub fn build(inputs: BundleInputs<'_>, out: &Path) -> Result<CiBundle> {
     crate::ingest::write_json(&CiBundle::manifest_path(out), &manifest)?;
 
     CiBundle::open(out).context("verifying the bundle that was just built")
+}
+
+/// Reproduce every record under the baseline before bundling it.
+///
+/// This is what makes "validated corpus" a description rather than a hope.
+/// Acquisition publishes what it could read; selection describes what it was
+/// handed. Neither reproduces anything, so up to this point a corpus is
+/// *acquired*, not validated — and a record whose V1 does not reproduce the
+/// original post-state proves nothing about any candidate.
+///
+/// Building is the first step that holds the baseline and every dependency, so
+/// it is the first step that can actually check. It runs V1 for each record and
+/// refuses the bundle unless the original outcome comes back.
+///
+/// The replay gate at comparison time still performs this check. It is not
+/// redundant: catching it here means a corpus is never published under a name
+/// it has not earned, and a team is never handed a bundle that will fail on
+/// their first pull request for a reason that predates their candidate.
+fn validate_against_baseline(
+    records: &[ReplayRecord],
+    baseline: &[u8],
+    dependency_dir: &Path,
+) -> Result<()> {
+    let v1 = crate::executor::ProgramVersion {
+        label: "baseline".to_string(),
+        bytes: baseline.to_vec(),
+    };
+    let loaded = crate::replay::load_dependencies(records, dependency_dir)
+        .context("loading dependencies to validate the corpus")?;
+    for record in records {
+        record
+            .validate()
+            .with_context(|| format!("record {} is not a valid replay record", record.id))?;
+        let original = record
+            .execute(&v1, &loaded)
+            .with_context(|| format!("replaying record {} under the baseline", record.id))?;
+        let fidelity = record.fidelity(&original)?;
+        if !matches!(
+            fidelity,
+            crate::replay::ReplayFidelity::Exact | crate::replay::ReplayFidelity::Matched
+        ) {
+            let failures = record.fidelity_failures(&original)?;
+            bail!(
+                "record {} does not reproduce under the baseline (fidelity {fidelity:?}); a \
+                 corpus cannot be called validated while it contains it.{}",
+                record.id,
+                failures
+                    .iter()
+                    .map(|failure| format!("\n  - {failure}"))
+                    .collect::<String>()
+            );
+        }
+    }
+    Ok(())
 }
 
 /// One value, or an error naming how many there were.
@@ -694,6 +771,9 @@ mod tests {
                 dependencies: &self.dependencies,
                 selection_policy: Some("stratified-diversity".to_string()),
                 selection_policy_version: Some(1),
+                validation: Validation::Skip {
+                    reason: "these fixtures pin 512-byte stand-ins, not executable programs",
+                },
                 limitations: vec![BundledLimitation {
                     code: "failed_original_transactions_unsupported".to_string(),
                     detail: "no failure path is represented".to_string(),
@@ -941,6 +1021,25 @@ mod tests {
             .limitations
             .iter()
             .any(|l| l.code == "failed_original_transactions_unsupported"));
+    }
+
+    /// `AgainstBaseline` really executes. These fixtures pin stand-ins rather
+    /// than programs, so asking for validation must fail — which is also the
+    /// proof that `Skip` in the other tests is doing something.
+    #[test]
+    fn validation_against_the_baseline_actually_replays() {
+        let fixture = fixture("validates");
+        let inputs = BundleInputs {
+            validation: Validation::AgainstBaseline,
+            ..fixture.inputs()
+        };
+        let error = build(inputs, &fixture.scratch.join("out")).expect_err("must refuse");
+        let text = format!("{error:#}");
+        assert!(text.contains("obs-a"), "{text}");
+
+        // The same inputs assemble fine when validation is skipped, which is
+        // what makes the failure above evidence that it ran.
+        build(fixture.inputs(), &fixture.scratch.join("skipped")).expect("assembles");
     }
 
     /// A bundle that has lost its limitations is a bundle that overclaims.
