@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 440" role="img" aria-labelledby="title">
+  <title id="title">Eplyx</title>
+  <defs>
+    <linearGradient id="eplyx-mark" x1="40" y1="40" x2="370" y2="400" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset=".54" stop-color="#eeedf3"/>
+      <stop offset="1" stop-color="#c4c1d2"/>
+    </linearGradient>
+  </defs>
+  <path id="crescent" fill="url(#eplyx-mark)" d="M355 68C316 26 265 10 219 11 124 9 44 69 18 152 4 197 8 242 17 270c3 10 12 11 26 9 30-3 63-19 87-43-14-35-11-65 5-95 22-42 58-76 99-93 44-18 86-7 121 20Z"/>
+  <path id="wave" fill="url(#eplyx-mark)" d="M24 291c31 13 60 9 93-12 31-20 64-48 93-69 40-29 81-45 122-43 36 1 71 16 84 34 7 10 4 19-5 24-35 23-61 53-85 84-33 43-65 76-107 90-79 27-157-21-195-108Z"/>
+</svg>
