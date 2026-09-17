@@ -24,7 +24,7 @@
 //! baseline and every dependency binary, so a pull request needs no RPC URL, no
 //! archive key and no keypair.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
 use anyhow::{Context, Result};
@@ -76,6 +76,32 @@ pub struct CandidateRef {
     pub len: u64,
 }
 
+/// Which layer of evidence a change came from.
+///
+/// Three layers, kept distinct on purpose. Only the named layer is declarable;
+/// the other two are still evidence, and a gate that consumed only the named
+/// layer would report "no unexpected changes" for a candidate whose changes it
+/// had detected and then discarded.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum EvidenceLayer {
+    /// Decoded by the protocol adapter, but not promoted to the public
+    /// vocabulary, so no expectation can name it.
+    DecodedEconomic,
+    /// Bytes, balances, outcome or invocation shape, from the generic diff, on
+    /// an observation whose adapter named nothing at all.
+    Structural,
+}
+
+/// A real change that no expectation can currently be written against.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct UndeclarableChange {
+    pub layer: EvidenceLayer,
+    /// What changed, in its own layer's vocabulary.
+    pub description: String,
+    pub observations: Vec<String>,
+}
+
 /// How widely the corpus can speak about one subject.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct SubjectCoverage {
@@ -106,6 +132,11 @@ pub struct CiReport {
     pub bundle: BundleRef,
     pub candidate: CandidateRef,
     pub coverage: Vec<SubjectCoverage>,
+    /// Detected changes outside the declarable vocabulary. Never empty-and-
+    /// ignored: each one fails the gate, because the alternative is reporting a
+    /// change as absent because it could not be named.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub undeclarable: Vec<UndeclarableChange>,
     #[serde(flatten)]
     pub review: Review,
     pub summary: ReviewSummary,
@@ -206,6 +237,109 @@ pub fn check(
         &replay,
         &declarations,
     ))
+}
+
+/// Changes the engine detected that no expectation can name.
+///
+/// Two sources, in order of specificity. An adapter that decodes a field but has
+/// not promoted it produces a `DecodedEconomic` entry — the manager fee on a
+/// stake-pool withdrawal is exactly this. An observation whose adapter named
+/// nothing at all, yet whose bytes, balances, outcome or invocation shape
+/// moved, produces a `Structural` entry; that is the case for every protocol
+/// with no semantic surface yet, where the alternative is a green check over a
+/// change the engine plainly saw.
+///
+/// Compute is excluded, as everywhere else: any recompilation moves it.
+fn undeclarable_changes(bundle: &CiBundle, replay: &ReplayReport) -> Vec<UndeclarableChange> {
+    let promoted: BTreeSet<(&str, &str)> =
+        crate::protocol::adapter_for(&bundle.manifest().program_id)
+            .map(|adapter| adapter.promoted_economic_fields().iter().copied().collect())
+            .unwrap_or_default();
+
+    let mut decoded: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
+    let mut structural: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
+
+    let diffs: BTreeMap<&str, &crate::diff::StateDiff> = replay
+        .analysis
+        .diffs
+        .iter()
+        .map(|diff| (diff.fixture_id.as_str(), diff))
+        .collect();
+
+    for observation in &replay.observations {
+        let mut named_or_decoded = !observation.named_findings.is_empty();
+
+        for change in &observation.economic_changes {
+            if promoted.contains(&(change.account_label.as_str(), change.field.as_str())) {
+                // Already spoken for by a named finding.
+                named_or_decoded = true;
+                continue;
+            }
+            named_or_decoded = true;
+            decoded
+                .entry(format!("{} {}", change.account_label, change.field))
+                .or_default()
+                .insert(observation.id.clone());
+        }
+
+        // Only when nothing semantic spoke for this observation at all. A
+        // structural entry beside a named finding would report one economic
+        // event three times, which is the same double-counting the execution
+        // hierarchy already avoids.
+        if named_or_decoded {
+            continue;
+        }
+        let Some(diff) = diffs.get(observation.id.as_str()) else {
+            continue;
+        };
+        for difference in &diff.differences {
+            let label = match difference {
+                crate::diff::Difference::ComputeChanged { .. } => continue,
+                crate::diff::Difference::SuccessChanged { .. } => "transaction outcome".to_string(),
+                crate::diff::Difference::CpiChanged { .. } => "invocation shape".to_string(),
+                crate::diff::Difference::BalanceChanged { account, .. } => {
+                    format!("{account} lamports")
+                }
+                crate::diff::Difference::RawDataChanged { account, .. } => {
+                    format!("{account} bytes")
+                }
+                crate::diff::Difference::FieldChanged { account, field, .. } => {
+                    format!("{account} {field}")
+                }
+                crate::diff::Difference::LiquidationStatusChanged { account, .. } => {
+                    format!("{account} liquidation status")
+                }
+            };
+            structural
+                .entry(label)
+                .or_default()
+                .insert(observation.id.clone());
+        }
+    }
+
+    let mut out: Vec<UndeclarableChange> = decoded
+        .into_iter()
+        .map(|(description, observations)| UndeclarableChange {
+            layer: EvidenceLayer::DecodedEconomic,
+            description,
+            observations: observations.into_iter().collect(),
+        })
+        .chain(
+            structural
+                .into_iter()
+                .map(|(description, observations)| UndeclarableChange {
+                    layer: EvidenceLayer::Structural,
+                    description,
+                    observations: observations.into_iter().collect(),
+                }),
+        )
+        .collect();
+    out.sort_by(|a, b| {
+        a.layer
+            .cmp(&b.layer)
+            .then_with(|| a.description.cmp(&b.description))
+    });
+    out
 }
 
 /// Everything that must hold about the bundle before a single VM runs.
@@ -310,7 +444,22 @@ pub fn assemble(
     });
     coverage.sort_by(|a, b| a.observation_id.cmp(&b.observation_id));
 
-    let reviewed = review(&observed, &coverage, declarations);
+    let mut reviewed = review(&observed, &coverage, declarations);
+
+    // The other two evidence layers. Without these the gate consumes only what
+    // the adapter chose to name, and a change it decoded but did not promote
+    // disappears into a passing report.
+    let undeclarable = undeclarable_changes(bundle, replay);
+    if coverage.iter().all(|entry| entry.subjects.is_empty()) {
+        reviewed.failures.push(FailureReason::NoSemanticCoverage);
+    }
+    if !undeclarable.is_empty() {
+        reviewed.failures.push(FailureReason::UndeclarableChange);
+    }
+    // Precedence, so `failures.first()` remains the exit code: an analysis that
+    // could not be performed outranks any verdict derived from it.
+    reviewed.failures.sort();
+    reviewed.failures.dedup();
 
     let mut per_subject: BTreeMap<String, usize> = BTreeMap::new();
     for observation in &coverage {
@@ -354,6 +503,7 @@ pub fn assemble(
             sha256: candidate_sha256,
             len: candidate_len,
         },
+        undeclarable,
         coverage: per_subject
             .into_iter()
             .map(|(subject, observations)| SubjectCoverage {
@@ -462,6 +612,212 @@ mod tests {
         assert!(text.contains("Rebuild the bundle"), "{text}");
     }
 
+    /// Build a real bundle from the committed record, re-pinned to synthetic
+    /// binaries, so `assemble` can be driven without a VM.
+    fn bundle(scratch: &std::path::Path) -> crate::bundle::CiBundle {
+        use crate::dependencies::{DependencyDiscovery, ProgramDependency, ProgramSource};
+        let baseline = vec![7_u8; 512];
+        let mut record = record();
+        record.current_program_sha256 = crate::replay::hash_bytes(&baseline);
+        record.dependencies.programs = vec![ProgramDependency {
+            program_id: record.program_id.clone(),
+            source: ProgramSource::HistoricalMainnet,
+            loader: None,
+            deployed_slot: None,
+            binary_sha256: Some(crate::replay::hash_bytes(&baseline)),
+            binary_len: Some(baseline.len() as u64),
+            observed_slot: None,
+            discovered_by: vec![DependencyDiscovery::ProgramUnderTest],
+            note: None,
+        }];
+        let baseline_path = scratch.join("current.so");
+        std::fs::write(&baseline_path, &baseline).unwrap();
+        std::fs::create_dir_all(scratch.join("deps")).unwrap();
+        crate::bundle::build(
+            crate::bundle::BundleInputs {
+                records: std::slice::from_ref(&record),
+                baseline: &baseline_path,
+                dependencies: &scratch.join("deps"),
+                selection_policy: None,
+                selection_policy_version: None,
+                limitations: Vec::new(),
+            },
+            &scratch.join("bundle"),
+        )
+        .expect("bundle")
+    }
+
+    fn execution() -> crate::executor::ExecutionResult {
+        crate::executor::ExecutionResult {
+            version: "v".into(),
+            success: true,
+            error: None,
+            compute_units: Some(1),
+            fee: 0,
+            logs: Vec::new(),
+            cpi_calls: Vec::new(),
+            accounts: BTreeMap::new(),
+        }
+    }
+
+    /// A replay report with no semantic surface at all: the shape every adapter
+    /// that has not implemented emission produces.
+    ///
+    /// Built from the real constructors rather than hand-written JSON, so it
+    /// cannot drift away from the report the engine actually emits.
+    fn replay_without_semantics(
+        id: &str,
+        differences: Vec<crate::diff::Difference>,
+    ) -> ReplayReport {
+        let mut record = record();
+        record.id = id.to_string();
+        let fixture = record.fixture();
+        let diff = crate::diff::StateDiff {
+            fixture_id: id.to_string(),
+            category: fixture.category,
+            scenario: fixture.scenario.clone(),
+            notes: fixture.notes.clone(),
+            differences,
+            v1: execution(),
+            v2: execution(),
+        };
+        let observation = crate::replay::ReplayObservation {
+            id: id.to_string(),
+            source_signature: record.transaction.signature.clone(),
+            source_slot: record.transaction.slot,
+            state_source: record.state_source.clone(),
+            fidelity: crate::replay::ReplayFidelity::Matched,
+            pre_state_hash: record.pre_state_hash.clone(),
+            post_v1_state_hash: String::new(),
+            post_v2_state_hash: String::new(),
+            native_transfer_lamports: None,
+            candidate_prevented_native_transfer_lamports: None,
+            // The whole point of the fixture: the adapter named nothing.
+            economic_changes: Vec::new(),
+            economic_summary: Vec::new(),
+            economic_entity: None,
+            evaluable_subjects: Vec::new(),
+            named_findings: Vec::new(),
+            dependency_programs: Vec::new(),
+            original_cpi_graph: Vec::new(),
+            cpi_graph_changed: false,
+            cpi_graph_v1: Vec::new(),
+            cpi_graph_v2: Vec::new(),
+        };
+        ReplayReport {
+            schema_version: crate::replay::REPLAY_SCHEMA,
+            economic_findings: 0,
+            timings: Vec::new(),
+            observations: vec![observation],
+            analysis: crate::report::Report::new(
+                record.program_id.clone(),
+                "v1".to_string(),
+                "v2".to_string(),
+                std::slice::from_ref(&fixture),
+                vec![diff],
+            ),
+            native_impact: None,
+        }
+    }
+
+    /// The exact failure the audit reproduced: an adapter with no semantic
+    /// surface produced empty coverage and empty findings, and the gate called
+    /// that a clean analysis while the replay had detected a change.
+    #[test]
+    fn empty_semantic_coverage_is_never_a_pass() {
+        let scratch = tempfile::tempdir().unwrap();
+        let bundle = bundle(scratch.path());
+        let replay = replay_without_semantics(
+            "obs-1",
+            vec![crate::diff::Difference::RawDataChanged {
+                account: "destination".into(),
+                offset: 64,
+                v1: "00".into(),
+                v2: "01".into(),
+            }],
+        );
+
+        let report = assemble(
+            &bundle,
+            "candidate".to_string(),
+            1,
+            &replay,
+            &ExpectationFile::empty(),
+        );
+        assert!(
+            report.coverage.is_empty(),
+            "no adapter surface, by construction"
+        );
+        assert!(
+            !report.summary.passed,
+            "a pass here means 'we did not look', not 'nothing changed'"
+        );
+        assert!(report
+            .summary
+            .failure_reasons
+            .contains(&FailureReason::NoSemanticCoverage));
+        assert_eq!(report.summary.exit_code, 2);
+    }
+
+    /// A change the generic layer saw, on an observation nothing semantic spoke
+    /// for, must survive into the report rather than being dropped at the CI
+    /// boundary.
+    #[test]
+    fn a_structural_change_with_no_semantic_surface_is_reported() {
+        let scratch = tempfile::tempdir().unwrap();
+        let bundle = bundle(scratch.path());
+        let replay = replay_without_semantics(
+            "obs-1",
+            vec![crate::diff::Difference::SuccessChanged {
+                v1_success: true,
+                v2_success: false,
+                v1_error: None,
+                v2_error: Some("failed".into()),
+            }],
+        );
+        let report = assemble(
+            &bundle,
+            "candidate".to_string(),
+            1,
+            &replay,
+            &ExpectationFile::empty(),
+        );
+        assert_eq!(report.undeclarable.len(), 1, "{:#?}", report.undeclarable);
+        assert_eq!(report.undeclarable[0].layer, EvidenceLayer::Structural);
+        assert_eq!(report.undeclarable[0].description, "transaction outcome");
+        assert!(!report.summary.passed);
+    }
+
+    /// Compute moves on any recompilation and is not a behavioural change.
+    #[test]
+    fn a_compute_only_difference_is_not_undeclarable() {
+        let scratch = tempfile::tempdir().unwrap();
+        let bundle = bundle(scratch.path());
+        let replay = replay_without_semantics(
+            "obs-1",
+            vec![crate::diff::Difference::ComputeChanged {
+                v1: 1000,
+                v2: 1200,
+                delta: 200,
+                pct_bps: 2000,
+            }],
+        );
+        let report = assemble(
+            &bundle,
+            "candidate".to_string(),
+            1,
+            &replay,
+            &ExpectationFile::empty(),
+        );
+        assert!(report.undeclarable.is_empty());
+        // Coverage is still empty, so the run still cannot be called clean -
+        // but not because of compute.
+        assert_eq!(
+            report.summary.failure_reasons,
+            vec![FailureReason::NoSemanticCoverage]
+        );
+    }
+
     #[test]
     fn exit_codes_are_the_documented_ones() {
         assert_eq!(EXIT_PASSED, 0);
@@ -481,8 +837,22 @@ mod tests {
         assert_eq!(FailureReason::UnevaluableExpectation.exit_code(), 5);
     }
 
+    /// A consumer has to be able to see which vocabulary a result speaks, so
+    /// the report carries it rather than leaving it implicit.
     #[test]
     fn the_semantic_schema_is_reported_so_a_consumer_can_check_it() {
-        assert_eq!(SEMANTIC_SCHEMA_VERSION, 1);
+        let scratch = tempfile::tempdir().unwrap();
+        let bundle = bundle(scratch.path());
+        let report = assemble(
+            &bundle,
+            "candidate".to_string(),
+            1,
+            &replay_without_semantics("obs-1", Vec::new()),
+            &ExpectationFile::empty(),
+        );
+        assert_eq!(
+            report.bundle.semantic_schema_version,
+            SEMANTIC_SCHEMA_VERSION
+        );
     }
 }

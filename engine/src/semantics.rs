@@ -45,7 +45,15 @@ use crate::protocol::TokenQuantity;
 /// The meaning of the vocabulary below, not the code that produces it.
 ///
 /// Bumped when a subject's meaning changes, never when an adapter is fixed.
-pub const SEMANTIC_SCHEMA_VERSION: u32 = 1;
+///
+/// 2: `pool_tokens_burned` is the mint's supply decrease. Under 1 it was the
+/// source account's debit, which on a withdrawal includes a manager fee
+/// transferred to another account — so an expectation written against burn or
+/// supply semantics was evaluated against a different quantity. The holder's
+/// debit is still available, under `pool_tokens_debited`. Expectation files
+/// written against schema 1 are refused rather than reinterpreted, which is
+/// what this constant exists for.
+pub const SEMANTIC_SCHEMA_VERSION: u32 = 2;
 
 /// Which axis of behaviour a finding is about.
 ///

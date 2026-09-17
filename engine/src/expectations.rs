@@ -8,6 +8,7 @@
 //!
 //! ```toml
 //! version = 1
+//! semantic_schema_version = 2
 //!
 //! [[change]]
 //! protocol = "spl-stake-pool"
@@ -219,6 +220,7 @@ mod tests {
 
     const DEPOSIT_FEE: &str = r#"
 version = 1
+semantic_schema_version = 2
 
 [[change]]
 protocol = "spl-stake-pool"
@@ -246,7 +248,8 @@ reason = "Approved deposit fee increase from 0.10% to 0.25%"
     /// A file that declares nothing is the normal state of a passing gate.
     #[test]
     fn a_file_with_no_declarations_is_valid() {
-        let file = ExpectationFile::parse("version = 1\n").expect("parses");
+        let file =
+            ExpectationFile::parse("version = 1\nsemantic_schema_version = 2\n").expect("parses");
         assert!(file.changes.is_empty());
     }
 
@@ -294,7 +297,7 @@ reason = "Approved deposit fee increase from 0.10% to 0.25%"
 
     #[test]
     fn two_declarations_for_one_fingerprint_are_refused() {
-        let text = format!("{DEPOSIT_FEE}\n{}", DEPOSIT_FEE.replace("version = 1", ""));
+        let text = format!("{DEPOSIT_FEE}\n{}", declarations_only(DEPOSIT_FEE));
         let error = ExpectationFile::parse(&text).expect_err("must refuse");
         assert!(
             format!("{error:#}").contains("one fingerprint has one declaration"),
@@ -331,22 +334,46 @@ reason = "Approved deposit fee increase from 0.10% to 0.25%"
     /// than reinterpreted: a subject name may no longer mean the same quantity.
     #[test]
     fn a_different_semantic_schema_is_refused() {
-        let text = DEPOSIT_FEE.replace("version = 1", "version = 1\nsemantic_schema_version = 2");
+        let text = DEPOSIT_FEE.replace(
+            "semantic_schema_version = 2",
+            &format!("semantic_schema_version = {}", SEMANTIC_SCHEMA_VERSION + 1),
+        );
         let error = ExpectationFile::parse(&text).expect_err("must refuse");
+        let reported = format!("{error:#}");
         assert!(
-            format!("{error:#}").contains("semantic schema 2"),
-            "{error:#}"
+            reported.contains(&format!("semantic schema {}", SEMANTIC_SCHEMA_VERSION + 1)),
+            "{reported}"
         );
     }
 
     /// An absent `semantic_schema_version` means schema 1 forever, not
-    /// "whatever this build happens to speak". Otherwise the day the vocabulary
-    /// moves to 2, every untouched file is silently reinterpreted.
+    /// "whatever this build happens to speak".
+    ///
+    /// The vocabulary has since moved to 2, so this is now observable end to
+    /// end: a file written before the move and left untouched is *refused*
+    /// rather than silently reinterpreted under the new meaning. That is the
+    /// entire purpose of the constant being a literal.
     #[test]
     fn an_absent_semantic_schema_means_schema_one() {
-        let file = ExpectationFile::parse(DEPOSIT_FEE).expect("parses");
-        assert_eq!(file.semantic_schema_version, ASSUMED_SEMANTIC_SCHEMA);
         assert_eq!(ASSUMED_SEMANTIC_SCHEMA, 1);
+        let without = DEPOSIT_FEE.replace("semantic_schema_version = 2\n", "");
+        assert!(!without.contains("semantic_schema_version"));
+        let error = ExpectationFile::parse(&without).expect_err("must refuse");
+        assert!(
+            format!("{error:#}").contains("semantic schema 1"),
+            "{error:#}"
+        );
+    }
+
+    /// Strip the file-level header so a fixture can be concatenated onto
+    /// another without duplicating keys.
+    fn declarations_only(text: &str) -> String {
+        text.lines()
+            .filter(|line| {
+                !line.starts_with("version =") && !line.starts_with("semantic_schema_version =")
+            })
+            .collect::<Vec<_>>()
+            .join("\n")
     }
 
     #[test]

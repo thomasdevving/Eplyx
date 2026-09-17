@@ -274,6 +274,19 @@ pub fn explain(field: &str, before: &FieldValue, after: &FieldValue) -> Option<S
     }
 }
 
+/// How many leading bytes a decoded layout actually describes.
+///
+/// Used by the generic diff to prove that everything past the struct is still
+/// compared: a decoder that covers a prefix must not be mistaken for one that
+/// covers the account.
+pub fn decoded_len(decoded: &Decoded) -> usize {
+    match decoded {
+        Decoded::Market(_) => MARKET_LEN,
+        Decoded::Position(_) => POSITION_LEN,
+        Decoded::Opaque => 0,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

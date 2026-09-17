@@ -42,6 +42,7 @@ echo "  bundle $BSHA"
 # Declarations used by the cases below.
 cat > "$WORK/expect/bounded.toml" <<'EOF'
 version = 1
+semantic_schema_version = 2
 [[change]]
 protocol = "spl-stake-pool"
 action   = "deposit_sol"
@@ -71,6 +72,7 @@ reason = "WithdrawSol is intentionally removed in upgrade v3"
 EOF
 cat > "$WORK/expect/stale.toml" <<'EOF'
 version = 1
+semantic_schema_version = 2
 [[change]]
 protocol = "spl-stake-pool"
 action   = "withdraw_sol"
@@ -82,6 +84,7 @@ reason = "We restored WithdrawSol in this release"
 EOF
 cat > "$WORK/expect/unevaluable.toml" <<'EOF'
 version = 1
+semantic_schema_version = 2
 [[change]]
 protocol = "spl-stake-pool"
 action   = "deposit_sol"
@@ -111,8 +114,12 @@ run_of()  { python3 -c "import json,sys;print(json.loads(sys.stdin.read()).get('
 echo "== gate outcomes =="
 BODY=$(post "$BUNDLE/binaries/current.so");                         check "A baseline candidate"        "$(echo "$BODY" | code_of)" 0
 BODY=$(post "$CANDIDATE_REGRESSED");                                check "B undeclared regression"     "$(echo "$BODY" | code_of)" 1
+# C: every *named* finding is declared and inside its bounds, and the gate still
+# fails - because this candidate also moves the manager fee, the reserve and the
+# pool's own totals, none of which any expectation can name. Reporting that as a
+# pass is exactly the false green an audit found in an earlier build.
 BODY=$(post "$CANDIDATE_REGRESSED" "$WORK/expect/bounded.toml")
-RUN_C=$(echo "$BODY" | run_of);                                     check "C declared and bounded"      "$(echo "$BODY" | code_of)" 0
+RUN_C=$(echo "$BODY" | run_of);                                     check "C named findings declared, rest undeclarable" "$(echo "$BODY" | code_of)" 1
 BODY=$(post "$BUNDLE/binaries/current.so" "$WORK/expect/stale.toml");        check "D stale declaration" "$(echo "$BODY" | code_of)" 3
 BODY=$(post "$BUNDLE/binaries/current.so" "$WORK/expect/unevaluable.toml");  check "E unevaluable"       "$(echo "$BODY" | code_of)" 5
 

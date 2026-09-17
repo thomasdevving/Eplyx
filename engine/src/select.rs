@@ -1143,6 +1143,9 @@ mod tests {
         let corpus = select(&population(3), 3, &Default::default()).unwrap();
         assert_eq!(corpus.selection_policy_version, SELECTION_POLICY_VERSION);
         assert_eq!(corpus.selection_policy, "stratified-diversity");
-        assert_eq!(corpus.adapter_version, Some(2));
+        assert_eq!(
+            corpus.adapter_version,
+            crate::protocol::adapter_for(&base().program_id).map(|a| a.adapter_version()),
+        );
     }
 }

@@ -1302,7 +1302,19 @@ pub fn compare_with_dependencies(
             cpi_graph_v2: cpi_graph(&candidate.cpi_calls),
         });
         let fixture = record.fixture();
-        diffs.push(crate::diff::compare(&fixture, original, candidate));
+        // Who owns this record's economics decides whether the generic layer
+        // may decode at all. A record with an adapter has one: the adapter
+        // names its quantities, and the generic layer must compare bytes
+        // without pretending to understand them. A record without one is the
+        // fixture protocol or the bounded pre-adapter path, which does own the
+        // lending layout and whose economics come from exactly that decoder.
+        let decoder = match record.adapter() {
+            Some(_) => crate::diff::FieldDecoder::None,
+            None => crate::diff::FieldDecoder::FixtureLending,
+        };
+        diffs.push(crate::diff::compare_with_decoder(
+            &fixture, original, candidate, decoder,
+        ));
         fixtures.push(fixture);
     }
     let native_impact = (v1_transferred_lamports > 0).then_some(NativeReplayImpact {

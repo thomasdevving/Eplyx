@@ -174,6 +174,12 @@ pub struct UnmatchedExpectation {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum FailureReason {
+    /// The corpus and adapter produced no semantic coverage at all, so a pass
+    /// would mean "we did not look", not "nothing changed".
+    NoSemanticCoverage,
+    /// A change the engine detected but the public vocabulary cannot name, so
+    /// it cannot be declared and must not be silently accepted.
+    UndeclarableChange,
     /// A declaration this corpus cannot judge. Eplyx cannot prove whether the
     /// approval still applies.
     UnevaluableExpectation,
@@ -196,14 +202,22 @@ impl FailureReason {
     /// fidelity error, and a bundle or baseline incompatibility - and abort it.
     pub fn exit_code(self) -> u8 {
         match self {
+            // The analysis could not be performed meaningfully, which is an
+            // analysis failure rather than a verdict on the candidate.
+            Self::NoSemanticCoverage => 2,
             Self::UnevaluableExpectation => 5,
             Self::StaleExpectation => 3,
-            Self::UndeclaredChange => 1,
+            // Both are "the candidate did something nobody approved". One could
+            // have been declared and was not; the other cannot be declared at
+            // all yet.
+            Self::UndeclaredChange | Self::UndeclarableChange => 1,
         }
     }
 
     pub fn as_str(self) -> &'static str {
         match self {
+            Self::NoSemanticCoverage => "no_semantic_coverage",
+            Self::UndeclarableChange => "undeclarable_change",
             Self::UnevaluableExpectation => "unevaluable_expectation",
             Self::StaleExpectation => "stale_expectation",
             Self::UndeclaredChange => "undeclared_change",
@@ -544,12 +558,23 @@ mod tests {
         }
     }
 
+    /// Strip the file-level header so a fixture can be concatenated.
+    fn declarations_only(text: &str) -> String {
+        text.lines()
+            .filter(|line| {
+                !line.starts_with("version =") && !line.starts_with("semantic_schema_version =")
+            })
+            .collect::<Vec<_>>()
+            .join("\n")
+    }
+
     fn expectations(toml: &str) -> ExpectationFile {
         ExpectationFile::parse(toml).expect("valid expectations")
     }
 
     const DECLARE_SHARES: &str = r#"
 version = 1
+semantic_schema_version = 2
 [[change]]
 protocol = "spl-stake-pool"
 action   = "deposit_sol"
@@ -563,6 +588,7 @@ reason = "Approved deposit fee increase"
 
     const DECLARE_REMOVAL: &str = r#"
 version = 1
+semantic_schema_version = 2
 [[change]]
 protocol = "spl-stake-pool"
 action   = "withdraw_sol"
@@ -790,7 +816,7 @@ reason = "WithdrawSol is intentionally removed in upgrade v3"
         let both = format!(
             "{}\n{}",
             DECLARE_REMOVAL.trim(),
-            DECLARE_SHARES.replace("version = 1", "").trim()
+            declarations_only(DECLARE_SHARES).trim()
         );
         let review = review(&[], &[coverage("o1", &[REVERTS])], &expectations(&both));
         let statuses: BTreeSet<ReviewStatus> = review.unmatched.iter().map(|e| e.status).collect();
@@ -1141,7 +1167,7 @@ reason = "WithdrawSol is intentionally removed in upgrade v3"
             "{}\n{}\n{}",
             DECLARE_REMOVAL.trim(),
             // stale: covered, not happening
-            DECLARE_SHARES.replace("version = 1", "").trim(),
+            declarations_only(DECLARE_SHARES).trim(),
             r#"
 [[change]]
 protocol = "spl-stake-pool"
