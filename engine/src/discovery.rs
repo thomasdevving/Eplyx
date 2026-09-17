@@ -421,6 +421,37 @@ pub fn replay_eligibility(
     source: Option<&ReplayStateSource>,
 ) -> ReplayEligibility {
     let kind = interaction_type(transaction, program);
+
+    // Where an adapter owns this program, *it* defines the replayable contract,
+    // and discovery must not answer a question it does not own. The blanket
+    // rejection below is the pre-adapter contract: one top-level instruction,
+    // no inner instructions. Applying it to an adapter program labelled both
+    // committed stake-pool records `unsupported_cpi` while replay accepted and
+    // reproduced them, so discovery and replay disagreed about the same
+    // transaction.
+    if let Some(adapter) = crate::protocol::adapter_for(program) {
+        if adapter.accept(transaction).is_err() {
+            return ReplayEligibility::UnsupportedTransaction;
+        }
+        if !transaction.success {
+            return ReplayEligibility::UnsupportedTransaction;
+        }
+        if transaction.version != "legacy" && transaction.loaded_address_count != 0 {
+            return ReplayEligibility::UnsupportedTransaction;
+        }
+        if !transaction.inner_instructions.is_empty() && !adapter.supports_cpi() {
+            return ReplayEligibility::UnsupportedCpi;
+        }
+        return match source {
+            Some(ReplayStateSource::ControlledSnapshot | ReplayStateSource::HistoricalArchive) => {
+                ReplayEligibility::HistoricalStateReady
+            }
+            Some(ReplayStateSource::Reconstructed) => ReplayEligibility::ReconstructedReady,
+            Some(ReplayStateSource::CurrentApproximation) => ReplayEligibility::ApproximateOnly,
+            None => ReplayEligibility::MissingState,
+        };
+    }
+
     if kind == InteractionType::CpiInteraction || !transaction.inner_instructions.is_empty() {
         return ReplayEligibility::UnsupportedCpi;
     }

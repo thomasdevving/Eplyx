@@ -58,6 +58,22 @@ The deposit figure is a property of transaction topology, not of the protocol:
 83.3% of observed deposits are Jito-tipped and therefore carry the rent-paying
 credit above. An unmeasured population is reported as absent, never as zero.
 
+## Acquired, then validated
+
+"Validated" is earned at a specific step, and it is not acquisition.
+
+```text
+historical acquire   publishes what it could read      acquired
+corpus select        describes what it was handed      acquired
+bundle build         replays V1 for every record       validated
+```
+
+Only the last holds the baseline and every dependency, so only the last can
+check. It refuses a bundle containing a record whose V1 does not reproduce the
+original post-state, naming the record and the mismatch. Until then the artifact
+is an acquired corpus, and calling it validated would be a claim nothing had
+tested.
+
 ## Selection
 
 `corpus select` is deterministic and uses no model, no sampling and no
