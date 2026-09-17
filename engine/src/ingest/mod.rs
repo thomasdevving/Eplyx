@@ -248,6 +248,19 @@ pub fn discover_bounded_with_concurrency(
                                 }
                                 Err(error) => return Err(error),
                             };
+                            // A message this build cannot represent is
+                            // observed activity, not a fault. Asked before
+                            // normalizing, so it is counted rather than thrown.
+                            if transactions::message_version(&raw).is_none() {
+                                return Ok(Err(UnreadableTransaction {
+                                    signature: signature.clone(),
+                                    slot: *slot,
+                                    reason: format!(
+                                        "message version {} is newer than this build reads",
+                                        raw["version"]
+                                    ),
+                                }));
+                            }
                             let tx = transactions::normalize(&raw)
                                 .with_context(|| format!("normalizing {signature}"))?;
                             anyhow::ensure!(
@@ -439,6 +452,7 @@ pub fn build_corpus(
 #[cfg(test)]
 mod version_ceiling_tests {
     use super::*;
+    use serde_json::Value;
 
     /// A node refusing one transaction's version must not read as a transport
     /// failure. It ended a whole scan over a single message before this.
@@ -463,6 +477,44 @@ mod version_ceiling_tests {
                 "treated {other} as a version refusal"
             );
         }
+    }
+
+    /// Every version the normalizer accepts, and nothing beyond it.
+    ///
+    /// The ceiling asked of the RPC is deliberately higher than what this build
+    /// can represent: seeing a transaction is how it gets counted, and
+    /// representing one is a separate question answered here.
+    #[test]
+    fn the_versions_this_build_reads_are_legacy_and_v0() {
+        use serde_json::json;
+        assert_eq!(
+            transactions::message_version(&json!({ "version": Value::Null })),
+            Some("legacy")
+        );
+        assert_eq!(
+            transactions::message_version(&json!({ "version": "legacy" })),
+            Some("legacy")
+        );
+        assert_eq!(
+            transactions::message_version(&json!({ "version": 0 })),
+            Some("v0")
+        );
+        for newer in [
+            json!({ "version": 1 }),
+            json!({ "version": 2 }),
+            json!({ "version": "v1" }),
+        ] {
+            assert_eq!(
+                transactions::message_version(&newer),
+                None,
+                "claimed to read {newer}"
+            );
+        }
+        assert!(
+            u64::from(MAX_SUPPORTED_TRANSACTION_VERSION) > 0,
+            "the RPC ceiling must exceed what can be represented, or newer \
+             activity is never even observed"
+        );
     }
 
     /// The two paths that fetch transactions must ask for the same thing.
