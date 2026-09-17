@@ -251,10 +251,7 @@ pub fn check(
 ///
 /// Compute is excluded, as everywhere else: any recompilation moves it.
 fn undeclarable_changes(bundle: &CiBundle, replay: &ReplayReport) -> Vec<UndeclarableChange> {
-    let promoted: BTreeSet<(&str, &str)> =
-        crate::protocol::adapter_for(&bundle.manifest().program_id)
-            .map(|adapter| adapter.promoted_economic_fields().iter().copied().collect())
-            .unwrap_or_default();
+    let adapter = crate::protocol::adapter_for(&bundle.manifest().program_id);
 
     let mut decoded: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
     let mut structural: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
@@ -267,41 +264,76 @@ fn undeclarable_changes(bundle: &CiBundle, replay: &ReplayReport) -> Vec<Undecla
         .collect();
 
     for observation in &replay.observations {
-        let mut named_or_decoded = !observation.named_findings.is_empty();
+        // What the findings *actually emitted for this observation* account
+        // for. Not a static list: `pool-mint/supply` is the burn on a
+        // withdrawal and a by-product of the mint on a deposit, and treating it
+        // as spoken for either way suppressed it even when nothing was named.
+        let explained: BTreeSet<(&str, &str)> = observation
+            .named_findings
+            .iter()
+            .filter_map(|finding| {
+                adapter.and_then(|a| a.decoded_source_of(finding.fingerprint.subject.as_str()))
+            })
+            .collect();
+        let outcome_named = observation
+            .named_findings
+            .iter()
+            .any(|f| f.fingerprint.domain == crate::semantics::FindingDomain::Execution);
 
+        // Every decoded change, whether a finding named it or it is reported
+        // below as undeclarable. Either way it is *visible in the report*, and
+        // the structural layer exists to catch what is not - repeating it as
+        // raw bytes would describe one event twice.
+        let mut reported: BTreeSet<(&str, &str)> = BTreeSet::new();
         for change in &observation.economic_changes {
-            if promoted.contains(&(change.account_label.as_str(), change.field.as_str())) {
-                // Already spoken for by a named finding.
-                named_or_decoded = true;
+            let key = (change.account_label.as_str(), change.field.as_str());
+            reported.insert(key);
+            if explained.contains(&key) {
                 continue;
             }
-            named_or_decoded = true;
             decoded
                 .entry(format!("{} {}", change.account_label, change.field))
                 .or_default()
                 .insert(observation.id.clone());
         }
+        let accounted_accounts: BTreeSet<&str> = reported.iter().map(|(label, _)| *label).collect();
 
-        // Only when nothing semantic spoke for this observation at all. A
-        // structural entry beside a named finding would report one economic
-        // event three times, which is the same double-counting the execution
-        // hierarchy already avoids.
-        if named_or_decoded {
-            continue;
-        }
+        // Structural evidence is examined for every observation. Suppressing it
+        // wholesale as soon as anything was named let a candidate hide an
+        // unrelated mutation behind one declared change: altering a manager key
+        // while also reducing a share calculation is two things, and only one
+        // of them is nameable.
         let Some(diff) = diffs.get(observation.id.as_str()) else {
             continue;
         };
         for difference in &diff.differences {
             let label = match difference {
+                // Any recompilation moves compute.
                 crate::diff::Difference::ComputeChanged { .. } => continue,
-                crate::diff::Difference::SuccessChanged { .. } => "transaction outcome".to_string(),
+                crate::diff::Difference::SuccessChanged { .. } => {
+                    if outcome_named {
+                        continue;
+                    }
+                    "transaction outcome".to_string()
+                }
                 crate::diff::Difference::CpiChanged { .. } => "invocation shape".to_string(),
                 crate::diff::Difference::BalanceChanged { account, .. } => {
+                    if reported.contains(&(account.as_str(), "lamports")) {
+                        continue;
+                    }
                     format!("{account} lamports")
                 }
-                crate::diff::Difference::RawDataChanged { account, .. } => {
-                    format!("{account} bytes")
+                crate::diff::Difference::RawDataChanged {
+                    account, v1, v2, ..
+                } => {
+                    // Bytes are explained only where an economic finding
+                    // demonstrably covers them. A decoded field describes a
+                    // range; anything differing outside every such range is
+                    // state nothing named.
+                    match unexplained_offset(adapter, account, v1, v2, &accounted_accounts) {
+                        None => continue,
+                        Some(offset) => format!("{account} bytes at offset {offset}"),
+                    }
                 }
                 crate::diff::Difference::FieldChanged { account, field, .. } => {
                     format!("{account} {field}")
@@ -340,6 +372,41 @@ fn undeclarable_changes(bundle: &CiBundle, replay: &ReplayReport) -> Vec<Undecla
             .then_with(|| a.description.cmp(&b.description))
     });
     out
+}
+
+/// The first differing byte an economic finding does not account for.
+///
+/// `None` means every difference falls inside a field the adapter decoded *and*
+/// reported a change for on this account. Any other byte belongs to state the
+/// adapter does not interpret, so no finding can speak for it.
+fn unexplained_offset(
+    adapter: Option<&'static dyn crate::protocol::ProtocolAdapter>,
+    account: &str,
+    v1_hex: &str,
+    v2_hex: &str,
+    accounted_accounts: &BTreeSet<&str>,
+) -> Option<usize> {
+    let (Ok(before), Ok(after)) = (crate::hexfmt::decode(v1_hex), crate::hexfmt::decode(v2_hex))
+    else {
+        // Undecodable evidence is not evidence of nothing.
+        return Some(0);
+    };
+    if before.len() != after.len() {
+        return Some(before.len().min(after.len()));
+    }
+    let ranges = match adapter {
+        Some(adapter) if accounted_accounts.contains(account) => {
+            adapter.decoded_byte_ranges(account)
+        }
+        // Nothing was reported for this account, so nothing explains any of it.
+        _ => &[],
+    };
+    before
+        .iter()
+        .zip(after.iter())
+        .enumerate()
+        .find(|(offset, (a, b))| a != b && !ranges.iter().any(|r| r.contains(offset)))
+        .map(|(offset, _)| offset)
 }
 
 /// Everything that must hold about the bundle before a single VM runs.
@@ -879,6 +946,174 @@ mod tests {
             report.summary.failure_reasons,
             vec![FailureReason::NoSemanticCoverage]
         );
+    }
+
+    /// Build a replay report for one stake-pool observation: a named finding
+    /// plus whatever decoded and structural evidence the caller specifies.
+    fn replay_with(
+        named: Vec<crate::semantics::NamedFinding>,
+        economic: Vec<crate::protocol::EconomicChange>,
+        differences: Vec<crate::diff::Difference>,
+    ) -> ReplayReport {
+        let mut replay = replay_without_semantics("obs-1", differences);
+        replay.observations[0].named_findings = named;
+        replay.observations[0].economic_changes = economic;
+        replay.observations[0].evaluable_subjects = vec![
+            "spl-stake-pool/deposit_sol/economic/pool_tokens_received/decreased"
+                .parse::<crate::semantics::FindingFingerprint>()
+                .expect("a valid fingerprint")
+                .evaluable_subject(),
+        ];
+        replay
+    }
+
+    fn received_finding() -> crate::semantics::NamedFinding {
+        crate::semantics::NamedFinding {
+            fingerprint: "spl-stake-pool/deposit_sol/economic/pool_tokens_received/decreased"
+                .parse()
+                .unwrap(),
+            baseline: Some(crate::semantics::SemanticValue::quantity(100_000, 9)),
+            candidate: Some(crate::semantics::SemanticValue::quantity(99_900, 9)),
+            relative_delta_bps: None,
+            severity: crate::diff::Severity::High,
+        }
+    }
+
+    fn economic(label: &str, field: &str) -> crate::protocol::EconomicChange {
+        crate::protocol::EconomicChange {
+            account_label: label.to_string(),
+            account_kind: "stake-pool".to_string(),
+            field: field.to_string(),
+            v1: "1".to_string(),
+            v2: "2".to_string(),
+            delta: None,
+        }
+    }
+
+    /// One declared change must not launder an unrelated mutation. A candidate
+    /// that reduces the shares a depositor receives *and* rewrites a manager key
+    /// has done two things; suppressing all structural evidence because
+    /// something was named hid the second behind the first.
+    #[test]
+    fn a_named_finding_does_not_hide_an_unrelated_byte_change() {
+        let scratch = tempfile::tempdir().unwrap();
+        let bundle = bundle(scratch.path());
+
+        // Byte 1 is inside the pool's manager key, far outside the fields the
+        // adapter decodes.
+        let mut before = vec![0_u8; 611];
+        before[0] = 1;
+        let mut after = before.clone();
+        after[1] ^= 0xFF;
+
+        let replay = replay_with(
+            vec![received_finding()],
+            vec![economic("destination-pool-token", "amount")],
+            vec![crate::diff::Difference::RawDataChanged {
+                account: "stake-pool".into(),
+                offset: 1,
+                v1: crate::hexfmt::encode(&before),
+                v2: crate::hexfmt::encode(&after),
+            }],
+        );
+        let report = assemble(
+            &bundle,
+            "candidate".to_string(),
+            1,
+            &replay,
+            &ExpectationFile::empty(),
+        );
+        assert!(
+            report
+                .undeclarable
+                .iter()
+                .any(|u| u.description.contains("stake-pool bytes")),
+            "{:#?}",
+            report.undeclarable
+        );
+        assert!(!report.summary.passed);
+    }
+
+    /// The counterpart: bytes a reported economic change demonstrably covers
+    /// are not reported again. `total_lamports` lives at 258.
+    #[test]
+    fn bytes_a_reported_change_covers_are_not_reported_twice() {
+        let scratch = tempfile::tempdir().unwrap();
+        let bundle = bundle(scratch.path());
+
+        let mut before = vec![0_u8; 611];
+        before[0] = 1;
+        let mut after = before.clone();
+        after[258] ^= 0xFF;
+
+        let replay = replay_with(
+            vec![crate::semantics::NamedFinding {
+                fingerprint: "spl-stake-pool/withdraw_sol/economic/pool_tokens_burned/decreased"
+                    .parse()
+                    .unwrap(),
+                baseline: None,
+                candidate: None,
+                relative_delta_bps: None,
+                severity: crate::diff::Severity::High,
+            }],
+            vec![economic("pool-mint", "supply")],
+            vec![crate::diff::Difference::RawDataChanged {
+                account: "stake-pool".into(),
+                offset: 258,
+                v1: crate::hexfmt::encode(&before),
+                v2: crate::hexfmt::encode(&after),
+            }],
+        );
+        let report = assemble(
+            &bundle,
+            "candidate".to_string(),
+            1,
+            &replay,
+            &ExpectationFile::empty(),
+        );
+        // The mint change is named, so it is not undeclarable; the stake-pool
+        // bytes are not, because nothing was reported for that account.
+        assert!(
+            report
+                .undeclarable
+                .iter()
+                .any(|u| u.description.contains("stake-pool bytes")),
+            "{:#?}",
+            report.undeclarable
+        );
+    }
+
+    /// A decoded change is suppressed only when a finding was actually emitted
+    /// for it on this observation. A static promoted list said `pool-mint`
+    /// supply was spoken for on every operation, including when nothing named
+    /// it, so a candidate that only moved the mint passed.
+    #[test]
+    fn a_promoted_field_still_reports_when_nothing_named_it() {
+        let scratch = tempfile::tempdir().unwrap();
+        let bundle = bundle(scratch.path());
+        let replay = replay_with(
+            Vec::new(),
+            vec![economic("pool-mint", "supply")],
+            Vec::new(),
+        );
+        let report = assemble(
+            &bundle,
+            "candidate".to_string(),
+            1,
+            &replay,
+            &ExpectationFile::empty(),
+        );
+        assert_eq!(
+            report
+                .undeclarable
+                .iter()
+                .filter(|u| u.description == "pool-mint supply")
+                .count(),
+            1,
+            "{:#?}",
+            report.undeclarable
+        );
+        assert!(!report.summary.passed);
     }
 
     #[test]

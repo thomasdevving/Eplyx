@@ -148,6 +148,57 @@ pub fn render(report: &CiReport) -> String {
         }
     }
 
+    if !report.undeclarable.is_empty() {
+        let _ = writeln!(out, "### Changes that cannot be declared\n");
+        let _ = writeln!(
+            out,
+            "Detected, and outside the vocabulary an expectation can name. They cannot be \
+             approved in `expected-changes.toml`; the subject has to be promoted deliberately \
+             first.\n"
+        );
+        let _ = writeln!(out, "| Layer | Change | Observations |");
+        let _ = writeln!(out, "|---|---|---:|");
+        for change in &report.undeclarable {
+            let layer = match change.layer {
+                crate::ci::EvidenceLayer::DecodedEconomic => "decoded economic",
+                crate::ci::EvidenceLayer::Structural => "structural",
+            };
+            let _ = writeln!(
+                out,
+                "| {layer} | `{}` | {} |",
+                change.description,
+                change.observations.len()
+            );
+        }
+        let _ = writeln!(out);
+    }
+
+    if !report.review.failures.is_empty() {
+        let _ = writeln!(out, "### Why this failed\n");
+        for reason in &report.review.failures {
+            let explanation = match reason {
+                crate::review::FailureReason::NoSemanticCoverage => {
+                    "This bundle's adapter produced no semantic coverage, so a pass would mean \
+                     \"we did not look\" rather than \"nothing changed\"."
+                }
+                crate::review::FailureReason::UndeclarableChange => {
+                    "A change was detected that no expectation can name."
+                }
+                crate::review::FailureReason::UndeclaredChange => {
+                    "A change is undeclared, or larger than declared."
+                }
+                crate::review::FailureReason::StaleExpectation => {
+                    "A declaration covers behaviour that no longer happens."
+                }
+                crate::review::FailureReason::UnevaluableExpectation => {
+                    "A declaration cannot be judged by this corpus."
+                }
+            };
+            let _ = writeln!(out, "- **`{}`** — {explanation}", reason.as_str());
+        }
+        let _ = writeln!(out);
+    }
+
     if !report.bundle.limitations.is_empty() {
         let _ = writeln!(out, "### Coverage limitations\n");
         let _ = writeln!(
@@ -218,5 +269,53 @@ fn render_group(
             let _ = writeln!(out, "Cannot judge: `{cause:?}`  ");
         }
         let _ = writeln!(out);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Two formats derived from one object still have to convey the same
+    /// verdict. Markdown once showed an expected finding and omitted the
+    /// undeclarable change that was the sole reason the check failed.
+    #[test]
+    fn the_reason_a_check_failed_reaches_the_markdown() {
+        let json = serde_json::json!({
+            "schema_version": 1,
+            "bundle": {
+                "sha256": "b", "baseline_sha256": "a", "corpus_sha256": "c",
+                "record_count": 1, "program_id": "SPoo1", "adapter": "spl-stake-pool",
+                "adapter_version": 3, "semantic_schema_version": 2,
+                "source_slot_range": { "first": 1, "last": 2 },
+                "limitations": []
+            },
+            "candidate": { "sha256": "d", "len": 1 },
+            "coverage": [],
+            "undeclarable": [{
+                "layer": "decoded_economic",
+                "description": "stake-pool pool_token_supply",
+                "observations": ["obs-1"]
+            }],
+            "findings": [], "unmatched": [],
+            "failures": ["undeclarable_change"],
+            "summary": {
+                "passed": false, "failure_reasons": ["undeclarable_change"], "exit_code": 1,
+                "expected": 0, "unexpected": 0, "expected_but_exceeded": 0,
+                "stale": 0, "unevaluable": 0
+            }
+        });
+        let report: CiReport = serde_json::from_value(json).expect("a report");
+        let markdown = render(&report);
+
+        assert!(
+            markdown.contains("stake-pool pool_token_supply"),
+            "the change that caused the failure is missing:\n{markdown}"
+        );
+        assert!(
+            markdown.contains("undeclarable_change"),
+            "the failure reason is missing:\n{markdown}"
+        );
+        assert!(markdown.contains("Upgrade check failed"));
     }
 }

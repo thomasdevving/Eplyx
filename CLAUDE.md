@@ -78,8 +78,9 @@ eplyx ci check --bundle .eplyx/bundle --candidate target/deploy/program.so \
 `cargo run` replaces the child's exit status, which silently turns every gate
 result into the same code. Exit codes: 0 passed, 1 undeclared or out-of-bounds
 change, 2 configuration/fidelity error, 3 stale declaration, 4 bundle or
-baseline incompatibility, 5 unevaluable declaration. Codes 2 and 4 are preflight
-aborts and produce no report.
+baseline incompatibility, 5 unevaluable declaration. Codes 2 and 4 are preflight aborts: they produce
+no *analysis*, but under `--format json` they still emit a structured error
+carrying the same exit code.
 
 `artifacts/*.so` is gitignored. Anything that executes requires `./scripts/build-programs.sh` (or `make`) first; tests fail with an explanatory message rather than skipping.
 
@@ -133,7 +134,7 @@ screening ──────────────┼→ historical → replay
 - **`fixtures/states/` must match the generator.** A test enforces it; run `make fixtures` after touching `corpus.rs`.
 - **The reference math in `interface::reference` must never be imported by the program.** If it were, V2 could not diverge and the whole differential suite would be vacuous. `v2_disagrees_with_the_reference_somewhere` guards this.
 - **No `f64` in the valuation or reporting path.** Enforced by `no_floating_point_in_the_valuation_or_reporting_path`, which scans non-test, non-comment source of `interface/src/lib.rs`, `money.rs`, `interpret.rs`, `impact.rs`, `diff.rs`, `report.rs`. Money is integer micro-USD; the compute percentage is integer basis points.
-- **Any integer that can pass 2^53 serializes as a decimal string**, via `numfmt::{u64_string, i64_string}`: account lamports and balance differences, alongside money and token quantities. A pool holding 15 million SOL is 1.5e16 lamports, and most JSON parsers — every JavaScript one — round past 2^53. Deserialization still accepts a number, so records written earlier keep parsing. Counts, basis points, slots and byte offsets stay plain numbers because they cannot plausibly get there.
+- **Account lamports and balance differences serialize as decimal strings**, via `numfmt::{u64_string, i64_string}`, alongside money and token quantities. A pool holding 15 million SOL is 1.5e16 lamports, and most JSON parsers — every JavaScript one — round past 2^53. Deserialization still accepts a number, so records written earlier keep parsing. Counts, basis points, slots and byte offsets stay plain numbers because they cannot plausibly get there. **Not yet converted:** transaction token amounts, the transaction balance arrays and post-account digests are still JSON numbers, so the rule is not uniform across every surface.
 - **Monetary values serialize as decimal strings** (`"6182370.000000"`), never JSON numbers — a number becomes a double in most consumers.
 - **`Difference` is an internally-tagged serde enum**, so it cannot carry `i128`/`u128` fields: serde's buffering for internally-tagged enums has no 128-bit variant, and the report would serialize but refuse to deserialize. Use `i64`.
 - **Compute is off the pass/fail axis.** All 141 fixtures differ on compute, including the 89 whose state is byte-identical. Folding it in would classify the whole corpus as changed.
@@ -151,7 +152,8 @@ screening ──────────────┼→ historical → replay
 - **A CPI graph difference between V1 and V2 is reported, not scored.** `cpi_graph_changed` is a fact about the candidate; whether it matters is a semantic question this layer does not answer.
 - **Dependency binaries are addressed by program ID and verified by hash.** A bundle that pairs one program's bytes with another's manifest entry, or a stale artefact, is an error - never a different replay.
 - **`ReplayReport::timings` is `#[serde(skip)]`.** The determinism check compares report bytes, and a wall-clock number never repeats.
-- - **The CI gate consumes three layers of evidence, not one.** Named semantic findings are the only declarable layer, but a decoded economic change the adapter has not promoted, and a structural change on an observation nothing semantic spoke for, both fail the gate as `undeclarable_change`. Empty semantic coverage is `no_semantic_coverage` and exit 2, never a pass: zero findings from an adapter with no surface means "we did not look". `ProtocolAdapter::promoted_economic_fields` is how an adapter says which decoded fields its named findings already speak for.
+- - **Evidence is suppressed only where it is demonstrably accounted for.** A decoded change is dropped from the undeclarable list only when a finding emitted *for that observation* names it — never from a static promoted list, because `pool-mint/supply` is the burn on a withdrawal and a by-product of the mint on a deposit. A raw byte change is dropped only when every differing offset lies inside a range the adapter decodes *and* reported for that account (`ProtocolAdapter::decoded_byte_ranges`). Suppressing all structural evidence because something was named let a candidate rewrite a manager key behind one declared share change.
+- **The CI gate consumes three layers of evidence, not one.** Named semantic findings are the only declarable layer, but a decoded economic change the adapter has not promoted, and a structural change on an observation nothing semantic spoke for, both fail the gate as `undeclarable_change`. Empty semantic coverage is `no_semantic_coverage` and exit 2, never a pass: zero findings from an adapter with no surface means "we did not look". `ProtocolAdapter::promoted_economic_fields` is how an adapter says which decoded fields its named findings already speak for.
 - **Whether a change is *intended* is classified by `expected-changes.toml`,** not by the engine. A legitimate upgrade may change behaviour on purpose; the team declares it narrowly and the review reports expected / unexpected / exceeded / stale / unevaluable.
 
 ## Conventions and prior decisions

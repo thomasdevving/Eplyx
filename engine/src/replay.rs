@@ -623,20 +623,22 @@ impl ReplayRecord {
                 .iter()
                 .map(String::as_str)
                 .collect();
-            // Only accounts whose boundary came from the archive need this
-            // proof. An account reconstructed from the transaction's own
-            // balances carries its own exact evidence and is deliberately
-            // outside the screened set, and one the runtime materializes has no
-            // boundary to be spoiled.
-            let archived: BTreeSet<&str> = self
+            // Which accounts need this proof is decided by *default*, not by
+            // the record's own list. Deriving the set from `acquisitions`
+            // meant deleting that list emptied the set and exempted every
+            // account at once - untrusted input deciding what needs proof.
+            //
+            // So: every non-runtime-managed account must be screened, and only
+            // an explicit provenance entry naming a source that carries its own
+            // boundary evidence can excuse one. A missing entry excuses nothing.
+            let exempt: BTreeSet<&str> = self
                 .acquisitions
                 .iter()
-                .filter(|a| a.source == AccountStateSource::HistoricalArchive)
+                .filter(|a| a.source != AccountStateSource::HistoricalArchive)
                 .map(|a| a.address.as_str())
                 .collect();
             for account in &self.accounts {
-                if is_runtime_managed(&account.address)
-                    || !archived.contains(account.address.as_str())
+                if is_runtime_managed(&account.address) || exempt.contains(account.address.as_str())
                 {
                     continue;
                 }
@@ -1887,5 +1889,57 @@ mod provenance_tests {
             format!("{error:#}").contains("after the transaction"),
             "{error:#}"
         );
+    }
+}
+
+#[cfg(test)]
+mod provenance_absence {
+    use super::*;
+
+    /// The withdrawal record, whose `destination-lamports` boundary comes from
+    /// transaction balances rather than the archive. It is therefore
+    /// legitimately outside the screened set - and so it is exactly the record
+    /// where an exemption can be abused.
+    fn record() -> ReplayRecord {
+        serde_json::from_str(include_str!(
+            "../../docs/examples/mainnet-stake-pool-withdraw-record.json"
+        ))
+        .expect("committed record")
+    }
+
+    /// Deleting the provenance list must not exempt every account from proof.
+    /// Deriving the "needs screening" set from that list let untrusted input
+    /// decide what needed proving, so removing it removed the requirement.
+    #[test]
+    fn stripping_acquisitions_does_not_waive_screening() {
+        let mut stripped = record();
+        stripped.acquisitions.clear();
+        let error = stripped.validate().expect_err("must refuse");
+        assert!(
+            format!("{error:#}").contains("omits required account"),
+            "{error:#}"
+        );
+    }
+
+    /// The same record with both provenance and the screened set emptied: the
+    /// combination the audit used, and it must still fail.
+    #[test]
+    fn stripping_provenance_and_the_screened_set_together_is_refused() {
+        let mut stripped = record();
+        stripped.acquisitions.clear();
+        if let Some(screening) = stripped.slot_screening.as_mut() {
+            screening.required_accounts.clear();
+        }
+        assert!(stripped.validate().is_err());
+    }
+
+    /// An account with an explicit non-archive provenance entry is still
+    /// legitimately outside the screened set - the exemption exists, it just
+    /// has to be claimed rather than inferred from silence.
+    #[test]
+    fn an_explicitly_non_archived_account_stays_exempt() {
+        record()
+            .validate()
+            .expect("the real record still validates");
     }
 }
