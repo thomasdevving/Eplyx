@@ -187,6 +187,22 @@ fn token_balances(value: &Value) -> Result<Option<Vec<TokenBalance>>> {
         .map(Some)
 }
 
+/// The message version this build can represent, if it is one.
+///
+/// Asked before normalizing rather than discovered by failing at it. A version
+/// newer than these is real production activity that cannot be replayed here,
+/// and a caller scanning a window needs to count it and carry on — not to parse
+/// an error message, and certainly not to be handed a decoder for a format
+/// nobody verified.
+pub fn message_version(value: &Value) -> Option<&'static str> {
+    match &value["version"] {
+        Value::Null => Some("legacy"),
+        Value::String(s) if s == "legacy" => Some("legacy"),
+        Value::Number(n) if n.as_u64() == Some(0) => Some("v0"),
+        _ => None,
+    }
+}
+
 pub fn normalize(value: &Value) -> Result<HistoricalTransaction> {
     anyhow::ensure!(
         !value.is_null(),
@@ -199,12 +215,7 @@ pub fn normalize(value: &Value) -> Result<HistoricalTransaction> {
         meta.get("err").is_some(),
         "transaction metadata missing outcome"
     );
-    let version = match &value["version"] {
-        Value::Null => "legacy",
-        Value::String(s) if s == "legacy" => "legacy",
-        Value::Number(n) if n.as_u64() == Some(0) => "v0",
-        _ => anyhow::bail!("unsupported transaction version"),
-    };
+    let version = message_version(value).context("unsupported transaction version")?;
     let static_keys = message["accountKeys"]
         .as_array()
         .context("missing account keys")?;
