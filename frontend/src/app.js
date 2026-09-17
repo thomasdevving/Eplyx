@@ -1,6 +1,7 @@
 import { LandingPage } from './landing.js';
 import { AnalysePage, attachAnalyse } from './analyse.js';
 import { ReportPage, attachReport } from './report.js';
+import { ProjectsPage, ProjectPage, attachProjects, attachProject } from './projects.js';
 import { finishIntro } from './intro.js';
 import { attachCoreParallax } from './core-scene.js';
 import { attachShell } from './shell.js';
@@ -19,6 +20,8 @@ function route() {
   disposeReport = undefined;
   const path = location.pathname.replace(/\/+$/, '') || '/';
   if (path === '/analyse') app.innerHTML = AnalysePage();
+  else if (path === '/projects') app.innerHTML = ProjectsPage();
+  else if (path.startsWith('/projects/')) app.innerHTML = ProjectPage(decodeURIComponent(path.slice(10)));
   else if (path.startsWith('/runs/')) app.innerHTML = ReportPage(decodeURIComponent(path.slice(6)));
   else app.innerHTML = LandingPage();
   if (location.hash) requestAnimationFrame(() => document.querySelector(location.hash)?.scrollIntoView());
@@ -64,6 +67,8 @@ function attachPage(path) {
     finishIntro();
   }
   if (path === '/analyse') attachAnalyse(navigate);
+  if (path === '/projects') disposeReport = attachProjects(navigate);
+  if (path.startsWith('/projects/')) disposeReport = attachProject(decodeURIComponent(path.slice(10)), navigate);
 }
 
 addEventListener('popstate', route);

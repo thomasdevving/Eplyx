@@ -182,6 +182,68 @@ Reports are refused with `409` until one exists. The engine exposes no durable
 per-record progress, so neither the API nor the page invents any: queued,
 running and completed is the whole vocabulary.
 
+### Onboarding, and who may do what
+
+A protocol team goes from a program to a running check through the API the
+console uses: create a project, upload a bundle, activate it, issue a token.
+
+```text
+POST /v1/projects                                    create
+GET  /v1/projects                                    list
+GET  /v1/projects/{id}                               one, with cheap run stats
+POST /v1/projects/{id}/tokens                        issue, shown once
+GET  /v1/projects/{id}/tokens                        ids and labels, never secrets
+DEL  /v1/projects/{id}/tokens/{token_id}             revoke
+POST /v1/projects/{id}/bundles                       register, verified on arrival
+GET  /v1/projects/{id}/bundles                       history, with the active one marked
+POST /v1/projects/{id}/bundles/{bundle_id}/activate  move the pointer
+GET  /v1/projects/{id}/runs                          newest first, cursor paged
+GET  /v1/adapters                                    what this build speaks
+```
+
+A project id is opaque and minted (`proj_01M2RN…`), never a name: two teams may
+both call theirs Lending, a rename is not a new project, and a name that became
+a path segment would put the caller in charge of where bytes land. Bundle, token
+and run ids are the same shape, and lead with their own minting time, so history
+is a directory listing and a cursor is "everything after this id".
+
+**Two credentials, no user model.** A *project token* is a CI secret: it submits
+checks for its own project and reads that project's runs and reports. An
+*operator token* is the console's, configured on the server as
+`EPLYX_OPERATOR_TOKEN` rather than issued by it; it creates projects, issues and
+revokes their tokens, and registers and activates bundles.
+
+That split is the Phase 10 rule applied to credentials: a token that lives in a
+pull request must not be able to change what future pull requests are measured
+against. It is also why no endpoint is public — listing projects without a
+credential would hand an unauthenticated caller every program this service
+watches. A foreign project token is answered `401` uniformly, because it is only
+ever matched against the owning project's tokens: the answer is the same whether
+the resource exists, belongs to someone else, or never existed.
+
+**Status is the project's, never the run's.** `setup` has no active bundle and
+accepts no checks; `ready` has one; `disabled` is an operator's decision and is
+never inferred away by activating a bundle. A check refused for any of those is
+a hosted configuration answer — `409`, with no exit code — because nothing was
+measured, so there is no verdict about the candidate to report.
+
+**A bundle must say what it is.** Registration and activation both check the
+bundle's own verified manifest against the project: same program, same declared
+adapter, an adapter this build still speaks, and the semantic schema version it
+was named under. Reading both sides matters. Checking only the engine's version
+left a program with no compiled adapter unable to onboard at all, while a bundle
+declaring `none@0` for such a program is telling the exact truth — every check
+against it reports `no_semantic_coverage` and fails, which is the engine saying
+it did not look rather than saying nothing is wrong. The console says so too,
+before a team reads that red gate as a finding.
+
+**A run pins its bundle at creation.** The active bundle is resolved once, when
+the check is accepted, and its id and hash are written to the run before the
+`202`. The worker never resolves it again. Activating a new bundle while a run
+is queued belongs to the next run: otherwise a result would quietly describe a
+comparison nobody asked for. Activation moves a pointer and destroys nothing, so
+the bundle an old run names is still there to re-read.
+
 ### What a restart costs
 
 The task queue is in-process. A restart drops whatever it was holding, and runs

@@ -16,6 +16,7 @@ path = "src/main.rs"
 [dependencies]
 eplyx-engine = { path = "../engine" }
 anyhow = { workspace = true }
+bs58 = "0.5.1"
 axum = { workspace = true }
 clap = { workspace = true }
 hex = { workspace = true }

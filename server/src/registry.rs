@@ -12,8 +12,75 @@ use eplyx_engine::bundle::CiBundle;
 use eplyx_engine::ci::CiReport;
 use serde::{Deserialize, Serialize};
 
-use crate::project::Project;
+use crate::project::{ActiveBundle, AdapterId, Project, ProjectToken};
 use crate::storage::Storage;
+
+/// A project's record of one immutable bundle.
+///
+/// The bytes live once in the content-addressed store; this says which project
+/// registered them, when, and what they claimed to be. Nothing here is
+/// editable: a bundle is not amended, a new one is uploaded.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct ProjectBundle {
+    pub bundle_id: String,
+    pub project_id: String,
+    pub bundle_sha256: String,
+    pub baseline_sha256: String,
+    pub program_id: String,
+    pub adapter_id: AdapterId,
+    pub semantic_schema_version: u32,
+    pub record_count: usize,
+    #[serde(default)]
+    pub source_filename: Option<String>,
+    pub created_at_unix_seconds: u64,
+}
+
+/// Whether a bundle may ever be measured against by this project.
+///
+/// Three questions, all answered from the bundle's own verified manifest
+/// rather than from anything a caller said: is it for this program, was it
+/// built under the vocabulary this project declares, and does this build still
+/// speak that vocabulary.
+///
+/// The adapter comparison reads both sides. Checking only the engine's version
+/// left a program the engine has no adapter for unable to onboard at all, while
+/// a bundle that declares `none@0` for such a program is telling the exact
+/// truth — every check against it reports `no_semantic_coverage` and fails,
+/// which is the engine saying it did not look rather than saying nothing is
+/// wrong.
+fn check_bundle_matches_project(project: &Project, bundle: &CiBundle) -> Result<()> {
+    let manifest = bundle.manifest();
+    if manifest.program_id != project.program_id {
+        bail!(
+            "bundle is for program {}, project {} protects {}",
+            manifest.program_id,
+            project.project_id,
+            project.program_id
+        );
+    }
+    let declared = AdapterId {
+        name: bundle.adapter().name.clone(),
+        version: bundle.adapter().version,
+    };
+    if declared != project.adapter_id {
+        bail!(
+            "bundle was built under adapter {declared}, project declares {}",
+            project.adapter_id
+        );
+    }
+    let engine = AdapterId::for_program(&project.program_id);
+    if declared != engine {
+        bail!("bundle was built under adapter {declared}, this build speaks {engine}");
+    }
+    let schema = eplyx_engine::semantics::SEMANTIC_SCHEMA_VERSION;
+    if manifest.semantic_schema_version != schema {
+        bail!(
+            "bundle names subjects under semantic schema v{}, this build speaks v{schema}",
+            manifest.semantic_schema_version
+        );
+    }
+    Ok(())
+}
 
 /// Where a run is in its life.
 ///
@@ -75,7 +142,13 @@ pub struct RunMetadata {
     pub project_id: String,
     pub status: RunStatus,
     /// Known at creation: the project's active bundle, resolved server-side.
+    ///
+    /// Pinned here, and never resolved again. A bundle activated after this run
+    /// was accepted belongs to the next run, not to this one — otherwise a
+    /// result would silently describe a comparison nobody asked for.
     pub bundle_sha256: String,
+    #[serde(default)]
+    pub bundle_id: Option<String>,
     #[serde(default)]
     pub corpus_sha256: Option<String>,
     #[serde(default)]
@@ -132,18 +205,113 @@ impl Registry {
         &self.storage
     }
 
-    pub fn load_project(&self, id: &str) -> Result<Project> {
-        let path = self.storage.project_path(id)?;
+    // ------------------------------------------------------------ projects
+
+    pub fn load_project(&self, project_id: &str) -> Result<Project> {
+        let path = self.storage.project_path(project_id)?;
         if !self.storage.exists(&path) {
             bail!("no such project");
         }
-        self.storage.read_project(&path)
+        self.storage.read_json(&path)
     }
 
     pub fn save_project(&self, project: &Project) -> Result<()> {
-        let path = self.storage.project_path(&project.id)?;
+        let path = self.storage.project_path(&project.project_id)?;
         self.storage.write_json(&path, project)
     }
+
+    /// Create a project, refusing to write over one that already exists.
+    pub fn create_project(&self, project: &Project) -> Result<()> {
+        let path = self.storage.project_path(&project.project_id)?;
+        if self.storage.exists(&path) {
+            bail!("project {} already exists", project.project_id);
+        }
+        self.save_project(project)
+    }
+
+    pub fn list_projects(&self) -> Result<Vec<Project>> {
+        let mut projects: Vec<Project> = self
+            .child_ids(&self.storage.projects_root())?
+            .into_iter()
+            .filter_map(|id| self.load_project(&id).ok())
+            .collect();
+        // Newest first: the id carries its own minting time.
+        projects.sort_by(|a, b| b.project_id.cmp(&a.project_id));
+        Ok(projects)
+    }
+
+    // -------------------------------------------------------------- tokens
+
+    /// Issue a token. The secret is returned to the caller and never stored.
+    pub fn create_token(&self, token: &ProjectToken) -> Result<()> {
+        let path = self
+            .storage
+            .project_token_path(&token.project_id, &token.token_id)?;
+        if self.storage.exists(&path) {
+            bail!("token {} already exists", token.token_id);
+        }
+        self.storage.write_json(&path, token)
+    }
+
+    pub fn list_tokens(&self, project_id: &str) -> Result<Vec<ProjectToken>> {
+        let directory = self.storage.project_tokens_dir(project_id)?;
+        let mut tokens: Vec<ProjectToken> = self
+            .child_ids(&directory)?
+            .into_iter()
+            .filter_map(|id| {
+                let path = self.storage.project_token_path(project_id, &id).ok()?;
+                self.storage.read_json(&path).ok()
+            })
+            .collect();
+        tokens.sort_by(|a, b| b.token_id.cmp(&a.token_id));
+        Ok(tokens)
+    }
+
+    /// Find the token a secret belongs to, within one project.
+    ///
+    /// Every live token is tried, because a project may hold several and the
+    /// caller sends only the secret. A revoked token is skipped rather than
+    /// matched and then rejected: there is no state in which it authenticates.
+    pub fn authenticate_token(&self, project_id: &str, secret: &str) -> Result<ProjectToken> {
+        let matched = self
+            .list_tokens(project_id)?
+            .into_iter()
+            .find(|token| !token.is_revoked() && token.verifier.verifies(secret));
+        matched.context("no live token matches")
+    }
+
+    pub fn revoke_token(&self, project_id: &str, token_id: &str) -> Result<ProjectToken> {
+        let _guard = self
+            .transitions
+            .lock()
+            .unwrap_or_else(|held| held.into_inner());
+        let path = self.storage.project_token_path(project_id, token_id)?;
+        if !self.storage.exists(&path) {
+            bail!("no such token");
+        }
+        let mut token: ProjectToken = self.storage.read_json(&path)?;
+        if token.revoked_at_unix_seconds.is_none() {
+            token.revoked_at_unix_seconds = Some(crate::project::now_unix_seconds());
+            self.storage.write_json(&path, &token)?;
+        }
+        Ok(token)
+    }
+
+    /// Record that a token was used. Best effort: a failure here must never
+    /// turn a successful request into a rejected one.
+    pub fn note_token_use(&self, token: &ProjectToken) {
+        let Ok(path) = self
+            .storage
+            .project_token_path(&token.project_id, &token.token_id)
+        else {
+            return;
+        };
+        let mut updated = token.clone();
+        updated.last_used_at_unix_seconds = Some(crate::project::now_unix_seconds());
+        let _ = self.storage.write_json(&path, &updated);
+    }
+
+    // ------------------------------------------------------------- bundles
 
     /// Install a verified bundle under its own content hash.
     ///
@@ -176,43 +344,137 @@ impl Registry {
         CiBundle::open(&path)
     }
 
-    /// Point a project at an installed bundle.
+    /// Register a verified bundle as belonging to a project.
     ///
-    /// Never automatic. A freshly built bundle sits installed but inactive
-    /// until an operator selects it, because a corpus change moves what every
-    /// pull request is measured against.
-    pub fn activate_bundle(&self, project_id: &str, bundle_sha256: &str) -> Result<()> {
+    /// The content lives once, addressed by its hash; this is the project's
+    /// record of it. Registering the same content twice returns the record
+    /// that already exists rather than minting a second identity for the same
+    /// bytes.
+    pub fn register_bundle(
+        &self,
+        project: &Project,
+        source: &std::path::Path,
+        source_filename: Option<&str>,
+    ) -> Result<ProjectBundle> {
+        let bundle = CiBundle::open(source).context("verifying the uploaded bundle")?;
+        check_bundle_matches_project(project, &bundle)?;
+        let sha256 = self.install_bundle(source)?;
+
+        if let Some(existing) = self
+            .list_bundles(&project.project_id)?
+            .into_iter()
+            .find(|record| record.bundle_sha256 == sha256)
+        {
+            return Ok(existing);
+        }
+
+        let manifest = bundle.manifest();
+        let record = ProjectBundle {
+            bundle_id: crate::ids::bundle(),
+            project_id: project.project_id.clone(),
+            bundle_sha256: sha256,
+            baseline_sha256: manifest.baseline_program_sha256.clone(),
+            program_id: manifest.program_id.clone(),
+            adapter_id: AdapterId {
+                name: bundle.adapter().name.clone(),
+                version: bundle.adapter().version,
+            },
+            semantic_schema_version: manifest.semantic_schema_version,
+            record_count: manifest.record_count,
+            source_filename: source_filename.map(str::to_string),
+            created_at_unix_seconds: crate::project::now_unix_seconds(),
+        };
+        let path = self
+            .storage
+            .project_bundle_path(&project.project_id, &record.bundle_id)?;
+        self.storage.write_json(&path, &record)?;
+        Ok(record)
+    }
+
+    pub fn load_bundle_record(&self, project_id: &str, bundle_id: &str) -> Result<ProjectBundle> {
+        let path = self.storage.project_bundle_path(project_id, bundle_id)?;
+        if !self.storage.exists(&path) {
+            bail!("no such bundle");
+        }
+        self.storage.read_json(&path)
+    }
+
+    pub fn list_bundles(&self, project_id: &str) -> Result<Vec<ProjectBundle>> {
+        let directory = self.storage.project_bundles_dir(project_id)?;
+        let mut bundles: Vec<ProjectBundle> = self
+            .child_ids(&directory)?
+            .into_iter()
+            .filter_map(|id| self.load_bundle_record(project_id, &id).ok())
+            .collect();
+        bundles.sort_by(|a, b| b.bundle_id.cmp(&a.bundle_id));
+        Ok(bundles)
+    }
+
+    /// Point a project at one of its registered bundles.
+    ///
+    /// Never automatic. A freshly uploaded bundle sits registered but inactive
+    /// until someone selects it, because a corpus change moves what every pull
+    /// request is measured against. The previous bundle is left exactly where
+    /// it is: activation moves a pointer and destroys nothing.
+    pub fn activate_bundle(&self, project_id: &str, bundle_id: &str) -> Result<Project> {
+        let _guard = self
+            .transitions
+            .lock()
+            .unwrap_or_else(|held| held.into_inner());
         let mut project = self.load_project(project_id)?;
-        let bundle = self.open_bundle(bundle_sha256)?;
+        let record = self.load_bundle_record(project_id, bundle_id)?;
+        // Re-opened from storage rather than trusted from the record: the
+        // question at activation is whether the bytes are still there and still
+        // verify, not what we wrote down when they arrived.
+        let bundle = self.open_bundle(&record.bundle_sha256)?;
+        check_bundle_matches_project(&project, &bundle)?;
 
-        if bundle.manifest().program_id != project.program_id {
-            bail!(
-                "bundle is for program {}, project {} protects {}",
-                bundle.manifest().program_id,
-                project.id,
-                project.program_id
-            );
-        }
-        // The same compatibility rules the gate applies, applied before a
-        // bundle can ever be reached by a pull request.
-        if let Some(adapter) = eplyx_engine::protocol::adapter_for(&project.program_id) {
-            if adapter.adapter_version() != bundle.adapter().version {
-                bail!(
-                    "bundle was built under {} adapter v{}, this build speaks v{}",
-                    bundle.adapter().name,
-                    bundle.adapter().version,
-                    adapter.adapter_version()
-                );
+        project.active_bundle = Some(ActiveBundle {
+            bundle_id: record.bundle_id.clone(),
+            bundle_sha256: record.bundle_sha256.clone(),
+            activated_at_unix_seconds: crate::project::now_unix_seconds(),
+        });
+        project.refresh_status();
+        project.touch();
+        self.save_project(&project)?;
+        Ok(project)
+    }
+
+    // ---------------------------------------------------------- run index
+
+    /// Note that a run belongs to a project, so history is a listing rather
+    /// than a scan of every run the service has ever executed.
+    pub fn index_run(&self, project_id: &str, run_id: &str) -> Result<()> {
+        let path = self.storage.project_run_marker(project_id, run_id)?;
+        self.storage.write_bytes(&path, b"")
+    }
+
+    /// Run ids owned by a project, newest first.
+    ///
+    /// The id begins with its own minting time, so ordering is the listing
+    /// reversed and paging is "everything before this id".
+    pub fn project_run_ids(&self, project_id: &str) -> Result<Vec<String>> {
+        let directory = self.storage.project_runs_dir(project_id)?;
+        let mut ids = self.child_ids(&directory)?;
+        ids.sort_by(|a, b| b.cmp(a));
+        Ok(ids)
+    }
+
+    /// Valid identifiers naming entries directly inside a directory.
+    fn child_ids(&self, directory: &std::path::Path) -> Result<Vec<String>> {
+        let mut ids = Vec::new();
+        let Ok(entries) = std::fs::read_dir(directory) else {
+            return Ok(ids);
+        };
+        for entry in entries.flatten() {
+            let name = entry.file_name();
+            let Some(name) = name.to_str() else { continue };
+            let name = name.strip_suffix(".json").unwrap_or(name);
+            if crate::storage::valid_id(name) {
+                ids.push(name.to_string());
             }
-        } else {
-            bail!(
-                "no adapter compiled in for program {}; refusing to activate",
-                project.program_id
-            );
         }
-
-        project.active_bundle_sha256 = Some(bundle_sha256.to_string());
-        self.save_project(&project)
+        Ok(ids)
     }
 
     /// Persist a run before anything expensive happens to it.

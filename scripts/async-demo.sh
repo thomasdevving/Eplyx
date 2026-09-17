@@ -37,7 +37,7 @@ start_server() { # capacity logfile
   echo "  FAIL server did not come up"; exit 1
 }
 submit() { # -> run id on stdout
-  curl -s -o "$WORK/accepted.json" -X POST "$URL/v1/projects/demo/checks" \
+  curl -s -o "$WORK/accepted.json" -X POST "$URL/v1/projects/$PROJECT/checks" \
     -H "Authorization: Bearer $TOKEN" -F "candidate=@$CANDIDATE" >/dev/null
   field run_id < "$WORK/accepted.json"
 }
@@ -54,31 +54,14 @@ note() { printf '  %-5s %-52s %s\n' "$1" "$2" "${3:-}"; [ "$1" = "FAIL" ] && fai
 field() { python3 -c "import json,sys; v=json.load(sys.stdin).get(sys.argv[1]); print('' if v is None else v)" "$1" 2>/dev/null; }
 
 echo "== provisioning =="
-"$SERVER" admin create-project --id demo --name Demo --program-id \
-  "$(python3 -c "import json;print(json.load(open('$BUNDLE/bundle.json'))['program_id'])")" \
-  > "$WORK/p.txt" 2>&1
-TOKEN=$(grep -oE 'eplyx_[0-9a-f]+' "$WORK/p.txt")
-"$SERVER" admin create-project --id other --name Other --program-id \
-  "$(python3 -c "import json;print(json.load(open('$BUNDLE/bundle.json'))['program_id'])")" \
-  > "$WORK/p2.txt" 2>&1
-TOKEN2=$(grep -oE 'eplyx_[0-9a-f]+' "$WORK/p2.txt")
-BSHA=$("$SERVER" admin install-bundle --path "$BUNDLE" 2>&1 | head -1 | awk '{print $3}')
-
-if "$SERVER" admin activate-bundle --project demo --bundle "$BSHA" >/dev/null 2>&1; then
-  note ok "bundle activated" "$BSHA"
-else
-  # A fixture program has no adapter compiled in, and activation refuses on
-  # purpose. The pointer is set directly so the lifecycle can still be shown;
-  # nothing about activation policy is being demonstrated here.
-  python3 - "$EPLYX_DATA_DIR/projects/demo/project.json" "$BSHA" <<'PY'
-import json, sys
-path, sha = sys.argv[1], sys.argv[2]
-project = json.load(open(path))
-project["active_bundle_sha256"] = sha
-json.dump(project, open(path, "w"), indent=2)
-PY
-  note note "bundle pointed at directly" "no adapter for this program; activation policy not exercised"
-fi
+PROG=$(python3 -c "import json;print(json.load(open('$BUNDLE/bundle.json'))['program_id'])")
+PROJECT=$("$SERVER" admin create-project --name Demo --program-id "$PROG" 2>&1 | head -1 | awk '{print $2}')
+OTHER=$("$SERVER" admin create-project --name Other --program-id "$PROG" 2>&1 | head -1 | awk '{print $2}')
+TOKEN=$("$SERVER" admin create-token --project "$PROJECT" 2>&1 | grep -oE 'eplyx_proj_[0-9a-f]+')
+TOKEN2=$("$SERVER" admin create-token --project "$OTHER" 2>&1 | grep -oE 'eplyx_proj_[0-9a-f]+')
+BUNDLE_ID=$("$SERVER" admin register-bundle --project "$PROJECT" --path "$BUNDLE" 2>&1 | head -1 | awk '{print $3}')
+"$SERVER" admin activate-bundle --project "$PROJECT" --bundle "$BUNDLE_ID" >/dev/null 2>&1 \
+  && note ok "bundle activated" "$BUNDLE_ID" || note FAIL "bundle activated"
 
 start_server 0 "$WORK/server.log"
 trap 'kill $SERVER_PID 2>/dev/null' EXIT
@@ -86,7 +69,7 @@ trap 'kill $SERVER_PID 2>/dev/null' EXIT
 echo
 echo "== a check returns before it runs =="
 START=$(python3 -c 'import time;print(time.time())')
-RESPONSE=$(curl -s -o "$WORK/accepted.json" -w '%{http_code}' -X POST "$URL/v1/projects/demo/checks" \
+RESPONSE=$(curl -s -o "$WORK/accepted.json" -w '%{http_code}' -X POST "$URL/v1/projects/$PROJECT/checks" \
   -H "Authorization: Bearer $TOKEN" -F "candidate=@$CANDIDATE")
 ELAPSED=$(python3 -c "import time;print(f'{time.time()-$START:.2f}s')")
 check "POST /checks" "$RESPONSE" "202"
@@ -152,7 +135,7 @@ echo
 echo "== capacity is shared, and nothing accepted is dropped =="
 IDS=""
 for _ in 1 2 3 4 5 6; do
-  curl -s -o "$WORK/a.json" -X POST "$URL/v1/projects/demo/checks" \
+  curl -s -o "$WORK/a.json" -X POST "$URL/v1/projects/$PROJECT/checks" \
     -H "Authorization: Bearer $TOKEN" -F "candidate=@$CANDIDATE" >/dev/null
   IDS="$IDS $(field run_id < "$WORK/a.json")"
 done

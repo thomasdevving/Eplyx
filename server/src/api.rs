@@ -25,8 +25,10 @@ use serde_json::json;
 use tower_http::cors::CorsLayer;
 
 use crate::config::Config;
-use crate::project::Project;
-use crate::registry::{now_unix_seconds, Registry, RunMetadata, RunStatus};
+use crate::project::{
+    validate_name, validate_program_id, AdapterId, Chain, Project, ProjectStatus, ProjectToken,
+};
+use crate::registry::{now_unix_seconds, ProjectBundle, Registry, RunMetadata, RunStatus};
 use crate::worker;
 
 pub struct AppState {
@@ -100,8 +102,22 @@ impl IntoResponse for ApiError {
 
 type ApiResult<T> = std::result::Result<T, ApiError>;
 
+/// One answer for a request body this API cannot use.
+///
+/// Axum's own JSON extractor reports a rejected body as 422 while every
+/// hand-written validation here reports 400, which left one class of mistake
+/// arriving under two different statuses depending on which check caught it.
+fn parse_json<T: serde::de::DeserializeOwned>(body: &Bytes) -> ApiResult<T> {
+    serde_json::from_slice(body)
+        .map_err(|error| ApiError::bad_request(format!("invalid request body: {error}")))
+}
+
 pub fn router(state: Shared) -> Router {
-    let limit = state.config.max_candidate_bytes + state.config.max_expectation_bytes + 64 * 1024;
+    let limit = state
+        .config
+        .max_bundle_bytes
+        .max(state.config.max_candidate_bytes + state.config.max_expectation_bytes)
+        + 64 * 1024;
     // A browser sends a preflight for any request carrying an Authorization
     // header, and without this the router answered it with 405 and no
     // Access-Control-Allow-Origin, so the documented separate-origin frontend
@@ -116,12 +132,32 @@ pub fn router(state: Shared) -> Router {
                 .filter_map(|origin| origin.parse::<axum::http::HeaderValue>().ok())
                 .collect::<Vec<_>>(),
         )
-        .allow_methods([Method::GET, Method::POST])
+        .allow_methods([Method::GET, Method::POST, Method::DELETE])
         .allow_headers([header::AUTHORIZATION, header::CONTENT_TYPE])
         .max_age(std::time::Duration::from_secs(600));
     Router::new()
         .route("/health", get(health))
         .route("/ready", get(ready))
+        .route("/v1/adapters", get(list_adapters))
+        .route("/v1/projects", post(create_project).get(list_projects))
+        .route("/v1/projects/{project_id}", get(get_project))
+        .route(
+            "/v1/projects/{project_id}/tokens",
+            post(create_token).get(list_tokens),
+        )
+        .route(
+            "/v1/projects/{project_id}/tokens/{token_id}",
+            axum::routing::delete(revoke_token),
+        )
+        .route(
+            "/v1/projects/{project_id}/bundles",
+            post(create_bundle).get(list_bundles),
+        )
+        .route(
+            "/v1/projects/{project_id}/bundles/{bundle_id}/activate",
+            post(activate_bundle),
+        )
+        .route("/v1/projects/{project_id}/runs", get(list_project_runs))
         .route("/v1/projects/{project_id}/checks", post(create_check))
         .route("/v1/runs/{run_id}", get(get_run))
         .route("/v1/runs/{run_id}/report.json", get(get_report_json))
@@ -147,28 +183,104 @@ async fn ready(State(state): State<Shared>) -> impl IntoResponse {
     }
 }
 
-/// Authenticate a request against one project.
+/// Who is asking.
 ///
-/// A token authenticates exactly the project whose record verifies it, so a
-/// token for project A used on project B's URL fails like any other bad token.
-fn authenticate(state: &AppState, project_id: &str, headers: &HeaderMap) -> ApiResult<Project> {
-    let token = headers
+/// Two credentials, and deliberately no user model. A **project token** is a CI
+/// secret: it may submit checks for its own project and read that project's
+/// results, and nothing else. An **operator token** is the hosted dashboard's
+/// credential, configured on the server rather than issued by it; it is what
+/// creates projects, issues and revokes their tokens, and registers and
+/// activates bundles.
+///
+/// The split is the Phase 10 rule applied to credentials: a token that lives in
+/// a pull request must not be able to change what future pull requests are
+/// measured against. Nothing here is a person, and no endpoint is public —
+/// listing projects without a credential would hand an unauthenticated caller
+/// every program this service watches.
+pub enum Principal {
+    Operator,
+    Project {
+        project: Box<Project>,
+        token: Box<ProjectToken>,
+    },
+}
+
+impl Principal {
+    fn is_operator(&self) -> bool {
+        matches!(self, Self::Operator)
+    }
+}
+
+fn bearer(headers: &HeaderMap) -> ApiResult<&str> {
+    headers
         .get(header::AUTHORIZATION)
         .and_then(|value| value.to_str().ok())
         .and_then(|value| value.strip_prefix("Bearer "))
         .map(str::trim)
         .filter(|token| !token.is_empty())
-        .ok_or_else(ApiError::unauthorized)?;
+        .ok_or_else(ApiError::unauthorized)
+}
 
+/// Authenticate the operator credential, and nothing else.
+fn operator(state: &AppState, headers: &HeaderMap) -> ApiResult<Principal> {
+    let secret = bearer(headers)?;
+    let configured = state.config.operator_token.as_deref().ok_or_else(|| {
+        ApiError::new(
+            StatusCode::FORBIDDEN,
+            "no operator credential is configured",
+        )
+    })?;
+    if !constant_time_eq(configured, secret) {
+        return Err(ApiError::unauthorized());
+    }
+    Ok(Principal::Operator)
+}
+
+/// Authenticate against a named project: its own live token, or the operator.
+///
+/// A token for another project fails exactly like a token for none. Which of
+/// the two it was is not distinguishable from outside, and should not be.
+fn authenticate(state: &AppState, project_id: &str, headers: &HeaderMap) -> ApiResult<Principal> {
+    let secret = bearer(headers)?;
+    if let Some(configured) = state.config.operator_token.as_deref() {
+        if constant_time_eq(configured, secret) {
+            return Ok(Principal::Operator);
+        }
+    }
     let project = state
         .registry
         .load_project(project_id)
         .map_err(|_| ApiError::unauthorized())?;
+    let token = state
+        .registry
+        .authenticate_token(project_id, secret)
+        .map_err(|_| ApiError::unauthorized())?;
+    state.registry.note_token_use(&token);
+    Ok(Principal::Project {
+        project: Box::new(project),
+        token: Box::new(token),
+    })
+}
 
-    if !project.token.verifies(token) {
-        return Err(ApiError::unauthorized());
+fn constant_time_eq(a: &str, b: &str) -> bool {
+    let (a, b) = (a.as_bytes(), b.as_bytes());
+    if a.len() != b.len() {
+        return false;
     }
-    Ok(project)
+    a.iter()
+        .zip(b.iter())
+        .fold(0_u8, |difference, (x, y)| difference | (x ^ y))
+        == 0
+}
+
+/// Require the operator, for anything that changes what checks measure against.
+fn require_operator(principal: &Principal) -> ApiResult<()> {
+    if principal.is_operator() {
+        return Ok(());
+    }
+    // A CI token asking to rotate a baseline is not a permissions puzzle to
+    // explain; from outside it looks like the thing does not exist.
+    Err(ApiError::not_found("resource"))
 }
 
 /// What creating a check answers with.
@@ -195,18 +307,37 @@ async fn create_check(
     headers: HeaderMap,
     multipart: Multipart,
 ) -> ApiResult<Response> {
-    let project = authenticate(&state, &project_id, &headers)?;
+    let principal = authenticate(&state, &project_id, &headers)?;
+    let project = match &principal {
+        Principal::Project { project, .. } => (**project).clone(),
+        Principal::Operator => state
+            .registry
+            .load_project(&project_id)
+            .map_err(|_| ApiError::not_found("project"))?,
+    };
     let (candidate, expectations) = read_upload(&state, multipart).await?;
 
     let candidate = candidate.ok_or_else(|| ApiError::bad_request("candidate is required"))?;
 
+    // Readiness is a hosted configuration question, answered before a run
+    // exists. It is deliberately not an Eplyx exit code: nothing was measured,
+    // so there is no verdict to report about the candidate.
+    if project.status == ProjectStatus::Disabled {
+        return Err(ApiError::new(
+            StatusCode::CONFLICT,
+            "this project is disabled and accepts no checks",
+        ));
+    }
     // The client never chooses the baseline. The project's active bundle is
     // server state, so a pull request cannot quietly measure itself against
     // something more forgiving.
-    let bundle_sha256 = project
-        .active_bundle_sha256
-        .clone()
-        .ok_or_else(|| ApiError::new(StatusCode::CONFLICT, "no active bundle for this project"))?;
+    let active = project.active_bundle.clone().ok_or_else(|| {
+        ApiError::new(
+            StatusCode::CONFLICT,
+            "this project has no active bundle; upload and activate one before running checks",
+        )
+    })?;
+    let bundle_sha256 = active.bundle_sha256.clone();
 
     // Opened, not merely located. Accepting a run against a bundle that cannot
     // be read would buy a 202 and pay for it with an execution error minutes
@@ -243,9 +374,10 @@ async fn create_check(
     let manifest = bundle.manifest();
     let metadata = RunMetadata {
         run_id: run_id.clone(),
-        project_id: project.id.clone(),
+        project_id: project.project_id.clone(),
         status: RunStatus::Queued,
         bundle_sha256: manifest.bundle_sha256.clone(),
+        bundle_id: Some(active.bundle_id.clone()),
         corpus_sha256: Some(manifest.corpus_sha256.clone()),
         baseline_sha256: Some(manifest.baseline_program_sha256.clone()),
         candidate_sha256: eplyx_engine::replay::hash_bytes(&candidate),
@@ -267,6 +399,10 @@ async fn create_check(
         .registry
         .create_run(&metadata)
         .map_err(|error| ApiError::internal(format!("persisting the run: {error}")))?;
+    state
+        .registry
+        .index_run(&project.project_id, &run_id)
+        .map_err(|error| ApiError::internal(format!("indexing the run: {error}")))?;
     worker::spawn(Arc::clone(&state), run_id.clone());
 
     Ok((
@@ -334,7 +470,14 @@ async fn read_upload(
     Ok((candidate, expectations))
 }
 
-/// A run belongs to one project, and only that project's token may read it.
+/// A run belongs to one project. Its own live token may read it, and so may
+/// the operator.
+///
+/// A foreign credential gets `401`, not `404`, and that is deliberate: it is
+/// matched only against the owning project's tokens, so it fails identically
+/// whether the run exists, belongs to someone else, or never existed. Searching
+/// every project's tokens to answer `404` instead would cost a verification per
+/// project and reveal nothing that this does not already withhold.
 fn authorize_run(state: &AppState, run_id: &str, headers: &HeaderMap) -> ApiResult<RunMetadata> {
     let metadata = state
         .registry
@@ -418,12 +561,554 @@ async fn get_report_markdown(
         .into_response())
 }
 
-/// Opaque, sortable-enough, and never derived from anything secret.
+/// Opaque, ordered, and never derived from anything secret.
+///
+/// Seconds were not enough: two runs accepted in the same second ordered by
+/// their random tail, so "newest first" was only true when a project was quiet.
 fn new_run_id() -> String {
-    let seconds = std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .map(|elapsed| elapsed.as_secs())
+    crate::ids::run()
+}
+
+// ---------------------------------------------------------------- projects
+//
+// Explicit response shapes throughout. Serializing a stored record straight to
+// the wire would make every internal field a public promise, and would leak the
+// next private one added to it by accident.
+
+#[derive(Serialize)]
+struct AdapterView {
+    adapter_id: String,
+    name: String,
+    version: u32,
+    program_id: Option<String>,
+    speaks_semantics: bool,
+}
+
+/// What this build can onboard, derived from the engine's own registry.
+async fn list_adapters(State(state): State<Shared>, headers: HeaderMap) -> ApiResult<Response> {
+    operator(&state, &headers)?;
+    let adapters: Vec<AdapterView> = AdapterId::supported()
+        .into_iter()
+        .map(|id| {
+            let program_id = eplyx_engine::protocol::adapters()
+                .iter()
+                .find(|adapter| adapter.name() == id.name)
+                .map(|adapter| adapter.program_id().to_string());
+            AdapterView {
+                adapter_id: id.to_string(),
+                name: id.name.clone(),
+                version: id.version,
+                program_id,
+                speaks_semantics: id.speaks_semantics(),
+            }
+        })
+        .collect();
+    Ok((
+        StatusCode::OK,
+        Json(json!({
+            "adapters": adapters,
+            "semantic_schema_version": eplyx_engine::semantics::SEMANTIC_SCHEMA_VERSION,
+        })),
+    )
+        .into_response())
+}
+
+#[derive(serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+struct CreateProjectRequest {
+    name: String,
+    program_id: String,
+    adapter_id: String,
+}
+
+#[derive(Serialize)]
+struct ActiveBundleView {
+    bundle_id: String,
+    bundle_sha256: String,
+    activated_at_unix_seconds: u64,
+}
+
+#[derive(Serialize)]
+struct ProjectView {
+    project_id: String,
+    name: String,
+    chain: Chain,
+    program_id: String,
+    adapter_id: String,
+    status: ProjectStatus,
+    speaks_semantics: bool,
+    active_bundle: Option<ActiveBundleView>,
+    created_at_unix_seconds: u64,
+    updated_at_unix_seconds: u64,
+}
+
+impl From<&Project> for ProjectView {
+    fn from(project: &Project) -> Self {
+        Self {
+            project_id: project.project_id.clone(),
+            name: project.name.clone(),
+            chain: project.chain,
+            program_id: project.program_id.clone(),
+            adapter_id: project.adapter_id.to_string(),
+            status: project.status,
+            // Surfaced rather than implied: a project on `none@0` runs checks
+            // that report no semantic coverage, and a team should see that
+            // before it reads a red gate as a finding.
+            speaks_semantics: project.adapter_id.speaks_semantics(),
+            active_bundle: project
+                .active_bundle
+                .as_ref()
+                .map(|active| ActiveBundleView {
+                    bundle_id: active.bundle_id.clone(),
+                    bundle_sha256: active.bundle_sha256.clone(),
+                    activated_at_unix_seconds: active.activated_at_unix_seconds,
+                }),
+            created_at_unix_seconds: project.created_at_unix_seconds,
+            updated_at_unix_seconds: project.updated_at_unix_seconds,
+        }
+    }
+}
+
+async fn create_project(
+    State(state): State<Shared>,
+    headers: HeaderMap,
+    body: Bytes,
+) -> ApiResult<Response> {
+    operator(&state, &headers)?;
+    let request: CreateProjectRequest = parse_json(&body)?;
+    validate_name(&request.name).map_err(|error| ApiError::bad_request(format!("{error}")))?;
+    validate_program_id(&request.program_id)
+        .map_err(|error| ApiError::bad_request(format!("{error}")))?;
+    let adapter_id = AdapterId::try_from(request.adapter_id.clone())
+        .map_err(|error| ApiError::bad_request(format!("{error}")))?;
+    if !AdapterId::supported().contains(&adapter_id) {
+        return Err(ApiError::bad_request(format!(
+            "adapter {adapter_id} is not one this build speaks"
+        )));
+    }
+
+    let project = Project::new(
+        &crate::ids::project(),
+        &request.name,
+        &request.program_id,
+        adapter_id,
+    )
+    .map_err(|error| ApiError::bad_request(format!("{error}")))?;
+    state
+        .registry
+        .create_project(&project)
+        .map_err(|error| ApiError::internal(format!("persisting the project: {error}")))?;
+    Ok((StatusCode::CREATED, Json(ProjectView::from(&project))).into_response())
+}
+
+async fn list_projects(State(state): State<Shared>, headers: HeaderMap) -> ApiResult<Response> {
+    operator(&state, &headers)?;
+    let projects = state
+        .registry
+        .list_projects()
+        .map_err(|error| ApiError::internal(format!("listing projects: {error}")))?;
+    let views: Vec<ProjectView> = projects.iter().map(ProjectView::from).collect();
+    Ok((StatusCode::OK, Json(json!({ "projects": views }))).into_response())
+}
+
+/// One project, with cheap run statistics.
+///
+/// Cheap means the index, not the history: the newest run id is the first entry
+/// of a sorted directory listing, and only that one record is read.
+async fn get_project(
+    State(state): State<Shared>,
+    Path(project_id): Path<String>,
+    headers: HeaderMap,
+) -> ApiResult<Response> {
+    let project = project_for(&state, &project_id, &headers)?;
+    let run_ids = state
+        .registry
+        .project_run_ids(&project_id)
         .unwrap_or_default();
-    let random: [u8; 8] = rand::random();
-    format!("run_{seconds:010}_{}", hex::encode(random))
+    let last = run_ids
+        .first()
+        .and_then(|id| state.registry.load_run(id).ok());
+    Ok((
+        StatusCode::OK,
+        Json(json!({
+            "project": ProjectView::from(&project),
+            "run_count": run_ids.len(),
+            "last_run_id": last.as_ref().map(|run| run.run_id.clone()),
+            "last_run_status": last.as_ref().map(|run| run.status),
+        })),
+    )
+        .into_response())
+}
+
+/// Resolve a project for a caller entitled to see it.
+///
+/// The operator sees any; a project token sees only its own, because it is only
+/// ever matched against that project's tokens.
+fn project_for(state: &AppState, project_id: &str, headers: &HeaderMap) -> ApiResult<Project> {
+    match authenticate(state, project_id, headers)? {
+        Principal::Operator => state
+            .registry
+            .load_project(project_id)
+            .map_err(|_| ApiError::not_found("project")),
+        Principal::Project { project, .. } => Ok(*project),
+    }
+}
+
+// ------------------------------------------------------------------ tokens
+
+#[derive(serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+struct CreateTokenRequest {
+    label: String,
+}
+
+#[derive(Serialize)]
+struct TokenView {
+    token_id: String,
+    label: String,
+    created_at_unix_seconds: u64,
+    last_used_at_unix_seconds: Option<u64>,
+    revoked_at_unix_seconds: Option<u64>,
+}
+
+impl From<&ProjectToken> for TokenView {
+    fn from(token: &ProjectToken) -> Self {
+        Self {
+            token_id: token.token_id.clone(),
+            label: token.label.clone(),
+            created_at_unix_seconds: token.created_at_unix_seconds,
+            last_used_at_unix_seconds: token.last_used_at_unix_seconds,
+            revoked_at_unix_seconds: token.revoked_at_unix_seconds,
+        }
+    }
+}
+
+/// Issue a token. The secret appears in this response and nowhere else, ever.
+async fn create_token(
+    State(state): State<Shared>,
+    Path(project_id): Path<String>,
+    headers: HeaderMap,
+    body: Bytes,
+) -> ApiResult<Response> {
+    let principal = authenticate(&state, &project_id, &headers)?;
+    require_operator(&principal)?;
+    let request: CreateTokenRequest = parse_json(&body)?;
+    state
+        .registry
+        .load_project(&project_id)
+        .map_err(|_| ApiError::not_found("project"))?;
+
+    let secret = crate::project::generate_token();
+    let token = ProjectToken::new(&crate::ids::token(), &project_id, &request.label, &secret)
+        .map_err(|error| ApiError::bad_request(format!("{error}")))?;
+    state
+        .registry
+        .create_token(&token)
+        .map_err(|error| ApiError::internal(format!("persisting the token: {error}")))?;
+
+    let mut body = serde_json::to_value(TokenView::from(&token)).unwrap_or(json!({}));
+    body["token"] = json!(secret);
+    Ok((StatusCode::CREATED, Json(body)).into_response())
+}
+
+async fn list_tokens(
+    State(state): State<Shared>,
+    Path(project_id): Path<String>,
+    headers: HeaderMap,
+) -> ApiResult<Response> {
+    let principal = authenticate(&state, &project_id, &headers)?;
+    require_operator(&principal)?;
+    let tokens = state
+        .registry
+        .list_tokens(&project_id)
+        .map_err(|error| ApiError::internal(format!("listing tokens: {error}")))?;
+    let views: Vec<TokenView> = tokens.iter().map(TokenView::from).collect();
+    Ok((StatusCode::OK, Json(json!({ "tokens": views }))).into_response())
+}
+
+async fn revoke_token(
+    State(state): State<Shared>,
+    Path((project_id, token_id)): Path<(String, String)>,
+    headers: HeaderMap,
+) -> ApiResult<Response> {
+    let principal = authenticate(&state, &project_id, &headers)?;
+    require_operator(&principal)?;
+    let token = state
+        .registry
+        .revoke_token(&project_id, &token_id)
+        .map_err(|_| ApiError::not_found("token"))?;
+    Ok((StatusCode::OK, Json(TokenView::from(&token))).into_response())
+}
+
+// ----------------------------------------------------------------- bundles
+
+#[derive(Serialize)]
+struct BundleView {
+    bundle_id: String,
+    bundle_sha256: String,
+    baseline_sha256: String,
+    program_id: String,
+    adapter_id: String,
+    semantic_schema_version: u32,
+    record_count: usize,
+    source_filename: Option<String>,
+    created_at_unix_seconds: u64,
+    active: bool,
+}
+
+fn bundle_view(record: &ProjectBundle, project: &Project) -> BundleView {
+    BundleView {
+        bundle_id: record.bundle_id.clone(),
+        bundle_sha256: record.bundle_sha256.clone(),
+        baseline_sha256: record.baseline_sha256.clone(),
+        program_id: record.program_id.clone(),
+        adapter_id: record.adapter_id.to_string(),
+        semantic_schema_version: record.semantic_schema_version,
+        record_count: record.record_count,
+        source_filename: record.source_filename.clone(),
+        created_at_unix_seconds: record.created_at_unix_seconds,
+        // Derived from the project's pointer, never stored on the bundle: a
+        // bundle does not know whether it is in use, and two records claiming
+        // to be active would be a contradiction nothing could resolve.
+        active: project
+            .active_bundle
+            .as_ref()
+            .is_some_and(|active| active.bundle_id == record.bundle_id),
+    }
+}
+
+/// Register an uploaded bundle.
+///
+/// The bundle arrives as one multipart part per file, named by its path inside
+/// the bundle, so a browser can send the directory the CLI produced without
+/// anything being archived, and so this service needs no archive format of its
+/// own. Every path is checked before it becomes one.
+async fn create_bundle(
+    State(state): State<Shared>,
+    Path(project_id): Path<String>,
+    headers: HeaderMap,
+    multipart: Multipart,
+) -> ApiResult<Response> {
+    let principal = authenticate(&state, &project_id, &headers)?;
+    require_operator(&principal)?;
+    let project = state
+        .registry
+        .load_project(&project_id)
+        .map_err(|_| ApiError::not_found("project"))?;
+
+    let staging = tempfile::Builder::new()
+        .prefix("eplyx-bundle-")
+        .tempdir()
+        .map_err(|error| ApiError::internal(format!("staging: {error}")))?;
+    let filename = read_bundle_upload(&state, multipart, staging.path()).await?;
+
+    // Verification is the engine's, not this layer's. `register_bundle` opens
+    // the uploaded tree through `CiBundle::open` and refuses anything that does
+    // not verify, belong to this program, or match the declared adapter.
+    let record = state
+        .registry
+        .register_bundle(&project, staging.path(), filename.as_deref())
+        .map_err(|error| ApiError::new(StatusCode::BAD_REQUEST, format!("{error:#}")))?;
+
+    Ok((StatusCode::CREATED, Json(bundle_view(&record, &project))).into_response())
+}
+
+async fn list_bundles(
+    State(state): State<Shared>,
+    Path(project_id): Path<String>,
+    headers: HeaderMap,
+) -> ApiResult<Response> {
+    let project = project_for(&state, &project_id, &headers)?;
+    let bundles = state
+        .registry
+        .list_bundles(&project_id)
+        .map_err(|error| ApiError::internal(format!("listing bundles: {error}")))?;
+    let views: Vec<BundleView> = bundles
+        .iter()
+        .map(|record| bundle_view(record, &project))
+        .collect();
+    Ok((StatusCode::OK, Json(json!({ "bundles": views }))).into_response())
+}
+
+/// Move the project's pointer. Nothing is deleted, and history is kept.
+async fn activate_bundle(
+    State(state): State<Shared>,
+    Path((project_id, bundle_id)): Path<(String, String)>,
+    headers: HeaderMap,
+) -> ApiResult<Response> {
+    let principal = authenticate(&state, &project_id, &headers)?;
+    require_operator(&principal)?;
+    let project = state
+        .registry
+        .activate_bundle(&project_id, &bundle_id)
+        .map_err(|error| ApiError::new(StatusCode::CONFLICT, format!("{error:#}")))?;
+    Ok((StatusCode::OK, Json(ProjectView::from(&project))).into_response())
+}
+
+// ------------------------------------------------------------- run history
+
+#[derive(serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+struct RunQuery {
+    #[serde(default)]
+    limit: Option<usize>,
+    #[serde(default)]
+    cursor: Option<String>,
+    #[serde(default)]
+    status: Option<RunStatus>,
+    #[serde(default)]
+    exit_code: Option<u8>,
+}
+
+#[derive(Serialize)]
+struct RunSummaryView {
+    run_id: String,
+    status: RunStatus,
+    exit_code: Option<u8>,
+    created_at_unix_seconds: u64,
+    started_at_unix_seconds: Option<u64>,
+    completed_at_unix_seconds: Option<u64>,
+    candidate_sha256: String,
+    bundle_sha256: String,
+    bundle_id: Option<String>,
+    report_available: bool,
+}
+
+/// A project's runs, newest first.
+///
+/// The cursor is a run id, and paging means "everything after this one in the
+/// ordering". Ids lead with their own minting time, so that is both stable
+/// under concurrent inserts and free to compute — a run created mid-page does
+/// not shift what the next page contains.
+async fn list_project_runs(
+    State(state): State<Shared>,
+    Path(project_id): Path<String>,
+    axum::extract::Query(query): axum::extract::Query<RunQuery>,
+    headers: HeaderMap,
+) -> ApiResult<Response> {
+    project_for(&state, &project_id, &headers)?;
+    let limit = query.limit.unwrap_or(20).clamp(1, 100);
+    let ids = state
+        .registry
+        .project_run_ids(&project_id)
+        .map_err(|error| ApiError::internal(format!("listing runs: {error}")))?;
+
+    let mut runs = Vec::new();
+    let mut next_cursor = None;
+    for id in ids {
+        if let Some(cursor) = &query.cursor {
+            if id.as_str() >= cursor.as_str() {
+                continue;
+            }
+        }
+        let Ok(run) = state.registry.load_run(&id) else {
+            continue;
+        };
+        if query.status.is_some_and(|want| want != run.status) {
+            continue;
+        }
+        if query.exit_code.is_some() && query.exit_code != run.exit_code {
+            continue;
+        }
+        if runs.len() == limit {
+            next_cursor = Some(runs.last().map(|last: &RunSummaryView| last.run_id.clone()));
+            break;
+        }
+        runs.push(RunSummaryView {
+            run_id: run.run_id,
+            status: run.status,
+            exit_code: run.exit_code,
+            created_at_unix_seconds: run.created_at_unix_seconds,
+            started_at_unix_seconds: run.started_at_unix_seconds,
+            completed_at_unix_seconds: run.completed_at_unix_seconds,
+            candidate_sha256: run.candidate_sha256,
+            bundle_sha256: run.bundle_sha256,
+            bundle_id: run.bundle_id,
+            report_available: run.report_available,
+        });
+    }
+    Ok((
+        StatusCode::OK,
+        Json(json!({ "runs": runs, "next_cursor": next_cursor.flatten() })),
+    )
+        .into_response())
+}
+
+/// Read an uploaded bundle into a staging directory.
+///
+/// Each part is named by its path inside the bundle. That name is the one thing
+/// a caller controls that could become a filesystem path, so it is validated
+/// rather than sanitised: anything absolute, anything with a traversal segment,
+/// anything with a character outside a narrow set, and anything unreasonably
+/// deep is refused outright.
+async fn read_bundle_upload(
+    state: &AppState,
+    mut multipart: Multipart,
+    into: &std::path::Path,
+) -> ApiResult<Option<String>> {
+    let mut total = 0_usize;
+    let mut files = 0_usize;
+    let mut first_name = None;
+    loop {
+        let field = multipart.next_field().await.map_err(|error| {
+            ApiError::new(error.status(), format!("malformed multipart: {error}"))
+        })?;
+        let Some(field) = field else { break };
+        let name = field.name().unwrap_or_default().to_string();
+        let filename = field.file_name().map(str::to_string);
+        let bytes = field
+            .bytes()
+            .await
+            .map_err(|error| ApiError::new(error.status(), format!("upload rejected: {error}")))?;
+
+        let relative = bundle_member_path(&name)
+            .ok_or_else(|| ApiError::bad_request(format!("unsafe bundle path {name:?}")))?;
+        total += bytes.len();
+        files += 1;
+        if total > state.config.max_bundle_bytes {
+            return Err(ApiError::too_large("bundle", state.config.max_bundle_bytes));
+        }
+        if files > 512 {
+            return Err(ApiError::bad_request("a bundle with more than 512 files"));
+        }
+        let destination = into.join(&relative);
+        if let Some(parent) = destination.parent() {
+            std::fs::create_dir_all(parent)
+                .map_err(|error| ApiError::internal(format!("staging: {error}")))?;
+        }
+        std::fs::write(&destination, &bytes)
+            .map_err(|error| ApiError::internal(format!("staging: {error}")))?;
+        if first_name.is_none() {
+            first_name = filename;
+        }
+    }
+    if files == 0 {
+        return Err(ApiError::bad_request("no bundle files were uploaded"));
+    }
+    Ok(first_name)
+}
+
+/// A relative path inside a bundle, or nothing.
+fn bundle_member_path(name: &str) -> Option<std::path::PathBuf> {
+    if name.is_empty() || name.len() > 200 || name.starts_with('/') || name.contains('\\') {
+        return None;
+    }
+    let segments: Vec<&str> = name.split('/').collect();
+    if segments.len() > 4 {
+        return None;
+    }
+    let mut path = std::path::PathBuf::new();
+    for segment in segments {
+        if segment.is_empty() || segment == "." || segment == ".." || segment.len() > 100 {
+            return None;
+        }
+        if !segment
+            .bytes()
+            .all(|b| b.is_ascii_alphanumeric() || b == b'.' || b == b'-' || b == b'_')
+        {
+            return None;
+        }
+        path.push(segment);
+    }
+    Some(path)
 }

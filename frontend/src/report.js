@@ -1,4 +1,5 @@
 import { Header, Footer } from './shell.js';
+import { API_BASE, operatorToken } from './session.js';
 
 /** One request in flight at a time, and never sub-second. */
 const POLL_MS = 1500;
@@ -21,7 +22,7 @@ const TERMINAL = ['passed', 'failed', 'execution_error'];
 export function ReportPage(id) {
   if (id === 'demo') return renderReport(DEMO, { demo: true, id });
 
-  const context = readContext(id);
+  const context = readContext();
   if (!context) return renderUnavailable(id);
   // Nothing of the submission is assumed to still be in memory: the run's own
   // state comes from the server on the first poll, a moment from now.
@@ -37,7 +38,7 @@ export function ReportPage(id) {
  */
 export function attachReport(id, render) {
   if (id === 'demo') return () => {};
-  const context = readContext(id);
+  const context = readContext();
   if (!context) return () => {};
 
   let stopped = false;
@@ -95,15 +96,16 @@ export function attachReport(id, render) {
   return stop;
 }
 
-/** What a run page needs to keep polling a run it did not itself submit. */
-function readContext(id) {
-  try {
-    const stored = sessionStorage.getItem(`eplyx-run-${id}`);
-    const context = stored ? JSON.parse(stored) : null;
-    return context?.api && context?.token ? context : null;
-  } catch {
-    return null;
-  }
+/**
+ * What a run page needs to follow a run.
+ *
+ * The console's own credential, not anything kept from a submission. That is
+ * what makes a run openable from history, from a link, or after a reload — the
+ * page never depended on having been the one that started it.
+ */
+function readContext() {
+  const token = operatorToken();
+  return token ? { api: API_BASE, token } : null;
 }
 
 /**

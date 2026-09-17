@@ -8,11 +8,18 @@
 //! ```text
 //! /data
 //!   projects/<project-id>/project.json
+//!   projects/<project-id>/tokens/<token-id>.json
+//!   projects/<project-id>/bundles/<bundle-id>.json   a project's record of one
+//!   projects/<project-id>/runs/<run-id>              index marker, empty
 //!   bundles/<bundle-sha256>/          an installed, verified CI bundle
 //!   runs/<run-id>/metadata.json
 //!   runs/<run-id>/report.json
 //!   runs/<run-id>/report.md
 //! ```
+//!
+//! Bundle *content* is addressed by its hash and shared; a project's record of
+//! a bundle lives under the project. Two projects that upload identical bytes
+//! store them once and own separate records of them.
 
 use std::path::{Path, PathBuf};
 
@@ -65,8 +72,7 @@ impl Storage {
     }
 
     pub fn project_path(&self, id: &str) -> Result<PathBuf> {
-        checked(id, "project id")?;
-        Ok(self.root.join("projects").join(id).join("project.json"))
+        Ok(self.project_dir(id)?.join("project.json"))
     }
 
     pub fn bundle_path(&self, sha256: &str) -> Result<PathBuf> {
@@ -78,13 +84,49 @@ impl Storage {
         self.root.join("runs")
     }
 
+    pub fn projects_root(&self) -> PathBuf {
+        self.root.join("projects")
+    }
+
+    pub fn project_dir(&self, project_id: &str) -> Result<PathBuf> {
+        checked(project_id, "project id")?;
+        Ok(self.projects_root().join(project_id))
+    }
+
+    pub fn project_tokens_dir(&self, project_id: &str) -> Result<PathBuf> {
+        Ok(self.project_dir(project_id)?.join("tokens"))
+    }
+
+    pub fn project_token_path(&self, project_id: &str, token_id: &str) -> Result<PathBuf> {
+        checked(token_id, "token id")?;
+        Ok(self
+            .project_tokens_dir(project_id)?
+            .join(format!("{token_id}.json")))
+    }
+
+    pub fn project_bundles_dir(&self, project_id: &str) -> Result<PathBuf> {
+        Ok(self.project_dir(project_id)?.join("bundles"))
+    }
+
+    pub fn project_bundle_path(&self, project_id: &str, bundle_id: &str) -> Result<PathBuf> {
+        checked(bundle_id, "bundle id")?;
+        Ok(self
+            .project_bundles_dir(project_id)?
+            .join(format!("{bundle_id}.json")))
+    }
+
+    pub fn project_runs_dir(&self, project_id: &str) -> Result<PathBuf> {
+        Ok(self.project_dir(project_id)?.join("runs"))
+    }
+
+    pub fn project_run_marker(&self, project_id: &str, run_id: &str) -> Result<PathBuf> {
+        checked(run_id, "run id")?;
+        Ok(self.project_runs_dir(project_id)?.join(run_id))
+    }
+
     pub fn run_dir(&self, id: &str) -> Result<PathBuf> {
         checked(id, "run id")?;
         Ok(self.root.join("runs").join(id))
-    }
-
-    pub fn read_project(&self, path: &Path) -> Result<crate::project::Project> {
-        self.read_json(path)
     }
 
     pub fn read_json<T: DeserializeOwned>(&self, path: &Path) -> Result<T> {
