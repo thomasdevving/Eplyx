@@ -20,6 +20,14 @@ The binary serves by default; `eplyx-server admin ...` is the operator surface.
 | `EPLYX_MAX_CANDIDATE_BYTES` | 8 MiB | |
 | `EPLYX_MAX_EXPECTATION_BYTES` | 256 KiB | |
 | `EPLYX_MAX_CONCURRENT_RUNS` | 2 | replay is CPU-bound and synchronous; this bounds how many run at once |
+| `EPLYX_ALLOWED_ORIGINS` | *(empty)* | comma-separated browser origins allowed to call the API, e.g. `https://eplyx.dev` |
+
+**`EPLYX_ALLOWED_ORIGINS` is required for the browser flow and for nothing else.**
+A request carrying an `Authorization` header triggers a CORS preflight, and with
+no origin named the API answers it without `Access-Control-Allow-Origin`, so the
+browser blocks the call. CI runners are unaffected — `curl` does not enforce the
+same-origin policy — so leaving it empty is the right default and naming a
+wildcard never is: these requests are authenticated.
 
 Deliberately absent: `SOLANA_RPC_URL`, `SOLANA_ARCHIVE_RPC_URL`,
 `SOLANA_BLOCK_RPC_URL`, `SOLANA_RPC_ORIGIN`. Corpus construction is a separate

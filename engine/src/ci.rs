@@ -34,7 +34,8 @@ use crate::bundle::CiBundle;
 use crate::expectations::ExpectationFile;
 use crate::replay::{hash_bytes, ReplayReport};
 use crate::review::{
-    review, FailureReason, ObservationCoverage, ObservedFinding, Review, ReviewStatus,
+    review, FailureReason, ObservationCoverage, ObservedFinding, ReviewStatus, ReviewedFinding,
+    UnmatchedExpectation,
 };
 
 pub const CI_REPORT_SCHEMA: u32 = 1;
@@ -137,8 +138,16 @@ pub struct CiReport {
     /// change as absent because it could not be named.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub undeclarable: Vec<UndeclarableChange>,
-    #[serde(flatten)]
-    pub review: Review,
+    /// The review, inlined rather than nested.
+    ///
+    /// These were a `#[serde(flatten)]`-ed `Review`, so the Rust type read
+    /// `report.findings` while the JSON carried `findings` at the top
+    /// level. Anything written against the type was then wrong about the wire,
+    /// which is exactly the mistake the frontend made. The type now says what
+    /// the JSON says.
+    pub findings: Vec<ReviewedFinding>,
+    pub unmatched: Vec<UnmatchedExpectation>,
+    pub failures: Vec<FailureReason>,
     pub summary: ReviewSummary,
 }
 
@@ -600,6 +609,9 @@ pub fn assemble(
             len: candidate_len,
         },
         undeclarable,
+        findings: reviewed.findings,
+        unmatched: reviewed.unmatched,
+        failures: reviewed.failures,
         coverage: per_subject
             .into_iter()
             .map(|(subject, observations)| SubjectCoverage {
@@ -607,7 +619,6 @@ pub fn assemble(
                 observations,
             })
             .collect(),
-        review: reviewed,
         summary,
     }
 }

@@ -1596,9 +1596,9 @@ fn render_ci(report: &eplyx_engine::ci::CiReport) -> String {
         report.summary.unevaluable
     );
 
-    if !report.review.findings.is_empty() {
+    if !report.findings.is_empty() {
         let _ = writeln!(text, "\nFINDINGS");
-        for finding in &report.review.findings {
+        for finding in &report.findings {
             // Severity and review status are two separate statements, and the
             // report keeps them side by side rather than folding one into the
             // other.
@@ -1631,9 +1631,9 @@ fn render_ci(report: &eplyx_engine::ci::CiReport) -> String {
         }
     }
 
-    if !report.review.unmatched.is_empty() {
+    if !report.unmatched.is_empty() {
         let _ = writeln!(text, "\nDECLARATIONS THAT MATCHED NOTHING");
-        for entry in &report.review.unmatched {
+        for entry in &report.unmatched {
             let _ = writeln!(text, "  {}", entry.status.as_str().to_uppercase());
             let _ = writeln!(text, "    {}", entry.fingerprint);
             let _ = writeln!(text, "    declared: {}", entry.reason);

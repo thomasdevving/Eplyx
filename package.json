@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "node frontend/dev-server.mjs",
     "build": "node frontend/build.mjs",
-    "check:frontend": "node frontend/check.mjs",
+    "check:frontend": "node frontend/check.mjs && node frontend/report.test.mjs",
     "verify:report": "node ts/check-report.ts"
   },
   "dependencies": {
