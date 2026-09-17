@@ -1,152 +1,300 @@
 import { Mark } from './brand.js';
 
-const inputs = [
-  ['Program Upgrade', 'live', 0],
-  ['Governance Change', 'future', 1],
-  ['Privilege / Authority', 'future', 2],
-  ['Parameter Change', 'future', 3],
-];
-const outputs = [
-  ['Economic Impact', 'live', 4, '<span>pool_tokens_<wbr>received</span><b>↓ 21 bps</b>'],
-  ['CI Decision', 'live', 5, '<span>UNEXPECTED</span><b class="signal-result__fail">FAIL</b>'],
-  ['Authority Surface', 'future', 6],
-  ['Exitability', 'future', 7],
-];
-// Initial gutter-only paths; attachment measures the actual label ports.
-const paths = [
-  'M188 172C225 172 216 283 257 283',
-  'M188 306C223 306 221 298 257 298',
-  'M188 384C224 384 221 318 257 318',
-  'M188 462C224 462 220 340 257 340',
-  'M423 283C464 283 465 172 505 172',
-  'M423 314C464 314 465 301 505 301',
-  'M423 333C464 333 465 419 505 419',
-  'M423 352C464 352 465 486 505 486',
-];
+// Two orbital planes around the mark: the changes Eplyx tracks, and the
+// consequences it measures. Each ring keeps its own inclination and travel
+// direction, so the toggle reads as a change of axis rather than a swap of
+// labels. Depth is the ring angle alone — the far half passes behind the mark.
+const rings = {
+  changes: {
+    label: 'Changes',
+    caption: 'What Eplyx tracks · one live layer, three planned',
+    tilt: -17,
+    direction: -1,
+    duration: 38,
+    bodies: [
+      ['Program Upgrade', 'live', 'A proposed program binary, replayed against validated historical production state.'],
+      ['Governance Change', 'planned', 'Proposals that change the rules, evaluated before they execute.'],
+      ['Privilege / Authority', 'planned', 'Who holds upgrade, freeze and withdrawal authority over the program.'],
+      ['Parameter Change', 'planned', 'Fees, rates and limits the program can move without a new binary.'],
+    ],
+  },
+  consequences: {
+    label: 'Consequences',
+    caption: 'What Eplyx measures · two live layers, two planned',
+    tilt: 19,
+    direction: 1,
+    duration: 34,
+    bodies: [
+      ['Economic Impact', 'live', 'Measured user output, fees and protocol balances across the tested corpus.', 'pool_tokens_received', '↓ 21 bps'],
+      ['CI Decision', 'live', 'An undeclared or out-of-bounds change fails the gate.', 'Unexpected', 'FAIL'],
+      ['Authority Surface', 'planned', 'Which authorities a change exposes, widens or removes.'],
+      ['Exitability', 'planned', 'Whether users can still withdraw once the change is live.'],
+    ],
+  },
+};
+
+const orbitBody = (ring, [name, status, detail, metric, value], index) =>
+  `<button type="button" class="orbit-body orbit-body--${status}" data-ring="${ring}" data-index="${index}" data-status="${status === 'live' ? 'Live' : 'Planned'}" data-detail="${detail}"${metric ? ` data-metric="${metric}" data-value="${value}"` : ''}>
+    <span class="orbit-body__name">${name}</span>
+    <small class="orbit-body__status">${status === 'live' ? 'Live' : 'Planned'}</small>
+    <span class="visually-hidden">${status === 'live' ? 'Live layer' : 'Planned layer'}. ${detail}</span>
+  </button>`;
+
+const orbitPlane = side => `<svg class="orbit-plane orbit-plane--${side}" aria-hidden="true">
+  ${side === 'front' ? `<defs>
+    <linearGradient id="orbit-main"><stop offset="0" stop-color="#b98cf0"/><stop offset=".38" stop-color="#fdf6ff"/><stop offset=".72" stop-color="#d3b0fb"/><stop offset="1" stop-color="#8646dd"/></linearGradient>
+    <linearGradient id="orbit-sheen"><stop offset="0" stop-color="#fffaff" stop-opacity=".1"/><stop offset=".45" stop-color="#fffaff" stop-opacity=".9"/><stop offset="1" stop-color="#f0dfff" stop-opacity=".15"/></linearGradient>
+    <filter id="orbit-bloom" x="-25%" y="-70%" width="150%" height="240%"><feGaussianBlur stdDeviation="5"/></filter>
+  </defs>` : ''}
+  <path class="orbit-line orbit-line--outer"/>
+  ${side === 'front' ? '<path class="orbit-line orbit-line--bloom"/>' : ''}
+  <path class="orbit-line orbit-line--main"/>
+  ${side === 'front' ? '<path class="orbit-line orbit-line--sheen"/><path class="orbit-pulse" pathLength="1"/>' : ''}
+</svg>`;
 
 export function EplyxCoreScene() {
-  const labels = (items, side) => `<div class="signal-column signal-column--${side}">
-    ${items.map(([name, status, connection, result], row) => {
-      const content = `<span class="signal-name">${name}</span><small class="signal-status">${status === 'live' ? 'Live' : 'Planned'}</small>`;
-      const attributes = `class="signal signal--${status}" style="--signal-row:${row}" data-connection="${connection}"`;
-      if (result) return `<div ${attributes}><button type="button" class="signal-trigger" aria-describedby="signal-result-${connection}">${content}</button><div id="signal-result-${connection}" class="signal-result" role="tooltip">${result}</div><i class="signal-port" aria-hidden="true"></i></div>`;
-      return `<${status === 'future' ? 'button type="button"' : 'div'} ${attributes}${status === 'future' ? ` aria-label="${name}: future capability"` : ''}>${content}<i class="signal-port" aria-hidden="true"></i></${status === 'future' ? 'button' : 'div'}>`;
-    }).join('')}
-  </div>`;
-  return `<div class="core-scene" role="group" aria-label="Change flows through Eplyx into consequences. Explore Economic Impact and CI Decision for demo outputs. Governance, authority, parameter and exitability analysis are planned.">
-    <svg class="execution-traces" viewBox="0 0 690 560" preserveAspectRatio="none" aria-hidden="true">
-      <defs>
-        ${[0, 4, 5].map(i => `<linearGradient id="trace-live-${i}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="690" y2="0"><stop stop-color="${i === 0 ? '#ae7cf3' : '#d9b7ff'}"/><stop offset=".36" stop-color="#f3e6ff"/><stop offset=".7" stop-color="#c295f4"/><stop offset="1" stop-color="${i === 0 ? '#eee0ff' : '#7840be'}"/></linearGradient>`).join('')}
-        <linearGradient id="trace-specular" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="690" y2="0"><stop stop-color="#fffaff" stop-opacity=".2"/><stop offset=".45" stop-color="#fffaff" stop-opacity=".95"/><stop offset="1" stop-color="#f0dfff" stop-opacity=".3"/></linearGradient>
-        <filter id="trace-glow" x="-30%" y="-50%" width="160%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
-      </defs>
-      ${[0, 4, 5].map(i => `<path class="trace-halo" data-route="${i}" d="${paths[i]}"/>`).join('')}
-      ${paths.map((d, i) => `<path class="trace ${[0, 4, 5].includes(i) ? 'trace--live' : 'trace--future'}" data-trace="${i}" data-route="${i}"${[0, 4, 5].includes(i) ? ` style="stroke:url(#trace-live-${i})"` : ''} d="${d}"/>`).join('')}
-      ${[0, 4, 5].map(i => `<path class="trace-specular" data-route="${i}" d="${paths[i]}"/>`).join('')}
-      ${[0, 4, 5].map((i, n) => `<path class="trace-pulse trace-pulse--${['input', 'impact', 'ci'][n]}" pathLength="1" data-route="${i}" d="${paths[i]}"/>`).join('')}
-      ${[0, 4, 5].map(i => `<path class="trace-arrow" data-arrow="${i}" style="fill:url(#trace-live-${i})"/>`).join('')}
-    </svg>
-    ${labels(inputs, 'input')}
-    <div class="core-glow" aria-hidden="true"></div>
-    <div class="logo-core" aria-hidden="true"><div class="sculpture-fallback">${Mark({ className: 'core-mark core-mark--face' })}</div><div class="sculpture-mount"></div></div>
-    ${labels(outputs, 'output')}
-    <div class="scene-footnote"><span><i></i> Live execution path</span><span>Future layers · planned</span></div>
+  const planes = Object.entries(rings);
+  return `<div class="core-scene" data-ring="changes" role="group" aria-label="The changes Eplyx tracks and the consequences it measures, orbiting the Eplyx mark. Switch between both sets and explore each layer for its current status.">
+    <div class="core-stage">
+      ${orbitPlane('back')}
+      <div class="core-glow" aria-hidden="true"></div>
+      <div class="logo-core" aria-hidden="true"><div class="sculpture-fallback">${Mark({ className: 'core-mark core-mark--face' })}</div><div class="sculpture-mount"></div></div>
+      ${orbitPlane('front')}
+      ${planes.map(([name, ring]) => ring.bodies.map((body, index) => orbitBody(name, body, index)).join('')).join('')}
+      <div class="orbit-detail" aria-hidden="true">
+        <div class="orbit-detail__head"><strong class="orbit-detail__name"></strong><em class="orbit-detail__status"></em></div>
+        <p class="orbit-detail__text"></p>
+        <div class="orbit-detail__metric"><span></span><b></b></div>
+      </div>
+    </div>
+    <div class="orbit-switch">
+      <i class="orbit-switch__thumb" aria-hidden="true"></i>
+      ${planes.map(([key, ring], index) => `<button type="button" class="orbit-switch__option" data-target="${key}" aria-pressed="${index === 0}">${ring.label}</button>`).join('')}
+    </div>
+    <p class="orbit-caption">${rings.changes.caption}</p>
   </div>`;
 }
 
 export function attachCoreParallax() {
   const scene = document.querySelector('.core-scene');
   if (!scene) return () => {};
-  // Long horizontal runs sit below the labels; bends stay in the gutters.
-  // Measure instead of assuming a fixed relationship between text and SVG.
-  const updateRoutes = () => {
-    if (!scene.isConnected) return;
-    const bounds = scene.getBoundingClientRect();
-    if (!bounds.width || !bounds.height) return;
-    const core = scene.querySelector('.logo-core').getBoundingClientRect();
-    const x = value => (value - bounds.left) * 690 / bounds.width;
-    const y = value => (value - bounds.top) * 560 / bounds.height;
-    const coreLeft = x(core.left + core.width * .18);
-    const coreRight = x(core.right - core.width * .18);
-    const coreMiddle = y(core.top + core.height * .5);
-    scene.querySelectorAll('.signal').forEach(label => {
-      if (!label.getClientRects().length) return;
-      const id = Number(label.dataset.connection);
-      const port = label.querySelector('.signal-port').getBoundingClientRect();
-      const portX = x(port.left + port.width / 2);
-      const portY = y(port.top + port.height / 2);
-      const input = id < 4;
-      const coreY = coreMiddle + [-27, -9, 9, 27][id % 4];
-      const startX = input ? portX : coreRight;
-      const startY = input ? portY : coreY;
-      const endX = input ? coreLeft : portX;
-      const endY = input ? coreY : portY;
-      const column = label.closest('.signal-column').getBoundingClientRect();
-      const gutter = input ? x(column.right + 12) : x(column.left - 12);
-      const bend = input ? (gutter + endX) / 2 : (startX + gutter) / 2;
-      const d = input
-        ? `M${startX} ${startY}H${gutter}C${bend} ${startY} ${bend} ${endY} ${endX} ${endY}`
-        : `M${startX} ${startY}C${bend} ${startY} ${bend} ${endY} ${gutter} ${endY}H${endX}`;
-      scene.querySelectorAll(`[data-route="${id}"]`).forEach(path => path.setAttribute('d', d));
-      const gradient = scene.querySelector(`#trace-live-${id}`);
-      if (gradient) {
-        for (const [attribute, value] of Object.entries({ x1: startX, y1: startY, x2: endX, y2: endY })) gradient.setAttribute(attribute, value);
-      }
-      const arrow = scene.querySelector(`[data-arrow="${id}"]`);
-      arrow?.setAttribute('d', `M${endX - 13} ${endY - 5.5}Q${endX - 14} ${endY - 6.5} ${endX - 11} ${endY - 5.5}L${endX} ${endY}L${endX - 11} ${endY + 5.5}Q${endX - 14} ${endY + 6.5} ${endX - 13} ${endY + 5.5}L${endX - 8.5} ${endY}Z`);
-    });
-  };
-  const routesObserver = new ResizeObserver(updateRoutes);
-  routesObserver.observe(scene);
-  routesObserver.observe(scene.querySelector('.logo-core'));
-  scene.querySelectorAll('.signal').forEach(label => routesObserver.observe(label));
-  updateRoutes();
-  document.fonts?.ready.then(updateRoutes);
+  const stage = scene.querySelector('.core-stage');
+  const detail = scene.querySelector('.orbit-detail');
+  const caption = scene.querySelector('.orbit-caption');
+  const bodies = [...scene.querySelectorAll('.orbit-body')];
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
+  // The inclination is tweened on a switch, so line and bodies never disagree.
+  const view = { tilt: rings.changes.tilt, from: rings.changes.tilt, to: rings.changes.tilt, swing: 1 };
+  const listeners = [];
+  let active = 'changes';
+  let width = 0, height = 0, bodyWidth = 154, spanX = 0, spanY = 0;
+  let frame = 0, last = 0, elapsed = 0, held = null, onscreen = true;
+
+  const point = (angle, spread = 1) => {
+    const radians = view.tilt * Math.PI / 180;
+    const x = Math.cos(angle) * spanX * spread;
+    const y = Math.sin(angle) * spanY * spread;
+    return {
+      x: width / 2 + x * Math.cos(radians) - y * Math.sin(radians),
+      y: height / 2 + x * Math.sin(radians) + y * Math.cos(radians),
+      depth: Math.sin(angle),
+    };
+  };
+
+  const arc = (from, to, spread) => {
+    let d = '';
+    for (let step = 0; step <= 44; step++) {
+      const { x, y } = point(from + (to - from) * step / 44, spread);
+      d += `${step ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`;
+    }
+    return d;
+  };
+
+  const drawPlanes = () => {
+    if (!width || !height) return;
+    for (const [side, from, to] of [['back', Math.PI, Math.PI * 2], ['front', 0, Math.PI]]) {
+      const plane = scene.querySelector(`.orbit-plane--${side}`);
+      plane.setAttribute('viewBox', `0 0 ${width} ${height}`);
+      const main = arc(from, to, 1);
+      plane.querySelectorAll('.orbit-line--main, .orbit-line--sheen, .orbit-line--bloom, .orbit-pulse').forEach(path => path.setAttribute('d', main));
+      plane.querySelector('.orbit-line--outer').setAttribute('d', arc(from, to, 1.19));
+    }
+  };
+
+  // The panel aligns with the body's outward edge so it opens away from the
+  // mark, and only flips back when that side has no room left in the stage.
+  const anchor = (x, y) => {
+    const half = (detail.offsetWidth || 228) / 2;
+    const depth = detail.offsetHeight || 150;
+    const outward = x >= width / 2 ? 1 : -1;
+    const span = Math.max(width - half - 2, half + 2);
+    const left = Math.min(Math.max(x + outward * (bodyWidth / 2 - half), half + 2), span);
+    const below = y < height * .5 ? y + 40 + depth < height : y - 40 - depth < 0;
+    detail.style.transform = `translate(${left.toFixed(1)}px, ${(y + (below ? 40 : -40)).toFixed(1)}px) translate(-50%, ${below ? '0' : '-100%'})`;
+  };
+
+  const place = () => {
+    if (!width || !height) return;
+    const ring = rings[active];
+    const turn = elapsed / ring.duration * Math.PI * 2 * ring.direction;
+    for (const body of bodies) {
+      if (body.dataset.ring !== active) continue;
+      const { x, y, depth } = point(turn + Number(body.dataset.index) / ring.bodies.length * Math.PI * 2);
+      const near = (depth + 1) / 2;
+      body.style.transform = `translate(-50%, -50%) translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) scale(${(.85 + near * .15).toFixed(3)})`;
+      body.style.zIndex = depth > 0 ? 6 : 2;
+      body.style.setProperty('--near', near.toFixed(3));
+      if (body === held) anchor(x, y);
+    }
+    scene.classList.add('is-placed');
+  };
+
+  const step = now => {
+    frame = 0;
+    const delta = last ? Math.min((now - last) / 1000, .05) : 0;
+    last = now;
+    if (view.swing < 1) {
+      view.swing = Math.min(1, view.swing + delta / .8);
+      const eased = 1 - (1 - view.swing) ** 3;
+      view.tilt = view.from + (view.to - view.from) * eased;
+      drawPlanes();
+    }
+    if (!held) elapsed += delta;
+    place();
+    if (onscreen && !document.hidden && !motion.matches) frame = requestAnimationFrame(step);
+  };
+
+  const start = () => {
+    if (frame || motion.matches || !onscreen || document.hidden) return;
+    last = 0;
+    frame = requestAnimationFrame(step);
+  };
+  const stop = () => {
+    cancelAnimationFrame(frame);
+    frame = 0;
+  };
+
+  const measure = () => {
+    const rect = stage.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    width = rect.width;
+    height = rect.height;
+    bodyWidth = parseFloat(getComputedStyle(scene).getPropertyValue('--orbit-body')) || bodyWidth;
+    spanX = Math.min(width * .39, width / 2 - bodyWidth / 2 - 2);
+    spanY = height * .22;
+    drawPlanes();
+    place();
+  };
+
+  const show = body => {
+    held = body;
+    detail.querySelector('.orbit-detail__name').textContent = body.querySelector('.orbit-body__name').textContent;
+    detail.querySelector('.orbit-detail__status').textContent = body.dataset.status;
+    detail.querySelector('.orbit-detail__text').textContent = body.dataset.detail;
+    const metric = detail.querySelector('.orbit-detail__metric');
+    metric.style.display = body.dataset.metric ? '' : 'none';
+    if (body.dataset.metric) {
+      metric.querySelector('span').textContent = body.dataset.metric;
+      metric.querySelector('b').textContent = body.dataset.value;
+    }
+    detail.dataset.status = body.dataset.status;
+    detail.classList.add('is-visible');
+    body.classList.add('orbit-body--held');
+    place();
+  };
+
+  const hide = () => {
+    held?.classList.remove('orbit-body--held');
+    held = null;
+    detail.classList.remove('is-visible');
+  };
+
+  const select = next => {
+    if (next === active || !rings[next]) return;
+    active = next;
+    scene.dataset.ring = next;
+    scene.querySelectorAll('.orbit-switch__option').forEach(option => option.setAttribute('aria-pressed', String(option.dataset.target === next)));
+    caption.textContent = rings[next].caption;
+    hide();
+    view.from = view.tilt;
+    view.to = rings[next].tilt;
+    view.swing = motion.matches ? 1 : 0;
+    if (motion.matches) view.tilt = view.to;
+    drawPlanes();
+    place();
+    start();
+  };
+
+  const bind = (target, event, handler) => {
+    target.addEventListener(event, handler);
+    listeners.push(() => target.removeEventListener(event, handler));
+  };
+
+  for (const body of bodies) {
+    bind(body, 'pointerenter', () => show(body));
+    bind(body, 'focus', () => show(body));
+    bind(body, 'pointerleave', hide);
+    bind(body, 'blur', hide);
+    bind(body, 'click', () => (held === body ? hide() : show(body)));
+    bind(body, 'keydown', event => {
+      if (event.key === 'Escape') hide();
+    });
+  }
+  for (const option of scene.querySelectorAll('.orbit-switch__option')) {
+    bind(option, 'click', () => select(option.dataset.target));
+  }
+
   const move = ({ clientX, clientY }) => {
     if (motion.matches) return;
-    const r = scene.getBoundingClientRect();
-    scene.style.setProperty('--px', ((clientX - r.left) / r.width - .5).toFixed(3));
-    scene.style.setProperty('--py', ((clientY - r.top) / r.height - .5).toFixed(3));
+    const rect = scene.getBoundingClientRect();
+    scene.style.setProperty('--px', ((clientX - rect.left) / rect.width - .5).toFixed(3));
+    scene.style.setProperty('--py', ((clientY - rect.top) / rect.height - .5).toFixed(3));
   };
   const leave = () => {
     scene.style.setProperty('--px', 0);
     scene.style.setProperty('--py', 0);
   };
-  scene.addEventListener('pointermove', move);
-  scene.addEventListener('pointerleave', leave);
-  const connections = [];
-  scene.querySelectorAll('.signal--future, .signal:has(.signal-trigger)').forEach(label => {
-    const path = scene.querySelector(`[data-trace="${label.dataset.connection}"]`);
-    const highlight = () => path?.classList.add('trace--highlighted');
-    const reset = () => path?.classList.remove('trace--highlighted');
-    for (const [event, handler] of [['pointerenter', highlight], ['focusin', highlight], ['pointerleave', reset], ['focusout', reset]]) {
-      label.addEventListener(event, handler);
-      connections.push(() => label.removeEventListener(event, handler));
-    }
+  bind(scene, 'pointermove', move);
+  bind(scene, 'pointerleave', leave);
+
+  const onMotion = () => {
+    stop();
+    if (motion.matches) {
+      view.tilt = view.to;
+      drawPlanes();
+      place();
+    } else start();
+  };
+  const onVisibility = () => (document.hidden ? stop() : start());
+  motion.addEventListener('change', onMotion);
+  document.addEventListener('visibilitychange', onVisibility);
+
+  const sizeObserver = new ResizeObserver(measure);
+  sizeObserver.observe(stage);
+  const screenObserver = new IntersectionObserver(([entry]) => {
+    onscreen = entry.isIntersecting;
+    if (onscreen) start(); else stop();
   });
-  scene.querySelectorAll('.signal-trigger').forEach(trigger => {
-    const label = trigger.closest('.signal');
-    const dismiss = event => {
-      if (event.key === 'Escape') label.classList.add('signal--dismissed');
-    };
-    const reset = () => label.classList.remove('signal--dismissed');
-    for (const [event, handler] of [['keydown', dismiss], ['pointerleave', reset], ['focusout', reset], ['pointerenter', reset]]) {
-      label.addEventListener(event, handler);
-      connections.push(() => label.removeEventListener(event, handler));
-    }
-  });
+  screenObserver.observe(stage);
+
+  measure();
+  document.fonts?.ready.then(measure);
+  start();
+
   let disposed = false;
   let disposeSculpture;
   import('./sculpture.js').then(module => {
     if (!disposed) disposeSculpture = module.mountSculpture(scene.querySelector('.sculpture-mount'));
   }).catch(() => { /* The original vector remains visible when WebGL is unavailable. */ });
+
   return () => {
     disposed = true;
-    routesObserver.disconnect();
+    stop();
+    sizeObserver.disconnect();
+    screenObserver.disconnect();
+    motion.removeEventListener('change', onMotion);
+    document.removeEventListener('visibilitychange', onVisibility);
+    listeners.forEach(dispose => dispose());
     disposeSculpture?.();
-    scene.removeEventListener('pointermove', move);
-    scene.removeEventListener('pointerleave', leave);
-    connections.forEach(dispose => dispose());
   };
 }

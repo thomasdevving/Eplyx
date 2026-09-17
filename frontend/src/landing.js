@@ -2,6 +2,16 @@ import { IntroAnimation } from './intro.js';
 import { EplyxCoreScene } from './core-scene.js';
 import { Header, Footer } from './shell.js';
 
+// A sparse set of stars that blink over the dense static field: left, top,
+// size, period and offset. Real twinkling is uneven, so the periods are chosen
+// not to fall into step with each other.
+const twinkles = [
+  [5, 21, 2.6, 5.3, 0], [11, 52, 1.6, 4.1, 1.9], [17, 13, 2.1, 6.4, 3.3], [9, 67, 1.4, 3.6, .8],
+  [23, 34, 1.8, 7.1, 2.4], [29, 59, 2.4, 4.7, 5.2], [35, 17, 1.5, 5.9, 1.2], [41, 44, 2.2, 3.9, 4.4],
+  [21, 77, 1.7, 6.7, 2.9], [47, 26, 1.4, 4.3, .4], [53, 54, 2.5, 7.4, 6.1], [33, 70, 1.9, 5.1, 3.8],
+  [59, 12, 1.6, 6.2, 1.5], [65, 37, 2.3, 4.9, 5.7], [44, 65, 1.5, 3.4, 2.1], [71, 23, 2, 6.9, 4.8],
+];
+
 const flow = [
   ['01', 'Production inputs', 'Real production state + proposed change + historical action.'],
   ['02', 'Deterministic replay', 'Execute the same action from the same pinned historical state.'],
@@ -29,7 +39,7 @@ export function LandingPage() {
     <main id="main">
       <section class="hero">
         ${Header()}
-        <div class="hero__atmosphere" aria-hidden="true"><div class="hero__stars"></div><div class="hero__mountains"></div></div>
+        <div class="hero__atmosphere" aria-hidden="true"><div class="hero__stars"></div><div class="hero__twinkle">${twinkles.map(([left, top, size, period, offset]) => `<i style="left:${left}%;top:${top}%;--s:${size}px;--t:${period}s;--d:${offset}s"></i>`).join('')}</div><div class="hero__mountains"></div></div>
         <div class="hero__wash"></div>
         <div class="hero__copy reveal">
           <p class="eyebrow"><span></span> Onchain change intelligence</p>
