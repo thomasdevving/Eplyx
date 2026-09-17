@@ -879,6 +879,19 @@ fn discover_command(args: DiscoverArgs) -> Result<ExitCode> {
         !manifest.transactions.is_empty(),
         "no target-program interactions found in the requested window"
     );
+    // Counted, not hidden. A window is not free of what the endpoint refused to
+    // show us, and a silent skip here would be an unmeasured population
+    // reported as nothing.
+    if !manifest.unreadable_transactions.is_empty() {
+        eprintln!(
+            "note: {} transaction(s) in this window are newer than this build \
+             reads and were observed but not normalized",
+            manifest.unreadable_transactions.len()
+        );
+        for unreadable in manifest.unreadable_transactions.iter().take(3) {
+            eprintln!("  {} at slot {}", unreadable.signature, unreadable.slot);
+        }
+    }
     let selection_start = std::time::Instant::now();
     let policy = eplyx_engine::discovery::SelectionPolicy {
         max_records: args.corpus_size,

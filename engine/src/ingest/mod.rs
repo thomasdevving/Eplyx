@@ -97,6 +97,16 @@ impl RpcProvider for MeasuredCachedRpc<'_> {
         Ok(value)
     }
 }
+/// The highest transaction version this client asks an endpoint to return.
+///
+/// Discovery has to *see* activity in order to classify it. A transaction the
+/// RPC refuses to serialize is neither observed nor counted, which is the one
+/// outcome this phase exists to prevent: an unmeasured population reported as
+/// nothing. Raising the ceiling changes only what the RPC will hand over;
+/// which transactions may be *replayed* is decided by the adapter's own message
+/// rule, not here.
+pub const MAX_SUPPORTED_TRANSACTION_VERSION: u8 = 1;
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct IngestManifest {
     pub schema_version: u32,
@@ -105,7 +115,30 @@ pub struct IngestManifest {
     pub start_slot: u64,
     pub end_slot: u64,
     pub transactions: Vec<HistoricalTransaction>,
+    /// Transactions the endpoint would not serialize for this client, kept as
+    /// a count rather than dropped: a window is not free of what it refused to
+    /// show us.
+    #[serde(default)]
+    pub unreadable_transactions: Vec<UnreadableTransaction>,
 }
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct UnreadableTransaction {
+    pub signature: String,
+    pub slot: u64,
+    pub reason: String,
+}
+/// Whether an endpoint refused a transaction because of its version.
+///
+/// `-32015` is the node saying the transaction is newer than the version this
+/// client declared it can read. It is about one transaction, not about the
+/// connection, and treating it as a transport failure ended a scan over a
+/// single message.
+fn is_unsupported_version(error: &anyhow::Error) -> bool {
+    let text = format!("{error:#}");
+    text.contains("-32015") || text.contains("not supported by the requesting client")
+}
+
 /// Inclusive slot window; paginate until complete. Errors never mean an empty
 /// successful corpus. Activity/address association is filtered to instructions.
 pub fn discover(
@@ -153,6 +186,7 @@ pub fn discover_bounded_with_concurrency(
     let mut before: Option<String> = None;
     let mut seen = BTreeSet::new();
     let mut txs = Vec::new();
+    let mut unreadable_transactions: Vec<UnreadableTransaction> = Vec::new();
     loop {
         let mut config = json!({"limit":1000,"commitment":"confirmed"});
         if let Some(cursor) = &before {
@@ -191,14 +225,36 @@ pub fn discover_bounded_with_concurrency(
                     .iter()
                     .map(|(signature, slot)| {
                         scope.spawn(move || {
-                            let raw=rpc.call("getTransaction",json!([signature,{"encoding":"json","commitment":"confirmed","maxSupportedTransactionVersion":0}]))?;
+                            let raw = match rpc.call(
+                                "getTransaction",
+                                json!([signature, {
+                                    "encoding": "json",
+                                    "commitment": "confirmed",
+                                    "maxSupportedTransactionVersion":
+                                        MAX_SUPPORTED_TRANSACTION_VERSION,
+                                }]),
+                            ) {
+                                Ok(raw) => raw,
+                                // A version this build cannot ask for is real
+                                // activity, and one of them must not end the
+                                // scan. It is carried out as unreadable and
+                                // counted, never silently skipped.
+                                Err(error) if is_unsupported_version(&error) => {
+                                    return Ok(Err(UnreadableTransaction {
+                                        signature: signature.clone(),
+                                        slot: *slot,
+                                        reason: format!("{error}"),
+                                    }));
+                                }
+                                Err(error) => return Err(error),
+                            };
                             let tx = transactions::normalize(&raw)
                                 .with_context(|| format!("normalizing {signature}"))?;
                             anyhow::ensure!(
                                 tx.signature == *signature && tx.slot == *slot,
                                 "transaction identity differs from discovery"
                             );
-                            Ok::<_, anyhow::Error>(tx)
+                            Ok::<_, anyhow::Error>(Ok(tx))
                         })
                     })
                     .collect();
@@ -208,7 +264,13 @@ pub fn discover_bounded_with_concurrency(
                     .collect()
             });
             for result in results {
-                let tx = result?;
+                let tx = match result? {
+                    Ok(tx) => tx,
+                    Err(unreadable) => {
+                        unreadable_transactions.push(unreadable);
+                        continue;
+                    }
+                };
                 if tx
                     .instructions
                     .iter()
@@ -237,6 +299,7 @@ pub fn discover_bounded_with_concurrency(
         );
     }
     txs.sort_by(|a, b| a.slot.cmp(&b.slot).then(a.signature.cmp(&b.signature)));
+    unreadable_transactions.sort_by(|a, b| a.slot.cmp(&b.slot).then(a.signature.cmp(&b.signature)));
     Ok(IngestManifest {
         schema_version: 1,
         program_id: program.into(),
@@ -244,6 +307,7 @@ pub fn discover_bounded_with_concurrency(
         start_slot: start,
         end_slot: end,
         transactions: txs,
+        unreadable_transactions,
     })
 }
 
@@ -370,4 +434,45 @@ pub fn build_corpus(
     anyhow::ensure!(!records.is_empty(),"no controlled snapshots matched; current RPC state cannot supply exact historical pre-state");
     write_json(out, &records)?;
     Ok(records.len())
+}
+
+#[cfg(test)]
+mod version_ceiling_tests {
+    use super::*;
+
+    /// A node refusing one transaction's version must not read as a transport
+    /// failure. It ended a whole scan over a single message before this.
+    #[test]
+    fn a_version_refusal_is_recognised_and_nothing_else_is() {
+        for refusal in [
+            "RPC getTransaction returned error code -32015, transaction error null",
+            "Transaction version (1) is not supported by the requesting client.",
+        ] {
+            assert!(
+                is_unsupported_version(&anyhow::anyhow!("{refusal}")),
+                "missed {refusal}"
+            );
+        }
+        for other in [
+            "RPC getTransaction returned error code -32005, node is unhealthy",
+            "connection reset by peer",
+            "slot skipped",
+        ] {
+            assert!(
+                !is_unsupported_version(&anyhow::anyhow!("{other}")),
+                "treated {other} as a version refusal"
+            );
+        }
+    }
+
+    /// The two paths that fetch transactions must ask for the same thing.
+    /// Screening was raised on its own once, and discovery stayed behind.
+    #[test]
+    fn the_ceiling_is_shared_with_screening() {
+        let screening = include_str!("../screening.rs");
+        assert!(
+            screening.contains("MAX_SUPPORTED_TRANSACTION_VERSION"),
+            "screening still names its own transaction-version ceiling"
+        );
+    }
 }

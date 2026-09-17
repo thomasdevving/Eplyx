@@ -185,7 +185,8 @@ pub fn screen(
                 // Raising the ceiling changes only what the RPC will return;
                 // which transactions may be *replayed* is decided by the
                 // adapter's own message rule, not here.
-                "maxSupportedTransactionVersion": 1
+                "maxSupportedTransactionVersion":
+                    crate::ingest::MAX_SUPPORTED_TRANSACTION_VERSION
             }
         ]),
     )?;

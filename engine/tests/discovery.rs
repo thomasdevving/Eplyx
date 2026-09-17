@@ -74,6 +74,7 @@ fn manifest(transactions: Vec<HistoricalTransaction>) -> IngestManifest {
         start_slot: 100,
         end_slot: 200,
         transactions,
+        unreadable_transactions: Vec::new(),
     }
 }
 
