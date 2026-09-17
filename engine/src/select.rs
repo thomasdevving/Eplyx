@@ -694,12 +694,14 @@ pub fn select(
 }
 
 /// What this corpus cannot speak to. Stated structurally so a consumer can act
-/// on it rather than having to read prose.
-fn limitations(
-    observed: &ObservedCounts,
-    eligible: &BTreeMap<String, usize>,
-) -> Vec<CoverageLimitation> {
-    let mut out = vec![
+/// Limits that hold for every corpus built under this replay contract,
+/// whatever was selected from it.
+///
+/// They travel with a bundle even when no selection ran, because a bundle that
+/// has lost them is a bundle that overclaims — and a passing CI report that
+/// omits them is the one place a reader most needs to see them.
+pub fn contract_limitations() -> Vec<CoverageLimitation> {
+    vec![
         CoverageLimitation {
             code: "failed_original_transactions_unsupported".into(),
             detail: "Transactions that failed on mainnet are observed but not replayed, so no \
@@ -719,15 +721,42 @@ fn limitations(
                      excluded. Tip accounts are the common case."
                 .into(),
         },
-    ];
-    // Only claim under-representation where both populations were measured.
-    for (action, eligible_count) in eligible {
-        let Some(observed_count) = observed.get(action) else {
-            continue;
-        };
+        CoverageLimitation {
+            code: "address_lookup_tables_unsupported".into(),
+            detail: "A v0 message that actually resolves addresses through a lookup table is \
+                     outside the replay contract and is excluded, so any interaction shape that \
+                     requires one is unrepresented."
+                .into(),
+        },
+    ]
+}
+
+/// on it rather than having to read prose.
+fn limitations(
+    observed: &ObservedCounts,
+    eligible: &BTreeMap<String, usize>,
+) -> Vec<CoverageLimitation> {
+    let mut out = contract_limitations();
+    // Iterate the observed side, not the eligible side. An action seen in
+    // production with *zero* replayable records is the most severe bias there
+    // is, and looping over what survived would skip exactly that case.
+    for (action, observed_count) in observed {
         if *observed_count == 0 {
             continue;
         }
+        let eligible_count = eligible.get(action).copied().unwrap_or(0);
+        if eligible_count == 0 {
+            out.push(CoverageLimitation {
+                code: format!("{action}_has_no_replayable_observations"),
+                detail: format!(
+                    "{observed_count} {action} interactions were observed in production and none \
+                     are replayable under the exact historical contract. This corpus says nothing \
+                     about {action}; that is not the same as {action} being unaffected."
+                ),
+            });
+            continue;
+        }
+        let eligible_count = &eligible_count;
         let share_bps = (*eligible_count as u128 * 10_000) / *observed_count as u128;
         if share_bps < 2_000 {
             out.push(CoverageLimitation {
