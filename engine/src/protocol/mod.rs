@@ -40,27 +40,24 @@ pub struct TokenQuantity {
     pub decimals: u8,
 }
 
-/// Largest decimal count `u128` can scale by. `10^39` overflows it.
-const MAX_RENDERABLE_DECIMALS: u8 = 38;
-
 fn render(base_units: u128, decimals: u8) -> String {
     if decimals == 0 {
         return base_units.to_string();
     }
-    // `decimals` is a `u8`, so a decoded mint can name more places than any
-    // scale can represent. Aborting the process over a field read from an
-    // account is the wrong failure: render it in base units and say what the
-    // scale was, which is honest and cannot panic.
-    if decimals > MAX_RENDERABLE_DECIMALS {
-        return format!("{base_units}e-{decimals}");
+    // Placed by shifting the digits, never by computing a scale. `decimals` is
+    // a `u8` read from a decoded mint, so `10u128.pow(decimals)` overflows at
+    // 39 and aborted the process; switching to exponent notation past that
+    // fixed the panic but produced a string the deserializer rejects, which
+    // traded a crash for a value that could not round trip. Shifting is exact
+    // for every input and always yields a plain decimal.
+    let digits = base_units.to_string();
+    let decimals = usize::from(decimals);
+    if digits.len() > decimals {
+        let split = digits.len() - decimals;
+        format!("{}.{}", &digits[..split], &digits[split..])
+    } else {
+        format!("0.{}{}", "0".repeat(decimals - digits.len()), digits)
     }
-    let scale = 10_u128.pow(u32::from(decimals));
-    format!(
-        "{}.{:0width$}",
-        base_units / scale,
-        base_units % scale,
-        width = usize::from(decimals)
-    )
 }
 
 impl TokenQuantity {
@@ -650,14 +647,29 @@ pub trait ProtocolAdapter: Sync {
         Vec::new()
     }
 
-    /// Which decoded economic fields this adapter has promoted to the public
-    /// vocabulary, as `(account label, field)`.
+    /// Which decoded `(account label, field)` a named subject reads.
     ///
-    /// The generic layer cannot tell a decoded change that `named_findings`
-    /// already speaks for from one it silently drops. This list is how an
-    /// adapter says which is which, so a change it decodes but does not name
-    /// fails the gate as undeclarable rather than disappearing.
-    fn promoted_economic_fields(&self) -> &'static [(&'static str, &'static str)] {
+    /// The generic layer cannot tell a decoded change that a named finding
+    /// already speaks for from one it silently drops. This is how an adapter
+    /// says which is which — per subject, so the mapping can be checked against
+    /// the findings actually emitted for *this* observation rather than against
+    /// a static list that is true for some operations and not others.
+    ///
+    /// `pool-mint/supply` is the example that matters: it is the burn on a
+    /// withdrawal and a consequence of the mint on a deposit, and a flat list
+    /// treated it as spoken for either way, including when nothing was named.
+    fn decoded_source_of(&self, _subject: &str) -> Option<(&'static str, &'static str)> {
+        None
+    }
+
+    /// Byte ranges this adapter decodes out of one account.
+    ///
+    /// Lets the generic layer prove that a raw byte change is accounted for.
+    /// Bytes outside these ranges are not explained by any economic finding,
+    /// however many were reported: a candidate that alters a manager key while
+    /// changing a share calculation has done two things, and only one of them
+    /// is nameable.
+    fn decoded_byte_ranges(&self, _account_label: &str) -> &'static [std::ops::Range<usize>] {
         &[]
     }
 
@@ -873,21 +885,44 @@ mod tests {
 mod malformed_input {
     use super::*;
 
-    /// `decimals` is a `u8` read from an account, so it can name more places
-    /// than any scale can represent. That must not abort the process.
+    /// `decimals` is a `u8` read from a decoded mint, so it can name more
+    /// places than a `u128` scale can represent. That must neither abort the
+    /// process nor produce a string the wire format cannot read back.
     #[test]
-    fn an_unrepresentable_decimal_count_does_not_panic() {
-        for decimals in [MAX_RENDERABLE_DECIMALS, 39, 100, u8::MAX] {
+    fn an_extreme_decimal_count_still_renders_a_readable_decimal() {
+        for decimals in [38_u8, 39, 100, u8::MAX] {
             let rendered = TokenQuantity::new(1_500, decimals).to_string();
-            assert!(!rendered.is_empty(), "{decimals} produced nothing");
+            let (whole, fraction) = rendered.split_once('.').expect("a decimal point");
+            assert_eq!(whole, "0");
+            assert_eq!(fraction.len(), usize::from(decimals), "{decimals}");
+            assert!(
+                fraction.bytes().all(|b| b.is_ascii_digit()),
+                "{rendered} is not a plain decimal"
+            );
         }
-        // Past what a scale can hold, the value is stated in base units with
-        // its exponent rather than silently truncated.
-        assert_eq!(TokenQuantity::new(1_500, 39).to_string(), "1500e-39");
-        // And the ordinary path is unchanged.
+        // The ordinary paths are unchanged.
         assert_eq!(
             TokenQuantity::new(1_500_000_000, 9).to_string(),
             "1.500000000"
+        );
+        assert_eq!(TokenQuantity::new(7_157, 8).to_string(), "0.00007157");
+        assert_eq!(TokenQuantity::new(42, 0).to_string(), "42");
+    }
+
+    /// The defect the previous fix introduced. "Renderable" is not the
+    /// contract; round-tripping is, and asserting only that the string was
+    /// non-empty is how exponent notation reached the wire.
+    #[test]
+    fn an_extreme_quantity_survives_the_wire_format() {
+        let value = crate::semantics::SemanticValue::quantity(1_500, 39);
+        let json = serde_json::to_string(&value).unwrap();
+        assert!(
+            !json.contains('e'),
+            "exponent notation cannot be read back: {json}"
+        );
+        assert_eq!(
+            serde_json::from_str::<crate::semantics::SemanticValue>(&json).unwrap(),
+            value
         );
     }
 }

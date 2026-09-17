@@ -1458,13 +1458,34 @@ impl ProtocolAdapter for StakePoolAdapter {
         subjects
     }
 
-    fn promoted_economic_fields(&self) -> &'static [(&'static str, &'static str)] {
-        &[
-            ("destination-pool-token", "amount"),
-            ("source-pool-token", "amount"),
-            ("pool-mint", "supply"),
-            ("destination-lamports", "lamports"),
-        ]
+    fn decoded_source_of(&self, subject: &str) -> Option<(&'static str, &'static str)> {
+        match subject {
+            "pool_tokens_received" => Some(("destination-pool-token", "amount")),
+            "pool_tokens_debited" => Some(("source-pool-token", "amount")),
+            "pool_tokens_burned" => Some(("pool-mint", "supply")),
+            "sol_received_by_user" => Some(("destination-lamports", "lamports")),
+            _ => None,
+        }
+    }
+
+    fn decoded_byte_ranges(&self, account_label: &str) -> &'static [std::ops::Range<usize>] {
+        // Verified against the committed mainnet pool account: the u64 at 266
+        // equals the mint's supply at 36, which is what fixes both offsets.
+        const TOTAL_LAMPORTS: usize = 258;
+        const POOL_TOKEN_SUPPLY: usize = 266;
+        const _: () = assert!(POOL_TOKEN_SUPPLY == TOTAL_LAMPORTS + 8);
+        // Exactly the fields this adapter reads, and nothing else. Everything
+        // outside them is state it does not interpret, so a change there cannot
+        // be explained away by an economic finding.
+        const POOL: [std::ops::Range<usize>; 2] = [258..266, 266..274];
+        const TOKEN_AMOUNT: [std::ops::Range<usize>; 1] = [std::ops::Range { start: 64, end: 72 }];
+        const MINT_SUPPLY: [std::ops::Range<usize>; 1] = [std::ops::Range { start: 36, end: 44 }];
+        match account_label {
+            "stake-pool" => &POOL,
+            "destination-pool-token" | "source-pool-token" | "manager-fee" => &TOKEN_AMOUNT,
+            "pool-mint" => &MINT_SUPPLY,
+            _ => &[],
+        }
     }
 
     fn named_findings(
@@ -1647,10 +1668,14 @@ impl ProtocolAdapter for StakePoolAdapter {
                 .after(result, "pool-mint")
                 .and_then(|m| mint_supply(&m.data))
             {
-                if closing < opening {
+                // Emitted whenever this is a withdrawal shape, including when
+                // the burn is zero. Omitting a zero made the field absent, and
+                // a comparison that skips an absent side reported "a candidate
+                // that stopped burning entirely" as no change at all.
+                if before("source-pool-token").is_some() {
                     fields.push(SemanticField {
                         name: "pool_tokens_burned".into(),
-                        value: FieldValue::quantity(opening - closing, decimals),
+                        value: FieldValue::quantity(opening.saturating_sub(closing), decimals),
                         economic: true,
                     });
                 }
