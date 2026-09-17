@@ -44,8 +44,10 @@ corpora are separate, provenance and replay eligibility are explicit, and
 current account samples remain approximate; and one exact CPI-aware path for a
 real stateful protocol interaction, with every dependency binary pinned to the
 deployment live at the transaction's slot. No arbitrary mainnet pre-state
-reconstruction, universal CPI replay, arbitrary DeFi support, dashboard, CI
-integration, AI, third-party decoding or sequence search. See
+reconstruction, universal CPI replay, arbitrary DeFi support, dashboard, GitHub
+App, AI, third-party decoding or sequence search. A CI gate *is* implemented —
+locally as `eplyx ci check` and as a small hosted API — over exactly the bounded
+replay contract described here. See
 [Phase 4](docs/phase-4-replay.md) for controlled replay,
 [Phase 5](docs/phase-5-mainnet-discovery.md) for discovery,
 [Phase 6](docs/phase-6-historical-state.md) for historical state,
@@ -124,7 +126,7 @@ explainable representative discovery corpus, then proves byte-identical output
 from the same cache. It performs no candidate comparison without sufficient
 historical state provenance. [Design, CLI, policy and limitations](docs/phase-5-mainnet-discovery.md).
 
-## Exact mainnet replay
+## Historical mainnet replay
 
 ```bash
 make demo-mainnet-replay
@@ -912,12 +914,11 @@ The mainnet paths carry their own, narrower boundaries: see
   reproduce exactly, and rejects everything else.
 - The **protocol adapter seam is a trait**, with Token-2022 and SPL Stake Pool
   implementations. `corpus.rs`, `interpret.rs`, `impact.rs`, `cluster.rs` and
-  `shrink.rs` remain fixture-lending-specific and are not reached by adapter
-  records.
-- **CPI replay is not general.** One protocol, one instruction, one level of
-  invocation into two known programs. Anything else is rejected.
-- No CI integration, dashboard, or AI-assisted explanation. Economic aggregation,
-  clustering and synthetic-corpus counterexample minimization are implemented.
+  `shrink.rs` remain fixture-lending-specific. They are not reached by adapter
+  records because the generic diff takes its decoder as an argument: `replay`
+  passes `FieldDecoder::None` for any record an adapter owns. Inferring a layout
+  from a leading byte, as it once did, made a real stake-pool account decode as
+  a synthetic `Market` and compare as identical over its first 86 of 611 bytes.
 
 **Execution model**
 

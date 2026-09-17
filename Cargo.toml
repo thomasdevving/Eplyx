@@ -19,8 +19,14 @@ borsh = { version = "1.5", features = ["derive"] }
 
 # Host-side execution. The `solana-*` pins below are deliberately identical to
 # litesvm 0.16's own requirements: these crates appear in litesvm's public API,
-# so a second semver-incompatible copy in the graph would produce two distinct
-# `Address`/`Instruction` types and fail to compile. `cargo tree -d` guards this.
+# so if the engine and litesvm resolved different versions of them there would be
+# two distinct `Address`/`Instruction` types and the build would fail. That is
+# what the pins prevent, and what compiling proves.
+#
+# It does *not* mean `cargo tree -d` is empty. It is not: older copies of
+# solana-address, solana-pubkey and solana-loader-v3-interface exist deeper in
+# the graph, reached by crates that never exchange those types with us. Harmless,
+# but the guard is the build, not an empty duplicate list.
 litesvm = "0.16"
 solana-account = "4.3.0"
 solana-address = "2.6.1"

@@ -11,6 +11,9 @@ use serde::{Deserialize, Serialize};
 /// A raw account, exactly as the runtime will see it.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AccountSnapshot {
+    /// A decimal string: a pool holding 15 million SOL is 1.5e16 lamports, past
+    /// the 2^53 where a JSON number starts rounding in most parsers.
+    #[serde(with = "crate::numfmt::u64_string")]
     pub lamports: u64,
     /// base58 program address that owns this account.
     pub owner: String,
