@@ -14,15 +14,36 @@ export function AnalysePage() {
         <div class="form-head"><span>New upgrade check</span><em>Uses the real hosted API</em></div>
         <label>API endpoint<input name="api" type="url" placeholder="https://api.eplyx.dev" required><small>The deployed Eplyx server base URL.</small></label>
         <label>Project ID<input name="project" placeholder="stake-pool" required></label>
-        <label>Project token<input name="token" type="password" autocomplete="off" placeholder="Bearer token" required><small>Used for this request only. It is not saved.</small></label>
+        <label>Project token<input name="token" type="password" autocomplete="off" placeholder="Bearer token" required><small>Kept in this browser tab so the run can be followed, and gone when the tab closes.</small></label>
         <label class="file-drop"><input name="candidate" type="file" accept=".so,application/octet-stream" required><span><b>Candidate binary</b><em>Drop candidate.so or choose a file</em></span><strong>Choose file</strong></label>
         <label class="file-drop file-drop--optional"><input name="expectations" type="file" accept=".toml,text/plain"><span><b>Expected changes</b><em>Optional .toml declaration</em></span><strong>Choose file</strong></label>
         <div class="form-status" role="status" aria-live="polite"></div>
         <button class="button button--primary" type="submit">Run analysis <span>↗</span></button>
-        <p class="form-note">Candidates run against the project’s server-controlled active bundle. A regression returns HTTP 200 with its Eplyx exit code.</p>
+        <p class="form-note">Candidates run against the project’s server-controlled active bundle. The check is accepted immediately and runs on the server; you can leave this page and come back to the run.</p>
       </form>
     </section>
   </main>${Footer()}`;
+}
+
+/** What a run page needs to keep following a run it did not start. */
+export function rememberRun(runId, context) {
+  try {
+    sessionStorage.setItem(`eplyx-run-${runId}`, JSON.stringify(context));
+  } catch {
+    /* A run is still followable in this page's own lifetime without storage. */
+  }
+}
+
+/**
+ * Transport faults, authentication and a refused check are three different
+ * things, and a caller can only act on the difference if it is preserved.
+ */
+function describeFailure(error, status, body) {
+  if (error instanceof TypeError) return 'Could not reach Eplyx. Check the endpoint and its browser CORS configuration.';
+  if (status === 401) return 'Authentication failed. Check the project ID and token.';
+  if (status === 413) return body?.error || 'The upload is larger than this server accepts.';
+  if (status === 409) return body?.error || 'This project has no usable active bundle yet.';
+  return body?.error || error?.message || `Request failed (${status})`;
 }
 
 export function attachAnalyse(navigate) {
@@ -44,22 +65,27 @@ export function attachAnalyse(navigate) {
     const expected = values.get('expectations');
     if (expected instanceof File && expected.size) body.append('expected_changes', expected);
     submit.disabled = true;
-    submit.innerHTML = 'Running replay <span class="spinner"></span>';
-    status.textContent = 'Uploading the candidate and waiting for deterministic replay…';
+    submit.innerHTML = 'Submitting <span class="spinner"></span>';
+    status.textContent = 'Uploading the candidate…';
     status.className = 'form-status is-visible';
+    let response;
     try {
-      const response = await fetch(`${api}/v1/projects/${project}/checks`, { method: 'POST', headers: { Authorization: `Bearer ${values.get('token')}` }, body });
-      const result = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(result.error || `Request failed (${response.status})`);
-      const reportPath = result.report?.json;
-      if (reportPath) {
-        const reportResponse = await fetch(`${api}${reportPath}`, { headers: { Authorization: `Bearer ${values.get('token')}` } });
-        if (reportResponse.ok) result.canonical_report = await reportResponse.json();
-      }
-      sessionStorage.setItem(`eplyx-run-${result.run_id}`, JSON.stringify(result));
-      navigate(`/runs/${result.run_id}`);
+      // The server answers before the analysis starts, so this waits only for
+      // the upload and the run id.
+      response = await fetch(`${api}/v1/projects/${project}/checks`, { method: 'POST', headers: { Authorization: `Bearer ${values.get('token')}` }, body });
     } catch (error) {
-      status.textContent = error instanceof TypeError ? 'Could not reach the API. Check the endpoint and its browser CORS configuration.' : error.message;
+      return refuse(describeFailure(error));
+    }
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || !result.run_id) return refuse(describeFailure(null, response.status, result));
+
+    // Stored before navigating: from here on the run page owns the run, and it
+    // must survive a reload that keeps nothing of this submission in memory.
+    rememberRun(result.run_id, { api, project, token: String(values.get('token')) });
+    navigate(`/runs/${result.run_id}`);
+
+    function refuse(message) {
+      status.textContent = message;
       status.className = 'form-status is-visible is-error';
       submit.disabled = false;
       submit.innerHTML = 'Run analysis <span>↗</span>';

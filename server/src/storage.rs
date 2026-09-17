@@ -74,6 +74,10 @@ impl Storage {
         Ok(self.root.join("bundles").join(sha256))
     }
 
+    pub fn runs_root(&self) -> PathBuf {
+        self.root.join("runs")
+    }
+
     pub fn run_dir(&self, id: &str) -> Result<PathBuf> {
         checked(id, "run id")?;
         Ok(self.root.join("runs").join(id))

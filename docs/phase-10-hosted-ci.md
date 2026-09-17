@@ -127,7 +127,7 @@ mapping is coarse, and rates a 1 bp and a 3,000 bp change the same.
 
 ```text
 POST /v1/projects/{project_id}/checks     multipart: candidate, expected_changes
-GET  /v1/runs/{run_id}
+GET  /v1/runs/{run_id}                    lifecycle state, in every state
 GET  /v1/runs/{run_id}/report.json        the canonical report, as stored
 GET  /v1/runs/{run_id}/report.md
 GET  /health                              process alive
@@ -140,9 +140,64 @@ token authenticates exactly one project; used on another project's URL it fails
 like any other bad token. Reports are served as stored — fetching one never
 re-runs an analysis.
 
-Uploaded candidates are ephemeral. They are written to a temporary directory
-removed on both success and failure; what survives is the SHA-256, the report
-and the run metadata.
+Uploaded candidates are ephemeral. They are staged in the run's own work
+directory and removed once the run is terminal, whatever the outcome; what
+survives is the SHA-256, the report and the run metadata.
+
+### A check outlives the request that created it
+
+`POST /checks` answers `202 Accepted` with a run id and `status: "queued"`. It
+does not wait for the analysis, and it never returns a verdict — inventing one
+to fill the shape would be a lie a caller could act on.
+
+The run is persisted before any worker is started, so a `202` is a promise that
+`GET /v1/runs/{run_id}` already resolves. That is the whole point: a closed tab,
+a proxy timeout or an aborted fetch cannot destroy an accepted analysis, and a
+browser that reloads recovers the run from the server rather than from its own
+memory. The worker is a detached task, not something scoped to the response.
+
+```text
+queued  → running → passed | failed
+                  → execution_error
+```
+
+`queued` means the run exists and is waiting for execution capacity. `running`
+means it holds a permit and the engine is going. No terminal state ever returns
+to `running`, and claiming a queued run is a compare-and-set, so one run cannot
+execute twice.
+
+**`failed` and `execution_error` are not the same failure.** `failed` means the
+engine reached a verdict and the verdict is no: a real gate result with a real
+exit code, which is the product working. `execution_error` means this service
+could not obtain a verdict at all — a disk that filled, a task that panicked, a
+restart — so there is no gate result and none is shown. Collapsing them would
+tell a team their upgrade was rejected when in fact a volume went away.
+
+A preflight abort stays on the first branch. Exit codes 2 and 4 produce no
+report by design, so such a run is `failed`, carries its exit code, and reports
+`report_available: false`. Asking for its report is a `409` that names the code
+rather than an empty report object.
+
+Reports are refused with `409` until one exists. The engine exposes no durable
+per-record progress, so neither the API nor the page invents any: queued,
+running and completed is the whole vocabulary.
+
+### What a restart costs
+
+The task queue is in-process. A restart drops whatever it was holding, and runs
+left `queued` or `running` have no worker behind them any more. On startup they
+are resolved as `execution_error` with `"Run interrupted by server restart;
+resubmit the check."`, and their inputs are cleared.
+
+This is a real limitation, stated rather than hidden. Resuming interrupted runs
+needs a durable queue, which a pilot does not need and which the single-volume
+deployment cannot honestly provide. What is not acceptable is leaving a run
+`running` forever for a client to poll.
+
+`scripts/async-demo.sh <bundle-dir>` drives a real server over a real socket
+through all of it: acceptance without execution, a queued run that has provably
+not started, refusal of its report, restart recovery, completion, and the
+canonical report refetched byte-identical.
 
 ### The hosted report is the local report
 

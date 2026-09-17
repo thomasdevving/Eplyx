@@ -32,22 +32,16 @@
 //! bytes are uploaded, and they are executed solely inside the replay VM the
 //! engine already sandboxes.
 
-mod api;
-mod config;
-mod project;
-mod registry;
-mod storage;
-
 use std::sync::Arc;
 
 use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
 
-use crate::api::AppState;
-use crate::config::Config;
-use crate::project::{generate_token, Project};
-use crate::registry::Registry;
-use crate::storage::Storage;
+use eplyx_server::api::{self, AppState};
+use eplyx_server::config::Config;
+use eplyx_server::project::{generate_token, Project};
+use eplyx_server::registry::Registry;
+use eplyx_server::storage::Storage;
 
 #[derive(Parser)]
 #[command(
@@ -107,7 +101,23 @@ fn main() -> Result<()> {
     let registry = Registry::new(storage);
 
     match cli.command.unwrap_or(Command::Serve) {
-        Command::Serve => serve(config, registry),
+        Command::Serve => {
+            // The task queue is in-process, so a restart drops whatever it was
+            // holding. Runs left queued or running have no worker behind them
+            // any more; saying so is the only honest option, and leaving them
+            // to be polled forever is the one that is simply wrong.
+            let interrupted = registry
+                .recover_interrupted_runs()
+                .context("resolving runs interrupted by a restart")?;
+            if !interrupted.is_empty() {
+                eprintln!(
+                    "resolved {} run(s) interrupted by a restart: {}",
+                    interrupted.len(),
+                    interrupted.join(", ")
+                );
+            }
+            serve(config, registry)
+        }
         Command::Admin { command } => admin(command, &registry),
     }
 }
@@ -148,6 +158,7 @@ fn serve(config: Config, registry: Registry) -> Result<()> {
         .build()?;
     runtime.block_on(async move {
         let bind = config.bind;
+        let concurrency = config.max_concurrent_runs;
         let state = Arc::new(AppState {
             runs: tokio::sync::Semaphore::new(config.max_concurrent_runs),
             config,
@@ -158,7 +169,7 @@ fn serve(config: Config, registry: Registry) -> Result<()> {
             .with_context(|| format!("binding {bind}"))?;
         // The data directory is printed; nothing else about the configuration
         // is, and no credential exists in this process to print.
-        eprintln!("eplyx-server listening on {bind}");
+        eprintln!("eplyx-server listening on {bind}, {concurrency} concurrent run(s)");
         axum::serve(listener, api::router(state))
             .with_graceful_shutdown(async {
                 let _ = tokio::signal::ctrl_c().await;
