@@ -1,5 +1,11 @@
 import { Header, Footer } from './shell.js';
 
+/** One request in flight at a time, and never sub-second. */
+const POLL_MS = 1500;
+const POLL_BACKOFF_MS = 5000;
+const POLL_ATTEMPTS = 8;
+const TERMINAL = ['passed', 'failed', 'execution_error'];
+
 /**
  * A report page renders what a run actually produced, or says it cannot.
  *
@@ -15,16 +21,86 @@ import { Header, Footer } from './shell.js';
 export function ReportPage(id) {
   if (id === 'demo') return renderReport(DEMO, { demo: true, id });
 
-  const live = readStoredRun(id);
-  if (!live) return renderUnavailable(id);
-  return renderReport(live, { demo: false, id });
+  const context = readContext(id);
+  if (!context) return renderUnavailable(id);
+  // Nothing of the submission is assumed to still be in memory: the run's own
+  // state comes from the server on the first poll, a moment from now.
+  return renderLifecycle(id, { status: 'loading' });
 }
 
-/** The run this browser session submitted, if it was this browser session. */
-function readStoredRun(id) {
+/**
+ * Follow a run to its end, then show it.
+ *
+ * Polling rather than a socket, because the engine exposes no durable progress
+ * and there is nothing to stream. `render` belongs to the router: this module
+ * decides what a run looks like, not how a page is swapped in.
+ */
+export function attachReport(id, render) {
+  if (id === 'demo') return () => {};
+  const context = readContext(id);
+  if (!context) return () => {};
+
+  let stopped = false;
+  let timer;
+  let failures = 0;
+  const stop = () => {
+    stopped = true;
+    clearTimeout(timer);
+  };
+  const ask = path => fetch(`${context.api}${path}`, { headers: { Authorization: `Bearer ${context.token}` } });
+
+  const tick = async () => {
+    if (stopped) return;
+    let run;
+    try {
+      const response = await ask(`/v1/runs/${encodeURIComponent(id)}`);
+      if (response.status === 401) return finish(renderStalled(id, 'Authentication failed.', 'The stored token no longer authenticates this project. Submit the check again with a current token.'));
+      if (response.status === 404) return finish(renderUnavailable(id));
+      if (!response.ok) throw new Error(`status ${response.status}`);
+      run = await response.json();
+      failures = 0;
+    } catch {
+      // A failed poll is not a failed run. Back off, and only give up after
+      // enough attempts that this is clearly not a blip.
+      failures += 1;
+      if (failures >= POLL_ATTEMPTS) return finish(renderStalled(id, 'Could not reach Eplyx.', 'The run is still on the server. Reload this page to resume following it.'));
+      timer = setTimeout(tick, POLL_BACKOFF_MS);
+      return;
+    }
+
+    if (!TERMINAL.includes(run.status)) {
+      render(renderLifecycle(id, run));
+      // Chained rather than an interval, so two polls can never overlap.
+      timer = setTimeout(tick, POLL_MS);
+      return;
+    }
+
+    stop();
+    if (!run.report_available) return render(renderIncomplete(id, run));
+    try {
+      const response = await ask(`/v1/runs/${encodeURIComponent(id)}/report.json`);
+      run.canonical_report = response.ok ? await response.json() : null;
+    } catch {
+      run.canonical_report = null;
+    }
+    render(renderReport(run, { demo: false, id }));
+  };
+
+  const finish = markup => {
+    stop();
+    render(markup);
+  };
+
+  tick();
+  return stop;
+}
+
+/** What a run page needs to keep polling a run it did not itself submit. */
+function readContext(id) {
   try {
     const stored = sessionStorage.getItem(`eplyx-run-${id}`);
-    return stored ? JSON.parse(stored) : null;
+    const context = stored ? JSON.parse(stored) : null;
+    return context?.api && context?.token ? context : null;
   } catch {
     return null;
   }
@@ -42,7 +118,7 @@ function renderUnavailable(id) {
         <div>
           <p class="eyebrow"><span></span> Run ${escapeHtml(id)}</p>
           <h1>This report is not available in this browser.</h1>
-          <p>Reports are shown from the session that submitted them. This browser has no copy of run <span class="mono">${escapeHtml(id)}</span>, and the project token needed to fetch one is not stored after a check runs.</p>
+          <p>A run is followed from the browser tab that submitted it. This tab holds no credential for run <span class="mono">${escapeHtml(id)}</span>, so it cannot ask the server about it. The run itself is unaffected.</p>
         </div>
         <div class="report-verdict is-unknown"><i></i><span>Unavailable</span><em>No result loaded</em></div>
       </div>
@@ -63,6 +139,91 @@ function renderUnavailable(id) {
   </main>${Footer()}`;
 }
 
+const LIFECYCLE = {
+  // Before the first poll answers, the only honest thing to say is that we do
+  // not know yet. Opening on "queued" would announce a state for a run that may
+  // have finished an hour ago.
+  loading: ['Loading', 'Loading this run…', 'Asking the server where this run stands.'],
+  queued: ['Queued', 'Waiting for an execution slot…', 'The run is on the server. Closing this page does not cancel it.'],
+  running: ['Running', 'Replaying the candidate against the active validated corpus…', 'This takes as long as the corpus takes. There is no partial result to show.'],
+};
+
+function renderLifecycle(id, run) {
+  const [label, headline, note] = LIFECYCLE[run.status] ?? LIFECYCLE.loading;
+  return shell(id, `
+      <div class="report-top">
+        <div>
+          <p class="eyebrow"><span></span> Run ${escapeHtml(id)}</p>
+          <h1>${escapeHtml(headline)}</h1>
+          <p>${escapeHtml(note)}</p>
+        </div>
+        <div class="report-verdict is-pending"><i></i><span>${escapeHtml(label)}</span><em>No result yet</em></div>
+      </div>
+      <div class="report-content">
+        <section><div class="report-section-title"><span>01</span><h2>Inputs</h2></div>
+          <div class="provenance-table">
+            ${row('Bundle SHA', run.bundle_sha256)}
+            ${row('Corpus SHA', run.corpus_sha256)}
+            ${row('Baseline SHA', run.baseline_sha256)}
+            ${row('Candidate SHA', run.candidate_sha256)}
+          </div>
+        </section>
+      </div>`);
+}
+
+/**
+ * A run that ended without a report.
+ *
+ * Two different things land here and they are not the same. A preflight abort
+ * is Eplyx answering — it carries a real exit code and produces no report by
+ * design. An execution error is this service failing to answer at all, and
+ * blames nothing about the candidate.
+ */
+function renderIncomplete(id, run) {
+  const infrastructure = run.status === 'execution_error';
+  return shell(id, `
+      <div class="report-top">
+        <div>
+          <p class="eyebrow"><span></span> Run ${escapeHtml(id)}</p>
+          <h1>${infrastructure ? 'The analysis could not complete.' : 'The check stopped before it could report.'}</h1>
+          <p>${infrastructure
+            ? 'Eplyx reached no verdict about this candidate, so none is shown. Nothing here reflects on the upgrade.'
+            : 'Eplyx reached a verdict before there was a report to put it in. Exit codes 2 and 4 are preflight aborts and produce no report.'}</p>
+        </div>
+        <div class="report-verdict ${infrastructure ? 'is-unknown' : ''}"><i></i><span>${infrastructure ? 'Incomplete' : 'Failed'}</span><em>${run.exit_code == null ? 'No exit code' : `Exit code ${escapeHtml(run.exit_code)}`}</em></div>
+      </div>
+      <div class="report-content">
+        <section><div class="report-section-title"><span>01</span><h2>Reason</h2></div>
+          <div class="empty-result"><p>${run.detail ? escapeHtml(run.detail) : 'No further detail was recorded.'}</p></div>
+        </section>
+        <section><div class="report-section-title"><span>02</span><h2>Inputs</h2></div>
+          <div class="provenance-table">
+            ${row('Bundle SHA', run.bundle_sha256)}
+            ${row('Candidate SHA', run.candidate_sha256)}
+          </div>
+        </section>
+      </div>`);
+}
+
+/** Polling stopped for a reason that is about this browser, not the run. */
+function renderStalled(id, headline, note) {
+  return shell(id, `
+      <div class="report-top">
+        <div>
+          <p class="eyebrow"><span></span> Run ${escapeHtml(id)}</p>
+          <h1>${escapeHtml(headline)}</h1>
+          <p>${escapeHtml(note)}</p>
+        </div>
+        <div class="report-verdict is-unknown"><i></i><span>Not following</span><em>Run unaffected</em></div>
+      </div>`);
+}
+
+function shell(id, inner) {
+  return `<main id="main" class="inner-page report-page">${Header({ light: true })}
+    <section class="report-shell">${inner}</section>
+  </main>${Footer()}`;
+}
+
 function renderReport(live, { demo, id }) {
   const report = live.canonical_report;
   const passed = live.status === 'passed';
@@ -70,7 +231,7 @@ function renderReport(live, { demo, id }) {
   const findings = report?.findings ?? [];
   const unmatched = report?.unmatched ?? [];
   const undeclarable = report?.undeclarable ?? [];
-  const summary = live.summary ?? {};
+  const summary = report?.summary ?? {};
 
   return `<main id="main" class="inner-page report-page">${Header({ light: true })}
     <section class="report-shell">
@@ -214,12 +375,13 @@ function escapeHtml(value) {
 const DEMO = {
   status: 'failed',
   exit_code: 1,
+  report_available: true,
   bundle_sha256: 'a18d72bc2f46…3e9c',
   corpus_sha256: 'c253aefc08d1…a901',
   baseline_sha256: '9f3a0d4be24e…8c21',
   candidate_sha256: '60b7e1ac3198…bf14',
-  summary: { unexpected: 2, expected: 0 },
   canonical_report: {
+    summary: { unexpected: 2, expected: 0, passed: false, exit_code: 1 },
     bundle: {
       program_id: 'SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy',
       record_count: 10,
