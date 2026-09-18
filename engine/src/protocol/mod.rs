@@ -17,6 +17,7 @@
 //! for the same reason [`crate::money::Usd`] does: a JSON number becomes a
 //! double in most consumers, and a u64 token amount does not survive that.
 
+pub mod kamino;
 pub mod stake_pool;
 pub mod token2022;
 
@@ -676,7 +677,7 @@ pub trait ProtocolAdapter: Sync {
         Vec::new()
     }
 
-    /// Which decoded `(account label, field)` a named subject reads.
+    /// Which decoded `(account label, field)` pairs a named subject reads.
     ///
     /// The generic layer cannot tell a decoded change that a named finding
     /// already speaks for from one it silently drops. This is how an adapter
@@ -687,8 +688,17 @@ pub trait ProtocolAdapter: Sync {
     /// `pool-mint/supply` is the example that matters: it is the burn on a
     /// withdrawal and a consequence of the mint on a deposit, and a flat list
     /// treated it as spoken for either way, including when nothing was named.
-    fn decoded_source_of(&self, _subject: &str) -> Option<(&'static str, &'static str)> {
-        None
+    ///
+    /// A *set* rather than a single pair, because a subject may read one of
+    /// several fixed positions. Kamino KLend is the case that forced this: an
+    /// obligation holds up to five borrow positions in a fixed-size array, the
+    /// action touches whichever one matches its reserve, and the slot index is
+    /// a property of the observation rather than of the subject. Returning one
+    /// pair could only ever name the wrong slot. An adapter with a
+    /// one-to-one mapping returns a one-element slice and behaves exactly as
+    /// before.
+    fn decoded_sources_of(&self, _subject: &str) -> &'static [(&'static str, &'static str)] {
+        &[]
     }
 
     /// Byte ranges this adapter decodes out of one account.
@@ -758,7 +768,8 @@ pub fn pair_summaries(v1: &[SemanticField], v2: &[SemanticField]) -> Vec<Economi
 pub fn adapters() -> &'static [&'static dyn ProtocolAdapter] {
     const TOKEN_2022: token2022::Token2022Adapter = token2022::Token2022Adapter;
     const STAKE_POOL: stake_pool::StakePoolAdapter = stake_pool::StakePoolAdapter;
-    &[&TOKEN_2022, &STAKE_POOL]
+    const KAMINO: kamino::KaminoKlendAdapter = kamino::KaminoKlendAdapter;
+    &[&TOKEN_2022, &STAKE_POOL, &KAMINO]
 }
 
 pub fn adapter_for(program_id: &str) -> Option<&'static dyn ProtocolAdapter> {
