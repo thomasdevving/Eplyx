@@ -1,0 +1,9 @@
+{
+  "boundary": "latest account write at or before finalized requested slot",
+  "kind": "prior_historical_archive_qualification",
+  "mainnet_replay_post_state_sha256": "c447c3c994cbdc7671153c353d4669b766984d88fd7f4e9d94d768636d58063a",
+  "mainnet_replay_pre_state_sha256": "5b29e923314147626739e5f1a3af6ce22af68ed43601e77f0d789f31e1182687",
+  "qualification_reused_per_user_instruction": true,
+  "reference": "docs/phase-6-historical-state.md",
+  "reference_sha256": "f13cb8ae5f86081e30f14ba33153fc46a5082c60c2156c3206875b2fd47ec5cc"
+}

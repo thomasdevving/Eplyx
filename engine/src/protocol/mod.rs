@@ -560,7 +560,22 @@ pub trait ProtocolAdapter: Sync {
     ///
     /// The bar is exactness, not best effort: a shape this adapter cannot prove
     /// is an error, never a silently approximated replay.
-    fn accept(&self, transaction: &HistoricalTransaction) -> Result<()>;
+    fn accept(&self, transaction: &HistoricalTransaction) -> Result<()> {
+        require_executable_message(transaction)?;
+        self.accept_instruction_contract(transaction)
+    }
+
+    /// Experimental admission after generic historical v0 reconstruction.
+    /// A sealed value can only come from independent message proof; ordinary
+    /// normalized transactions and durable ReplayRecords retain the old gate.
+    /// This reports the next contract blocker, not production replay readiness.
+    fn accept_reconstructed_message(&self, message: &crate::message::ProvenV0) -> Result<()> {
+        self.accept_instruction_contract(message.transaction())
+    }
+
+    /// Protocol shape rules after the message gate. Calling this alone is a
+    /// diagnostic contract check and does not establish executable admission.
+    fn accept_instruction_contract(&self, transaction: &HistoricalTransaction) -> Result<()>;
 
     /// Whether this adapter's contract admits cross-program invocation.
     ///

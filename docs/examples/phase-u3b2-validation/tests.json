@@ -1,0 +1,26 @@
+{
+  "clippy": "passed -D warnings",
+  "failures": 0,
+  "git_diff_check": "passed",
+  "mutation_output_isolated": true,
+  "production_tests": [
+    "real_single_table_historical_proof",
+    "real_five_table_historical_proof",
+    "real_five_table_55_loaded_historical_proof",
+    "real_historical_bytes_cannot_be_replaced_by_rpc_metadata",
+    "real_wrong_historical_bytes_are_rejected"
+  ],
+  "python_acquisition": 24,
+  "real_byte_synthetic_bank_context_test": "real_table_bytes_in_explicit_synthetic_warmup_context",
+  "rust_suites": {
+    "historical": 4,
+    "historical_lut": 27,
+    "kamino": 10,
+    "library": 421,
+    "replay": 16,
+    "token2022": 12
+  },
+  "rustfmt": "passed",
+  "total_passed": 544,
+  "u3a_integrity": 30
+}

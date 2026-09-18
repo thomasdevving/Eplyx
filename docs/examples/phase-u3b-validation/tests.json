@@ -1,0 +1,43 @@
+{
+  "clippy": "passed with -D warnings for library, LUT tests and all four audit/proof examples",
+  "fresh_normal_tests_after_shared_build_cache_cleanup": true,
+  "mutation_build_directory_isolated": true,
+  "new_python_acquisition_tests": {
+    "failed": 0,
+    "passed": 17
+  },
+  "production_historical_table_to_rpc_test": "blocked: no archive; no real evidence exists",
+  "rust_suites": {
+    "historical": {
+      "failed": 0,
+      "passed": 4
+    },
+    "historical_lut": {
+      "failed": 0,
+      "passed": 21
+    },
+    "kamino": {
+      "failed": 0,
+      "passed": 10
+    },
+    "library": {
+      "failed": 0,
+      "passed": 421
+    },
+    "replay": {
+      "failed": 0,
+      "passed": 16
+    },
+    "token2022": {
+      "failed": 0,
+      "passed": 12
+    }
+  },
+  "rustfmt": "passed",
+  "synthetic_byte_fixture_sha256": "d49fe57e91baf1d5ce831b8b9e35cf2515de04903174ba4249abdd99906a2e59",
+  "total_passed": 531,
+  "u3a_integrity_tests": {
+    "failed": 0,
+    "passed": 30
+  }
+}

@@ -1,0 +1,425 @@
+{
+  "after_exact_historical_proof": 8,
+  "after_unproven": 0,
+  "before_lut_blocked": 8,
+  "production_baseline_replays": 0,
+  "rows": [
+    {
+      "execution_slot": 448195166,
+      "failure": null,
+      "loaded_address_count": 13,
+      "lookup_table_count": 1,
+      "next_old_engine_rejection": "unsupported program HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ in a Kamino KLend replay; the supported contract admits KLend and compute-budget instructions only",
+      "on_chain_success": true,
+      "passed_previous_lut_gate": true,
+      "signature": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97",
+      "stages": [
+        {
+          "name": "historical_state_acquired",
+          "stage": 1,
+          "status": "passed"
+        },
+        {
+          "name": "execution_slot_visibility_valid",
+          "stage": 2,
+          "status": "passed"
+        },
+        {
+          "name": "addresses_resolved",
+          "stage": 3,
+          "status": "passed"
+        },
+        {
+          "name": "rpc_loaded_addresses_match",
+          "stage": 4,
+          "status": "passed"
+        },
+        {
+          "name": "full_key_space_reconstructed",
+          "stage": 5,
+          "status": "passed"
+        },
+        {
+          "name": "compiled_instruction_identity_match",
+          "stage": 6,
+          "status": "passed"
+        },
+        {
+          "name": "previous_lut_gate_passed",
+          "stage": 7,
+          "status": "passed"
+        },
+        {
+          "name": "next_old_engine_rejection",
+          "stage": 8,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "execution_slot": 448195147,
+      "failure": null,
+      "loaded_address_count": 52,
+      "lookup_table_count": 5,
+      "next_old_engine_rejection": "Kamino replay supports one KLend action per transaction",
+      "on_chain_success": true,
+      "passed_previous_lut_gate": true,
+      "signature": "3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q",
+      "stages": [
+        {
+          "name": "historical_state_acquired",
+          "stage": 1,
+          "status": "passed"
+        },
+        {
+          "name": "execution_slot_visibility_valid",
+          "stage": 2,
+          "status": "passed"
+        },
+        {
+          "name": "addresses_resolved",
+          "stage": 3,
+          "status": "passed"
+        },
+        {
+          "name": "rpc_loaded_addresses_match",
+          "stage": 4,
+          "status": "passed"
+        },
+        {
+          "name": "full_key_space_reconstructed",
+          "stage": 5,
+          "status": "passed"
+        },
+        {
+          "name": "compiled_instruction_identity_match",
+          "stage": 6,
+          "status": "passed"
+        },
+        {
+          "name": "previous_lut_gate_passed",
+          "stage": 7,
+          "status": "passed"
+        },
+        {
+          "name": "next_old_engine_rejection",
+          "stage": 8,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "execution_slot": 448195003,
+      "failure": null,
+      "loaded_address_count": 55,
+      "lookup_table_count": 5,
+      "next_old_engine_rejection": "replay selects successfully captured original transactions",
+      "on_chain_success": false,
+      "passed_previous_lut_gate": true,
+      "signature": "47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf",
+      "stages": [
+        {
+          "name": "historical_state_acquired",
+          "stage": 1,
+          "status": "passed"
+        },
+        {
+          "name": "execution_slot_visibility_valid",
+          "stage": 2,
+          "status": "passed"
+        },
+        {
+          "name": "addresses_resolved",
+          "stage": 3,
+          "status": "passed"
+        },
+        {
+          "name": "rpc_loaded_addresses_match",
+          "stage": 4,
+          "status": "passed"
+        },
+        {
+          "name": "full_key_space_reconstructed",
+          "stage": 5,
+          "status": "passed"
+        },
+        {
+          "name": "compiled_instruction_identity_match",
+          "stage": 6,
+          "status": "passed"
+        },
+        {
+          "name": "previous_lut_gate_passed",
+          "stage": 7,
+          "status": "passed"
+        },
+        {
+          "name": "next_old_engine_rejection",
+          "stage": 8,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "execution_slot": 448194959,
+      "failure": null,
+      "loaded_address_count": 30,
+      "lookup_table_count": 1,
+      "next_old_engine_rejection": "Kamino replay supports one KLend action per transaction",
+      "on_chain_success": true,
+      "passed_previous_lut_gate": true,
+      "signature": "37XJKQbB9fRX1R76cKKGSENNNA2RSY1WvjkCx2Q7joN2irKfTTZ5Z6bHgH4rfgDPJvhXf3peTe4mwxisfpSEmimu",
+      "stages": [
+        {
+          "name": "historical_state_acquired",
+          "stage": 1,
+          "status": "passed"
+        },
+        {
+          "name": "execution_slot_visibility_valid",
+          "stage": 2,
+          "status": "passed"
+        },
+        {
+          "name": "addresses_resolved",
+          "stage": 3,
+          "status": "passed"
+        },
+        {
+          "name": "rpc_loaded_addresses_match",
+          "stage": 4,
+          "status": "passed"
+        },
+        {
+          "name": "full_key_space_reconstructed",
+          "stage": 5,
+          "status": "passed"
+        },
+        {
+          "name": "compiled_instruction_identity_match",
+          "stage": 6,
+          "status": "passed"
+        },
+        {
+          "name": "previous_lut_gate_passed",
+          "stage": 7,
+          "status": "passed"
+        },
+        {
+          "name": "next_old_engine_rejection",
+          "stage": 8,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "execution_slot": 448194517,
+      "failure": null,
+      "loaded_address_count": 11,
+      "lookup_table_count": 1,
+      "next_old_engine_rejection": "unsupported program HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ in a Kamino KLend replay; the supported contract admits KLend and compute-budget instructions only",
+      "on_chain_success": true,
+      "passed_previous_lut_gate": true,
+      "signature": "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk",
+      "stages": [
+        {
+          "name": "historical_state_acquired",
+          "stage": 1,
+          "status": "passed"
+        },
+        {
+          "name": "execution_slot_visibility_valid",
+          "stage": 2,
+          "status": "passed"
+        },
+        {
+          "name": "addresses_resolved",
+          "stage": 3,
+          "status": "passed"
+        },
+        {
+          "name": "rpc_loaded_addresses_match",
+          "stage": 4,
+          "status": "passed"
+        },
+        {
+          "name": "full_key_space_reconstructed",
+          "stage": 5,
+          "status": "passed"
+        },
+        {
+          "name": "compiled_instruction_identity_match",
+          "stage": 6,
+          "status": "passed"
+        },
+        {
+          "name": "previous_lut_gate_passed",
+          "stage": 7,
+          "status": "passed"
+        },
+        {
+          "name": "next_old_engine_rejection",
+          "stage": 8,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "execution_slot": 448194462,
+      "failure": null,
+      "loaded_address_count": 9,
+      "lookup_table_count": 1,
+      "next_old_engine_rejection": "unsupported program HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ in a Kamino KLend replay; the supported contract admits KLend and compute-budget instructions only",
+      "on_chain_success": true,
+      "passed_previous_lut_gate": true,
+      "signature": "5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V",
+      "stages": [
+        {
+          "name": "historical_state_acquired",
+          "stage": 1,
+          "status": "passed"
+        },
+        {
+          "name": "execution_slot_visibility_valid",
+          "stage": 2,
+          "status": "passed"
+        },
+        {
+          "name": "addresses_resolved",
+          "stage": 3,
+          "status": "passed"
+        },
+        {
+          "name": "rpc_loaded_addresses_match",
+          "stage": 4,
+          "status": "passed"
+        },
+        {
+          "name": "full_key_space_reconstructed",
+          "stage": 5,
+          "status": "passed"
+        },
+        {
+          "name": "compiled_instruction_identity_match",
+          "stage": 6,
+          "status": "passed"
+        },
+        {
+          "name": "previous_lut_gate_passed",
+          "stage": 7,
+          "status": "passed"
+        },
+        {
+          "name": "next_old_engine_rejection",
+          "stage": 8,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "execution_slot": 448194435,
+      "failure": null,
+      "loaded_address_count": 14,
+      "lookup_table_count": 1,
+      "next_old_engine_rejection": "unsupported program HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ in a Kamino KLend replay; the supported contract admits KLend and compute-budget instructions only",
+      "on_chain_success": true,
+      "passed_previous_lut_gate": true,
+      "signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx",
+      "stages": [
+        {
+          "name": "historical_state_acquired",
+          "stage": 1,
+          "status": "passed"
+        },
+        {
+          "name": "execution_slot_visibility_valid",
+          "stage": 2,
+          "status": "passed"
+        },
+        {
+          "name": "addresses_resolved",
+          "stage": 3,
+          "status": "passed"
+        },
+        {
+          "name": "rpc_loaded_addresses_match",
+          "stage": 4,
+          "status": "passed"
+        },
+        {
+          "name": "full_key_space_reconstructed",
+          "stage": 5,
+          "status": "passed"
+        },
+        {
+          "name": "compiled_instruction_identity_match",
+          "stage": 6,
+          "status": "passed"
+        },
+        {
+          "name": "previous_lut_gate_passed",
+          "stage": 7,
+          "status": "passed"
+        },
+        {
+          "name": "next_old_engine_rejection",
+          "stage": 8,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "execution_slot": 448194341,
+      "failure": null,
+      "loaded_address_count": 13,
+      "lookup_table_count": 1,
+      "next_old_engine_rejection": "unsupported program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL in a Kamino KLend replay; the supported contract admits KLend and compute-budget instructions only",
+      "on_chain_success": true,
+      "passed_previous_lut_gate": true,
+      "signature": "2dc94E8Mvh83c8MiecgRekd7Vj8YE6aexfVeCJK58K46LQcTRjpDomii6pYmwbdeYmdTM3bVbHw6rhFdtwRtSTnT",
+      "stages": [
+        {
+          "name": "historical_state_acquired",
+          "stage": 1,
+          "status": "passed"
+        },
+        {
+          "name": "execution_slot_visibility_valid",
+          "stage": 2,
+          "status": "passed"
+        },
+        {
+          "name": "addresses_resolved",
+          "stage": 3,
+          "status": "passed"
+        },
+        {
+          "name": "rpc_loaded_addresses_match",
+          "stage": 4,
+          "status": "passed"
+        },
+        {
+          "name": "full_key_space_reconstructed",
+          "stage": 5,
+          "status": "passed"
+        },
+        {
+          "name": "compiled_instruction_identity_match",
+          "stage": 6,
+          "status": "passed"
+        },
+        {
+          "name": "previous_lut_gate_passed",
+          "stage": 7,
+          "status": "passed"
+        },
+        {
+          "name": "next_old_engine_rejection",
+          "stage": 8,
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "sample_fingerprint": "b97116541aeefc6723ef91a1d38c9be52792d47316b573ac08d49484fd97d0af"
+}

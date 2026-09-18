@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "id": "mainnet-memo-5f06d3fa24222fa28070",
+  "program_id": "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+  "genesis_hash": "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d",
+  "transaction": {
+    "signature": "2KQ6LoGoez5dyuQ2VCAZKCMHUiQ6Zzr6Q7V88uSScWdJD9Kbt9vwLEi6QpSbPw6gDwXTQeGUbDNvg3KscqCRWqXU",
+    "slot": 447218873,
+    "block_time": 1789465484,
+    "version": "legacy",
+    "recent_blockhash": "F4SunzfsaGPXFKkXL3Pp1nBhqXFWkQxVFhrffpGu5AVC",
+    "payer": "3oGtPoidvDsPBrHjGRoGJir3jgbbTWvP2np9x6RzsyEu",
+    "account_keys": [
+      {
+        "address": "3oGtPoidvDsPBrHjGRoGJir3jgbbTWvP2np9x6RzsyEu",
+        "is_signer": true,
+        "is_writable": true
+      },
+      {
+        "address": "AuREUm3svmvWxJ5te5z6fHWqQT4Ereikesf5Pfa6VvBT",
+        "is_signer": false,
+        "is_writable": true
+      },
+      {
+        "address": "11111111111111111111111111111111",
+        "is_signer": false,
+        "is_writable": false
+      },
+      {
+        "address": "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "is_signer": false,
+        "is_writable": false
+      }
+    ],
+    "instructions": [
+      {
+        "program": "11111111111111111111111111111111",
+        "accounts": [
+          {
+            "address": "3oGtPoidvDsPBrHjGRoGJir3jgbbTWvP2np9x6RzsyEu",
+            "is_signer": true,
+            "is_writable": true
+          },
+          {
+            "address": "AuREUm3svmvWxJ5te5z6fHWqQT4Ereikesf5Pfa6VvBT",
+            "is_signer": false,
+            "is_writable": true
+          }
+        ],
+        "data": "02000000cd4c000000000000"
+      },
+      {
+        "program": "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+        "accounts": [],
+        "data": "33574c5141795a353347715450416a7348314850526d6148445a70346672454e483644415654477863424c795968514b734a62325965566b577a3931524172594a525651453762467a46324d50534e7a64573852716b5a55"
+      }
+    ],
+    "inner_instructions": [],
+    "success": true,
+    "error": null,
+    "fee": 5000,
+    "compute_units": 32787,
+    "pre_balances": [3582716951, 4221380817, 1, 523015135],
+    "post_balances": [3582692290, 4221400478, 1, 523015135],
+    "native_value_lamports": 22161,
+    "logs": [
+      "Program 11111111111111111111111111111111 invoke [1]",
+      "Program 11111111111111111111111111111111 success",
+      "Program MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr invoke [1]",
+      "Program log: Memo (len 88): \"3WLQAyZ53GqTPAjsH1HPRmaHDZp4frENH6DAVTGxcBLyYhQKsJb2YeVkWz91RArYJRVQE7bFzF2MPSNzdW8RqkZU\"",
+      "Program MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr consumed 32637 of 202850 compute units",
+      "Program MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr success"
+    ]
+  },
+  "accounts": [
+    {
+      "label": "payer",
+      "address": "3oGtPoidvDsPBrHjGRoGJir3jgbbTWvP2np9x6RzsyEu",
+      "account": {
+        "lamports": 3582716951,
+        "owner": "11111111111111111111111111111111",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 18446744073709551615
+      }
+    },
+    {
+      "label": "recipient",
+      "address": "AuREUm3svmvWxJ5te5z6fHWqQT4Ereikesf5Pfa6VvBT",
+      "account": {
+        "lamports": 4221380817,
+        "owner": "11111111111111111111111111111111",
+        "data": "",
+        "executable": false,
+        "rent_epoch": 18446744073709551615
+      }
+    }
+  ],
+  "clock": {
+    "slot": 447218873,
+    "epoch_start_timestamp": 0,
+    "epoch": 0,
+    "leader_schedule_epoch": 0,
+    "unix_timestamp": 1789465484
+  },
+  "state_source": "historical_archive",
+  "pre_state_hash": "5b29e923314147626739e5f1a3af6ce22af68ed43601e77f0d789f31e1182687",
+  "original": {
+    "success": true,
+    "fee": 5000,
+    "post_state_hash": "c447c3c994cbdc7671153c353d4669b766984d88fd7f4e9d94d768636d58063a"
+  },
+  "current_program_sha256": "f520eaf096361abbb9639ea4dc3e5388a87b9330e121f476607b87c46ef67954",
+  "assumptions": [
+    "slot-addressable archive snapshots at S-1 and S match validator pre/post balances",
+    "bounded contract is one System transfer followed by account-free Memo; no CPI",
+    "both state accounts are data-empty System accounts; only lamports may change",
+    "Memo is an immutable legacy-loader executable; archived account data is exact V1 SBF",
+    "System and Memo do not read Clock; remaining runtime state uses pinned LiteSVM defaults"
+  ]
+}

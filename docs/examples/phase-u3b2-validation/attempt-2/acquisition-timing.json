@@ -1,0 +1,15 @@
+{
+  "account_state_requests": 0,
+  "acquisition_seconds": 0.01540687499800697,
+  "failed_table_requests": 0,
+  "historical_contexts_acquired": 0,
+  "measurement": "wall_clock_transport",
+  "network_requests": 1,
+  "requests": [
+    {
+      "request": "genesis",
+      "seconds": 0.01540687499800697
+    }
+  ],
+  "successful_table_requests": 0
+}

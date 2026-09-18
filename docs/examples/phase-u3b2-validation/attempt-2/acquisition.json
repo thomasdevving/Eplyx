@@ -1,0 +1,418 @@
+{
+  "archive_validation_file": null,
+  "attempt_policy": {
+    "max_attempts_per_context": 1,
+    "provider_fallback": false,
+    "timeout_seconds": 15
+  },
+  "complete": true,
+  "genesis_response_file": null,
+  "kind": "experimental_historical_lut_capture",
+  "provider": null,
+  "raw_artifact_hashes": {},
+  "requests": [
+    {
+      "attempted": false,
+      "decoded_account_sha256": null,
+      "execution_slot": 448195003,
+      "failure_category": "archive_unavailable",
+      "failure_reason": "transport_exit_6",
+      "method": "getAccountInfo",
+      "params": [
+        "26XAkAHyMHzp9tUmh8m7x8A4YmB8vaknbc2bXijp8dKS",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195003
+        }
+      ],
+      "requested_slot": 448195003,
+      "response_file": null,
+      "response_sha256": null,
+      "returned_context_slot": null,
+      "status": "failure",
+      "table_pubkey": "26XAkAHyMHzp9tUmh8m7x8A4YmB8vaknbc2bXijp8dKS",
+      "transaction_signatures": [
+        "47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf"
+      ]
+    },
+    {
+      "attempted": false,
+      "decoded_account_sha256": null,
+      "execution_slot": 448195147,
+      "failure_category": "archive_unavailable",
+      "failure_reason": "transport_exit_6",
+      "method": "getAccountInfo",
+      "params": [
+        "26XAkAHyMHzp9tUmh8m7x8A4YmB8vaknbc2bXijp8dKS",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195147
+        }
+      ],
+      "requested_slot": 448195147,
+      "response_file": null,
+      "response_sha256": null,
+      "returned_context_slot": null,
+      "status": "failure",
+      "table_pubkey": "26XAkAHyMHzp9tUmh8m7x8A4YmB8vaknbc2bXijp8dKS",
+      "transaction_signatures": [
+        "3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q"
+      ]
+    },
+    {
+      "attempted": false,
+      "decoded_account_sha256": null,
+      "execution_slot": 448195166,
+      "failure_category": "archive_unavailable",
+      "failure_reason": "transport_exit_6",
+      "method": "getAccountInfo",
+      "params": [
+        "8ofreL6hKfEet1DnhHVGvCTnSdz4pg85PpbuCUHnEcKm",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "requested_slot": 448195166,
+      "response_file": null,
+      "response_sha256": null,
+      "returned_context_slot": null,
+      "status": "failure",
+      "table_pubkey": "8ofreL6hKfEet1DnhHVGvCTnSdz4pg85PpbuCUHnEcKm",
+      "transaction_signatures": [
+        "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97"
+      ]
+    },
+    {
+      "attempted": false,
+      "decoded_account_sha256": null,
+      "execution_slot": 448195147,
+      "failure_category": "archive_unavailable",
+      "failure_reason": "transport_exit_6",
+      "method": "getAccountInfo",
+      "params": [
+        "9rVP9Ly5RC1nix3WDm5QgkoWJbxV7Kteth1KHtYk5hT9",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195147
+        }
+      ],
+      "requested_slot": 448195147,
+      "response_file": null,
+      "response_sha256": null,
+      "returned_context_slot": null,
+      "status": "failure",
+      "table_pubkey": "9rVP9Ly5RC1nix3WDm5QgkoWJbxV7Kteth1KHtYk5hT9",
+      "transaction_signatures": [
+        "3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q"
+      ]
+    },
+    {
+      "attempted": false,
+      "decoded_account_sha256": null,
+      "execution_slot": 448194959,
+      "failure_category": "archive_unavailable",
+      "failure_reason": "transport_exit_6",
+      "method": "getAccountInfo",
+      "params": [
+        "9vv7YoDouByqvZDXNkpTxUN7LLNA21pyCgvHYG1SyJ6v",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448194959
+        }
+      ],
+      "requested_slot": 448194959,
+      "response_file": null,
+      "response_sha256": null,
+      "returned_context_slot": null,
+      "status": "failure",
+      "table_pubkey": "9vv7YoDouByqvZDXNkpTxUN7LLNA21pyCgvHYG1SyJ6v",
+      "transaction_signatures": [
+        "37XJKQbB9fRX1R76cKKGSENNNA2RSY1WvjkCx2Q7joN2irKfTTZ5Z6bHgH4rfgDPJvhXf3peTe4mwxisfpSEmimu"
+      ]
+    },
+    {
+      "attempted": false,
+      "decoded_account_sha256": null,
+      "execution_slot": 448195003,
+      "failure_category": "archive_unavailable",
+      "failure_reason": "transport_exit_6",
+      "method": "getAccountInfo",
+      "params": [
+        "A3M7Bv5bePAJ6Pb6i8PGm2aj3P4WonaCXy7EUt6PMEn9",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195003
+        }
+      ],
+      "requested_slot": 448195003,
+      "response_file": null,
+      "response_sha256": null,
+      "returned_context_slot": null,
+      "status": "failure",
+      "table_pubkey": "A3M7Bv5bePAJ6Pb6i8PGm2aj3P4WonaCXy7EUt6PMEn9",
+      "transaction_signatures": [
+        "47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf"
+      ]
+    },
+    {
+      "attempted": false,
+      "decoded_account_sha256": null,
+      "execution_slot": 448195147,
+      "failure_category": "archive_unavailable",
+      "failure_reason": "transport_exit_6",
+      "method": "getAccountInfo",
+      "params": [
+        "A3M7Bv5bePAJ6Pb6i8PGm2aj3P4WonaCXy7EUt6PMEn9",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195147
+        }
+      ],
+      "requested_slot": 448195147,
+      "response_file": null,
+      "response_sha256": null,
+      "returned_context_slot": null,
+      "status": "failure",
+      "table_pubkey": "A3M7Bv5bePAJ6Pb6i8PGm2aj3P4WonaCXy7EUt6PMEn9",
+      "transaction_signatures": [
+        "3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q"
+      ]
+    },
+    {
+      "attempted": false,
+      "decoded_account_sha256": null,
+      "execution_slot": 448194462,
+      "failure_category": "archive_unavailable",
+      "failure_reason": "transport_exit_6",
+      "method": "getAccountInfo",
+      "params": [
+        "FGMSBiyVE8TvZcdQnZETAAKw28tkQJ2ccZy6pyp95URb",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448194462
+        }
+      ],
+      "requested_slot": 448194462,
+      "response_file": null,
+      "response_sha256": null,
+      "returned_context_slot": null,
+      "status": "failure",
+      "table_pubkey": "FGMSBiyVE8TvZcdQnZETAAKw28tkQJ2ccZy6pyp95URb",
+      "transaction_signatures": [
+        "5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V"
+      ]
+    },
+    {
+      "attempted": false,
+      "decoded_account_sha256": null,
+      "execution_slot": 448194517,
+      "failure_category": "archive_unavailable",
+      "failure_reason": "transport_exit_6",
+      "method": "getAccountInfo",
+      "params": [
+        "FGMSBiyVE8TvZcdQnZETAAKw28tkQJ2ccZy6pyp95URb",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448194517
+        }
+      ],
+      "requested_slot": 448194517,
+      "response_file": null,
+      "response_sha256": null,
+      "returned_context_slot": null,
+      "status": "failure",
+      "table_pubkey": "FGMSBiyVE8TvZcdQnZETAAKw28tkQJ2ccZy6pyp95URb",
+      "transaction_signatures": [
+        "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk"
+      ]
+    },
+    {
+      "attempted": false,
+      "decoded_account_sha256": null,
+      "execution_slot": 448195003,
+      "failure_category": "archive_unavailable",
+      "failure_reason": "transport_exit_6",
+      "method": "getAccountInfo",
+      "params": [
+        "GP57a1T8vJjeAnF2zfKT1bnZysNwVprLaw6Mjw2d1gPy",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195003
+        }
+      ],
+      "requested_slot": 448195003,
+      "response_file": null,
+      "response_sha256": null,
+      "returned_context_slot": null,
+      "status": "failure",
+      "table_pubkey": "GP57a1T8vJjeAnF2zfKT1bnZysNwVprLaw6Mjw2d1gPy",
+      "transaction_signatures": [
+        "47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf"
+      ]
+    },
+    {
+      "attempted": false,
+      "decoded_account_sha256": null,
+      "execution_slot": 448194341,
+      "failure_category": "archive_unavailable",
+      "failure_reason": "transport_exit_6",
+      "method": "getAccountInfo",
+      "params": [
+        "GprZNyWk67655JhX6Rq9KoebQ6WkQYRhATWzkx2P2LNc",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448194341
+        }
+      ],
+      "requested_slot": 448194341,
+      "response_file": null,
+      "response_sha256": null,
+      "returned_context_slot": null,
+      "status": "failure",
+      "table_pubkey": "GprZNyWk67655JhX6Rq9KoebQ6WkQYRhATWzkx2P2LNc",
+      "transaction_signatures": [
+        "2dc94E8Mvh83c8MiecgRekd7Vj8YE6aexfVeCJK58K46LQcTRjpDomii6pYmwbdeYmdTM3bVbHw6rhFdtwRtSTnT"
+      ]
+    },
+    {
+      "attempted": false,
+      "decoded_account_sha256": null,
+      "execution_slot": 448194435,
+      "failure_category": "archive_unavailable",
+      "failure_reason": "transport_exit_6",
+      "method": "getAccountInfo",
+      "params": [
+        "GprZNyWk67655JhX6Rq9KoebQ6WkQYRhATWzkx2P2LNc",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448194435
+        }
+      ],
+      "requested_slot": 448194435,
+      "response_file": null,
+      "response_sha256": null,
+      "returned_context_slot": null,
+      "status": "failure",
+      "table_pubkey": "GprZNyWk67655JhX6Rq9KoebQ6WkQYRhATWzkx2P2LNc",
+      "transaction_signatures": [
+        "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx"
+      ]
+    },
+    {
+      "attempted": false,
+      "decoded_account_sha256": null,
+      "execution_slot": 448195003,
+      "failure_category": "archive_unavailable",
+      "failure_reason": "transport_exit_6",
+      "method": "getAccountInfo",
+      "params": [
+        "YXziZZksvEhVhqapwQmbEg8TeeNwav8cL5TjnxGGTpD",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195003
+        }
+      ],
+      "requested_slot": 448195003,
+      "response_file": null,
+      "response_sha256": null,
+      "returned_context_slot": null,
+      "status": "failure",
+      "table_pubkey": "YXziZZksvEhVhqapwQmbEg8TeeNwav8cL5TjnxGGTpD",
+      "transaction_signatures": [
+        "47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf"
+      ]
+    },
+    {
+      "attempted": false,
+      "decoded_account_sha256": null,
+      "execution_slot": 448195147,
+      "failure_category": "archive_unavailable",
+      "failure_reason": "transport_exit_6",
+      "method": "getAccountInfo",
+      "params": [
+        "YXziZZksvEhVhqapwQmbEg8TeeNwav8cL5TjnxGGTpD",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195147
+        }
+      ],
+      "requested_slot": 448195147,
+      "response_file": null,
+      "response_sha256": null,
+      "returned_context_slot": null,
+      "status": "failure",
+      "table_pubkey": "YXziZZksvEhVhqapwQmbEg8TeeNwav8cL5TjnxGGTpD",
+      "transaction_signatures": [
+        "3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q"
+      ]
+    },
+    {
+      "attempted": false,
+      "decoded_account_sha256": null,
+      "execution_slot": 448195003,
+      "failure_category": "archive_unavailable",
+      "failure_reason": "transport_exit_6",
+      "method": "getAccountInfo",
+      "params": [
+        "iBP3RJEdvxKz361DHadB9Mdw7qfreeLEVTNEZ1DA3X9",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195003
+        }
+      ],
+      "requested_slot": 448195003,
+      "response_file": null,
+      "response_sha256": null,
+      "returned_context_slot": null,
+      "status": "failure",
+      "table_pubkey": "iBP3RJEdvxKz361DHadB9Mdw7qfreeLEVTNEZ1DA3X9",
+      "transaction_signatures": [
+        "47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf"
+      ]
+    },
+    {
+      "attempted": false,
+      "decoded_account_sha256": null,
+      "execution_slot": 448195147,
+      "failure_category": "archive_unavailable",
+      "failure_reason": "transport_exit_6",
+      "method": "getAccountInfo",
+      "params": [
+        "iBP3RJEdvxKz361DHadB9Mdw7qfreeLEVTNEZ1DA3X9",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195147
+        }
+      ],
+      "requested_slot": 448195147,
+      "response_file": null,
+      "response_sha256": null,
+      "returned_context_slot": null,
+      "status": "failure",
+      "table_pubkey": "iBP3RJEdvxKz361DHadB9Mdw7qfreeLEVTNEZ1DA3X9",
+      "transaction_signatures": [
+        "3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q"
+      ]
+    }
+  ],
+  "sample_fingerprint": "b97116541aeefc6723ef91a1d38c9be52792d47316b573ac08d49484fd97d0af",
+  "schema_version": 2,
+  "slot_hashes_requests": []
+}

@@ -19,7 +19,7 @@ solana-address = { workspace = true, features = ["curve25519", "std"] }
 solana-clock = { workspace = true }
 solana-instruction = { workspace = true }
 solana-keypair = { workspace = true }
-solana-message = { workspace = true }
+solana-message = { workspace = true, features = ["serde"] }
 solana-rent = { workspace = true }
 solana-signer = { workspace = true }
 solana-system-interface = { workspace = true }
@@ -36,6 +36,8 @@ bs58 = "0.5.1"
 sha2 = "0.10.9"
 wincode = "0.5.5"
 solana-hash = { workspace = true }
+solana-address-lookup-table-interface = { version = "=3.1.0", features = ["wincode", "bytemuck", "serde"] }
+solana-slot-hashes = { version = "=3.1.0", features = ["wincode"] }
 
 [dev-dependencies]
 tempfile = "3"

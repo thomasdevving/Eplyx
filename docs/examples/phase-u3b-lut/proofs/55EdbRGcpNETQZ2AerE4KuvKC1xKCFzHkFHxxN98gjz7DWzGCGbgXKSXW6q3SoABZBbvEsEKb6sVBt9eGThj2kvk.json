@@ -1,0 +1,84 @@
+{
+  "capture_sha256": "df4e89d2ca98b295e5985e8e8747ec941103ae7386e9afa50e40346831ff67f5",
+  "execution_slot": 448194517,
+  "failure": {
+    "acquisition_failures": [
+      {
+        "reason": "historical_account_archive_not_configured",
+        "table_pubkey": "FGMSBiyVE8TvZcdQnZETAAKw28tkQJ2ccZy6pyp95URb"
+      }
+    ],
+    "detail": "missing or extra historical LUT evidence",
+    "stage": 1
+  },
+  "kind": "experimental_transaction_lut_evidence",
+  "next_old_engine_rejection": null,
+  "passed_previous_lut_gate": false,
+  "production_replay_eligible": false,
+  "proof": null,
+  "sample_fingerprint": "b97116541aeefc6723ef91a1d38c9be52792d47316b573ac08d49484fd97d0af",
+  "signature": "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk",
+  "stages": [
+    {
+      "name": "historical_state_acquired",
+      "stage": 1,
+      "status": "failed"
+    },
+    {
+      "name": "execution_slot_visibility_valid",
+      "stage": 2,
+      "status": "not_attempted"
+    },
+    {
+      "name": "addresses_resolved",
+      "stage": 3,
+      "status": "not_attempted"
+    },
+    {
+      "name": "rpc_loaded_addresses_match",
+      "stage": 4,
+      "status": "not_attempted"
+    },
+    {
+      "name": "full_key_space_reconstructed",
+      "stage": 5,
+      "status": "not_attempted"
+    },
+    {
+      "name": "compiled_instruction_identity_match",
+      "stage": 6,
+      "status": "not_attempted"
+    },
+    {
+      "name": "previous_lut_gate_passed",
+      "stage": 7,
+      "status": "not_attempted"
+    },
+    {
+      "name": "next_old_engine_rejection",
+      "stage": 8,
+      "status": "not_attempted"
+    }
+  ],
+  "table_membership": [
+    {
+      "execution_slot": 448194517,
+      "failure_reason": "historical_account_archive_not_configured",
+      "method": "getAccountInfo",
+      "params": [
+        "FGMSBiyVE8TvZcdQnZETAAKw28tkQJ2ccZy6pyp95URb",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448194517
+        }
+      ],
+      "requested_slot": 448194517,
+      "response_file": null,
+      "response_sha256": null,
+      "returned_context_slot": null,
+      "status": "failure",
+      "table_pubkey": "FGMSBiyVE8TvZcdQnZETAAKw28tkQJ2ccZy6pyp95URb"
+    }
+  ]
+}
