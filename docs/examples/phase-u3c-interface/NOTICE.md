@@ -1,0 +1,1 @@
+These are unmodified excerpts from the public Kamino-Finance Scope, Scope SDK, and KLend repositories at the revisions in manifest.json. Original licenses accompany each repository. They establish interface provenance, not reproducible correspondence with the historical deployed ELF.

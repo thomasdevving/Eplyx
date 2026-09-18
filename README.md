@@ -65,6 +65,9 @@ The semantic adapter work is recorded in [U1](docs/universal-evidence-layer.md)
 and [U2](docs/phase-u2-kamino.md). The [U3 preflight](docs/phase-u3-modern-replay-surface.md)
 documents the incomplete recovered U2 sample; [U3A](docs/phase-u3a-production-baseline.md)
 freezes a separate reproducible production sample before modern replay changes.
+[U3B](docs/phase-u3b-historical-lut-reconstruction.md) proves historical LUT
+reconstruction; [U3C](docs/phase-u3c-transaction-envelope.md) adds narrow structural
+envelope admission, with historical dependencies and production replay still incomplete.
 
 ---
 

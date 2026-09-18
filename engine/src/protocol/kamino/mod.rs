@@ -42,6 +42,7 @@
 //! an evaluable subject this adapter cannot compute would be a claim with no
 //! implementation behind it.
 
+pub mod envelope;
 pub mod fraction;
 pub mod state;
 

@@ -33,6 +33,7 @@ pub mod corpus_store;
 pub mod dependencies;
 pub mod diff;
 pub mod discovery;
+pub mod envelope;
 pub mod evidence;
 pub mod executor;
 pub mod expectations;

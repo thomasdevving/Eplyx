@@ -1,0 +1,90 @@
+{
+  "files": [
+    {
+      "bytes": 1865,
+      "path": "programs/scope/src/program_id.rs",
+      "repository": "scope",
+      "revision": "fe5352366a7215dda5c6f7b867a6bb5929d52c94",
+      "sha256": "fcadc03a76507ae39969f508b00f70d10fd2c83b11952a317155ad306373ad9f",
+      "status": "captured"
+    },
+    {
+      "bytes": 5730,
+      "path": "programs/scope/src/lib.rs",
+      "repository": "scope",
+      "revision": "fe5352366a7215dda5c6f7b867a6bb5929d52c94",
+      "sha256": "443a5e55a2fad5bae1247b9bde811d2928e7e363710c2dfb8cc8233bb378ef55",
+      "status": "captured"
+    },
+    {
+      "bytes": 8390,
+      "path": "programs/scope/src/handlers/handler_refresh_prices.rs",
+      "repository": "scope",
+      "revision": "fe5352366a7215dda5c6f7b867a6bb5929d52c94",
+      "sha256": "2669d4807e2af5627b98886df3d7801451da67aae260efaadfb71fc1ed859bfe",
+      "status": "captured"
+    },
+    {
+      "bytes": 25481,
+      "path": "programs/scope/src/oracles/mod.rs",
+      "repository": "scope",
+      "revision": "fe5352366a7215dda5c6f7b867a6bb5929d52c94",
+      "sha256": "0e9a964e3eeb07e359742ca4d02d87c3368bca067f7c8699f46fd8373e1bec74",
+      "status": "captured"
+    },
+    {
+      "bytes": 7261,
+      "path": "src/@codegen/scope/instructions/refreshPriceList.ts",
+      "repository": "scope-sdk",
+      "revision": "d77ac13bced666e07719bba3e026f628cd5d3e61",
+      "sha256": "7a2cd19d53b3761e6848c19c31bdd8f70832be2e6a3e335343d44c5128b10959",
+      "status": "captured"
+    },
+    {
+      "bytes": 12922,
+      "path": "src/@codegen/scope/programs/scope.ts",
+      "repository": "scope-sdk",
+      "revision": "d77ac13bced666e07719bba3e026f628cd5d3e61",
+      "sha256": "0455511108f8fdfd8ee8c9bf627feb08ec021ec07a38f722fbf5a1f40e10c65a",
+      "status": "captured"
+    },
+    {
+      "bytes": 2589,
+      "path": "programs/klend/src/handlers/handler_refresh_reserve.rs",
+      "repository": "klend",
+      "revision": "a08760976f51a3a58c4a0c6ea27b4a0e565bca79",
+      "sha256": "96a3f1a7b0c0b7c175404692ddf8a20c7207c789baf124f54be6da151578fc50",
+      "status": "captured"
+    },
+    {
+      "bytes": 4244,
+      "path": "LICENSE",
+      "repository": "scope",
+      "revision": "fe5352366a7215dda5c6f7b867a6bb5929d52c94",
+      "sha256": "0388ef6a0ae8cd89d040229a0d822cd6081467db30238669b6f4453a4ae49948",
+      "status": "captured"
+    },
+    {
+      "bytes": 11357,
+      "path": "LICENSE",
+      "repository": "scope-sdk",
+      "revision": "d77ac13bced666e07719bba3e026f628cd5d3e61",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "status": "captured"
+    },
+    {
+      "bytes": 4253,
+      "path": "LICENSE",
+      "repository": "klend",
+      "revision": "a08760976f51a3a58c4a0c6ea27b4a0e565bca79",
+      "sha256": "bbac42262e13c89488141e02fc8897d56acf478a9408da43d283155d6392a612",
+      "status": "captured"
+    }
+  ],
+  "kind": "official_interface_source_capture",
+  "repositories": {
+    "klend": "a08760976f51a3a58c4a0c6ea27b4a0e565bca79",
+    "scope": "fe5352366a7215dda5c6f7b867a6bb5929d52c94",
+    "scope-sdk": "d77ac13bced666e07719bba3e026f628cd5d3e61"
+  }
+}
