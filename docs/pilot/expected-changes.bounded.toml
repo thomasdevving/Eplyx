@@ -1,0 +1,42 @@
+# Production pilot, case C: a bounded declaration that the engine should accept.
+#
+# The candidate is `fixture_stake_pool_v2.so`, a locally constructed
+# counterexample — not a proposed upstream release. Its delta is known exactly,
+# which is what makes it usable as a test of the declaration mechanism: both
+# fingerprints below are the whole of what it changes, each named exactly and
+# each bounded. Nothing here is an allowlist, and none of it says the candidate
+# is good.
+version = 1
+semantic_schema_version = 2
+
+# The deliberate defect: the candidate caches the exchange rate at four decimal
+# places instead of multiplying before dividing, so a depositor receives
+# slightly fewer pool tokens. Measured at 1 bp on this corpus; declared at 25 to
+# show a satisfied bound rather than one tuned to the answer.
+[[change]]
+protocol = "spl-stake-pool"
+action   = "deposit_sol"
+domain   = "economic"
+subject  = "pool_tokens_received"
+change   = "decreased"
+
+max_delta_bps             = 25
+max_affected_observations = 1
+max_affected_entities     = 1
+
+reason = "Counterexample: rate-caching refactor truncates the depositor's share to the nearest basis point."
+
+# The candidate implements DepositSol and nothing else, so every WithdrawSol
+# record reverts. Declared because it is the known remainder of this
+# counterexample's delta, bounded to the nine observations that can measure it.
+[[change]]
+protocol = "spl-stake-pool"
+action   = "withdraw_sol"
+domain   = "execution"
+subject  = "transaction"
+change   = "now_reverts"
+
+max_affected_observations = 9
+max_affected_entities     = 9
+
+reason = "Counterexample implements DepositSol only; WithdrawSol is absent by construction."
