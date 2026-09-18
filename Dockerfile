@@ -21,8 +21,12 @@ RUN rustup show
 
 # Dependencies first. The litesvm and solana-* tree dominates this build and
 # moves only when the lockfile does, so it is compiled against stub sources and
-# cached independently of the engine's own code. Cargo validates every declared
-# target, so `engine`'s explicit `eplyx` binary needs a stub too.
+# cached independently of the engine's own code.
+#
+# Cargo validates every *explicitly declared* target before it compiles
+# anything, so each one needs a stub file even when this build would never
+# compile it: `engine`'s `[[bin]] eplyx` and `server`'s `[lib] eplyx_server`.
+# A missing one fails the layer with "can't find lib", not with a type error.
 COPY Cargo.toml Cargo.lock ./
 COPY interface/Cargo.toml interface/
 COPY engine/Cargo.toml engine/
@@ -31,14 +35,17 @@ RUN mkdir -p interface/src engine/src server/src \
  && : > interface/src/lib.rs \
  && : > engine/src/lib.rs \
  && echo 'fn main() {}' > engine/src/main.rs \
+ && : > server/src/lib.rs \
  && echo 'fn main() {}' > server/src/main.rs \
  && cargo build --release -p eplyx-server \
  && rm -rf interface/src engine/src server/src
 
 COPY . .
 # Cargo decides what to rebuild from mtimes, and the real sources arrive with
-# the build context's timestamps, which can predate the stub build above.
-RUN touch interface/src/lib.rs engine/src/lib.rs engine/src/main.rs server/src/main.rs \
+# the build context's timestamps, which can predate the stub build above. Every
+# stubbed file is listed so the set stays obvious next to the one above.
+RUN touch interface/src/lib.rs engine/src/lib.rs engine/src/main.rs \
+      server/src/lib.rs server/src/main.rs \
  && cargo build --release -p eplyx-server
 
 FROM debian:bookworm-slim AS runtime
