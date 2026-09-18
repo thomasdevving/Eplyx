@@ -327,6 +327,24 @@ pub fn select(
 ) -> Result<SelectedCorpus> {
     anyhow::ensure!(target_size > 0, "--target-size must be greater than zero");
 
+    // An observed population is keyed by semantic action, and a key that is not
+    // one can never join the eligible set. Left unchecked that is not inert:
+    // `limitations` reports every observed key with no eligible counterpart as
+    // an action production exercises and this corpus cannot replay, so a map in
+    // the wrong vocabulary - discovery's structural `direct_interaction`, say -
+    // publishes a false coverage claim inside an immutable bundle. Refuse the
+    // vocabulary rather than the intersection: measuring only some actions is
+    // legitimate, and a caller who measured deposits while only withdrawals
+    // proved replayable is describing a real and important gap.
+    for key in observed.keys() {
+        anyhow::ensure!(
+            SemanticAction::parse(key).is_some(),
+            "--observed is keyed by semantic action, and {key:?} is not one. \
+             Valid actions: {}",
+            SemanticAction::ALL.map(|action| action.as_str()).join(", ")
+        );
+    }
+
     // Canonical order first: everything downstream is order-independent because
     // the input is normalised here, not because callers are careful.
     let mut candidates: Vec<Candidate> = records.iter().map(describe).collect();
@@ -1150,6 +1168,48 @@ mod tests {
             .limitations
             .iter()
             .any(|l| l.code.ends_with("_replayability_materially_below_observed")));
+    }
+
+    /// The observed map arrives from a caller, and a caller can measure a
+    /// different taxonomy than the one a corpus is keyed by. Discovery counts
+    /// structure - direct versus CPI - which no adapter will ever call an
+    /// action, so those keys match nothing and every one of them would be
+    /// published as "production exercises this and the corpus cannot replay
+    /// it". That claim then travels inside an immutable bundle. Refused at the
+    /// door instead.
+    #[test]
+    fn an_observed_population_in_the_wrong_vocabulary_is_refused() {
+        let observed: ObservedCounts = [
+            ("direct_interaction".to_string(), 580_usize),
+            ("cpi_interaction".to_string(), 41_usize),
+        ]
+        .into_iter()
+        .collect();
+        let error = select(&population(4), 4, &observed)
+            .unwrap_err()
+            .to_string();
+        assert!(
+            error.contains("direct_interaction") || error.contains("cpi_interaction"),
+            "the rejected key is not named: {error}"
+        );
+        assert!(
+            error.contains("deposit") && error.contains("withdraw"),
+            "the valid vocabulary is not offered: {error}"
+        );
+    }
+
+    /// Measuring only part of production is legitimate, and the case worth
+    /// protecting: a caller who counted deposits while only withdrawals proved
+    /// replayable is describing the most severe bias this report can carry.
+    /// Rejecting on a missing intersection would silence exactly that.
+    #[test]
+    fn an_observed_action_with_no_replayable_records_still_reports() {
+        let observed: ObservedCounts = [("swap".to_string(), 12_usize)].into_iter().collect();
+        let corpus = select(&population(4), 4, &observed).unwrap();
+        assert!(corpus
+            .limitations
+            .iter()
+            .any(|l| l.code == "swap_has_no_replayable_observations"));
     }
 
     #[test]

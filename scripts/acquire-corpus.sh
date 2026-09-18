@@ -154,19 +154,28 @@ echo "  $acquired of ${#CANDIDATES[@]} acquired"
 
 step "3. report the three populations"
 # Observed, replay-eligible and selected are never collapsed into one number.
-OBSERVED=$(python3 - "$SESSION/discovery-corpus.json" <<'PY'
+#
+# What discovery counts is *structure* - direct versus CPI - because that is all
+# it can see without executing anything. A corpus population is keyed by
+# semantic action, which only the adapter can name and only from an acquired
+# record. Two taxonomies, no join. So these counts are printed and deliberately
+# not passed to --observed: a key that matches nothing is not inert there, it is
+# published as "production exercises this and this corpus cannot replay it",
+# which would be a false coverage claim sealed inside an immutable bundle. The
+# engine now refuses such a map outright. An unmeasured population is reported
+# as absent, never as zero, and never as some other taxonomy's number.
+python3 - "$SESSION/discovery-corpus.json" <<'PY'
 import json, sys
 from collections import Counter
 corpus = json.load(open(sys.argv[1]))
 counts = Counter(
     s["interaction"].get("interaction_type", "unknown") for s in corpus["selected"]
 )
-print(json.dumps({str(k).lower(): v for k, v in counts.items()}))
+print("  observed by structure (not an action population):")
+for kind, count in sorted(counts.items()):
+    print(f"    {str(kind).lower()}: {count}")
 PY
-)
-echo "  observed: $OBSERVED"
-"$CLI" corpus select --corpus "$CORPUS" --target-size "$TARGET_SIZE" --observed "$OBSERVED" \
-  || die "selection"
+"$CLI" corpus select --corpus "$CORPUS" --target-size "$TARGET_SIZE" || die "selection"
 
 step "4. build the bundle"
 # The baseline is the V1 binary acquisition resolved for these records. Every
@@ -181,7 +190,6 @@ rm -rf "$OUT/bundle"
   --baseline "$BASELINE" \
   --dependencies "$CORPUS/dependencies" \
   --target-size "$TARGET_SIZE" \
-  --observed "$OBSERVED" \
   --out "$OUT/bundle" || die "bundle build"
 
 step "5. verify it the way the gate will"
