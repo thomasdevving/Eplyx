@@ -79,22 +79,30 @@ python3 - "$SESSION/discovery-corpus.json" "$MAX_ACQUIRE" \
 import json, sys
 from collections import Counter
 
-# The serialized spelling is snake_case, and `exact_ready` is the pre-rename
-# name still accepted on read. Matching the Rust variant name instead finds
-# nothing, and finding nothing here looks exactly like a window with no
-# eligible activity — so the breakdown is printed either way.
-READY = {"historical_state_ready", "exact_ready"}
+# Named by what cannot be acquired, not by what can.
+#
+# `historical_state_ready` is not a label this path can produce: discovery
+# samples *current* account state, so every shape it accepts comes back as
+# `approximate_only`. Only a run given Phase 4 snapshots can claim exact state,
+# and acquisition is the step that goes and gets it — asking discovery to have
+# already proved it is asking the wrong question of the wrong command.
+#
+# So the filter excludes what the adapter's contract rules out and attempts the
+# rest. Erring toward attempting is the safe direction: acquisition refuses
+# loudly when a boundary cannot be proved, while a label added upstream that
+# this list did not know about would otherwise be dropped in silence.
+CANNOT_ACQUIRE = {"unsupported_transaction", "unsupported_cpi", "missing_state"}
 corpus = json.load(open(sys.argv[1]))
 selected = corpus["selected"]
 ready = [
     s["interaction"]["signature"]
     for s in selected
-    if s["interaction"].get("replay_eligibility") in READY
+    if s["interaction"].get("replay_eligibility") not in CANNOT_ACQUIRE
 ]
 breakdown = Counter(s["interaction"].get("replay_eligibility") for s in selected)
 for signature in ready[: int(sys.argv[2])]:
     print(signature)
-print(f"{len(ready)} of {len(selected)} selected interactions have exact historical state",
+print(f"{len(ready)} of {len(selected)} selected interactions are worth acquiring",
       file=sys.stderr)
 for label, count in breakdown.most_common():
     print(f"  {label}: {count}", file=sys.stderr)
@@ -111,16 +119,19 @@ echo "  ${#CANDIDATES[@]} candidate(s) to acquire"
 # or read the breakdown above for what this contract cannot replay.
 if [ "${#CANDIDATES[@]}" -eq 0 ]; then
   echo
-  echo "  Nothing in this window can be replayed exactly. That is a property of"
-  echo "  the window and of the adapter's contract, not a failure here:"
+  echo "  Nothing in this window is worth acquiring. That is a property of the"
+  echo "  window and of the adapter's contract, not a failure here:"
   echo "    · a transaction that failed on mainnet is observed, never replayed"
   echo "    · this adapter replays DepositSol and WithdrawSol, and nothing else"
-  echo "  Widen the window with EPLYX_START_SLOT / EPLYX_END_SLOT, and raise"
-  echo "  --limit if discovery is truncating the window before it is scanned."
-  die "no interaction in this window has exact historical state"
+  echo "  Move the window with EPLYX_START_SLOT / EPLYX_END_SLOT before widening"
+  echo "  it: a quiet period yields nothing however far it is scanned."
+  die "no interaction in this window is worth acquiring"
 fi
 
 step "2. acquire exact historical state, one transaction at a time"
+# This is where the funnel narrows for real. Measured on SPL Stake Pool: of 94
+# in the supported family, 34 were boundary-clean and 23 reproduced V1. Most of
+# what is attempted here is expected to be refused, each for a stated reason.
 # Each acquisition reads every message account at S-1 and S from the archive,
 # resolves the V1 binary deployed at that slot, and screens the block for
 # same-slot interference. A refusal here is the design working: a boundary that
