@@ -58,6 +58,20 @@ The deposit figure is a property of transaction topology, not of the protocol:
 83.3% of observed deposits are Jito-tipped and therefore carry the rent-paying
 credit above. An unmeasured population is reported as absent, never as zero.
 
+That number is supplied by the caller through `--observed`, and it is keyed by
+*semantic action* — the vocabulary in `SemanticAction`, which only an adapter
+can assign and only from an acquired record. Discovery cannot produce it: it
+classifies transactions by structure (`direct_interaction`, `cpi_interaction`)
+because that is all it can see without executing anything. Feeding one taxonomy
+to the other is not inert. Every observed key with no eligible counterpart is
+published as `<action>_has_no_replayable_observations` — "production exercises
+this and this corpus cannot replay it" — so a structural map yields a false
+coverage claim sealed inside an immutable bundle. `select` therefore refuses a
+key that does not name an action. It refuses on the *vocabulary*, never on the
+intersection: a caller who measured only deposits while only withdrawals proved
+replayable is describing the most severe bias this report can carry, and that
+must still be reportable.
+
 ## Acquired, then validated
 
 "Validated" is earned at a specific step, and it is not acquisition.

@@ -314,6 +314,35 @@ pub enum SemanticAction {
 }
 
 impl SemanticAction {
+    /// Every name this type can serialize to.
+    ///
+    /// Exposed because a caller describing a production population is naming
+    /// actions from this list or it is naming something else, and there is no
+    /// third possibility. See [`SemanticAction::parse`].
+    pub const ALL: [Self; 14] = [
+        Self::Transfer,
+        Self::Mint,
+        Self::Burn,
+        Self::Approve,
+        Self::Revoke,
+        Self::Deposit,
+        Self::Withdraw,
+        Self::Stake,
+        Self::Unstake,
+        Self::Claim,
+        Self::Rebalance,
+        Self::Liquidate,
+        Self::Swap,
+        Self::Unknown,
+    ];
+
+    /// The inverse of [`SemanticAction::as_str`]. `None` for anything else -
+    /// deliberately not a lossy fallback to [`SemanticAction::Unknown`], which
+    /// is a real classification an adapter makes and not a parse failure.
+    pub fn parse(name: &str) -> Option<Self> {
+        Self::ALL.into_iter().find(|action| action.as_str() == name)
+    }
+
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Transfer => "transfer",
@@ -741,6 +770,42 @@ pub fn adapter_for(program_id: &str) -> Option<&'static dyn ProtocolAdapter> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn every_semantic_action_round_trips_through_its_name() {
+        for action in SemanticAction::ALL {
+            assert_eq!(SemanticAction::parse(action.as_str()), Some(action));
+        }
+        assert_eq!(SemanticAction::parse("direct_interaction"), None);
+        // `unknown` is a classification an adapter makes, not a parse failure.
+        assert_eq!(
+            SemanticAction::parse("unknown"),
+            Some(SemanticAction::Unknown)
+        );
+
+        // Tripwire: a new variant makes this match non-exhaustive and the crate
+        // stops compiling here. The fix is to add it to `ALL` above as well -
+        // without that it would round-trip to `None` and silently fall out of
+        // every population report keyed by action.
+        for action in SemanticAction::ALL {
+            match action {
+                SemanticAction::Transfer
+                | SemanticAction::Mint
+                | SemanticAction::Burn
+                | SemanticAction::Approve
+                | SemanticAction::Revoke
+                | SemanticAction::Deposit
+                | SemanticAction::Withdraw
+                | SemanticAction::Stake
+                | SemanticAction::Unstake
+                | SemanticAction::Claim
+                | SemanticAction::Rebalance
+                | SemanticAction::Liquidate
+                | SemanticAction::Swap
+                | SemanticAction::Unknown => {}
+            }
+        }
+    }
+
     use super::*;
 
     #[test]
