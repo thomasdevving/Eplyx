@@ -30,3 +30,4 @@ private-setup.json
 
 # Written at build time from EPLYX_API_URL
 /frontend/public/runtime-config.js
+__pycache__/

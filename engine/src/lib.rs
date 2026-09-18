@@ -33,6 +33,7 @@ pub mod corpus_store;
 pub mod dependencies;
 pub mod diff;
 pub mod discovery;
+pub mod evidence;
 pub mod executor;
 pub mod expectations;
 pub mod hexfmt;
@@ -50,6 +51,7 @@ pub mod screening;
 pub mod select;
 pub mod semantics;
 pub mod shrink;
+pub mod standard_programs;
 pub mod types;
 pub mod versions;
 

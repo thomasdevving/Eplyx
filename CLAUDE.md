@@ -48,6 +48,8 @@ cargo run -p eplyx-engine -- compare [--format json] [--no-minimize] [--fail-on-
 cargo run -p eplyx-engine -- reproduce boundary-position-017   # one fixture
 cargo run -p eplyx-engine -- reproduce newly-liquidatable      # a regression group
 pnpm install && pnpm verify:report                             # JSON contract check
+python3 scripts/measure-adapter-duplication.py \
+  engine/src/protocol/stake_pool.rs engine/src/protocol/token2022.rs "overlap"   # Phase U1 control
 ```
 
 Mainnet paths (need an archive endpoint; see `docs/phase-7-production-protocol-upgrade.md`):
@@ -102,12 +104,64 @@ One source tree, two cargo features (`v1` / `v2`, mutually exclusive, `compile_e
 corpus → executor → diff → interpret → impact → cluster → shrink → report
 ```
 
-- **Protocol-agnostic**: `executor`, `diff`, `money`, `report`, `hexfmt`, `types`, `dependencies`, `screening`, `versions`. These deal in accounts, bytes, balances, compute, programs and USD. They must not learn what a health factor is, and must contain no protocol names.
+- **Protocol-agnostic**: `executor`, `diff`, `money`, `report`, `hexfmt`, `types`, `dependencies`, `screening`, `versions`, `evidence`, `standard_programs`. These deal in accounts, bytes, balances, compute, programs and USD. They must not learn what a health factor is, and must contain no protocol names.
 - **Protocol-aware**: `corpus`, `interpret`, `impact`, `cluster`, `shrink`. Everything that understands positions, health factors and liquidation lives here.
 
-As of Phase 7 the seam **is a trait**: `protocol::ProtocolAdapter` owns which transactions a program can replay exactly, what its accounts mean, which programs and accounts it reaches, how an archived snapshot is proved against validator metadata, and what an execution difference means economically. `protocol::token2022` and `protocol::stake_pool` are the implementations. Phase 8 added `supports_cpi`, `dependency_programs`, `required_accounts` and `summarize`, all with defaults that leave an older adapter behaving exactly as before — `supports_cpi` defaults to `false` on purpose, so an adapter proved without CPI keeps the narrower guarantee. The fixture protocol and the bounded Phase 6 Memo path predate the trait and keep their inline contracts in `replay::validate`; new protocols arrive as adapters, not as another branch there. `corpus`, `interpret`, `impact`, `cluster` and `shrink` stay fixture-lending-specific. They are not reached by adapter records **because the generic diff takes its decoder as an argument**: `replay` passes `FieldDecoder::None` for any record an adapter owns, and `FieldDecoder::FixtureLending` only for the fixture and pre-adapter paths that define that layout. This was not always true — the diff used to dispatch on a leading discriminator byte, and a real stake-pool account (first byte `1`, 611 bytes) decoded as a synthetic `Market`, was compared over 86 bytes, and reported identical while `total_lamports` at offset 258 changed. Never infer a layout from bytes alone: an adapter record's economics come from `ProtocolAdapter::interpret`, and the report suppresses the position/USD block for them.
+As of Phase 7 the seam **is a trait**: `protocol::ProtocolAdapter` owns which transactions a program can replay exactly, what its accounts mean, which programs and accounts it reaches, how an archived snapshot is proved against validator metadata, and what an execution difference means economically. `protocol::token2022` and `protocol::stake_pool` are the implementations. Phase 8 added `supports_cpi`, `dependency_programs`, `required_accounts` and `summarize`, all with defaults that leave an older adapter behaving exactly as before — `supports_cpi` defaults to `false` on purpose, so an adapter proved without CPI keeps the narrower guarantee. The fixture protocol and the bounded Phase 6 Memo path predate the trait and keep their inline contracts in `replay::validate`; new protocols arrive as adapters, not as another branch there. As of Phase U1 the generic half of what adapters used to do lives in `evidence/` (measurement and proof) and `standard_programs/` (layouts the runtime or a pinned dependency defines) — see `docs/universal-evidence-layer.md`. `corpus`, `interpret`, `impact`, `cluster` and `shrink` stay fixture-lending-specific. They are not reached by adapter records **because the generic diff takes its decoder as an argument**: `replay` passes `FieldDecoder::None` for any record an adapter owns, and `FieldDecoder::FixtureLending` only for the fixture and pre-adapter paths that define that layout. This was not always true — the diff used to dispatch on a leading discriminator byte, and a real stake-pool account (first byte `1`, 611 bytes) decoded as a synthetic `Market`, was compared over 86 bytes, and reported identical while `total_lamports` at offset 258 changed. Never infer a layout from bytes alone: an adapter record's economics come from `ProtocolAdapter::interpret`, and the report suppresses the position/USD block for them.
 
 `shrink` re-enters `executor` to run candidate states — it sits above execution, never inside it.
+
+### The universal evidence layer (Phase U1)
+
+```
+standard_programs  what the bytes ARE     spl_token · token2022 · system
+evidence           what was MEASURED     account · boundary · token · native
+                                          cpi · field · labels · pairing
+protocol           what it MEANS          stake_pool · token2022
+```
+
+Extracted because 46% of the second adapter's shared-method code was
+line-identical to the first's, and the most duplicated method —
+`prove_boundaries` at 77% — was Solana machinery, not protocol knowledge.
+
+- **Core proves *how*; the adapter says *what*.** `evidence::boundary::prove`
+  performs every check; `BoundaryContract` carries the three things only a
+  protocol knows: which token program a balance must be attributed to, which
+  accounts are exempt from read-only byte identity, and how its token accounts
+  decode. Stake Pool exempts Clock and StakeHistory; **Token-2022 exempts
+  nothing and must not** — no instruction in its contract reads a sysvar, so one
+  appearing there is an anomaly, and a prover that exempted sysvars
+  unconditionally would silently widen the narrower guarantee. The pool's own
+  accounting identity — `total_lamports` against the reserve's observed change,
+  `pool_token_supply` against observed holdings of the pool mint — stays in the
+  adapter.
+- **Two token decoders, not one permissive one.** `spl_token::decode_account`
+  accepts exactly 165 bytes; `token2022::decode_account` accepts the extended
+  forms. The stake-pool contract admits legacy token accounts only, and one
+  lenient decoder would read one program's extended state under another
+  program's narrower claim.
+- **`accept` was deliberately not unified.** Its 52% overlap is
+  `anyhow::ensure!` syntax; the predicates inside are the two protocols' entire
+  replay contracts. Do not merge them.
+- **No flow evidence is not evidence of no economic change.** `FlowEvidence` has
+  no `is_empty`, no `unchanged` and no verdict; the only accessor for an empty
+  set is `no_flow_observed()`, which describes the measurement and never the
+  economics. Drift `settlePNL` is the case: every flow primitive measures zero
+  while real value moves. `UniversalEvidence` carries no overall verdict at all,
+  and there is no `fully_understood` flag.
+- **A decode failure is never an absence.** `Decoded<T>` is
+  `Decoded`/`NotApplicable`/`Malformed`/`Unsupported`, and a truncated buffer
+  never reads as zero. An unknown Token-2022 extension stays visible as
+  `unrecognized` with its type number and bytes.
+- **Lamport deltas carry an attribution.** `FeePayer`, `RuntimeManaged` and
+  `Lifecycle` are not value movement; `Unattributed` means nothing known
+  disqualifies it, not that it is meaningful.
+- **`evidence::cpi::CpiGraph` is a derived view**, not a replacement for
+  `executor::CpiCall` — the wire form is frozen into every bundle. The six-part
+  `InvocationShape` is the comparison; fewer parts is the defect it prevents.
+- Evidence types serialize and **do not deserialize**: they are recomputed from
+  an execution every time, and a wire format would invite handing the engine an
+  assertion in place of a measurement.
 
 ### Historical mainnet layer
 
@@ -182,5 +236,7 @@ Done, as a pilot-ready product surface (Phase 10): an immutable, hash-addressed 
 **Bounded, not general.** The CPI path is one protocol (`SPoo1Ku8…`) and two instructions: `DepositSol` into a pool with no SOL deposit authority, reaching the System and SPL Token programs; and `WithdrawSol`, reaching SPL Token and the deployed Stake program, admitting a strictly-shaped top-level `Approve` companion. One level of invocation, into known programs. Do not describe it as CPI support.
 
 Explicitly **not** started, and not to be begun without being asked: general CPI execution beyond that contract, address lookup table execution, account creation/closure in replay, failed-original replay, multi-instruction sequence search, protocols beyond Token-2022 and SPL Stake Pool (lending, vaults, AMMs), a GitHub App, frontend UI, AI analysis, and fiat valuation of protocol assets.
+
+Done, as a refactor and foundation (Phase U1): the protocol-independent half of the adapters extracted into `evidence/` and `standard_programs/`, with every canonical report byte-identical and every gate exit code unchanged. Adapter shared-method overlap fell from 46% to 31%, and what remains is signatures and call syntax rather than logic. No new protocol, no new semantic action, no adapter DSL, no Adapter Contract v2 — the architecture study's conclusion that **v2 should not be built yet** stands, and `docs/adapter-v2-*.md` record why. See `docs/universal-evidence-layer.md`.
 
 Expected-vs-unexpected classification and CI integration *are* done — see Phase 10 above. What remains unbuilt there is a GitHub App, a dashboard, and a queue.

@@ -22,8 +22,10 @@ use super::{
     SemanticAction, SemanticField, StateFeature, TokenQuantity,
 };
 use crate::{
+    evidence::{boundary, labels, pairing},
     executor::ExecutionResult,
     ingest::transactions::{HistoricalTransaction, TokenBalance},
+    standard_programs::{address_at, spl_token as spl, system, u64_at, u8_at},
     types::{AccountSnapshot, InstructionSpec, NamedAccount},
 };
 use anyhow::{Context, Result};
@@ -41,9 +43,6 @@ const DEPOSIT_SOL: u8 = 14;
 const DEPOSIT_SOL_LEN: usize = 9;
 /// `DepositSol` without a SOL deposit authority takes exactly these accounts.
 const DEPOSIT_SOL_ACCOUNTS: usize = 10;
-/// `SystemInstruction::Transfer`, followed by a `u64`.
-const SYSTEM_TRANSFER: u32 = 2;
-const SYSTEM_TRANSFER_LEN: usize = 12;
 /// `AssociatedTokenAccountInstruction::CreateIdempotent`.
 const CREATE_IDEMPOTENT: u8 = 1;
 /// SPL Token `Approve`: the delegation a withdrawing client grants so the pool
@@ -54,11 +53,14 @@ const TOKEN_APPROVE_ACCOUNTS: usize = 3;
 
 /// `AccountType::StakePool`.
 const ACCOUNT_TYPE_STAKE_POOL: u8 = 1;
-/// Base SPL Token layouts, which the pool mint and every pool token account use.
-const TOKEN_ACCOUNT_LEN: usize = 165;
-const MINT_LEN: usize = 82;
 /// `StakeStateV2`, which is what the reserve stake account holds.
 const STAKE_STATE_LEN: usize = 200;
+
+// The pool mint and every pool token account use the base SPL Token layouts.
+// Those belong to `crate::standard_programs::spl_token` and are read through it:
+// this adapter deals in *legacy* token accounts, which are exactly 165 bytes, and
+// the strictness of that decoder is what keeps a Token-2022 extended account from
+// being read under this adapter's narrower claim.
 
 /// Roles, in the order `DepositSol` declares them.
 /// `WithdrawSol`: burn pool tokens, pay the manager fee, withdraw lamports from
@@ -457,33 +459,25 @@ impl StakePool {
     }
 }
 
-fn u64_at(data: &[u8], offset: usize) -> Option<u64> {
-    Some(u64::from_le_bytes(
-        data.get(offset..offset + 8)?.try_into().ok()?,
-    ))
-}
-
-fn address_at(data: &[u8], offset: usize) -> Option<String> {
-    Some(bs58::encode(data.get(offset..offset + 32)?).into_string())
-}
-
 /// Base-layout SPL Token account balance.
+///
+/// Delegated to the shared decoder, which is strict on length for the reason
+/// this adapter needs it to be: a legacy token account is exactly 165 bytes,
+/// and a longer buffer is a Token-2022 account this contract does not admit.
 pub fn token_account_amount(data: &[u8]) -> Option<u64> {
-    (data.len() == TOKEN_ACCOUNT_LEN).then(|| u64_at(data, 64))?
+    spl::account_amount(data)
 }
 
 pub fn token_account_mint(data: &[u8]) -> Option<String> {
-    (data.len() == TOKEN_ACCOUNT_LEN).then(|| address_at(data, 0))?
+    spl::account_mint(data)
 }
 
 pub fn mint_decimals(data: &[u8]) -> Option<u8> {
-    (data.len() == MINT_LEN)
-        .then(|| data.get(44).copied())
-        .flatten()
+    spl::mint_decimals(data)
 }
 
 pub fn mint_supply(data: &[u8]) -> Option<u64> {
-    (data.len() == MINT_LEN).then(|| u64_at(data, 36))?
+    spl::mint_supply(data)
 }
 
 impl StakePoolAdapter {
@@ -538,46 +532,29 @@ impl StakePoolAdapter {
             .then(|| u64_at(&instruction.data, 1))?
     }
 
+    /// Bind each declared account position to its role and let
+    /// [`crate::evidence::labels`] assign the names.
+    ///
+    /// One account can hold two roles - a depositor who takes the referral
+    /// position, most commonly - and the first role named is the one that
+    /// explains what it is doing. That rule is the shared assigner's.
     fn labels(&self, transaction: &HistoricalTransaction) -> Vec<String> {
-        let mut labels: Vec<String> = (0..transaction.account_keys.len())
-            .map(|index| format!("key-{index}"))
-            .collect();
+        let mut bindings = Vec::new();
         if let Ok((op, instruction)) = self.operation(transaction) {
             for (position, role) in op.roles().iter().copied().enumerate() {
                 let Some(meta) = instruction.accounts.get(position) else {
                     continue;
                 };
-                let Some(index) = transaction
-                    .account_keys
-                    .iter()
-                    .position(|key| key.address == meta.address)
-                else {
-                    continue;
-                };
-                // One account can hold two roles - a depositor who takes the
-                // referral position, most commonly - and the first role named is
-                // the one that explains what it is doing.
-                if labels[index].starts_with("key-") {
-                    labels[index] = role.to_string();
-                }
+                bindings.push(labels::RoleBinding::new(meta.address.clone(), role));
             }
         }
-        if let Some(label) = labels.first_mut() {
-            if label.starts_with("key-") {
-                *label = "payer".into();
-            }
-        }
-        labels
-    }
-
-    fn balance_at<'a>(
-        &self,
-        balances: Option<&'a Vec<TokenBalance>>,
-        index: usize,
-    ) -> Option<&'a TokenBalance> {
-        balances?
-            .iter()
-            .find(|balance| balance.account_index == index)
+        labels::assign(
+            transaction
+                .account_keys
+                .iter()
+                .map(|key| key.address.as_str()),
+            &bindings,
+        )
     }
 
     /// Pool mint decimals, from whichever snapshot carries the mint.
@@ -816,12 +793,13 @@ impl ProtocolAdapter for StakePoolAdapter {
                     );
                     // Plain transfers only. Account creation and allocation are
                     // outside the contract, and both are System instructions.
+                    // The System encoding is the System program's, so it is read
+                    // by the shared decoder rather than re-derived here.
                     anyhow::ensure!(
-                        companion.data.len() == SYSTEM_TRANSFER_LEN
-                            && u32::from_le_bytes(
-                                companion.data[..4].try_into().expect("length checked")
-                            ) == SYSTEM_TRANSFER
-                            && companion.accounts.len() == 2,
+                        matches!(
+                            system::decode_instruction(&companion.data).ok(),
+                            Some(system::SystemInstruction::Transfer { .. })
+                        ) && companion.accounts.len() == 2,
                         "top-level System instruction {index} is not a plain transfer; \
                          account creation and allocation are not supported"
                     );
@@ -892,11 +870,13 @@ impl ProtocolAdapter for StakePoolAdapter {
                         .position(|key| key.address == target.address)
                         .context("CreateIdempotent target is not a message key")?;
                     anyhow::ensure!(
-                        self.balance_at(transaction.pre_token_balances.as_ref(), index_of)
+                        boundary::balance_at(transaction.pre_token_balances.as_ref(), index_of)
                             .is_some()
-                            && self
-                                .balance_at(transaction.post_token_balances.as_ref(), index_of)
-                                .is_some(),
+                            && boundary::balance_at(
+                                transaction.post_token_balances.as_ref(),
+                                index_of
+                            )
+                            .is_some(),
                         "CreateIdempotent targets {} which the validator did not record as an \
                          existing token account on both sides; account creation is outside the \
                          supported contract",
@@ -936,10 +916,7 @@ impl ProtocolAdapter for StakePoolAdapter {
     }
 
     fn label(&self, transaction: &HistoricalTransaction, index: usize) -> String {
-        self.labels(transaction)
-            .get(index)
-            .cloned()
-            .unwrap_or_else(|| format!("key-{index}"))
+        labels::at(&self.labels(transaction), index)
     }
 
     fn required_accounts(&self, transaction: &HistoricalTransaction) -> Vec<String> {
@@ -1028,37 +1005,46 @@ impl ProtocolAdapter for StakePoolAdapter {
                     ],
                 })
             }
-            TOKEN_PROGRAM_ID if account.data.len() == TOKEN_ACCOUNT_LEN => Some(SemanticAccount {
+            // The base SPL Token layouts are read by the shared decoder. The
+            // *presentation* below is this adapter's: which fields it reports,
+            // in which order, and which of them are economic.
+            TOKEN_PROGRAM_ID if account.data.len() == spl::ACCOUNT_LEN => Some(SemanticAccount {
                 kind: "token-account".into(),
                 fields: vec![
                     SemanticField {
                         name: "mint".into(),
-                        value: FieldValue::Address(address_at(&account.data, 0)?),
+                        value: FieldValue::Address(address_at(&account.data, spl::ACCOUNT_MINT)?),
                         economic: false,
                     },
                     SemanticField {
                         name: "owner".into(),
-                        value: FieldValue::Address(address_at(&account.data, 32)?),
+                        value: FieldValue::Address(address_at(&account.data, spl::ACCOUNT_OWNER)?),
                         economic: false,
                     },
                     SemanticField {
                         name: "amount".into(),
-                        value: FieldValue::quantity(u64_at(&account.data, 64)?, 0),
+                        value: FieldValue::quantity(u64_at(&account.data, spl::ACCOUNT_AMOUNT)?, 0),
                         economic: true,
                     },
                     SemanticField {
                         name: "state".into(),
-                        value: FieldValue::Count(u64::from(*account.data.get(108)?)),
+                        value: FieldValue::Count(u64::from(u8_at(
+                            &account.data,
+                            spl::ACCOUNT_STATE,
+                        )?)),
                         economic: true,
                     },
                     SemanticField {
                         name: "delegated_amount".into(),
-                        value: FieldValue::quantity(u64_at(&account.data, 121)?, 0),
+                        value: FieldValue::quantity(
+                            u64_at(&account.data, spl::ACCOUNT_DELEGATED_AMOUNT)?,
+                            0,
+                        ),
                         economic: true,
                     },
                 ],
             }),
-            TOKEN_PROGRAM_ID if account.data.len() == MINT_LEN => Some(SemanticAccount {
+            TOKEN_PROGRAM_ID if account.data.len() == spl::MINT_LEN => Some(SemanticAccount {
                 kind: "mint".into(),
                 fields: vec![
                     SemanticField {
@@ -1090,12 +1076,46 @@ impl ProtocolAdapter for StakePoolAdapter {
         }
     }
 
+    /// The generic prover establishes the boundary; what stays here is what
+    /// only this protocol can supply.
+    ///
+    /// Three things: that balances must be attributed to the *SPL Token*
+    /// program, that Clock and StakeHistory are exempt from read-only byte
+    /// identity because `WithdrawSol` names them and the runtime rewrites them
+    /// every slot, and the pool's own accounting identity — which is the
+    /// strongest evidence in this adapter and is irreducibly its own.
     fn prove_boundaries(
         &self,
         transaction: &HistoricalTransaction,
         pre: &[NamedAccount],
         post: &[NamedAccount],
     ) -> Result<Vec<String>> {
+        let contract = boundary::BoundaryContract {
+            token_program: TOKEN_PROGRAM_ID,
+            token_program_description: "the SPL Token program",
+            token_account_description: "base-layout token account",
+            account_amount: token_account_amount,
+            account_mint: token_account_mint,
+            // Sysvars are read-only to the transaction but rewritten by the
+            // runtime every slot, so byte-identity across S-1 and S is not a
+            // property they have and cannot be evidence of anything. Only the
+            // two this contract's instructions actually name are exempted; any
+            // other sysvar appearing here is still treated as a real change,
+            // because the contract does not admit an instruction that reads one.
+            read_only_exempt: &[CLOCK_SYSVAR_ID, STAKE_HISTORY_SYSVAR_ID],
+            interference_hint: |side, slot| {
+                format!(
+                    "Another transaction in slot {slot} wrote this account {} this one.",
+                    if side == boundary::Side::Pre {
+                        "before"
+                    } else {
+                        "after"
+                    }
+                )
+            },
+        };
+        let proof = boundary::prove(&contract, transaction, pre, post)?;
+
         let pre_balances = transaction
             .pre_balances
             .as_ref()
@@ -1104,110 +1124,7 @@ impl ProtocolAdapter for StakePoolAdapter {
             .post_balances
             .as_ref()
             .context("transaction metadata omitted post-balances")?;
-        let index_of = |address: &str| -> Result<usize> {
-            transaction
-                .account_keys
-                .iter()
-                .position(|key| key.address == address)
-                .with_context(|| format!("snapshot account {address} is not in the message"))
-        };
-        let mut proved_token_accounts = 0_usize;
-
-        for (side, snapshots, lamports, token_balances) in [
-            (
-                "pre",
-                pre,
-                pre_balances,
-                transaction.pre_token_balances.as_ref(),
-            ),
-            (
-                "post",
-                post,
-                post_balances,
-                transaction.post_token_balances.as_ref(),
-            ),
-        ] {
-            for named in snapshots {
-                let index = index_of(&named.address)?;
-                anyhow::ensure!(
-                    lamports.get(index) == Some(&named.account.lamports),
-                    "{} for {}: archive reports {} lamports at the {} boundary, validator \
-                     metadata records {}. Another transaction in slot {} wrote this account \
-                     {} this one.",
-                    if side == "pre" {
-                        "slot-before state is not this transaction's pre-state"
-                    } else {
-                        "slot-end state is not this transaction's post-state"
-                    },
-                    named.address,
-                    named.account.lamports,
-                    if side == "pre" { "S-1" } else { "S" },
-                    lamports
-                        .get(index)
-                        .map(u64::to_string)
-                        .unwrap_or_else(|| "nothing".into()),
-                    transaction.slot,
-                    if side == "pre" { "before" } else { "after" }
-                );
-                let Some(balance) = self.balance_at(token_balances, index) else {
-                    continue;
-                };
-                let decoded = token_account_amount(&named.account.data).with_context(|| {
-                    format!(
-                        "account {} has a token balance but does not decode as a base-layout \
-                         token account",
-                        named.address
-                    )
-                })?;
-                anyhow::ensure!(
-                    decoded == balance.amount,
-                    "{side}-state archive amount {decoded} differs from validator-observed {} \
-                     for {}",
-                    balance.amount,
-                    named.address
-                );
-                anyhow::ensure!(
-                    balance.program_id == TOKEN_PROGRAM_ID,
-                    "account {} is owned by token program {}, not the SPL Token program",
-                    named.address,
-                    balance.program_id
-                );
-                anyhow::ensure!(
-                    token_account_mint(&named.account.data).as_deref() == Some(&balance.mint),
-                    "account {} decodes to a different mint than the validator recorded",
-                    named.address
-                );
-                if side == "pre" {
-                    proved_token_accounts += 1;
-                }
-            }
-        }
-
-        for named in pre {
-            let index = index_of(&named.address)?;
-            if transaction.account_keys[index].is_writable {
-                continue;
-            }
-            // Sysvars are read-only to the transaction but rewritten by the
-            // runtime every slot, so byte-identity across S-1 and S is not a
-            // property they have and cannot be evidence of anything. Only the
-            // two this contract's instructions actually name are exempted; any
-            // other sysvar appearing here is still treated as a real change,
-            // because the contract does not admit an instruction that reads one.
-            if named.address == CLOCK_SYSVAR_ID || named.address == STAKE_HISTORY_SYSVAR_ID {
-                continue;
-            }
-            let after = post
-                .iter()
-                .find(|other| other.address == named.address)
-                .context("read-only account missing from post-state")?;
-            anyhow::ensure!(
-                named.account.data == after.account.data
-                    && named.account.owner == after.account.owner,
-                "read-only account {} changed across the transaction boundary",
-                named.address
-            );
-        }
+        let index_of = |address: &str| boundary::index_of(transaction, address);
 
         // Validator metadata says nothing about a pool account's bytes, so the
         // pool would otherwise rest on the archive alone. It does not have to:
@@ -1285,18 +1202,7 @@ impl ProtocolAdapter for StakePoolAdapter {
             );
         }
 
-        anyhow::ensure!(
-            proved_token_accounts > 0,
-            "no token account balance could be proved against validator metadata"
-        );
-
-        let mut assumptions = vec![
-            format!(
-                "{proved_token_accounts} token account balance(s) at S-1 and S match the \
-                 validator-observed pre/post token balances"
-            ),
-            "every snapshot's lamports match validator-observed pre/post balances".into(),
-        ];
+        let mut assumptions = proof.assumptions;
         assumptions.extend(corroboration);
         assumptions.push(
             "read-only accounts are byte-identical across the boundary; validator metadata \
@@ -1361,6 +1267,13 @@ impl ProtocolAdapter for StakePoolAdapter {
         Ok(assumptions)
     }
 
+    /// Pairing two executions field by field is
+    /// [`crate::evidence::pairing`]. What stays here is the rescale, which is
+    /// this protocol's: pool-token fields are decoded in raw base units because
+    /// an individual account does not carry the pool mint's decimals, while
+    /// lamport fields are already at their real precision and must not be
+    /// rescaled. That is why the distinction is an explicit list rather than a
+    /// guess at the decimal count.
     fn interpret(
         &self,
         accounts: &[NamedAccount],
@@ -1368,49 +1281,13 @@ impl ProtocolAdapter for StakePoolAdapter {
         v2: &ExecutionResult,
     ) -> Vec<EconomicChange> {
         let decimals = self.pool_decimals(accounts);
-        let mut changes = Vec::new();
-        for named in accounts {
-            let (Some(after_v1), Some(after_v2)) =
-                (self.after(v1, &named.label), self.after(v2, &named.label))
-            else {
-                continue;
-            };
-            let (Some(decoded_v1), Some(decoded_v2)) =
-                (self.decode(after_v1), self.decode(after_v2))
-            else {
-                continue;
-            };
-            for field in &decoded_v1.fields {
-                if !field.economic {
-                    continue;
-                }
-                let Some(other) = decoded_v2.field(&field.name) else {
-                    continue;
-                };
-                if other.value == field.value {
-                    continue;
-                }
-                let render = |value: &FieldValue| match value.as_quantity() {
-                    Some(quantity) => self.rescale(&field.name, quantity, decimals).to_string(),
-                    None => value.render(),
-                };
-                let delta = match (field.value.as_quantity(), other.value.as_quantity()) {
-                    (Some(before), Some(after)) => self
-                        .rescale(&field.name, after, decimals)
-                        .delta(self.rescale(&field.name, before, decimals)),
-                    _ => None,
-                };
-                changes.push(EconomicChange {
-                    account_label: named.label.clone(),
-                    account_kind: decoded_v1.kind.clone(),
-                    field: field.name.clone(),
-                    v1: render(&field.value),
-                    v2: render(&other.value),
-                    delta,
-                });
-            }
-        }
-        changes
+        pairing::compare_decoded(
+            accounts,
+            v1,
+            v2,
+            |account| self.decode(account),
+            |field, quantity| self.rescale(field, quantity, decimals),
+        )
     }
 
     fn action_id(&self, transaction: &HistoricalTransaction) -> Option<crate::semantics::ActionId> {
@@ -2182,7 +2059,7 @@ mod semantic_surface {
     }
 
     fn set_token_amount(data: &mut [u8], amount: u64) {
-        if data.len() == TOKEN_ACCOUNT_LEN {
+        if data.len() == spl::ACCOUNT_LEN {
             data[64..72].copy_from_slice(&amount.to_le_bytes());
         }
     }
