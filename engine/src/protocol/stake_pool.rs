@@ -69,8 +69,8 @@ const STAKE_STATE_LEN: usize = 200;
 const WITHDRAW_SOL: u8 = 16;
 const WITHDRAW_SOL_LEN: usize = 9;
 const WITHDRAW_SOL_ACCOUNTS: usize = 12;
-const CLOCK_SYSVAR_ID: &str = "SysvarC1ock11111111111111111111111111111111";
-const STAKE_HISTORY_SYSVAR_ID: &str = "SysvarStakeHistory1111111111111111111111111";
+pub const CLOCK_SYSVAR_ID: &str = "SysvarC1ock11111111111111111111111111111111";
+pub const STAKE_HISTORY_SYSVAR_ID: &str = "SysvarStakeHistory1111111111111111111111111";
 
 const WITHDRAW_SOL_ROLES: [&str; WITHDRAW_SOL_ACCOUNTS] = [
     "stake-pool",
@@ -1335,13 +1335,15 @@ impl ProtocolAdapter for StakePoolAdapter {
         subjects
     }
 
-    fn decoded_source_of(&self, subject: &str) -> Option<(&'static str, &'static str)> {
+    /// One decoded field per subject here: every promoted stake-pool quantity
+    /// is read from exactly one account's one field.
+    fn decoded_sources_of(&self, subject: &str) -> &'static [(&'static str, &'static str)] {
         match subject {
-            "pool_tokens_received" => Some(("destination-pool-token", "amount")),
-            "pool_tokens_debited" => Some(("source-pool-token", "amount")),
-            "pool_tokens_burned" => Some(("pool-mint", "supply")),
-            "sol_received_by_user" => Some(("destination-lamports", "lamports")),
-            _ => None,
+            "pool_tokens_received" => &[("destination-pool-token", "amount")],
+            "pool_tokens_debited" => &[("source-pool-token", "amount")],
+            "pool_tokens_burned" => &[("pool-mint", "supply")],
+            "sol_received_by_user" => &[("destination-lamports", "lamports")],
+            _ => &[],
         }
     }
 

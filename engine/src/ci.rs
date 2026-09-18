@@ -280,8 +280,12 @@ fn undeclarable_changes(bundle: &CiBundle, replay: &ReplayReport) -> Vec<Undecla
         let explained: BTreeSet<(&str, &str)> = observation
             .named_findings
             .iter()
-            .filter_map(|finding| {
-                adapter.and_then(|a| a.decoded_source_of(finding.fingerprint.subject.as_str()))
+            .flat_map(|finding| {
+                adapter
+                    .map(|a| a.decoded_sources_of(finding.fingerprint.subject.as_str()))
+                    .unwrap_or(&[])
+                    .iter()
+                    .copied()
             })
             .collect();
         let outcome_named = observation

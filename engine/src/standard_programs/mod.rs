@@ -156,6 +156,19 @@ pub fn u64_at(data: &[u8], offset: usize) -> Option<u64> {
     ))
 }
 
+/// A little-endian `u128`.
+///
+/// Beside the others because it is the same primitive: a bounds-checked
+/// little-endian integer read. Protocols that carry fixed-point quantities in
+/// 128 bits - Kamino's scaled fractions, for one - would otherwise hand-roll
+/// `from_le_bytes`, which is the machinery tax this module exists to remove.
+/// What the 128 bits *mean* is never decided here.
+pub fn u128_at(data: &[u8], offset: usize) -> Option<u128> {
+    Some(u128::from_le_bytes(
+        data.get(offset..offset + 16)?.try_into().ok()?,
+    ))
+}
+
 pub fn address_at(data: &[u8], offset: usize) -> Option<String> {
     Some(bs58::encode(data.get(offset..offset + 32)?).into_string())
 }
@@ -189,6 +202,7 @@ mod tests {
     fn readers_refuse_to_read_past_the_end() {
         let data = [1_u8, 2, 3];
         assert_eq!(u64_at(&data, 0), None);
+        assert_eq!(u128_at(&data, 0), None);
         assert_eq!(u32_at(&data, 0), None);
         assert_eq!(u16_at(&data, 2), None);
         assert_eq!(address_at(&data, 0), None);
