@@ -22,9 +22,10 @@
 #   EPLYX_TOKEN=<project token> scripts/eplyx-submit.sh \
 #     --api <url> --project <id> --candidate <file> [--expectations <file>]
 #     [--report-json <out>] [--report-md <out>] [--summary <out>]
+#     [--expect-bundle <sha256>]
 set -uo pipefail
 
-API="" PROJECT="" CANDIDATE="" EXPECTATIONS="" REPORT_JSON="" REPORT_MD="" SUMMARY=""
+API="" PROJECT="" CANDIDATE="" EXPECTATIONS="" REPORT_JSON="" REPORT_MD="" SUMMARY="" EXPECT_BUNDLE=""
 POLL_SECONDS="${EPLYX_POLL_SECONDS:-3}"
 TIMEOUT_SECONDS="${EPLYX_TIMEOUT_SECONDS:-1800}"
 
@@ -37,6 +38,7 @@ while [ $# -gt 0 ]; do
     --report-json) REPORT_JSON="$2"; shift 2;;
     --report-md) REPORT_MD="$2"; shift 2;;
     --summary) SUMMARY="$2"; shift 2;;
+    --expect-bundle) EXPECT_BUNDLE="$2"; shift 2;;
     *) echo "unknown argument: $1" >&2; exit 70;;
   esac
 done
@@ -102,6 +104,17 @@ if [ "$SERVER_SHA" != "$LOCAL_SHA" ]; then
   exit 70
 fi
 
+# Which evidence the verdict is about. A green run against the wrong bundle -
+# a demo corpus, a stale one, a different project's - reads exactly like a
+# green run against the right one, so acceptance names the bundle it means.
+if [ -n "$EXPECT_BUNDLE" ]; then
+  RUN_BUNDLE=$(printf '%s' "$RESPONSE" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("bundle_sha256",""))')
+  if [ "$RUN_BUNDLE" != "$EXPECT_BUNDLE" ]; then
+    echo "bundle mismatch: expected $EXPECT_BUNDLE, run used $RUN_BUNDLE" >&2
+    exit 70
+  fi
+fi
+
 EXIT=$(printf '%s' "$RESPONSE" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("exit_code",70))')
 [ -n "$REPORT_JSON" ] && curl -sS "$API/v1/runs/$RUN/report.json" -H "Authorization: Bearer $EPLYX_TOKEN" -o "$REPORT_JSON"
 [ -n "$REPORT_MD" ] && curl -sS "$API/v1/runs/$RUN/report.md" -H "Authorization: Bearer $EPLYX_TOKEN" -o "$REPORT_MD"
@@ -129,10 +142,16 @@ if report_path:
     try:
         report = json.load(open(report_path))
         summary = report.get("summary", {})
+        # Only the five review outcomes belong under a "count" heading.
+        # `passed` is a verdict and `exit_code` is already in the table above;
+        # listing them here rendered "passed | False" as though it were a count.
         out += ["", "### Review", "", "| outcome | count |", "|---|---:|"]
-        for k, v in summary.items():
-            if isinstance(v, int):
-                out.append(f"| {k} | {v} |")
+        for key in ("expected", "unexpected", "expected_but_exceeded", "stale", "unevaluable"):
+            if isinstance(summary.get(key), int):
+                out.append(f"| {key.replace('_', ' ')} | {summary[key]} |")
+        reasons = summary.get("failure_reasons") or []
+        if reasons:
+            out += ["", "Gate failed on: " + ", ".join(f"`{r}`" for r in reasons)]
         limits = report.get("bundle", {}).get("limitations") or []
         if limits:
             out += ["", "### Known limitations of this corpus", ""]

@@ -1,0 +1,109 @@
+# Measure a candidate build against the project's active Eplyx bundle.
+#
+# The credential here is a *project* token. It can submit checks for its own
+# project and read that project's runs, and it can do nothing else: it cannot
+# create a project, install a bundle, or activate one. That is the point. A
+# token that lives in a pull request must not be able to change what future
+# pull requests are measured against, so a passing run never moves the
+# baseline — promoting a build is an operator action taken elsewhere.
+#
+# There is no GitHub App and no operator token. Three repository secrets:
+#
+#   EPLYX_API_URL     the hosted API, a public hostname
+#   EPLYX_PROJECT_ID  the project to measure against, not a secret either
+#   EPLYX_TOKEN       the project token, the only real secret here
+#
+name: Eplyx upgrade check
+
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      candidate:
+        description: Path to a prebuilt candidate .so, instead of building one
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  upgrade-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Candidate code is built here, never by Eplyx. The service receives
+      # bytes and executes them inside the replay VM the engine sandboxes; it
+      # never clones a repository and never runs a build.
+      - name: Install the Solana toolchain
+        if: inputs.candidate == ''
+        run: |
+          sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
+          echo "$HOME/.local/share/solana/install/active_release/bin" >> "$GITHUB_PATH"
+
+      - name: Build the candidate
+        if: inputs.candidate == ''
+        run: ./scripts/build-programs.sh
+
+      - name: Choose the candidate binary
+        id: candidate
+        run: |
+          path="${{ inputs.candidate }}"
+          [ -n "$path" ] || path=artifacts/fixture_stake_pool_v2.so
+          [ -f "$path" ] || { echo "no candidate at $path" >&2; exit 1; }
+          echo "path=$path" >> "$GITHUB_OUTPUT"
+          # Hashed here and never rebuilt before the upload. The client checks
+          # this value against what the server says it measured, so the report
+          # is about bytes this job can name rather than bytes it hopes it sent.
+          echo "sha256=$(sha256sum "$path" | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+
+      - name: Submit to Eplyx and wait for the verdict
+        id: eplyx
+        env:
+          EPLYX_TOKEN: ${{ secrets.EPLYX_TOKEN }}
+        run: |
+          set +e
+          ./scripts/eplyx-submit.sh \
+            --api "${{ secrets.EPLYX_API_URL }}" \
+            --project "${{ secrets.EPLYX_PROJECT_ID }}" \
+            --candidate "${{ steps.candidate.outputs.path }}" \
+            ${{ hashFiles('.eplyx/expected-changes.toml') != '' && '--expectations .eplyx/expected-changes.toml' || '' }} \
+            --report-json eplyx-report.json \
+            --report-md eplyx-report.md \
+            --summary eplyx-summary.md
+          echo "exit=$?" >> "$GITHUB_OUTPUT"
+          set -e
+
+      - name: Write the job summary
+        if: always()
+        run: cat eplyx-summary.md >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || true
+
+      - name: Upload the evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eplyx-evidence
+          path: |
+            eplyx-report.json
+            eplyx-report.md
+            eplyx-summary.md
+          if-no-files-found: warn
+
+      # The job's result is the gate's result. 0-5 are Eplyx's own exit codes;
+      # 75 means the hosted run produced no verdict at all, which is a different
+      # thing from a candidate failing and must not be reported as one; 70 means
+      # this job could not trust its own result.
+      - name: Apply the gate result
+        run: |
+          code="${{ steps.eplyx.outputs.exit }}"
+          case "$code" in
+            0) echo "Eplyx check passed against the project's active production-derived replay bundle." ;;
+            1) echo "::error::Unexpected or over-bound semantic changes detected." ;;
+            2) echo "::error::Eplyx could not run the analysis (configuration or fidelity error)." ;;
+            3) echo "::error::A declaration in expected-changes.toml no longer describes anything." ;;
+            4) echo "::error::The candidate is incompatible with the project's active bundle." ;;
+            5) echo "::error::A declaration cannot be evaluated by this corpus." ;;
+            75) echo "::error::The hosted run ended without a verdict. This is not a statement about the candidate." ;;
+            *) echo "::error::Eplyx integration error; the reported result could not be trusted." ;;
+          esac
+          exit "$code"
