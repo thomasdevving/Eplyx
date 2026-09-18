@@ -1,0 +1,2614 @@
+{
+  "M_advanced_past_lut_gate": 8,
+  "N_M_difference": "none; all sealed messages advance through the experimental LUT gate into unchanged instruction admission",
+  "N_historically_lut_proven": 8,
+  "acquisition_timing": {
+    "account_state_requests": 16,
+    "acquisition_seconds": 5.154811793850968,
+    "failed_table_requests": 0,
+    "full_capture_timing_qualification": "not instrumented for attempt 3; acquisition_seconds measures all 17 sequential request wall-clock durations, excluding local qualification/decoding/file writes",
+    "full_capture_wall_clock_seconds": null,
+    "historical_contexts_acquired": 16,
+    "measurement": "wall_clock_transport",
+    "network_requests": 17,
+    "requests": [
+      {
+        "request": "genesis",
+        "seconds": 0.16907800000626594
+      },
+      {
+        "request": "table-0",
+        "seconds": 0.3834843749937136
+      },
+      {
+        "request": "table-1",
+        "seconds": 0.39579833298921585
+      },
+      {
+        "request": "table-2",
+        "seconds": 0.42339379197801463
+      },
+      {
+        "request": "table-3",
+        "seconds": 0.2083207089744974
+      },
+      {
+        "request": "table-4",
+        "seconds": 0.19149187501170672
+      },
+      {
+        "request": "table-5",
+        "seconds": 0.19259016698924825
+      },
+      {
+        "request": "table-6",
+        "seconds": 0.3699363329797052
+      },
+      {
+        "request": "table-7",
+        "seconds": 0.36929124998277985
+      },
+      {
+        "request": "table-8",
+        "seconds": 0.36842833398259245
+      },
+      {
+        "request": "table-9",
+        "seconds": 0.39861829197616316
+      },
+      {
+        "request": "table-10",
+        "seconds": 0.37226508298772387
+      },
+      {
+        "request": "table-11",
+        "seconds": 0.1968578750093002
+      },
+      {
+        "request": "table-12",
+        "seconds": 0.37454104199423455
+      },
+      {
+        "request": "table-13",
+        "seconds": 0.1757644169847481
+      },
+      {
+        "request": "table-14",
+        "seconds": 0.19213387501076795
+      },
+      {
+        "request": "table-15",
+        "seconds": 0.37281804200029
+      }
+    ],
+    "successful_table_requests": 16
+  },
+  "archive_configuration": {
+    "divergent_fixture": "optional; not supplied",
+    "layer_1": "existing historical account provider qualification reused",
+    "layer_2": "mandatory independent official LUT resolution and exact frozen RPC comparison",
+    "private_credentials_used": false,
+    "provider": {
+      "genesis_hash": "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d",
+      "scheme_host": "https://solana-mainnet.g.alchemy.com",
+      "validation_artifact_sha256": "c21a90f2a47425dfa4f925c344bcbbd4d667367547bf3c559f74c35a121e95e4",
+      "visibility": "finalized_end_of_execution_slot"
+    },
+    "source": "task-local environment using the documented Phase 6 public archive; inherited SOLANA_ARCHIVE_RPC_URL was absent"
+  },
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "configuration": "absent",
+      "evidence": "phase-u3b-lut",
+      "historically_lut_proven": 0,
+      "network_requests": 0
+    },
+    {
+      "attempt": 2,
+      "configuration": "documented public archive",
+      "evidence": "phase-u3b2-validation/attempt-2",
+      "genesis_request_attempted": true,
+      "historically_lut_proven": 0,
+      "reason": "transport_exit_6; sandbox DNS unavailable",
+      "table_requests_attempted": 0
+    },
+    {
+      "attempt": 3,
+      "configuration": "same documented public archive; authorized network access",
+      "evidence": "phase-u3b2-lut",
+      "historically_lut_proven": 8,
+      "network_requests": 17,
+      "table_requests_attempted": 16
+    }
+  ],
+  "baseline_fidelity_measured": false,
+  "before_lut_blocked": 8,
+  "boundary_premises": {
+    "append_only": "official ALT processor appends without reordering old addresses",
+    "closure": "only after deactivation leaves SlotHashes; same-bank usable table cannot close",
+    "earlier_deactivation": "historical bank SlotHashes required",
+    "historical_truth": "conditional on previously validated provider contract and canonical ALT semantics; no cryptographic ledger inclusion proof",
+    "observed_tables": "all active and last_extended_slot < execution slot",
+    "same_slot_deactivation": "remains usable at S",
+    "same_slot_warmup": "official interface limits to last_extended_slot_start_index at S; first extension records old length, later same-slot extensions preserve it"
+  },
+  "commit_worktree_state": {
+    "control_commit": "d20c764916aa8ceb84bb8fbb69d1c1c88406c23c",
+    "frozen_sample_files_changed": false,
+    "proof_commit": "commit containing this report",
+    "recorded_before_commit": true
+  },
+  "companion_rules_changed": false,
+  "eight_targets": [
+    {
+      "address_table_lookups": [
+        {
+          "accountKey": "8ofreL6hKfEet1DnhHVGvCTnSdz4pg85PpbuCUHnEcKm",
+          "readonlyIndexes": [
+            8,
+            86,
+            2,
+            5,
+            7,
+            87,
+            36
+          ],
+          "writableIndexes": [
+            84,
+            40,
+            26,
+            25,
+            11,
+            15
+          ]
+        }
+      ],
+      "advanced_past_lut_gate": true,
+      "artifact": "phase-u3b2-lut/proofs/5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97.json",
+      "capture_sha256": "e6c0d270fa2516e3ba3da1004c51918d263ca10f747734ee66a1cd86fa1ff56a",
+      "compiled_instruction_identity_match": true,
+      "execution_slot": 448195166,
+      "full_key_vector_match": true,
+      "historically_lut_proven": true,
+      "independently_resolved_readonly": [
+        "11111111111111111111111111111111",
+        "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+        "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+        "Sysvar1nstructions1111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W"
+      ],
+      "independently_resolved_writable": [
+        "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+        "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+        "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+        "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+        "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+        "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d"
+      ],
+      "loaded_readonly_count": 7,
+      "loaded_writable_count": 6,
+      "message_reconstruction_ready": true,
+      "native_message": "VersionedMessage::V0",
+      "next_rejection": "unsupported program HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ in a Kamino KLend replay; the supported contract admits KLend and compute-budget instructions only",
+      "on_chain_success": true,
+      "proof_id": "8a5552a3e5d2b23106f4b23fc5862c5c275f49792e950e78064985498a0bf207",
+      "rpc_exact_match": true,
+      "signature": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97"
+    },
+    {
+      "address_table_lookups": [
+        {
+          "accountKey": "26XAkAHyMHzp9tUmh8m7x8A4YmB8vaknbc2bXijp8dKS",
+          "readonlyIndexes": [
+            68,
+            63,
+            67,
+            73,
+            38,
+            37,
+            4,
+            80,
+            10,
+            17,
+            62,
+            97
+          ],
+          "writableIndexes": [
+            45,
+            65,
+            64,
+            81,
+            86,
+            42,
+            75,
+            66,
+            83,
+            40,
+            76,
+            46,
+            84,
+            74,
+            85,
+            43,
+            44,
+            41,
+            39
+          ]
+        },
+        {
+          "accountKey": "9rVP9Ly5RC1nix3WDm5QgkoWJbxV7Kteth1KHtYk5hT9",
+          "readonlyIndexes": [
+            10
+          ],
+          "writableIndexes": []
+        },
+        {
+          "accountKey": "A3M7Bv5bePAJ6Pb6i8PGm2aj3P4WonaCXy7EUt6PMEn9",
+          "readonlyIndexes": [
+            1
+          ],
+          "writableIndexes": [
+            8,
+            3,
+            4,
+            10,
+            2
+          ]
+        },
+        {
+          "accountKey": "iBP3RJEdvxKz361DHadB9Mdw7qfreeLEVTNEZ1DA3X9",
+          "readonlyIndexes": [
+            14,
+            15,
+            12
+          ],
+          "writableIndexes": [
+            103,
+            41,
+            39,
+            96,
+            59,
+            58,
+            17,
+            23,
+            40
+          ]
+        },
+        {
+          "accountKey": "YXziZZksvEhVhqapwQmbEg8TeeNwav8cL5TjnxGGTpD",
+          "readonlyIndexes": [
+            207,
+            74
+          ],
+          "writableIndexes": []
+        }
+      ],
+      "advanced_past_lut_gate": true,
+      "artifact": "phase-u3b2-lut/proofs/3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q.json",
+      "capture_sha256": "9f33e8525af03a1c3b27ce50bc9c627770e062f47b410bc69ad52dbfc4381ec8",
+      "compiled_instruction_identity_match": true,
+      "execution_slot": 448195147,
+      "full_key_vector_match": true,
+      "historically_lut_proven": true,
+      "independently_resolved_readonly": [
+        "4cG31VNF9TzFinNc7BmnjhFvGjxkY3sCETVMtMgbrhPs",
+        "8ekCy2jHHUbW2yeNGFWYJT9Hm9FW7SvZcZK66dSZCDiF",
+        "BAT1Ndpu5gbLTp2AZkSXP79LJBZfCH4B3zGhi6LtvdhK",
+        "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+        "DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+        "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms",
+        "So11111111111111111111111111111111111111112",
+        "Sysvar1nstructions1111111111111111111111111",
+        "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "8xeaWCsJYxRoudEZGJWURdfrtFhLYZz9b4iHJnW5tb3d",
+        "HXhTkpZ5gcXCjYKjU9buimWCyGp4Cydw1kJ314rtufSR",
+        "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+        "9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo",
+        "SysvarRent111111111111111111111111111111111",
+        "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+        "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr"
+      ],
+      "independently_resolved_writable": [
+        "5DMkwX1edkbAywTecSjP2nyPjzmi8dCKvWfQXybVLvCw",
+        "5pVN5XZB8cYBjNLFrsBCPWkCQBan5K5Mq2dWGzwPgGJV",
+        "7sJf1SmKDDAFtBmMtg253rTbjG7zVFm3zTNounSgSNc9",
+        "8sjV1AqBFvFuADBCQHhotaRq5DFFYSjjg1jMyVWMqXvZ",
+        "9x85APtURYxxxosTmJhvZWBmPSoTMqhYHz4tBnJ7N4T8",
+        "AYhievvcVNZ8ATrSeVTUPeEX2JAz1RhAnBp5CUmxYjy4",
+        "C9jjhzojE16zJ296tEPinA35rB1okyMVspE7FnR4idMf",
+        "Ci3HZCb6fr5YiYLG9R6XbxHcjm2mDb1R3ugQ3bPZ7oKZ",
+        "CNRQ2Q5YURFcQrATzYeKUWgKUoBDfqzkDrRWf21UXCVo",
+        "EPUHjseXG3izk3MVUJ1PcyWT9xeBhtAnq8gUpq3j8Uni",
+        "F2zDmA4GLsHtSDtEAFo9wWr5VBHLXtZjYzhRoGybWsFM",
+        "FCgtbMQPyLVNnvd7mpxc3SCE8Ne8qEL9xkU2gwf7xceA",
+        "FGQoLafigpyVb7mLa6pvsDDpDaEE3JetrzQoAggTo3n7",
+        "FJnaiidSLXFweWkgbinxEHRykVHsnkzDcYbNDR3RF5LN",
+        "Gqr3Y3xGv3Rz948JnrKq4aH5Z8ZpKjPcysQDyYPJs7tZ",
+        "GUGu95pqRvUk1NeZTmadqrUa1RxFcmTMCCrqTXK6976V",
+        "H6mmDwnQHBq68tqEhBConeRBBDUobqHrQbDUcBVNTW9M",
+        "H7o7KCr5n3whqcPsPkeCPWrzivKrarqzidD3kt8fijvB",
+        "UUUXQdoC85FmgUgDMfYj3UsBWMLSjU7gVj4QmYGdMRx",
+        "4pMwMqyGaRVTAikdYdkSRPJZ9DK2YnkVvNWe6Cv2YCCt",
+        "4UMmHKV515oq6X9aGf3t1cNMLtQ4HYyQZpivE5imWuyu",
+        "6CmqJ191AhMmDeW5g7BNmEEszfsExkvZfZLZYTbDsubE",
+        "7aexzJ7g77pcmvn1hnQDVomfRR3kpnwE32PpiQJ8kzYs",
+        "FnPyGazTr3REmJ2bXjHK5AF4SifREyTurEhf7MxwPiKC",
+        "2UywZrUdyqs5vDchy7fKQJKau2RVyuzBev2XKGPDSiX1",
+        "3JNof8s453bwG5UqiXBLJc77NRQXezYYEBbk3fqnoKph",
+        "8NXMyRD91p3nof61BTkJvrfpGTASHygz1cUvc3HvwyGS",
+        "955xWFhSDcDiUgUr4sBRtCpTLiMd4H5uZLAmgtP3R3sX",
+        "BbDUrk1bVtSixgQsPLBJFZEF7mwGstnD5joA1WzYvYFX",
+        "Bgq7trRgVMeq33yt235zM2onQ4bRDBsY5EWiTetF4qw6",
+        "d4A2prbA2whesmvHaL88BH6Ewn5N4bTSU2Ze8P6Bc4Q",
+        "D6q6wuQSrifJKZYpR1M8R4YawnLDtDsMmWM1NbBmgJ59",
+        "GafNuUXj9rxGLn4y79dPu6MHSuPWeJR6UtTWuexpGh3U"
+      ],
+      "loaded_readonly_count": 19,
+      "loaded_writable_count": 33,
+      "message_reconstruction_ready": true,
+      "native_message": "VersionedMessage::V0",
+      "next_rejection": "Kamino replay supports one KLend action per transaction",
+      "on_chain_success": true,
+      "proof_id": "cede9ffbdc00dfa3d41b760cc23f6f483926e40f08f9322aef67dac960d456db",
+      "rpc_exact_match": true,
+      "signature": "3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q"
+    },
+    {
+      "address_table_lookups": [
+        {
+          "accountKey": "26XAkAHyMHzp9tUmh8m7x8A4YmB8vaknbc2bXijp8dKS",
+          "readonlyIndexes": [
+            68,
+            63,
+            67,
+            73,
+            38,
+            37,
+            4,
+            10,
+            31,
+            17,
+            62
+          ],
+          "writableIndexes": [
+            35,
+            45,
+            65,
+            64,
+            36,
+            42,
+            75,
+            66,
+            33,
+            40,
+            76,
+            46,
+            74,
+            32,
+            43,
+            44,
+            41,
+            34,
+            39
+          ]
+        },
+        {
+          "accountKey": "A3M7Bv5bePAJ6Pb6i8PGm2aj3P4WonaCXy7EUt6PMEn9",
+          "readonlyIndexes": [
+            1
+          ],
+          "writableIndexes": [
+            8,
+            3,
+            4,
+            10,
+            2
+          ]
+        },
+        {
+          "accountKey": "GP57a1T8vJjeAnF2zfKT1bnZysNwVprLaw6Mjw2d1gPy",
+          "readonlyIndexes": [
+            112
+          ],
+          "writableIndexes": [
+            4,
+            3,
+            1,
+            2
+          ]
+        },
+        {
+          "accountKey": "iBP3RJEdvxKz361DHadB9Mdw7qfreeLEVTNEZ1DA3X9",
+          "readonlyIndexes": [
+            14,
+            15,
+            12
+          ],
+          "writableIndexes": [
+            103,
+            41,
+            39,
+            96,
+            59,
+            58,
+            17,
+            23,
+            40
+          ]
+        },
+        {
+          "accountKey": "YXziZZksvEhVhqapwQmbEg8TeeNwav8cL5TjnxGGTpD",
+          "readonlyIndexes": [
+            207,
+            74
+          ],
+          "writableIndexes": []
+        }
+      ],
+      "advanced_past_lut_gate": true,
+      "artifact": "phase-u3b2-lut/proofs/47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf.json",
+      "capture_sha256": "436855ec3ae45ea8e8661dab7d493b0a61fd016e2a4971b7e0f7c4e39257bda8",
+      "compiled_instruction_identity_match": true,
+      "execution_slot": 448195003,
+      "full_key_vector_match": true,
+      "historically_lut_proven": true,
+      "independently_resolved_readonly": [
+        "4cG31VNF9TzFinNc7BmnjhFvGjxkY3sCETVMtMgbrhPs",
+        "8ekCy2jHHUbW2yeNGFWYJT9Hm9FW7SvZcZK66dSZCDiF",
+        "BAT1Ndpu5gbLTp2AZkSXP79LJBZfCH4B3zGhi6LtvdhK",
+        "BiSoNHVpsVZW2F7rx2eQ59yQwKxzU5NvBcmKshCSUypi",
+        "DRVSpZ2YUYYKgZP8XtLhAGtT1zYSCKzeHfb4DgRnrgqD",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+        "So11111111111111111111111111111111111111112",
+        "SV2EYYJyRz2YhfXwXnhNAevDEui5Q6yrfyo13WtupPF",
+        "Sysvar1nstructions1111111111111111111111111",
+        "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+        "HXhTkpZ5gcXCjYKjU9buimWCyGp4Cydw1kJ314rtufSR",
+        "Ag3hiK9svNixH9Vu5sD2CmK5fyDWrx9a1iVSbZW22bUS",
+        "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+        "9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo",
+        "SysvarRent111111111111111111111111111111111",
+        "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+        "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr"
+      ],
+      "independently_resolved_writable": [
+        "5bHD9xdEzJdkVuhs54mGPC9BZgUshqgMg4tqmTwhWggc",
+        "5DMkwX1edkbAywTecSjP2nyPjzmi8dCKvWfQXybVLvCw",
+        "5pVN5XZB8cYBjNLFrsBCPWkCQBan5K5Mq2dWGzwPgGJV",
+        "7sJf1SmKDDAFtBmMtg253rTbjG7zVFm3zTNounSgSNc9",
+        "ARWaajRJyF6PKQryJ4HLzLBfTWM2qmVQUQVtBjk6PgPc",
+        "AYhievvcVNZ8ATrSeVTUPeEX2JAz1RhAnBp5CUmxYjy4",
+        "C9jjhzojE16zJ296tEPinA35rB1okyMVspE7FnR4idMf",
+        "Ci3HZCb6fr5YiYLG9R6XbxHcjm2mDb1R3ugQ3bPZ7oKZ",
+        "CyCUgmaCYUZxbux3J2svDzxSryVFMtZNPrnMKS41nc4G",
+        "EPUHjseXG3izk3MVUJ1PcyWT9xeBhtAnq8gUpq3j8Uni",
+        "F2zDmA4GLsHtSDtEAFo9wWr5VBHLXtZjYzhRoGybWsFM",
+        "FCgtbMQPyLVNnvd7mpxc3SCE8Ne8qEL9xkU2gwf7xceA",
+        "FJnaiidSLXFweWkgbinxEHRykVHsnkzDcYbNDR3RF5LN",
+        "FkEB6uvyzuoaGpgs4yRtFtxC4WJxhejNFbUkj5R6wR32",
+        "GUGu95pqRvUk1NeZTmadqrUa1RxFcmTMCCrqTXK6976V",
+        "H6mmDwnQHBq68tqEhBConeRBBDUobqHrQbDUcBVNTW9M",
+        "H7o7KCr5n3whqcPsPkeCPWrzivKrarqzidD3kt8fijvB",
+        "QoFvFhDZg9TaZEi4SsasWpH5xXzk3zBqfRyicGexfNQ",
+        "UUUXQdoC85FmgUgDMfYj3UsBWMLSjU7gVj4QmYGdMRx",
+        "4pMwMqyGaRVTAikdYdkSRPJZ9DK2YnkVvNWe6Cv2YCCt",
+        "4UMmHKV515oq6X9aGf3t1cNMLtQ4HYyQZpivE5imWuyu",
+        "6CmqJ191AhMmDeW5g7BNmEEszfsExkvZfZLZYTbDsubE",
+        "7aexzJ7g77pcmvn1hnQDVomfRR3kpnwE32PpiQJ8kzYs",
+        "FnPyGazTr3REmJ2bXjHK5AF4SifREyTurEhf7MxwPiKC",
+        "4CqpDzLQZJemtge58uX9dwVi8nvKXHVynVubCsLtctur",
+        "8XrtGP8RG33AnrN2yJ6H3gnXPNQ3dYXKqM72bpzhcsd6",
+        "ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn",
+        "DT2krA8vSP96D68nH86eAztZHVM18YB5i4gDXjLBDXm7",
+        "2UywZrUdyqs5vDchy7fKQJKau2RVyuzBev2XKGPDSiX1",
+        "3JNof8s453bwG5UqiXBLJc77NRQXezYYEBbk3fqnoKph",
+        "8NXMyRD91p3nof61BTkJvrfpGTASHygz1cUvc3HvwyGS",
+        "955xWFhSDcDiUgUr4sBRtCpTLiMd4H5uZLAmgtP3R3sX",
+        "BbDUrk1bVtSixgQsPLBJFZEF7mwGstnD5joA1WzYvYFX",
+        "Bgq7trRgVMeq33yt235zM2onQ4bRDBsY5EWiTetF4qw6",
+        "d4A2prbA2whesmvHaL88BH6Ewn5N4bTSU2Ze8P6Bc4Q",
+        "D6q6wuQSrifJKZYpR1M8R4YawnLDtDsMmWM1NbBmgJ59",
+        "GafNuUXj9rxGLn4y79dPu6MHSuPWeJR6UtTWuexpGh3U"
+      ],
+      "loaded_readonly_count": 18,
+      "loaded_writable_count": 37,
+      "message_reconstruction_ready": true,
+      "native_message": "VersionedMessage::V0",
+      "next_rejection": "replay selects successfully captured original transactions",
+      "on_chain_success": false,
+      "proof_id": "949ad069c87bb17d7a151fc579ec91bb4e5d3b7e4dd3bfbfa514446727c3006e",
+      "rpc_exact_match": true,
+      "signature": "47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf"
+    },
+    {
+      "address_table_lookups": [
+        {
+          "accountKey": "9vv7YoDouByqvZDXNkpTxUN7LLNA21pyCgvHYG1SyJ6v",
+          "readonlyIndexes": [
+            3,
+            17,
+            60,
+            4,
+            32,
+            22,
+            1,
+            7,
+            8,
+            10
+          ],
+          "writableIndexes": [
+            23,
+            12,
+            65,
+            34,
+            55,
+            5,
+            35,
+            36,
+            33,
+            48,
+            11,
+            49,
+            50,
+            46,
+            47,
+            13,
+            15,
+            16,
+            19,
+            18
+          ]
+        }
+      ],
+      "advanced_past_lut_gate": true,
+      "artifact": "phase-u3b2-lut/proofs/37XJKQbB9fRX1R76cKKGSENNNA2RSY1WvjkCx2Q7joN2irKfTTZ5Z6bHgH4rfgDPJvhXf3peTe4mwxisfpSEmimu.json",
+      "capture_sha256": "510c77d857f8e23b2e86f1bde458ed02c69a273065bad30e3d228cb2f225cbc2",
+      "compiled_instruction_identity_match": true,
+      "execution_slot": 448194959,
+      "full_key_vector_match": true,
+      "historically_lut_proven": true,
+      "independently_resolved_readonly": [
+        "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+        "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+        "3NJYftD5sjVfxSnUdZ1wVML8f3aC6mp1CXCL6L7TnU8C",
+        "9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo",
+        "2u1tszSeqZ3qBWF3uNGPFc8TzMk2tdiwknnRMWGWjGWH",
+        "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+        "11111111111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+      ],
+      "independently_resolved_writable": [
+        "2gc9Dm1eB6UgVYFBUN9bWks6Kes9PbWSaPaa9DqyvEiN",
+        "D6q6wuQSrifJKZYpR1M8R4YawnLDtDsMmWM1NbBmgJ59",
+        "H3t6qZ1JkguCNTi9uzVKqQ7dvt2cum4XiXWom6Gn5e5S",
+        "ESCkPWKHmgNE7Msf77n9yzqJd5kQVWWGy3o5Mgxhvavp",
+        "ApQkX32ULJUzszZDe986aobLDLMNDoGQK8tRm6oD6SsA",
+        "6zn3UhC8X1LGgH76TA9qnfuC2wv83jwCvwLJ5Mr8vSWN",
+        "DGBo8HmL7pBWBZLGePjHQ73JKRE37HVZ7ZbjA2FYUZHZ",
+        "39M8hy7EUypjxsHqsZQmNQqXGpknCwoCXzF7r8WMBbAs",
+        "63av3Q6327LtDD3Rf82GAX8qjY12tcy7k9YYjZeKiCjN",
+        "EXMcKF76kmBUH8xZ5fi1jv3ezh3eVQCeL4rQbpjCRxvF",
+        "BtajQEHuZJbpjLr2WV6XRpgcZjiKMRbiZZ9uaKyVRERD",
+        "2ovNVDzhRTXyijrs38rbhEyw7XDPvRXHHr7hvPDv5aRs",
+        "JAVj73fdncxHNkJpH5KZ5fdU5cCNnMwxtEEvjCwt3BEn",
+        "4SMRzaLXsuvTi2B5cSVs4LuCUUqQhB2uByTWUvbixjfF",
+        "6KzHa7L1MDTkaUb4qGiJqMvnmAy1qztGDeLvSHdS9ooU",
+        "Bgq7trRgVMeq33yt235zM2onQ4bRDBsY5EWiTetF4qw6",
+        "B8V6WVjPxW1UGwVDfxH2d2r8SyT4cqn7dQRK6XneVa7D",
+        "3DzjXRfxRm6iejfyyMynR4tScddaanrePJ1NJU2XnPPL",
+        "6ty9i31n275Yv1izrpH8MyLpDTEUHfTQV6VsgUjZftez",
+        "JAvnB9AKtgPsTEoKmn24Bq64UMoYcrtWtq42HHBdsPkh"
+      ],
+      "loaded_readonly_count": 10,
+      "loaded_writable_count": 20,
+      "message_reconstruction_ready": true,
+      "native_message": "VersionedMessage::V0",
+      "next_rejection": "Kamino replay supports one KLend action per transaction",
+      "on_chain_success": true,
+      "proof_id": "addc2bc36bc64028efb089e480b5c86cfa7dba5cfd3a06b01f73e06b9b51c6ff",
+      "rpc_exact_match": true,
+      "signature": "37XJKQbB9fRX1R76cKKGSENNNA2RSY1WvjkCx2Q7joN2irKfTTZ5Z6bHgH4rfgDPJvhXf3peTe4mwxisfpSEmimu"
+    },
+    {
+      "address_table_lookups": [
+        {
+          "accountKey": "FGMSBiyVE8TvZcdQnZETAAKw28tkQJ2ccZy6pyp95URb",
+          "readonlyIndexes": [
+            8,
+            76,
+            2,
+            5
+          ],
+          "writableIndexes": [
+            211,
+            55,
+            62,
+            150,
+            146,
+            80,
+            198
+          ]
+        }
+      ],
+      "advanced_past_lut_gate": true,
+      "artifact": "phase-u3b2-lut/proofs/55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk.json",
+      "capture_sha256": "df4e89d2ca98b295e5985e8e8747ec941103ae7386e9afa50e40346831ff67f5",
+      "compiled_instruction_identity_match": true,
+      "execution_slot": 448194517,
+      "full_key_vector_match": true,
+      "historically_lut_proven": true,
+      "independently_resolved_readonly": [
+        "11111111111111111111111111111111",
+        "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+        "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+        "Sysvar1nstructions1111111111111111111111111"
+      ],
+      "independently_resolved_writable": [
+        "2gc9Dm1eB6UgVYFBUN9bWks6Kes9PbWSaPaa9DqyvEiN",
+        "BcLJRx7GbyX2Jj8RFpYDnEE47Tm36wSskLnm7ALarEC1",
+        "d4A2prbA2whesmvHaL88BH6Ewn5N4bTSU2Ze8P6Bc4Q",
+        "D6q6wuQSrifJKZYpR1M8R4YawnLDtDsMmWM1NbBmgJ59",
+        "ESCkPWKHmgNE7Msf77n9yzqJd5kQVWWGy3o5Mgxhvavp",
+        "Gm2itCNPBpBSSrgCA194pmErjwHAFVpvBBFvpdTF5LuJ",
+        "GmJ2vXsDt8R5DNimAZc7Rtphr4oqecBVAx1psaTcVtrX"
+      ],
+      "loaded_readonly_count": 4,
+      "loaded_writable_count": 7,
+      "message_reconstruction_ready": true,
+      "native_message": "VersionedMessage::V0",
+      "next_rejection": "unsupported program HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ in a Kamino KLend replay; the supported contract admits KLend and compute-budget instructions only",
+      "on_chain_success": true,
+      "proof_id": "67e3648c8508420803ac814e4fe9801e7cdbe90f8571aeb2d6a3817e86fda04a",
+      "rpc_exact_match": true,
+      "signature": "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk"
+    },
+    {
+      "address_table_lookups": [
+        {
+          "accountKey": "FGMSBiyVE8TvZcdQnZETAAKw28tkQJ2ccZy6pyp95URb",
+          "readonlyIndexes": [
+            8,
+            2,
+            158,
+            5,
+            7
+          ],
+          "writableIndexes": [
+            97,
+            132,
+            150,
+            227
+          ]
+        }
+      ],
+      "advanced_past_lut_gate": true,
+      "artifact": "phase-u3b2-lut/proofs/5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V.json",
+      "capture_sha256": "04b2b326125766e85498d21c00b81e49f7d918affc65456b2c248371c7f786b7",
+      "compiled_instruction_identity_match": true,
+      "execution_slot": 448194462,
+      "full_key_vector_match": true,
+      "historically_lut_proven": true,
+      "independently_resolved_readonly": [
+        "11111111111111111111111111111111",
+        "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "Sysvar1nstructions1111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+      ],
+      "independently_resolved_writable": [
+        "BbDUrk1bVtSixgQsPLBJFZEF7mwGstnD5joA1WzYvYFX",
+        "Bgq7trRgVMeq33yt235zM2onQ4bRDBsY5EWiTetF4qw6",
+        "D6q6wuQSrifJKZYpR1M8R4YawnLDtDsMmWM1NbBmgJ59",
+        "HV9KsS5mB4b9CFhDJVKdfxWBAomYfUk5PeUsdgMQsUrB"
+      ],
+      "loaded_readonly_count": 5,
+      "loaded_writable_count": 4,
+      "message_reconstruction_ready": true,
+      "native_message": "VersionedMessage::V0",
+      "next_rejection": "unsupported program HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ in a Kamino KLend replay; the supported contract admits KLend and compute-budget instructions only",
+      "on_chain_success": true,
+      "proof_id": "b75157021d53ee662c432ddede6ff1115bd1b283b12156b5dc866af9d1d38ae2",
+      "rpc_exact_match": true,
+      "signature": "5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V"
+    },
+    {
+      "address_table_lookups": [
+        {
+          "accountKey": "GprZNyWk67655JhX6Rq9KoebQ6WkQYRhATWzkx2P2LNc",
+          "readonlyIndexes": [
+            7,
+            2,
+            48,
+            1,
+            11,
+            4,
+            6
+          ],
+          "writableIndexes": [
+            19,
+            17,
+            20,
+            10,
+            50,
+            12,
+            13
+          ]
+        }
+      ],
+      "advanced_past_lut_gate": true,
+      "artifact": "phase-u3b2-lut/proofs/49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx.json",
+      "capture_sha256": "b32f4181b93633abc7463bf5affe191a218fc8a6d4d3260d2d2642f6a3002ca2",
+      "compiled_instruction_identity_match": true,
+      "execution_slot": 448194435,
+      "full_key_vector_match": true,
+      "historically_lut_proven": true,
+      "independently_resolved_readonly": [
+        "11111111111111111111111111111111",
+        "B9spsrMK6pJicYtukaZzDyzsUQLgc3jbx5gHVwdDxb6y",
+        "Chpu5ZgfWX5ZzVpUx9Xvv4WPM75Xd7zPJNDPsFnCpLpk",
+        "DxXdAyU3kCjnyggvHmY5nAwg5cRbbmdyX3npfDMjjMek",
+        "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "Sysvar1nstructions1111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+      ],
+      "independently_resolved_writable": [
+        "3NJYftD5sjVfxSnUdZ1wVML8f3aC6mp1CXCL6L7TnU8C",
+        "B7nzBEuViVtaQN8iEhhtBY4gQSxBY38ms31DUWUx1bza",
+        "DdTmCCjv7zHRD1hJv3E8bpnSEQBzdKkzB1j9ApXX5QoP",
+        "Ga4rZytCpq1unD4DbEJ5bkHeUz9g3oh9AAFEi6vSauXp",
+        "GbpsVomudPRRwmqfTmo3MYQVTikPG6QXxqpzJexA1JRb",
+        "GENey8es3EgGiNTM8H8gzA3vf98haQF8LHiYFyErjgrv",
+        "rywFxeqHfCWL5iGq9cDxutwiiR2TabZgzv8aRM1Lceq"
+      ],
+      "loaded_readonly_count": 7,
+      "loaded_writable_count": 7,
+      "message_reconstruction_ready": true,
+      "native_message": "VersionedMessage::V0",
+      "next_rejection": "unsupported program HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ in a Kamino KLend replay; the supported contract admits KLend and compute-budget instructions only",
+      "on_chain_success": true,
+      "proof_id": "98f87ad74a05e1f2bf1b20c4c3ffe2037c9d8ede088957e06128a96a0f6ff796",
+      "rpc_exact_match": true,
+      "signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx"
+    },
+    {
+      "address_table_lookups": [
+        {
+          "accountKey": "GprZNyWk67655JhX6Rq9KoebQ6WkQYRhATWzkx2P2LNc",
+          "readonlyIndexes": [
+            7,
+            21,
+            19,
+            2,
+            1,
+            4,
+            6
+          ],
+          "writableIndexes": [
+            25,
+            22,
+            26,
+            20,
+            24,
+            10
+          ]
+        }
+      ],
+      "advanced_past_lut_gate": true,
+      "artifact": "phase-u3b2-lut/proofs/2dc94E8Mvh83c8MiecgRekd7Vj8YE6aexfVeCJK58K46LQcTRjpDomii6pYmwbdeYmdTM3bVbHw6rhFdtwRtSTnT.json",
+      "capture_sha256": "e5f9f9fcaf408291c4affa034943411bb7b1810b78870188917fb44dc13550c8",
+      "compiled_instruction_identity_match": true,
+      "execution_slot": 448194341,
+      "full_key_vector_match": true,
+      "historically_lut_proven": true,
+      "independently_resolved_readonly": [
+        "11111111111111111111111111111111",
+        "27G8MtK7VtTcCHkpASjSDdkWWYfoqT6ggEuKidVJidD4",
+        "3NJYftD5sjVfxSnUdZ1wVML8f3aC6mp1CXCL6L7TnU8C",
+        "B9spsrMK6pJicYtukaZzDyzsUQLgc3jbx5gHVwdDxb6y",
+        "DxXdAyU3kCjnyggvHmY5nAwg5cRbbmdyX3npfDMjjMek",
+        "Sysvar1nstructions1111111111111111111111111",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+      ],
+      "independently_resolved_writable": [
+        "7hWy6oHrmnG9Bq15BBC7GMphZSBvENGBLqE6A2DdjXRf",
+        "CHcHknV6KujiUVqVsQfJrqUcsifgJmWBzhUWyYibt1ss",
+        "Db5fLNHRbUfvQ71XK62APWGTbSTTKhDTAnknsYyZPLy4",
+        "DdTmCCjv7zHRD1hJv3E8bpnSEQBzdKkzB1j9ApXX5QoP",
+        "G6LBmbbApvCrTGjMsPsxW43AGmzvcXa7P8x9yvHbek1f",
+        "Ga4rZytCpq1unD4DbEJ5bkHeUz9g3oh9AAFEi6vSauXp"
+      ],
+      "loaded_readonly_count": 7,
+      "loaded_writable_count": 6,
+      "message_reconstruction_ready": true,
+      "native_message": "VersionedMessage::V0",
+      "next_rejection": "unsupported program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL in a Kamino KLend replay; the supported contract admits KLend and compute-budget instructions only",
+      "on_chain_success": true,
+      "proof_id": "b5b1afa4cf9782d81d44abdf7c07fe43fca10b751c2f847ce9c1b9168870db19",
+      "rpc_exact_match": true,
+      "signature": "2dc94E8Mvh83c8MiecgRekd7Vj8YE6aexfVeCJK58K46LQcTRjpDomii6pYmwbdeYmdTM3bVbHw6rhFdtwRtSTnT"
+    }
+  ],
+  "final_decision": "A. HISTORICAL LUT RECONSTRUCTION PROVEN — strong A, 8/8",
+  "frozen_u3a": {
+    "all_344_checksums_verified": true,
+    "fingerprint": "b97116541aeefc6723ef91a1d38c9be52792d47316b573ac08d49484fd97d0af",
+    "integrity_tests_passed": 30,
+    "normal_reverse_rebuilds": "passed",
+    "policy_sha256": "3a95c98305aa69e2b7f0502c6e9472f47aea863c3fdf32c12e3644a06a0180c3"
+  },
+  "historical_contexts": [
+    {
+      "address_count": 110,
+      "attempted": true,
+      "decoded_account_sha256": "12a7691afd968b1347ebf5f5ace1a43cf355d063d7f0514cc114b72f4b9e7d82",
+      "executable": false,
+      "execution_slot": 448195003,
+      "failure_category": null,
+      "failure_reason": null,
+      "lamports": 18816320,
+      "metadata": {
+        "_padding": 0,
+        "authority": [
+          44,
+          105,
+          206,
+          93,
+          89,
+          136,
+          40,
+          116,
+          226,
+          227,
+          7,
+          175,
+          247,
+          25,
+          60,
+          135,
+          8,
+          114,
+          120,
+          116,
+          32,
+          126,
+          39,
+          236,
+          201,
+          207,
+          213,
+          14,
+          164,
+          135,
+          183,
+          217
+        ],
+        "deactivation_slot": 18446744073709551615,
+        "last_extended_slot": 448065780,
+        "last_extended_slot_start_index": 104
+      },
+      "owner": "AddressLookupTab1e1111111111111111111111111",
+      "requested_slot": 448195003,
+      "response_file": "rpc/table-0.body",
+      "response_sha256": "4df704265a3f28c17c72cbb4d5d9130ce4be9b2644491a66867dd06894a1db64",
+      "returned_context_slot": 448195003,
+      "status": "success",
+      "table_pubkey": "26XAkAHyMHzp9tUmh8m7x8A4YmB8vaknbc2bXijp8dKS",
+      "transaction_signatures": [
+        "47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf"
+      ]
+    },
+    {
+      "address_count": 110,
+      "attempted": true,
+      "decoded_account_sha256": "12a7691afd968b1347ebf5f5ace1a43cf355d063d7f0514cc114b72f4b9e7d82",
+      "executable": false,
+      "execution_slot": 448195147,
+      "failure_category": null,
+      "failure_reason": null,
+      "lamports": 18816320,
+      "metadata": {
+        "_padding": 0,
+        "authority": [
+          44,
+          105,
+          206,
+          93,
+          89,
+          136,
+          40,
+          116,
+          226,
+          227,
+          7,
+          175,
+          247,
+          25,
+          60,
+          135,
+          8,
+          114,
+          120,
+          116,
+          32,
+          126,
+          39,
+          236,
+          201,
+          207,
+          213,
+          14,
+          164,
+          135,
+          183,
+          217
+        ],
+        "deactivation_slot": 18446744073709551615,
+        "last_extended_slot": 448065780,
+        "last_extended_slot_start_index": 104
+      },
+      "owner": "AddressLookupTab1e1111111111111111111111111",
+      "requested_slot": 448195147,
+      "response_file": "rpc/table-1.body",
+      "response_sha256": "b5d045129a355b40a03ec1727d93cc7f454cbdb25484cd7ad8598fc5fb9eab32",
+      "returned_context_slot": 448195147,
+      "status": "success",
+      "table_pubkey": "26XAkAHyMHzp9tUmh8m7x8A4YmB8vaknbc2bXijp8dKS",
+      "transaction_signatures": [
+        "3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q"
+      ]
+    },
+    {
+      "address_count": 95,
+      "attempted": true,
+      "decoded_account_sha256": "995ecf43e032f66abae2560d389ba27e12a20ceefb6956f8e41e8be361226261",
+      "executable": false,
+      "execution_slot": 448195166,
+      "failure_category": null,
+      "failure_reason": null,
+      "lamports": 22439040,
+      "metadata": {
+        "_padding": 0,
+        "authority": [
+          12,
+          245,
+          18,
+          1,
+          181,
+          37,
+          211,
+          28,
+          87,
+          103,
+          211,
+          231,
+          157,
+          36,
+          222,
+          152,
+          20,
+          17,
+          22,
+          187,
+          48,
+          22,
+          243,
+          140,
+          85,
+          209,
+          129,
+          123,
+          32,
+          56,
+          104,
+          130
+        ],
+        "deactivation_slot": 18446744073709551615,
+        "last_extended_slot": 437406889,
+        "last_extended_slot_start_index": 85
+      },
+      "owner": "AddressLookupTab1e1111111111111111111111111",
+      "requested_slot": 448195166,
+      "response_file": "rpc/table-2.body",
+      "response_sha256": "9fe3756b034b3b0933499a917cb6d7ef614022aaef5d3490fb4e4a5a8955f772",
+      "returned_context_slot": 448195166,
+      "status": "success",
+      "table_pubkey": "8ofreL6hKfEet1DnhHVGvCTnSdz4pg85PpbuCUHnEcKm",
+      "transaction_signatures": [
+        "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97"
+      ]
+    },
+    {
+      "address_count": 255,
+      "attempted": true,
+      "decoded_account_sha256": "13b6ab040bcaed64f4856d50c959546fb286092e4724b77f42d41e5356260d2d",
+      "executable": false,
+      "execution_slot": 448195147,
+      "failure_category": null,
+      "failure_reason": null,
+      "lamports": 57183360,
+      "metadata": {
+        "_padding": 0,
+        "authority": [
+          4,
+          251,
+          159,
+          114,
+          167,
+          125,
+          76,
+          30,
+          5,
+          111,
+          37,
+          91,
+          13,
+          75,
+          217,
+          33,
+          71,
+          85,
+          224,
+          45,
+          97,
+          114,
+          172,
+          228,
+          59,
+          137,
+          230,
+          36,
+          28,
+          143,
+          30,
+          199
+        ],
+        "deactivation_slot": 18446744073709551615,
+        "last_extended_slot": 447853178,
+        "last_extended_slot_start_index": 251
+      },
+      "owner": "AddressLookupTab1e1111111111111111111111111",
+      "requested_slot": 448195147,
+      "response_file": "rpc/table-3.body",
+      "response_sha256": "ec165ea104f0a6725a5fb8ffbc01d418712a6ce7b2082f75258b0b62fb5d2f64",
+      "returned_context_slot": 448195147,
+      "status": "success",
+      "table_pubkey": "9rVP9Ly5RC1nix3WDm5QgkoWJbxV7Kteth1KHtYk5hT9",
+      "transaction_signatures": [
+        "3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q"
+      ]
+    },
+    {
+      "address_count": 82,
+      "attempted": true,
+      "decoded_account_sha256": "918081429faaa1313ca6c3e0019c1ce7458f70e4d6f1ab191ce6b3aae284d2d6",
+      "executable": false,
+      "execution_slot": 448194959,
+      "failure_category": null,
+      "failure_reason": null,
+      "lamports": 19543680,
+      "metadata": {
+        "_padding": 0,
+        "authority": [
+          254,
+          64,
+          64,
+          130,
+          84,
+          251,
+          245,
+          87,
+          63,
+          238,
+          223,
+          78,
+          194,
+          15,
+          8,
+          172,
+          19,
+          242,
+          117,
+          17,
+          136,
+          94,
+          226,
+          4,
+          158,
+          80,
+          214,
+          68,
+          207,
+          215,
+          216,
+          44
+        ],
+        "deactivation_slot": 18446744073709551615,
+        "last_extended_slot": 443183745,
+        "last_extended_slot_start_index": 73
+      },
+      "owner": "AddressLookupTab1e1111111111111111111111111",
+      "requested_slot": 448194959,
+      "response_file": "rpc/table-4.body",
+      "response_sha256": "2a946b7245603c10a427d307df384d7ca75699d385b9b32efef4ea0b7ecb784b",
+      "returned_context_slot": 448194959,
+      "status": "success",
+      "table_pubkey": "9vv7YoDouByqvZDXNkpTxUN7LLNA21pyCgvHYG1SyJ6v",
+      "transaction_signatures": [
+        "37XJKQbB9fRX1R76cKKGSENNNA2RSY1WvjkCx2Q7joN2irKfTTZ5Z6bHgH4rfgDPJvhXf3peTe4mwxisfpSEmimu"
+      ]
+    },
+    {
+      "address_count": 18,
+      "attempted": true,
+      "decoded_account_sha256": "f123281a26505cf9fb77a835e55c35846d21c7a6d1301af6aba33347a12df956",
+      "executable": false,
+      "execution_slot": 448195003,
+      "failure_category": null,
+      "failure_reason": null,
+      "lamports": 4813080,
+      "metadata": {
+        "_padding": 0,
+        "authority": [
+          174,
+          190,
+          175,
+          200,
+          177,
+          163,
+          120,
+          227,
+          205,
+          168,
+          230,
+          190,
+          253,
+          79,
+          223,
+          227,
+          125,
+          170,
+          156,
+          221,
+          163,
+          134,
+          115,
+          121,
+          195,
+          67,
+          246,
+          215,
+          148,
+          186,
+          11,
+          102
+        ],
+        "deactivation_slot": 18446744073709551615,
+        "last_extended_slot": 444409098,
+        "last_extended_slot_start_index": 14
+      },
+      "owner": "AddressLookupTab1e1111111111111111111111111",
+      "requested_slot": 448195003,
+      "response_file": "rpc/table-5.body",
+      "response_sha256": "128629eebe93adc497a8654766e2e6395148716bbcce409363a07733304e400a",
+      "returned_context_slot": 448195003,
+      "status": "success",
+      "table_pubkey": "A3M7Bv5bePAJ6Pb6i8PGm2aj3P4WonaCXy7EUt6PMEn9",
+      "transaction_signatures": [
+        "47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf"
+      ]
+    },
+    {
+      "address_count": 18,
+      "attempted": true,
+      "decoded_account_sha256": "f123281a26505cf9fb77a835e55c35846d21c7a6d1301af6aba33347a12df956",
+      "executable": false,
+      "execution_slot": 448195147,
+      "failure_category": null,
+      "failure_reason": null,
+      "lamports": 4813080,
+      "metadata": {
+        "_padding": 0,
+        "authority": [
+          174,
+          190,
+          175,
+          200,
+          177,
+          163,
+          120,
+          227,
+          205,
+          168,
+          230,
+          190,
+          253,
+          79,
+          223,
+          227,
+          125,
+          170,
+          156,
+          221,
+          163,
+          134,
+          115,
+          121,
+          195,
+          67,
+          246,
+          215,
+          148,
+          186,
+          11,
+          102
+        ],
+        "deactivation_slot": 18446744073709551615,
+        "last_extended_slot": 444409098,
+        "last_extended_slot_start_index": 14
+      },
+      "owner": "AddressLookupTab1e1111111111111111111111111",
+      "requested_slot": 448195147,
+      "response_file": "rpc/table-6.body",
+      "response_sha256": "e10f622d8f6f8070b65c244ba248beb7f429bb47698023482965a3270ae98ece",
+      "returned_context_slot": 448195147,
+      "status": "success",
+      "table_pubkey": "A3M7Bv5bePAJ6Pb6i8PGm2aj3P4WonaCXy7EUt6PMEn9",
+      "transaction_signatures": [
+        "3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q"
+      ]
+    },
+    {
+      "address_count": 254,
+      "attempted": true,
+      "decoded_account_sha256": "2898588f299641a1f9ee0a99346a6f5849f0e04cbd69c232f8412763a26cfed3",
+      "executable": false,
+      "execution_slot": 448194462,
+      "failure_category": null,
+      "failure_reason": null,
+      "lamports": 57851520,
+      "metadata": {
+        "_padding": 0,
+        "authority": [
+          12,
+          245,
+          18,
+          1,
+          181,
+          37,
+          211,
+          28,
+          87,
+          103,
+          211,
+          231,
+          157,
+          36,
+          222,
+          152,
+          20,
+          17,
+          22,
+          187,
+          48,
+          22,
+          243,
+          140,
+          85,
+          209,
+          129,
+          123,
+          32,
+          56,
+          104,
+          130
+        ],
+        "deactivation_slot": 18446744073709551615,
+        "last_extended_slot": 370262848,
+        "last_extended_slot_start_index": 247
+      },
+      "owner": "AddressLookupTab1e1111111111111111111111111",
+      "requested_slot": 448194462,
+      "response_file": "rpc/table-7.body",
+      "response_sha256": "8fc2032a8407fc6f9afe52cefac3ada2dd7424c03e0a82c0e2856162827d3dcf",
+      "returned_context_slot": 448194462,
+      "status": "success",
+      "table_pubkey": "FGMSBiyVE8TvZcdQnZETAAKw28tkQJ2ccZy6pyp95URb",
+      "transaction_signatures": [
+        "5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V"
+      ]
+    },
+    {
+      "address_count": 254,
+      "attempted": true,
+      "decoded_account_sha256": "2898588f299641a1f9ee0a99346a6f5849f0e04cbd69c232f8412763a26cfed3",
+      "executable": false,
+      "execution_slot": 448194517,
+      "failure_category": null,
+      "failure_reason": null,
+      "lamports": 57851520,
+      "metadata": {
+        "_padding": 0,
+        "authority": [
+          12,
+          245,
+          18,
+          1,
+          181,
+          37,
+          211,
+          28,
+          87,
+          103,
+          211,
+          231,
+          157,
+          36,
+          222,
+          152,
+          20,
+          17,
+          22,
+          187,
+          48,
+          22,
+          243,
+          140,
+          85,
+          209,
+          129,
+          123,
+          32,
+          56,
+          104,
+          130
+        ],
+        "deactivation_slot": 18446744073709551615,
+        "last_extended_slot": 370262848,
+        "last_extended_slot_start_index": 247
+      },
+      "owner": "AddressLookupTab1e1111111111111111111111111",
+      "requested_slot": 448194517,
+      "response_file": "rpc/table-8.body",
+      "response_sha256": "783818ff17e1f1e920ed552bee930c968cefa40515714e353321df1f527a41cd",
+      "returned_context_slot": 448194517,
+      "status": "success",
+      "table_pubkey": "FGMSBiyVE8TvZcdQnZETAAKw28tkQJ2ccZy6pyp95URb",
+      "transaction_signatures": [
+        "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk"
+      ]
+    },
+    {
+      "address_count": 135,
+      "attempted": true,
+      "decoded_account_sha256": "6d5582616903d7c013f2a010f9c73c38b61ca578bf8a7e9df03dc55e4b3f8f14",
+      "executable": false,
+      "execution_slot": 448195003,
+      "failure_category": null,
+      "failure_reason": null,
+      "lamports": 31347840,
+      "metadata": {
+        "_padding": 0,
+        "authority": [
+          124,
+          71,
+          1,
+          216,
+          22,
+          13,
+          57,
+          58,
+          72,
+          77,
+          95,
+          81,
+          248,
+          161,
+          92,
+          149,
+          225,
+          73,
+          82,
+          234,
+          94,
+          106,
+          69,
+          144,
+          151,
+          46,
+          163,
+          144,
+          143,
+          216,
+          124,
+          148
+        ],
+        "deactivation_slot": 18446744073709551615,
+        "last_extended_slot": 428532555,
+        "last_extended_slot_start_index": 134
+      },
+      "owner": "AddressLookupTab1e1111111111111111111111111",
+      "requested_slot": 448195003,
+      "response_file": "rpc/table-9.body",
+      "response_sha256": "7587a63ac6a3c62c99253cc2790e998b722d457b11bdee4582ccb4a9c6d51996",
+      "returned_context_slot": 448195003,
+      "status": "success",
+      "table_pubkey": "GP57a1T8vJjeAnF2zfKT1bnZysNwVprLaw6Mjw2d1gPy",
+      "transaction_signatures": [
+        "47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf"
+      ]
+    },
+    {
+      "address_count": 63,
+      "attempted": true,
+      "decoded_account_sha256": "8e7a44aec6546dea9d1162790095226f09f8b6d163338c6f8afaf4f7092a6c00",
+      "executable": false,
+      "execution_slot": 448194341,
+      "failure_category": null,
+      "failure_reason": null,
+      "lamports": 15312000,
+      "metadata": {
+        "_padding": 0,
+        "authority": [
+          198,
+          50,
+          65,
+          194,
+          150,
+          119,
+          152,
+          123,
+          238,
+          29,
+          86,
+          21,
+          131,
+          227,
+          171,
+          134,
+          143,
+          88,
+          25,
+          191,
+          12,
+          60,
+          171,
+          16,
+          15,
+          10,
+          210,
+          167,
+          84,
+          140,
+          47,
+          15
+        ],
+        "deactivation_slot": 18446744073709551615,
+        "last_extended_slot": 345013275,
+        "last_extended_slot_start_index": 55
+      },
+      "owner": "AddressLookupTab1e1111111111111111111111111",
+      "requested_slot": 448194341,
+      "response_file": "rpc/table-10.body",
+      "response_sha256": "4a203fd3c0fb1ae5998698c7fe69b3d7e417d8c2012634f769dbe03f6fa0713a",
+      "returned_context_slot": 448194341,
+      "status": "success",
+      "table_pubkey": "GprZNyWk67655JhX6Rq9KoebQ6WkQYRhATWzkx2P2LNc",
+      "transaction_signatures": [
+        "2dc94E8Mvh83c8MiecgRekd7Vj8YE6aexfVeCJK58K46LQcTRjpDomii6pYmwbdeYmdTM3bVbHw6rhFdtwRtSTnT"
+      ]
+    },
+    {
+      "address_count": 63,
+      "attempted": true,
+      "decoded_account_sha256": "8e7a44aec6546dea9d1162790095226f09f8b6d163338c6f8afaf4f7092a6c00",
+      "executable": false,
+      "execution_slot": 448194435,
+      "failure_category": null,
+      "failure_reason": null,
+      "lamports": 15312000,
+      "metadata": {
+        "_padding": 0,
+        "authority": [
+          198,
+          50,
+          65,
+          194,
+          150,
+          119,
+          152,
+          123,
+          238,
+          29,
+          86,
+          21,
+          131,
+          227,
+          171,
+          134,
+          143,
+          88,
+          25,
+          191,
+          12,
+          60,
+          171,
+          16,
+          15,
+          10,
+          210,
+          167,
+          84,
+          140,
+          47,
+          15
+        ],
+        "deactivation_slot": 18446744073709551615,
+        "last_extended_slot": 345013275,
+        "last_extended_slot_start_index": 55
+      },
+      "owner": "AddressLookupTab1e1111111111111111111111111",
+      "requested_slot": 448194435,
+      "response_file": "rpc/table-11.body",
+      "response_sha256": "095453cbe25e467668e9da15615d73e33719ff28fac270913522353f74876093",
+      "returned_context_slot": 448194435,
+      "status": "success",
+      "table_pubkey": "GprZNyWk67655JhX6Rq9KoebQ6WkQYRhATWzkx2P2LNc",
+      "transaction_signatures": [
+        "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx"
+      ]
+    },
+    {
+      "address_count": 220,
+      "attempted": true,
+      "decoded_account_sha256": "3237cd8a2ac360ac511c6c46ed0d8fb7da34bf06437ab8c1f3cb0132d86642cf",
+      "executable": false,
+      "execution_slot": 448195003,
+      "failure_category": null,
+      "failure_reason": null,
+      "lamports": 50279040,
+      "metadata": {
+        "_padding": 0,
+        "authority": [
+          12,
+          23,
+          123,
+          176,
+          4,
+          144,
+          248,
+          211,
+          224,
+          109,
+          108,
+          59,
+          103,
+          189,
+          108,
+          74,
+          16,
+          134,
+          154,
+          252,
+          78,
+          250,
+          102,
+          252,
+          4,
+          185,
+          118,
+          12,
+          216,
+          125,
+          138,
+          135
+        ],
+        "deactivation_slot": 18446744073709551615,
+        "last_extended_slot": 408727116,
+        "last_extended_slot_start_index": 208
+      },
+      "owner": "AddressLookupTab1e1111111111111111111111111",
+      "requested_slot": 448195003,
+      "response_file": "rpc/table-12.body",
+      "response_sha256": "26da38a4be86b1aa632b2abd04908c8addf6197aecceb90f12fbaa44308bb258",
+      "returned_context_slot": 448195003,
+      "status": "success",
+      "table_pubkey": "YXziZZksvEhVhqapwQmbEg8TeeNwav8cL5TjnxGGTpD",
+      "transaction_signatures": [
+        "47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf"
+      ]
+    },
+    {
+      "address_count": 220,
+      "attempted": true,
+      "decoded_account_sha256": "3237cd8a2ac360ac511c6c46ed0d8fb7da34bf06437ab8c1f3cb0132d86642cf",
+      "executable": false,
+      "execution_slot": 448195147,
+      "failure_category": null,
+      "failure_reason": null,
+      "lamports": 50279040,
+      "metadata": {
+        "_padding": 0,
+        "authority": [
+          12,
+          23,
+          123,
+          176,
+          4,
+          144,
+          248,
+          211,
+          224,
+          109,
+          108,
+          59,
+          103,
+          189,
+          108,
+          74,
+          16,
+          134,
+          154,
+          252,
+          78,
+          250,
+          102,
+          252,
+          4,
+          185,
+          118,
+          12,
+          216,
+          125,
+          138,
+          135
+        ],
+        "deactivation_slot": 18446744073709551615,
+        "last_extended_slot": 408727116,
+        "last_extended_slot_start_index": 208
+      },
+      "owner": "AddressLookupTab1e1111111111111111111111111",
+      "requested_slot": 448195147,
+      "response_file": "rpc/table-13.body",
+      "response_sha256": "767658f2bc0449797af9a19ad34555b144ce363b546daa80fbe11ef5bc40e08e",
+      "returned_context_slot": 448195147,
+      "status": "success",
+      "table_pubkey": "YXziZZksvEhVhqapwQmbEg8TeeNwav8cL5TjnxGGTpD",
+      "transaction_signatures": [
+        "3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q"
+      ]
+    },
+    {
+      "address_count": 216,
+      "attempted": true,
+      "decoded_account_sha256": "42bc189e66d54f10bd362c8351819b51e4ad6d08c3f3093fccd53fc6daa37e9c",
+      "executable": false,
+      "execution_slot": 448195003,
+      "failure_category": null,
+      "failure_reason": null,
+      "lamports": 49388160,
+      "metadata": {
+        "_padding": 0,
+        "authority": [
+          84,
+          146,
+          68,
+          232,
+          65,
+          70,
+          245,
+          245,
+          38,
+          156,
+          52,
+          166,
+          25,
+          173,
+          90,
+          191,
+          246,
+          163,
+          58,
+          226,
+          235,
+          232,
+          123,
+          101,
+          251,
+          231,
+          120,
+          81,
+          77,
+          158,
+          181,
+          93
+        ],
+        "deactivation_slot": 18446744073709551615,
+        "last_extended_slot": 230358868,
+        "last_extended_slot_start_index": 200
+      },
+      "owner": "AddressLookupTab1e1111111111111111111111111",
+      "requested_slot": 448195003,
+      "response_file": "rpc/table-14.body",
+      "response_sha256": "415a3665d7d90b8869784cf5f61c56e7f3f48eb95d8d04bc3331ee62ba828f04",
+      "returned_context_slot": 448195003,
+      "status": "success",
+      "table_pubkey": "iBP3RJEdvxKz361DHadB9Mdw7qfreeLEVTNEZ1DA3X9",
+      "transaction_signatures": [
+        "47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf"
+      ]
+    },
+    {
+      "address_count": 216,
+      "attempted": true,
+      "decoded_account_sha256": "42bc189e66d54f10bd362c8351819b51e4ad6d08c3f3093fccd53fc6daa37e9c",
+      "executable": false,
+      "execution_slot": 448195147,
+      "failure_category": null,
+      "failure_reason": null,
+      "lamports": 49388160,
+      "metadata": {
+        "_padding": 0,
+        "authority": [
+          84,
+          146,
+          68,
+          232,
+          65,
+          70,
+          245,
+          245,
+          38,
+          156,
+          52,
+          166,
+          25,
+          173,
+          90,
+          191,
+          246,
+          163,
+          58,
+          226,
+          235,
+          232,
+          123,
+          101,
+          251,
+          231,
+          120,
+          81,
+          77,
+          158,
+          181,
+          93
+        ],
+        "deactivation_slot": 18446744073709551615,
+        "last_extended_slot": 230358868,
+        "last_extended_slot_start_index": 200
+      },
+      "owner": "AddressLookupTab1e1111111111111111111111111",
+      "requested_slot": 448195147,
+      "response_file": "rpc/table-15.body",
+      "response_sha256": "ef8ad97112fc87d5e3de28ddd8a80628800f8be95cbb71e898732e2baf3fc7d5",
+      "returned_context_slot": 448195147,
+      "status": "success",
+      "table_pubkey": "iBP3RJEdvxKz361DHadB9Mdw7qfreeLEVTNEZ1DA3X9",
+      "transaction_signatures": [
+        "3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q"
+      ]
+    }
+  ],
+  "kamino_runtime_execution_attempted": false,
+  "mutations": {
+    "all_isolated_sources_restored": true,
+    "killed_by_named_assertions": 20,
+    "mutations_executed": 20,
+    "production_source_sha256_after": "13ea3738a7e91b35385724eec40057f6b45c2a8909db2fe7c08bb891bde8366f",
+    "production_source_sha256_before": "13ea3738a7e91b35385724eec40057f6b45c2a8909db2fe7c08bb891bde8366f",
+    "results": [
+      {
+        "control_passed": true,
+        "description": "loaded writable/readonly vectors swapped",
+        "evidence_boundary": "original synthetic controls",
+        "mutated_source_sha256": "0925348c8d71c3d49d0ff36a0e96707946ff92f910fb45a997433e804d263bbc",
+        "mutation": 1,
+        "named_test": "independent_resolution_preserves_writable_readonly_order",
+        "result": "killed_by_assertion",
+        "test_exit": 101
+      },
+      {
+        "control_passed": true,
+        "description": "loaded addresses sorted",
+        "evidence_boundary": "original synthetic controls",
+        "mutated_source_sha256": "6582a4bb9ac725168dfa00adecb91bbe86738439366d4ca4b4254a61214b4ff3",
+        "mutation": 2,
+        "named_test": "independent_resolution_preserves_writable_readonly_order",
+        "result": "killed_by_assertion",
+        "test_exit": 101
+      },
+      {
+        "control_passed": true,
+        "description": "second lookup table ignored",
+        "evidence_boundary": "original synthetic controls",
+        "mutated_source_sha256": "dc83a25dda836aa8b0197cd54b038864b4adde26cb03f201198f907f426cfe9c",
+        "mutation": 3,
+        "named_test": "independent_resolution_preserves_writable_readonly_order",
+        "result": "killed_by_assertion",
+        "test_exit": 101
+      },
+      {
+        "control_passed": true,
+        "description": "current state queried instead of execution-slot state",
+        "evidence_boundary": "original synthetic controls",
+        "mutated_source_sha256": "48a264ffe87e0550f0847821982e5105e3a3d08e0d2f7c5a924fd2c62b628cab",
+        "mutation": 4,
+        "named_test": "acquisition_never_substitutes_current_state_for_historical",
+        "result": "killed_by_assertion",
+        "test_exit": 101
+      },
+      {
+        "control_passed": true,
+        "description": "wrong table owner accepted",
+        "evidence_boundary": "original synthetic controls",
+        "mutated_source_sha256": "949383cf63d9ef7b403358a94232a524bded3a3a7c040d5d85b1e97f71896917",
+        "mutation": 5,
+        "named_test": "wrong_owner_is_rejected_before_address_comparison",
+        "result": "killed_by_assertion",
+        "test_exit": 101
+      },
+      {
+        "control_passed": true,
+        "description": "same-slot extension warmup ignored",
+        "evidence_boundary": "original synthetic controls",
+        "mutated_source_sha256": "f23b2f583590c7bcdf39567514eae8cdb8111c4abc6ff92ebb58b65a6e4bc5eb",
+        "mutation": 6,
+        "named_test": "same_slot_extension_only_exposes_old_prefix",
+        "result": "killed_by_assertion",
+        "test_exit": 101
+      },
+      {
+        "control_passed": true,
+        "description": "out-of-range writable index clamped",
+        "evidence_boundary": "original synthetic controls",
+        "mutated_source_sha256": "d80bd6908059b2622b4b4084723b3878b4d869fdaa287d6fdfd4e9196c1bde63",
+        "mutation": 7,
+        "named_test": "writable_and_readonly_out_of_range_indexes_reject",
+        "result": "killed_by_assertion",
+        "test_exit": 101
+      },
+      {
+        "control_passed": true,
+        "description": "RPC loaded addresses trusted without historical proof",
+        "evidence_boundary": "original synthetic controls",
+        "mutated_source_sha256": "5083f9eea95767fd0b0b8fbf9252be838522e1930a446d07262c2c4dea9b2ec1",
+        "mutation": 8,
+        "named_test": "rpc_loaded_metadata_is_never_a_table_proof",
+        "result": "killed_by_assertion",
+        "test_exit": 101
+      },
+      {
+        "control_passed": true,
+        "description": "loaded writable key promoted to signer",
+        "evidence_boundary": "original synthetic controls",
+        "mutated_source_sha256": "5162392c6d4b728e15b23ee97409ae33e90073c2d1c547c4ae655e1bd1351f5d",
+        "mutation": 9,
+        "named_test": "independent_resolution_preserves_writable_readonly_order",
+        "result": "killed_by_assertion",
+        "test_exit": 101
+      },
+      {
+        "control_passed": true,
+        "description": "execution slot off by one in evidence validation",
+        "evidence_boundary": "original synthetic controls",
+        "mutated_source_sha256": "78c5d38e98d3026510c8216c3c0fbaf4f072aa05967b8b8913e41f574986c7cd",
+        "mutation": 10,
+        "named_test": "independent_resolution_preserves_writable_readonly_order",
+        "result": "killed_by_assertion",
+        "test_exit": 101
+      },
+      {
+        "control_passed": true,
+        "description": "table pubkey removed from evidence identity",
+        "evidence_boundary": "original synthetic controls",
+        "mutated_source_sha256": "08e1ef78679b332470935f545ff799665bd3b84ff2d601cd0470268a1992b33d",
+        "mutation": 11,
+        "named_test": "table_identity_binds_pubkey_bytes_slot_and_genesis",
+        "result": "killed_by_assertion",
+        "test_exit": 101
+      },
+      {
+        "control_passed": true,
+        "description": "compiled instruction account indexes resolved against static keys only",
+        "evidence_boundary": "original synthetic controls",
+        "mutated_source_sha256": "4c8b0f8df0d7897ce38358f2d97463554892a6039b1440aeb68d3833b0deb1d5",
+        "mutation": 12,
+        "named_test": "independent_resolution_preserves_writable_readonly_order",
+        "result": "killed_by_assertion",
+        "test_exit": 101
+      },
+      {
+        "control_passed": true,
+        "description": "production evidence: loaded writable/readonly vectors swapped",
+        "evidence_boundary": "acquired frozen production evidence",
+        "mutated_source_sha256": "0925348c8d71c3d49d0ff36a0e96707946ff92f910fb45a997433e804d263bbc",
+        "mutation": 13,
+        "named_test": "real_five_table_55_loaded_historical_proof",
+        "result": "killed_by_assertion",
+        "test_exit": 101
+      },
+      {
+        "control_passed": true,
+        "description": "production evidence: loaded addresses sorted",
+        "evidence_boundary": "acquired frozen production evidence",
+        "mutated_source_sha256": "6582a4bb9ac725168dfa00adecb91bbe86738439366d4ca4b4254a61214b4ff3",
+        "mutation": 14,
+        "named_test": "real_five_table_55_loaded_historical_proof",
+        "result": "killed_by_assertion",
+        "test_exit": 101
+      },
+      {
+        "control_passed": true,
+        "description": "production evidence: second lookup table ignored",
+        "evidence_boundary": "acquired frozen production evidence",
+        "mutated_source_sha256": "dc83a25dda836aa8b0197cd54b038864b4adde26cb03f201198f907f426cfe9c",
+        "mutation": 15,
+        "named_test": "real_five_table_historical_proof",
+        "result": "killed_by_assertion",
+        "test_exit": 101
+      },
+      {
+        "control_passed": true,
+        "description": "production evidence: same-slot extension warmup ignored",
+        "evidence_boundary": "real table bytes with explicitly synthetic visibility context",
+        "mutated_source_sha256": "f23b2f583590c7bcdf39567514eae8cdb8111c4abc6ff92ebb58b65a6e4bc5eb",
+        "mutation": 16,
+        "named_test": "real_table_bytes_in_explicit_synthetic_warmup_context",
+        "result": "killed_by_assertion",
+        "test_exit": 101
+      },
+      {
+        "control_passed": true,
+        "description": "production evidence: RPC loaded addresses trusted without historical proof",
+        "evidence_boundary": "acquired frozen production evidence",
+        "mutated_source_sha256": "5083f9eea95767fd0b0b8fbf9252be838522e1930a446d07262c2c4dea9b2ec1",
+        "mutation": 17,
+        "named_test": "real_historical_bytes_cannot_be_replaced_by_rpc_metadata",
+        "result": "killed_by_assertion",
+        "test_exit": 101
+      },
+      {
+        "control_passed": true,
+        "description": "production evidence: execution slot off by one in evidence validation",
+        "evidence_boundary": "acquired frozen production evidence",
+        "mutated_source_sha256": "78c5d38e98d3026510c8216c3c0fbaf4f072aa05967b8b8913e41f574986c7cd",
+        "mutation": 18,
+        "named_test": "real_single_table_historical_proof",
+        "result": "killed_by_assertion",
+        "test_exit": 101
+      },
+      {
+        "control_passed": true,
+        "description": "production evidence: compiled instruction account indexes resolved against static keys only",
+        "evidence_boundary": "acquired frozen production evidence",
+        "mutated_source_sha256": "4c8b0f8df0d7897ce38358f2d97463554892a6039b1440aeb68d3833b0deb1d5",
+        "mutation": 19,
+        "named_test": "real_five_table_55_loaded_historical_proof",
+        "result": "killed_by_assertion",
+        "test_exit": 101
+      },
+      {
+        "control_passed": true,
+        "description": "wrong historical bytes bypass RPC equality",
+        "evidence_boundary": "acquired frozen production evidence",
+        "mutated_source_sha256": "853ace8f06322445cfaa1e0ac185c8f5c963afab332bb14535a6fcaa50d5f1a5",
+        "mutation": 20,
+        "named_test": "real_wrong_historical_bytes_are_rejected",
+        "result": "killed_by_assertion",
+        "test_exit": 101
+      }
+    ]
+  },
+  "next_blocker_distribution": {
+    "Kamino replay supports one KLend action per transaction": 2,
+    "replay selects successfully captured original transactions": 1,
+    "unsupported program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL in a Kamino KLend replay; the supported contract admits KLend and compute-budget instructions only": 1,
+    "unsupported program HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ in a Kamino KLend replay; the supported contract admits KLend and compute-budget instructions only": 4
+  },
+  "offline_rebuild": {
+    "all_canonical_artifact_bytes_identical": true,
+    "artifact_hashes": {
+      "checksums.sha256": "4825b843d9c1f33f094c66eb4470c83acc254a9a41daca232d4723e7437e7a15",
+      "proofs/2dc94E8Mvh83c8MiecgRekd7Vj8YE6aexfVeCJK58K46LQcTRjpDomii6pYmwbdeYmdTM3bVbHw6rhFdtwRtSTnT.json": "f39f0860959cfaa594028ce8a12eefccd5d77421d16a00ade218b73a36b5aef4",
+      "proofs/37XJKQbB9fRX1R76cKKGSENNNA2RSY1WvjkCx2Q7joN2irKfTTZ5Z6bHgH4rfgDPJvhXf3peTe4mwxisfpSEmimu.json": "25c7f1c956e40ef14774bf00b0be49c55a74bd976dd9d7cd4bf88392e3b1a846",
+      "proofs/3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q.json": "9cbddbac3b9fe9c6faca04c323f31472220ebc4edd13cebd6a0b74d23a7b0404",
+      "proofs/47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf.json": "c5f0381683af407eb28b0d1edc42e9290df5a3d064ab9be35d09fe11daac28ae",
+      "proofs/49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx.json": "9ed768bcdbe7a063fcb0a3247ea44a376d5dd2379e67fbd01c8ebae66484a4e9",
+      "proofs/55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk.json": "ad1be821b014bba34e2397b138dc2d59eef5795db40f12b3e4195b594e6c3325",
+      "proofs/5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V.json": "37a1760cd65c04370305f80ee5e32c05a1ab640ad3ef3866345ca95654dd4fdc",
+      "proofs/5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97.json": "96dd0b48c20b4ededd679e4853bc09d40da1ce9493e49a019ba8f4ee86881421",
+      "stage-table.json": "677fb752095c4ab7d687882ecda5b99d02751a8d80100f87c1d67449193f0d46",
+      "summary.json": "49dbe2b108bfc3da459e6cc42acda128b1dd8fcba34ea9f0bdc1af3b81478b9d",
+      "targets.json": "3a300f1ea6b9f762582bee9c847b9b16d63b2ac0fea2e950f33a6aca12f420e0"
+    },
+    "network_transport_called": false,
+    "normal": "passed",
+    "relocated_reversed_filesystem_four_workers": "passed",
+    "reverse_four_workers": "passed"
+  },
+  "offline_timing": {
+    "normal": {
+      "frozen_and_capture_integrity_seconds": 0.17306945801828988,
+      "includes_frozen_integrity_checks": true,
+      "network_transport_called": false,
+      "offline_message_derivation_seconds": 0.4856669169967063,
+      "offline_rebuild_seconds": 0.6854212500038557,
+      "real_historical_decode_timing": "included_in_message_derivation",
+      "real_historical_proofs_derived": 8,
+      "reverse": false,
+      "workers": 1
+    },
+    "reverse_four_workers": {
+      "frozen_and_capture_integrity_seconds": 0.3420099589857273,
+      "includes_frozen_integrity_checks": true,
+      "network_transport_called": false,
+      "offline_message_derivation_seconds": 0.7867067499901168,
+      "offline_rebuild_seconds": 1.1778182089910842,
+      "real_historical_decode_timing": "included_in_message_derivation",
+      "real_historical_proofs_derived": 8,
+      "reverse": true,
+      "workers": 4
+    }
+  },
+  "product_controls": {
+    "binary_sha256": "d917a4d375e3befa8c35f8d5836449689107e178cf66ef71ff26df23a538338c",
+    "cases": [
+      {
+        "case": "verify",
+        "exit_code": 0,
+        "matches_preserved_u2_bytes": true,
+        "stdout_sha256": "d395a058064535cbeb7547943f34ad3c3a2b109e849e5ecf859c694b54acbcf0"
+      },
+      {
+        "case": "baseline",
+        "exit_code": 0,
+        "matches_preserved_u2_bytes": true,
+        "stdout_sha256": "7be26a66f3e98f9b96ba6f1270003c158d99968d9ed081c336a97f14782d2099"
+      },
+      {
+        "case": "regression",
+        "exit_code": 1,
+        "matches_preserved_u2_bytes": true,
+        "stdout_sha256": "e5e6a4b39ce377d8573099dc646fb37928bd3aa1172ceea4b4fa6c903cd52ee4"
+      },
+      {
+        "case": "bounded",
+        "exit_code": 1,
+        "matches_preserved_u2_bytes": true,
+        "stdout_sha256": "139fd95c2899d54b765511d20bc70dfc63cb7a9532d5b3b5ae62b7626df68d16"
+      },
+      {
+        "case": "stale",
+        "exit_code": 3,
+        "matches_preserved_u2_bytes": true,
+        "stdout_sha256": "8d6a4dc867c39655b58f91395630aac48d8e865b1aa1fee3a36a6ac0bcb9bc63"
+      },
+      {
+        "case": "unevaluable",
+        "exit_code": 5,
+        "matches_preserved_u2_bytes": true,
+        "stdout_sha256": "0c7a3b5231f84b99e58d6ddba6fe76e595cc212ce13a81fac24d9be283ca57d7"
+      }
+    ],
+    "control_commit": "8855edb",
+    "rpc_environment_removed": true
+  },
+  "production_replay_claim": false,
+  "production_replay_eligibility_changed": false,
+  "query_boundary": "finalized end-of-execution-slot S; exact requested context; latest write at or before S; never S-1/current/minimum context fallback",
+  "recommendation": "S8 favors companion-contract work (5/8), with multiple-action scope (2/8) and original failure (1/8) retained. Define the next phase from these measured first blockers; no U3C implementation was performed.",
+  "replay_record_schema_changed": false,
+  "required_lut_accounts": 10,
+  "required_lut_contexts": 16,
+  "secret_scan": {
+    "credential_fields_or_credential_bearing_urls": 0,
+    "files_scanned": 87,
+    "private_credentials_read": false,
+    "provider_provenance": "scheme and host only",
+    "result": "passed",
+    "synthetic_secret_strings": "tests only; absent from production evidence"
+  },
+  "slot_hashes_cases": 0,
+  "slot_hashes_requests": 0,
+  "stage_table": {
+    "after_exact_historical_proof": 8,
+    "after_unproven": 0,
+    "before_lut_blocked": 8,
+    "production_baseline_replays": 0,
+    "rows": [
+      {
+        "execution_slot": 448195166,
+        "failure": null,
+        "loaded_address_count": 13,
+        "lookup_table_count": 1,
+        "next_old_engine_rejection": "unsupported program HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ in a Kamino KLend replay; the supported contract admits KLend and compute-budget instructions only",
+        "on_chain_success": true,
+        "passed_previous_lut_gate": true,
+        "signature": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97",
+        "stages": [
+          {
+            "name": "historical_state_acquired",
+            "stage": 1,
+            "status": "passed"
+          },
+          {
+            "name": "execution_slot_visibility_valid",
+            "stage": 2,
+            "status": "passed"
+          },
+          {
+            "name": "addresses_resolved",
+            "stage": 3,
+            "status": "passed"
+          },
+          {
+            "name": "rpc_loaded_addresses_match",
+            "stage": 4,
+            "status": "passed"
+          },
+          {
+            "name": "full_key_space_reconstructed",
+            "stage": 5,
+            "status": "passed"
+          },
+          {
+            "name": "compiled_instruction_identity_match",
+            "stage": 6,
+            "status": "passed"
+          },
+          {
+            "name": "previous_lut_gate_passed",
+            "stage": 7,
+            "status": "passed"
+          },
+          {
+            "name": "next_old_engine_rejection",
+            "stage": 8,
+            "status": "passed"
+          }
+        ]
+      },
+      {
+        "execution_slot": 448195147,
+        "failure": null,
+        "loaded_address_count": 52,
+        "lookup_table_count": 5,
+        "next_old_engine_rejection": "Kamino replay supports one KLend action per transaction",
+        "on_chain_success": true,
+        "passed_previous_lut_gate": true,
+        "signature": "3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q",
+        "stages": [
+          {
+            "name": "historical_state_acquired",
+            "stage": 1,
+            "status": "passed"
+          },
+          {
+            "name": "execution_slot_visibility_valid",
+            "stage": 2,
+            "status": "passed"
+          },
+          {
+            "name": "addresses_resolved",
+            "stage": 3,
+            "status": "passed"
+          },
+          {
+            "name": "rpc_loaded_addresses_match",
+            "stage": 4,
+            "status": "passed"
+          },
+          {
+            "name": "full_key_space_reconstructed",
+            "stage": 5,
+            "status": "passed"
+          },
+          {
+            "name": "compiled_instruction_identity_match",
+            "stage": 6,
+            "status": "passed"
+          },
+          {
+            "name": "previous_lut_gate_passed",
+            "stage": 7,
+            "status": "passed"
+          },
+          {
+            "name": "next_old_engine_rejection",
+            "stage": 8,
+            "status": "passed"
+          }
+        ]
+      },
+      {
+        "execution_slot": 448195003,
+        "failure": null,
+        "loaded_address_count": 55,
+        "lookup_table_count": 5,
+        "next_old_engine_rejection": "replay selects successfully captured original transactions",
+        "on_chain_success": false,
+        "passed_previous_lut_gate": true,
+        "signature": "47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf",
+        "stages": [
+          {
+            "name": "historical_state_acquired",
+            "stage": 1,
+            "status": "passed"
+          },
+          {
+            "name": "execution_slot_visibility_valid",
+            "stage": 2,
+            "status": "passed"
+          },
+          {
+            "name": "addresses_resolved",
+            "stage": 3,
+            "status": "passed"
+          },
+          {
+            "name": "rpc_loaded_addresses_match",
+            "stage": 4,
+            "status": "passed"
+          },
+          {
+            "name": "full_key_space_reconstructed",
+            "stage": 5,
+            "status": "passed"
+          },
+          {
+            "name": "compiled_instruction_identity_match",
+            "stage": 6,
+            "status": "passed"
+          },
+          {
+            "name": "previous_lut_gate_passed",
+            "stage": 7,
+            "status": "passed"
+          },
+          {
+            "name": "next_old_engine_rejection",
+            "stage": 8,
+            "status": "passed"
+          }
+        ]
+      },
+      {
+        "execution_slot": 448194959,
+        "failure": null,
+        "loaded_address_count": 30,
+        "lookup_table_count": 1,
+        "next_old_engine_rejection": "Kamino replay supports one KLend action per transaction",
+        "on_chain_success": true,
+        "passed_previous_lut_gate": true,
+        "signature": "37XJKQbB9fRX1R76cKKGSENNNA2RSY1WvjkCx2Q7joN2irKfTTZ5Z6bHgH4rfgDPJvhXf3peTe4mwxisfpSEmimu",
+        "stages": [
+          {
+            "name": "historical_state_acquired",
+            "stage": 1,
+            "status": "passed"
+          },
+          {
+            "name": "execution_slot_visibility_valid",
+            "stage": 2,
+            "status": "passed"
+          },
+          {
+            "name": "addresses_resolved",
+            "stage": 3,
+            "status": "passed"
+          },
+          {
+            "name": "rpc_loaded_addresses_match",
+            "stage": 4,
+            "status": "passed"
+          },
+          {
+            "name": "full_key_space_reconstructed",
+            "stage": 5,
+            "status": "passed"
+          },
+          {
+            "name": "compiled_instruction_identity_match",
+            "stage": 6,
+            "status": "passed"
+          },
+          {
+            "name": "previous_lut_gate_passed",
+            "stage": 7,
+            "status": "passed"
+          },
+          {
+            "name": "next_old_engine_rejection",
+            "stage": 8,
+            "status": "passed"
+          }
+        ]
+      },
+      {
+        "execution_slot": 448194517,
+        "failure": null,
+        "loaded_address_count": 11,
+        "lookup_table_count": 1,
+        "next_old_engine_rejection": "unsupported program HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ in a Kamino KLend replay; the supported contract admits KLend and compute-budget instructions only",
+        "on_chain_success": true,
+        "passed_previous_lut_gate": true,
+        "signature": "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk",
+        "stages": [
+          {
+            "name": "historical_state_acquired",
+            "stage": 1,
+            "status": "passed"
+          },
+          {
+            "name": "execution_slot_visibility_valid",
+            "stage": 2,
+            "status": "passed"
+          },
+          {
+            "name": "addresses_resolved",
+            "stage": 3,
+            "status": "passed"
+          },
+          {
+            "name": "rpc_loaded_addresses_match",
+            "stage": 4,
+            "status": "passed"
+          },
+          {
+            "name": "full_key_space_reconstructed",
+            "stage": 5,
+            "status": "passed"
+          },
+          {
+            "name": "compiled_instruction_identity_match",
+            "stage": 6,
+            "status": "passed"
+          },
+          {
+            "name": "previous_lut_gate_passed",
+            "stage": 7,
+            "status": "passed"
+          },
+          {
+            "name": "next_old_engine_rejection",
+            "stage": 8,
+            "status": "passed"
+          }
+        ]
+      },
+      {
+        "execution_slot": 448194462,
+        "failure": null,
+        "loaded_address_count": 9,
+        "lookup_table_count": 1,
+        "next_old_engine_rejection": "unsupported program HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ in a Kamino KLend replay; the supported contract admits KLend and compute-budget instructions only",
+        "on_chain_success": true,
+        "passed_previous_lut_gate": true,
+        "signature": "5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V",
+        "stages": [
+          {
+            "name": "historical_state_acquired",
+            "stage": 1,
+            "status": "passed"
+          },
+          {
+            "name": "execution_slot_visibility_valid",
+            "stage": 2,
+            "status": "passed"
+          },
+          {
+            "name": "addresses_resolved",
+            "stage": 3,
+            "status": "passed"
+          },
+          {
+            "name": "rpc_loaded_addresses_match",
+            "stage": 4,
+            "status": "passed"
+          },
+          {
+            "name": "full_key_space_reconstructed",
+            "stage": 5,
+            "status": "passed"
+          },
+          {
+            "name": "compiled_instruction_identity_match",
+            "stage": 6,
+            "status": "passed"
+          },
+          {
+            "name": "previous_lut_gate_passed",
+            "stage": 7,
+            "status": "passed"
+          },
+          {
+            "name": "next_old_engine_rejection",
+            "stage": 8,
+            "status": "passed"
+          }
+        ]
+      },
+      {
+        "execution_slot": 448194435,
+        "failure": null,
+        "loaded_address_count": 14,
+        "lookup_table_count": 1,
+        "next_old_engine_rejection": "unsupported program HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ in a Kamino KLend replay; the supported contract admits KLend and compute-budget instructions only",
+        "on_chain_success": true,
+        "passed_previous_lut_gate": true,
+        "signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx",
+        "stages": [
+          {
+            "name": "historical_state_acquired",
+            "stage": 1,
+            "status": "passed"
+          },
+          {
+            "name": "execution_slot_visibility_valid",
+            "stage": 2,
+            "status": "passed"
+          },
+          {
+            "name": "addresses_resolved",
+            "stage": 3,
+            "status": "passed"
+          },
+          {
+            "name": "rpc_loaded_addresses_match",
+            "stage": 4,
+            "status": "passed"
+          },
+          {
+            "name": "full_key_space_reconstructed",
+            "stage": 5,
+            "status": "passed"
+          },
+          {
+            "name": "compiled_instruction_identity_match",
+            "stage": 6,
+            "status": "passed"
+          },
+          {
+            "name": "previous_lut_gate_passed",
+            "stage": 7,
+            "status": "passed"
+          },
+          {
+            "name": "next_old_engine_rejection",
+            "stage": 8,
+            "status": "passed"
+          }
+        ]
+      },
+      {
+        "execution_slot": 448194341,
+        "failure": null,
+        "loaded_address_count": 13,
+        "lookup_table_count": 1,
+        "next_old_engine_rejection": "unsupported program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL in a Kamino KLend replay; the supported contract admits KLend and compute-budget instructions only",
+        "on_chain_success": true,
+        "passed_previous_lut_gate": true,
+        "signature": "2dc94E8Mvh83c8MiecgRekd7Vj8YE6aexfVeCJK58K46LQcTRjpDomii6pYmwbdeYmdTM3bVbHw6rhFdtwRtSTnT",
+        "stages": [
+          {
+            "name": "historical_state_acquired",
+            "stage": 1,
+            "status": "passed"
+          },
+          {
+            "name": "execution_slot_visibility_valid",
+            "stage": 2,
+            "status": "passed"
+          },
+          {
+            "name": "addresses_resolved",
+            "stage": 3,
+            "status": "passed"
+          },
+          {
+            "name": "rpc_loaded_addresses_match",
+            "stage": 4,
+            "status": "passed"
+          },
+          {
+            "name": "full_key_space_reconstructed",
+            "stage": 5,
+            "status": "passed"
+          },
+          {
+            "name": "compiled_instruction_identity_match",
+            "stage": 6,
+            "status": "passed"
+          },
+          {
+            "name": "previous_lut_gate_passed",
+            "stage": 7,
+            "status": "passed"
+          },
+          {
+            "name": "next_old_engine_rejection",
+            "stage": 8,
+            "status": "passed"
+          }
+        ]
+      }
+    ],
+    "sample_fingerprint": "b97116541aeefc6723ef91a1d38c9be52792d47316b573ac08d49484fd97d0af"
+  },
+  "storage": {
+    "acquired_contexts": 16,
+    "advanced_past_lut_gate": 8,
+    "complete_evidence_directory_bytes": 2052941,
+    "complete_evidence_directory_files": 36,
+    "decision": "A. HISTORICAL LUT RECONSTRUCTION PROVEN",
+    "decision_qualification": "Strong A: all eight",
+    "decoded_proof_bytes": 1458996,
+    "distinct_historical_lut_states": 10,
+    "distinct_raw_response_states": 16,
+    "duplication_analysis": "six repeated table/context captures reuse ten identical table byte states; 28528 extra referenced account bytes; retained direct evidence is small enough for this experiment; no content-addressed deduplication implemented",
+    "envelope_bytes": 104660,
+    "exact_historical_proofs": 8,
+    "failure_distribution": {},
+    "historically_lut_proven": 8,
+    "next_blockers_measured": 8,
+    "no_protocol_accounts_acquired": true,
+    "optional_divergent_fixture_required": false,
+    "raw_account_bytes_distinct": 46896,
+    "raw_account_bytes_referenced": 75424,
+    "raw_account_duplication_bytes": 28528,
+    "raw_artifact_bytes": 136993,
+    "replay_record_overhead_measured": false,
+    "replay_record_schema_unchanged": true,
+    "sample_fingerprint": "b97116541aeefc6723ef91a1d38c9be52792d47316b573ac08d49484fd97d0af",
+    "table_slot_contexts": 16,
+    "target_transactions": 8,
+    "transaction_evidence_bytes": 1806442,
+    "unique_lut_accounts": 10,
+    "unproven_transactions": 0
+  },
+  "tests": {
+    "clippy": "passed -D warnings",
+    "failures": 0,
+    "git_diff_check": "passed",
+    "mutation_output_isolated": true,
+    "production_tests": [
+      "real_single_table_historical_proof",
+      "real_five_table_historical_proof",
+      "real_five_table_55_loaded_historical_proof",
+      "real_historical_bytes_cannot_be_replaced_by_rpc_metadata",
+      "real_wrong_historical_bytes_are_rejected"
+    ],
+    "python_acquisition": 24,
+    "real_byte_synthetic_bank_context_test": "real_table_bytes_in_explicit_synthetic_warmup_context",
+    "rust_suites": {
+      "historical": 4,
+      "historical_lut": 27,
+      "kamino": 10,
+      "library": 421,
+      "replay": 16,
+      "token2022": 12
+    },
+    "rustfmt": "passed",
+    "total_passed": 544,
+    "u3a_integrity": 30
+  },
+  "unproven": 0
+}

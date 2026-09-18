@@ -41,6 +41,7 @@ pub mod historical;
 pub mod impact;
 pub mod ingest;
 pub mod interpret;
+pub mod message;
 pub mod money;
 pub mod numfmt;
 pub mod protocol;

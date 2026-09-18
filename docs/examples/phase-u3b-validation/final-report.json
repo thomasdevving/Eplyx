@@ -1,0 +1,302 @@
+{
+  "acquisition_model": "provider-neutral existing RpcProvider/exact-slot getAccountInfo convention; separate raw collector; mandatory network and divergent-LUT independent-byte validation; no current-state fallback; one directory per provider attempt",
+  "acquisition_timing": {
+    "network_requests": 0,
+    "real_historical_acquisition_seconds": null,
+    "status": "not_attempted"
+  },
+  "commit_worktree_state": {
+    "changes": "uncommitted experimental U3B implementation/artifacts",
+    "frozen_sample_files_changed": false,
+    "head": "d20c764916aa8ceb84bb8fbb69d1c1c88406c23c",
+    "new_commit": null
+  },
+  "custom_alt_parsing_added": false,
+  "decision_qualification": "No real historical proof established",
+  "eight_targets": [
+    {
+      "capture_sha256": "e6c0d270fa2516e3ba3da1004c51918d263ca10f747734ee66a1cd86fa1ff56a",
+      "compiled_instruction_identity_result": "not_attempted",
+      "execution_slot": 448195166,
+      "failed_stage": 1,
+      "full_key_space_result": "not_attempted",
+      "historical_table_hashes": [],
+      "next_blocker": null,
+      "on_chain_success": true,
+      "passed_previous_lut_gate": false,
+      "proof_failure": "historical_account_archive_not_configured",
+      "rpc_loaded_address_match": "not_attempted",
+      "signature": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97",
+      "table_count": 1,
+      "table_pubkeys": [
+        "8ofreL6hKfEet1DnhHVGvCTnSdz4pg85PpbuCUHnEcKm"
+      ]
+    },
+    {
+      "capture_sha256": "9f33e8525af03a1c3b27ce50bc9c627770e062f47b410bc69ad52dbfc4381ec8",
+      "compiled_instruction_identity_result": "not_attempted",
+      "execution_slot": 448195147,
+      "failed_stage": 1,
+      "full_key_space_result": "not_attempted",
+      "historical_table_hashes": [],
+      "next_blocker": null,
+      "on_chain_success": true,
+      "passed_previous_lut_gate": false,
+      "proof_failure": "historical_account_archive_not_configured",
+      "rpc_loaded_address_match": "not_attempted",
+      "signature": "3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q",
+      "table_count": 5,
+      "table_pubkeys": [
+        "26XAkAHyMHzp9tUmh8m7x8A4YmB8vaknbc2bXijp8dKS",
+        "9rVP9Ly5RC1nix3WDm5QgkoWJbxV7Kteth1KHtYk5hT9",
+        "A3M7Bv5bePAJ6Pb6i8PGm2aj3P4WonaCXy7EUt6PMEn9",
+        "iBP3RJEdvxKz361DHadB9Mdw7qfreeLEVTNEZ1DA3X9",
+        "YXziZZksvEhVhqapwQmbEg8TeeNwav8cL5TjnxGGTpD"
+      ]
+    },
+    {
+      "capture_sha256": "436855ec3ae45ea8e8661dab7d493b0a61fd016e2a4971b7e0f7c4e39257bda8",
+      "compiled_instruction_identity_result": "not_attempted",
+      "execution_slot": 448195003,
+      "failed_stage": 1,
+      "full_key_space_result": "not_attempted",
+      "historical_table_hashes": [],
+      "next_blocker": null,
+      "on_chain_success": false,
+      "passed_previous_lut_gate": false,
+      "proof_failure": "historical_account_archive_not_configured",
+      "rpc_loaded_address_match": "not_attempted",
+      "signature": "47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf",
+      "table_count": 5,
+      "table_pubkeys": [
+        "26XAkAHyMHzp9tUmh8m7x8A4YmB8vaknbc2bXijp8dKS",
+        "A3M7Bv5bePAJ6Pb6i8PGm2aj3P4WonaCXy7EUt6PMEn9",
+        "GP57a1T8vJjeAnF2zfKT1bnZysNwVprLaw6Mjw2d1gPy",
+        "iBP3RJEdvxKz361DHadB9Mdw7qfreeLEVTNEZ1DA3X9",
+        "YXziZZksvEhVhqapwQmbEg8TeeNwav8cL5TjnxGGTpD"
+      ]
+    },
+    {
+      "capture_sha256": "510c77d857f8e23b2e86f1bde458ed02c69a273065bad30e3d228cb2f225cbc2",
+      "compiled_instruction_identity_result": "not_attempted",
+      "execution_slot": 448194959,
+      "failed_stage": 1,
+      "full_key_space_result": "not_attempted",
+      "historical_table_hashes": [],
+      "next_blocker": null,
+      "on_chain_success": true,
+      "passed_previous_lut_gate": false,
+      "proof_failure": "historical_account_archive_not_configured",
+      "rpc_loaded_address_match": "not_attempted",
+      "signature": "37XJKQbB9fRX1R76cKKGSENNNA2RSY1WvjkCx2Q7joN2irKfTTZ5Z6bHgH4rfgDPJvhXf3peTe4mwxisfpSEmimu",
+      "table_count": 1,
+      "table_pubkeys": [
+        "9vv7YoDouByqvZDXNkpTxUN7LLNA21pyCgvHYG1SyJ6v"
+      ]
+    },
+    {
+      "capture_sha256": "df4e89d2ca98b295e5985e8e8747ec941103ae7386e9afa50e40346831ff67f5",
+      "compiled_instruction_identity_result": "not_attempted",
+      "execution_slot": 448194517,
+      "failed_stage": 1,
+      "full_key_space_result": "not_attempted",
+      "historical_table_hashes": [],
+      "next_blocker": null,
+      "on_chain_success": true,
+      "passed_previous_lut_gate": false,
+      "proof_failure": "historical_account_archive_not_configured",
+      "rpc_loaded_address_match": "not_attempted",
+      "signature": "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk",
+      "table_count": 1,
+      "table_pubkeys": [
+        "FGMSBiyVE8TvZcdQnZETAAKw28tkQJ2ccZy6pyp95URb"
+      ]
+    },
+    {
+      "capture_sha256": "04b2b326125766e85498d21c00b81e49f7d918affc65456b2c248371c7f786b7",
+      "compiled_instruction_identity_result": "not_attempted",
+      "execution_slot": 448194462,
+      "failed_stage": 1,
+      "full_key_space_result": "not_attempted",
+      "historical_table_hashes": [],
+      "next_blocker": null,
+      "on_chain_success": true,
+      "passed_previous_lut_gate": false,
+      "proof_failure": "historical_account_archive_not_configured",
+      "rpc_loaded_address_match": "not_attempted",
+      "signature": "5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V",
+      "table_count": 1,
+      "table_pubkeys": [
+        "FGMSBiyVE8TvZcdQnZETAAKw28tkQJ2ccZy6pyp95URb"
+      ]
+    },
+    {
+      "capture_sha256": "b32f4181b93633abc7463bf5affe191a218fc8a6d4d3260d2d2642f6a3002ca2",
+      "compiled_instruction_identity_result": "not_attempted",
+      "execution_slot": 448194435,
+      "failed_stage": 1,
+      "full_key_space_result": "not_attempted",
+      "historical_table_hashes": [],
+      "next_blocker": null,
+      "on_chain_success": true,
+      "passed_previous_lut_gate": false,
+      "proof_failure": "historical_account_archive_not_configured",
+      "rpc_loaded_address_match": "not_attempted",
+      "signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx",
+      "table_count": 1,
+      "table_pubkeys": [
+        "GprZNyWk67655JhX6Rq9KoebQ6WkQYRhATWzkx2P2LNc"
+      ]
+    },
+    {
+      "capture_sha256": "e5f9f9fcaf408291c4affa034943411bb7b1810b78870188917fb44dc13550c8",
+      "compiled_instruction_identity_result": "not_attempted",
+      "execution_slot": 448194341,
+      "failed_stage": 1,
+      "full_key_space_result": "not_attempted",
+      "historical_table_hashes": [],
+      "next_blocker": null,
+      "on_chain_success": true,
+      "passed_previous_lut_gate": false,
+      "proof_failure": "historical_account_archive_not_configured",
+      "rpc_loaded_address_match": "not_attempted",
+      "signature": "2dc94E8Mvh83c8MiecgRekd7Vj8YE6aexfVeCJK58K46LQcTRjpDomii6pYmwbdeYmdTM3bVbHw6rhFdtwRtSTnT",
+      "table_count": 1,
+      "table_pubkeys": [
+        "GprZNyWk67655JhX6Rq9KoebQ6WkQYRhATWzkx2P2LNc"
+      ]
+    }
+  ],
+  "exact_failure_reason": "No SOLANA_ARCHIVE_RPC_URL configured and no independent historical LUT validation witness provided. All sixteen requests explicitly unavailable; zero network requests made.",
+  "exact_slot_runtime_visibility_rule": "finalized end-of-S historical table; official lookup at S; extension in S exposes only last_extended_slot_start_index prefix; prior deactivation requires historical execution-bank SlotHashes; same-slot deactivation remains usable; future metadata rejected",
+  "existing_control_equality": "all six stdout reports byte-identical to U2; Token-2022 12/12 and Kamino 10/10 before/after; U3A rebuild and 30 tests unchanged",
+  "final_decision": "B. PARTIAL LUT RECONSTRUCTION — SOME FROZEN TRANSACTIONS REMAIN UNPROVABLE",
+  "frozen_u3a_fingerprint_verified": "b97116541aeefc6723ef91a1d38c9be52792d47316b573ac08d49484fd97d0af",
+  "historical_table_hashes": [],
+  "historical_table_slot_contexts": 16,
+  "mutations": {
+    "executed": 12,
+    "killed_by_named_assertions": 12,
+    "report": "mutations.json",
+    "sources_restored": true
+  },
+  "next_blocker_distribution": "unmeasured; do not infer companions/action shape/state failures",
+  "official_types_reused": [
+    "AddressLookupTable/LookupTableMeta/lookup/get_active_addresses_len (ALT interface 3.1.0)",
+    "SlotHashes 3.1.0 with official wincode codec",
+    "v0::Message/LoadedAddresses/LoadedMessage and v0 sanitizer (solana-message 4.4.1)",
+    "VersionedMessage::V0; LiteSVM 0.16.0 native support studied"
+  ],
+  "offline_rebuild": {
+    "canonical_outputs_identical": true,
+    "normal": "passed",
+    "relocated_and_reversed_filesystem": "passed",
+    "result_type": "deterministic failure evidence; no real historical table proof",
+    "reversed_inputs_four_workers": "passed"
+  },
+  "offline_timing": {
+    "normal": {
+      "frozen_and_capture_integrity_seconds": 0.09347987498040311,
+      "includes_frozen_integrity_checks": true,
+      "network_transport_called": false,
+      "offline_message_derivation_seconds": 0.224956916004885,
+      "offline_rebuild_seconds": 0.32048887500423007,
+      "real_historical_decode_timing": "unavailable",
+      "real_historical_proofs_derived": 0,
+      "reverse": false,
+      "workers": 1
+    },
+    "real_successful_historical_reconstruction_seconds": null,
+    "reverse_four_workers": {
+      "frozen_and_capture_integrity_seconds": 0.10339070798363537,
+      "includes_frozen_integrity_checks": true,
+      "network_transport_called": false,
+      "offline_message_derivation_seconds": 0.23569537498406135,
+      "offline_rebuild_seconds": 0.3469205419823993,
+      "real_historical_decode_timing": "unavailable",
+      "real_historical_proofs_derived": 0,
+      "reverse": true,
+      "workers": 4
+    }
+  },
+  "phase_production_acceptance_complete": false,
+  "production_compiled_instruction_identity_matches": 0,
+  "production_full_key_space_matches": 0,
+  "production_rpc_matches": 0,
+  "recommendation": "Resume U3B historical archive validation/acquisition for these exact 16 contexts. Do not start U3C or adapter #4 until production message proof and next blockers are actually measured.",
+  "rpc_v0_json_field_parsing_added": true,
+  "sampling_policy_sha256": "3a95c98305aa69e2b7f0502c6e9472f47aea863c3fdf32c12e3644a06a0180c3",
+  "secret_scan": "passed",
+  "storage": {
+    "acquired_contexts": 0,
+    "decision": "B. PARTIAL LUT RECONSTRUCTION — SOME FROZEN TRANSACTIONS REMAIN UNPROVABLE",
+    "decision_qualification": "No real historical proof established",
+    "decoded_proof_bytes": 0,
+    "distinct_historical_lut_states": 0,
+    "distinct_raw_response_states": 0,
+    "duplication_materiality": "not_measurable_without_historical_states; no content-addressed deduplication implemented",
+    "exact_historical_proofs": 0,
+    "experimental_directory_bytes": 109520,
+    "experimental_directory_files": 14,
+    "next_blockers_measured": 0,
+    "no_protocol_accounts_acquired": true,
+    "raw_account_bytes_distinct": 0,
+    "raw_account_bytes_referenced": 0,
+    "raw_account_duplication_bytes": 0,
+    "raw_artifact_bytes": 0,
+    "replay_record_schema_unchanged": true,
+    "replay_record_storage_overhead_measured": false,
+    "sample_fingerprint": "b97116541aeefc6723ef91a1d38c9be52792d47316b573ac08d49484fd97d0af",
+    "table_slot_contexts": 16,
+    "target_transactions": 8,
+    "transaction_evidence_bytes": 23908,
+    "unique_lut_accounts": 10,
+    "unproven_transactions": 8
+  },
+  "tests": {
+    "clippy": "passed with -D warnings for library, LUT tests and all four audit/proof examples",
+    "fresh_normal_tests_after_shared_build_cache_cleanup": true,
+    "mutation_build_directory_isolated": true,
+    "new_python_acquisition_tests": {
+      "failed": 0,
+      "passed": 17
+    },
+    "production_historical_table_to_rpc_test": "blocked: no archive; no real evidence exists",
+    "rust_suites": {
+      "historical": {
+        "failed": 0,
+        "passed": 4
+      },
+      "historical_lut": {
+        "failed": 0,
+        "passed": 21
+      },
+      "kamino": {
+        "failed": 0,
+        "passed": 10
+      },
+      "library": {
+        "failed": 0,
+        "passed": 421
+      },
+      "replay": {
+        "failed": 0,
+        "passed": 16
+      },
+      "token2022": {
+        "failed": 0,
+        "passed": 12
+      }
+    },
+    "rustfmt": "passed",
+    "synthetic_byte_fixture_sha256": "d49fe57e91baf1d5ce831b8b9e35cf2515de04903174ba4249abdd99906a2e59",
+    "total_passed": 531,
+    "u3a_integrity_tests": {
+      "failed": 0,
+      "passed": 30
+    }
+  },
+  "transactions_passing_old_lut_blocker": 0,
+  "transactions_with_failed_or_unavailable_proof": 8,
+  "unique_lut_accounts": 10
+}

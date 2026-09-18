@@ -1,0 +1,11 @@
+{
+  "frozen_and_capture_integrity_seconds": 0.17306945801828988,
+  "includes_frozen_integrity_checks": true,
+  "network_transport_called": false,
+  "offline_message_derivation_seconds": 0.4856669169967063,
+  "offline_rebuild_seconds": 0.6854212500038557,
+  "real_historical_decode_timing": "included_in_message_derivation",
+  "real_historical_proofs_derived": 8,
+  "reverse": false,
+  "workers": 1
+}

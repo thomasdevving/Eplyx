@@ -1,0 +1,16 @@
+{
+  "baseline_rebuild": "passed",
+  "control_commit": "d20c764",
+  "engineering_model": "../../phase-u3b-historical-lut-reconstruction.md",
+  "frozen_fingerprint": "b97116541aeefc6723ef91a1d38c9be52792d47316b573ac08d49484fd97d0af",
+  "kamino": {
+    "failed": 0,
+    "passed": 10
+  },
+  "product_controls": "before/controls.json",
+  "recorded_before_replay_code_changes": true,
+  "token2022": {
+    "failed": 0,
+    "passed": 12
+  }
+}

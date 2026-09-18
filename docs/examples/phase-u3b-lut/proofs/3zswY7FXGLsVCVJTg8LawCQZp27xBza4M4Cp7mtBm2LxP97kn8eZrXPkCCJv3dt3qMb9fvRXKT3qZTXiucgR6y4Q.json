@@ -1,0 +1,176 @@
+{
+  "capture_sha256": "9f33e8525af03a1c3b27ce50bc9c627770e062f47b410bc69ad52dbfc4381ec8",
+  "execution_slot": 448195147,
+  "failure": {
+    "acquisition_failures": [
+      {
+        "reason": "historical_account_archive_not_configured",
+        "table_pubkey": "26XAkAHyMHzp9tUmh8m7x8A4YmB8vaknbc2bXijp8dKS"
+      },
+      {
+        "reason": "historical_account_archive_not_configured",
+        "table_pubkey": "9rVP9Ly5RC1nix3WDm5QgkoWJbxV7Kteth1KHtYk5hT9"
+      },
+      {
+        "reason": "historical_account_archive_not_configured",
+        "table_pubkey": "A3M7Bv5bePAJ6Pb6i8PGm2aj3P4WonaCXy7EUt6PMEn9"
+      },
+      {
+        "reason": "historical_account_archive_not_configured",
+        "table_pubkey": "iBP3RJEdvxKz361DHadB9Mdw7qfreeLEVTNEZ1DA3X9"
+      },
+      {
+        "reason": "historical_account_archive_not_configured",
+        "table_pubkey": "YXziZZksvEhVhqapwQmbEg8TeeNwav8cL5TjnxGGTpD"
+      }
+    ],
+    "detail": "missing or extra historical LUT evidence",
+    "stage": 1
+  },
+  "kind": "experimental_transaction_lut_evidence",
+  "next_old_engine_rejection": null,
+  "passed_previous_lut_gate": false,
+  "production_replay_eligible": false,
+  "proof": null,
+  "sample_fingerprint": "b97116541aeefc6723ef91a1d38c9be52792d47316b573ac08d49484fd97d0af",
+  "signature": "3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q",
+  "stages": [
+    {
+      "name": "historical_state_acquired",
+      "stage": 1,
+      "status": "failed"
+    },
+    {
+      "name": "execution_slot_visibility_valid",
+      "stage": 2,
+      "status": "not_attempted"
+    },
+    {
+      "name": "addresses_resolved",
+      "stage": 3,
+      "status": "not_attempted"
+    },
+    {
+      "name": "rpc_loaded_addresses_match",
+      "stage": 4,
+      "status": "not_attempted"
+    },
+    {
+      "name": "full_key_space_reconstructed",
+      "stage": 5,
+      "status": "not_attempted"
+    },
+    {
+      "name": "compiled_instruction_identity_match",
+      "stage": 6,
+      "status": "not_attempted"
+    },
+    {
+      "name": "previous_lut_gate_passed",
+      "stage": 7,
+      "status": "not_attempted"
+    },
+    {
+      "name": "next_old_engine_rejection",
+      "stage": 8,
+      "status": "not_attempted"
+    }
+  ],
+  "table_membership": [
+    {
+      "execution_slot": 448195147,
+      "failure_reason": "historical_account_archive_not_configured",
+      "method": "getAccountInfo",
+      "params": [
+        "26XAkAHyMHzp9tUmh8m7x8A4YmB8vaknbc2bXijp8dKS",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195147
+        }
+      ],
+      "requested_slot": 448195147,
+      "response_file": null,
+      "response_sha256": null,
+      "returned_context_slot": null,
+      "status": "failure",
+      "table_pubkey": "26XAkAHyMHzp9tUmh8m7x8A4YmB8vaknbc2bXijp8dKS"
+    },
+    {
+      "execution_slot": 448195147,
+      "failure_reason": "historical_account_archive_not_configured",
+      "method": "getAccountInfo",
+      "params": [
+        "9rVP9Ly5RC1nix3WDm5QgkoWJbxV7Kteth1KHtYk5hT9",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195147
+        }
+      ],
+      "requested_slot": 448195147,
+      "response_file": null,
+      "response_sha256": null,
+      "returned_context_slot": null,
+      "status": "failure",
+      "table_pubkey": "9rVP9Ly5RC1nix3WDm5QgkoWJbxV7Kteth1KHtYk5hT9"
+    },
+    {
+      "execution_slot": 448195147,
+      "failure_reason": "historical_account_archive_not_configured",
+      "method": "getAccountInfo",
+      "params": [
+        "A3M7Bv5bePAJ6Pb6i8PGm2aj3P4WonaCXy7EUt6PMEn9",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195147
+        }
+      ],
+      "requested_slot": 448195147,
+      "response_file": null,
+      "response_sha256": null,
+      "returned_context_slot": null,
+      "status": "failure",
+      "table_pubkey": "A3M7Bv5bePAJ6Pb6i8PGm2aj3P4WonaCXy7EUt6PMEn9"
+    },
+    {
+      "execution_slot": 448195147,
+      "failure_reason": "historical_account_archive_not_configured",
+      "method": "getAccountInfo",
+      "params": [
+        "iBP3RJEdvxKz361DHadB9Mdw7qfreeLEVTNEZ1DA3X9",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195147
+        }
+      ],
+      "requested_slot": 448195147,
+      "response_file": null,
+      "response_sha256": null,
+      "returned_context_slot": null,
+      "status": "failure",
+      "table_pubkey": "iBP3RJEdvxKz361DHadB9Mdw7qfreeLEVTNEZ1DA3X9"
+    },
+    {
+      "execution_slot": 448195147,
+      "failure_reason": "historical_account_archive_not_configured",
+      "method": "getAccountInfo",
+      "params": [
+        "YXziZZksvEhVhqapwQmbEg8TeeNwav8cL5TjnxGGTpD",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195147
+        }
+      ],
+      "requested_slot": 448195147,
+      "response_file": null,
+      "response_sha256": null,
+      "returned_context_slot": null,
+      "status": "failure",
+      "table_pubkey": "YXziZZksvEhVhqapwQmbEg8TeeNwav8cL5TjnxGGTpD"
+    }
+  ]
+}

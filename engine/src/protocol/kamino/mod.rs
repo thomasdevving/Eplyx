@@ -558,8 +558,7 @@ impl ProtocolAdapter for KaminoKlendAdapter {
     /// obligation is a different computation from the one that ran. Admitting a
     /// record without them would put an unproved interpretation under an
     /// exactness claim.
-    fn accept(&self, transaction: &HistoricalTransaction) -> Result<()> {
-        super::require_executable_message(transaction)?;
+    fn accept_instruction_contract(&self, transaction: &HistoricalTransaction) -> Result<()> {
         anyhow::ensure!(
             transaction.success && transaction.error.is_none(),
             "replay selects successfully captured original transactions"

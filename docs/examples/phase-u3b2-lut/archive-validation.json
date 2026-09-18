@@ -1,0 +1,15 @@
+{
+  "genesis_hash": "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d",
+  "kind": "existing_historical_archive_contract",
+  "lut_specific_cross_check_required": true,
+  "optional_divergent_fixture": "not_supplied",
+  "provider": "https://solana-mainnet.g.alchemy.com",
+  "qualification_artifacts": {
+    "qualification/provider.rs": "f0497b5ba426023e2f227ad2614b9ff81b4eea9247dfdaf77082ec013d18a665",
+    "qualification/record.json": "453b38ac6e17a78f59b60b74edd120158b9da459ad64ff1f84f3cf4051ce71ad",
+    "qualification/reference.json": "5a43bd216bd144c3906b65543152fd17bbb4715ba773f7c18f60f25c56188310"
+  },
+  "qualification_reused": true,
+  "trust_boundary": "operator selects the previously qualified archive using environment configuration",
+  "visibility": "finalized_end_of_execution_slot"
+}

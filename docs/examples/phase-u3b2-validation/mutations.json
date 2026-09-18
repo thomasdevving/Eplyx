@@ -1,0 +1,209 @@
+{
+  "all_isolated_sources_restored": true,
+  "killed_by_named_assertions": 20,
+  "mutations_executed": 20,
+  "production_source_sha256_after": "13ea3738a7e91b35385724eec40057f6b45c2a8909db2fe7c08bb891bde8366f",
+  "production_source_sha256_before": "13ea3738a7e91b35385724eec40057f6b45c2a8909db2fe7c08bb891bde8366f",
+  "results": [
+    {
+      "control_passed": true,
+      "description": "loaded writable/readonly vectors swapped",
+      "evidence_boundary": "original synthetic controls",
+      "mutated_source_sha256": "0925348c8d71c3d49d0ff36a0e96707946ff92f910fb45a997433e804d263bbc",
+      "mutation": 1,
+      "named_test": "independent_resolution_preserves_writable_readonly_order",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "loaded addresses sorted",
+      "evidence_boundary": "original synthetic controls",
+      "mutated_source_sha256": "6582a4bb9ac725168dfa00adecb91bbe86738439366d4ca4b4254a61214b4ff3",
+      "mutation": 2,
+      "named_test": "independent_resolution_preserves_writable_readonly_order",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "second lookup table ignored",
+      "evidence_boundary": "original synthetic controls",
+      "mutated_source_sha256": "dc83a25dda836aa8b0197cd54b038864b4adde26cb03f201198f907f426cfe9c",
+      "mutation": 3,
+      "named_test": "independent_resolution_preserves_writable_readonly_order",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "current state queried instead of execution-slot state",
+      "evidence_boundary": "original synthetic controls",
+      "mutated_source_sha256": "48a264ffe87e0550f0847821982e5105e3a3d08e0d2f7c5a924fd2c62b628cab",
+      "mutation": 4,
+      "named_test": "acquisition_never_substitutes_current_state_for_historical",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "wrong table owner accepted",
+      "evidence_boundary": "original synthetic controls",
+      "mutated_source_sha256": "949383cf63d9ef7b403358a94232a524bded3a3a7c040d5d85b1e97f71896917",
+      "mutation": 5,
+      "named_test": "wrong_owner_is_rejected_before_address_comparison",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "same-slot extension warmup ignored",
+      "evidence_boundary": "original synthetic controls",
+      "mutated_source_sha256": "f23b2f583590c7bcdf39567514eae8cdb8111c4abc6ff92ebb58b65a6e4bc5eb",
+      "mutation": 6,
+      "named_test": "same_slot_extension_only_exposes_old_prefix",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "out-of-range writable index clamped",
+      "evidence_boundary": "original synthetic controls",
+      "mutated_source_sha256": "d80bd6908059b2622b4b4084723b3878b4d869fdaa287d6fdfd4e9196c1bde63",
+      "mutation": 7,
+      "named_test": "writable_and_readonly_out_of_range_indexes_reject",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "RPC loaded addresses trusted without historical proof",
+      "evidence_boundary": "original synthetic controls",
+      "mutated_source_sha256": "5083f9eea95767fd0b0b8fbf9252be838522e1930a446d07262c2c4dea9b2ec1",
+      "mutation": 8,
+      "named_test": "rpc_loaded_metadata_is_never_a_table_proof",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "loaded writable key promoted to signer",
+      "evidence_boundary": "original synthetic controls",
+      "mutated_source_sha256": "5162392c6d4b728e15b23ee97409ae33e90073c2d1c547c4ae655e1bd1351f5d",
+      "mutation": 9,
+      "named_test": "independent_resolution_preserves_writable_readonly_order",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "execution slot off by one in evidence validation",
+      "evidence_boundary": "original synthetic controls",
+      "mutated_source_sha256": "78c5d38e98d3026510c8216c3c0fbaf4f072aa05967b8b8913e41f574986c7cd",
+      "mutation": 10,
+      "named_test": "independent_resolution_preserves_writable_readonly_order",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "table pubkey removed from evidence identity",
+      "evidence_boundary": "original synthetic controls",
+      "mutated_source_sha256": "08e1ef78679b332470935f545ff799665bd3b84ff2d601cd0470268a1992b33d",
+      "mutation": 11,
+      "named_test": "table_identity_binds_pubkey_bytes_slot_and_genesis",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "compiled instruction account indexes resolved against static keys only",
+      "evidence_boundary": "original synthetic controls",
+      "mutated_source_sha256": "4c8b0f8df0d7897ce38358f2d97463554892a6039b1440aeb68d3833b0deb1d5",
+      "mutation": 12,
+      "named_test": "independent_resolution_preserves_writable_readonly_order",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "production evidence: loaded writable/readonly vectors swapped",
+      "evidence_boundary": "acquired frozen production evidence",
+      "mutated_source_sha256": "0925348c8d71c3d49d0ff36a0e96707946ff92f910fb45a997433e804d263bbc",
+      "mutation": 13,
+      "named_test": "real_five_table_55_loaded_historical_proof",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "production evidence: loaded addresses sorted",
+      "evidence_boundary": "acquired frozen production evidence",
+      "mutated_source_sha256": "6582a4bb9ac725168dfa00adecb91bbe86738439366d4ca4b4254a61214b4ff3",
+      "mutation": 14,
+      "named_test": "real_five_table_55_loaded_historical_proof",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "production evidence: second lookup table ignored",
+      "evidence_boundary": "acquired frozen production evidence",
+      "mutated_source_sha256": "dc83a25dda836aa8b0197cd54b038864b4adde26cb03f201198f907f426cfe9c",
+      "mutation": 15,
+      "named_test": "real_five_table_historical_proof",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "production evidence: same-slot extension warmup ignored",
+      "evidence_boundary": "real table bytes with explicitly synthetic visibility context",
+      "mutated_source_sha256": "f23b2f583590c7bcdf39567514eae8cdb8111c4abc6ff92ebb58b65a6e4bc5eb",
+      "mutation": 16,
+      "named_test": "real_table_bytes_in_explicit_synthetic_warmup_context",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "production evidence: RPC loaded addresses trusted without historical proof",
+      "evidence_boundary": "acquired frozen production evidence",
+      "mutated_source_sha256": "5083f9eea95767fd0b0b8fbf9252be838522e1930a446d07262c2c4dea9b2ec1",
+      "mutation": 17,
+      "named_test": "real_historical_bytes_cannot_be_replaced_by_rpc_metadata",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "production evidence: execution slot off by one in evidence validation",
+      "evidence_boundary": "acquired frozen production evidence",
+      "mutated_source_sha256": "78c5d38e98d3026510c8216c3c0fbaf4f072aa05967b8b8913e41f574986c7cd",
+      "mutation": 18,
+      "named_test": "real_single_table_historical_proof",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "production evidence: compiled instruction account indexes resolved against static keys only",
+      "evidence_boundary": "acquired frozen production evidence",
+      "mutated_source_sha256": "4c8b0f8df0d7897ce38358f2d97463554892a6039b1440aeb68d3833b0deb1d5",
+      "mutation": 19,
+      "named_test": "real_five_table_55_loaded_historical_proof",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "wrong historical bytes bypass RPC equality",
+      "evidence_boundary": "acquired frozen production evidence",
+      "mutated_source_sha256": "853ace8f06322445cfaa1e0ac185c8f5c963afab332bb14535a6fcaa50d5f1a5",
+      "mutation": 20,
+      "named_test": "real_wrong_historical_bytes_are_rejected",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "acquired_contexts": 0,
+  "decision": "B. PARTIAL LUT RECONSTRUCTION — SOME FROZEN TRANSACTIONS REMAIN UNPROVABLE",
+  "decision_qualification": "No real historical proof established",
+  "decoded_proof_bytes": 0,
+  "distinct_historical_lut_states": 0,
+  "distinct_raw_response_states": 0,
+  "exact_historical_proofs": 0,
+  "next_blockers_measured": 0,
+  "no_protocol_accounts_acquired": true,
+  "raw_account_bytes_distinct": 0,
+  "raw_account_bytes_referenced": 0,
+  "raw_account_duplication_bytes": 0,
+  "raw_artifact_bytes": 0,
+  "replay_record_schema_unchanged": true,
+  "sample_fingerprint": "b97116541aeefc6723ef91a1d38c9be52792d47316b573ac08d49484fd97d0af",
+  "table_slot_contexts": 16,
+  "target_transactions": 8,
+  "transaction_evidence_bytes": 23908,
+  "unique_lut_accounts": 10,
+  "unproven_transactions": 8
+}

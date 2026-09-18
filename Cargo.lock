@@ -1193,6 +1193,7 @@ dependencies = [
  "sha2 0.10.9",
  "solana-account",
  "solana-address 2.6.1",
+ "solana-address-lookup-table-interface",
  "solana-clock",
  "solana-hash",
  "solana-instruction",
@@ -1201,6 +1202,7 @@ dependencies = [
  "solana-message",
  "solana-rent",
  "solana-signer",
+ "solana-slot-hashes",
  "solana-system-interface",
  "solana-transaction",
  "solana-transaction-error",
@@ -2638,6 +2640,7 @@ dependencies = [
  "solana-pubkey 4.2.1",
  "solana-sdk-ids",
  "solana-slot-hashes",
+ "wincode",
 ]
 
 [[package]]
@@ -3144,6 +3147,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7e29e655f222a3a64145fedceacdca3e696ba7aded1dbd5391aa09d5fbfba53c"
 dependencies = [
  "blake3",
+ "serde",
+ "serde_derive",
  "solana-address 2.6.1",
  "solana-hash",
  "solana-instruction",
