@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "engine_commit": "8855edb",
+  "capture_status": "incomplete_original_u2_sample",
+  "original_census_sha256": "a179c254b8ada5888d76a8544d9bf9e2eed562f713aec0505442322834f49ba5",
+  "observed_from_u2_census": {
+    "deposit": 11,
+    "borrow": 7
+  },
+  "recovered_supported_transaction_captures": {
+    "deposit": 2,
+    "borrow": 0
+  },
+  "missing_supported_transaction_identities": {
+    "deposit": 9,
+    "borrow": 7
+  },
+  "original_examined": 200,
+  "classified": 199,
+  "warning": "Do not substitute the earlier 100-signature snapshot or a new scan for the missing original U2 sample. This recovery is not an immutable complete BEFORE state.",
+  "artifacts": [
+    {
+      "file": "census.json",
+      "bytes": 11968,
+      "sha256": "a179c254b8ada5888d76a8544d9bf9e2eed562f713aec0505442322834f49ba5"
+    },
+    {
+      "file": "census-source.py",
+      "bytes": 4995,
+      "sha256": "35719945da5cf9ffd37a6dbaafb1cef647d9844b7af8f4a761805c5aef7475c0"
+    },
+    {
+      "file": "tx-dep1.json",
+      "bytes": 9529,
+      "sha256": "cb46e938a131749745a886af2b84b4ac7c22cd55a48653ddab17196b9a7e816c"
+    },
+    {
+      "file": "tx-dep2.json",
+      "bytes": 9927,
+      "sha256": "60b3c09ee616fea7fc7e23ef1bc4c70d132b78968e7d93eb0433d75e9685cf95"
+    },
+    {
+      "file": "rejections.json",
+      "bytes": 8476,
+      "sha256": "ac922513b5c115eb75e65ed2622ec4e297a6e5eb2029289c0a01799f5f63474c",
+      "kind": "derived_preflight_evidence"
+    },
+    {
+      "file": "lifecycle-diagnosis.json",
+      "bytes": 3025,
+      "sha256": "05b995895df2c4b59a0f2dbadd83fd08e6bf207ec72fb4eb0179ea1e8ad7c0d5",
+      "kind": "derived_preflight_evidence"
+    },
+    {
+      "file": "controls.json",
+      "bytes": 1198,
+      "sha256": "2a565174c52784890f98fbed7628b5271a3982ef1e9cbbda7dd9590c903c8d9a",
+      "kind": "derived_preflight_evidence"
+    }
+  ]
+}

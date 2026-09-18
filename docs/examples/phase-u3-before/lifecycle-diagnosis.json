@@ -1,0 +1,66 @@
+[
+  {
+    "signature": "21QjNsJU9WDnbHaJSbx5ZAvfwctCgFGuZkob3ZhZxT2oWhQnSKCk56TTzuNomH9Na7mTn55g1zUkJAw3ZdrY9RJ2",
+    "slot": 448170827,
+    "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "mint": "So11111111111111111111111111111111111111112",
+    "closed_account": "BshUsSancK4CKL7yt9Nmtgy1saPQekwNthZ8HmCo7jR9",
+    "close_outer_index": 8,
+    "close_destination": "Gruh6YKhDtH3yreu2G725ySoBfhNH6DBAtAaSDCt5aBr",
+    "close_authority_meta": "Gruh6YKhDtH3yreu2G725ySoBfhNH6DBAtAaSDCt5aBr",
+    "pre_balance": "1488440",
+    "post_balance": "0",
+    "validator_pre_token_balance": {
+      "accountIndex": 5,
+      "mint": "So11111111111111111111111111111111111111112",
+      "owner": "Gruh6YKhDtH3yreu2G725ySoBfhNH6DBAtAaSDCt5aBr",
+      "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "uiTokenAmount": {
+        "amount": "0",
+        "decimals": 9,
+        "uiAmount": null,
+        "uiAmountString": "0"
+      }
+    },
+    "create_account_invocations": [],
+    "ata_result": "existing_account_idempotent_noop",
+    "top_level_funding_lamports": "1690100",
+    "deposited_lamports_from_transfer_checked": "201660",
+    "close_refund_inferred_lamports": "2976880",
+    "refunded_native_amount_inferred_lamports": "1488440",
+    "payer_lamport_change": "1267780",
+    "fee": "19000",
+    "historical_account_bytes_acquired": false,
+    "inference_note": "Refund inferred from compiled instruction amounts, invocation graph and validator balance conservation. No intermediate account bytes or native reserve field were captured; those remain unproved."
+  },
+  {
+    "signature": "2EpuubYByzWwzkmQ8J32PEbQ2VMxy5pW8Xk7Nvp3BPhgM8RL8nWquJXDpVi9SNjMHRQRGsD3ZRm5k7aNaVtUyg47",
+    "slot": 448170087,
+    "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "mint": "So11111111111111111111111111111111111111112",
+    "closed_account": "Bbr3Y7Wcy4xs5RqrGw2ZWkPQqjLZqwmNxQdwAEjt7Cdc",
+    "close_outer_index": 9,
+    "close_destination": "3boJzRQsSSiP11GKrk4QiDW21uTXmT3S2h5eHXsNvjgj",
+    "close_authority_meta": "3boJzRQsSSiP11GKrk4QiDW21uTXmT3S2h5eHXsNvjgj",
+    "pre_balance": "0",
+    "post_balance": "0",
+    "validator_pre_token_balance": null,
+    "create_account_invocations": [
+      {
+        "outer_index": 2,
+        "lamports": 1488440,
+        "data_len": 165,
+        "owner_bytes_hex": "06ddf6e1d765a193d9cbe146ceeb79ac1cb485ed5f5b37913a8cf5857eff00a9"
+      }
+    ],
+    "ata_result": "created_then_closed",
+    "top_level_funding_lamports": "1001488440",
+    "deposited_lamports_from_transfer_checked": "1000000000",
+    "close_refund_inferred_lamports": "2976880",
+    "refunded_native_amount_inferred_lamports": "1488440",
+    "payer_lamport_change": "-1000025000",
+    "fee": "25000",
+    "historical_account_bytes_acquired": false,
+    "inference_note": "Refund inferred from compiled instruction amounts, invocation graph and validator balance conservation. No intermediate account bytes or native reserve field were captured; those remain unproved."
+  }
+]

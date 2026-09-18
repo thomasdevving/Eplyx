@@ -1,0 +1,40 @@
+{
+  "anchor_rule": "Reuse fixed finalized anchor 448195486 and the exact immutable v1 source RPC listing, captured under policy 03bf8d0fbed56b8d256d8fbf11e2b0d9f9c715eefc58182db71d1201252b327f. Inclusive slot window [448185486,448195486]. No new signature window or membership substitution.",
+  "capture_revision": "v1 did not retain non-JSON failure bodies and is not frozen; v2 re-fetches the identical predetermined membership, serially, with raw failure-body preservation. No replay implementation changes.",
+  "classification_rule": "One row per successful RPC fetch, including on-chain failure; preserve original message/meta. Recognize the four U2 action discriminators diagnostically, including malformed shapes. Audit unchanged normalize, Kamino accept, and replay_eligibility(state=None). Success-only observed action aggregates and all-status recognized instruction counts are distinct. No account acquisition or execution.",
+  "classification_schema": 1,
+  "commitment": "finalized",
+  "control_commit": "8855edb",
+  "expected_genesis_hash": "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d",
+  "fetch_rule": {
+    "max_attempts": 3,
+    "retry_delay_seconds": 3,
+    "retry_on": "transport failure, invalid JSON, JSON-RPC error, or null result; persist every received body, including non-JSON failures",
+    "timeout_seconds": 15,
+    "workers": 1
+  },
+  "finalization_rule": "No unresolved selected fetches or missing classifications; checkpoint complete=false is never a final artifact.",
+  "frozen_source_hashes": {
+    "rpc/anchor.json": "fd6a9e5937bd67c88dad31add4a7c20c07334d4f91399cc0c6b6226e1240f69a",
+    "rpc/genesis.json": "072c547ad3321ad6379bf249c218bcf112eaa3bd0138f07ace4077db1785a37d",
+    "rpc/source.json": "70d1fb93d69513bef928ab5f34489be4b569f4475477d93ed92cbe8f3776f772"
+  },
+  "get_transaction_options": {
+    "commitment": "finalized",
+    "encoding": "json",
+    "maxSupportedTransactionVersion": 0
+  },
+  "network_scope": [
+    "getGenesisHash",
+    "getSlot",
+    "getSignaturesForAddress",
+    "getTransaction"
+  ],
+  "ordering_rule": "source_index defines original RPC order; input enumeration and filesystem order are irrelevant. Canonical outputs sorted by source_index and instruction index.",
+  "program_id": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+  "provider": "https://solana-mainnet.g.alchemy.com",
+  "sample_version": 2,
+  "selection_rule": "Preserve all entries from one getSignaturesForAddress(limit=1000, commitment=finalized) in RPC order with source_index. Select first 200 entries whose slot is in the window, including failed on-chain transactions. Require 200 eligible entries; never replace a failed fetch.",
+  "signature_limit": 1000,
+  "transaction_fetch_limit": 200
+}

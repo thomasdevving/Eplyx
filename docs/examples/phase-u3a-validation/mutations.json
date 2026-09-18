@@ -1,0 +1,89 @@
+{
+  "all_isolated_sources_restored": true,
+  "killed_by_named_assertions": 10,
+  "mutations_executed": 10,
+  "production_source_sha256_after": "4ba9f8781a6217b51665e049f799a62825c247fc417481e9d9981c30153c08f9",
+  "production_source_sha256_before": "4ba9f8781a6217b51665e049f799a62825c247fc417481e9d9981c30153c08f9",
+  "results": [
+    {
+      "description": "199 classifications accepted for 200 successful fetches",
+      "mutated_source_sha256": "749bbb1c64026361796605da256410c4f32552e9f73716d821104e697673bf9e",
+      "mutation": 1,
+      "named_test": "test_199_of_200_classifications_rejected",
+      "result": "killed_by_assertion",
+      "test_exit": 1
+    },
+    {
+      "description": "LUT-supported identity omitted from detail",
+      "mutated_source_sha256": "d98eaad8f4d214561274c97f68bf7b76e5e2fadc4298e60338231a83696a9846",
+      "mutation": 2,
+      "named_test": "test_lut_supported_identity_preserved",
+      "result": "killed_by_assertion",
+      "test_exit": 1
+    },
+    {
+      "description": "independent extra deposit aggregate",
+      "mutated_source_sha256": "4fe4810693b822dd16bfd9ae4f84de1479b1199d8f2666a0d6e8f069ff58a92e",
+      "mutation": 3,
+      "named_test": "test_action_counts_from_rows",
+      "result": "killed_by_assertion",
+      "test_exit": 1
+    },
+    {
+      "description": "failed fetch admitted as classified irrelevant row",
+      "mutated_source_sha256": "f0464bbc3161bcc0f9c338b10a61b28b4480bf7ea63c062aa07a279a8b2480ca",
+      "mutation": 4,
+      "named_test": "test_failed_fetch_cannot_be_classified_irrelevant",
+      "result": "killed_by_assertion",
+      "test_exit": 1
+    },
+    {
+      "description": "raw response hash omitted from manifest",
+      "mutated_source_sha256": "5ff29e003aa5f59c488699a88bdebc04d682ad4368f0c1da183f04ffcfe7b033",
+      "mutation": 5,
+      "named_test": "test_raw_hash_inventory_in_final_manifest",
+      "result": "killed_by_assertion",
+      "test_exit": 1
+    },
+    {
+      "description": "duplicate signature silently overwrites",
+      "mutated_source_sha256": "d3aa5d1d5949b3217623c6f0ef0bebe4dddb392e72d771da560ce5b9d448d5ef",
+      "mutation": 6,
+      "named_test": "test_duplicate_signature_rejected",
+      "result": "killed_by_assertion",
+      "test_exit": 1
+    },
+    {
+      "description": "API key written into final manifest",
+      "mutated_source_sha256": "9b1877232e1f747f7bf583bc4ae27c598a0d207b2bf1367990ce6c1c3530f6f0",
+      "mutation": 7,
+      "named_test": "test_final_manifest_has_no_credentials",
+      "result": "killed_by_assertion",
+      "test_exit": 1
+    },
+    {
+      "description": "irrelevant source enumeration alters fingerprint",
+      "mutated_source_sha256": "51d60ea15c2ccf8979518e6108fdbebc41e9dc9ad6cda25bd721ae2a56cf01c4",
+      "mutation": 8,
+      "named_test": "test_fingerprint_ignores_input_enumeration",
+      "result": "killed_by_assertion",
+      "test_exit": 1
+    },
+    {
+      "description": "checkpoint treated as complete",
+      "mutated_source_sha256": "dfbc3286b57436fd83aa08db658b4cc41e79d2b6ab54a0631a3b037d40ad3909",
+      "mutation": 9,
+      "named_test": "test_checkpoint_cannot_finalize",
+      "result": "killed_by_assertion",
+      "test_exit": 1
+    },
+    {
+      "description": "old-engine reason omitted from supported BEFORE row",
+      "mutated_source_sha256": "f09452dabf1824278aeead5767c8043e35d9fb963e60386b1bb7210675e7d47b",
+      "mutation": 10,
+      "named_test": "test_before_rejection_reason_retained",
+      "result": "killed_by_assertion",
+      "test_exit": 1
+    }
+  ]
+}

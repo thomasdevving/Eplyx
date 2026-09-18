@@ -1,0 +1,5 @@
+{
+  "complete": false,
+  "frozen": false,
+  "reason": "Candidate v1 failed its predeclared raw failure-body preservation policy; never committed as the chosen sample. Superseded by v2 using identical immutable source and selected membership."
+}

@@ -1,0 +1,19 @@
+{
+  "bounded_scope": [
+    "repository tracked/untracked/ignored evidence and data/cache/discovery/acquisition outputs",
+    "exact U2 task scratchpad and task-linked session transcript (session 58f501a6-3780-443f-ba89-a0ba54f94865)",
+    "related archived Eplyx worktree eplyx-stock-transition (HEAD 3787a697bbdd9ed08d87e5b63800724d4de2d55c), no Kamino/census/signature artifacts"
+  ],
+  "irrecoverability_reason": "Census source retained no source listing, successful-fetch denominator or raw transactions; detail only records no-LUT observations. Session evidence confirms an interrupted pre-classification progress snapshot was copied to census-final.",
+  "missing_supported_identities": 16,
+  "original_census_sha256": "a179c254b8ada5888d76a8544d9bf9e2eed562f713aec0505442322834f49ba5",
+  "original_sample_fully_recovered": false,
+  "outcome": "C",
+  "positive_linkage": "Recovered census-final is byte-identical to committed U2 census; census source and two deposits are retained in phase-u3-before.",
+  "preflight_artifact_hashes_verified_unchanged": true,
+  "recoverable_supported_captures": 2,
+  "rejected_candidate": "Earlier sigs.json: 100 signatures, slots 448163393\u2013448164098; hash 42c8c7bd12cef002d4911afdfcd0932bfabeb15b6d0db86df323a745a25ef321. Not the final 1000-signature census source.",
+  "stop_rule": "No missing identities or denominators found in the bounded project-only search. No further reconstruction from aggregate counts.",
+  "workspace_json_files_checked": 7537,
+  "workspace_kamino_hits": 0
+}

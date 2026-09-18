@@ -61,6 +61,11 @@ production-derived corpus a gate runs on, and
 ([pilot onboarding](docs/pilot-onboarding.md),
 [Railway deployment](docs/railway-deployment.md)).
 
+The semantic adapter work is recorded in [U1](docs/universal-evidence-layer.md)
+and [U2](docs/phase-u2-kamino.md). The [U3 preflight](docs/phase-u3-modern-replay-surface.md)
+documents the incomplete recovered U2 sample; [U3A](docs/phase-u3a-production-baseline.md)
+freezes a separate reproducible production sample before modern replay changes.
+
 ---
 
 ## Quick start

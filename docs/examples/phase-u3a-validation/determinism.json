@@ -1,0 +1,23 @@
+{
+  "canonical_derived_hashes": {
+    "before-rejections.json": "0c7bb8085801eec1ab7bb1fb4a00e18e766d64e47f5d83ba6a8dec4d0bfd7548",
+    "checksums.sha256": "55eef5e2ba0e4cadbdaef6322b21b2daa6b5fdd0f404f58882a0c6cbb03c6ad9",
+    "classifications.json": "dabafe084c4e91168e022d1691037db68f52882893567d5d190b1d88e0ac40e9",
+    "manifest.json": "a9f8b9e78cc49484c2002ea1d614745b49dc36bea221ca7ed9a1703752e79674",
+    "summary.json": "3946f9a03abff5d41824b05959972c58b98868b3ca1579af57ce54ec8855e00a",
+    "supported-observations.json": "21d72d1713640dbc0b037557cfb1ffb73b60a8ae75740bec14282d759011fe57"
+  },
+  "capture_attempts": 332,
+  "captured_response_files": 332,
+  "chosen_sample_fingerprint": "b97116541aeefc6723ef91a1d38c9be52792d47316b573ac08d49484fd97d0af",
+  "fetch_failure_distribution": {
+    "invalid_json_response": 39,
+    "rpc_error_-32015": 5
+  },
+  "filesystem_order_unit_test": "test_byte_determinism_reverse_enumeration",
+  "network_disabled_unit_test": "test_offline_derive_removes_rpc_and_secret_environment",
+  "relocated_directory_byte_identical": true,
+  "repeated_runs_byte_identical": true,
+  "reverse_input_and_classifier_order_byte_identical": true,
+  "verified_checksum_entries": 344
+}

@@ -1,0 +1,409 @@
+{
+ "totals": {
+  "signatures_listed": 1000,
+  "original_succeeded": 601,
+  "original_failed": 399,
+  "examined": 200,
+  "no_klend_top_level": 89,
+  "fetch_failed": 138,
+  "with_klend_top_level": 110,
+  "uses_lookup_tables": 104,
+  "no_lookup_tables": 6
+ },
+ "observed": {
+  "refreshReserve": 103,
+  "refreshObligation": 87,
+  "withdrawObligationCollateralAndRedeemReserveCollateralV2": 6,
+  "repayObligationLiquidityV2": 8,
+  "flashBorrowReserveLiquidity": 44,
+  "liquidateObligationAndRedeemReserveCollateralV2": 34,
+  "flashRepayReserveLiquidity": 44,
+  "refreshReservesBatch": 1,
+  "borrowObligationLiquidityV2": 7,
+  "rolloverFixedTermBorrow": 3,
+  "depositReserveLiquidityAndObligationCollateralV2": 10,
+  "initObligation": 1,
+  "initUserMetadata": 1,
+  "depositReserveLiquidityAndObligationCollateral": 1,
+  "refreshObligationFarmsForReserve": 1,
+  "requestElevationGroup": 1,
+  "initObligationFarmsForReserve": 1
+ },
+ "eligible": {
+  "refreshReserve": 5,
+  "refreshObligation": 5,
+  "rolloverFixedTermBorrow": 3,
+  "initUserMetadata": 1,
+  "depositReserveLiquidityAndObligationCollateral": 1,
+  "refreshObligationFarmsForReserve": 1,
+  "depositReserveLiquidityAndObligationCollateralV2": 1
+ },
+ "detail": {
+  "refreshReserve": [
+   {
+    "signature": "4bE4Eo9Q3B1cQ81WmjuhucQ6VEwXpDL1fFQBHq5zufEKfkfuU5eZqBFJqaLvg1YQSfrW43yV3F8PJ2rHcFcbCi3S",
+    "slot": 448171959,
+    "version": "0",
+    "top_instructions": 7,
+    "klend_instructions": [
+     "refreshReserve",
+     "refreshReserve",
+     "refreshReserve",
+     "refreshObligation",
+     "rolloverFixedTermBorrow"
+    ],
+    "top_programs": [
+     "ComputeBudget111111111111111111111111111111",
+     "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD"
+    ],
+    "inner_groups": 0,
+    "inner_count": 0,
+    "max_stack": 0
+   },
+   {
+    "signature": "2M4d2fKrCyeQU4mJXkcf4M3ikHezYCB31y9h48ZPYhrfsDELUU1serATdX2snwMbp38WoYZC5mMuKS9kwdbaaGeP",
+    "slot": 448170828,
+    "version": "0",
+    "top_instructions": 7,
+    "klend_instructions": [
+     "refreshReserve",
+     "refreshReserve",
+     "refreshReserve",
+     "refreshObligation",
+     "rolloverFixedTermBorrow"
+    ],
+    "top_programs": [
+     "ComputeBudget111111111111111111111111111111",
+     "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD"
+    ],
+    "inner_groups": 0,
+    "inner_count": 0,
+    "max_stack": 0
+   },
+   {
+    "signature": "21QjNsJU9WDnbHaJSbx5ZAvfwctCgFGuZkob3ZhZxT2oWhQnSKCk56TTzuNomH9Na7mTn55g1zUkJAw3ZdrY9RJ2",
+    "slot": 448170827,
+    "version": "legacy",
+    "top_instructions": 10,
+    "klend_instructions": [
+     "refreshReserve",
+     "refreshObligation",
+     "refreshObligationFarmsForReserve",
+     "depositReserveLiquidityAndObligationCollateral",
+     "refreshObligationFarmsForReserve"
+    ],
+    "top_programs": [
+     "11111111111111111111111111111111",
+     "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+     "ComputeBudget111111111111111111111111111111",
+     "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    ],
+    "inner_groups": 2,
+    "inner_count": 3,
+    "max_stack": 2
+   },
+   {
+    "signature": "2EpuubYByzWwzkmQ8J32PEbQ2VMxy5pW8Xk7Nvp3BPhgM8RL8nWquJXDpVi9SNjMHRQRGsD3ZRm5k7aNaVtUyg47",
+    "slot": 448170087,
+    "version": "0",
+    "top_instructions": 10,
+    "klend_instructions": [
+     "refreshReserve",
+     "refreshObligation",
+     "depositReserveLiquidityAndObligationCollateralV2"
+    ],
+    "top_programs": [
+     "11111111111111111111111111111111",
+     "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+     "ComputeBudget111111111111111111111111111111",
+     "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    ],
+    "inner_groups": 2,
+    "inner_count": 7,
+    "max_stack": 2
+   },
+   {
+    "signature": "5yT3bqAMoT1AypBkcHpBAbBzDAqCaM2zyX1M4HHsNmng4ZDQc6RhHe8DMFZX5XcFg52955UDx55FBaT2GXjQb8mM",
+    "slot": 448169710,
+    "version": "0",
+    "top_instructions": 7,
+    "klend_instructions": [
+     "refreshReserve",
+     "refreshReserve",
+     "refreshReserve",
+     "refreshObligation",
+     "rolloverFixedTermBorrow"
+    ],
+    "top_programs": [
+     "ComputeBudget111111111111111111111111111111",
+     "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD"
+    ],
+    "inner_groups": 0,
+    "inner_count": 0,
+    "max_stack": 0
+   }
+  ],
+  "refreshObligation": [
+   {
+    "signature": "4bE4Eo9Q3B1cQ81WmjuhucQ6VEwXpDL1fFQBHq5zufEKfkfuU5eZqBFJqaLvg1YQSfrW43yV3F8PJ2rHcFcbCi3S",
+    "slot": 448171959,
+    "version": "0",
+    "top_instructions": 7,
+    "klend_instructions": [
+     "refreshReserve",
+     "refreshReserve",
+     "refreshReserve",
+     "refreshObligation",
+     "rolloverFixedTermBorrow"
+    ],
+    "top_programs": [
+     "ComputeBudget111111111111111111111111111111",
+     "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD"
+    ],
+    "inner_groups": 0,
+    "inner_count": 0,
+    "max_stack": 0
+   },
+   {
+    "signature": "2M4d2fKrCyeQU4mJXkcf4M3ikHezYCB31y9h48ZPYhrfsDELUU1serATdX2snwMbp38WoYZC5mMuKS9kwdbaaGeP",
+    "slot": 448170828,
+    "version": "0",
+    "top_instructions": 7,
+    "klend_instructions": [
+     "refreshReserve",
+     "refreshReserve",
+     "refreshReserve",
+     "refreshObligation",
+     "rolloverFixedTermBorrow"
+    ],
+    "top_programs": [
+     "ComputeBudget111111111111111111111111111111",
+     "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD"
+    ],
+    "inner_groups": 0,
+    "inner_count": 0,
+    "max_stack": 0
+   },
+   {
+    "signature": "21QjNsJU9WDnbHaJSbx5ZAvfwctCgFGuZkob3ZhZxT2oWhQnSKCk56TTzuNomH9Na7mTn55g1zUkJAw3ZdrY9RJ2",
+    "slot": 448170827,
+    "version": "legacy",
+    "top_instructions": 10,
+    "klend_instructions": [
+     "refreshReserve",
+     "refreshObligation",
+     "refreshObligationFarmsForReserve",
+     "depositReserveLiquidityAndObligationCollateral",
+     "refreshObligationFarmsForReserve"
+    ],
+    "top_programs": [
+     "11111111111111111111111111111111",
+     "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+     "ComputeBudget111111111111111111111111111111",
+     "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    ],
+    "inner_groups": 2,
+    "inner_count": 3,
+    "max_stack": 2
+   },
+   {
+    "signature": "2EpuubYByzWwzkmQ8J32PEbQ2VMxy5pW8Xk7Nvp3BPhgM8RL8nWquJXDpVi9SNjMHRQRGsD3ZRm5k7aNaVtUyg47",
+    "slot": 448170087,
+    "version": "0",
+    "top_instructions": 10,
+    "klend_instructions": [
+     "refreshReserve",
+     "refreshObligation",
+     "depositReserveLiquidityAndObligationCollateralV2"
+    ],
+    "top_programs": [
+     "11111111111111111111111111111111",
+     "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+     "ComputeBudget111111111111111111111111111111",
+     "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    ],
+    "inner_groups": 2,
+    "inner_count": 7,
+    "max_stack": 2
+   },
+   {
+    "signature": "5yT3bqAMoT1AypBkcHpBAbBzDAqCaM2zyX1M4HHsNmng4ZDQc6RhHe8DMFZX5XcFg52955UDx55FBaT2GXjQb8mM",
+    "slot": 448169710,
+    "version": "0",
+    "top_instructions": 7,
+    "klend_instructions": [
+     "refreshReserve",
+     "refreshReserve",
+     "refreshReserve",
+     "refreshObligation",
+     "rolloverFixedTermBorrow"
+    ],
+    "top_programs": [
+     "ComputeBudget111111111111111111111111111111",
+     "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD"
+    ],
+    "inner_groups": 0,
+    "inner_count": 0,
+    "max_stack": 0
+   }
+  ],
+  "rolloverFixedTermBorrow": [
+   {
+    "signature": "4bE4Eo9Q3B1cQ81WmjuhucQ6VEwXpDL1fFQBHq5zufEKfkfuU5eZqBFJqaLvg1YQSfrW43yV3F8PJ2rHcFcbCi3S",
+    "slot": 448171959,
+    "version": "0",
+    "top_instructions": 7,
+    "klend_instructions": [
+     "refreshReserve",
+     "refreshReserve",
+     "refreshReserve",
+     "refreshObligation",
+     "rolloverFixedTermBorrow"
+    ],
+    "top_programs": [
+     "ComputeBudget111111111111111111111111111111",
+     "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD"
+    ],
+    "inner_groups": 0,
+    "inner_count": 0,
+    "max_stack": 0
+   },
+   {
+    "signature": "2M4d2fKrCyeQU4mJXkcf4M3ikHezYCB31y9h48ZPYhrfsDELUU1serATdX2snwMbp38WoYZC5mMuKS9kwdbaaGeP",
+    "slot": 448170828,
+    "version": "0",
+    "top_instructions": 7,
+    "klend_instructions": [
+     "refreshReserve",
+     "refreshReserve",
+     "refreshReserve",
+     "refreshObligation",
+     "rolloverFixedTermBorrow"
+    ],
+    "top_programs": [
+     "ComputeBudget111111111111111111111111111111",
+     "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD"
+    ],
+    "inner_groups": 0,
+    "inner_count": 0,
+    "max_stack": 0
+   },
+   {
+    "signature": "5yT3bqAMoT1AypBkcHpBAbBzDAqCaM2zyX1M4HHsNmng4ZDQc6RhHe8DMFZX5XcFg52955UDx55FBaT2GXjQb8mM",
+    "slot": 448169710,
+    "version": "0",
+    "top_instructions": 7,
+    "klend_instructions": [
+     "refreshReserve",
+     "refreshReserve",
+     "refreshReserve",
+     "refreshObligation",
+     "rolloverFixedTermBorrow"
+    ],
+    "top_programs": [
+     "ComputeBudget111111111111111111111111111111",
+     "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD"
+    ],
+    "inner_groups": 0,
+    "inner_count": 0,
+    "max_stack": 0
+   }
+  ],
+  "initUserMetadata": [
+   {
+    "signature": "2PAYypxY6QU7yZypQvyyEEawQJHRJVAnPhXa7Hwg65nnfvxguLwWFzT29X8NKJs3HmAs8YmLLG5wxybpbBEG6eVj",
+    "slot": 448171822,
+    "version": "0",
+    "top_instructions": 4,
+    "klend_instructions": [
+     "initUserMetadata"
+    ],
+    "top_programs": [
+     "AddressLookupTab1e1111111111111111111111111",
+     "ComputeBudget111111111111111111111111111111",
+     "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD"
+    ],
+    "inner_groups": 2,
+    "inner_count": 4,
+    "max_stack": 2
+   }
+  ],
+  "depositReserveLiquidityAndObligationCollateral": [
+   {
+    "signature": "21QjNsJU9WDnbHaJSbx5ZAvfwctCgFGuZkob3ZhZxT2oWhQnSKCk56TTzuNomH9Na7mTn55g1zUkJAw3ZdrY9RJ2",
+    "slot": 448170827,
+    "version": "legacy",
+    "top_instructions": 10,
+    "klend_instructions": [
+     "refreshReserve",
+     "refreshObligation",
+     "refreshObligationFarmsForReserve",
+     "depositReserveLiquidityAndObligationCollateral",
+     "refreshObligationFarmsForReserve"
+    ],
+    "top_programs": [
+     "11111111111111111111111111111111",
+     "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+     "ComputeBudget111111111111111111111111111111",
+     "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    ],
+    "inner_groups": 2,
+    "inner_count": 3,
+    "max_stack": 2
+   }
+  ],
+  "refreshObligationFarmsForReserve": [
+   {
+    "signature": "21QjNsJU9WDnbHaJSbx5ZAvfwctCgFGuZkob3ZhZxT2oWhQnSKCk56TTzuNomH9Na7mTn55g1zUkJAw3ZdrY9RJ2",
+    "slot": 448170827,
+    "version": "legacy",
+    "top_instructions": 10,
+    "klend_instructions": [
+     "refreshReserve",
+     "refreshObligation",
+     "refreshObligationFarmsForReserve",
+     "depositReserveLiquidityAndObligationCollateral",
+     "refreshObligationFarmsForReserve"
+    ],
+    "top_programs": [
+     "11111111111111111111111111111111",
+     "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+     "ComputeBudget111111111111111111111111111111",
+     "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    ],
+    "inner_groups": 2,
+    "inner_count": 3,
+    "max_stack": 2
+   }
+  ],
+  "depositReserveLiquidityAndObligationCollateralV2": [
+   {
+    "signature": "2EpuubYByzWwzkmQ8J32PEbQ2VMxy5pW8Xk7Nvp3BPhgM8RL8nWquJXDpVi9SNjMHRQRGsD3ZRm5k7aNaVtUyg47",
+    "slot": 448170087,
+    "version": "0",
+    "top_instructions": 10,
+    "klend_instructions": [
+     "refreshReserve",
+     "refreshObligation",
+     "depositReserveLiquidityAndObligationCollateralV2"
+    ],
+    "top_programs": [
+     "11111111111111111111111111111111",
+     "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+     "ComputeBudget111111111111111111111111111111",
+     "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    ],
+    "inner_groups": 2,
+    "inner_count": 7,
+    "max_stack": 2
+   }
+  ]
+ }
+}
