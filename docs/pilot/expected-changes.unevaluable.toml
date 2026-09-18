@@ -1,0 +1,20 @@
+# Production pilot, case E: a declaration this corpus cannot evaluate.
+#
+# `withdraw_stake` is a real Stake Pool action and an honest thing for a team to
+# declare — but no record in this bundle exercises it, so the corpus cannot say
+# whether the declaration holds. That is exit 5, distinct from both "it held"
+# and "it did not": absent evidence is never read as absence of a problem.
+version = 1
+semantic_schema_version = 2
+
+[[change]]
+protocol = "spl-stake-pool"
+action   = "withdraw_stake"
+domain   = "economic"
+subject  = "stake_lamports_returned"
+change   = "decreased"
+
+max_delta_bps             = 10
+max_affected_observations = 5
+
+reason = "Declared against an action this corpus does not cover, to prove unevaluable stays its own outcome."

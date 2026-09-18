@@ -1,0 +1,22 @@
+# Production pilot, case D: a declaration that no longer describes anything.
+#
+# Run against the baseline binary as its own candidate, which changes nothing at
+# all, so this declaration necessarily matches no finding. A stale declaration
+# is its own exit code (3) rather than a pass: a file that has outlived the
+# change it described is a file nobody is reading, and silently honouring it
+# would let the next real change inherit its permission.
+version = 1
+semantic_schema_version = 2
+
+[[change]]
+protocol = "spl-stake-pool"
+action   = "deposit_sol"
+domain   = "economic"
+subject  = "pool_tokens_received"
+change   = "decreased"
+
+max_delta_bps             = 25
+max_affected_observations = 1
+max_affected_entities     = 1
+
+reason = "Deliberately stale: describes a deposit-share change this candidate does not make."

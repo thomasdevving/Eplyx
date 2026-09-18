@@ -1,0 +1,28 @@
+# Build context for the frontend image only.
+#
+# The repository root .dockerignore excludes `frontend/` on purpose — it is
+# describing the *server* build, for which a frontend commit should leave the
+# context byte-identical. This file replaces it for this Dockerfile, so the
+# exclusions have to be stated the other way round.
+.git
+.github
+target/
+node_modules/
+dist/
+artifacts/
+data/
+programs/
+engine/
+server/
+interface/
+fixtures/
+deploy/
+docs/
+scripts/
+test-ledger/
+ts/
+.env
+.env.*
+report.json
+.DS_Store
+frontend/public/vendor/
