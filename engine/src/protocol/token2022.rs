@@ -17,8 +17,13 @@ use super::{
     SemanticAction, SemanticField, StateFeature, TokenQuantity,
 };
 use crate::{
+    evidence::{boundary, labels, pairing},
     executor::ExecutionResult,
     ingest::transactions::HistoricalTransaction,
+    standard_programs::{
+        address_at, coption_address_at, spl_token as spl, token2022 as layout, u16_at, u64_at,
+        u8_at,
+    },
     types::{AccountSnapshot, NamedAccount},
 };
 use anyhow::{Context, Result};
@@ -39,11 +44,9 @@ const APPROVE_CHECKED: u8 = 13;
 const MINT_TO_CHECKED: u8 = 14;
 const BURN_CHECKED: u8 = 15;
 
-/// Offset of the `newer_transfer_fee` record inside a TransferFeeConfig
-/// extension: two optional authorities (32 each), the withheld amount (8), then
-/// the older fee record (8 + 8 + 2).
-const NEWER_TRANSFER_FEE_OFFSET: usize = 32 + 32 + 8 + 18;
-const TRANSFER_FEE_CONFIG: u16 = 1;
+/// The extension carrying a mint's fee schedule. Its field offsets belong to
+/// [`crate::standard_programs::token2022`], which owns the layout.
+use layout::TRANSFER_FEE_CONFIG;
 
 /// The Token-2022 instructions this adapter replays exactly.
 ///
@@ -135,137 +138,28 @@ impl TokenOp {
     }
 }
 
-/// Length of the base account and mint structures, before any extensions.
-const ACCOUNT_LEN: usize = 165;
-const MINT_LEN: usize = 82;
-/// Extended accounts carry a discriminant here, then TLV extension entries.
-const ACCOUNT_TYPE_OFFSET: usize = 165;
-const TLV_START: usize = 166;
-const ACCOUNT_TYPE_MINT: u8 = 1;
-const ACCOUNT_TYPE_ACCOUNT: u8 = 2;
-
+/// The Token-2022 account layouts live in
+/// [`crate::standard_programs::token2022`]. This adapter reads them; it does
+/// not define them. Before Phase U1 the 165-byte base layout, the TLV walk and
+/// the extension-name table were all declared here, and the SPL Stake Pool
+/// adapter declared its own copy of the first of them.
 pub struct Token2022Adapter;
 
-fn u64_at(data: &[u8], offset: usize) -> Option<u64> {
-    Some(u64::from_le_bytes(
-        data.get(offset..offset + 8)?.try_into().ok()?,
-    ))
-}
-
-fn u16_at(data: &[u8], offset: usize) -> Option<u16> {
-    Some(u16::from_le_bytes(
-        data.get(offset..offset + 2)?.try_into().ok()?,
-    ))
-}
-
-fn address_at(data: &[u8], offset: usize) -> Option<String> {
-    Some(bs58::encode(data.get(offset..offset + 32)?).into_string())
-}
-
-/// A `COption<Pubkey>`: a 4-byte discriminant followed by the key.
-fn coption_address_at(data: &[u8], offset: usize) -> Option<Option<String>> {
-    match u32::from_le_bytes(data.get(offset..offset + 4)?.try_into().ok()?) {
-        0 => Some(None),
-        1 => Some(address_at(data, offset + 4)),
-        _ => None,
-    }
-}
-
-fn extension_name(kind: u16) -> &'static str {
-    match kind {
-        1 => "transfer-fee-config",
-        2 => "transfer-fee-amount",
-        3 => "mint-close-authority",
-        4 => "confidential-transfer-mint",
-        5 => "confidential-transfer-account",
-        6 => "default-account-state",
-        7 => "immutable-owner",
-        8 => "memo-transfer",
-        9 => "non-transferable",
-        10 => "interest-bearing-config",
-        11 => "cpi-guard",
-        12 => "permanent-delegate",
-        13 => "non-transferable-account",
-        14 => "transfer-hook",
-        15 => "transfer-hook-account",
-        16 => "confidential-transfer-fee-config",
-        17 => "confidential-transfer-fee-amount",
-        18 => "metadata-pointer",
-        19 => "token-metadata",
-        20 => "group-pointer",
-        21 => "token-group",
-        22 => "group-member-pointer",
-        23 => "token-group-member",
-        24 => "confidential-mint-burn",
-        25 => "scaled-ui-amount",
-        26 => "pausable",
-        27 => "pausable-account",
-        _ => "unrecognized",
-    }
-}
-
-/// Walk the TLV extension list, returning `(type, value)` pairs.
+/// Base-unit balance of a Token-2022 token account.
 ///
-/// A malformed or truncated list yields what was parsed up to that point rather
-/// than an error: extension parsing informs the report, while the economic
-/// verdict rests on the base fields and the proved balances.
-fn extensions(data: &[u8]) -> Vec<(u16, &[u8])> {
-    let mut found = Vec::new();
-    let mut offset = TLV_START;
-    while offset + 4 <= data.len() {
-        let Some(kind) = u16_at(data, offset) else {
-            break;
-        };
-        let Some(length) = u16_at(data, offset + 2) else {
-            break;
-        };
-        if kind == 0 && length == 0 {
-            break;
-        }
-        let start = offset + 4;
-        let end = start + usize::from(length);
-        if end > data.len() {
-            break;
-        }
-        found.push((kind, &data[start..end]));
-        offset = end;
-    }
-    found
-}
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-enum Layout {
-    Mint,
-    Account,
-}
-
-fn layout_of(data: &[u8]) -> Option<Layout> {
-    match data.len() {
-        MINT_LEN => Some(Layout::Mint),
-        ACCOUNT_LEN => Some(Layout::Account),
-        length if length > ACCOUNT_TYPE_OFFSET => match data.get(ACCOUNT_TYPE_OFFSET) {
-            Some(&ACCOUNT_TYPE_MINT) => Some(Layout::Mint),
-            Some(&ACCOUNT_TYPE_ACCOUNT) => Some(Layout::Account),
-            _ => None,
-        },
-        _ => None,
-    }
-}
-
-/// The decoded balance of a token account, with the decimals it is denominated
-/// in. Decimals come from the account's own mint, so the caller must supply it.
+/// Kept as a re-export rather than a re-implementation: callers outside the
+/// adapter read balances through this name, and the bytes are read by the
+/// shared decoder.
 pub fn token_account_amount(data: &[u8]) -> Option<u64> {
-    (layout_of(data)? == Layout::Account).then(|| u64_at(data, 64))?
+    layout::account_amount(data)
 }
 
 pub fn token_account_mint(data: &[u8]) -> Option<String> {
-    (layout_of(data)? == Layout::Account).then(|| address_at(data, 0))?
+    layout::account_mint(data)
 }
 
 pub fn mint_decimals(data: &[u8]) -> Option<u8> {
-    (layout_of(data)? == Layout::Mint)
-        .then(|| data.get(44).copied())
-        .flatten()
+    layout::mint_decimals(data)
 }
 
 impl Token2022Adapter {
@@ -284,47 +178,37 @@ impl Token2022Adapter {
     /// Unique semantic labels for every message key.
     ///
     /// Roles are taken from the transfer's account positions; anything with no
-    /// role keeps a positional label. Uniqueness is enforced by construction so
-    /// that labels stay usable as the diff and report key.
+    /// role keeps a positional label. The assignment itself - first role wins,
+    /// key 0 falls back to `payer` - is
+    /// [`crate::evidence::labels`]. What stays here is the part that is this
+    /// adapter's: a transaction may carry several Token-2022 instructions, and
+    /// their roles are disambiguated by ordinal so two sources stay distinct.
     fn labels(&self, transaction: &HistoricalTransaction) -> Vec<String> {
-        let mut labels: Vec<String> = (0..transaction.account_keys.len())
-            .map(|index| format!("key-{index}"))
-            .collect();
         let ops = self.ops(transaction);
         let multiple = ops.len() > 1;
+        let mut bindings = Vec::new();
         for (ordinal, (op, instruction)) in ops.iter().enumerate() {
             for (position, role) in op.roles().iter().enumerate() {
                 let Some(meta) = instruction.accounts.get(position) else {
                     continue;
                 };
-                let Some(index) = transaction
-                    .account_keys
-                    .iter()
-                    .position(|key| key.address == meta.address)
-                else {
-                    continue;
-                };
-                // A key already named by an earlier instruction keeps that name,
-                // so the label stays stable however many instructions touch it.
-                if !labels[index].starts_with("key-") {
-                    continue;
-                }
-                labels[index] = if multiple {
-                    format!("{role}-{ordinal}")
-                } else {
-                    (*role).to_string()
-                };
+                bindings.push(labels::RoleBinding::new(
+                    meta.address.clone(),
+                    if multiple {
+                        format!("{role}-{ordinal}")
+                    } else {
+                        (*role).to_string()
+                    },
+                ));
             }
         }
-        // The fee payer is always message key 0. Name it only if no transfer
-        // role already claimed it, so an authority that also pays keeps the
-        // role that explains what it is doing.
-        if let Some(label) = labels.first_mut() {
-            if label.starts_with("key-") {
-                *label = "payer".into();
-            }
-        }
-        labels
+        labels::assign(
+            transaction
+                .account_keys
+                .iter()
+                .map(|key| key.address.as_str()),
+            &bindings,
+        )
     }
 
     /// Token-2022 instructions paired with the operation they encode.
@@ -376,22 +260,7 @@ impl Token2022Adapter {
     /// is not modelled: this feeds boundary *ranking*, never the economic
     /// verdict, which rests on executing the real program.
     fn transfer_fee_schedule(&self, mint_data: &[u8]) -> Option<(u16, u64)> {
-        let (_, value) = extensions(mint_data)
-            .into_iter()
-            .find(|(kind, _)| *kind == TRANSFER_FEE_CONFIG)?;
-        let maximum_fee = u64_at(value, NEWER_TRANSFER_FEE_OFFSET + 8)?;
-        let basis_points = u16_at(value, NEWER_TRANSFER_FEE_OFFSET + 16)?;
-        Some((basis_points, maximum_fee))
-    }
-
-    fn balance_at<'a>(
-        &self,
-        balances: Option<&'a Vec<crate::ingest::transactions::TokenBalance>>,
-        index: usize,
-    ) -> Option<&'a crate::ingest::transactions::TokenBalance> {
-        balances?
-            .iter()
-            .find(|balance| balance.account_index == index)
+        layout::newer_transfer_fee(mint_data)
     }
 }
 
@@ -479,12 +348,12 @@ impl ProtocolAdapter for Token2022Adapter {
             if let Some(decimals) = mint_decimals(data) {
                 features.push(StateFeature::integer("mint_decimals", decimals as u128));
             }
-            if let Some(supply) = u64_at(data, 36) {
+            if let Some(supply) = layout::mint_supply(data) {
                 features.push(StateFeature::integer("mint_supply", supply as u128));
             }
             features.push(StateFeature::integer(
                 "mint_extension_count",
-                extensions(data).len() as u128,
+                layout::extensions(data).entries.len() as u128,
             ));
             if let Some((basis_points, maximum_fee)) = self.transfer_fee_schedule(data) {
                 features.push(StateFeature::integer(
@@ -665,10 +534,7 @@ impl ProtocolAdapter for Token2022Adapter {
     }
 
     fn label(&self, transaction: &HistoricalTransaction, index: usize) -> String {
-        self.labels(transaction)
-            .get(index)
-            .cloned()
-            .unwrap_or_else(|| format!("key-{index}"))
+        labels::at(&self.labels(transaction), index)
     }
 
     fn decode(&self, account: &AccountSnapshot) -> Option<SemanticAccount> {
@@ -676,22 +542,23 @@ impl ProtocolAdapter for Token2022Adapter {
             return None;
         }
         let data = &account.data;
-        let present = extensions(data)
-            .into_iter()
-            .map(|(kind, _)| extension_name(kind))
-            .collect::<Vec<_>>();
-        match layout_of(data)? {
-            Layout::Account => {
-                let amount = u64_at(data, 64)?;
+        // Extension names come from the shared layout, so an extension this
+        // build has never heard of is still listed - as `unrecognized`, with a
+        // type number - rather than vanishing from the report.
+        let extensions = layout::extensions(data);
+        let present = extensions.names();
+        match layout::layout_of(data)? {
+            layout::Layout::Account => {
+                let amount = u64_at(data, spl::ACCOUNT_AMOUNT)?;
                 let mut fields = vec![
                     SemanticField {
                         name: "mint".into(),
-                        value: FieldValue::Address(address_at(data, 0)?),
+                        value: FieldValue::Address(address_at(data, spl::ACCOUNT_MINT)?),
                         economic: false,
                     },
                     SemanticField {
                         name: "owner".into(),
-                        value: FieldValue::Address(address_at(data, 32)?),
+                        value: FieldValue::Address(address_at(data, spl::ACCOUNT_OWNER)?),
                         economic: false,
                     },
                     SemanticField {
@@ -705,16 +572,19 @@ impl ProtocolAdapter for Token2022Adapter {
                     },
                     SemanticField {
                         name: "state".into(),
-                        value: FieldValue::Count(u64::from(*data.get(108)?)),
+                        value: FieldValue::Count(u64::from(u8_at(data, spl::ACCOUNT_STATE)?)),
                         economic: true,
                     },
                     SemanticField {
                         name: "delegated_amount".into(),
-                        value: FieldValue::quantity(u64_at(data, 121)?, 0),
+                        value: FieldValue::quantity(
+                            u64_at(data, spl::ACCOUNT_DELEGATED_AMOUNT)?,
+                            0,
+                        ),
                         economic: true,
                     },
                 ];
-                if let Some(delegate) = coption_address_at(data, 72)? {
+                if let Some(delegate) = coption_address_at(data, spl::ACCOUNT_DELEGATE).ok()? {
                     fields.push(SemanticField {
                         name: "delegate".into(),
                         value: FieldValue::Address(delegate),
@@ -723,8 +593,8 @@ impl ProtocolAdapter for Token2022Adapter {
                 }
                 // Withheld transfer fees are spendable value parked in the
                 // account, so a change in them is an economic change.
-                for (kind, value) in extensions(data) {
-                    if kind == 2 {
+                for (kind, value) in &extensions.entries {
+                    if *kind == layout::TRANSFER_FEE_AMOUNT {
                         if let Some(withheld) = u64_at(value, 0) {
                             fields.push(SemanticField {
                                 name: "withheld_transfer_fee".into(),
@@ -746,12 +616,12 @@ impl ProtocolAdapter for Token2022Adapter {
                     fields,
                 })
             }
-            Layout::Mint => {
-                let decimals = *data.get(44)?;
+            layout::Layout::Mint => {
+                let decimals = u8_at(data, spl::MINT_DECIMALS)?;
                 let mut fields = vec![
                     SemanticField {
                         name: "supply".into(),
-                        value: FieldValue::quantity(u64_at(data, 36)?, decimals),
+                        value: FieldValue::quantity(u64_at(data, spl::MINT_SUPPLY)?, decimals),
                         economic: true,
                     },
                     SemanticField {
@@ -761,17 +631,26 @@ impl ProtocolAdapter for Token2022Adapter {
                     },
                     SemanticField {
                         name: "is_initialized".into(),
-                        value: FieldValue::Flag(*data.get(45)? == 1),
+                        value: FieldValue::Flag(u8_at(data, spl::MINT_IS_INITIALIZED)? == 1),
                         economic: false,
                     },
                 ];
-                for (kind, value) in extensions(data) {
-                    if kind == 1 {
+                for (kind, value) in &extensions.entries {
+                    if *kind == TRANSFER_FEE_CONFIG {
                         // TransferFeeConfig: two authorities, the withheld
-                        // total, then the older and newer fee schedules.
-                        if let (Some(withheld), Some(older_bps), Some(newer_bps)) =
-                            (u64_at(value, 64), u16_at(value, 88), u16_at(value, 106))
-                        {
+                        // total, then the older and newer fee schedules. The
+                        // offsets belong to the shared layout.
+                        if let (Some(withheld), Some(older_bps), Some(newer_bps)) = (
+                            u64_at(value, layout::FEE_CONFIG_WITHHELD),
+                            u16_at(
+                                value,
+                                layout::FEE_CONFIG_OLDER + layout::FEE_RECORD_BASIS_POINTS,
+                            ),
+                            u16_at(
+                                value,
+                                layout::FEE_CONFIG_NEWER + layout::FEE_RECORD_BASIS_POINTS,
+                            ),
+                        ) {
                             fields.push(SemanticField {
                                 name: "withheld_transfer_fee".into(),
                                 value: FieldValue::quantity(withheld, decimals),
@@ -805,161 +684,68 @@ impl ProtocolAdapter for Token2022Adapter {
         }
     }
 
+    /// The generic prover establishes the boundary; this declares what it must
+    /// establish, and states the assumptions particular to this contract.
+    ///
+    /// Nothing is exempted from read-only byte identity. That is deliberate and
+    /// it is the narrower guarantee: no instruction in this contract reads a
+    /// sysvar, so a sysvar turning up read-only here would be an anomaly, not a
+    /// known runtime rewrite.
     fn prove_boundaries(
         &self,
         transaction: &HistoricalTransaction,
         pre: &[NamedAccount],
         post: &[NamedAccount],
     ) -> Result<Vec<String>> {
-        let pre_balances = transaction
-            .pre_balances
-            .as_ref()
-            .context("transaction metadata omitted pre-balances")?;
-        let post_balances = transaction
-            .post_balances
-            .as_ref()
-            .context("transaction metadata omitted post-balances")?;
-        let mut proved_token_accounts = 0_usize;
-
-        for (side, snapshots, lamports, token_balances) in [
-            (
-                "pre",
-                pre,
-                pre_balances,
-                transaction.pre_token_balances.as_ref(),
-            ),
-            (
-                "post",
-                post,
-                post_balances,
-                transaction.post_token_balances.as_ref(),
-            ),
-        ] {
-            for named in snapshots {
-                let index = transaction
-                    .account_keys
-                    .iter()
-                    .position(|key| key.address == named.address)
-                    .with_context(|| {
-                        format!("snapshot account {} is not in the message", named.address)
-                    })?;
-                // A mismatch here is almost always same-slot interference
-                // rather than a bad archive: the archive answers with the state
-                // at the *end* of slot S, so another transaction touching the
-                // same account in that slot moves it away from this
-                // transaction's boundary. Pre-state and post-state failures
-                // mean different things, so they are reported differently.
-                anyhow::ensure!(
-                    lamports.get(index) == Some(&named.account.lamports),
-                    "{} for {}: archive reports {} lamports at the {} boundary, validator \
-                     metadata records {}. {}",
-                    if side == "pre" {
-                        "slot-before state is not this transaction's pre-state"
-                    } else {
-                        "slot-end state is not this transaction's post-state"
-                    },
-                    named.address,
-                    named.account.lamports,
-                    if side == "pre" { "S-1" } else { "S" },
-                    lamports
-                        .get(index)
-                        .map(u64::to_string)
-                        .unwrap_or_else(|| "nothing".into()),
-                    if side == "pre" {
+        let contract = boundary::BoundaryContract {
+            token_program: PROGRAM_ID,
+            token_program_description: "Token-2022",
+            token_account_description: "token account",
+            account_amount: layout::account_amount,
+            account_mint: layout::account_mint,
+            read_only_exempt: &[],
+            interference_hint: |side, _slot| {
+                match side {
+                    boundary::Side::Pre => {
                         "Another transaction in slot S wrote this account before this one."
-                    } else {
+                    }
+                    boundary::Side::Post => {
                         "Another transaction in slot S wrote this account after this one, so \
                          the archived end-of-slot state cannot serve as the fidelity reference. \
                          Select a transaction whose accounts are untouched elsewhere in its slot."
                     }
-                );
-                let Some(balance) = self.balance_at(token_balances, index) else {
-                    continue;
-                };
-                // The validator recorded an exact base-unit amount for this
-                // account. Anything the archive returned has to match it, which
-                // is what rejects a snapshot taken on the wrong side of a
-                // same-slot write.
-                let decoded = token_account_amount(&named.account.data).with_context(|| {
-                    format!(
-                        "account {} has a token balance but does not decode as a token account",
-                        named.address
-                    )
-                })?;
-                anyhow::ensure!(
-                    decoded == balance.amount,
-                    "{side}-state archive amount {decoded} differs from validator-observed \
-                     {} for {}",
-                    balance.amount,
-                    named.address
-                );
-                anyhow::ensure!(
-                    balance.program_id == PROGRAM_ID,
-                    "account {} is owned by token program {}, not Token-2022",
-                    named.address,
-                    balance.program_id
-                );
-                anyhow::ensure!(
-                    token_account_mint(&named.account.data).as_deref() == Some(&balance.mint),
-                    "account {} decodes to a different mint than the validator recorded",
-                    named.address
-                );
-                if side == "pre" {
-                    proved_token_accounts += 1;
                 }
-            }
-        }
+                .to_string()
+            },
+        };
 
-        // Read-only accounts must be byte-identical across the boundary. For the
-        // mint this is the only available proof - metadata records no mint data -
-        // so it is stated as an assumption rather than claimed as independent.
-        for named in pre {
-            let index = transaction
-                .account_keys
-                .iter()
-                .position(|key| key.address == named.address)
-                .expect("checked above");
-            if transaction.account_keys[index].is_writable {
-                continue;
-            }
-            let after = post
-                .iter()
-                .find(|other| other.address == named.address)
-                .context("read-only account missing from post-state")?;
-            anyhow::ensure!(
-                named.account.data == after.account.data
-                    && named.account.owner == after.account.owner,
-                "read-only account {} changed across the transaction boundary",
-                named.address
-            );
-        }
-
-        anyhow::ensure!(
-            proved_token_accounts > 0,
-            "no token account balance could be proved against validator metadata"
-        );
-
-        Ok(vec![
-            format!(
-                "{proved_token_accounts} token account balance(s) at S-1 and S match the \
-                 validator-observed pre/post token balances"
-            ),
-            "every snapshot's lamports match validator-observed pre/post balances".into(),
+        let proof = boundary::prove(&contract, transaction, pre, post)?;
+        let mut assumptions = proof.assumptions;
+        assumptions.push(
             "read-only accounts, including the mint, are byte-identical across the boundary; \
              validator metadata records no mint data, so mint bytes rest on the archive and on \
              V1 reproducing the original outcome"
                 .into(),
+        );
+        assumptions.push(
             "supported contract is a direct Token-2022 balance or delegation instruction \
              (Transfer, TransferChecked, MintTo, MintToChecked, Burn, BurnChecked, Approve, \
              ApproveChecked, Revoke) with a signer authority, optionally preceded by \
              compute-budget instructions, and no CPI"
                 .into(),
+        );
+        assumptions.push(
             "Token-2022 reads no Clock in this path; remaining runtime state uses pinned \
              LiteSVM defaults"
                 .into(),
-        ])
+        );
+        Ok(assumptions)
     }
 
+    /// Pairing two executions field by field is
+    /// [`crate::evidence::pairing`]. What stays here is the rescale: every
+    /// decoded quantity is denominated in the mint's decimals, because an
+    /// individual token account does not carry them.
     fn interpret(
         &self,
         accounts: &[NamedAccount],
@@ -972,48 +758,13 @@ impl ProtocolAdapter for Token2022Adapter {
             .iter()
             .find_map(|named| mint_decimals(&named.account.data))
             .unwrap_or(0);
-        let mut changes = Vec::new();
-        for named in accounts {
-            let (Some(after_v1), Some(after_v2)) =
-                (v1.accounts.get(&named.label), v2.accounts.get(&named.label))
-            else {
-                continue;
-            };
-            let (Some(decoded_v1), Some(decoded_v2)) =
-                (self.decode(after_v1), self.decode(after_v2))
-            else {
-                continue;
-            };
-            for field in &decoded_v1.fields {
-                if !field.economic {
-                    continue;
-                }
-                let Some(other) = decoded_v2.field(&field.name) else {
-                    continue;
-                };
-                if other.value == field.value {
-                    continue;
-                }
-                let delta = match (field.value.as_quantity(), other.value.as_quantity()) {
-                    (Some(before), Some(after)) => TokenQuantity::new(after.base_units, decimals)
-                        .delta(TokenQuantity::new(before.base_units, decimals)),
-                    _ => None,
-                };
-                let render = |value: &FieldValue| match value.as_quantity() {
-                    Some(quantity) => TokenQuantity::new(quantity.base_units, decimals).to_string(),
-                    None => value.render(),
-                };
-                changes.push(EconomicChange {
-                    account_label: named.label.clone(),
-                    account_kind: decoded_v1.kind.clone(),
-                    field: field.name.clone(),
-                    v1: render(&field.value),
-                    v2: render(&other.value),
-                    delta,
-                });
-            }
-        }
-        changes
+        pairing::compare_decoded(
+            accounts,
+            v1,
+            v2,
+            |account| self.decode(account),
+            |_field, quantity| TokenQuantity::new(quantity.base_units, decimals),
+        )
     }
 }
 
@@ -1115,18 +866,18 @@ mod tests {
     #[test]
     fn transfer_fee_schedule_reads_the_newer_record() {
         // A TransferFeeConfig whose newer schedule is 150 bps capped at 5_000.
+        const NEWER: usize = layout::FEE_CONFIG_NEWER;
         let mut value = vec![0_u8; 108];
-        value[NEWER_TRANSFER_FEE_OFFSET..NEWER_TRANSFER_FEE_OFFSET + 8]
-            .copy_from_slice(&42_u64.to_le_bytes()); // epoch
-        value[NEWER_TRANSFER_FEE_OFFSET + 8..NEWER_TRANSFER_FEE_OFFSET + 16]
+        value[NEWER..NEWER + 8].copy_from_slice(&42_u64.to_le_bytes()); // epoch
+        value[NEWER + layout::FEE_RECORD_MAXIMUM..NEWER + layout::FEE_RECORD_MAXIMUM + 8]
             .copy_from_slice(&5_000_u64.to_le_bytes()); // maximum fee
-        value[NEWER_TRANSFER_FEE_OFFSET + 16..NEWER_TRANSFER_FEE_OFFSET + 18]
+        value[NEWER + layout::FEE_RECORD_BASIS_POINTS..NEWER + layout::FEE_RECORD_BASIS_POINTS + 2]
             .copy_from_slice(&150_u16.to_le_bytes()); // basis points
 
-        let mut mint = vec![0_u8; MINT_LEN];
-        mint[44] = 6; // decimals, so the base layout is a plausible mint
-        mint.resize(ACCOUNT_TYPE_OFFSET, 0);
-        mint.push(ACCOUNT_TYPE_MINT);
+        let mut mint = vec![0_u8; spl::MINT_LEN];
+        mint[spl::MINT_DECIMALS] = 6; // so the base layout is a plausible mint
+        mint.resize(layout::ACCOUNT_TYPE_OFFSET, 0);
+        mint.push(1); // AccountType::Mint
         mint.extend_from_slice(&TRANSFER_FEE_CONFIG.to_le_bytes());
         mint.extend_from_slice(&(value.len() as u16).to_le_bytes());
         mint.extend_from_slice(&value);
@@ -1137,8 +888,8 @@ mod tests {
 
     #[test]
     fn a_mint_without_the_extension_has_no_schedule() {
-        let mut mint = vec![0_u8; MINT_LEN];
-        mint[44] = 9;
+        let mut mint = vec![0_u8; spl::MINT_LEN];
+        mint[spl::MINT_DECIMALS] = 9;
         assert_eq!(Token2022Adapter.transfer_fee_schedule(&mint), None);
     }
 }
