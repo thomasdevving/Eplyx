@@ -1,0 +1,14 @@
+{
+  "changed_in_u3a": false,
+  "old_census_sha256": "a179c254b8ada5888d76a8544d9bf9e2eed562f713aec0505442322834f49ba5",
+  "preflight_hashes": {
+    "census-source.py": "35719945da5cf9ffd37a6dbaafb1cef647d9844b7af8f4a761805c5aef7475c0",
+    "census.json": "a179c254b8ada5888d76a8544d9bf9e2eed562f713aec0505442322834f49ba5",
+    "controls.json": "2a565174c52784890f98fbed7628b5271a3982ef1e9cbbda7dd9590c903c8d9a",
+    "lifecycle-diagnosis.json": "05b995895df2c4b59a0f2dbadd83fd08e6bf207ec72fb4eb0179ea1e8ad7c0d5",
+    "manifest.json": "8bbf77c043e7fb770f43e0ad894c02694eef2c83e4619ab4cf38ae54a893a580",
+    "rejections.json": "ac922513b5c115eb75e65ed2622ec4e297a6e5eb2029289c0a01799f5f63474c",
+    "tx-dep1.json": "cb46e938a131749745a886af2b84b4ac7c22cd55a48653ddab17196b9a7e816c",
+    "tx-dep2.json": "60b3c09ee616fea7fc7e23ef1bc4c70d132b78968e7d93eb0433d75e9685cf95"
+  }
+}

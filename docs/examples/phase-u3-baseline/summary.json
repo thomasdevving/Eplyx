@@ -1,0 +1,53 @@
+{
+  "all_status_recognized_actions": {
+    "borrow": 6,
+    "deposit": 6
+  },
+  "classified_rows": 156,
+  "companion_program_transactions": {
+    "11111111111111111111111111111111": 3,
+    "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL": 8,
+    "ComputeBudget111111111111111111111111111111": 9,
+    "DF1ow4tspfHX9JwWJsAb9epbkA8hmpSEAtxXy1V27QBH": 1,
+    "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ": 4,
+    "MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms": 1,
+    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA": 3,
+    "proVF4pMXVaYqmy4NjniPh4pqKNfMmsihgd4wdkCX3u": 1
+  },
+  "fetch_failure": 44,
+  "fetch_selected": 200,
+  "fetch_success": 156,
+  "klend_top_level": 96,
+  "message_versions": {
+    "legacy": 1,
+    "newer_unsupported": 0,
+    "unreadable": 0,
+    "v0_with_lut_resolution": 154,
+    "v0_without_lut_resolution": 1
+  },
+  "no_klend_top_level": 60,
+  "not_fetch_selected": 800,
+  "production_replay_validated": 0,
+  "source_count": 1000,
+  "successful_supported_actions": {
+    "borrow": 5,
+    "deposit": 5
+  },
+  "successful_supported_lut_observations": 9,
+  "successful_supported_no_lut_observations": 1,
+  "supported_admission_accepted": 0,
+  "supported_first_rejections": {
+    "message resolves 11 address lookup table entries; lookup tables are normalized but not executed": 1,
+    "message resolves 13 address lookup table entries; lookup tables are normalized but not executed": 2,
+    "message resolves 14 address lookup table entries; lookup tables are normalized but not executed": 1,
+    "message resolves 30 address lookup table entries; lookup tables are normalized but not executed": 1,
+    "message resolves 52 address lookup table entries; lookup tables are normalized but not executed": 1,
+    "message resolves 55 address lookup table entries; lookup tables are normalized but not executed": 1,
+    "message resolves 9 address lookup table entries; lookup tables are normalized but not executed": 1,
+    "unsupported program 11111111111111111111111111111111 in a Kamino KLend replay; the supported contract admits KLend and compute-budget instructions only": 1
+  },
+  "supported_transactions_all_status": 9,
+  "supported_transactions_successful": 8,
+  "transient_account_cases": 3,
+  "transient_account_transactions": 2
+}

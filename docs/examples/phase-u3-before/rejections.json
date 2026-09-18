@@ -1,0 +1,267 @@
+[
+  {
+    "action": "deposit_reserve_liquidity_and_obligation_collateral",
+    "admitted": false,
+    "capture_sha256": "60b3c09ee616fea7fc7e23ef1bc4c70d132b78968e7d93eb0433d75e9685cf95",
+    "current_rejection_code": "unsupported_transaction",
+    "current_rejection_detail": "unsupported program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL in a Kamino KLend replay; the supported contract admits KLend and compute-budget instructions only",
+    "limitation_class": "B: eligibility/admission",
+    "lookup_table_count": 0,
+    "message_version": "v0",
+    "replay_eligible_production_evidence": false,
+    "resolved_address_count": 0,
+    "signature": "2EpuubYByzWwzkmQ8J32PEbQ2VMxy5pW8Xk7Nvp3BPhgM8RL8nWquJXDpVi9SNjMHRQRGsD3ZRm5k7aNaVtUyg47",
+    "slot": 448170087,
+    "standard_program_companions": [
+      {
+        "accounts": [],
+        "data_hex": "02801a0600",
+        "outer_index": 0,
+        "program": "ComputeBudget111111111111111111111111111111"
+      },
+      {
+        "accounts": [],
+        "data_hex": "0350c3000000000000",
+        "outer_index": 1,
+        "program": "ComputeBudget111111111111111111111111111111"
+      },
+      {
+        "accounts": [
+          {
+            "address": "3boJzRQsSSiP11GKrk4QiDW21uTXmT3S2h5eHXsNvjgj",
+            "is_signer": true,
+            "is_writable": true
+          },
+          {
+            "address": "Bbr3Y7Wcy4xs5RqrGw2ZWkPQqjLZqwmNxQdwAEjt7Cdc",
+            "is_signer": false,
+            "is_writable": true
+          },
+          {
+            "address": "3boJzRQsSSiP11GKrk4QiDW21uTXmT3S2h5eHXsNvjgj",
+            "is_signer": true,
+            "is_writable": true
+          },
+          {
+            "address": "So11111111111111111111111111111111111111112",
+            "is_signer": false,
+            "is_writable": false
+          },
+          {
+            "address": "11111111111111111111111111111111",
+            "is_signer": false,
+            "is_writable": false
+          },
+          {
+            "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "is_signer": false,
+            "is_writable": false
+          }
+        ],
+        "data_hex": "01",
+        "outer_index": 2,
+        "program": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+      },
+      {
+        "accounts": [
+          {
+            "address": "3boJzRQsSSiP11GKrk4QiDW21uTXmT3S2h5eHXsNvjgj",
+            "is_signer": true,
+            "is_writable": true
+          },
+          {
+            "address": "Bbr3Y7Wcy4xs5RqrGw2ZWkPQqjLZqwmNxQdwAEjt7Cdc",
+            "is_signer": false,
+            "is_writable": true
+          }
+        ],
+        "data_hex": "020000003880b13b00000000",
+        "outer_index": 3,
+        "program": "11111111111111111111111111111111"
+      },
+      {
+        "accounts": [
+          {
+            "address": "3boJzRQsSSiP11GKrk4QiDW21uTXmT3S2h5eHXsNvjgj",
+            "is_signer": true,
+            "is_writable": true
+          },
+          {
+            "address": "Bbr3Y7Wcy4xs5RqrGw2ZWkPQqjLZqwmNxQdwAEjt7Cdc",
+            "is_signer": false,
+            "is_writable": true
+          },
+          {
+            "address": "3boJzRQsSSiP11GKrk4QiDW21uTXmT3S2h5eHXsNvjgj",
+            "is_signer": true,
+            "is_writable": true
+          },
+          {
+            "address": "So11111111111111111111111111111111111111112",
+            "is_signer": false,
+            "is_writable": false
+          },
+          {
+            "address": "11111111111111111111111111111111",
+            "is_signer": false,
+            "is_writable": false
+          },
+          {
+            "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "is_signer": false,
+            "is_writable": false
+          }
+        ],
+        "data_hex": "01",
+        "outer_index": 4,
+        "program": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+      },
+      {
+        "accounts": [
+          {
+            "address": "Bbr3Y7Wcy4xs5RqrGw2ZWkPQqjLZqwmNxQdwAEjt7Cdc",
+            "is_signer": false,
+            "is_writable": true
+          }
+        ],
+        "data_hex": "11",
+        "outer_index": 5,
+        "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+      },
+      {
+        "accounts": [
+          {
+            "address": "Bbr3Y7Wcy4xs5RqrGw2ZWkPQqjLZqwmNxQdwAEjt7Cdc",
+            "is_signer": false,
+            "is_writable": true
+          },
+          {
+            "address": "3boJzRQsSSiP11GKrk4QiDW21uTXmT3S2h5eHXsNvjgj",
+            "is_signer": true,
+            "is_writable": true
+          },
+          {
+            "address": "3boJzRQsSSiP11GKrk4QiDW21uTXmT3S2h5eHXsNvjgj",
+            "is_signer": true,
+            "is_writable": true
+          }
+        ],
+        "data_hex": "09",
+        "outer_index": 9,
+        "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+      }
+    ],
+    "uses_lookup_tables": false
+  },
+  {
+    "action": "deposit_reserve_liquidity_and_obligation_collateral",
+    "admitted": false,
+    "capture_sha256": "cb46e938a131749745a886af2b84b4ac7c22cd55a48653ddab17196b9a7e816c",
+    "current_rejection_code": "unsupported_transaction",
+    "current_rejection_detail": "unsupported program 11111111111111111111111111111111 in a Kamino KLend replay; the supported contract admits KLend and compute-budget instructions only",
+    "limitation_class": "B: eligibility/admission",
+    "lookup_table_count": 0,
+    "message_version": "legacy",
+    "replay_eligible_production_evidence": false,
+    "resolved_address_count": 0,
+    "signature": "21QjNsJU9WDnbHaJSbx5ZAvfwctCgFGuZkob3ZhZxT2oWhQnSKCk56TTzuNomH9Na7mTn55g1zUkJAw3ZdrY9RJ2",
+    "slot": 448170827,
+    "standard_program_companions": [
+      {
+        "accounts": [
+          {
+            "address": "Gruh6YKhDtH3yreu2G725ySoBfhNH6DBAtAaSDCt5aBr",
+            "is_signer": true,
+            "is_writable": true
+          },
+          {
+            "address": "BshUsSancK4CKL7yt9Nmtgy1saPQekwNthZ8HmCo7jR9",
+            "is_signer": false,
+            "is_writable": true
+          }
+        ],
+        "data_hex": "02000000f4c9190000000000",
+        "outer_index": 0,
+        "program": "11111111111111111111111111111111"
+      },
+      {
+        "accounts": [
+          {
+            "address": "Gruh6YKhDtH3yreu2G725ySoBfhNH6DBAtAaSDCt5aBr",
+            "is_signer": true,
+            "is_writable": true
+          },
+          {
+            "address": "BshUsSancK4CKL7yt9Nmtgy1saPQekwNthZ8HmCo7jR9",
+            "is_signer": false,
+            "is_writable": true
+          },
+          {
+            "address": "Gruh6YKhDtH3yreu2G725ySoBfhNH6DBAtAaSDCt5aBr",
+            "is_signer": true,
+            "is_writable": true
+          },
+          {
+            "address": "So11111111111111111111111111111111111111112",
+            "is_signer": false,
+            "is_writable": true
+          },
+          {
+            "address": "11111111111111111111111111111111",
+            "is_signer": false,
+            "is_writable": false
+          },
+          {
+            "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "is_signer": false,
+            "is_writable": false
+          }
+        ],
+        "data_hex": "01",
+        "outer_index": 1,
+        "program": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+      },
+      {
+        "accounts": [
+          {
+            "address": "BshUsSancK4CKL7yt9Nmtgy1saPQekwNthZ8HmCo7jR9",
+            "is_signer": false,
+            "is_writable": true
+          }
+        ],
+        "data_hex": "11",
+        "outer_index": 2,
+        "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+      },
+      {
+        "accounts": [
+          {
+            "address": "BshUsSancK4CKL7yt9Nmtgy1saPQekwNthZ8HmCo7jR9",
+            "is_signer": false,
+            "is_writable": true
+          },
+          {
+            "address": "Gruh6YKhDtH3yreu2G725ySoBfhNH6DBAtAaSDCt5aBr",
+            "is_signer": true,
+            "is_writable": true
+          },
+          {
+            "address": "Gruh6YKhDtH3yreu2G725ySoBfhNH6DBAtAaSDCt5aBr",
+            "is_signer": true,
+            "is_writable": true
+          }
+        ],
+        "data_hex": "09",
+        "outer_index": 8,
+        "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+      },
+      {
+        "accounts": [],
+        "data_hex": "031027000000000000",
+        "outer_index": 9,
+        "program": "ComputeBudget111111111111111111111111111111"
+      }
+    ],
+    "uses_lookup_tables": false
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "anchor_rule": "One getSlot(finalized) before signature listing; inclusive window [anchor-10000, anchor]. No window changes after collection starts.",
+  "classification_rule": "One row per successful RPC fetch, including on-chain failure; preserve original message/meta. Recognize the four U2 action discriminators diagnostically, including malformed shapes. Audit unchanged normalize, Kamino accept, and replay_eligibility(state=None). Success-only observed action aggregates and all-status recognized instruction counts are distinct. No account acquisition or execution.",
+  "classification_schema": 1,
+  "commitment": "finalized",
+  "control_commit": "8855edb",
+  "expected_genesis_hash": "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d",
+  "fetch_rule": {
+    "max_attempts": 3,
+    "retry_delay_seconds": 1,
+    "retry_on": "transport failure, invalid JSON, JSON-RPC error, or null result; persist every received response",
+    "timeout_seconds": 15,
+    "workers": 4
+  },
+  "finalization_rule": "No unresolved selected fetches or missing classifications; checkpoint complete=false is never a final artifact.",
+  "get_transaction_options": {
+    "commitment": "finalized",
+    "encoding": "json",
+    "maxSupportedTransactionVersion": 0
+  },
+  "network_scope": [
+    "getGenesisHash",
+    "getSlot",
+    "getSignaturesForAddress",
+    "getTransaction"
+  ],
+  "ordering_rule": "source_index defines original RPC order; input enumeration and filesystem order are irrelevant. Canonical outputs sorted by source_index and instruction index.",
+  "program_id": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+  "provider": "https://solana-mainnet.g.alchemy.com",
+  "sample_version": 1,
+  "selection_rule": "Preserve all entries from one getSignaturesForAddress(limit=1000, commitment=finalized) in RPC order with source_index. Select first 200 entries whose slot is in the window, including failed on-chain transactions. Require 200 eligible entries; never replace a failed fetch.",
+  "signature_limit": 1000,
+  "transaction_fetch_limit": 200
+}

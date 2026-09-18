@@ -1,0 +1,10 @@
+{
+  "artifact_files_scanned": 356,
+  "no_private_api_key_used": true,
+  "possible_secret_matches": 0,
+  "scope": [
+    "chosen frozen baseline",
+    "control/recovery/mutation/verification artifacts"
+  ],
+  "synthetic_secret_test_strings_are_test_inputs_only": true
+}
