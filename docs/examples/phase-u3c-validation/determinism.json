@@ -1,0 +1,32 @@
+{
+  "all_eight_original_U3B_proofs_identical": true,
+  "canonical_derived_sha256": {
+    "dependencies/checksums.sha256": "2caf1f37dd917bac499f0cd30841277cdf2d4a5062c9c1990ce3364743db0851",
+    "dependencies/resolved/49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx.json": "61563b17efcf743156ec28cc5bdd56556ea1fdb4c05fc1355fcdefa4f74fb8f6",
+    "dependencies/resolved/55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk.json": "a9046b81ada61822f8722b1e11ce79327c32845cdfd4a292a9d3c16aa58af4ef",
+    "dependencies/resolved/5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V.json": "e0b051e5691af03cc29406573bbf00c553900e67aeffd69124e7fbc53876f732",
+    "dependencies/resolved/5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97.json": "3401b1cd07c87c197075406d28d08b165c25424fe9a965e3a7b279a0bcbe1ed3",
+    "dependencies/stage-table.json": "ed60d9f86e5a6a11f5d459d77b456bf2ea0c3fdf5774a7bfeca9e97fa4a16031",
+    "envelope/checksums.sha256": "9c48f6902d70e85f8316b87d6f928b999307bea52f54ecb345b4ea5130838cdb",
+    "envelope/structure-analysis.json": "904bb85cdf48a70df6132fbeaaf0ed870c736570ffbfccf07fe64657a2932aa9",
+    "envelope/summary.json": "8a6c4e05cdfe57018501c154be45febfb38e5d529b0d702156f6b65393088bad",
+    "envelope/transactions/2dc94E8Mvh83c8MiecgRekd7Vj8YE6aexfVeCJK58K46LQcTRjpDomii6pYmwbdeYmdTM3bVbHw6rhFdtwRtSTnT.json": "e4067b6280dacbcee1e02f66c0370c567de3438a010e037b15a725c81457ec1b",
+    "envelope/transactions/37XJKQbB9fRX1R76cKKGSENNNA2RSY1WvjkCx2Q7joN2irKfTTZ5Z6bHgH4rfgDPJvhXf3peTe4mwxisfpSEmimu.json": "5a6c89cd496a299402ab8d4d40c2a162d850ee4d7136e11bce4bb4e0590bb3a3",
+    "envelope/transactions/3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q.json": "b857885a47c530d72211ce61225a0200ee22d23c9c284ad5951fb62612fcfc02",
+    "envelope/transactions/47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf.json": "d32ddfea37d057f17cae3c3b9169a3c17b5b26fb5718fcb48f92cc0be768c69e",
+    "envelope/transactions/49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx.json": "e8fa71cb7db0c3d8b7f2b3a29b8b7a4483b1eccc8b6e9ab565c7f56e0475035b",
+    "envelope/transactions/55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk.json": "71b33fc41d1ad0a0f8f5935a9e6405f4df87cf0bd76c154fe21c5f217880dcee",
+    "envelope/transactions/5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V.json": "73e7b908f8b9bdb1add5dd5570349f7a126bbc9e27f795130b7836b23c822ce3",
+    "envelope/transactions/5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97.json": "0f0da755631b027e97633f49c08d00d0d0c8bc3a0b5ff11fadf0c7561d61e378"
+  },
+  "dependency_normal_seconds": 12.852341541991336,
+  "dependency_relocated_input_seconds": 11.806315833004192,
+  "dependency_reverse_seconds": 13.083178041997598,
+  "envelope_normal_seconds": 1.0253207499918062,
+  "envelope_reverse_seconds": 0.9814666669990402,
+  "frozen_input_hashes_rechecked": true,
+  "normal_reverse_output_bytes_identical": true,
+  "offline_only": true,
+  "relocated_input_archive_bytes_identical": true,
+  "relocated_output_bytes_identical": true
+}

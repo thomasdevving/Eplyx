@@ -1,0 +1,22 @@
+{
+  "S8_distribution": {
+    "ata_companion": 1,
+    "failed_original": 1,
+    "multiple_actions": 2,
+    "scope_companion": 4
+  },
+  "U3B_proofs_identical": 8,
+  "baseline_fidelity_matches": 0,
+  "envelope_admissible": 4,
+  "frozen_fingerprint": "b97116541aeefc6723ef91a1d38c9be52792d47316b573ac08d49484fd97d0af",
+  "primary_signatures": [
+    "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97",
+    "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk",
+    "5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V",
+    "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx"
+  ],
+  "primary_targets": 4,
+  "production_replay_eligible": 0,
+  "runtime_execution_attempted": 0,
+  "structurally_classified": 4
+}

@@ -1,0 +1,20 @@
+{
+  "C4_binaries_identified": false,
+  "archive_validation_sha256": "c21a90f2a47425dfa4f925c344bcbbd4d667367547bf3c559f74c35a121e95e4",
+  "executable_transaction_constructed": false,
+  "execution_slot": 448194462,
+  "failure": {
+    "code": "dependency_binary_unavailable",
+    "detail": "retained transport failure",
+    "program_id": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+    "requested_slot": 448194461
+  },
+  "frozen_message_proof_id": "b75157021d53ee662c432ddede6ff1115bd1b283b12156b5dc866af9d1d38ae2",
+  "historical_state_acquisition": "not_attempted",
+  "kind": "experimental_envelope_dependency_capture",
+  "pre_slot": 448194461,
+  "programs": [],
+  "runtime_executed": false,
+  "signature": "5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V",
+  "slot_screening": null
+}

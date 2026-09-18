@@ -1,0 +1,2163 @@
+{
+  "decision": "B",
+  "decision_scope": "narrow primary structural envelope admission proven; complete execution support and production replay remain unproven",
+  "kind": "phase_u3c_final_report",
+  "primary_metrics": {
+    "C4_binary_capture_complete": 1,
+    "J_baseline_attempted": 0,
+    "K_all_historical_dependencies_acquired": 0,
+    "M_admitted": 4,
+    "N_classified": 4,
+    "P_baseline_fidelity": 0
+  },
+  "production_replay_eligible": 0,
+  "production_source_hashes": {
+    "engine/src/envelope.rs": "a34d75b4392c8056b09ae738a2657b5d3b397b44983feb3146cb3246c87eb815",
+    "engine/src/protocol/kamino/envelope.rs": "59b37ec3596dba2ed08d407abd9cea73682cf02f878bb5ecf0f306676da9bf03"
+  },
+  "requested_results": {
+    "01_commit_worktree": {
+      "freeze": "commit containing this report and documentation",
+      "frozen_artifacts_additive": true,
+      "initial_HEAD": "e88d9bf40b9210ceea9d0501522c41ee4daeefba",
+      "initial_worktree": "clean",
+      "parent": "e88d9bf40b9210ceea9d0501522c41ee4daeefba"
+    },
+    "02_frozen_identities": {
+      "U3A_checksums_verified": 344,
+      "U3A_fingerprint": "b97116541aeefc6723ef91a1d38c9be52792d47316b573ac08d49484fd97d0af",
+      "U3A_policy_sha256": "3a95c98305aa69e2b7f0502c6e9472f47aea863c3fdf32c12e3644a06a0180c3",
+      "U3B_proofs_identical": 8,
+      "all_recorded_frozen_hashes_unchanged": true
+    },
+    "03_actual_S8_distribution": {
+      "ata_companion": 1,
+      "failed_original": 1,
+      "multiple_actions": 2,
+      "scope_companion": 4
+    },
+    "04_HFn_identity": {
+      "canonical_program": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+      "historical_ELF_source_correspondence_proven": false,
+      "identity": "Scope oracle program in official Kamino-Finance repositories",
+      "interface_source_capture": "../phase-u3c-interface/manifest.json",
+      "source_revisions": {
+        "klend": "a08760976f51a3a58c4a0c6ea27b4a0e565bca79",
+        "scope": "fe5352366a7215dda5c6f7b867a6bb5929d52c94",
+        "scope-sdk": "d77ac13bced666e07719bba3e026f628cd5d3e61"
+      }
+    },
+    "05_exact_HFn_instructions": [
+      {
+        "instruction": {
+          "accounts": [
+            {
+              "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "Sysvar1nstructions1111111111111111111111111",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+              "is_signer": false,
+              "is_writable": false
+            }
+          ],
+          "data": "53bacf83cbfec68204000000580117010d00c801",
+          "program": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ"
+        },
+        "signature": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97"
+      },
+      {
+        "instruction": {
+          "accounts": [
+            {
+              "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "Sysvar1nstructions1111111111111111111111111",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+              "is_signer": false,
+              "is_writable": false
+            }
+          ],
+          "data": "53bacf83cbfec682080000000300c7010d00c8011900cb019400cd01",
+          "program": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ"
+        },
+        "signature": "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk"
+      },
+      {
+        "instruction": {
+          "accounts": [
+            {
+              "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "Sysvar1nstructions1111111111111111111111111",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "pSPcvR8GmG9aKDUbn9nbKYjkxt9hxMS7kF1qqKJaPqJ",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "pSPcvR8GmG9aKDUbn9nbKYjkxt9hxMS7kF1qqKJaPqJ",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+              "is_signer": false,
+              "is_writable": false
+            }
+          ],
+          "data": "53bacf83cbfec68206000000dd000300dd00c7010d00c801",
+          "program": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ"
+        },
+        "signature": "5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V"
+      },
+      {
+        "instruction": {
+          "accounts": [
+            {
+              "address": "3NJYftD5sjVfxSnUdZ1wVML8f3aC6mp1CXCL6L7TnU8C",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "Chpu5ZgfWX5ZzVpUx9Xvv4WPM75Xd7zPJNDPsFnCpLpk",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "GbpsVomudPRRwmqfTmo3MYQVTikPG6QXxqpzJexA1JRb",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "Sysvar1nstructions1111111111111111111111111",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+              "is_signer": false,
+              "is_writable": false
+            }
+          ],
+          "data": "53bacf83cbfec68202000000a001f501",
+          "program": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ"
+        },
+        "signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx"
+      }
+    ],
+    "06_timelines": {
+      "all_original_instructions_retained": true,
+      "complete_per_transaction": "../phase-u3c-envelope/transactions"
+    },
+    "07_semantic_targets": {
+      "identity": [
+        "signature",
+        "outer_index",
+        "program_id",
+        "existing_U2_action_id",
+        "exact_instruction_identity"
+      ],
+      "new_action_families": 0,
+      "new_semantic_subjects": 0,
+      "semantic_fingerprint_unchanged": true
+    },
+    "08_execution_dependencies": {
+      "ATA_dependency_semantics_added": false,
+      "CPI_walker": "existing generic U1 infrastructure",
+      "Scope_semantic_supported": false,
+      "state_writes_and_consumers_recorded": true
+    },
+    "09_envelope_admission": {
+      "API": "kamino::envelope::admit(ProvenV0) -> Option<AdmittedEnvelope>",
+      "deserialized_diagnostics_authorize_admission": false,
+      "distinct_reserves_and_matching_market_required": true,
+      "exact_profile": "Scope, existing ATA witness, reserve refreshes, obligation refresh, single target, compute limit, compute price",
+      "observed_arity_profile": [
+        {
+          "instruction": "depositReserveLiquidityAndObligationCollateralV2",
+          "reserve_refreshes": 2,
+          "scope_tokens": 4
+        },
+        {
+          "instruction": "borrowObligationLiquidityV2",
+          "reserve_refreshes": 4,
+          "scope_tokens": 8
+        },
+        {
+          "instruction": "borrowObligationLiquidityV2",
+          "reserve_refreshes": 2,
+          "scope_tokens": 6
+        },
+        {
+          "instruction": "borrowObligationLiquidityV2",
+          "reserve_refreshes": 2,
+          "scope_tokens": 2
+        }
+      ],
+      "ordinary_admission_unchanged": true,
+      "runtime_authorized_by_structural_admission": false
+    },
+    "10_binary_provenance": {
+      "C4_complete_primary": 1,
+      "C4_incomplete_primary": 3,
+      "artifact": "binary-provenance.json",
+      "current_fallback": false,
+      "exact_predecessor_slots_required": true,
+      "observed_program_source": "original top-level/CPI/invocation evidence",
+      "qualified_archive_validation_sha256": "c21a90f2a47425dfa4f925c344bcbbd4d667367547bf3c559f74c35a121e95e4"
+    },
+    "11_state_provenance": {
+      "C5": "not_attempted",
+      "dependency_protocol_snapshots": 0,
+      "intermediate_state": "must be produced by execution; never captured as seed",
+      "seed_boundary": "S-1 under existing same-slot interference rules",
+      "state_requests": 0
+    },
+    "12_primary_C1_C10": [
+      {
+        "C1": "passed",
+        "C10": "not_attempted",
+        "C2": "passed",
+        "C3": "passed",
+        "C4": "passed",
+        "C5": "not_attempted",
+        "C6": "not_attempted",
+        "C7": "not_attempted",
+        "C8": "not_attempted",
+        "C9": "not_attempted",
+        "cohort_stop": "bounded historical binary acquisition incomplete for three other primary targets",
+        "execution_slot": 448195166,
+        "next_observed_blocker": null,
+        "signature": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97"
+      },
+      {
+        "C1": "passed",
+        "C10": "not_attempted",
+        "C2": "passed",
+        "C3": "passed",
+        "C4": "failed",
+        "C5": "not_attempted",
+        "C6": "not_attempted",
+        "C7": "not_attempted",
+        "C8": "not_attempted",
+        "C9": "not_attempted",
+        "cohort_stop": null,
+        "execution_slot": 448194517,
+        "next_observed_blocker": {
+          "code": "dependency_binary_unavailable",
+          "detail": "retained transport failure",
+          "program_id": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+          "requested_slot": 448194516
+        },
+        "signature": "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk"
+      },
+      {
+        "C1": "passed",
+        "C10": "not_attempted",
+        "C2": "passed",
+        "C3": "passed",
+        "C4": "failed",
+        "C5": "not_attempted",
+        "C6": "not_attempted",
+        "C7": "not_attempted",
+        "C8": "not_attempted",
+        "C9": "not_attempted",
+        "cohort_stop": null,
+        "execution_slot": 448194462,
+        "next_observed_blocker": {
+          "code": "dependency_binary_unavailable",
+          "detail": "retained transport failure",
+          "program_id": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+          "requested_slot": 448194461
+        },
+        "signature": "5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V"
+      },
+      {
+        "C1": "passed",
+        "C10": "not_attempted",
+        "C2": "passed",
+        "C3": "passed",
+        "C4": "failed",
+        "C5": "not_attempted",
+        "C6": "not_attempted",
+        "C7": "not_attempted",
+        "C8": "not_attempted",
+        "C9": "not_attempted",
+        "cohort_stop": null,
+        "execution_slot": 448194435,
+        "next_observed_blocker": {
+          "code": "dependency_binary_unavailable",
+          "detail": "retained transport failure",
+          "program_id": "ComputeBudget111111111111111111111111111111",
+          "requested_slot": 448194434
+        },
+        "signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx"
+      }
+    ],
+    "13_multi_action_analysis": [
+      {
+        "observations": [
+          {
+            "action_id": "borrow_obligation_liquidity",
+            "compiled_target_accounts": [
+              {
+                "address": "J7VP3NfH9hrVzC6s9fZLpjtCfDpiaDVHYEUkhh3VyMxf",
+                "is_signer": true,
+                "is_writable": true
+              },
+              {
+                "address": "6zn3UhC8X1LGgH76TA9qnfuC2wv83jwCvwLJ5Mr8vSWN",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "ESCkPWKHmgNE7Msf77n9yzqJd5kQVWWGy3o5Mgxhvavp",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "2u1tszSeqZ3qBWF3uNGPFc8TzMk2tdiwknnRMWGWjGWH",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "DGBo8HmL7pBWBZLGePjHQ73JKRE37HVZ7ZbjA2FYUZHZ",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "39M8hy7EUypjxsHqsZQmNQqXGpknCwoCXzF7r8WMBbAs",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "63av3Q6327LtDD3Rf82GAX8qjY12tcy7k9YYjZeKiCjN",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "Sysvar1nstructions1111111111111111111111111",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+                "is_signer": false,
+                "is_writable": false
+              }
+            ],
+            "inner_group": {
+              "index": 8,
+              "instructions": [
+                {
+                  "accounts": [
+                    11,
+                    29,
+                    13,
+                    28
+                  ],
+                  "data": "gL8Wu1cVn43hf",
+                  "programIdIndex": 30,
+                  "stackHeight": 2
+                }
+              ]
+            },
+            "instruction_data": "a1808ff5abc7c20611dafe9400000000",
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "market": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+            "obligation": "6zn3UhC8X1LGgH76TA9qnfuC2wv83jwCvwLJ5Mr8vSWN",
+            "outer_index": 8,
+            "program_id": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+            "reserve": "ESCkPWKHmgNE7Msf77n9yzqJd5kQVWWGy3o5Mgxhvavp"
+          },
+          {
+            "action_id": "deposit_reserve_liquidity_and_obligation_collateral",
+            "compiled_target_accounts": [
+              {
+                "address": "J7VP3NfH9hrVzC6s9fZLpjtCfDpiaDVHYEUkhh3VyMxf",
+                "is_signer": true,
+                "is_writable": true
+              },
+              {
+                "address": "6zn3UhC8X1LGgH76TA9qnfuC2wv83jwCvwLJ5Mr8vSWN",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "D6q6wuQSrifJKZYpR1M8R4YawnLDtDsMmWM1NbBmgJ59",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "Bgq7trRgVMeq33yt235zM2onQ4bRDBsY5EWiTetF4qw6",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "B8V6WVjPxW1UGwVDfxH2d2r8SyT4cqn7dQRK6XneVa7D",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "3DzjXRfxRm6iejfyyMynR4tScddaanrePJ1NJU2XnPPL",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "BtajQEHuZJbpjLr2WV6XRpgcZjiKMRbiZZ9uaKyVRERD",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "Sysvar1nstructions1111111111111111111111111",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "6ty9i31n275Yv1izrpH8MyLpDTEUHfTQV6VsgUjZftez",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "JAvnB9AKtgPsTEoKmn24Bq64UMoYcrtWtq42HHBdsPkh",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+                "is_signer": false,
+                "is_writable": false
+              }
+            ],
+            "inner_group": {
+              "index": 12,
+              "instructions": [
+                {
+                  "accounts": [
+                    15,
+                    34,
+                    20,
+                    0
+                  ],
+                  "data": "g8ogEJNuFUMDf",
+                  "programIdIndex": 33,
+                  "stackHeight": 2
+                },
+                {
+                  "accounts": [
+                    21,
+                    22,
+                    28
+                  ],
+                  "data": "6qGqhq1iCd8K",
+                  "programIdIndex": 33,
+                  "stackHeight": 2
+                },
+                {
+                  "accounts": [
+                    28,
+                    23,
+                    24
+                  ],
+                  "data": "A6dvPnBXaVCCvZxLpn2RcT",
+                  "programIdIndex": 31,
+                  "stackHeight": 2
+                }
+              ]
+            },
+            "instruction_data": "d8e0bf1bcc9766af0384029500000000",
+            "instruction_identity": "depositReserveLiquidityAndObligationCollateralV2",
+            "market": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+            "obligation": "6zn3UhC8X1LGgH76TA9qnfuC2wv83jwCvwLJ5Mr8vSWN",
+            "outer_index": 12,
+            "program_id": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+            "reserve": "D6q6wuQSrifJKZYpR1M8R4YawnLDtDsMmWM1NbBmgJ59"
+          }
+        ],
+        "on_chain_success": true,
+        "runtime_execution_attempted": false,
+        "semantic_attribution": "unsupported; existing evaluator uses whole-transaction token balances; instruction-local transfers alone do not establish independent reserve/obligation/rounding deltas",
+        "shared_obligation": true,
+        "shared_reserve": false,
+        "signature": "37XJKQbB9fRX1R76cKKGSENNNA2RSY1WvjkCx2Q7joN2irKfTTZ5Z6bHgH4rfgDPJvhXf3peTe4mwxisfpSEmimu",
+        "slot": 448194959
+      },
+      {
+        "observations": [
+          {
+            "action_id": "deposit_reserve_liquidity_and_obligation_collateral",
+            "compiled_target_accounts": [
+              {
+                "address": "Cm8arRFComUHUARm9B7KgBphuG2WshuUFCPSpG5CAc8D",
+                "is_signer": true,
+                "is_writable": true
+              },
+              {
+                "address": "4pMwMqyGaRVTAikdYdkSRPJZ9DK2YnkVvNWe6Cv2YCCt",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "d4A2prbA2whesmvHaL88BH6Ewn5N4bTSU2Ze8P6Bc4Q",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "So11111111111111111111111111111111111111112",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "GafNuUXj9rxGLn4y79dPu6MHSuPWeJR6UtTWuexpGh3U",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "2UywZrUdyqs5vDchy7fKQJKau2RVyuzBev2XKGPDSiX1",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "8NXMyRD91p3nof61BTkJvrfpGTASHygz1cUvc3HvwyGS",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "FnPyGazTr3REmJ2bXjHK5AF4SifREyTurEhf7MxwPiKC",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "Sysvar1nstructions1111111111111111111111111",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "7aexzJ7g77pcmvn1hnQDVomfRR3kpnwE32PpiQJ8kzYs",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "955xWFhSDcDiUgUr4sBRtCpTLiMd4H5uZLAmgtP3R3sX",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+                "is_signer": false,
+                "is_writable": false
+              }
+            ],
+            "inner_group": {
+              "index": 9,
+              "instructions": [
+                {
+                  "accounts": [
+                    31,
+                    49,
+                    40,
+                    0
+                  ],
+                  "data": "gcPhHoRitU4xY",
+                  "programIdIndex": 7,
+                  "stackHeight": 2
+                },
+                {
+                  "accounts": [
+                    32,
+                    34,
+                    56
+                  ],
+                  "data": "6JNRvFAWSJrj",
+                  "programIdIndex": 7,
+                  "stackHeight": 2
+                },
+                {
+                  "accounts": [
+                    56,
+                    30,
+                    35
+                  ],
+                  "data": "A6dvPnBXaVBtK3CybBFwXD",
+                  "programIdIndex": 59,
+                  "stackHeight": 2
+                }
+              ]
+            },
+            "instruction_data": "d8e0bf1bcc9766af27e1e4f60d000000",
+            "instruction_identity": "depositReserveLiquidityAndObligationCollateralV2",
+            "market": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+            "obligation": "4pMwMqyGaRVTAikdYdkSRPJZ9DK2YnkVvNWe6Cv2YCCt",
+            "outer_index": 9,
+            "program_id": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+            "reserve": "d4A2prbA2whesmvHaL88BH6Ewn5N4bTSU2Ze8P6Bc4Q"
+          },
+          {
+            "action_id": "borrow_obligation_liquidity",
+            "compiled_target_accounts": [
+              {
+                "address": "Cm8arRFComUHUARm9B7KgBphuG2WshuUFCPSpG5CAc8D",
+                "is_signer": true,
+                "is_writable": true
+              },
+              {
+                "address": "4pMwMqyGaRVTAikdYdkSRPJZ9DK2YnkVvNWe6Cv2YCCt",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "D6q6wuQSrifJKZYpR1M8R4YawnLDtDsMmWM1NbBmgJ59",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "Bgq7trRgVMeq33yt235zM2onQ4bRDBsY5EWiTetF4qw6",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "BbDUrk1bVtSixgQsPLBJFZEF7mwGstnD5joA1WzYvYFX",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "4UMmHKV515oq6X9aGf3t1cNMLtQ4HYyQZpivE5imWuyu",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "Sysvar1nstructions1111111111111111111111111",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "d4A2prbA2whesmvHaL88BH6Ewn5N4bTSU2Ze8P6Bc4Q",
+                "is_signer": false,
+                "is_writable": true
+              }
+            ],
+            "inner_group": {
+              "index": 13,
+              "instructions": [
+                {
+                  "accounts": [
+                    37,
+                    46,
+                    28,
+                    56
+                  ],
+                  "data": "gJuYHXggW6S8u",
+                  "programIdIndex": 7,
+                  "stackHeight": 2
+                }
+              ]
+            },
+            "instruction_data": "a1808ff5abc7c2061032a80201000000",
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "market": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+            "obligation": "4pMwMqyGaRVTAikdYdkSRPJZ9DK2YnkVvNWe6Cv2YCCt",
+            "outer_index": 13,
+            "program_id": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+            "reserve": "D6q6wuQSrifJKZYpR1M8R4YawnLDtDsMmWM1NbBmgJ59"
+          }
+        ],
+        "on_chain_success": true,
+        "runtime_execution_attempted": false,
+        "semantic_attribution": "unsupported; existing evaluator uses whole-transaction token balances; instruction-local transfers alone do not establish independent reserve/obligation/rounding deltas",
+        "shared_obligation": true,
+        "shared_reserve": false,
+        "signature": "3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q",
+        "slot": 448195147
+      },
+      {
+        "observations": [
+          {
+            "action_id": "deposit_reserve_liquidity_and_obligation_collateral",
+            "compiled_target_accounts": [
+              {
+                "address": "Cm8arRFComUHUARm9B7KgBphuG2WshuUFCPSpG5CAc8D",
+                "is_signer": true,
+                "is_writable": true
+              },
+              {
+                "address": "4pMwMqyGaRVTAikdYdkSRPJZ9DK2YnkVvNWe6Cv2YCCt",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "d4A2prbA2whesmvHaL88BH6Ewn5N4bTSU2Ze8P6Bc4Q",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "So11111111111111111111111111111111111111112",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "GafNuUXj9rxGLn4y79dPu6MHSuPWeJR6UtTWuexpGh3U",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "2UywZrUdyqs5vDchy7fKQJKau2RVyuzBev2XKGPDSiX1",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "8NXMyRD91p3nof61BTkJvrfpGTASHygz1cUvc3HvwyGS",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "FnPyGazTr3REmJ2bXjHK5AF4SifREyTurEhf7MxwPiKC",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "Sysvar1nstructions1111111111111111111111111",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "7aexzJ7g77pcmvn1hnQDVomfRR3kpnwE32PpiQJ8kzYs",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "955xWFhSDcDiUgUr4sBRtCpTLiMd4H5uZLAmgtP3R3sX",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+                "is_signer": false,
+                "is_writable": false
+              }
+            ],
+            "inner_group": {
+              "index": 9,
+              "instructions": [
+                {
+                  "accounts": [
+                    31,
+                    52,
+                    44,
+                    0
+                  ],
+                  "data": "gcPhHoRitU4xY",
+                  "programIdIndex": 7,
+                  "stackHeight": 2
+                },
+                {
+                  "accounts": [
+                    36,
+                    38,
+                    59
+                  ],
+                  "data": "6V5v8pkbDtSB",
+                  "programIdIndex": 7,
+                  "stackHeight": 2
+                },
+                {
+                  "accounts": [
+                    59,
+                    30,
+                    39
+                  ],
+                  "data": "A6dvPnBXaVC52XRZBG3X6f",
+                  "programIdIndex": 62,
+                  "stackHeight": 2
+                }
+              ]
+            },
+            "instruction_data": "d8e0bf1bcc9766af27e1e4f60d000000",
+            "instruction_identity": "depositReserveLiquidityAndObligationCollateralV2",
+            "market": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+            "obligation": "4pMwMqyGaRVTAikdYdkSRPJZ9DK2YnkVvNWe6Cv2YCCt",
+            "outer_index": 9,
+            "program_id": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+            "reserve": "d4A2prbA2whesmvHaL88BH6Ewn5N4bTSU2Ze8P6Bc4Q"
+          },
+          {
+            "action_id": "borrow_obligation_liquidity",
+            "compiled_target_accounts": [
+              {
+                "address": "Cm8arRFComUHUARm9B7KgBphuG2WshuUFCPSpG5CAc8D",
+                "is_signer": true,
+                "is_writable": true
+              },
+              {
+                "address": "4pMwMqyGaRVTAikdYdkSRPJZ9DK2YnkVvNWe6Cv2YCCt",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "D6q6wuQSrifJKZYpR1M8R4YawnLDtDsMmWM1NbBmgJ59",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "Bgq7trRgVMeq33yt235zM2onQ4bRDBsY5EWiTetF4qw6",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "BbDUrk1bVtSixgQsPLBJFZEF7mwGstnD5joA1WzYvYFX",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "4UMmHKV515oq6X9aGf3t1cNMLtQ4HYyQZpivE5imWuyu",
+                "is_signer": false,
+                "is_writable": true
+              },
+              {
+                "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "Sysvar1nstructions1111111111111111111111111",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+                "is_signer": false,
+                "is_writable": false
+              },
+              {
+                "address": "d4A2prbA2whesmvHaL88BH6Ewn5N4bTSU2Ze8P6Bc4Q",
+                "is_signer": false,
+                "is_writable": true
+              }
+            ],
+            "inner_group": {
+              "index": 13,
+              "instructions": [
+                {
+                  "accounts": [
+                    41,
+                    50,
+                    28,
+                    59
+                  ],
+                  "data": "hDxqnDpTmTshX",
+                  "programIdIndex": 7,
+                  "stackHeight": 2
+                }
+              ]
+            },
+            "instruction_data": "a1808ff5abc7c2065810a40201000000",
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "market": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+            "obligation": "4pMwMqyGaRVTAikdYdkSRPJZ9DK2YnkVvNWe6Cv2YCCt",
+            "outer_index": 13,
+            "program_id": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+            "reserve": "D6q6wuQSrifJKZYpR1M8R4YawnLDtDsMmWM1NbBmgJ59"
+          }
+        ],
+        "on_chain_success": false,
+        "runtime_execution_attempted": false,
+        "semantic_attribution": "unsupported; existing evaluator uses whole-transaction token balances; instruction-local transfers alone do not establish independent reserve/obligation/rounding deltas",
+        "shared_obligation": true,
+        "shared_reserve": false,
+        "signature": "47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf",
+        "slot": 448195003
+      }
+    ],
+    "14_attribution": {
+      "independent_finding_sets_emitted": 0,
+      "instruction_boundary_state_snapshots_proven": false,
+      "instruction_local_CPI_groups_preserved": true,
+      "result": "unsupported_multi_action_attribution",
+      "whole_transaction_delta_guessed": false
+    },
+    "15_ATA_analysis": {
+      "creation_lifecycle_implemented": false,
+      "metadata": [
+        {
+          "account": "2dE9E2GcHYLjzC7PEsEFH9Lxrxr1yeGigXs5uzJSff8o",
+          "data": "01",
+          "inner_group": null,
+          "interpretation": "existing-token/no-creation metadata witness; historical account bytes and local execution not established",
+          "mint": "27G8MtK7VtTcCHkpASjSDdkWWYfoqT6ggEuKidVJidD4",
+          "outer_index": 0,
+          "post_lamports": 1488440,
+          "post_token_balance": {
+            "accountIndex": 1,
+            "mint": "27G8MtK7VtTcCHkpASjSDdkWWYfoqT6ggEuKidVJidD4",
+            "owner": "CTuvNKiwwknG48g6629h27z7htPPeXqj23KozhEN8GJr",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 6,
+              "uiAmount": null,
+              "uiAmountString": "0"
+            }
+          },
+          "pre_lamports": 1488440,
+          "pre_token_balance": {
+            "accountIndex": 1,
+            "mint": "27G8MtK7VtTcCHkpASjSDdkWWYfoqT6ggEuKidVJidD4",
+            "owner": "CTuvNKiwwknG48g6629h27z7htPPeXqj23KozhEN8GJr",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "920567",
+              "decimals": 6,
+              "uiAmount": 0.920567,
+              "uiAmountString": "0.920567"
+            }
+          },
+          "primary_group": false,
+          "signature": "2dc94E8Mvh83c8MiecgRekd7Vj8YE6aexfVeCJK58K46LQcTRjpDomii6pYmwbdeYmdTM3bVbHw6rhFdtwRtSTnT",
+          "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "account": "FnPyGazTr3REmJ2bXjHK5AF4SifREyTurEhf7MxwPiKC",
+          "data": "01",
+          "inner_group": {
+            "index": 0,
+            "instructions": [
+              {
+                "accounts": [
+                  49
+                ],
+                "data": "84eT",
+                "programIdIndex": 7,
+                "stackHeight": 2
+              },
+              {
+                "accounts": [
+                  0,
+                  31
+                ],
+                "data": "111135fAZn8PZBEU8J8iUmUTdbmBE6po1LhhgEJXngDjhxmUTshDA8EHdXaMJUsXdMg3PE",
+                "programIdIndex": 2,
+                "stackHeight": 2
+              },
+              {
+                "accounts": [
+                  31
+                ],
+                "data": "P",
+                "programIdIndex": 7,
+                "stackHeight": 2
+              },
+              {
+                "accounts": [
+                  31,
+                  49
+                ],
+                "data": "6YtqFncn16ck7jeXHELJfAAG6Q9cLHTBAx7ZJJqm1TkZB",
+                "programIdIndex": 7,
+                "stackHeight": 2
+              }
+            ]
+          },
+          "interpretation": "existing-token/no-creation metadata witness; historical account bytes and local execution not established",
+          "mint": "So11111111111111111111111111111111111111112",
+          "outer_index": 0,
+          "post_lamports": 174368711,
+          "post_token_balance": {
+            "accountIndex": 31,
+            "mint": "So11111111111111111111111111111111111111112",
+            "owner": "Cm8arRFComUHUARm9B7KgBphuG2WshuUFCPSpG5CAc8D",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "172880271",
+              "decimals": 9,
+              "uiAmount": 0.172880271,
+              "uiAmountString": "0.172880271"
+            }
+          },
+          "pre_lamports": 0,
+          "pre_token_balance": null,
+          "primary_group": false,
+          "signature": "3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q",
+          "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "account": "4UMmHKV515oq6X9aGf3t1cNMLtQ4HYyQZpivE5imWuyu",
+          "data": "01",
+          "inner_group": null,
+          "interpretation": "existing-token/no-creation metadata witness; historical account bytes and local execution not established",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outer_index": 1,
+          "post_lamports": 2039281,
+          "post_token_balance": {
+            "accountIndex": 28,
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "owner": "Cm8arRFComUHUARm9B7KgBphuG2WshuUFCPSpG5CAc8D",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "10837542468",
+              "decimals": 6,
+              "uiAmount": 10837.542468,
+              "uiAmountString": "10837.542468"
+            }
+          },
+          "pre_lamports": 2039281,
+          "pre_token_balance": {
+            "accountIndex": 28,
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "owner": "Cm8arRFComUHUARm9B7KgBphuG2WshuUFCPSpG5CAc8D",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "10837542468",
+              "decimals": 6,
+              "uiAmount": 10837.542468,
+              "uiAmountString": "10837.542468"
+            }
+          },
+          "primary_group": false,
+          "signature": "3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q",
+          "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "account": "6CmqJ191AhMmDeW5g7BNmEEszfsExkvZfZLZYTbDsubE",
+          "data": "01",
+          "inner_group": null,
+          "interpretation": "existing-token/no-creation metadata witness; historical account bytes and local execution not established",
+          "mint": "2UywZrUdyqs5vDchy7fKQJKau2RVyuzBev2XKGPDSiX1",
+          "outer_index": 2,
+          "post_lamports": 2039280,
+          "post_token_balance": {
+            "accountIndex": 29,
+            "mint": "2UywZrUdyqs5vDchy7fKQJKau2RVyuzBev2XKGPDSiX1",
+            "owner": "Cm8arRFComUHUARm9B7KgBphuG2WshuUFCPSpG5CAc8D",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 6,
+              "uiAmount": null,
+              "uiAmountString": "0"
+            }
+          },
+          "pre_lamports": 2039280,
+          "pre_token_balance": {
+            "accountIndex": 29,
+            "mint": "2UywZrUdyqs5vDchy7fKQJKau2RVyuzBev2XKGPDSiX1",
+            "owner": "Cm8arRFComUHUARm9B7KgBphuG2WshuUFCPSpG5CAc8D",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 6,
+              "uiAmount": null,
+              "uiAmountString": "0"
+            }
+          },
+          "primary_group": false,
+          "signature": "3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q",
+          "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "account": "FnPyGazTr3REmJ2bXjHK5AF4SifREyTurEhf7MxwPiKC",
+          "data": "01",
+          "inner_group": {
+            "index": 0,
+            "instructions": [
+              {
+                "accounts": [
+                  52
+                ],
+                "data": "84eT",
+                "programIdIndex": 7,
+                "stackHeight": 2
+              },
+              {
+                "accounts": [
+                  0,
+                  31
+                ],
+                "data": "111135fAZn8PZBEU8J8iUmUTdbmBE6po1LhhgEJXngDjhxmUTshDA8EHdXaMJUsXdMg3PE",
+                "programIdIndex": 2,
+                "stackHeight": 2
+              },
+              {
+                "accounts": [
+                  31
+                ],
+                "data": "P",
+                "programIdIndex": 7,
+                "stackHeight": 2
+              },
+              {
+                "accounts": [
+                  31,
+                  52
+                ],
+                "data": "6YtqFncn16ck7jeXHELJfAAG6Q9cLHTBAx7ZJJqm1TkZB",
+                "programIdIndex": 7,
+                "stackHeight": 2
+              }
+            ]
+          },
+          "interpretation": "existing-token/no-creation metadata witness; historical account bytes and local execution not established",
+          "mint": "So11111111111111111111111111111111111111112",
+          "outer_index": 0,
+          "post_lamports": 0,
+          "post_token_balance": null,
+          "pre_lamports": 0,
+          "pre_token_balance": null,
+          "primary_group": false,
+          "signature": "47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf",
+          "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "account": "4UMmHKV515oq6X9aGf3t1cNMLtQ4HYyQZpivE5imWuyu",
+          "data": "01",
+          "inner_group": null,
+          "interpretation": "existing-token/no-creation metadata witness; historical account bytes and local execution not established",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outer_index": 1,
+          "post_lamports": 2039281,
+          "post_token_balance": {
+            "accountIndex": 28,
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "owner": "Cm8arRFComUHUARm9B7KgBphuG2WshuUFCPSpG5CAc8D",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "10837541468",
+              "decimals": 6,
+              "uiAmount": 10837.541468,
+              "uiAmountString": "10837.541468"
+            }
+          },
+          "pre_lamports": 2039281,
+          "pre_token_balance": {
+            "accountIndex": 28,
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "owner": "Cm8arRFComUHUARm9B7KgBphuG2WshuUFCPSpG5CAc8D",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "10837541468",
+              "decimals": 6,
+              "uiAmount": 10837.541468,
+              "uiAmountString": "10837.541468"
+            }
+          },
+          "primary_group": false,
+          "signature": "47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf",
+          "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "account": "6CmqJ191AhMmDeW5g7BNmEEszfsExkvZfZLZYTbDsubE",
+          "data": "01",
+          "inner_group": null,
+          "interpretation": "existing-token/no-creation metadata witness; historical account bytes and local execution not established",
+          "mint": "2UywZrUdyqs5vDchy7fKQJKau2RVyuzBev2XKGPDSiX1",
+          "outer_index": 2,
+          "post_lamports": 2039280,
+          "post_token_balance": {
+            "accountIndex": 29,
+            "mint": "2UywZrUdyqs5vDchy7fKQJKau2RVyuzBev2XKGPDSiX1",
+            "owner": "Cm8arRFComUHUARm9B7KgBphuG2WshuUFCPSpG5CAc8D",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 6,
+              "uiAmount": null,
+              "uiAmountString": "0"
+            }
+          },
+          "pre_lamports": 2039280,
+          "pre_token_balance": {
+            "accountIndex": 29,
+            "mint": "2UywZrUdyqs5vDchy7fKQJKau2RVyuzBev2XKGPDSiX1",
+            "owner": "Cm8arRFComUHUARm9B7KgBphuG2WshuUFCPSpG5CAc8D",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 6,
+              "uiAmount": null,
+              "uiAmountString": "0"
+            }
+          },
+          "primary_group": false,
+          "signature": "47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf",
+          "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "account": "2cgzHpjXndKmD8853ehSy7NGAiQ9Xc1HDCBNMGus6wkj",
+          "data": "01",
+          "inner_group": null,
+          "interpretation": "existing-token/no-creation metadata witness; historical account bytes and local execution not established",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outer_index": 1,
+          "post_lamports": 1855569,
+          "post_token_balance": {
+            "accountIndex": 1,
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "owner": "CTuvNKiwwknG48g6629h27z7htPPeXqj23KozhEN8GJr",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "3590359",
+              "decimals": 6,
+              "uiAmount": 3.590359,
+              "uiAmountString": "3.590359"
+            }
+          },
+          "pre_lamports": 1855569,
+          "pre_token_balance": {
+            "accountIndex": 1,
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "owner": "CTuvNKiwwknG48g6629h27z7htPPeXqj23KozhEN8GJr",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 6,
+              "uiAmount": null,
+              "uiAmountString": "0"
+            }
+          },
+          "primary_group": true,
+          "signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx",
+          "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "account": "AEueaqsjpNUHV7v4BSmZfSq39NaoWM9BnYfmpbfP3Fsh",
+          "data": "01",
+          "inner_group": null,
+          "interpretation": "existing-token/no-creation metadata witness; historical account bytes and local execution not established",
+          "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+          "outer_index": 1,
+          "post_lamports": 2192400,
+          "post_token_balance": {
+            "accountIndex": 5,
+            "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+            "owner": "HL2fkpkZ1ZPphr1UnDcN9N2mQQNgbtLeCR4RHmgCKpur",
+            "programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "uiTokenAmount": {
+              "amount": "50002000000",
+              "decimals": 6,
+              "uiAmount": 50002.0,
+              "uiAmountString": "50002"
+            }
+          },
+          "pre_lamports": 2192400,
+          "pre_token_balance": {
+            "accountIndex": 5,
+            "mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+            "owner": "HL2fkpkZ1ZPphr1UnDcN9N2mQQNgbtLeCR4RHmgCKpur",
+            "programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 6,
+              "uiAmount": null,
+              "uiAmountString": "0"
+            }
+          },
+          "primary_group": true,
+          "signature": "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk",
+          "token_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "account": "CgYCkFUg2hZiUUZsxWJovdFNtHxukQDapxL1E4p2xMPM",
+          "data": "01",
+          "inner_group": null,
+          "interpretation": "existing-token/no-creation metadata witness; historical account bytes and local execution not established",
+          "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+          "outer_index": 1,
+          "post_lamports": 2039283,
+          "post_token_balance": {
+            "accountIndex": 3,
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "owner": "BW1vV7pcnTJ3P1nG8KcPc9NnmvuCkQcvSpRjUrq28oTA",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "200000000",
+              "decimals": 6,
+              "uiAmount": 200.0,
+              "uiAmountString": "200"
+            }
+          },
+          "pre_lamports": 2039283,
+          "pre_token_balance": {
+            "accountIndex": 3,
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "owner": "BW1vV7pcnTJ3P1nG8KcPc9NnmvuCkQcvSpRjUrq28oTA",
+            "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "uiTokenAmount": {
+              "amount": "0",
+              "decimals": 6,
+              "uiAmount": null,
+              "uiAmountString": "0"
+            }
+          },
+          "primary_group": true,
+          "signature": "5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V",
+          "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "account": "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+          "data": "01",
+          "inner_group": null,
+          "interpretation": "existing-token/no-creation metadata witness; historical account bytes and local execution not established",
+          "mint": "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+          "outer_index": 1,
+          "post_lamports": 2136720,
+          "post_token_balance": {
+            "accountIndex": 3,
+            "mint": "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+            "owner": "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+            "programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "uiTokenAmount": {
+              "amount": "1",
+              "decimals": 8,
+              "uiAmount": 1e-08,
+              "uiAmountString": "0.00000001"
+            }
+          },
+          "pre_lamports": 2136720,
+          "pre_token_balance": {
+            "accountIndex": 3,
+            "mint": "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+            "owner": "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+            "programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "uiTokenAmount": {
+              "amount": "46523145",
+              "decimals": 8,
+              "uiAmount": 0.46523145,
+              "uiAmountString": "0.46523145"
+            }
+          },
+          "primary_group": true,
+          "signature": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97",
+          "token_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        }
+      ],
+      "primary_rule": "CreateIdempotent with existing-token/no-creation witness; real instruction retained",
+      "third_group_runtime_or_admission_unlocked": false
+    },
+    "16_legacy_system_analysis": {
+      "excluded_from_eight_LUT_targets": true,
+      "first_rejection": {
+        "class": "B",
+        "code": "unsupported_transaction",
+        "detail": "unsupported program 11111111111111111111111111111111 in a Kamino KLend replay; the supported contract admits KLend and compute-budget instructions only",
+        "stage": "admission"
+      },
+      "outer_0_system_transfer_lamports": 1667810,
+      "runtime_execution_attempted": false,
+      "signature": "2bcGD3XPZoBaQ9VL1oL4HtJ45sSatCYwPycGuLCNh9NxqhHtcahXYFYsYfZNvYk5HgXGaCYZAJrn256ZLgoHMjv6",
+      "slot": 448195333,
+      "subsequent_token_instructions": {
+        "outer_2": "SyncNative",
+        "outer_8": "CloseAccount"
+      },
+      "support": "not implemented; lifecycle distinct from primary existing-ATA path",
+      "timeline": [
+        {
+          "accounts": [
+            {
+              "address": "6GQNgoq6ZZRU4ZgHeqxCQbHpCXC6qfxarh5HDKXruNWx",
+              "is_signer": true,
+              "is_writable": true
+            },
+            {
+              "address": "BWkudvSNY2soFkhh5Q2jHcjMut8NXi1KvVApFH5ZriJT",
+              "is_signer": false,
+              "is_writable": true
+            }
+          ],
+          "data": "02000000e272190000000000",
+          "program": "11111111111111111111111111111111"
+        },
+        {
+          "accounts": [
+            {
+              "address": "6GQNgoq6ZZRU4ZgHeqxCQbHpCXC6qfxarh5HDKXruNWx",
+              "is_signer": true,
+              "is_writable": true
+            },
+            {
+              "address": "BWkudvSNY2soFkhh5Q2jHcjMut8NXi1KvVApFH5ZriJT",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "6GQNgoq6ZZRU4ZgHeqxCQbHpCXC6qfxarh5HDKXruNWx",
+              "is_signer": true,
+              "is_writable": true
+            },
+            {
+              "address": "So11111111111111111111111111111111111111112",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "11111111111111111111111111111111",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "is_signer": false,
+              "is_writable": false
+            }
+          ],
+          "data": "01",
+          "program": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "accounts": [
+            {
+              "address": "BWkudvSNY2soFkhh5Q2jHcjMut8NXi1KvVApFH5ZriJT",
+              "is_signer": false,
+              "is_writable": true
+            }
+          ],
+          "data": "11",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "accounts": [
+            {
+              "address": "d4A2prbA2whesmvHaL88BH6Ewn5N4bTSU2Ze8P6Bc4Q",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+              "is_signer": false,
+              "is_writable": false
+            }
+          ],
+          "data": "02da8aeb4fc91966",
+          "program": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD"
+        },
+        {
+          "accounts": [
+            {
+              "address": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "2k4wWqxyJ5ZUXP8RCcQ2kkFgwS1DAiGYcNthZ1rBegbs",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "d4A2prbA2whesmvHaL88BH6Ewn5N4bTSU2Ze8P6Bc4Q",
+              "is_signer": false,
+              "is_writable": true
+            }
+          ],
+          "data": "218493e497c04859",
+          "program": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD"
+        },
+        {
+          "accounts": [
+            {
+              "address": "6GQNgoq6ZZRU4ZgHeqxCQbHpCXC6qfxarh5HDKXruNWx",
+              "is_signer": true,
+              "is_writable": true
+            },
+            {
+              "address": "2k4wWqxyJ5ZUXP8RCcQ2kkFgwS1DAiGYcNthZ1rBegbs",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "d4A2prbA2whesmvHaL88BH6Ewn5N4bTSU2Ze8P6Bc4Q",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "955xWFhSDcDiUgUr4sBRtCpTLiMd4H5uZLAmgtP3R3sX",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "3DKbFij3LhjsF5cpPgDDfiuKkRYhZLraUUcappSGRpt7",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "SysvarRent111111111111111111111111111111111",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "11111111111111111111111111111111",
+              "is_signer": false,
+              "is_writable": false
+            }
+          ],
+          "data": "8c90fd150a4af80300",
+          "program": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD"
+        },
+        {
+          "accounts": [
+            {
+              "address": "6GQNgoq6ZZRU4ZgHeqxCQbHpCXC6qfxarh5HDKXruNWx",
+              "is_signer": true,
+              "is_writable": true
+            },
+            {
+              "address": "2k4wWqxyJ5ZUXP8RCcQ2kkFgwS1DAiGYcNthZ1rBegbs",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "d4A2prbA2whesmvHaL88BH6Ewn5N4bTSU2Ze8P6Bc4Q",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "So11111111111111111111111111111111111111112",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "GafNuUXj9rxGLn4y79dPu6MHSuPWeJR6UtTWuexpGh3U",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "2UywZrUdyqs5vDchy7fKQJKau2RVyuzBev2XKGPDSiX1",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "8NXMyRD91p3nof61BTkJvrfpGTASHygz1cUvc3HvwyGS",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "BWkudvSNY2soFkhh5Q2jHcjMut8NXi1KvVApFH5ZriJT",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "Sysvar1nstructions1111111111111111111111111",
+              "is_signer": false,
+              "is_writable": false
+            }
+          ],
+          "data": "81c70402de271a2eaabc020000000000",
+          "program": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD"
+        },
+        {
+          "accounts": [
+            {
+              "address": "6GQNgoq6ZZRU4ZgHeqxCQbHpCXC6qfxarh5HDKXruNWx",
+              "is_signer": true,
+              "is_writable": true
+            },
+            {
+              "address": "2k4wWqxyJ5ZUXP8RCcQ2kkFgwS1DAiGYcNthZ1rBegbs",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "d4A2prbA2whesmvHaL88BH6Ewn5N4bTSU2Ze8P6Bc4Q",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "955xWFhSDcDiUgUr4sBRtCpTLiMd4H5uZLAmgtP3R3sX",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "3DKbFij3LhjsF5cpPgDDfiuKkRYhZLraUUcappSGRpt7",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "SysvarRent111111111111111111111111111111111",
+              "is_signer": false,
+              "is_writable": false
+            },
+            {
+              "address": "11111111111111111111111111111111",
+              "is_signer": false,
+              "is_writable": false
+            }
+          ],
+          "data": "8c90fd150a4af80300",
+          "program": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD"
+        },
+        {
+          "accounts": [
+            {
+              "address": "BWkudvSNY2soFkhh5Q2jHcjMut8NXi1KvVApFH5ZriJT",
+              "is_signer": false,
+              "is_writable": true
+            },
+            {
+              "address": "6GQNgoq6ZZRU4ZgHeqxCQbHpCXC6qfxarh5HDKXruNWx",
+              "is_signer": true,
+              "is_writable": true
+            },
+            {
+              "address": "6GQNgoq6ZZRU4ZgHeqxCQbHpCXC6qfxarh5HDKXruNWx",
+              "is_signer": true,
+              "is_writable": true
+            }
+          ],
+          "data": "09",
+          "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "accounts": [],
+          "data": "031027000000000000",
+          "program": "ComputeBudget111111111111111111111111111111"
+        }
+      ],
+      "wrapped_sol_account": "BWkudvSNY2soFkhh5Q2jHcjMut8NXi1KvVApFH5ZriJT",
+      "wrapped_sol_post_lamports": 0,
+      "wrapped_sol_pre_lamports": 1488440
+    },
+    "17_advanced": {
+      "denominator": 4,
+      "failed_original_policy_unchanged": true,
+      "primary_old_Scope_rejection_advanced_experimentally": 4,
+      "production_eligibility_added": 0
+    },
+    "18_next_blockers": {
+      "complete_binary_target_state_stage_not_attempted": 1,
+      "dependency_binary_unavailable": 3,
+      "observed_state_or_runtime_blockers": 0,
+      "stop_rule": "user section 41; cohort stopped at real bounded binary acquisition gaps"
+    },
+    "19_runtime": {
+      "controlled_dependency_produced_state_test": "not attempted; runtime not reached",
+      "existing_product_runtime_controls_executed": true,
+      "frozen_U3C_executed": false,
+      "new_executor_integration": false
+    },
+    "20_baseline_fidelity": {
+      "attempted": 0,
+      "later_blockers_inferred": false,
+      "matched": 0
+    },
+    "21_first_Kamino_production_record": null,
+    "22_tests": {
+      "Clippy_warnings_denied": true,
+      "Python": {
+        "U3A integrity": 30,
+        "U3B acquisition": 24,
+        "U3C integrity": 10
+      },
+      "Rust": {
+        "Kamino": 10,
+        "Token2022": 12,
+        "historical": 4,
+        "historical_LUT": 27,
+        "library": 421,
+        "replay": 16,
+        "transaction_envelope": 20
+      },
+      "Rust_formatting": true,
+      "controlled_Scope_state_effect_runtime_test": "not attempted; primary cohort stopped at C4 gaps",
+      "existing_normal_controls_passed": true,
+      "new_tests_boundaries": {
+        "actual_binary_evidence": "official existing resolver rerun offline against every retained raw response; each complete ELF compared byte for byte",
+        "binary_and_seed_guards": "simulated provenance records and synthetic hash bytes; not execution proof",
+        "frozen_messages": "actual frozen instructions and acquired U3B LUT bytes",
+        "transformed_messages": "explicit negative controls; signatures not reverified"
+      },
+      "normal_tests_passed": 574
+    },
+    "23_mutations": {
+      "artifact": "mutations.json",
+      "compiler_only_kills": 0,
+      "executed": 13,
+      "fault_12_boundary": "transformed creation/unknown-lifecycle negative control; real primary ATA paths show no creation",
+      "fault_8_boundary": "distinct observation ActionIds; no multi-action finding generator exists",
+      "fault_9_boundary": "unevaluable attribution status; no actual wrongly attributed finding was generated",
+      "killed_by_named_assertions": 13,
+      "runtime_state_effect_kills_claimed": false
+    },
+    "24_existing_controls": {
+      "Kamino": 10,
+      "Token2022": 12,
+      "U3A_and_U3B_normal_and_reverse_passed": true,
+      "after": "after/controls.json",
+      "before": "before/controls.json",
+      "canonical_case_outputs_byte_identical": true,
+      "exits": [
+        0,
+        0,
+        1,
+        1,
+        3,
+        5
+      ]
+    },
+    "25_performance": {
+      "RPC_helper_boundary": "curl transport plus helper response JSON parsing",
+      "acquisition": {
+        "account_requests": 101,
+        "block_requests": 1,
+        "failed_requests": 3,
+        "full_capture_seconds": 63.65533795801457,
+        "requests": 103,
+        "successful_requests": 100,
+        "transport_seconds": 59.86870058279601
+      },
+      "external_execution_overhead_seconds": null,
+      "full_capture_boundary": "receipt initialization through final receipt hashing; excludes builds and pre-acquisition envelope checks",
+      "offline": {
+        "all_eight_original_U3B_proofs_identical": true,
+        "canonical_derived_sha256": {
+          "dependencies/checksums.sha256": "2caf1f37dd917bac499f0cd30841277cdf2d4a5062c9c1990ce3364743db0851",
+          "dependencies/resolved/49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx.json": "61563b17efcf743156ec28cc5bdd56556ea1fdb4c05fc1355fcdefa4f74fb8f6",
+          "dependencies/resolved/55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk.json": "a9046b81ada61822f8722b1e11ce79327c32845cdfd4a292a9d3c16aa58af4ef",
+          "dependencies/resolved/5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V.json": "e0b051e5691af03cc29406573bbf00c553900e67aeffd69124e7fbc53876f732",
+          "dependencies/resolved/5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97.json": "3401b1cd07c87c197075406d28d08b165c25424fe9a965e3a7b279a0bcbe1ed3",
+          "dependencies/stage-table.json": "ed60d9f86e5a6a11f5d459d77b456bf2ea0c3fdf5774a7bfeca9e97fa4a16031",
+          "envelope/checksums.sha256": "9c48f6902d70e85f8316b87d6f928b999307bea52f54ecb345b4ea5130838cdb",
+          "envelope/structure-analysis.json": "904bb85cdf48a70df6132fbeaaf0ed870c736570ffbfccf07fe64657a2932aa9",
+          "envelope/summary.json": "8a6c4e05cdfe57018501c154be45febfb38e5d529b0d702156f6b65393088bad",
+          "envelope/transactions/2dc94E8Mvh83c8MiecgRekd7Vj8YE6aexfVeCJK58K46LQcTRjpDomii6pYmwbdeYmdTM3bVbHw6rhFdtwRtSTnT.json": "e4067b6280dacbcee1e02f66c0370c567de3438a010e037b15a725c81457ec1b",
+          "envelope/transactions/37XJKQbB9fRX1R76cKKGSENNNA2RSY1WvjkCx2Q7joN2irKfTTZ5Z6bHgH4rfgDPJvhXf3peTe4mwxisfpSEmimu.json": "5a6c89cd496a299402ab8d4d40c2a162d850ee4d7136e11bce4bb4e0590bb3a3",
+          "envelope/transactions/3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q.json": "b857885a47c530d72211ce61225a0200ee22d23c9c284ad5951fb62612fcfc02",
+          "envelope/transactions/47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf.json": "d32ddfea37d057f17cae3c3b9169a3c17b5b26fb5718fcb48f92cc0be768c69e",
+          "envelope/transactions/49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx.json": "e8fa71cb7db0c3d8b7f2b3a29b8b7a4483b1eccc8b6e9ab565c7f56e0475035b",
+          "envelope/transactions/55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk.json": "71b33fc41d1ad0a0f8f5935a9e6405f4df87cf0bd76c154fe21c5f217880dcee",
+          "envelope/transactions/5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V.json": "73e7b908f8b9bdb1add5dd5570349f7a126bbc9e27f795130b7836b23c822ce3",
+          "envelope/transactions/5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97.json": "0f0da755631b027e97633f49c08d00d0d0c8bc3a0b5ff11fadf0c7561d61e378"
+        },
+        "dependency_normal_seconds": 12.852341541991336,
+        "dependency_relocated_input_seconds": 11.806315833004192,
+        "dependency_reverse_seconds": 13.083178041997598,
+        "envelope_normal_seconds": 1.0253207499918062,
+        "envelope_reverse_seconds": 0.9814666669990402,
+        "final_profile_reverification_passed": true,
+        "frozen_input_hashes_rechecked": true,
+        "normal_reverse_output_bytes_identical": true,
+        "offline_only": true,
+        "relocated_input_archive_bytes_identical": true,
+        "relocated_output_bytes_identical": true
+      },
+      "runtime_seconds": null
+    },
+    "26_storage": {
+      "ReplayRecord_overhead_measured": false,
+      "capture_compressed_bytes": 5130046,
+      "capture_expanded_bytes": 107368223,
+      "capture_expanded_files": 115,
+      "complete_incremental_audit_bytes": 6168875,
+      "complete_incremental_audit_files": 56,
+      "compression": "lossless; preserves padding and every historical context",
+      "external_protocol_state_bytes": 0,
+      "generalized_deduplication": false,
+      "incremental_evidence_directories": {
+        "phase-u3c-dependencies": 5147477,
+        "phase-u3c-envelope": 602531,
+        "phase-u3c-interface": 88706,
+        "phase-u3c-validation": 330161
+      },
+      "original_capture_metadata_bytes": 109070,
+      "raw_response_bytes": 63510581,
+      "retained_loader_image_bytes": 43748572
+    },
+    "27_correctness_bugs": {
+      "existing_replay_bug_found": false,
+      "experimental_tooling_corrections": [
+        "clean-screen pending checkpoint is not a state acquisition failure",
+        "failed-original retains first priority over attribution blockers",
+        "future collector stores explicit zero-byte response artifacts",
+        "extra repeated or mismatched reserve refreshes rejected by observed arity and distinct-reserve profile"
+      ]
+    },
+    "28_remaining_unsupported": [
+      "complete historical primary state and bank context",
+      "native v0 full-envelope runtime integration and fidelity proof",
+      "independent multi-action attribution",
+      "additional Scope account/oracle shapes",
+      "ATA account creation",
+      "System/SyncNative/CloseAccount lifecycle",
+      "unknown companions"
+    ],
+    "29_decision": "B — primary structural envelope support proven, production replay still blocked",
+    "30_adapter_four": {
+      "begin": false,
+      "contract_v2_implemented": false,
+      "hosted_or_production_bundle_changes": false,
+      "reason": "generic full historical state and modern full-envelope execution remain unproven"
+    }
+  },
+  "secret_scan": "secret-scan.json"
+}

@@ -1,0 +1,27 @@
+{
+  "Clippy_warnings_denied": true,
+  "Python": {
+    "U3A integrity": 30,
+    "U3B acquisition": 24,
+    "U3C integrity": 10
+  },
+  "Rust": {
+    "Kamino": 10,
+    "Token2022": 12,
+    "historical": 4,
+    "historical_LUT": 27,
+    "library": 421,
+    "replay": 16,
+    "transaction_envelope": 20
+  },
+  "Rust_formatting": true,
+  "controlled_Scope_state_effect_runtime_test": "not attempted; primary cohort stopped at C4 gaps",
+  "existing_normal_controls_passed": true,
+  "new_tests_boundaries": {
+    "actual_binary_evidence": "official existing resolver rerun offline against every retained raw response; each complete ELF compared byte for byte",
+    "binary_and_seed_guards": "simulated provenance records and synthetic hash bytes; not execution proof",
+    "frozen_messages": "actual frozen instructions and acquired U3B LUT bytes",
+    "transformed_messages": "explicit negative controls; signatures not reverified"
+  },
+  "normal_tests_passed": 574
+}

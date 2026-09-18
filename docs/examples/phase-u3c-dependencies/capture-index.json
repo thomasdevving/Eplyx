@@ -1,0 +1,13 @@
+{
+  "archive_qualification_reused": "docs/examples/phase-u3b2-lut/archive-validation.json",
+  "archive_validation_sha256": "c21a90f2a47425dfa4f925c344bcbbd4d667367547bf3c559f74c35a121e95e4",
+  "attempt": 1,
+  "compressed_bytes": 5130046,
+  "compressed_sha256": "f99efa7fa8ee5ce71e0af3ff10bd52caf5e811296b8b87ee87b2686d0e093afc",
+  "expanded_bytes": 107368223,
+  "expanded_files": 115,
+  "historical_state_requests": 0,
+  "kind": "lossless_compressed_historical_dependency_capture",
+  "preservation": "all received nonempty transport bodies and complete binary captures; original clean-screen pending-state label is a checkpoint, not a C5 acquisition failure",
+  "visibility": "finalized end-of-S-1, then strict same-slot screening"
+}

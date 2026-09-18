@@ -1,0 +1,87 @@
+{
+  "C4_binaries_identified": false,
+  "archive_validation_sha256": "c21a90f2a47425dfa4f925c344bcbbd4d667367547bf3c559f74c35a121e95e4",
+  "executable_transaction_constructed": false,
+  "execution_slot": 448194517,
+  "failure": {
+    "code": "dependency_binary_unavailable",
+    "detail": "retained transport failure",
+    "program_id": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+    "requested_slot": 448194516
+  },
+  "frozen_message_proof_id": "67e3648c8508420803ac814e4fe9801e7cdbe90f8571aeb2d6a3817e86fda04a",
+  "historical_state_acquisition": "not_attempted",
+  "kind": "experimental_envelope_dependency_capture",
+  "pre_slot": 448194516,
+  "programs": [
+    {
+      "binary_bytes": 105032,
+      "binary_file": "binaries/ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL.so",
+      "discovered_by": [
+        "top_level_instruction",
+        "execution_log"
+      ],
+      "program_id": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+      "provenance": {
+        "deploy_slot": null,
+        "loader": "legacy",
+        "observed_slot": 448194516,
+        "program_id": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "programdata_address": null,
+        "sha256": "6804554e69fd3a58caa191dc4a58f4c67223d30ca28ab8987f39fc18d2f7374d",
+        "upgrade_authority": null
+      },
+      "source": "historical_mainnet"
+    },
+    {
+      "discovered_by": [
+        "top_level_instruction",
+        "execution_log"
+      ],
+      "observed_slot": 448194516,
+      "program_id": "ComputeBudget111111111111111111111111111111",
+      "source": "builtin"
+    },
+    {
+      "binary_bytes": 10485715,
+      "binary_file": "binaries/FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr.so",
+      "discovered_by": [
+        "inner_instruction",
+        "execution_log"
+      ],
+      "program_id": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+      "provenance": {
+        "deploy_slot": 444035168,
+        "loader": "upgradeable",
+        "observed_slot": 448194516,
+        "program_id": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+        "programdata_address": "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+        "sha256": "67c4a989342024efedf6181c1d91cf6aac2bb2bcd17f43b8848c9f3d8ba21011",
+        "upgrade_authority": "CivjSDKgTpmkRNL4zYcmv9D9QqPJg6yTxBVxMGcXvMuY"
+      },
+      "source": "historical_mainnet"
+    },
+    {
+      "binary_bytes": 10485715,
+      "binary_file": "binaries/HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ.so",
+      "discovered_by": [
+        "top_level_instruction",
+        "execution_log"
+      ],
+      "program_id": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+      "provenance": {
+        "deploy_slot": 443102298,
+        "loader": "upgradeable",
+        "observed_slot": 448194516,
+        "program_id": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+        "programdata_address": "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+        "sha256": "c1ddc8a903949eafe175dba8a284c636697dcd50f98a346557320b6b06f3bd87",
+        "upgrade_authority": "4R33WT7isNgzALNyvpZKiZQARtZNAXarWB3prUbPkXX7"
+      },
+      "source": "historical_mainnet"
+    }
+  ],
+  "runtime_executed": false,
+  "signature": "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk",
+  "slot_screening": null
+}

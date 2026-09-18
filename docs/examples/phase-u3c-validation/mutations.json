@@ -1,0 +1,186 @@
+{
+  "all_isolated_sources_restored": true,
+  "killed_by_named_assertions": 13,
+  "mutations_executed": 13,
+  "production_source_hashes_after": {
+    "engine/src/envelope.rs": "a34d75b4392c8056b09ae738a2657b5d3b397b44983feb3146cb3246c87eb815",
+    "engine/src/protocol/kamino/envelope.rs": "59b37ec3596dba2ed08d407abd9cea73682cf02f878bb5ecf0f306676da9bf03"
+  },
+  "production_source_hashes_before": {
+    "engine/src/envelope.rs": "a34d75b4392c8056b09ae738a2657b5d3b397b44983feb3146cb3246c87eb815",
+    "engine/src/protocol/kamino/envelope.rs": "59b37ec3596dba2ed08d407abd9cea73682cf02f878bb5ecf0f306676da9bf03"
+  },
+  "results": [
+    {
+      "control_passed": true,
+      "description": "arbitrary external program admitted as Scope",
+      "evidence_boundary": "frozen production message or explicitly transformed negative-control message; no execution",
+      "mutated_source_hashes": {
+        "engine/src/envelope.rs": "a34d75b4392c8056b09ae738a2657b5d3b397b44983feb3146cb3246c87eb815",
+        "engine/src/protocol/kamino/envelope.rs": "3f98883809663a4ea2f09b9d7e6094c34e3af37d91d98275b23b6419460508b6"
+      },
+      "mutation": 1,
+      "named_test": "arbitrary_external_program_cannot_replace_scope",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "Scope dependency order ignored",
+      "evidence_boundary": "frozen production message or explicitly transformed negative-control message; no execution",
+      "mutated_source_hashes": {
+        "engine/src/envelope.rs": "a34d75b4392c8056b09ae738a2657b5d3b397b44983feb3146cb3246c87eb815",
+        "engine/src/protocol/kamino/envelope.rs": "af213a7bf034fc9d08bab1a63a40cfc4bbe89dbeb2fe66457975e313f7fd9800"
+      },
+      "mutation": 2,
+      "named_test": "scope_after_reserve_refresh_is_rejected",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "Scope stripped from execution plan",
+      "evidence_boundary": "frozen production message or explicitly transformed negative-control message; no execution",
+      "mutated_source_hashes": {
+        "engine/src/envelope.rs": "298535a006b400f66854f61c8d68d9b37b80f58c7fecce1e9f0a98467d804eda",
+        "engine/src/protocol/kamino/envelope.rs": "59b37ec3596dba2ed08d407abd9cea73682cf02f878bb5ecf0f306676da9bf03"
+      },
+      "mutation": 3,
+      "named_test": "complete_sequence_cannot_strip_or_reorder_dependency",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "current or intermediate dependency state accepted",
+      "evidence_boundary": "transformed frozen message with simulated provenance records; no execution",
+      "mutated_source_hashes": {
+        "engine/src/envelope.rs": "c9942b8fe41530f603006bea5250e1aec97a19b787f057e17713e0660b6a3b90",
+        "engine/src/protocol/kamino/envelope.rs": "59b37ec3596dba2ed08d407abd9cea73682cf02f878bb5ecf0f306676da9bf03"
+      },
+      "mutation": 4,
+      "named_test": "current_or_intermediate_scope_state_is_rejected",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "current external binary accepted",
+      "evidence_boundary": "transformed frozen message with simulated provenance records; no execution",
+      "mutated_source_hashes": {
+        "engine/src/envelope.rs": "fe8de3b7170345ca47c11a6ac97a65600ec5fe3a8d41537c7351712644d7c58b",
+        "engine/src/protocol/kamino/envelope.rs": "59b37ec3596dba2ed08d407abd9cea73682cf02f878bb5ecf0f306676da9bf03"
+      },
+      "mutation": 5,
+      "named_test": "current_external_binary_is_rejected",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "execution dependency given Scope semantic coverage",
+      "evidence_boundary": "frozen production message or explicitly transformed negative-control message; no execution",
+      "mutated_source_hashes": {
+        "engine/src/envelope.rs": "a34d75b4392c8056b09ae738a2657b5d3b397b44983feb3146cb3246c87eb815",
+        "engine/src/protocol/kamino/envelope.rs": "dd3d41c2c2450d1c0268a63890c62d834c01bf927ac9f41e0e5bf46d8c0621b5"
+      },
+      "mutation": 6,
+      "named_test": "dependency_has_no_scope_semantic_support",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "only first of multiple targets preserved",
+      "evidence_boundary": "frozen production message or explicitly transformed negative-control message; no execution",
+      "mutated_source_hashes": {
+        "engine/src/envelope.rs": "a34d75b4392c8056b09ae738a2657b5d3b397b44983feb3146cb3246c87eb815",
+        "engine/src/protocol/kamino/envelope.rs": "26186e5ca62b182b24bae49dadf3d980346e1dd8c9615943548e96b6d569a482"
+      },
+      "mutation": 7,
+      "named_test": "real_multi_action_observations_preserve_both_outer_indices",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "two action identities merged",
+      "evidence_boundary": "frozen production message or explicitly transformed negative-control message; no execution",
+      "mutated_source_hashes": {
+        "engine/src/envelope.rs": "a34d75b4392c8056b09ae738a2657b5d3b397b44983feb3146cb3246c87eb815",
+        "engine/src/protocol/kamino/envelope.rs": "7c9be367ab6445a14c4228a48e4b2af5eca05d2cff34fff5ab6719019caedd14"
+      },
+      "mutation": 8,
+      "named_test": "real_multi_action_ids_are_not_merged",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "whole-transaction delta assigned as action attribution",
+      "evidence_boundary": "frozen production message or explicitly transformed negative-control message; no execution",
+      "mutated_source_hashes": {
+        "engine/src/envelope.rs": "a34d75b4392c8056b09ae738a2657b5d3b397b44983feb3146cb3246c87eb815",
+        "engine/src/protocol/kamino/envelope.rs": "00dcab068edb654dd92b08cf74df2a34061f250103b7954dc8fdf95d5e416073"
+      },
+      "mutation": 9,
+      "named_test": "real_multi_action_whole_transaction_delta_is_unevaluable",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "unknown extra companion hidden after valid envelope",
+      "evidence_boundary": "frozen production message or explicitly transformed negative-control message; no execution",
+      "mutated_source_hashes": {
+        "engine/src/envelope.rs": "b36fe85aead07ec34aa9c0f5ee6364ba44b3f0c7e5613b78393093fe144d4b68",
+        "engine/src/protocol/kamino/envelope.rs": "c354ee2817653418323676fb8e02943ae1d850de37213844f17f2cacc2bc88f0"
+      },
+      "mutation": 10,
+      "named_test": "unknown_extra_companion_cannot_hide_behind_required_dependencies",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "failed original loses explicit rejection",
+      "evidence_boundary": "frozen production message or explicitly transformed negative-control message; no execution",
+      "mutated_source_hashes": {
+        "engine/src/envelope.rs": "a34d75b4392c8056b09ae738a2657b5d3b397b44983feb3146cb3246c87eb815",
+        "engine/src/protocol/kamino/envelope.rs": "5d03ed186ad72cc1e7fc55f65bcce735251a43da1159d105db4123a56fe990da"
+      },
+      "mutation": 11,
+      "named_test": "real_failed_original_policy_survives_exact_lut_proof",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "ATA creation treated as existing account without witness",
+      "evidence_boundary": "frozen production message or explicitly transformed negative-control message; no execution",
+      "mutated_source_hashes": {
+        "engine/src/envelope.rs": "a34d75b4392c8056b09ae738a2657b5d3b397b44983feb3146cb3246c87eb815",
+        "engine/src/protocol/kamino/envelope.rs": "e4540828988d80a628be5e01b2f9a8d5e14705fdf9c39d070d57de3e63ce8b8e"
+      },
+      "mutation": 12,
+      "named_test": "primary_ata_existing_evidence_cannot_be_replaced_by_creation",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    },
+    {
+      "control_passed": true,
+      "description": "unexpected recognized duplicate dependency admitted",
+      "evidence_boundary": "frozen production message or explicitly transformed negative-control message; no execution",
+      "mutated_source_hashes": {
+        "engine/src/envelope.rs": "a34d75b4392c8056b09ae738a2657b5d3b397b44983feb3146cb3246c87eb815",
+        "engine/src/protocol/kamino/envelope.rs": "52208ca48d5da4e8c1d5b9e3bf8c9bd3e5b5d7977ecdb735f8f4104d604c5096"
+      },
+      "mutation": 13,
+      "named_test": "unexpected_known_extra_dependency_is_rejected",
+      "result": "killed_by_assertion",
+      "test_exit": 101
+    }
+  ],
+  "runtime_state_effect_test": "not attempted; no baseline execution reached",
+  "separate_cargo_output": "target/u3c-envelope-mutants"
+}
