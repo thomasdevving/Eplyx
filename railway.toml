@@ -1,15 +1,27 @@
-# Railway service definition for the hosted Eplyx CI API.
+# Railway settings shared by every service built from this repository: the
+# hosted Eplyx CI API, and the static frontend that talks to it.
 #
-# Everything stateful lives on a volume mounted at /data: projects, their token
-# verifiers, installed bundles and every stored run. Attach one before the first
-# deploy — without it a redeploy discards the project a pilot is using.
+# The API keeps everything stateful on a volume mounted at /data: projects,
+# their token verifiers, installed bundles and every stored run. Attach one
+# before the first deploy, and then check it — a deployment succeeds perfectly
+# well without a volume, writes to the container's own filesystem, and loses
+# the project a pilot is using at the next redeploy. Comparing the device id of
+# / and /data is what says whether it is really there.
 
+# Both services in this repository are Dockerfile builds, so the builder is
+# stated here and the rest is deliberately not. `dockerfilePath` and
+# `startCommand` used to live here and had to go: config-as-code applies to
+# every service in the repository and always overrides the dashboard, so naming
+# the API's Dockerfile and start command here silently forced them on the
+# frontend service too — which then spent ten minutes compiling the Solana tree
+# before trying to launch `eplyx-server`. Neither field was load-bearing: each
+# image already carries the right CMD, and the API's Dockerfile sits at the
+# default path. Per-service selection is the RAILWAY_DOCKERFILE_PATH variable.
 [build]
 builder = "dockerfile"
-dockerfilePath = "Dockerfile"
 
 [deploy]
-startCommand = "eplyx-server serve"
+# Both services answer /health.
 healthcheckPath = "/health"
 healthcheckTimeout = 60
 restartPolicyType = "on_failure"

@@ -34,7 +34,9 @@ const neverCache = new Set(['/public/runtime-config.js']);
 
 createServer(async (request, response) => {
   const url = new URL(request.url, 'http://localhost');
-  if (url.pathname === '/healthz') {
+  // `/health` matches what the API answers on, so one healthcheck path in the
+  // platform config covers both services and neither needs its own config file.
+  if (url.pathname === '/health' || url.pathname === '/healthz') {
     response.writeHead(200, { 'Content-Type': 'application/json' });
     return response.end('{"status":"ok"}');
   }
