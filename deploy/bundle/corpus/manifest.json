@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "program_id": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+  "protocol": "spl-stake-pool",
+  "adapter_version": 3,
+  "genesis_hash": "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d",
+  "record_count": 10,
+  "record_ids": [
+    "mainnet-spl-stake-pool-0c4fe6c80dd53827",
+    "mainnet-spl-stake-pool-13f83ad421a7c1b5",
+    "mainnet-spl-stake-pool-151010f709e113e7",
+    "mainnet-spl-stake-pool-1575fae8f62d7fe1",
+    "mainnet-spl-stake-pool-1970f44e62cb6be7",
+    "mainnet-spl-stake-pool-a61d372b8976c9e9",
+    "mainnet-spl-stake-pool-a8b2f3a9fc36f2dc",
+    "mainnet-spl-stake-pool-d5a70b997bcf1d00",
+    "mainnet-spl-stake-pool-d5e15c805ba927b7",
+    "mainnet-spl-stake-pool-eeffb53e253469b7"
+  ],
+  "canonical_hash": "a4b667316b972685743bf0724b5596b7fbb64dde46468e159f44d773894f69b1"
+}

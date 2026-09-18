@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "program_id": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+  "genesis_hash": "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d",
+  "baseline_program_sha256": "ec2dfefaa70d560754a0000f39bd2cabc192b895d36205b3c428f601b6e1d7e1",
+  "baseline_program_len": 1080464,
+  "corpus_sha256": "a4b667316b972685743bf0724b5596b7fbb64dde46468e159f44d773894f69b1",
+  "record_count": 10,
+  "record_ids": [
+    "mainnet-spl-stake-pool-0c4fe6c80dd53827",
+    "mainnet-spl-stake-pool-13f83ad421a7c1b5",
+    "mainnet-spl-stake-pool-151010f709e113e7",
+    "mainnet-spl-stake-pool-1575fae8f62d7fe1",
+    "mainnet-spl-stake-pool-1970f44e62cb6be7",
+    "mainnet-spl-stake-pool-a61d372b8976c9e9",
+    "mainnet-spl-stake-pool-a8b2f3a9fc36f2dc",
+    "mainnet-spl-stake-pool-d5a70b997bcf1d00",
+    "mainnet-spl-stake-pool-d5e15c805ba927b7",
+    "mainnet-spl-stake-pool-eeffb53e253469b7"
+  ],
+  "source_slot_range": {
+    "first": 447850493,
+    "last": 447904974
+  },
+  "dependencies": [
+    {
+      "program_id": "Stake11111111111111111111111111111111111111",
+      "sha256": "3d2d39c596ce8be2d47816b4ee5db9fc759d80fde54b08c930ad0b6daed64c2c",
+      "len": 212056
+    },
+    {
+      "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "sha256": "8190d3f7ceb6cb7a7a8d8924bff89f9f611e15ce1f806f2b6237f3311a98f697",
+      "len": 108600
+    }
+  ],
+  "adapter_metadata_sha256": "c7635cb3f22720aa6da6098574b3216a5d7c9ccc9993e1f918439fd54e1b6ac3",
+  "semantic_schema_version": 2,
+  "selection_policy": "stratified-diversity",
+  "selection_policy_version": 1,
+  "bundle_sha256": "5e5b67ac13e4f6b8249348ad81db29885ee8ee897ba78f6de213b55793f4285f"
+}
