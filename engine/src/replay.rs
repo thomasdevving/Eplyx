@@ -8,7 +8,9 @@ use crate::{
     types::{AccountSnapshot, Category, Fixture, InstructionSpec, NamedAccount},
     universal::{
         evidence::EvidenceStore,
-        execution::{ExecutionBackend, ExecutionRequest, LiteSvmBackend, SlotHashesVariant},
+        execution::{
+            ExecutionBackend, ExecutionRequest, LiteSvmBackend, RuntimeProfile, SlotHashesVariant,
+        },
         model::ExecutionInput,
     },
     versions::{ProgramLoader, LEGACY_BPF_LOADER_ID, UPGRADEABLE_LOADER_ID},
@@ -1043,6 +1045,7 @@ impl ReplayRecord {
             loader: UPGRADEABLE_LOADER_ID.parse()?,
             bytes: program.bytes.clone(),
         });
+        let runtime_profile = RuntimeProfile::legacy(false, false)?;
         let evidence = LiteSvmBackend.execute(&ExecutionRequest {
             message: &resolved,
             seeds: &seeds,
@@ -1051,8 +1054,7 @@ impl ReplayRecord {
             runtime_sysvars: &BTreeMap::new(),
             clock: Some(self.clock.clock()),
             programs_to_load: &programs,
-            signature_check: false,
-            blockhash_check: false,
+            runtime_profile: &runtime_profile,
             unlimited_logs: false,
             slot_hashes: SlotHashesVariant::BackendDefault,
             require_complete_state: false,

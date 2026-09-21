@@ -443,7 +443,8 @@ fn build(import: &Value, output: &std::path::Path) -> Result<ReplayObservationV2
         runtime: RuntimeContext { sysvars: runtime_seeds, feature_profile: "LiteSVM 0.16.0 mainnet".into(),
             slot_hashes_policy: "materiality_checked_default".into(), signature_check: false,
             blockhash_check: false, instructions_rule: "runtime_generated_from_complete_message".into(),
-            provenance: "U3F three-profile SlotHashes materiality control; exact Clock/Rent/EpochSchedule account observations".into() },
+            provenance: "U3F three-profile SlotHashes materiality control; exact Clock/Rent/EpochSchedule account observations".into(),
+            historical_evidence: None },
         expected, fidelity_profile: FidelityProfile::CompleteExecutionV2 };
     record.id = record.identity()?;
     record.resolve(&store)?;

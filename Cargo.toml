@@ -27,7 +27,7 @@ borsh = { version = "1.5", features = ["derive"] }
 # solana-address, solana-pubkey and solana-loader-v3-interface exist deeper in
 # the graph, reached by crates that never exchange those types with us. Harmless,
 # but the guard is the build, not an empty duplicate list.
-litesvm = "0.16"
+litesvm = { version = "0.16", features = ["invocation-inspect-callback"] }
 solana-account = "4.3.0"
 solana-address = "2.6.1"
 solana-clock = "3.1.1"
@@ -36,6 +36,7 @@ solana-instruction = "3.4.0"
 solana-keypair = "3.1.2"
 solana-message = "4.2.4"
 solana-native-token = "3.0.0"
+solana-program-runtime = "4.2.2"
 solana-rent = "4.3.0"
 solana-signer = "3.0.1"
 solana-system-interface = "3.2.0"

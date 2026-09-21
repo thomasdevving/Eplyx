@@ -6,7 +6,7 @@ use solana_message::{v0, Message, VersionedMessage};
 use super::evidence::{
     AccountBoundary, AccountObservation, EvidenceKind, EvidenceRef, EvidenceStore,
 };
-use super::execution::{InnerGroup, ReturnData};
+use super::execution::{HistoricalRuntimeEvidence, InnerGroup, ReturnData};
 use crate::{
     dependencies::DependencyManifest,
     ingest::transactions::HistoricalTransaction,
@@ -273,6 +273,8 @@ pub struct RuntimeContext {
     pub blockhash_check: bool,
     pub instructions_rule: String,
     pub provenance: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub historical_evidence: Option<HistoricalRuntimeEvidence>,
 }
 
 /// A runtime limitation is about the replay backend or its evidence, never a
@@ -287,6 +289,16 @@ pub enum RuntimeCapability {
 
 impl RuntimeContext {
     pub fn capability(&self) -> RuntimeCapability {
+        if let Some(evidence) = &self.historical_evidence {
+            if let Err(error) = evidence.validate() {
+                return RuntimeCapability::InsufficientRuntimeEvidence(error.to_string());
+            }
+            if evidence.feature_profile != self.feature_profile {
+                return RuntimeCapability::InsufficientRuntimeEvidence(
+                    "runtime feature profile binding".into(),
+                );
+            }
+        }
         if self.feature_profile != "LiteSVM 0.16.0 mainnet" {
             return RuntimeCapability::UnsupportedRuntimeFeature(format!(
                 "feature profile {}",
