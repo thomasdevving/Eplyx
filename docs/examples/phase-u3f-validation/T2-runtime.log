@@ -1,0 +1,3 @@
+{"target": "T2", "variant": "default", "success": true, "fidelity": "matched", "failures": []}
+{"target": "T2", "variant": "empty", "success": true, "fidelity": "matched", "failures": []}
+{"target": "T2", "variant": "different", "success": true, "fidelity": "matched", "failures": []}

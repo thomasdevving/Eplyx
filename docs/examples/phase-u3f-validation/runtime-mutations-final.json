@@ -1,0 +1,112 @@
+{
+  "compiler_only_kills": 0,
+  "killed": 12,
+  "original_sources_unchanged": true,
+  "runtime_source_mutants": [
+    {
+      "boundary": "real native v0 execution or runtime construction guard",
+      "compiled": true,
+      "fault": "skip Scope",
+      "fault_source_sha256": "cebd99ed5b289f01c61321da82e275fb0aca1cd1f9be11866e23f440e571eb89",
+      "id": 17,
+      "killed": true,
+      "named_assertion": "strict raw/outcome historical fidelity"
+    },
+    {
+      "boundary": "real native v0 execution or runtime construction guard",
+      "compiled": true,
+      "fault": "seed post-Scope state",
+      "fault_source_sha256": "4383d8b6517e81c78e0444c5b9b7196c30465d16f339b6953823208b89940b87",
+      "id": 18,
+      "killed": true,
+      "named_assertion": "actual VM pre-state differs from historical seed"
+    },
+    {
+      "boundary": "real native v0 execution or runtime construction guard",
+      "compiled": true,
+      "fault": "reorder Scope",
+      "fault_source_sha256": "b2f7ce78ea003d1821265519811a25c3cc80258b7818d7c5da326f38de439723",
+      "id": 19,
+      "killed": true,
+      "named_assertion": "strict raw/outcome historical fidelity"
+    },
+    {
+      "boundary": "real native v0 execution or runtime construction guard",
+      "compiled": true,
+      "fault": "wrong Scope ELF",
+      "fault_source_sha256": "b6d6ad4e25bdb14a42e0b1acefb1df65605039a9187dec6a6df28ecd5578eb0e",
+      "id": 20,
+      "killed": true,
+      "named_assertion": "historical ELF hash differs"
+    },
+    {
+      "boundary": "real native v0 execution or runtime construction guard",
+      "compiled": true,
+      "fault": "wrong KLend ELF",
+      "fault_source_sha256": "5bef89258ec6409fea152c43f85cb602314efce1bdad3011e5f9e8a674ef1609",
+      "id": 21,
+      "killed": true,
+      "named_assertion": "historical ELF hash differs"
+    },
+    {
+      "boundary": "real native v0 execution or runtime construction guard",
+      "compiled": true,
+      "fault": "reduce original native v0 envelope",
+      "fault_source_sha256": "cb67a819c941271613a776082ffa0773401d72c480ed7697c073e3792f6979d7",
+      "id": 22,
+      "killed": true,
+      "named_assertion": "strict raw/outcome historical fidelity"
+    },
+    {
+      "boundary": "real native v0 execution or runtime construction guard",
+      "compiled": true,
+      "fault": "incorrect Instructions sysvar account",
+      "fault_source_sha256": "3e9c47a726df2f7a2eb7e01c880e54b9219a275d905bb49aeca255656a796383",
+      "id": 23,
+      "killed": true,
+      "named_assertion": "strict raw/outcome historical fidelity"
+    },
+    {
+      "boundary": "real native v0 execution or runtime construction guard",
+      "compiled": true,
+      "fault": "current Clock",
+      "fault_source_sha256": "bb2cef66e21e7deb27eff2369abaaf2541c3ff15d607f2132f7e20bc758df4d1",
+      "id": 24,
+      "killed": true,
+      "named_assertion": "historical Clock differs"
+    },
+    {
+      "boundary": "strict comparator/gating source mutation",
+      "fault": "Ok means fidelity",
+      "fault_source_sha256": "19c004c4550885194e54704c79dff715a8b564ddc0434452116a44f84eb0afa4",
+      "id": 25,
+      "killed": true,
+      "named_assertion": "unexpected raw byte must reject even when transaction is Ok"
+    },
+    {
+      "boundary": "strict comparator/gating source mutation",
+      "fault": "ignore raw data differences",
+      "fault_source_sha256": "02acff163dfc1cf2caf48ee70c93ff09f060ca6484484526f6c9d7686bec6213",
+      "id": 26,
+      "killed": true,
+      "named_assertion": "unexpected raw byte must reject even when transaction is Ok"
+    },
+    {
+      "boundary": "strict comparator/gating source mutation",
+      "fault": "semantics before fidelity",
+      "fault_source_sha256": "81cc401b5538312bb435799ab4aa963d77f574b6f940fb1bfe7d4317c5b86f4a",
+      "id": 27,
+      "killed": true,
+      "named_assertion": "semantic evaluator must not be called before strict fidelity"
+    },
+    {
+      "boundary": "compiled semantic evaluation output",
+      "compiled": true,
+      "fault": "promote Scope semantic support",
+      "fault_source_sha256": "f6513c32adabcfbdf19beb1b8144824fe70973781f5c7e862a9a6ce63dc0e90b",
+      "id": 28,
+      "killed": true,
+      "named_assertion": "exact unchanged U2 economic subject set; no Scope subject"
+    }
+  ]
+}

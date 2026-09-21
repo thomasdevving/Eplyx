@@ -1,0 +1,148 @@
+{
+  "block_transaction_index": 259,
+  "first_post_conflicting_signature": "3unvygkdeJYt43BwXyq7kmJUtjDd96wymhaXnUbca1mHdfMt5cFSKoe74dowiNLfxPUtXWcuuU9aC6YD3vpCH2gw",
+  "first_post_conflicting_transaction_index": 385,
+  "fixed_role_accounts": [
+    {
+      "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "role": "token_program_a",
+      "writable": false
+    },
+    {
+      "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "role": "token_program_b",
+      "writable": false
+    },
+    {
+      "address": "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+      "role": "memo_program",
+      "writable": false
+    },
+    {
+      "address": "H6PjRLnqGPz5VEU4roZzKnfJRxKECRzYuJAZ2Hvc1rAc",
+      "role": "token_authority",
+      "writable": true
+    },
+    {
+      "address": "HxrqS96uHco2a8LxTvUwb9e2tS963Ec6nYkvZso9TDii",
+      "role": "whirlpool",
+      "writable": true
+    },
+    {
+      "address": "So11111111111111111111111111111111111111112",
+      "role": "token_mint_a",
+      "writable": false
+    },
+    {
+      "address": "Xsv9hRk1z5ystj9MhnA7Lq4vjSsLwzL2nxrwmwtD3re",
+      "role": "token_mint_b",
+      "writable": false
+    },
+    {
+      "address": "8gbSj1AEU8xNbmwwzpBdxots4e55PVqUaFHobwhryuBs",
+      "role": "token_owner_account_a",
+      "writable": true
+    },
+    {
+      "address": "EdcxbpnvtssEkHV4KDfdYVFoGDewE7XnYbTakgLxPusR",
+      "role": "token_vault_a",
+      "writable": true
+    },
+    {
+      "address": "AawdCALDWi7ea9JCeCArzjEzLGqwuFSdzydgJZrephXv",
+      "role": "token_owner_account_b",
+      "writable": true
+    },
+    {
+      "address": "3BbFVfXDfM14kM46SFfPaRJXVSub4Ljwox87HfKyv1JA",
+      "role": "token_vault_b",
+      "writable": true
+    },
+    {
+      "address": "DyxxT7XjZRS86nhAN4k8w21kN8af6AVGeUhQSHLsvgcY",
+      "role": "tick_array_0",
+      "writable": true
+    },
+    {
+      "address": "4joyRY87Qs8mNFh9oyW9hnR5uFVgVusJiQWz2KwFVv2w",
+      "role": "tick_array_1",
+      "writable": true
+    },
+    {
+      "address": "GoCMmS76U4UmibhGqw8razjsNfJv2s81TMhihMDxnWa",
+      "role": "tick_array_2",
+      "writable": true
+    },
+    {
+      "address": "FBNg5G8CrU46jguTyX55VRSMBtERn5L4ZawiHEpEAgK8",
+      "role": "oracle",
+      "writable": true
+    }
+  ],
+  "inner_instruction_count": 6,
+  "inner_instruction_group_count": 2,
+  "instruction": "swap_v2",
+  "loaded_readonly_claim_count": 5,
+  "loaded_writable_claim_count": 7,
+  "log_count": 40,
+  "logs_sha256": "868bb6e203064908abf345c82529148569adb508142a184bba0ed3aa5cb95a0e",
+  "lookup_descriptors": [
+    {
+      "accountKey": "8bnWtkhsFKXEXTETxMnTsMuyPfyP3JKRzcbRgQYvAqEd",
+      "readonlyIndexes": [
+        2,
+        3
+      ],
+      "writableIndexes": [
+        17,
+        5,
+        16,
+        15,
+        4,
+        6,
+        1
+      ]
+    },
+    {
+      "accountKey": "GqBzfLfkXqpJtEYp7VvuFkZ3SZLLQ3ApQThz9tNmdNfZ",
+      "readonlyIndexes": [
+        7
+      ],
+      "writableIndexes": []
+    },
+    {
+      "accountKey": "8qfVCNSiPkeDGBYXeqG6xUKsmSkKvAChbUC3ogAbPA3j",
+      "readonlyIndexes": [
+        95
+      ],
+      "writableIndexes": []
+    },
+    {
+      "accountKey": "FZSQhk9KTGz5wuCKTbYD3FWfEpVPXGLU4eeE2Av3YzVX",
+      "readonlyIndexes": [
+        91
+      ],
+      "writableIndexes": []
+    }
+  ],
+  "lut_historical_observations_acquired": false,
+  "message_version": 0,
+  "observed_cpi_programs": {
+    "11111111111111111111111111111111": 1,
+    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA": 4,
+    "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb": 1
+  },
+  "original_fee": 5750,
+  "original_outcome": null,
+  "outer_target_index": 4,
+  "remaining_account_count": 0,
+  "replay_eligibility": "TransactionBoundaryStateRequired",
+  "return_data": null,
+  "same_slot_post_clean": false,
+  "same_slot_pre_clean": true,
+  "sample_index": 32,
+  "signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+  "slot": 448760958,
+  "static_key_count": 10,
+  "validator_envelope_sha256": "fbf1f72939295ae452f9f5e1f728ce65c314b772d2027d18bfbcb1420f843222"
+}

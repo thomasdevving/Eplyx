@@ -1,0 +1,19 @@
+{
+  "agave_account_notifier": {
+    "commit": "965aee8e55d45ac3ca72e48f15945bfca4a32804",
+    "sha256": "12ff3ad2ae264928657744306e6a26934703d3a0e44cddf62cd4481a860d5f38",
+    "tag": "v4.3.0-rc.0",
+    "url": "https://github.com/anza-xyz/agave/blob/965aee8e55d45ac3ca72e48f15945bfca4a32804/accounts-db/src/accounts.rs"
+  },
+  "agave_plugin_interface": {
+    "commit": "965aee8e55d45ac3ca72e48f15945bfca4a32804",
+    "sha256": "d5db7f1c1ef404bd8166943d6d54fff27465b3a42e4f46c699b4aee6b8a24642",
+    "tag": "v4.3.0-rc.0",
+    "url": "https://github.com/anza-xyz/agave/blob/965aee8e55d45ac3ca72e48f15945bfca4a32804/geyser-plugin-interface/src/geyser_plugin_interface.rs"
+  },
+  "yellowstone_proto": {
+    "commit": "7139edd23c44470b4d260fabd5c270907014c270",
+    "sha256": "2aac393e5b2e75ecbfb990fbff90d2923338f348468b0cb14fe8990d97beb9b6",
+    "url": "https://github.com/rpcpool/yellowstone-grpc/blob/7139edd23c44470b4d260fabd5c270907014c270/yellowstone-grpc-proto/proto/geyser.proto"
+  }
+}

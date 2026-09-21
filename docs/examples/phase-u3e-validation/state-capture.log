@@ -1,0 +1,1400 @@
+{
+  "acquired": [
+    {
+      "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+      "boundary": "pre",
+      "facts": {
+        "anchor_type": "OraclePrices",
+        "context_slot": 448195165,
+        "data_bytes": 28712,
+        "data_sha256": "c3fe3908e3c8778f0b99f6c83def59cc07c95ca7468e8f4585c5fe3d0caf6884",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 200726443,
+        "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "88f1b591553c84a75ad449b8cda67fe0f4c9a4bc5599cb7f96a8f9fcb138f37c",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+      "boundary": "post",
+      "facts": {
+        "anchor_type": "OraclePrices",
+        "context_slot": 448195166,
+        "data_bytes": 28712,
+        "data_sha256": "7b412449f556f471ca5623ec1731f03366675455a1509a349388e89e90d231bc",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 200726443,
+        "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "867025d5688e6f8600adc9a0331e765b74a9d58f0e52b5a7cd91ee822280e110",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+      "boundary": "pre",
+      "facts": {
+        "anchor_type": "OracleMappings",
+        "context_slot": 448195165,
+        "data_bytes": 29704,
+        "data_sha256": "1d4d40f87f5c82460565a5780e727073cdd787f528636f059628df0a8d55a110",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 207630762,
+        "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "245441edd41df68c4fda449c0396d8ab33d351f2b42c754f9f854074c8bd4b32",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+      "boundary": "post",
+      "facts": {
+        "anchor_type": "OracleMappings",
+        "context_slot": 448195166,
+        "data_bytes": 29704,
+        "data_sha256": "1d4d40f87f5c82460565a5780e727073cdd787f528636f059628df0a8d55a110",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 207630762,
+        "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "245441edd41df68c4fda449c0396d8ab33d351f2b42c754f9f854074c8bd4b32",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+      "boundary": "pre",
+      "facts": {
+        "anchor_type": "OracleTwaps",
+        "context_slot": 448195165,
+        "data_bytes": 344136,
+        "data_sha256": "d107cdaeb3b97e7dc14c30bc05e4fe49cd72617a1a1b947e25cd3279eb6018ac",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 2396077462,
+        "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "7678bbbfe3d11f85c6d487b9fafb01cc087af1c0c729ab5f54561ecd4bd02814",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+      "boundary": "post",
+      "facts": {
+        "anchor_type": "OracleTwaps",
+        "context_slot": 448195166,
+        "data_bytes": 344136,
+        "data_sha256": "d107cdaeb3b97e7dc14c30bc05e4fe49cd72617a1a1b947e25cd3279eb6018ac",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 2396077462,
+        "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "7678bbbfe3d11f85c6d487b9fafb01cc087af1c0c729ab5f54561ecd4bd02814",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+      "boundary": "pre",
+      "facts": {
+        "anchor_type": null,
+        "context_slot": 448195165,
+        "data_bytes": 0,
+        "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 84251529,
+        "owner": "11111111111111111111111111111111",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "d2a17b03067e0d37e341148de9f82407eee6eaa57ab3baeeb9cb21f94f490e85",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+      "boundary": "post",
+      "facts": {
+        "anchor_type": null,
+        "context_slot": 448195166,
+        "data_bytes": 0,
+        "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 84186003,
+        "owner": "11111111111111111111111111111111",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "96c6f88f76db5f92c9fcd9fea403e4ba592c2662e60923dc418e3c8a41a1be0a",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+      "boundary": "pre",
+      "facts": {
+        "anchor_type": "Obligation",
+        "context_slot": 448195165,
+        "data_bytes": 3344,
+        "data_sha256": "68051b7f5f658e9549d92dd8ecd86301410a807d0de32c6bb65ddef9d6f030ed",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 24165120,
+        "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "5463477d6ef99348002591e2c02c6b1cb72d3fb72021e414b41be0b09bebdc3b",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+      "boundary": "post",
+      "facts": {
+        "anchor_type": "Obligation",
+        "context_slot": 448195166,
+        "data_bytes": 3344,
+        "data_sha256": "5e0570ccdb8401db8969fb6fd400cdf2357fc3bcf975fe089c51096130e3554c",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 24165120,
+        "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "62860eab446fd64fd12349db7db39862377eae715bb27df6e8fb969a72d05433",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+      "boundary": "pre",
+      "facts": {
+        "anchor_type": null,
+        "context_slot": 448195165,
+        "data_bytes": 179,
+        "data_sha256": "4b8b6a0b70d8176b0087132f360533337f84400b884970ceecd54bde42672f8e",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 2136720,
+        "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "4e611d3cc808437860b5a93b252599ced63f8dece3b18af722e2790621f1a29a",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+      "boundary": "post",
+      "facts": {
+        "anchor_type": null,
+        "context_slot": 448195166,
+        "data_bytes": 179,
+        "data_sha256": "1f45eae302bcc52b52e28ccc4f7a67589b520445b87d731df116edcada9c2072",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 2136720,
+        "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "b3d6f6f9d7f05b5495c6ae9908013e76704dd7fa919ac7f0c370acbdc3b5aac8",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+      "boundary": "pre",
+      "facts": {
+        "anchor_type": null,
+        "context_slot": 448195165,
+        "data_bytes": 36,
+        "data_sha256": "f4aba07704156a828ec27a590398cc17b3227924465d012c6b2edf3163af05b3",
+        "executable": true,
+        "execution_seed_admitted": false,
+        "lamports": 1141440,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "273fe6d66bed40568e2eadaa874aeb76deacc3690de75ec67d96e88d8a2ed4f1",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+      "boundary": "post",
+      "facts": {
+        "anchor_type": null,
+        "context_slot": 448195166,
+        "data_bytes": 36,
+        "data_sha256": "f4aba07704156a828ec27a590398cc17b3227924465d012c6b2edf3163af05b3",
+        "executable": true,
+        "execution_seed_admitted": false,
+        "lamports": 1141440,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "273fe6d66bed40568e2eadaa874aeb76deacc3690de75ec67d96e88d8a2ed4f1",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+      "boundary": "pre",
+      "facts": {
+        "anchor_type": null,
+        "context_slot": 448195165,
+        "data_bytes": 82,
+        "data_sha256": "e07b45060053455599b0d8aa820516572ca4632167928a1848770f267fc111f5",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 1461600,
+        "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "606989ae8f92c503b6d5b5979241aa203bbecc3d791686b1af414f8d97b59b1d",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+      "boundary": "post",
+      "facts": {
+        "anchor_type": null,
+        "context_slot": 448195166,
+        "data_bytes": 82,
+        "data_sha256": "e1d479cdb52442dc16c6476e9299f111e27cca058917dddcc36f65ef1854a8db",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 1461600,
+        "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "e4e2ff322fcaf058335883bf93ce3eb625a06af3d4b873d7e845b368a54629ae",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+      "boundary": "pre",
+      "facts": {
+        "anchor_type": "Reserve",
+        "context_slot": 448195165,
+        "data_bytes": 8624,
+        "data_sha256": "784688a29c0ceeb79fb1f6e41327fa9373b938e1739499cbb1b6eb3faddbe188",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 60913920,
+        "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "7f5ffff482796e498ef641fa21a0b9cbda7fd442398396c90277efbdb22ff000",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+      "boundary": "post",
+      "facts": {
+        "anchor_type": "Reserve",
+        "context_slot": 448195166,
+        "data_bytes": 8624,
+        "data_sha256": "9a08be63b7c6b8191e6661b1aec5bdfc93af7753c6aceb11426041028126042d",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 60913920,
+        "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "1a59eaba828f499407ace9d2c0fa7f8d83c78429938fc588af5d00cd6ce92203",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+      "boundary": "pre",
+      "facts": {
+        "anchor_type": null,
+        "context_slot": 448195165,
+        "data_bytes": 175,
+        "data_sha256": "5ccafb6924124f66dcfc755ee0ed01f5b3e12571b2e801acaa1b592cf77c5914",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 2108880,
+        "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "172f582ff650afded7d5da49db1257cc5f536f4c17b052d3b99053ab5af2b462",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+      "boundary": "post",
+      "facts": {
+        "anchor_type": null,
+        "context_slot": 448195166,
+        "data_bytes": 175,
+        "data_sha256": "d92020439aa6f2194864291155bde3d6f4c80dd91a32a8371787516ef474ee4f",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 2108880,
+        "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "2f5271b2aa6be57281ed1e56a89876243e45f9054f2ee9f27575ef6e29f8f8bb",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+      "boundary": "pre",
+      "facts": {
+        "anchor_type": null,
+        "context_slot": 448195165,
+        "data_bytes": 165,
+        "data_sha256": "c97710319bb2703a9ce0ee68eb15d4fc0e95b6ae3a5a06767fec359862465b68",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 2039280,
+        "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "65b7d7148c273c123cc7c7bd814740ff1550316910e6cea3e21bb90b4a8daa6d",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+      "boundary": "post",
+      "facts": {
+        "anchor_type": null,
+        "context_slot": 448195166,
+        "data_bytes": 165,
+        "data_sha256": "9a7ec50642479595301e3807120f1b7df0c56f32f7f2bab18664d53543e5504d",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 2039280,
+        "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "55a668993738a610eaf1e6ecb41a5203843bb84360d36c7ccc824eb363af50e5",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+      "boundary": "pre",
+      "facts": {
+        "anchor_type": "Reserve",
+        "context_slot": 448195165,
+        "data_bytes": 8624,
+        "data_sha256": "fe1cc0faea5ac1617d44efaee7c586eb8b6827f5b08db9697eb65cbaa648da20",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 60913920,
+        "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "a2fbfe5d1f430aa3aae4d48367724b022e822215f621bd2ebfa55cb4dd056c59",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+      "boundary": "post",
+      "facts": {
+        "anchor_type": "Reserve",
+        "context_slot": 448195166,
+        "data_bytes": 8624,
+        "data_sha256": "88114b83a3bc84f0d0c3a72c0ef651cc6206230872683dbbf150c85a26eb5c92",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 60913920,
+        "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "8e521e82956aafaacb38de4bc01836f3f2bbc0a4040dcdbc4a5b7b7a8722f772",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "11111111111111111111111111111111",
+      "boundary": "pre",
+      "facts": {
+        "anchor_type": null,
+        "context_slot": 448195165,
+        "data_bytes": 21,
+        "data_sha256": "c94b792a6d8b25d3e53ea94d8b80111735ed80d6a7dc8deb937cd342707f5f03",
+        "executable": true,
+        "execution_seed_admitted": false,
+        "lamports": 1,
+        "owner": "NativeLoader1111111111111111111111111111111",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "39cc4ec7ee47c3f2ad2382421046ad8a88c66ad5f3292dd7a9a9c01ea06ca623",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "11111111111111111111111111111111",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "11111111111111111111111111111111",
+      "boundary": "post",
+      "facts": {
+        "anchor_type": null,
+        "context_slot": 448195166,
+        "data_bytes": 21,
+        "data_sha256": "c94b792a6d8b25d3e53ea94d8b80111735ed80d6a7dc8deb937cd342707f5f03",
+        "executable": true,
+        "execution_seed_admitted": false,
+        "lamports": 1,
+        "owner": "NativeLoader1111111111111111111111111111111",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "39cc4ec7ee47c3f2ad2382421046ad8a88c66ad5f3292dd7a9a9c01ea06ca623",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "11111111111111111111111111111111",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+      "boundary": "pre",
+      "facts": {
+        "absence_requires_pair_validation": true,
+        "present": false,
+        "validator_lamports": 0
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+      "boundary": "post",
+      "facts": {
+        "absence_requires_pair_validation": true,
+        "present": false,
+        "validator_lamports": 0
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+      "boundary": "pre",
+      "facts": {
+        "anchor_type": "LendingMarket",
+        "context_slot": 448195165,
+        "data_bytes": 4664,
+        "data_sha256": "ab5a8e3831db3fdfd87ef8c0dd0bcebd57df853ce4affacc65bdca9e37194777",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 33352320,
+        "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "b16318321a21258d7a6865f30962ecfa0080bcd082f8158edbd47f660991aa2f",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+      "boundary": "post",
+      "facts": {
+        "anchor_type": "LendingMarket",
+        "context_slot": 448195166,
+        "data_bytes": 4664,
+        "data_sha256": "ab5a8e3831db3fdfd87ef8c0dd0bcebd57df853ce4affacc65bdca9e37194777",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 33352320,
+        "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "b16318321a21258d7a6865f30962ecfa0080bcd082f8158edbd47f660991aa2f",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+      "boundary": "pre",
+      "facts": {
+        "anchor_type": null,
+        "context_slot": 448195165,
+        "data_bytes": 676,
+        "data_sha256": "3a0cde7377b2c441b76eab17cbcc5747aeac9ddaa423cce4f496f39ff2eb92cb",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 36662853,
+        "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "9d974e04d6850a71f4e5b62b5cf80744e14aeb405c0ded44d389303b7290ec87",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+      "boundary": "post",
+      "facts": {
+        "anchor_type": null,
+        "context_slot": 448195166,
+        "data_bytes": 676,
+        "data_sha256": "3a0cde7377b2c441b76eab17cbcc5747aeac9ddaa423cce4f496f39ff2eb92cb",
+        "executable": false,
+        "execution_seed_admitted": false,
+        "lamports": 36662853,
+        "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "owner_check": "role_and_historical_boundary",
+        "present": true,
+        "raw_account_json_sha256": "9d974e04d6850a71f4e5b62b5cf80744e14aeb405c0ded44d389303b7290ec87",
+        "rent_epoch": 18446744073709551615,
+        "typed_protocol_and_extension_validation": "pending",
+        "validator_lamports_match": true
+      },
+      "method": "getAccountInfo",
+      "params": [
+        "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    }
+  ],
+  "failure": null,
+  "historical_state_complete": false,
+  "kind": "u3e_T1_boundary_capture",
+  "planned": [
+    {
+      "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "11111111111111111111111111111111",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "11111111111111111111111111111111",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "11111111111111111111111111111111",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "11111111111111111111111111111111",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    }
+  ],
+  "production_replay_eligible": false,
+  "raw_boundary_capture_complete": true,
+  "runtime_executed": false,
+  "signature": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97"
+}
+

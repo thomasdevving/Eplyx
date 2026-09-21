@@ -1,0 +1,18 @@
+{
+  "cargo_lock_sha256": "6922c627de8a29f22e27f54f9fd1148eb19f1d84c67ebbd02163539eb0bd8682",
+  "proof_boundary": "implementation inspection only; no deployed ELF equivalence or local execution",
+  "sources": [
+    {
+      "package_source": "litesvm-0.16.0/src/lib.rs",
+      "sha256": "7c11a398084b8b709b5e1d8a6ca0e18e6ea130282e947f4a5a1537a877218e1b"
+    },
+    {
+      "package_source": "litesvm-0.16.0/src/accounts_db.rs",
+      "sha256": "0331209d4856a43939581ce8a964276365f6b33f88d29448f98fb2cb338b103d"
+    },
+    {
+      "package_source": "solana-address-lookup-table-interface-3.1.0/src/state.rs",
+      "sha256": "44bc430a102228883c329b0af472c5adf54f188b3ee9465242265f83f7f3cd8e"
+    }
+  ]
+}

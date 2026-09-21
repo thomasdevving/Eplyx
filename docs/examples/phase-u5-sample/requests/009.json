@@ -1,0 +1,1 @@
+{"id":1,"jsonrpc":"2.0","method":"getTransaction","params":["2BBXgALpMRVteXN8PXDJaeuMfT3i9iGfkuLaEwnojVKzYmTCEaEiuWGn4GXeDmN9MExs9Qpge36bmSLr2DMAoLMS",{"commitment":"finalized","encoding":"json","maxSupportedTransactionVersion":0}]}

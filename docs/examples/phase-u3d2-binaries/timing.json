@@ -1,0 +1,9 @@
+{
+  "account_requests": 68,
+  "block_requests": 1,
+  "failed_requests": 3,
+  "full_capture_seconds": 43.69254762498895,
+  "requests": 70,
+  "successful_requests": 67,
+  "transport_seconds": 39.34987487382023
+}

@@ -1,0 +1,16 @@
+{
+  "schema": "eplyx-orca-u5-block-diagnostic-v1",
+  "sample_fingerprint": "f77749d7a7992253e15f0df34e3a8f574998cc8868586884ec987f30423712c3",
+  "reason": "The public RPC returned HTTP 429 for 190 of 200 one-attempt getTransaction requests. Full finalized blocks can diagnose the same frozen signatures and provide earlier-transaction order for same-slot screens. They do not replace failed per-signature receipts or alter sample membership.",
+  "provider": "https://api.mainnet-beta.solana.com",
+  "slots": "all 22 distinct slots in the frozen sample, in descending order; one attempt each, no replacement",
+  "request": {
+    "method": "getBlock",
+    "commitment": "finalized",
+    "encoding": "json",
+    "transactionDetails": "full",
+    "maxSupportedTransactionVersion": 1,
+    "rewards": false
+  },
+  "use": "Supplemental structural classification and same-slot diagnostic only. It is not exact-slot account pre-state, historical binary proof or replay admission."
+}

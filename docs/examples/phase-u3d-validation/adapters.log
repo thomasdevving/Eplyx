@@ -1,0 +1,12 @@
+error: no test target named `token2022_adapter` in `eplyx-engine` package
+help: available test targets:
+    discovery
+    historical
+    historical_lut
+    kamino
+    replay
+    stake_pool
+    token2022
+    transaction_envelope
+    universal_evidence
+    upgrade_diff

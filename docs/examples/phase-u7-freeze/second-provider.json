@@ -1,0 +1,15 @@
+{
+  "advertised_capabilities": [
+    "getAccountChanges per-write history with txnSignature",
+    "signature anchored before/after historical account state",
+    "getRewindCoverage"
+  ],
+  "anonymous_guessed_endpoint": "https://public.rpc.solanavibestation.com/rewind",
+  "anonymous_probe_body_sha256": "0a4a057f6782d1ccfee8332c2ce1c1e16f687ee21359dc3733d5926d31828a63",
+  "anonymous_probe_http_status": 404,
+  "credential_available": false,
+  "interpretation": "404 at a guessed public endpoint does not establish Rewind capability or retention; no authenticated Rewind request was possible",
+  "official_product_page": "https://solanavibestation.com/rewind",
+  "provider": "Solana Vibe Station Rewind",
+  "qualification": "not_qualified"
+}

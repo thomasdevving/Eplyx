@@ -1,0 +1,125 @@
+{
+  "sha": "95b595cad50f1f5147c3524613c805c516f03005",
+  "node_id": "C_kwDOKfjqhtoAKDk1YjU5NWNhZDUwZjFmNTE0N2MzNTI0NjEzYzgwNWM1MTZmMDMwMDU",
+  "commit": {
+    "author": {
+      "name": "yugure-orca",
+      "email": "109891005+yugure-orca@users.noreply.github.com",
+      "date": "2026-08-19T16:54:57Z"
+    },
+    "committer": {
+      "name": "GitHub",
+      "email": "noreply@github.com",
+      "date": "2026-08-19T16:54:57Z"
+    },
+    "message": "fix reposition_liquidity_v2 (#25)",
+    "tree": {
+      "sha": "6a0ab4bdf017e8831495470cec885f3ad3f42c56",
+      "url": "https://api.github.com/repos/orca-so/whirlpool-tx-replayer/git/trees/6a0ab4bdf017e8831495470cec885f3ad3f42c56"
+    },
+    "url": "https://api.github.com/repos/orca-so/whirlpool-tx-replayer/git/commits/95b595cad50f1f5147c3524613c805c516f03005",
+    "comment_count": 0,
+    "verification": {
+      "verified": true,
+      "reason": "valid",
+      "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqhd/hCRC1aQ7uu5UhlAAA7zAQAJuU5Ylux4zPwFxBr67VXTIu\nqIudXjz8Qins+vwXQZPKv3ZnWQz5nYCT75bmEkialFQpEjuCO+BravJ3JbPL3LC9\nXhxz7jTEqJS/2ouQFxp3YKj4UyfpmB7km9zDfSKW/+YU3JgquDuGEOBOyOtcEONd\nqOjlOXKqoNPmQmO/XBNEmYqz4KF7iciWszjEZI9NJ6g9Jk92I/jpaoSwpe4Ex+AV\nWdzuXB6lWtdWNjakbl1S2yKnCWBGE9sNBBVI7HU+Hs2b5RxRLnKrw8MUePIpFWLM\nINHlSFcq2BnC9x2xWYvWRjSmv8Sy9dnoux2MT4uqjs9bXCwji5WKWwmeg3EZWVqu\n8qiRbsCcWdoZQDjjOb7zEr2Z37yf0HTLCD8qDlV/+5qSoyVC5msrUe9Uzd7qMvgF\ndzNrhNHTW4QiDTrXBDDBJMe4lb2O0yP8tdNEGnKdjdnP+C5ccRbLErj3glPterPb\nVJMSFmaobR9zHNo51RT8esj+0gxCaBusTdj4DBqmhxkV8X1+MyD0VbLi2vh2BSDq\nmClKega73u8UnqaZIwEdXtSSKX+Ew9Zvs3ZehKgBnfw/yXsSt9jJY43yI6U4d9HU\nK11kk57JHmrsF4jXJjkyrL4Z9R77UMPHC8TYuAHVRRXQKmN/8H8Ha5m1xRF+3GX5\n8iwVg7U8B2To1cXfmzvq\n=jhoH\n-----END PGP SIGNATURE-----\n",
+      "payload": "tree 6a0ab4bdf017e8831495470cec885f3ad3f42c56\nparent fbea34ca115101aedb5afb0eca801199a53518c9\nauthor yugure-orca <109891005+yugure-orca@users.noreply.github.com> 1787158497 +0900\ncommitter GitHub <noreply@github.com> 1787158497 +0900\n\nfix reposition_liquidity_v2 (#25)",
+      "verified_at": "2026-08-19T16:54:57Z"
+    }
+  },
+  "url": "https://api.github.com/repos/orca-so/whirlpool-tx-replayer/commits/95b595cad50f1f5147c3524613c805c516f03005",
+  "html_url": "https://github.com/orca-so/whirlpool-tx-replayer/commit/95b595cad50f1f5147c3524613c805c516f03005",
+  "comments_url": "https://api.github.com/repos/orca-so/whirlpool-tx-replayer/commits/95b595cad50f1f5147c3524613c805c516f03005/comments",
+  "author": {
+    "login": "yugure-orca",
+    "id": 109891005,
+    "node_id": "U_kgDOBozNvQ",
+    "avatar_url": "https://avatars.githubusercontent.com/u/109891005?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/yugure-orca",
+    "html_url": "https://github.com/yugure-orca",
+    "followers_url": "https://api.github.com/users/yugure-orca/followers",
+    "following_url": "https://api.github.com/users/yugure-orca/following{/other_user}",
+    "gists_url": "https://api.github.com/users/yugure-orca/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/yugure-orca/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/yugure-orca/subscriptions",
+    "organizations_url": "https://api.github.com/users/yugure-orca/orgs",
+    "repos_url": "https://api.github.com/users/yugure-orca/repos",
+    "events_url": "https://api.github.com/users/yugure-orca/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/yugure-orca/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "committer": {
+    "login": "web-flow",
+    "id": 19864447,
+    "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+    "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/web-flow",
+    "html_url": "https://github.com/web-flow",
+    "followers_url": "https://api.github.com/users/web-flow/followers",
+    "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+    "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+    "organizations_url": "https://api.github.com/users/web-flow/orgs",
+    "repos_url": "https://api.github.com/users/web-flow/repos",
+    "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/web-flow/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "parents": [
+    {
+      "sha": "fbea34ca115101aedb5afb0eca801199a53518c9",
+      "url": "https://api.github.com/repos/orca-so/whirlpool-tx-replayer/commits/fbea34ca115101aedb5afb0eca801199a53518c9",
+      "html_url": "https://github.com/orca-so/whirlpool-tx-replayer/commit/fbea34ca115101aedb5afb0eca801199a53518c9"
+    }
+  ],
+  "stats": {
+    "total": 18,
+    "additions": 9,
+    "deletions": 9
+  },
+  "files": [
+    {
+      "sha": "1a3ef6fc65c5300faa6455796079806e1f9d79f7",
+      "filename": "Cargo.lock",
+      "status": "modified",
+      "additions": 4,
+      "deletions": 4,
+      "changes": 8,
+      "blob_url": "https://github.com/orca-so/whirlpool-tx-replayer/blob/95b595cad50f1f5147c3524613c805c516f03005/Cargo.lock",
+      "raw_url": "https://github.com/orca-so/whirlpool-tx-replayer/raw/95b595cad50f1f5147c3524613c805c516f03005/Cargo.lock",
+      "contents_url": "https://api.github.com/repos/orca-so/whirlpool-tx-replayer/contents/Cargo.lock?ref=95b595cad50f1f5147c3524613c805c516f03005",
+      "patch": "@@ -3306,7 +3306,7 @@ checksum = \"adad44e29e4c806119491a7f06f03de4d1af22c3a680dd47f1e6e179439d1f56\"\n \n [[package]]\n name = \"replay-engine\"\n-version = \"0.1.15\"\n+version = \"0.1.16\"\n dependencies = [\n  \"anchor-client\",\n  \"anchor-lang\",\n@@ -5950,7 +5950,7 @@ dependencies = [\n \n [[package]]\n name = \"whirlpool-regression-test\"\n-version = \"0.1.15\"\n+version = \"0.1.16\"\n dependencies = [\n  \"anchor-lang\",\n  \"chrono\",\n@@ -5963,7 +5963,7 @@ dependencies = [\n \n [[package]]\n name = \"whirlpool-replay\"\n-version = \"0.1.15\"\n+version = \"0.1.16\"\n dependencies = [\n  \"anchor-lang\",\n  \"clap 4.5.6\",\n@@ -5974,7 +5974,7 @@ dependencies = [\n \n [[package]]\n name = \"whirlpool-replayer\"\n-version = \"0.1.15\"\n+version = \"0.1.16\"\n dependencies = [\n  \"base64 0.21.7\",\n  \"bincode\","
+    },
+    {
+      "sha": "a536d79514f4f0fccfe21c7e7325f5bf4cef4c11",
+      "filename": "Cargo.toml",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2,
+      "blob_url": "https://github.com/orca-so/whirlpool-tx-replayer/blob/95b595cad50f1f5147c3524613c805c516f03005/Cargo.toml",
+      "raw_url": "https://github.com/orca-so/whirlpool-tx-replayer/raw/95b595cad50f1f5147c3524613c805c516f03005/Cargo.toml",
+      "contents_url": "https://api.github.com/repos/orca-so/whirlpool-tx-replayer/contents/Cargo.toml?ref=95b595cad50f1f5147c3524613c805c516f03005",
+      "patch": "@@ -9,7 +9,7 @@ members = [\n resolver = \"2\"\n \n [workspace.package]\n-version = \"0.1.15\"\n+version = \"0.1.16\"\n edition = \"2021\"\n \n [workspace.dependencies]"
+    },
+    {
+      "sha": "694b4e227c09a78c5e9c81bfe97f88a0baeb8dc9",
+      "filename": "replay-engine/src/replay_instructions/reposition_liquidity_v2.rs",
+      "status": "modified",
+      "additions": 4,
+      "deletions": 4,
+      "changes": 8,
+      "blob_url": "https://github.com/orca-so/whirlpool-tx-replayer/blob/95b595cad50f1f5147c3524613c805c516f03005/replay-engine%2Fsrc%2Freplay_instructions%2Freposition_liquidity_v2.rs",
+      "raw_url": "https://github.com/orca-so/whirlpool-tx-replayer/raw/95b595cad50f1f5147c3524613c805c516f03005/replay-engine%2Fsrc%2Freplay_instructions%2Freposition_liquidity_v2.rs",
+      "contents_url": "https://api.github.com/repos/orca-so/whirlpool-tx-replayer/contents/replay-engine%2Fsrc%2Freplay_instructions%2Freposition_liquidity_v2.rs?ref=95b595cad50f1f5147c3524613c805c516f03005",
+      "patch": "@@ -173,13 +173,13 @@ pub fn replay(req: ReplayInstructionParams<decoded_instructions::DecodedRepositi\n     vault_amount_b\n   );\n   // existing_tick_array_lower\n-  replayer.set_whirlpool_account(&ix.key_existing_tick_array_lower, accounts);\n+  replayer.set_whirlpool_account_with_additional_lamports(&ix.key_existing_tick_array_lower, accounts); // add lamports to collect rent of 2 ticks\n   // existing_tick_array_upper\n-  replayer.set_whirlpool_account(&ix.key_existing_tick_array_upper, accounts);\n+  replayer.set_whirlpool_account_with_additional_lamports(&ix.key_existing_tick_array_upper, accounts); // add lamports to collect rent of 2 ticks\n   // new_tick_array_lower\n-  replayer.set_whirlpool_account(&ix.key_new_tick_array_lower, accounts);\n+  replayer.set_whirlpool_account_with_additional_lamports(&ix.key_new_tick_array_lower, accounts); // add lamports to collect rent of 2 ticks\n   // new_tick_array_upper\n-  replayer.set_whirlpool_account(&ix.key_new_tick_array_upper, accounts);\n+  replayer.set_whirlpool_account_with_additional_lamports(&ix.key_new_tick_array_upper, accounts); // add lamports to collect rent of 2 ticks\n   // system_program\n \n   let method = match ix.data_method {"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+test_any_frozen_input_change_stops (__main__.LutAcquisitionTests.test_any_frozen_input_change_stops) ... ok
+test_attempt_directory_never_overwritten (__main__.LutAcquisitionTests.test_attempt_directory_never_overwritten) ... ok
+test_checkpoint_and_pending_fail_closed (__main__.LutAcquisitionTests.test_checkpoint_and_pending_fail_closed) ... ok
+test_credentials_are_never_provider_identity (__main__.LutAcquisitionTests.test_credentials_are_never_provider_identity) ... ok
+test_current_rpc_query_without_exact_slot_is_rejected (__main__.LutAcquisitionTests.test_current_rpc_query_without_exact_slot_is_rejected) ... ok
+test_decoded_account_hash_and_attempt_are_revalidated (__main__.LutAcquisitionTests.test_decoded_account_hash_and_attempt_are_revalidated) ... ok
+test_exact_frozen_membership (__main__.LutAcquisitionTests.test_exact_frozen_membership) ... ok
+test_failure_cannot_reference_unhashed_body (__main__.LutAcquisitionTests.test_failure_cannot_reference_unhashed_body) ... ok
+test_failure_categories_preserve_the_actual_stage (__main__.LutAcquisitionTests.test_failure_categories_preserve_the_actual_stage) ... ok
+test_genesis_mismatch_stops_before_table_requests (__main__.LutAcquisitionTests.test_genesis_mismatch_stops_before_table_requests) ... ok
+test_missing_optional_fixture_is_not_an_acquisition_failure (__main__.LutAcquisitionTests.test_missing_optional_fixture_is_not_an_acquisition_failure) ... ok
+test_missing_or_duplicate_context_is_rejected (__main__.LutAcquisitionTests.test_missing_or_duplicate_context_is_rejected) ... ok
+test_prior_provider_contract_does_not_require_divergent_fixture (__main__.LutAcquisitionTests.test_prior_provider_contract_does_not_require_divergent_fixture) ... ok
+test_provider_table_errors_preserve_all_membership_and_raw_bodies (__main__.LutAcquisitionTests.test_provider_table_errors_preserve_all_membership_and_raw_bodies) ... ok
+test_raw_non_json_failure_is_preserved (__main__.LutAcquisitionTests.test_raw_non_json_failure_is_preserved) ... ok
+test_relocated_and_reversed_filesystem_and_workers_are_deterministic (__main__.LutAcquisitionTests.test_relocated_and_reversed_filesystem_and_workers_are_deterministic) ... ok
+test_s_minus_one_is_not_execution_slot (__main__.LutAcquisitionTests.test_s_minus_one_is_not_execution_slot) ... ok
+test_same_historical_byte_hash_cannot_validate_archive_boundary (__main__.LutAcquisitionTests.test_same_historical_byte_hash_cannot_validate_archive_boundary) ... ok
+test_success_requires_validated_provider (__main__.LutAcquisitionTests.test_success_requires_validated_provider) ... ok
+test_transaction_context_membership_cannot_be_changed (__main__.LutAcquisitionTests.test_transaction_context_membership_cannot_be_changed) ... ok
+test_unavailable_preserves_every_context_and_never_calls_network (__main__.LutAcquisitionTests.test_unavailable_preserves_every_context_and_never_calls_network) ... ok
+test_validated_archive_acquisition_and_offline_raw_hash_linkage (__main__.LutAcquisitionTests.test_validated_archive_acquisition_and_offline_raw_hash_linkage) ... ok
+test_warmup_visibility_has_its_own_failure_category (__main__.LutAcquisitionTests.test_warmup_visibility_has_its_own_failure_category) ... ok
+test_wrong_returned_slot_is_retained_as_a_specific_failure (__main__.LutAcquisitionTests.test_wrong_returned_slot_is_retained_as_a_specific_failure) ... ok
+
+----------------------------------------------------------------------
+Ran 24 tests in 4.205s
+
+OK

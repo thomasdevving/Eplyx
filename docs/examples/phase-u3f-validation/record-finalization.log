@@ -1,0 +1,34 @@
+{
+  "baseline_self_findings": [],
+  "borrow": 1,
+  "candidate_differential": "not attempted; no reproducibly buildable historical-compatible controlled candidate established",
+  "deposit": 1,
+  "economic_subjects": 7,
+  "kind": "experimental_production_derived_Kamino_corpus",
+  "ordered_envelope_shapes": 2,
+  "ordinary_product_admission": false,
+  "record_count": 2,
+  "records": [
+    {
+      "record": "record.json",
+      "sha256": "165da3d621194213a0573a2efbe3edbcf2cb519866f1051022ef60a78199245c",
+      "signature": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97",
+      "slot": 448195166,
+      "target": "T1",
+      "target_outer_index": 5
+    },
+    {
+      "record": "T2.json",
+      "sha256": "dd5ca166f31098ff438eee3bc527a6f4138c4cf8038cf9fcfaf3b036666b2a51",
+      "signature": "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk",
+      "slot": 448194517,
+      "target": "T2",
+      "target_outer_index": 7
+    }
+  ],
+  "representative_of_Kamino_traffic": false,
+  "shape_definition": "Scope/ATA/2 or 4 reserve-refreshes/obligation/deposit or borrow/compute-limit/price",
+  "unique_obligations": 2,
+  "unique_target_reserves": 2
+}
+

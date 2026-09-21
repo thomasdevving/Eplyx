@@ -1,0 +1,154 @@
+[
+  {
+    "C1": "passed",
+    "C10": "not_attempted",
+    "C2": "passed",
+    "C3": "passed",
+    "C4": "passed",
+    "C5": "ordinary_account_boundaries_validated",
+    "C6": "not_attempted",
+    "C7": "not_attempted",
+    "C8": "not_attempted",
+    "C9": "not_attempted",
+    "new_requests": 39,
+    "runtime_context": "partial_acquisition_blocked",
+    "signature": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97",
+    "target": "T1",
+    "terminal_cause": "RuntimeContext",
+    "terminal_evidence": {
+      "reason": "missing_account",
+      "request": {
+        "address": "SysvarS1otHashes111111111111111111111111111",
+        "method": "getAccountInfo",
+        "name": "SlotHashes",
+        "params": [
+          "SysvarS1otHashes111111111111111111111111111",
+          {
+            "commitment": "finalized",
+            "encoding": "base64",
+            "slot": 448195166
+          }
+        ]
+      }
+    }
+  },
+  {
+    "C1": "passed",
+    "C10": "not_attempted",
+    "C2": "passed",
+    "C3": "passed",
+    "C4": "failed_in_retained_U3D2_attempt",
+    "C5": "not_attempted",
+    "C6": "not_attempted",
+    "C7": "not_attempted",
+    "C8": "not_attempted",
+    "C9": "not_attempted",
+    "new_requests": 0,
+    "runtime_context": "not_attempted",
+    "signature": "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk",
+    "target": "T2",
+    "terminal_cause": "Transport",
+    "terminal_evidence": {
+      "attempted": true,
+      "failure_reason": "invalid_json_response",
+      "method": "getAccountInfo",
+      "params": [
+        "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+        {
+          "commitment": "finalized",
+          "dataSlice": {
+            "length": 524288,
+            "offset": 3670016
+          },
+          "encoding": "base64",
+          "slot": 448194516
+        }
+      ],
+      "request_id": "e6603892a13ff10b7aba24baac34a5bcc614c7c16203f2e662ddb8b384cedab7",
+      "response_bytes": 0,
+      "response_file": "rpc/e6603892a13ff10b7aba24baac34a5bcc614c7c16203f2e662ddb8b384cedab7.body",
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "response_withheld": false,
+      "status": "failure",
+      "transport_seconds": 0.12281362497014925
+    }
+  },
+  {
+    "C1": "passed",
+    "C10": "not_attempted",
+    "C2": "passed",
+    "C3": "passed",
+    "C4": "failed_in_retained_U3D2_attempt",
+    "C5": "not_attempted",
+    "C6": "not_attempted",
+    "C7": "not_attempted",
+    "C8": "not_attempted",
+    "C9": "not_attempted",
+    "new_requests": 0,
+    "runtime_context": "not_attempted",
+    "signature": "5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V",
+    "target": "T3",
+    "terminal_cause": "Transport",
+    "terminal_evidence": {
+      "attempted": true,
+      "failure_reason": "invalid_json_response",
+      "method": "getAccountInfo",
+      "params": [
+        "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+        {
+          "commitment": "finalized",
+          "dataSlice": {
+            "length": 524288,
+            "offset": 0
+          },
+          "encoding": "base64",
+          "slot": 448194461
+        }
+      ],
+      "request_id": "44ae4612d5eb8a9eb844eb83f750e147fda28272754ec4f34ba9b0cbbdf22bf8",
+      "response_bytes": 0,
+      "response_file": "rpc/44ae4612d5eb8a9eb844eb83f750e147fda28272754ec4f34ba9b0cbbdf22bf8.body",
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "response_withheld": false,
+      "status": "failure",
+      "transport_seconds": 0.11789304198464379
+    }
+  },
+  {
+    "C1": "passed",
+    "C10": "not_attempted",
+    "C2": "passed",
+    "C3": "passed",
+    "C4": "failed_in_retained_U3D2_attempt",
+    "C5": "not_attempted",
+    "C6": "not_attempted",
+    "C7": "not_attempted",
+    "C8": "not_attempted",
+    "C9": "not_attempted",
+    "new_requests": 0,
+    "runtime_context": "not_attempted",
+    "signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx",
+    "target": "T4",
+    "terminal_cause": "Transport",
+    "terminal_evidence": {
+      "attempted": true,
+      "failure_reason": "invalid_json_response",
+      "method": "getAccountInfo",
+      "params": [
+        "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448194434
+        }
+      ],
+      "request_id": "187707edb53db315718d0d4320f82504d60dacde6c966da39beef3a64da7573f",
+      "response_bytes": 0,
+      "response_file": "rpc/187707edb53db315718d0d4320f82504d60dacde6c966da39beef3a64da7573f.body",
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "response_withheld": false,
+      "status": "failure",
+      "transport_seconds": 0.11719070799881592
+    }
+  }
+]

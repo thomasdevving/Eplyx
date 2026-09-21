@@ -8,6 +8,10 @@ use eplyx_engine::{
     ingest::rpc::RpcProvider,
     message::{self, ArchiveProvenance, FrozenV0, HistoricalAccountEvidence, HistoricalVisibility},
     replay::hash_bytes,
+    universal::{
+        evidence::{AccountBoundary, AccountObservation, EvidenceKind, EvidenceStore},
+        model::ExecutionInput,
+    },
 };
 use serde_json::{json, Value};
 use solana_address::Address;
@@ -70,6 +74,72 @@ fn prove(
     tables: &[HistoricalAccountEvidence],
 ) -> std::result::Result<message::ProvenV0, message::LutProofFailure> {
     message::reconstruct(&FrozenV0::from_rpc(raw, GENESIS).unwrap(), tables, None)
+}
+
+#[test]
+fn universal_v0_input_reconstructs_multiple_luts_from_shared_evidence() {
+    let (raw, tables) = fixture();
+    let proven = prove(&raw, &tables).expect("historical lookup proof");
+    let scratch = tempfile::tempdir().unwrap();
+    let store = EvidenceStore::at(scratch.path());
+    let frozen_transaction = store
+        .put(
+            EvidenceKind::Transaction,
+            &serde_json::to_vec(&raw).unwrap(),
+        )
+        .unwrap();
+    let lookup_tables = tables
+        .iter()
+        .map(|table| {
+            let bytes = BASE64_STANDARD.decode(&table.raw_response_base64).unwrap();
+            AccountObservation::capture(
+                &store,
+                &table.pubkey,
+                SLOT,
+                AccountBoundary::EndOfExecutionSlot,
+                table.provider.clone(),
+                &bytes,
+            )
+            .unwrap()
+        })
+        .collect::<Vec<_>>();
+    let input = ExecutionInput::V0 {
+        message: proven.proof().native_v0_message.clone(),
+        frozen_transaction,
+        lookup_tables: lookup_tables.clone(),
+        slot_hashes: None,
+        claimed_proof: proven.proof().clone(),
+    };
+    let resolved = input
+        .resolve(&store, GENESIS)
+        .expect("reconstruct complete native v0 key space");
+    assert_eq!(resolved.message, proven.versioned_message());
+    assert_eq!(
+        resolved.account_keys.len(),
+        proven.proof().full_account_keys.len()
+    );
+    assert_eq!(
+        resolved.transaction.instructions,
+        proven.transaction().instructions
+    );
+    let mut forged = input.clone();
+    if let ExecutionInput::V0 { claimed_proof, .. } = &mut forged {
+        claimed_proof.resolved_writable[0] = key(99).parse().unwrap();
+    }
+    assert!(
+        forged.resolve(&store, GENESIS).is_err(),
+        "stored loaded addresses cannot authorize replay"
+    );
+    assert!(
+        input.resolve(&store, &key(98)).is_err(),
+        "wrong genesis cannot reuse evidence"
+    );
+    let path = store.path(&lookup_tables[0]).unwrap();
+    std::fs::write(&path, b"tampered").unwrap();
+    assert!(
+        input.resolve(&store, GENESIS).is_err(),
+        "tampered shared evidence must fail closed"
+    );
 }
 fn replace_table(tables: &mut [HistoricalAccountEvidence], pos: usize, meta: LookupTableMeta) {
     let old = &tables[pos];

@@ -1,0 +1,38 @@
+{
+  "evidence_bytes": 109530773,
+  "evidence_hash_validation_ms": 9194,
+  "evidence_objects": 314,
+  "notes": "Timings are diagnostic and overlap. Seeded ProgramData is lazily loaded by LiteSVM during transaction execution; explicit registration is zero for native V0.",
+  "records": [
+    {
+      "account_count": 32,
+      "account_materialization_ms": 19633,
+      "account_seeding_ms": 242,
+      "evidence_collection_ms": 0,
+      "explicit_program_registration_ms": 0,
+      "fidelity_ms": 0,
+      "full_materiality_profile_ms": 956,
+      "record_id": "858e3dbc07e74a10a36c2e37c2a24d54dd191653f90986d411da151bb3002189",
+      "resolution_ms": 21444,
+      "runtime_setup_ms": 37,
+      "semantic_interpretation_ms": 1,
+      "semantic_subjects": 5,
+      "transaction_execution_ms": 47
+    },
+    {
+      "account_count": 29,
+      "account_materialization_ms": 13731,
+      "account_seeding_ms": 211,
+      "evidence_collection_ms": 0,
+      "explicit_program_registration_ms": 0,
+      "fidelity_ms": 0,
+      "full_materiality_profile_ms": 816,
+      "record_id": "e56202c8fdcd443d1deba455ab04f2bc6f16689f83a7c107bb98765ec2da626f",
+      "resolution_ms": 15715,
+      "runtime_setup_ms": 34,
+      "semantic_interpretation_ms": 1,
+      "semantic_subjects": 4,
+      "transaction_execution_ms": 31
+    }
+  ]
+}

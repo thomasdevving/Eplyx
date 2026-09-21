@@ -1,0 +1,12 @@
+{
+  "configured": false,
+  "credential_values_recorded": false,
+  "historical_state_acquisition": "not_attempted",
+  "kind": "local_configuration_check_not_acquisition_attempt",
+  "network_requests": 0,
+  "optional_origin_configured": false,
+  "private_configuration_files_searched": false,
+  "reason": "qualified_archive_configuration_not_available_in_process",
+  "required_variable": "SOLANA_ARCHIVE_RPC_URL",
+  "state_requests": 0
+}

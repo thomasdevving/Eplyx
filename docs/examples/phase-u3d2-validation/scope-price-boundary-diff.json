@@ -1,0 +1,18 @@
+{
+  "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+  "changed_bytes": [
+    {
+      "offset": 25592,
+      "post": 51,
+      "pre": 48
+    }
+  ],
+  "data_bytes": 28712,
+  "kind": "archive_boundary_raw_diff_not_local_execution",
+  "local_scope_execution_proven": false,
+  "post_data_sha256": "7b412449f556f471ca5623ec1731f03366675455a1509a349388e89e90d231bc",
+  "post_slot": 448195166,
+  "pre_data_sha256": "c3fe3908e3c8778f0b99f6c83def59cc07c95ca7468e8f4585c5fe3d0caf6884",
+  "pre_slot": 448195165,
+  "scope_to_klend_causal_effect_proven": false
+}

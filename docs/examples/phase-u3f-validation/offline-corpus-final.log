@@ -1,0 +1,35 @@
+{
+  "elapsed_seconds": 26.290944124979433,
+  "live_transport_forbidden": true,
+  "offline_reexecution_passed": true,
+  "provider_environment_removed": true,
+  "record_hashes_verified": true,
+  "variants": [
+    {
+      "evidence_sha256": "83f479faf1fe0f809c7c9c5c1db16047bb6c94d4cf3e1d549fbb3b19bc7f7990",
+      "execution_seconds": 0.021731875,
+      "fidelity": "matched",
+      "pre_state_exact": true,
+      "preparation_seconds": 3.710712291,
+      "variant": "different"
+    },
+    {
+      "evidence_sha256": "83f479faf1fe0f809c7c9c5c1db16047bb6c94d4cf3e1d549fbb3b19bc7f7990",
+      "execution_seconds": 0.074599875,
+      "fidelity": "matched",
+      "pre_state_exact": true,
+      "preparation_seconds": 4.138848833,
+      "variant": "empty"
+    },
+    {
+      "evidence_sha256": "83f479faf1fe0f809c7c9c5c1db16047bb6c94d4cf3e1d549fbb3b19bc7f7990",
+      "execution_seconds": 0.022967333,
+      "fidelity": "matched",
+      "pre_state_exact": true,
+      "preparation_seconds": 4.192085125,
+      "variant": "default"
+    }
+  ]
+}
+
+{"offline_corpus_records": 2, "matched": 2}

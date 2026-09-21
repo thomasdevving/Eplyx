@@ -1,0 +1,689 @@
+   Compiling eplyx-engine v0.1.0 (/Users/thomas/Downloads/Upgrade Impact CI/engine)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 52.61s
+     Running unittests src/lib.rs (target/debug/deps/eplyx_engine-e4953a4ecde62be7)
+
+running 421 tests
+test bundle::tests::a_corpus_spanning_two_baselines_is_refused ... ok
+test bundle::tests::a_baseline_that_ran_no_record_is_refused ... ok
+test bundle::tests::a_baseline_mismatch_refuses_the_comparison ... ok
+test bundle::tests::an_edited_manifest_is_refused ... ok
+test bundle::tests::an_empty_corpus_is_refused ... ok
+test bundle::tests::a_manifest_that_miscounts_its_records_is_refused ... ok
+test bundle::tests::a_tampered_record_is_refused ... ok
+test bundle::tests::conflicting_dependency_versions_are_refused_by_name ... ok
+test bundle::tests::a_tampered_baseline_binary_is_refused ... ok
+test bundle::tests::a_tampered_dependency_binary_is_refused ... ok
+test bundle::tests::a_manifest_that_lists_other_records_is_refused ... ok
+test bundle::tests::a_built_bundle_verifies_itself ... ok
+test bundle::tests::a_manifest_that_misstates_its_slot_window_is_refused ... ok
+test bundle::tests::a_bundle_without_selection_still_carries_contract_limitations ... ok
+test ci::tests::a_bundle_built_under_another_adapter_version_is_refused ... ok
+test ci::tests::a_bundle_naming_the_wrong_adapter_is_refused ... ok
+test ci::tests::a_consistent_bundle_passes_preflight ... ok
+test ci::tests::a_bundle_naming_subjects_under_another_vocabulary_is_refused ... ok
+test ci::tests::a_record_for_another_program_is_refused ... ok
+test ci::tests::a_record_validated_against_another_baseline_is_refused ... ok
+test bundle::tests::the_bundle_pins_the_vocabulary_its_subjects_were_named_under ... ok
+test bundle::tests::coverage_limitations_travel_with_the_bundle ... ok
+test ci::tests::exit_codes_are_the_documented_ones ... ok
+test bundle::tests::building_over_an_existing_bundle_is_refused ... ok
+test ci_markdown::tests::the_reason_a_check_failed_reaches_the_markdown ... ok
+test ci::tests::a_promoted_field_still_reports_when_nothing_named_it ... ok
+test ci::tests::a_named_finding_does_not_hide_an_unrelated_byte_change ... ok
+test cluster::tests::metrics_render_in_their_own_units ... ok
+test cluster::tests::tight_ranges_are_informative_and_wide_ones_are_not ... ok
+test corpus::tests::boundary_window_is_where_we_think_it_is ... ok
+test ci::tests::a_structural_change_with_no_semantic_surface_is_reported ... ok
+test cluster::tests::identical_values_are_always_informative ... ok
+test cluster::tests::ranges_capture_min_and_max ... ok
+test ci::tests::a_compute_only_difference_is_not_undeclarable ... ok
+test ci::tests::bytes_a_reported_change_covers_are_not_reported_twice ... ok
+test corpus_store::tests::an_unsafe_observation_id_is_refused ... ok
+test corpus_store::tests::a_conflicting_body_under_an_existing_id_is_refused ... ok
+test corpus_store::tests::adding_the_same_observation_twice_is_idempotent ... ok
+test dependencies::tests::an_artifact_name_is_addressed_by_program_id ... ok
+test dependencies::tests::discovery_routes_are_recorded_and_merged ... ok
+test dependencies::tests::a_cpi_only_program_is_discovered ... ok
+test ci::tests::empty_semantic_coverage_is_never_a_pass ... ok
+test dependencies::tests::log_scraping_ignores_program_authored_text ... ok
+test diff::invocation_shape::a_changed_discriminant_is_a_changed_invocation ... ok
+test diff::invocation_shape::account_count_and_data_length_are_part_of_the_shape ... ok
+test dependencies::tests::the_manifest_orders_dependencies_canonically ... ok
+test diff::invocation_shape::the_owning_instruction_is_part_of_the_shape ... ok
+test diff::invocation_shape::an_identical_call_compares_equal ... ok
+test corpus_store::tests::records_load_in_canonical_id_order_regardless_of_insertion_order ... ok
+test diff::large_value_serialization::a_balance_past_two_to_the_fifty_third_round_trips ... ok
+test diff::large_value_serialization::a_numeric_balance_is_still_read ... ok
+test diff::tests::compute_only_diffs_are_not_behavioural_changes ... ok
+test diff::tests::large_compute_drift_escalates ... ok
+test diff::tests::severity_ordering_is_meaningful ... ok
+test ci::tests::the_semantic_schema_is_reported_so_a_consumer_can_check_it ... ok
+test diff::tests::small_compute_drift_is_noise ... ok
+test evidence::account::tests::a_created_account_is_not_a_modified_empty_one ... ok
+test evidence::account::tests::a_shortened_buffer_reports_the_truncation_point ... ok
+test evidence::account::tests::a_closed_account_is_reported_as_closed ... ok
+test evidence::account::tests::an_account_in_neither_side_produces_nothing ... ok
+test evidence::account::tests::accounts_pair_by_label_not_by_position ... ok
+test evidence::account::tests::provenance_travels_with_every_delta ... ok
+test evidence::account::tests::an_owner_change_is_a_lifecycle_event ... ok
+test evidence::account::tests::an_executable_change_and_a_length_change_are_both_reported ... ok
+test evidence::account::tests::the_first_differing_offset_is_reported ... ok
+test evidence::boundary::tests::a_balance_recorded_under_another_token_program_is_refused ... ok
+test evidence::boundary::tests::a_balance_on_an_account_that_does_not_decode_is_refused ... ok
+test evidence::boundary::tests::a_mint_that_contradicts_the_validator_is_refused ... ok
+test evidence::boundary::tests::a_read_only_account_absent_from_the_post_state_is_an_error ... ok
+test evidence::boundary::tests::a_read_only_account_that_changed_is_refused ... ok
+test evidence::boundary::tests::a_lamport_mismatch_names_the_side_and_the_account ... ok
+test evidence::boundary::tests::a_post_side_lamport_mismatch_is_named_differently ... ok
+test evidence::boundary::tests::a_snapshot_the_message_does_not_name_is_an_error ... ok
+test evidence::boundary::tests::a_read_only_account_whose_owner_changed_is_refused ... ok
+test evidence::boundary::tests::a_token_amount_that_contradicts_the_validator_is_refused ... ok
+test evidence::boundary::tests::an_exact_boundary_proves ... ok
+test evidence::boundary::tests::a_writable_account_may_change ... ok
+test bundle::tests::validation_against_the_baseline_actually_replays ... ok
+test evidence::boundary::tests::missing_validator_balances_are_an_error_not_an_empty_proof ... ok
+test evidence::boundary::tests::proving_no_token_account_at_all_is_refused ... ok
+test evidence::cpi::tests::a_child_never_attaches_across_top_level_instructions ... ok
+test evidence::cpi::tests::a_nested_invocation_is_attached_to_its_caller ... ok
+test evidence::boundary::tests::exemption_applies_only_where_the_contract_asks_for_it ... ok
+test evidence::cpi::tests::an_unknown_program_is_kept_with_its_raw_identity ... ok
+test evidence::cpi::tests::no_invocations_is_an_empty_graph_not_a_missing_one ... ok
+test evidence::cpi::tests::one_invocation_is_a_root ... ok
+test evidence::cpi::tests::programs_are_reported_as_a_set_without_collapsing_the_nodes ... ok
+test evidence::cpi::tests::raw_payload_size_and_discriminant_survive_the_view ... ok
+test evidence::cpi::tests::the_graph_is_deterministic_for_a_given_execution ... ok
+test evidence::cpi::tests::siblings_share_a_parent_and_keep_their_order ... ok
+test evidence::cpi::tests::two_invocations_differing_only_in_arguments_have_different_shapes ... ok
+test evidence::field::tests::a_change_running_to_the_end_is_closed_off ... ok
+test evidence::field::tests::a_field_read_past_the_end_is_absent_not_zero ... ok
+test evidence::field::tests::a_length_change_is_always_reported ... ok
+test evidence::field::tests::a_non_numeric_field_has_no_numeric_delta ... ok
+test evidence::field::tests::a_schema_carries_its_provenance_rather_than_implying_one ... ok
+test evidence::field::tests::a_typed_field_reports_its_range_and_its_delta ... ok
+test evidence::field::tests::contiguous_changes_are_one_range_not_eight_findings ... ok
+test evidence::field::tests::identical_buffers_produce_no_ranges ... ok
+test evidence::field::tests::separated_changes_are_separate_ranges ... ok
+test evidence::labels::tests::a_binding_for_an_absent_address_is_ignored ... ok
+test evidence::labels::tests::a_bound_key_takes_its_role ... ok
+test evidence::labels::tests::a_role_on_key_zero_beats_the_payer_fallback ... ok
+test evidence::labels::tests::an_empty_message_produces_no_labels ... ok
+test evidence::labels::tests::an_index_past_the_end_falls_back_to_a_positional_name ... ok
+test evidence::labels::tests::labels_are_unique_by_construction ... ok
+test evidence::labels::tests::ordinal_suffixed_roles_stay_separate ... ok
+test evidence::labels::tests::the_first_role_named_for_an_address_wins ... ok
+test evidence::labels::tests::unbound_keys_keep_positional_labels ... ok
+test evidence::native::tests::a_created_account_produces_no_lamport_delta ... ok
+test evidence::native::tests::a_fee_payer_delta_is_not_value_movement ... ok
+test evidence::native::tests::a_lifecycle_attribution_can_be_applied_after_the_fact ... ok
+test evidence::native::tests::a_full_range_change_does_not_overflow ... ok
+test evidence::native::tests::an_unchanged_balance_produces_no_delta ... ok
+test evidence::native::tests::increases_and_decreases_are_both_measured ... ok
+test evidence::native::tests::runtime_managed_accounts_are_excluded_from_value_movement ... ok
+test evidence::pairing::tests::a_changed_economic_field_is_reported_with_its_delta ... ok
+test evidence::pairing::tests::a_non_economic_field_is_never_compared ... ok
+test evidence::pairing::tests::a_selective_rescale_leaves_other_fields_alone ... ok
+test evidence::pairing::tests::accounts_are_reported_in_the_order_they_were_supplied ... ok
+test evidence::pairing::tests::an_account_only_one_side_produced_is_skipped ... ok
+test evidence::pairing::tests::an_account_that_does_not_decode_is_skipped ... ok
+test evidence::pairing::tests::an_unchanged_field_produces_nothing ... ok
+test evidence::pairing::tests::the_rescale_hook_governs_how_a_quantity_renders ... ok
+test evidence::tests::a_measured_absence_of_flow_is_not_an_absence_of_change ... ok
+test evidence::tests::evidence_derivation_is_deterministic ... ok
+test evidence::tests::universal_evidence_offers_no_overall_verdict ... ok
+test evidence::token::tests::a_closed_token_account_yields_no_balance_delta ... ok
+test evidence::token::tests::a_created_token_account_yields_no_balance_delta ... ok
+test evidence::token::tests::a_delegate_appearing_is_an_authority_delta ... ok
+test evidence::token::tests::a_mint_authority_change_is_an_authority_delta ... ok
+test evidence::token::tests::a_malformed_token_account_yields_no_delta_rather_than_zero ... ok
+test evidence::token::tests::a_non_token_account_produces_no_token_evidence ... ok
+test evidence::token::tests::a_mint_change_under_one_address_is_not_a_balance_delta ... ok
+test evidence::token::tests::a_full_range_decrease_does_not_overflow ... ok
+test evidence::token::tests::a_token_program_change_is_not_a_balance_delta ... ok
+test evidence::token::tests::mint_supply_increases_and_decreases_are_measured ... ok
+test evidence::token::tests::a_token_increase_and_decrease_are_both_measured ... ok
+test evidence::token::tests::an_unchanged_balance_is_still_reported_as_a_measurement ... ok
+test evidence::token::tests::an_owner_change_on_a_token_account_is_an_authority_delta ... ok
+test evidence::token::tests::the_decoder_that_read_a_delta_is_recorded_on_it ... ok
+test evidence::token::tests::token_2022_extended_accounts_are_measured_under_their_own_program ... ok
+test expectations::tests::a_declaration_parses_into_a_fingerprint ... ok
+test expectations::tests::a_bound_of_zero_cannot_be_satisfied_and_is_refused ... ok
+test expectations::tests::a_file_with_no_declarations_is_valid ... ok
+test expectations::tests::a_different_semantic_schema_is_refused ... ok
+test expectations::tests::a_declaration_without_a_reason_is_refused ... ok
+test expectations::tests::a_misspelled_field_is_an_error_not_an_ignored_bound ... ok
+test expectations::tests::a_relative_bound_needs_a_magnitude ... ok
+test expectations::tests::allowlist_shaped_fields_do_not_exist ... ok
+test expectations::tests::an_absent_semantic_schema_means_schema_one ... ok
+test expectations::tests::an_unsupported_file_schema_is_refused ... ok
+test expectations::tests::a_malformed_identity_is_rejected_by_the_vocabulary ... ok
+test expectations::tests::two_declarations_for_one_fingerprint_are_refused ... ok
+test hexfmt::tests::rejects_malformed ... ok
+test hexfmt::tests::round_trips ... ok
+test impact::tests::a_balance_change_alone_is_a_value_change ... ok
+test impact::tests::a_reverting_transaction_is_affected_but_not_newly_liquidatable ... ok
+test impact::tests::a_threshold_crossing_contributes_and_is_counted_as_newly_liquidatable ... ok
+test impact::tests::aggregate_equals_the_sum_of_included_positions ... ok
+test impact::tests::compute_only_differences_do_not_affect_capital ... ok
+test impact::tests::consequence_keys_are_always_present ... ok
+test impact::tests::unchanged_fixtures_do_not_affect_capital ... ok
+test ingest::version_ceiling_tests::a_version_refusal_is_recognised_and_nothing_else_is ... ok
+test ingest::version_ceiling_tests::the_ceiling_is_shared_with_screening ... ok
+test ingest::version_ceiling_tests::the_versions_this_build_reads_are_legacy_and_v0 ... ok
+test interpret::tests::an_underwater_position_has_negative_net_value ... ok
+test interpret::tests::health_formats_as_decimal ... ok
+test interpret::tests::instruction_names_match_the_wire_encoding ... ok
+test interpret::tests::liquidation_threshold_is_exactly_one ... ok
+test interpret::tests::opaque_data_decodes_to_opaque ... ok
+test interpret::tests::valuation_uses_account_state_and_protocol_constants ... ok
+test money::tests::exact_at_magnitudes_where_f64_would_lose_precision ... ok
+test money::tests::rejects_malformed_and_over_precise_input ... ok
+test money::tests::integer_boundaries_and_malformed_decimals ... ok
+test money::tests::renders_full_precision_for_json ... ok
+test money::tests::renders_grouped_dollars_for_terminals ... ok
+test money::tests::round_trips_through_json ... ok
+test money::tests::signed_values_round_trip_and_render ... ok
+test numfmt::tests::large_values_round_trip_without_loss ... ok
+test numfmt::tests::a_number_is_still_accepted_on_the_way_in ... ok
+test money::tests::summation_is_exact_and_order_independent ... ok
+test numfmt::tests::nonsense_is_rejected_rather_than_defaulted ... ok
+test protocol::kamino::fraction::tests::a_decrease_is_negative_and_exact ... ok
+test protocol::kamino::fraction::tests::a_pure_fraction_floors_to_zero_and_keeps_its_remainder ... ok
+test protocol::kamino::fraction::tests::a_realistic_debt_round_trips_through_the_scale ... ok
+test protocol::kamino::fraction::tests::a_sub_unit_increase_is_visible_even_though_it_floors_to_zero ... ok
+test protocol::kamino::fraction::tests::a_whole_base_unit_is_two_to_the_sixty ... ok
+test protocol::kamino::fraction::tests::an_unchanged_value_has_a_zero_delta_in_both_forms ... ok
+test protocol::kamino::fraction::tests::the_delta_is_converted_after_subtracting_not_before ... ok
+test protocol::kamino::fraction::tests::the_full_range_converts_without_overflow_or_rounding ... ok
+test protocol::kamino::state::tests::an_implausible_decimal_count_is_malformed_rather_than_truncated_silently ... ok
+test protocol::kamino::state::tests::a_borrowed_amount_is_a_fraction_not_a_token_count ... ok
+test protocol::kamino::state::tests::a_reserve_decodes_every_field_the_adapter_reads ... ok
+test protocol::kamino::state::tests::a_right_tag_with_a_wrong_length_is_malformed ... ok
+test protocol::kamino::state::tests::an_obligation_reports_only_occupied_position_slots ... ok
+test protocol::kamino::state::tests::the_discriminator_gates_every_decode ... ok
+test protocol::kamino::state::tests::positions_are_found_by_their_reserve ... ok
+test protocol::kamino::state::tests::the_interface_records_what_it_rests_on ... ok
+test protocol::kamino::tests::a_borrow_against_an_existing_debt_measures_the_increase ... ok
+test protocol::kamino::tests::a_borrow_reports_the_liquidity_it_moved_and_the_debt_it_created ... ok
+test protocol::kamino::tests::a_borrow_declares_exactly_the_subjects_it_can_measure ... ok
+test protocol::kamino::tests::a_debt_subject_names_every_slot_its_position_could_occupy ... ok
+test protocol::kamino::tests::a_deposit_declares_exactly_the_subjects_it_can_measure ... ok
+test protocol::kamino::tests::a_borrow_is_reported_as_unknown_rather_than_misclassified ... ok
+test protocol::kamino::tests::a_deposit_regression_that_short_changes_the_depositor_is_named ... ok
+test protocol::kamino::tests::a_borrower_short_changed_on_liquidity_is_named ... ok
+test protocol::kamino::tests::a_deposit_reports_its_flows_and_the_position_it_creates ... ok
+test protocol::kamino::tests::a_derived_subject_is_not_declared_when_its_state_is_missing ... ok
+test protocol::kamino::tests::a_message_resolving_lookup_tables_is_refused ... ok
+test protocol::kamino::tests::a_failed_original_transaction_is_refused ... ok
+test protocol::kamino::tests::a_production_shaped_refresh_obligation_with_extra_accounts_is_accepted ... ok
+test protocol::kamino::tests::a_refresh_of_a_different_obligation_does_not_satisfy_the_prerequisite ... ok
+test protocol::kamino::tests::a_refresh_naming_a_different_market_is_refused ... ok
+test protocol::kamino::tests::a_refresh_of_a_different_reserve_does_not_satisfy_the_prerequisite ... ok
+test protocol::kamino::tests::a_reserve_and_an_obligation_decode_into_protocol_terms ... ok
+test protocol::kamino::tests::a_preserved_outcome_produces_no_findings ... ok
+test protocol::kamino::tests::a_reserve_vault_under_a_foreign_program_yields_no_flow ... ok
+test protocol::kamino::tests::a_reverting_candidate_reports_only_the_outcome ... ok
+test protocol::kamino::tests::a_supported_deposit_and_borrow_are_accepted ... ok
+test protocol::kamino::tests::a_token_shaped_account_under_a_foreign_program_yields_no_balance ... ok
+test protocol::kamino::tests::an_account_owned_by_another_program_is_not_decoded ... ok
+test protocol::kamino::tests::a_wrong_arity_or_unsigned_owner_or_zero_amount_is_refused ... ok
+test protocol::kamino::tests::an_action_without_its_prerequisite_refreshes_is_refused ... ok
+test protocol::kamino::tests::an_unsupported_companion_program_is_refused ... ok
+test protocol::kamino::tests::an_unsupported_klend_instruction_alongside_the_action_is_refused ... ok
+test protocol::kamino::tests::every_decoded_source_names_a_field_the_adapter_emits ... ok
+test protocol::kamino::tests::cpi_outside_the_defined_programs_is_refused ... ok
+test protocol::kamino::tests::accounts_are_bound_to_their_klend_roles ... ok
+test protocol::kamino::tests::both_supported_actions_are_recognised_by_discriminator ... ok
+test protocol::kamino::tests::missing_validator_token_balances_are_refused ... ok
+test protocol::kamino::tests::required_accounts_include_the_oracle_the_refresh_reads ... ok
+test protocol::kamino::tests::the_adapter_is_registered_and_declares_its_contract ... ok
+test protocol::kamino::tests::state_features_describe_the_pre_state_without_claiming_risk ... ok
+test protocol::kamino::tests::the_interpretation_walk_reports_a_changed_debt_field ... ok
+test protocol::kamino::tests::every_emitted_finding_is_covered_by_a_declared_subject ... ok
+test protocol::kamino::tests::the_modelled_boundary_is_the_reserves_available_liquidity ... ok
+test protocol::kamino::tests::the_two_forms_of_one_family_share_an_action_id_and_differ_in_arity ... ok
+test protocol::kamino::tests::token_accounts_are_decoded_through_the_shared_standard_program_layer ... ok
+test protocol::kamino::tests::the_economic_entity_is_the_obligation_not_the_wallet ... ok
+test protocol::kamino::tests::the_declared_byte_ranges_cover_the_fields_that_move ... ok
+test protocol::kamino::tests::token_flow_alone_cannot_establish_the_borrow_semantic ... ok
+test protocol::malformed_input::an_extreme_decimal_count_still_renders_a_readable_decimal ... ok
+test protocol::kamino::tests::two_klend_actions_in_one_transaction_are_refused ... ok
+test protocol::malformed_input::an_extreme_quantity_survives_the_wire_format ... ok
+test protocol::stake_pool::semantic_surface::a_deposit_can_measure_the_shares_it_produces ... ok
+test protocol::stake_pool::semantic_surface::an_action_outside_the_contract_names_no_subjects ... ok
+test protocol::stake_pool::semantic_surface::a_rejected_instruction_is_one_finding_not_several ... ok
+test protocol::stake_pool::semantic_surface::a_withdrawal_can_measure_what_it_burns_and_pays_out ... ok
+test corpus_store::tests::publishing_the_same_evidence_twice_is_byte_identical ... ok
+test protocol::stake_pool::semantic_surface::an_unchanged_outcome_is_named_as_nothing ... ok
+test protocol::stake_pool::semantic_surface::an_instruction_that_starts_succeeding_is_also_named ... ok
+test protocol::stake_pool::semantic_surface::capability_does_not_depend_on_anything_changing ... ok
+test protocol::stake_pool::tests::a_foreign_account_does_not_decode ... ok
+test protocol::stake_pool::semantic_surface::every_emitted_finding_is_covered_by_a_declared_capability ... ok
+test protocol::stake_pool::tests::a_zero_denominator_fee_is_no_fee ... ok
+test protocol::stake_pool::semantic_surface::fewer_shares_for_the_same_deposit_is_named ... ok
+test protocol::stake_pool::tests::a_truncated_pool_does_not_decode ... ok
+test protocol::stake_pool::tests::an_empty_pool_mints_one_for_one ... ok
+test protocol::stake_pool::tests::a_pool_account_decodes_into_economic_fields ... ok
+test protocol::stake_pool::tests::a_pool_gating_withdrawals_is_decoded_as_gated ... ok
+test protocol::stake_pool::tests::an_empty_pool_withdraws_nothing ... ok
+test protocol::stake_pool::tests::only_pool_token_fields_are_rescaled ... ok
+test protocol::stake_pool::tests::required_accounts_exclude_programs_and_sysvars ... ok
+test protocol::stake_pool::tests::stale_trailing_bytes_do_not_break_decoding ... ok
+test protocol::stake_pool::tests::the_two_operations_have_distinct_shapes_and_meanings ... ok
+test protocol::stake_pool::tests::the_pool_layout_decodes_past_its_variable_length_fields ... ok
+test protocol::stake_pool::tests::the_pool_layout_surfaces_the_withdrawal_side ... ok
+test protocol::tests::an_unchanged_summary_field_is_still_reported ... ok
+test protocol::tests::an_economic_change_round_trips ... ok
+test protocol::tests::an_unknown_program_has_no_adapter ... ok
+test protocol::stake_pool::tests::withdrawal_reference_math_survives_mainnet_scale ... ok
+test protocol::stake_pool::tests::the_replayed_deposit_reproduces_the_observed_mint ... ok
+test protocol::stake_pool::tests::withdrawal_reference_math_multiplies_before_dividing ... ok
+test protocol::tests::quantities_from_different_mints_do_not_subtract ... ok
+test protocol::tests::cpi_support_is_declared_per_adapter ... ok
+test protocol::tests::deltas_carry_a_sign_and_keep_full_u64_range ... ok
+test protocol::tests::quantities_render_against_their_mints_decimals ... ok
+test protocol::tests::quantities_serialize_as_strings_not_json_numbers ... ok
+test protocol::tests::summaries_pair_by_name_and_keep_v1_order ... ok
+test protocol::token2022::tests::boundary_distance_is_integer_basis_points_of_the_reference ... ok
+test protocol::tests::every_semantic_action_round_trips_through_its_name ... ok
+test protocol::tests::signed_quantities_round_trip_through_their_string_form ... ok
+test protocol::token2022::tests::a_mint_without_the_extension_has_no_schedule ... ok
+test protocol::token2022::tests::transfer_fee_schedule_reads_the_newer_record ... ok
+test protocol::token2022::tests::every_supported_discriminant_maps_to_one_shape_and_action ... ok
+test protocol::token2022::tests::instruction_families_outside_the_contract_stay_unmapped ... ok
+test protocol::token2022::tests::only_revoke_carries_no_amount ... ok
+test replay::provenance_tests::a_dependency_deployed_after_the_transaction_is_refused ... ok
+test replay::provenance_tests::a_dependency_resolved_at_an_unrelated_slot_is_refused ... ok
+test replay::provenance_absence::stripping_provenance_and_the_screened_set_together_is_refused ... ok
+test replay::provenance_absence::stripping_acquisitions_does_not_waive_screening ... ok
+test replay::tests::a_boundary_disagreement_blocks_reconstruction ... ok
+test replay::tests::a_changed_clock_pre_state_still_breaks_record_integrity ... ok
+test replay::tests::a_changed_protocol_account_post_state_must_change_the_outcome_hash ... ok
+test replay::tests::a_vanity_lookalike_account_is_not_excluded ... ok
+test replay::tests::ineligible_account_classes_cannot_enter_the_reconstruction_path ... ok
+test replay::tests::only_an_empty_system_account_may_rest_on_balance_metadata ... ok
+test replay::tests::runtime_managed_recognises_the_sysvars_a_withdrawal_reads ... ok
+test replay::provenance_tests::acquisition_at_an_unrelated_slot_is_refused ... ok
+test replay::tests::the_runtime_managed_list_is_pinned_to_the_recorded_schema ... ok
+test replay::tests::the_outcome_hash_drops_runtime_managed_accounts_only ... ok
+test review::tests::a_change_larger_than_declared_fails ... ok
+test review::tests::a_change_wider_than_declared_fails ... ok
+test replay::provenance_tests::screening_that_covers_fewer_accounts_than_the_replay_needs_is_refused ... ok
+test review::tests::a_declaration_for_behaviour_that_stopped_is_stale ... ok
+test review::tests::a_declaration_does_not_absorb_a_different_finding ... ok
+test review::tests::a_declaration_the_corpus_cannot_measure_is_unevaluable ... ok
+test review::tests::a_declared_change_inside_its_bounds_passes ... ok
+test review::tests::a_zero_baseline_makes_a_relative_bound_unevaluable ... ok
+test review::tests::a_review_survives_a_json_round_trip ... ok
+test review::tests::an_expected_finding_keeps_its_severity ... ok
+test review::tests::an_undeclared_change_is_unexpected_and_fails ... ok
+test review::tests::coverage_and_affected_counts_are_both_reported ... ok
+test review::tests::an_undefined_delta_does_not_block_a_declaration_without_a_delta_bound ... ok
+test review::tests::any_undefined_bound_cause_blocks_the_whole_bound ... ok
+test review::tests::no_findings_and_no_declarations_passes ... ok
+test review::tests::exit_codes_are_distinct_and_stable ... ok
+test review::tests::declaration_order_does_not_reach_the_report ... ok
+test review::tests::observations_and_entities_are_aggregated_deterministically ... ok
+test review::tests::one_unevaluable_observation_makes_the_whole_bound_unevaluable ... ok
+test review::tests::stale_and_unevaluable_are_reported_separately ... ok
+test review::tests::precedence_summarises_without_filtering ... ok
+test review::tests::the_largest_magnitude_across_observations_is_what_is_bounded ... ok
+test review::tests::the_gate_never_consults_severity ... ok
+test review::tests::without_coverage_nothing_is_called_stale ... ok
+test review::tests::the_opposite_direction_is_a_different_finding ... ok
+test screening::tests::a_later_writer_invalidates_the_post_state ... ok
+test screening::tests::a_missing_target_is_an_error ... ok
+test screening::tests::a_shared_read_only_account_is_not_a_conflict ... ok
+test screening::tests::an_untouched_slot_screens_clean ... ok
+test screening::tests::an_unavailable_block_is_an_error ... ok
+test replay::provenance_absence::an_explicitly_non_archived_account_stays_exempt ... ok
+test screening::tests::an_earlier_writer_invalidates_the_pre_state ... ok
+test screening::tests::one_conflict_is_reported_per_account ... ok
+test select::tests::a_large_observed_to_replayable_gap_is_surfaced ... ok
+test bundle::tests::building_twice_produces_the_same_identity ... ok
+test replay::provenance_tests::the_committed_records_still_validate ... ok
+test select::tests::a_target_larger_than_the_population_reports_a_shortfall ... ok
+test select::tests::an_invalid_target_fails_cleanly ... ok
+test select::tests::an_observed_action_with_no_replayable_records_still_reports ... ok
+test select::tests::an_observed_population_in_the_wrong_vocabulary_is_refused ... ok
+test select::tests::a_target_the_population_can_satisfy_reports_no_shortfall ... ok
+test select::tests::a_singleton_invocation_signature_is_covered ... ok
+test select::tests::an_unmeasured_observed_population_is_not_reported_as_zero ... ok
+test select::tests::contract_limitations_are_always_stated ... ok
+test select::tests::entity_diversity_is_preferred ... ok
+test select::tests::an_observation_cannot_be_selected_twice ... ok
+test select::tests::pool_diversity_is_preferred_within_entity_selection ... ok
+test select::tests::every_action_with_an_observation_is_represented ... ok
+test select::tests::concurrent_construction_produces_the_same_corpus ... ok
+test select::tests::the_canonical_encoding_is_byte_identical_across_runs ... ok
+test select::tests::selection_reasons_are_stable_and_non_empty ... ok
+test semantics::tests::a_direction_comes_from_the_signed_delta ... ok
+test semantics::tests::a_quantity_does_not_serialize_as_a_json_number ... ok
+test semantics::tests::a_fingerprint_survives_a_json_round_trip ... ok
+test semantics::tests::a_relative_delta_is_measured_against_the_baseline ... ok
+test select::tests::input_order_cannot_reach_the_result ... ok
+test semantics::tests::magnitudes_round_away_from_zero ... ok
+test semantics::tests::a_zero_baseline_has_no_relative_delta ... ok
+test semantics::tests::an_enormous_relative_change_saturates_rather_than_wrapping ... ok
+test semantics::tests::an_unordered_subject_has_no_relative_delta ... ok
+test semantics::tests::malformed_fingerprints_are_rejected ... ok
+test semantics::tests::quantities_on_different_scales_are_not_compared ... ok
+test semantics::tests::run_specific_facts_are_not_part_of_the_identity ... ok
+test semantics::tests::the_adapter_version_is_not_in_the_identity ... ok
+test semantics::tests::the_canonical_string_round_trips ... ok
+test semantics::tests::the_evaluable_subject_drops_only_the_change ... ok
+test shrink::tests::quantization_rounds_down_to_readable_steps ... ok
+test select::tests::the_policy_version_is_recorded ... ok
+test standard_programs::spl_token::tests::a_delegate_and_its_delegated_amount_decode_together ... ok
+test standard_programs::spl_token::tests::a_close_authority_decodes ... ok
+test standard_programs::spl_token::tests::a_frozen_account_reports_its_state ... ok
+test standard_programs::spl_token::tests::a_stake_pool_account_does_not_decode_as_a_token_account ... ok
+test standard_programs::spl_token::tests::a_truncated_base_layout_is_malformed_rather_than_absent ... ok
+test standard_programs::spl_token::tests::a_valid_account_decodes_every_declared_field ... ok
+test standard_programs::spl_token::tests::a_valid_mint_decodes_every_declared_field ... ok
+test standard_programs::spl_token::tests::a_wrapped_sol_account_reports_its_rent_exempt_reserve ... ok
+test standard_programs::spl_token::tests::a_wrong_length_buffer_is_not_applicable_rather_than_zero ... ok
+test standard_programs::spl_token::tests::an_account_state_byte_outside_the_enum_is_malformed ... ok
+test standard_programs::spl_token::tests::an_initialized_flag_outside_its_range_is_malformed ... ok
+test standard_programs::spl_token::tests::an_uninitialized_account_is_decoded_not_refused ... ok
+test standard_programs::spl_token::tests::an_uninitialized_mint_still_decodes_and_says_so ... ok
+test standard_programs::spl_token::tests::maximum_supply_round_trips ... ok
+test standard_programs::spl_token::tests::the_narrow_accessors_agree_with_the_full_decode ... ok
+test standard_programs::system::tests::a_plain_transfer_decodes_with_its_amount ... ok
+test standard_programs::spl_token::tests::zero_and_maximum_amounts_both_round_trip ... ok
+test standard_programs::system::tests::a_transfer_discriminant_with_the_wrong_length_is_malformed ... ok
+test standard_programs::system::tests::account_creation_is_named_rather_than_reported_as_not_a_transfer ... ok
+test standard_programs::system::tests::empty_data_is_malformed_not_a_transfer_of_zero ... ok
+test standard_programs::system::tests::an_unmodelled_variant_keeps_its_discriminant ... ok
+test standard_programs::tests::a_coption_tag_outside_its_range_is_malformed_not_absent ... ok
+test standard_programs::tests::a_truncated_buffer_does_not_read_as_zero ... ok
+test standard_programs::tests::decoded_states_are_distinguishable ... ok
+test standard_programs::tests::readers_refuse_to_read_past_the_end ... ok
+test standard_programs::token2022::tests::a_base_account_decodes_with_an_empty_extension_list ... ok
+test standard_programs::token2022::tests::a_default_account_state_of_frozen_decodes ... ok
+test standard_programs::token2022::tests::a_malformed_extension_layout_records_why_the_walk_stopped ... ok
+test standard_programs::token2022::tests::a_mint_does_not_decode_as_an_account_or_the_reverse ... ok
+test select::tests::the_same_input_selects_the_same_observations ... ok
+test standard_programs::token2022::tests::a_permanent_delegate_decodes ... ok
+test standard_programs::token2022::tests::a_transfer_fee_config_decodes_both_schedules ... ok
+test standard_programs::token2022::tests::a_transfer_hook_reports_its_program_and_its_absence ... ok
+test standard_programs::token2022::tests::a_truncated_fee_config_is_unrecognized_rather_than_zero ... ok
+test standard_programs::token2022::tests::a_withheld_fee_on_an_account_decodes ... ok
+test standard_programs::token2022::tests::a_zero_terminator_ends_the_list_without_being_an_error ... ok
+test standard_programs::token2022::tests::extended_accessors_accept_what_the_legacy_ones_refuse ... ok
+test standard_programs::token2022::tests::an_unknown_extension_is_reported_not_dropped ... ok
+test standard_programs::token2022::tests::extension_order_is_preserved_as_written ... ok
+test standard_programs::token2022::tests::pause_state_decodes_in_both_directions ... ok
+test standard_programs::token2022::tests::the_two_base_lengths_and_the_type_byte_classify_every_buffer ... ok
+test versions::tests::a_range_without_an_upgrade_reports_no_boundary ... ok
+test versions::tests::an_empty_range_is_rejected_rather_than_silently_returning_nothing ... ok
+test versions::tests::searching_a_wide_range_costs_far_less_than_scanning_it ... ok
+test versions::tests::bisection_locates_an_upgrade_to_the_exact_slot ... ok
+test versions::tests::bisection_locates_every_upgrade_in_a_range ... ok
+test diff::tests::changes_past_a_decoded_prefix_are_still_reported ... ok
+test corpus::tests::corpus_is_large_enough_and_ids_are_unique ... ok
+test diff::tests::a_foreign_account_is_not_decoded_as_a_lending_layout ... ok
+test shrink::tests::a_variant_stays_self_consistent ... ok
+test corpus::tests::generation_is_deterministic ... ok
+
+test result: ok. 421 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.87s
+
+     Running unittests src/main.rs (target/debug/deps/eplyx-f6e505fd177be4f5)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/discovery.rs (target/debug/deps/discovery-8487bd2432e16e94)
+
+running 16 tests
+test direct_cpi_and_unknown_are_distinguished ... ok
+test provider_retries_are_bounded_and_eventually_succeed ... ok
+test instruction_fingerprints_are_deterministic_and_structural ... ok
+test observations_are_not_silently_equated_with_unique_entities ... ok
+test rare_shapes_receive_rarity_reasons_and_higher_scores ... ok
+test high_compute_and_native_movement_are_ranked_by_distribution ... ok
+test historical_failures_are_prioritized_but_not_called_bugs ... ok
+test replay_eligibility_preserves_phase_four_boundaries ... ok
+test selected_records_preserve_source_provenance ... ok
+test clustering_is_deterministic_and_groups_matching_shapes ... ok
+test discovery_corpus_and_manifest_round_trip ... ok
+test coverage_reports_factual_cluster_and_failure_counts ... ok
+test current_state_provider_never_promotes_samples_to_historical_state ... ok
+test deduplication_caps_near_identical_buckets ... ok
+test stratified_selection_keeps_rare_failure_cpi_and_high_compute_examples ... ok
+test repeated_selection_is_byte_identical ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/historical.rs (target/debug/deps/historical-250aa1d2e2d518c2)
+
+running 4 tests
+test extra_instruction_or_cpi_is_refused_before_state_is_claimed ... ok
+test archive_must_match_transaction_boundary_evidence_exactly ... ok
+test committed_mainnet_record_is_historical_state_ready_and_self_consistent ... ok
+test exact_archive_builds_a_valid_mainnet_record_and_v1_artifact ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/historical_lut.rs (target/debug/deps/historical_lut-d6d9fb03fd480292)
+
+running 27 tests
+test future_table_metadata_rejects ... ok
+test acquisition_never_substitutes_current_state_for_historical ... ok
+test duplicate_extra_missing_and_corrupt_table_artifacts_fail_closed ... ok
+test provenance_omits_credentials_and_lut_core_is_protocol_neutral ... ok
+test independent_resolution_preserves_writable_readonly_order ... ok
+test official_metadata_decode_and_raw_hashes_are_stable ... ok
+test compiled_indices_are_validated_by_official_v0_sanitizer ... ok
+test duplicates_are_rejected_without_deduplication ... ok
+test full_key_order_and_loaded_privileges_are_exact ... ok
+test deactivation_rejects_wrong_slot_hashes_owner_and_bank_context ... ok
+test deactivation_uses_exact_historical_slot_hashes ... ok
+test rpc_loaded_metadata_is_never_a_table_proof ... ok
+test rpc_address_length_order_and_pubkey_mismatch_reject ... ok
+test reversed_input_and_parallel_reconstruction_are_byte_identical ... ok
+test same_slot_extension_only_exposes_old_prefix ... ok
+test table_identity_binds_pubkey_bytes_slot_and_genesis ... ok
+test writable_and_readonly_out_of_range_indexes_reject ... ok
+test wrong_owner_is_rejected_before_address_comparison ... ok
+test wrong_owner_and_malformed_and_empty_table_fail_closed ... ok
+test single_writable_and_readonly_and_many_addresses ... ok
+test real_single_table_historical_proof ... ok
+test real_table_bytes_in_explicit_synthetic_warmup_context ... ok
+test real_five_table_55_key_compiled_fixture_with_synthetic_table_bytes ... ok
+test real_historical_bytes_cannot_be_replaced_by_rpc_metadata ... ok
+test real_wrong_historical_bytes_are_rejected ... ok
+test real_five_table_55_loaded_historical_proof ... ok
+test real_five_table_historical_proof ... ok
+
+test result: ok. 27 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.38s
+
+     Running tests/kamino.rs (target/debug/deps/kamino-e9089c442060da1d)
+
+running 10 tests
+test no_new_coarse_semantic_action_was_added_for_kamino ... ok
+test no_adapter_specification_language_was_introduced ... ok
+test every_supported_discriminator_matches_anchors_derivation ... ok
+test the_kamino_adapter_delegates_proof_and_pairing_to_the_shared_layer ... ok
+test the_interface_provenance_is_recorded_and_not_overclaimed ... ok
+test the_adapter_reads_token_accounts_under_both_token_programs ... ok
+test the_kamino_path_uses_no_floating_point ... ok
+test the_adapter_claims_only_the_two_families_it_supports ... ok
+test the_layout_decodes_real_mainnet_accounts ... ok
+test the_kamino_adapter_contains_no_token_layout_of_its_own ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/replay.rs (target/debug/deps/replay-0b05ec71950cf862)
+
+running 16 tests
+test account_normalization_preserves_all_fields ... ok
+test cache_paths_are_deterministic_and_roundtrip_without_rpc ... ok
+test actual_validator_snapshot_matches_original_offline ... ok
+test canonical_hash_ignores_order_and_labels_but_covers_every_account_field ... ok
+test discovery_respects_configured_parallel_transaction_fetches ... ok
+test normalization_derives_native_movement_without_calling_it_economic_value ... ok
+test discovery_paginates_inclusive_window_and_filters_program_interaction ... ok
+test incomplete_or_tampered_prestate_and_privileges_are_rejected ... ok
+test corpus_build_matches_capture_to_discovery_and_loads_offline ... ok
+test crediting_a_rent_paying_account_is_classified_not_left_as_a_mismatch ... ok
+test v0_resolves_loaded_accounts_and_preserves_duplicate_metas ... ok
+test fidelity_mismatch_blocks_candidate_and_unknown_is_not_exact ... ok
+test normalization_preserves_order_privileges_and_instruction_bytes ... ok
+test malformed_transactions_fail_instead_of_partial_normalization ... ok
+test exact_offline_replay_uses_fresh_state_and_detects_candidate_regression ... ok
+test ordinary_credits_and_debits_are_not_classified_as_rent_state_failures ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 12.28s
+
+     Running tests/stake_pool.rs (target/debug/deps/stake_pool-86ae41c29a8d3a05)
+
+running 23 tests
+test dependency_extraction_finds_programs_reached_only_through_cpi ... ok
+test cpi_frames_survive_transaction_normalization ... ok
+test a_same_slot_writer_of_a_cpi_account_rejects_the_candidate ... ok
+test account_discovery_records_how_each_account_was_found ... ok
+test a_clean_screen_is_recorded_on_the_record ... ok
+test a_cpi_record_without_screening_is_refused ... ok
+test a_program_that_executes_but_is_not_pinned_is_refused ... ok
+test the_adapter_decodes_pool_state_reserve_and_token_balances ... ok
+test records_from_earlier_phases_remain_valid ... ok
+test every_executing_program_is_pinned_to_a_binary_or_to_the_runtime ... ok
+test dependency_versions_are_selected_at_the_transactions_slot ... ok
+test the_committed_mainnet_record_is_internally_consistent ... ok
+test the_pool_state_account_is_screened_like_any_other ... ok
+test a_substituted_dependency_binary_is_refused ... ok
+test the_pre_state_hash_covers_every_dependent_account_in_canonical_order ... ok
+test executing_without_the_dependency_bundle_is_refused ... ok
+test fidelity_requires_the_invocation_graph_as_well_as_the_post_state ... ok
+test a_fidelity_failure_withholds_the_candidate ... ok
+test the_generic_diff_and_the_economic_finding_stay_separate ... ok
+test the_ci_gate_trips_on_an_economic_finding_the_generic_classifier_rates_lower ... ok
+test the_share_result_is_reported_for_both_builds_even_when_it_is_unchanged ... ok
+test the_regressed_candidate_changes_the_economic_result_while_still_succeeding ... ok
+test repeated_offline_replay_produces_an_identical_report ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.38s
+
+     Running tests/token2022.rs (target/debug/deps/token2022-0dd785e472514825)
+
+running 12 tests
+test a_snapshot_contradicting_validator_metadata_is_refused ... ok
+test a_read_only_account_that_changed_across_the_boundary_is_refused ... ok
+test a_lamport_boundary_mismatch_names_the_side_it_failed_on ... ok
+test the_record_states_what_its_proof_rests_on ... ok
+test a_versioned_message_resolving_no_lookup_tables_replays ... ok
+test version_resolution_reads_the_deployment_live_at_the_slot ... ok
+test committed_mainnet_record_is_historical_state_ready_and_self_consistent ... ok
+test economic_interpretation_reports_the_token_delta_with_mint_decimals ... ok
+test an_empty_system_account_takes_its_boundary_from_transaction_metadata ... ok
+test archive_acquisition_builds_a_valid_stateful_record ... ok
+test acquired_snapshots_decode_to_the_validator_observed_amounts ... ok
+test unsupported_transaction_shapes_are_refused ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/transaction_envelope.rs (target/debug/deps/transaction_envelope-a3e1aa07f5e56be3)
+
+running 20 tests
+test arbitrary_external_program_cannot_replace_scope ... ok
+test complete_sequence_cannot_strip_or_reorder_dependency ... ok
+test missing_or_tampered_dependency_binary_fails_closed ... ok
+test current_or_intermediate_scope_state_is_rejected ... ok
+test dependency_has_no_scope_semantic_support ... ok
+test primary_ata_existing_evidence_cannot_be_replaced_by_creation ... ok
+test current_external_binary_is_rejected ... ok
+test real_scope_decoder_rejects_wrong_identity_data_arity_and_privileges ... ok
+test serialized_analysis_cannot_seal_an_envelope ... ok
+test same_slot_dependency_interference_stays_fail_closed ... ok
+test scope_after_reserve_refresh_is_rejected ... ok
+test unknown_extra_companion_cannot_hide_behind_required_dependencies ... ok
+test target_signer_and_positive_amount_contract_is_preserved ... ok
+test unexpected_known_extra_dependency_is_rejected ... ok
+test real_multi_action_whole_transaction_delta_is_unevaluable ... ok
+test real_failed_original_policy_survives_exact_lut_proof ... ok
+test four_real_primary_envelopes_are_classified_without_production_admission_change ... ok
+test real_multi_action_ids_are_not_merged ... ok
+test real_scope_identity_bytes_accounts_and_tokens_are_exact ... ok
+test real_multi_action_observations_preserve_both_outer_indices ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.47s
+
+     Running tests/universal_evidence.rs (target/debug/deps/universal_evidence-f82fa1e690b49746)
+
+running 12 tests
+test a_cpi_child_never_attaches_across_top_level_instructions ... ok
+test the_shared_token_decoder_is_strict_about_what_it_will_read ... ok
+test the_stake_pool_adapter_does_not_read_extended_token_accounts ... ok
+test an_empty_universal_flow_set_is_not_an_empty_change_set ... ok
+test flow_is_measured_when_there_is_flow ... ok
+test a_created_account_is_never_reported_as_a_modified_existing_one ... ok
+test a_fee_payer_lamport_change_is_never_value_movement ... ok
+test a_withheld_transfer_fee_is_never_dropped ... ok
+test a_read_only_owner_change_fails_the_boundary_proof ... ok
+test accounts_never_pair_by_position ... ok
+test the_known_regression_still_fails_with_the_same_findings ... ok
+test the_production_bundle_still_passes_with_byte_identical_output ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.26s
+
+     Running tests/upgrade_diff.rs (target/debug/deps/upgrade_diff-d49962556207e879)
+
+running 42 tests
+test checked_in_fixtures_match_the_generator ... ok
+test corpus_generation_is_reproducible ... ok
+test audit_cluster_ids_are_unique_for_same_action_different_fields ... ok
+test aggregates_equal_the_sum_of_their_member_positions ... ok
+test corpus_valuation_is_deterministic_and_covers_every_position ... ok
+test clusters_partition_the_changed_fixtures_exactly ... ok
+test audit_account_metadata_changes_are_not_silent ... ok
+test consequences_partition_the_affected_set ... ok
+test boundary_window_flips_exactly_the_expected_fixtures ... ok
+test compute_only_and_unchanged_positions_contribute_no_affected_capital ... ok
+test audit_zero_granularity_is_rejected ... ok
+test every_critical_finding_is_a_threshold_crossing_or_a_reverted_transaction ... ok
+test ranges_describe_the_trigger_and_wide_ones_are_not_promoted ... ok
+test fixtures_sharing_a_consequence_and_action_cluster_together ... ok
+test liquidation_eligibility_flips_and_seizes_collateral_under_v2 ... ok
+test newly_liquidatable_capital_is_counted_from_the_expected_positions ... ok
+test reproduction_output_shows_both_sides ... ok
+test the_flagship_counterexample_is_reported_precisely ... ok
+test the_flagship_fixture_carries_exact_economic_values ... ok
+test no_floating_point_in_the_valuation_or_reporting_path ... ok
+test the_json_report_carries_the_economic_summary ... ok
+test the_json_report_is_valid_and_carries_the_findings ... ok
+test the_corpus_exercises_the_instruction_surface ... ok
+test the_majority_of_the_corpus_is_unaffected ... ok
+test the_text_report_names_the_fixture_and_the_changed_fields ... ok
+test the_text_report_shows_economic_coverage_and_impact ... ok
+test the_two_artifacts_differ ... ok
+test unrelated_regression_classes_stay_separate ... ok
+test v1_matches_the_reference_implementation ... ok
+test v2_accepts_the_same_instruction_encoding_and_layout ... ok
+test v2_disagrees_with_the_reference_somewhere ... ok
+test whole_sol_categories_are_completely_unaffected ... ok
+test withdrawal_gate_reverts_under_v2_for_the_expected_fixtures ... ok
+test representative_selection_is_deterministic_and_derived_from_data ... ok
+test the_json_report_round_trips ... ok
+test repeated_execution_of_a_fixture_is_bit_identical ... ok
+test clustering_does_not_disturb_the_economic_totals has been running for over 60 seconds
+test every_critical_cluster_produces_a_smaller_counterexample has been running for over 60 seconds
+test minimized_cases_preserve_the_exact_regression_class has been running for over 60 seconds
+test reproducing_a_minimized_case_is_deterministic has been running for over 60 seconds
+test the_cluster_section_renders_and_reproduction_resolves_by_group_id has been running for over 60 seconds
+test the_json_report_carries_clusters_and_round_trips_with_minimized_cases has been running for over 60 seconds
+test every_critical_cluster_produces_a_smaller_counterexample ... ok
+test the_cluster_section_renders_and_reproduction_resolves_by_group_id ... ok
+test clustering_does_not_disturb_the_economic_totals ... ok
+test the_json_report_carries_clusters_and_round_trips_with_minimized_cases ... ok
+test minimized_cases_preserve_the_exact_regression_class ... ok
+test reproducing_a_minimized_case_is_deterministic ... ok
+
+test result: ok. 42 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 128.03s
+
+   Doc-tests eplyx_engine
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

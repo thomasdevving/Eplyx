@@ -1,0 +1,333 @@
+{
+  "account_event_count": 2464,
+  "account_events_missing_signature": 5,
+  "account_events_signature_not_in_block": 0,
+  "block_metas": [
+    {
+      "blockhash": "GoYyJFwVcoT4UWnZCDtPTG4u82bWJahxmNMYAPoVjHqi",
+      "executed_transaction_count": 1131,
+      "parent_blockhash": "A2uVDFYNS3HNaYMus1fM6FztNkanJsV74K66FF4mDjZi",
+      "parent_slot": 448760957,
+      "raw_event_sha256": "2ac8d7a43596db02763caefb76f89b03a10df2fe3b6b859c73c68efde72b56a7"
+    }
+  ],
+  "counts": {
+    "account": 2464,
+    "block_meta": 1,
+    "slot": 1,
+    "transaction": 1131
+  },
+  "frozen_blockhash": "GoYyJFwVcoT4UWnZCDtPTG4u82bWJahxmNMYAPoVjHqi",
+  "frozen_parent_slot": 448760957,
+  "missing_transaction_indexes": [],
+  "repeated_address_count": 0,
+  "repeated_address_examples": [],
+  "slot": 448760958,
+  "slot_statuses": [
+    {
+      "parent": 448760957,
+      "raw_event_sha256": "1bac5589a89e3a24950688067c2f5fd5019f7fe2d0c26c69ac347dfe5fb32b81",
+      "status": "SLOT_FINALIZED"
+    }
+  ],
+  "target_accounts": [
+    {
+      "address": "H6PjRLnqGPz5VEU4roZzKnfJRxKECRzYuJAZ2Hvc1rAc",
+      "events": [
+        {
+          "address": "H6PjRLnqGPz5VEU4roZzKnfJRxKECRzYuJAZ2Hvc1rAc",
+          "data_length": 0,
+          "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "executable": false,
+          "lamports": 43909044904,
+          "owner": "11111111111111111111111111111111",
+          "raw_event_sha256": "210a2d7aac97fdc392854bde8be657e321ef7eb0a372fb88ec183e8ef8425d37",
+          "rent_epoch": 18446744073709551615,
+          "transaction_index": 259,
+          "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+          "write_version": 1259
+        }
+      ],
+      "role": "token_authority"
+    },
+    {
+      "address": "8gbSj1AEU8xNbmwwzpBdxots4e55PVqUaFHobwhryuBs",
+      "events": [
+        {
+          "address": "8gbSj1AEU8xNbmwwzpBdxots4e55PVqUaFHobwhryuBs",
+          "data_length": 0,
+          "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "executable": false,
+          "lamports": 0,
+          "owner": "11111111111111111111111111111111",
+          "raw_event_sha256": "91191a938641f9b7107f11ce94b7d52b84b44ee130872d32b8982093e27993be",
+          "rent_epoch": 18446744073709551615,
+          "transaction_index": 259,
+          "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+          "write_version": 1259
+        }
+      ],
+      "role": "token_owner_account_a"
+    },
+    {
+      "address": "AawdCALDWi7ea9JCeCArzjEzLGqwuFSdzydgJZrephXv",
+      "events": [
+        {
+          "address": "AawdCALDWi7ea9JCeCArzjEzLGqwuFSdzydgJZrephXv",
+          "data_length": 179,
+          "data_sha256": "904ce75078128789fe4717f6e1bd6d97e6b673c9136fb9dc8f65af13d69d46b3",
+          "executable": false,
+          "lamports": 1559560,
+          "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "raw_event_sha256": "3f90322f39de3a35dbdfc82a99fed49c8c392f5adabc400ec4ec95ffb5d3349c",
+          "rent_epoch": 18446744073709551615,
+          "transaction_index": 259,
+          "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+          "write_version": 1259
+        }
+      ],
+      "role": "token_owner_account_b"
+    },
+    {
+      "address": "Eb2KpSC8uMt9GmzyAEm5Eb1AAAgTjRaXWFjKyFXHZxF3",
+      "events": [
+        {
+          "address": "Eb2KpSC8uMt9GmzyAEm5Eb1AAAgTjRaXWFjKyFXHZxF3",
+          "data_length": 0,
+          "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "executable": false,
+          "lamports": 221757514,
+          "owner": "11111111111111111111111111111111",
+          "raw_event_sha256": "9867bf6f9c0c9554ce0733388afeb5a5ec74dc1c580d72b9469aaf2421de2c48",
+          "rent_epoch": 18446744073709551615,
+          "transaction_index": 259,
+          "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+          "write_version": 1259
+        }
+      ],
+      "role": null
+    },
+    {
+      "address": "HCyytQceq1kmeMEmKmDutWM74M1c7CMK8nASjbSJWd94",
+      "events": [
+        {
+          "address": "HCyytQceq1kmeMEmKmDutWM74M1c7CMK8nASjbSJWd94",
+          "data_length": 80,
+          "data_sha256": "977e3b107c3297c3dd6e732628df848576bef58997c58669f866ba691b7a916d",
+          "executable": false,
+          "lamports": 1500000,
+          "owner": "11111111111111111111111111111111",
+          "raw_event_sha256": "471bf53b9f5993c81facfcea0c71860aa08cb331b59723ff65fd7b380e5218c9",
+          "rent_epoch": 18446744073709551615,
+          "transaction_index": 259,
+          "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+          "write_version": 1259
+        }
+      ],
+      "role": null
+    },
+    {
+      "address": "11111111111111111111111111111111",
+      "events": [],
+      "role": null
+    },
+    {
+      "address": "ComputeBudget111111111111111111111111111111",
+      "events": [],
+      "role": null
+    },
+    {
+      "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "events": [],
+      "role": "token_program_a"
+    },
+    {
+      "address": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "events": [],
+      "role": null
+    },
+    {
+      "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+      "events": [],
+      "role": null
+    },
+    {
+      "address": "GoCMmS76U4UmibhGqw8razjsNfJv2s81TMhihMDxnWa",
+      "events": [
+        {
+          "address": "GoCMmS76U4UmibhGqw8razjsNfJv2s81TMhihMDxnWa",
+          "data_length": 148,
+          "data_sha256": "7b2a8096934195f7f4e07a51337d8ff75d673b283f5b1770034ab5ced525d88e",
+          "executable": false,
+          "lamports": 1920960,
+          "owner": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "raw_event_sha256": "0eee328917e6d73448bd03556093d9670958a05251938c53ccf0bf48d8f74981",
+          "rent_epoch": 18446744073709551615,
+          "transaction_index": 259,
+          "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+          "write_version": 1259
+        }
+      ],
+      "role": "tick_array_2"
+    },
+    {
+      "address": "3BbFVfXDfM14kM46SFfPaRJXVSub4Ljwox87HfKyv1JA",
+      "events": [
+        {
+          "address": "3BbFVfXDfM14kM46SFfPaRJXVSub4Ljwox87HfKyv1JA",
+          "data_length": 179,
+          "data_sha256": "c73025c3db7bc90d54024e83cb0ede608c6a3a65b29f06b03f93999e09d79bff",
+          "executable": false,
+          "lamports": 2136720,
+          "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "raw_event_sha256": "828a2de3716bd8730db75babe7c737e233f45776f5c347225072ec55a97cb0e5",
+          "rent_epoch": 18446744073709551615,
+          "transaction_index": 259,
+          "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+          "write_version": 1259
+        }
+      ],
+      "role": "token_vault_b"
+    },
+    {
+      "address": "4joyRY87Qs8mNFh9oyW9hnR5uFVgVusJiQWz2KwFVv2w",
+      "events": [
+        {
+          "address": "4joyRY87Qs8mNFh9oyW9hnR5uFVgVusJiQWz2KwFVv2w",
+          "data_length": 708,
+          "data_sha256": "b832f76db55488a0343c2ddb04d6458a6cddf4338626ada87d6f25e2af678960",
+          "executable": false,
+          "lamports": 5818560,
+          "owner": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "raw_event_sha256": "c0b5d563e39d2abd5ac2114b16ff16f2aeb9530f1e7b1e15e015c918973eaad8",
+          "rent_epoch": 18446744073709551615,
+          "transaction_index": 259,
+          "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+          "write_version": 1259
+        }
+      ],
+      "role": "tick_array_1"
+    },
+    {
+      "address": "DyxxT7XjZRS86nhAN4k8w21kN8af6AVGeUhQSHLsvgcY",
+      "events": [
+        {
+          "address": "DyxxT7XjZRS86nhAN4k8w21kN8af6AVGeUhQSHLsvgcY",
+          "data_length": 6756,
+          "data_sha256": "b031a7fa212e10bc8cd9398739d89c4aa41f71f41839fe7b34240ed7e431a6d6",
+          "executable": false,
+          "lamports": 143793600,
+          "owner": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "raw_event_sha256": "f5312a274ec2e3e785514eb6a46a9630d9a0bbd083e8d160e240359638888910",
+          "rent_epoch": 18446744073709551615,
+          "transaction_index": 259,
+          "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+          "write_version": 1259
+        }
+      ],
+      "role": "tick_array_0"
+    },
+    {
+      "address": "EdcxbpnvtssEkHV4KDfdYVFoGDewE7XnYbTakgLxPusR",
+      "events": [
+        {
+          "address": "EdcxbpnvtssEkHV4KDfdYVFoGDewE7XnYbTakgLxPusR",
+          "data_length": 165,
+          "data_sha256": "2794af1a37ed8e8b5561d21166c1608a78f0e936c9efbfa2f2e41fef06d1f914",
+          "executable": false,
+          "lamports": 915487996482,
+          "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "raw_event_sha256": "85dc8af3f614a44181a56c37b0eef8a859a7f8077f790003c8ab36d7e4b901dc",
+          "rent_epoch": 18446744073709551615,
+          "transaction_index": 259,
+          "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+          "write_version": 1259
+        }
+      ],
+      "role": "token_vault_a"
+    },
+    {
+      "address": "FBNg5G8CrU46jguTyX55VRSMBtERn5L4ZawiHEpEAgK8",
+      "events": [
+        {
+          "address": "FBNg5G8CrU46jguTyX55VRSMBtERn5L4ZawiHEpEAgK8",
+          "data_length": 254,
+          "data_sha256": "de5668e024ac326572de46946226a78c2833f713aad99dc683bb5ad0f12b6f28",
+          "executable": false,
+          "lamports": 2658720,
+          "owner": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "raw_event_sha256": "9cfe50eb7783aabebf45a16e6e31f91ece897262291723d7bba96cf7f45a0447",
+          "rent_epoch": 18446744073709551615,
+          "transaction_index": 259,
+          "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+          "write_version": 1259
+        }
+      ],
+      "role": "oracle"
+    },
+    {
+      "address": "HxrqS96uHco2a8LxTvUwb9e2tS963Ec6nYkvZso9TDii",
+      "events": [
+        {
+          "address": "HxrqS96uHco2a8LxTvUwb9e2tS963Ec6nYkvZso9TDii",
+          "data_length": 653,
+          "data_sha256": "6b4b7d0d45befee9d48c5a5fa96a22d63a8d55102bd60353a314a82a7dca69d3",
+          "executable": false,
+          "lamports": 5435760,
+          "owner": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+          "raw_event_sha256": "5e3d342b959ad20342cbaec80c797d8c1c8483fc3d749e392139fdf2dfae9352",
+          "rent_epoch": 18446744073709551615,
+          "transaction_index": 259,
+          "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+          "write_version": 1259
+        }
+      ],
+      "role": "whirlpool"
+    },
+    {
+      "address": "So11111111111111111111111111111111111111112",
+      "events": [],
+      "role": "token_mint_a"
+    },
+    {
+      "address": "Xsv9hRk1z5ystj9MhnA7Lq4vjSsLwzL2nxrwmwtD3re",
+      "events": [],
+      "role": "token_mint_b"
+    },
+    {
+      "address": "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+      "events": [],
+      "role": "memo_program"
+    },
+    {
+      "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "events": [],
+      "role": "token_program_b"
+    },
+    {
+      "address": "SysvarRecentB1ockHashes11111111111111111111",
+      "events": [
+        {
+          "address": "SysvarRecentB1ockHashes11111111111111111111",
+          "data_length": 6008,
+          "data_sha256": "5b6e7f56eb69a1ac533ed81f352603a9dda558ce85d09e52f5b2320c2c9990e5",
+          "executable": false,
+          "lamports": 42706560,
+          "owner": "Sysvar1111111111111111111111111111111111111",
+          "raw_event_sha256": "c71442850bb47780e00081abb100f3091831fbb2bf9f625f6b183719abda917d",
+          "rent_epoch": 18446744073709551615,
+          "transaction_index": null,
+          "txn_signature": null,
+          "write_version": 8589934594
+        }
+      ],
+      "role": null
+    }
+  ],
+  "transaction_duplicate_indexes": [],
+  "transaction_extra_indexes": [],
+  "transaction_index_mismatches": [],
+  "unique_account_count": 2464,
+  "write_version_count": 937,
+  "write_versions_spanning_transaction_indexes": {}
+}

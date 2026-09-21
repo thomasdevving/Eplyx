@@ -1,0 +1,61 @@
+{
+  "conservative_slice": {
+    "failed_originals": 81,
+    "transactions": 166,
+    "versions": {
+      "0": 117,
+      "1": 26,
+      "legacy": 23
+    }
+  },
+  "direct_after_count": 8,
+  "direct_after_indexes": [
+    385,
+    819,
+    846,
+    857,
+    860,
+    861,
+    896,
+    1114
+  ],
+  "direct_before_count": 0,
+  "first_later_conflict_index": 385,
+  "full_prefix": {
+    "failed_originals": 0,
+    "transactions": 259,
+    "versions": {
+      "0": 2,
+      "1": 1,
+      "legacy": 256
+    }
+  },
+  "full_prefix_count": 259,
+  "full_suffix": {
+    "failed_originals": 134,
+    "transactions": 871,
+    "versions": {
+      "0": 231,
+      "1": 57,
+      "legacy": 583
+    }
+  },
+  "full_suffix_count": 871,
+  "needed_accounts_at_slot_start_after_both_closures": 1251,
+  "needed_accounts_at_target_after_suffix_closure": 1217,
+  "prefix_conservative_closure_count": 7,
+  "slot": 448760958,
+  "suffix_conservative_closure_count": 158,
+  "target_index": 259,
+  "target_key_count": 22,
+  "transactions": 1131,
+  "whole_block": {
+    "failed_originals": 134,
+    "transactions": 1131,
+    "versions": {
+      "0": 234,
+      "1": 58,
+      "legacy": 839
+    }
+  }
+}

@@ -47,7 +47,7 @@ pub struct ArchiveProvenance {
     pub validation_artifact_sha256: String,
 }
 impl ArchiveProvenance {
-    fn validate(&self) -> Result<()> {
+    pub fn validate(&self) -> Result<()> {
         let host = self
             .scheme_host
             .strip_prefix("https://")

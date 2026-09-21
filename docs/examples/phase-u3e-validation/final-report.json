@@ -1,0 +1,523 @@
+{
+  "01_initial_commit_worktree": {
+    "head": "84ba410287a4a7ed315a7d779dbaad625fe3bf39",
+    "prior_attempt_hashes": {
+      "docs/examples/phase-u3d-inventory/checksums.sha256": "e5216f1a6e1a8489667b26122367a64ae3503d70d108b85409142f0ed4092d78",
+      "docs/examples/phase-u3d-inventory/inventory.json": "db925ad29690298c6ccc65579c91393e34bf31103eeab692626d4c73f66e78c5",
+      "docs/examples/phase-u3d-validation/adapters-corrected.log": "db41bbb6f3a1ad36e1f11a005b441fa8620151ce43a195b6a904ca8b3c4fbe0b",
+      "docs/examples/phase-u3d-validation/adapters.log": "b00ec652af8e56a80388c7f66b9d3ab7f788ac935e0dba162bcc338fed6ff5be",
+      "docs/examples/phase-u3d-validation/after/baseline.stdout": "7be26a66f3e98f9b96ba6f1270003c158d99968d9ed081c336a97f14782d2099",
+      "docs/examples/phase-u3d-validation/after/bounded.stdout": "139fd95c2899d54b765511d20bc70dfc63cb7a9532d5b3b5ae62b7626df68d16",
+      "docs/examples/phase-u3d-validation/after/controls.json": "9a56fee540cecfe5c365e44303412c557ee1fc3a5a23fcc164b034e201de6e34",
+      "docs/examples/phase-u3d-validation/after/regression.stdout": "e5e6a4b39ce377d8573099dc646fb37928bd3aa1172ceea4b4fa6c903cd52ee4",
+      "docs/examples/phase-u3d-validation/after/stale.stdout": "8d6a4dc867c39655b58f91395630aac48d8e865b1aa1fee3a36a6ac0bcb9bc63",
+      "docs/examples/phase-u3d-validation/after/unevaluable.stdout": "0c7a3b5231f84b99e58d6ddba6fe76e595cc212ce13a81fac24d9be283ca57d7",
+      "docs/examples/phase-u3d-validation/after/verify.stdout": "d395a058064535cbeb7547943f34ad3c3a2b109e849e5ecf859c694b54acbcf0",
+      "docs/examples/phase-u3d-validation/before/baseline.stdout": "7be26a66f3e98f9b96ba6f1270003c158d99968d9ed081c336a97f14782d2099",
+      "docs/examples/phase-u3d-validation/before/bounded.stdout": "139fd95c2899d54b765511d20bc70dfc63cb7a9532d5b3b5ae62b7626df68d16",
+      "docs/examples/phase-u3d-validation/before/controls.json": "8c87c22887b29f1de939ecfa36c2575af8af2c8d44269f06ca28db9c64388c72",
+      "docs/examples/phase-u3d-validation/before/regression.stdout": "e5e6a4b39ce377d8573099dc646fb37928bd3aa1172ceea4b4fa6c903cd52ee4",
+      "docs/examples/phase-u3d-validation/before/stale.stdout": "8d6a4dc867c39655b58f91395630aac48d8e865b1aa1fee3a36a6ac0bcb9bc63",
+      "docs/examples/phase-u3d-validation/before/unevaluable.stdout": "0c7a3b5231f84b99e58d6ddba6fe76e595cc212ce13a81fac24d9be283ca57d7",
+      "docs/examples/phase-u3d-validation/before/verify.stdout": "d395a058064535cbeb7547943f34ad3c3a2b109e849e5ecf859c694b54acbcf0",
+      "docs/examples/phase-u3d-validation/blockers.json": "125a2bfa596cb6548c43a52c3e67e0d38b35d61c7da5020a2d4fa663ac0a033a",
+      "docs/examples/phase-u3d-validation/build.log": "083897711e135647e0b27b912a058556e9a3b7800cf1015e722ccad819daf50d",
+      "docs/examples/phase-u3d-validation/environment-check.json": "8d3bacd9e43beee8752909301069d0b099a76c6f9129cdd6bd3ba888e51f5341",
+      "docs/examples/phase-u3d-validation/final-report.json": "42f105063e05022b0626b7ffc76bfdeab43216bccb13bd117abfe5cd3c17a92e",
+      "docs/examples/phase-u3d-validation/inventory-tests.log": "e6a59c7b282096d046bad7150f00d701a5dbf9705371110237cb793f809f6cf8",
+      "docs/examples/phase-u3d-validation/inventory-timing.json": "66811974c0dc2b794c12a9a5f36ff6d6dd20ccfdcd189a163049e16d1fa47c57",
+      "docs/examples/phase-u3d-validation/inventory.sha256": "f5e45bdcf0f0ee480865e49958b141a4b9f975d7eb944664ace15788b3c19239",
+      "docs/examples/phase-u3d-validation/mutations.json": "10427e0ee71b2630262fe5e933e8871485362e562ffe2ae6a9c5babcd82baa35",
+      "docs/examples/phase-u3d-validation/preimplementation.json": "323e0e47b6c2a70e9be6505371eeffd0beb057ceba54c97960a69112943c1850",
+      "docs/examples/phase-u3d-validation/rebuild.log": "57900fde20ab557d7fe6841273307f4ed5a8796167f467e80032b4213f1333cd",
+      "docs/examples/phase-u3d-validation/runtime-review.json": "33d970988e9082cdd3a3f8b9f1da18207b0d9b55b663f7b779c9e97394cf5f27",
+      "docs/examples/phase-u3d-validation/rust-controls.log": "c451637d7eb0771246b4ee9a7663bda64dc75cd6b7ed93dc08b3199db98036c5",
+      "docs/examples/phase-u3d-validation/stage-0.json": "9dfd2243a4981d9169ca6801b27b3b35cec79ac186dbebe669f026a8a92a22ad",
+      "docs/examples/phase-u3d-validation/storage.json": "e284e19f36888df7aaef5a8c5dda04de6c402802616e25db5c8a8d846ed58c43",
+      "docs/examples/phase-u3d-validation/tests.json": "84e47bb84bba2ef1f830a9235413c8fc11be068e11954b9d92916af9606e12a3",
+      "docs/examples/phase-u3d-validation/u3a-tests.log": "e038fe6f1942f1c902a6b21ad86e6d1cc2ce7be929d6b09718464a0f0f23c68d",
+      "docs/examples/phase-u3d-validation/u3a.log": "1e4299df9e4caa65e3964e2a31aabc80c83162d63aa67803a5ad063c336223bc",
+      "docs/examples/phase-u3d-validation/u3b-tests.log": "586591c171065fe29a2d0f57e5776251c1bb704b0198b72701fab43994680ee3",
+      "docs/examples/phase-u3d-validation/u3b.log": "a1d416614c3e60b9aea2f6ebb382e3643e4118326e607028e60546652d31c74b",
+      "docs/examples/phase-u3d-validation/u3b2.log": "49dbe2b108bfc3da459e6cc42acda128b1dd8fcba34ea9f0bdc1af3b81478b9d",
+      "docs/examples/phase-u3d-validation/u3c-tests.log": "f47af82254924bd706e3928b1b21b1ef0ad718f3a4b0dc6b2fd9e47c23b0b116",
+      "docs/examples/phase-u3d-validation/u3c.log": "a3745998f0a61d1ff1efa1fba9d283c9fa57ba8046f08f4f27e2c074265b7977",
+      "docs/examples/phase-u3d2-binaries/49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx/result.json": "bfc0e6795b57e786eedf68f84d4c89f8fd43470667cb42335b6fe315088d1415",
+      "docs/examples/phase-u3d2-binaries/55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk/result.json": "0e3318923fa80238fb687570103e4655f09b61adfb34870e0af86de61c42578a",
+      "docs/examples/phase-u3d2-binaries/5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V/result.json": "2e41fd016713104b1b6dea50e54c102a76aee722daf5a521a1a4188f2ce1b851",
+      "docs/examples/phase-u3d2-binaries/5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97/result.json": "65d2c528bc8fb62cf0e00d4aefa3fb0f1e1dc52c0acf7e7b2c0faa649e5704a1",
+      "docs/examples/phase-u3d2-binaries/capture-index.json": "9cef6bec6136ccb3495d8172f242e698dc343b62568c05758c4b7caac3f7d2a9",
+      "docs/examples/phase-u3d2-binaries/capture.tar.gz": "d7effc58e920ff3b5fc628b69e899b4ca616a063baadcbaaffb656130dc99b2d",
+      "docs/examples/phase-u3d2-binaries/receipt.json": "05b61771214542d0e8c86d49c86660ce486c447d217ec5af9505ff2f63cf9818",
+      "docs/examples/phase-u3d2-binaries/timing.json": "d4b33fa367ac8838c4e112003fb9cb89e180eb4b574c5673812be52b5e9a3fe2",
+      "docs/examples/phase-u3d2-state/receipt.json": "c182d72cefa162e343ce2604f65a4208f2f17ab357fbdbceb8230decc3ed280d",
+      "docs/examples/phase-u3d2-state/result.json": "9fbd46dda5584678762b5bc65683fcf4543c01130de9179bb21f64c865e40c12",
+      "docs/examples/phase-u3d2-state/rpc/029a6d2dbec111f322082624220bd3e2b13a506168a630880f4ebab264b12d94-1.body": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "docs/examples/phase-u3d2-state/rpc/029a6d2dbec111f322082624220bd3e2b13a506168a630880f4ebab264b12d94-2.body": "072c547ad3321ad6379bf249c218bcf112eaa3bd0138f07ace4077db1785a37d",
+      "docs/examples/phase-u3d2-state/rpc/2bc51b465d29c8165688fc0449e8f7101248212a1cd200cd4b5d780b1d3b65c8-1.body": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "docs/examples/phase-u3d2-state/rpc/2bc51b465d29c8165688fc0449e8f7101248212a1cd200cd4b5d780b1d3b65c8-2.body": "65c6e5c44058c8593c048ae962d9a5dc0a105f26d60faea1659c8aad40bc6eaf",
+      "docs/examples/phase-u3d2-state/rpc/397adf7fd4e5fee0d74a815b4829c1477e37e0ad1f4640cbd5318be45862a5af-1.body": "c8f1e240dd765942770a85120c3602f0c0cbfaefbc1f1ee06d0dfdf79f076edb",
+      "docs/examples/phase-u3d2-state/rpc/9880a48ca6d6fba8cabf64e12f33a6da9b401fdb82c9745ee21c7a1d24b9e67c-1.body": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "docs/examples/phase-u3d2-state/rpc/9880a48ca6d6fba8cabf64e12f33a6da9b401fdb82c9745ee21c7a1d24b9e67c-2.body": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "docs/examples/phase-u3d2-state/timing.json": "3a01665b699648ea2d019de51e636570c1db40b2b76be34197f10315155f2c52",
+      "docs/examples/phase-u3d2-validation/account-inventories.json": "de05072c9ea48581169c951be7403a187b386942c79b1d9ae4c874db599f6ab0",
+      "docs/examples/phase-u3d2-validation/after/baseline.stdout": "7be26a66f3e98f9b96ba6f1270003c158d99968d9ed081c336a97f14782d2099",
+      "docs/examples/phase-u3d2-validation/after/bounded.stdout": "139fd95c2899d54b765511d20bc70dfc63cb7a9532d5b3b5ae62b7626df68d16",
+      "docs/examples/phase-u3d2-validation/after/controls.json": "9a56fee540cecfe5c365e44303412c557ee1fc3a5a23fcc164b034e201de6e34",
+      "docs/examples/phase-u3d2-validation/after/regression.stdout": "e5e6a4b39ce377d8573099dc646fb37928bd3aa1172ceea4b4fa6c903cd52ee4",
+      "docs/examples/phase-u3d2-validation/after/stale.stdout": "8d6a4dc867c39655b58f91395630aac48d8e865b1aa1fee3a36a6ac0bcb9bc63",
+      "docs/examples/phase-u3d2-validation/after/unevaluable.stdout": "0c7a3b5231f84b99e58d6ddba6fe76e595cc212ce13a81fac24d9be283ca57d7",
+      "docs/examples/phase-u3d2-validation/after/verify.stdout": "d395a058064535cbeb7547943f34ad3c3a2b109e849e5ecf859c694b54acbcf0",
+      "docs/examples/phase-u3d2-validation/attempt-summary.json": "d3097e9e58c0e61ba66d63c2e9af35fbf3608fc774468b313b1e7fddd76e47dc",
+      "docs/examples/phase-u3d2-validation/binary-capture.log": "c69dcfbe55e1906a3c9e775b129a790b634a61bfdd05657a770cd20b707187f1",
+      "docs/examples/phase-u3d2-validation/binary-revalidation.json": "229a56b1ac00490be83334cfb7a47d814a48e3ce70f485d3c8443bbb30c5ef5e",
+      "docs/examples/phase-u3d2-validation/clippy.log": "cb3e4d724c05dfb2ce88cfee6ec46aefb19ec09e81d0549951020b32bcf14b69",
+      "docs/examples/phase-u3d2-validation/envelope-mutations.json": "24eaae252aec734c8111583ad16c4e0920d3a452d12556ea4d12ccbc9feb18f8",
+      "docs/examples/phase-u3d2-validation/envelope-mutations.log": "668f38815444719659f6a5090ad41dc281a80bebdb11bce9c6e0de9b54d3d48b",
+      "docs/examples/phase-u3d2-validation/final-offline-rebuild.log": "e2f8045c9445b441b7acb6f59f3dcb6262c5a91d2e9aaff5e773bdfe07af419f",
+      "docs/examples/phase-u3d2-validation/final-report.json": "0862dae2d6007211e59767ed26deab2e90fde4efa3ffc0efbfd1fc497de6d581",
+      "docs/examples/phase-u3d2-validation/fmt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "docs/examples/phase-u3d2-validation/frozen-rebuild.log": "89ca346fca4f0344ee96e75dbe0553ae5a3e92dca87ff510f65d9a27745952e0",
+      "docs/examples/phase-u3d2-validation/inventory-tests.log": "86e2715b89fdc0a783cf0d9ee8e4597d5e770499e14d26662260a19ca910a4c8",
+      "docs/examples/phase-u3d2-validation/inventory.sha256": "a3e0031d998bb60522b355e1c46f7aeced91662ef2e70b248024bf3a58775ee5",
+      "docs/examples/phase-u3d2-validation/offline-rebuild.log": "e2f8045c9445b441b7acb6f59f3dcb6262c5a91d2e9aaff5e773bdfe07af419f",
+      "docs/examples/phase-u3d2-validation/preimplementation.json": "53c33cae7415523aa81f86114c3a5a99f56e408d09d462df2fb52dbb522d22e5",
+      "docs/examples/phase-u3d2-validation/product-controls.log": "b2b1c82f8b4cbb1bb4dca1e667029860dcde8b00ae04bdc1a58f26c391c04542",
+      "docs/examples/phase-u3d2-validation/requested-mutation-coverage.json": "530371da500fe9bde1dd3d6fb04af3cd4ddb88c700bd8cffc18b73b070a44efc",
+      "docs/examples/phase-u3d2-validation/rust-all-tests.log": "4b40bfec55227a2c6058fb1327754779cb608dc34a3f38796706a3f78ffc2c3a",
+      "docs/examples/phase-u3d2-validation/scope-price-boundary-diff.json": "023e387077851b135faf06108f26301e337451e5b1162106fc4b4e9b77adaf3a",
+      "docs/examples/phase-u3d2-validation/stage-table.json": "843688ea308500af950c89ee3dc6b42605c6409e07f0cf7bcdc9fad945682158",
+      "docs/examples/phase-u3d2-validation/state-capture.log": "da849e6241cf54423173a82e38f976ffc38e63793a8552159dbb777188d4fb93",
+      "docs/examples/phase-u3d2-validation/state-mutations.json": "8f9cf4752df55a7d58369350c4328c924524beb9d1168497157089df9089abd4",
+      "docs/examples/phase-u3d2-validation/state-mutations.log": "853fff979a21883466e864c084c4867e0c60285658e2504cc35e57c298b4a55d",
+      "docs/examples/phase-u3d2-validation/state-offline.log": "558a65b075dc3edd9d8ec30504a289cc013b1aee16b1b2daa485fe2f122f3644",
+      "docs/examples/phase-u3d2-validation/state-tests.log": "da9eef46c4dfc871d570339a0f6b8e3f61ccf4575f0a09db91e14b77d66f97fa",
+      "docs/examples/phase-u3d2-validation/storage.json": "944718c532076a9e839cf8091b1eaee42fc14b06b9434fcd51d297aa1accbd45",
+      "docs/examples/phase-u3d2-validation/t1-prior-comparison.json": "11df2b7ba47d526e072e314a915ed37e7a913940fd6f7950aa251822c2cf58a4",
+      "docs/examples/phase-u3d2-validation/tests.json": "6199b21271ff554f328f7ec39bc3119bfc9a9ec0a8ead136cd241f3135383089",
+      "docs/examples/phase-u3d2-validation/u3a-tests.log": "53e4d9e4cf21a6e5add72daa59a4e8304b08b9c400c443dff4652d5157da746a",
+      "docs/examples/phase-u3d2-validation/u3b-tests.log": "ceab9f3f3a104e07d95b5257298d9cfc467a4d5c49b5237998b8a4b795e011c6",
+      "docs/examples/phase-u3d2-validation/u3c-tests.log": "bb04dffccd764e6110da4c1227599fefeaabf77f5c151f0977a3d472beeba591",
+      "docs/phase-u3d-t1-historical-inputs.md": "d305f3f6859cbf6811bfd948b0bd22965b89a3abd01d8f8437f4cfe2d14de57d",
+      "docs/phase-u3d2-primary-acquisition.md": "335c4502b554c182f4d2c9ce97bd548f0e37380173715776490667dd2732d5b5"
+    },
+    "scope": "T1 transport observability, exact mappings probe, then gated state/context/execution; T2-T4 require T1-A",
+    "worktree_before": "?? docs/examples/phase-u3d-inventory/\n?? docs/examples/phase-u3d-validation/\n?? docs/examples/phase-u3d2-binaries/\n?? docs/examples/phase-u3d2-state/\n?? docs/examples/phase-u3d2-validation/\n?? docs/phase-u3d-t1-historical-inputs.md\n?? docs/phase-u3d2-primary-acquisition.md\n?? scripts/kamino_u3d_inventory.py\n?? scripts/kamino_u3d_state.py\n?? scripts/mutate-kamino-u3d-state.py\n?? scripts/rebuild-kamino-u3d-inventory.sh\n?? scripts/rebuild-kamino-u3d2.py\n?? scripts/test_kamino_u3d_inventory.py\n?? scripts/test_kamino_u3d_state.py\n"
+  },
+  "02_stages_reached": {
+    "0_5": "completed ordinary boundary acquisition, checks and references",
+    "13": "T1-D",
+    "14_23": "not reached",
+    "24_27": "reporting and decisions completed",
+    "6": "partial historical runtime input acquisition; stopped at SlotHashes null",
+    "7_12": "not reached"
+  },
+  "03_transport_architecture": "historical_transport.py; stdin-only endpoint config, curl diagnostics, safe header allowlist, exact logical contexts, raw bodies including empty artifacts, independent offline reclassification",
+  "04_retry_policy": {
+    "backoff_seconds": [
+      0,
+      2,
+      5,
+      10
+    ],
+    "concurrency": 1,
+    "kind": "u3e_exact_historical_transport_policy_v1",
+    "max_attempts_per_context": 4,
+    "mode": "Exact T1 Scope mappings request first; full T1 state only after diagnosed probe success; T2-T4 require T1-A.",
+    "nonretryable": [
+      "http_status",
+      "json_rpc_error",
+      "missing_account",
+      "slot_context_mismatch",
+      "contradictory_account"
+    ],
+    "process_timeout_seconds": 25,
+    "provider_fallback": false,
+    "redirects": false,
+    "request_timeout_seconds": 20,
+    "retryable": [
+      "dns_failure",
+      "connect_failure",
+      "tls_failure",
+      "rate_limited",
+      "gateway_failure",
+      "timeout",
+      "empty_http_body",
+      "truncated_body",
+      "invalid_json",
+      "unknown_transport_failure"
+    ],
+    "slot_fallback": false
+  },
+  "05_T1_inventory": "final-account-inventory.json: 23 message keys, 4 ProgramData, 1 LUT; 16 ordinary accounts at two boundaries, 15 present and 1 authority absent at both",
+  "06_T1_state_acquisition": {
+    "absence_proofs": 2,
+    "all_execution_inputs_complete": false,
+    "ordinary_boundaries_complete": true,
+    "present_account_snapshots": 30,
+    "requests": 32,
+    "typed_decodes": 18
+  },
+  "07_same_slot": {
+    "conflicts": [],
+    "required_accounts": [
+      "11111111111111111111111111111111",
+      "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+      "3gvYRKWyXRR9xKWe1ZjPhLY5ZJRN7KDB4rFZFGoJfFk2",
+      "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+      "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+      "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+      "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+      "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+      "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+      "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+      "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+      "ComputeBudget111111111111111111111111111111",
+      "DoU57AYuPFu2QU514RktNPG22QhApEjnKxnBcu4BHDTY",
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+      "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+      "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+      "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+      "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+      "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+      "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W"
+    ],
+    "slot": 448195166,
+    "target_index": 63,
+    "target_signature": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97",
+    "transactions_in_slot": 712
+  },
+  "08_runtime_context_model": {
+    "active_lut_limit": "T1 deactivation_slot is u64::MAX, so this table status check does not inspect historical hash membership. This is not a proof that a replacement sysvar is authoritative for the full historical environment.",
+    "decision": "T1-D",
+    "default_sysvar_substitution": "not performed",
+    "failure": {
+      "reason": "missing_account",
+      "request": {
+        "address": "SysvarS1otHashes111111111111111111111111111",
+        "method": "getAccountInfo",
+        "name": "SlotHashes",
+        "params": [
+          "SysvarS1otHashes111111111111111111111111111",
+          {
+            "commitment": "finalized",
+            "encoding": "base64",
+            "slot": 448195166
+          }
+        ]
+      }
+    },
+    "feature_equivalence": "pinned current-compatible behavior, not exact historical validator equivalence",
+    "historical_inputs": [
+      {
+        "address": "SysvarC1ock11111111111111111111111111111111",
+        "facts": {
+          "data_bytes": 40,
+          "data_sha256": "652923b2d3e34bcba34fad51675b849b50fc2148baf9d04c2f16172f55a4920c",
+          "executable": false,
+          "fields": {
+            "epoch": 1037,
+            "epoch_start_timestamp": 1789708003,
+            "leader_schedule_epoch": 1038,
+            "slot": 448195166,
+            "unix_timestamp": 1789764316
+          },
+          "lamports": 1169280,
+          "owner": "Sysvar1111111111111111111111111111111111111",
+          "raw_account_sha256": "7b03eed9be41709838187ba299d9133fae10ac91ff1826542a30af3c08a7d5ab",
+          "rent_epoch": 18446744073709551615
+        },
+        "method": "getAccountInfo",
+        "name": "Clock",
+        "params": [
+          "SysvarC1ock11111111111111111111111111111111",
+          {
+            "commitment": "finalized",
+            "encoding": "base64",
+            "slot": 448195166
+          }
+        ]
+      },
+      {
+        "address": "SysvarRent111111111111111111111111111111111",
+        "facts": {
+          "data_bytes": 17,
+          "data_sha256": "e6833309a1b7d9ce57849bd64d1d5834144a14cbc659346a9fda424a3e7ae219",
+          "executable": false,
+          "fields": {
+            "burn_percent": 50,
+            "exemption_threshold": 1.0,
+            "lamports_per_byte_year": 5080
+          },
+          "lamports": 1009200,
+          "owner": "Sysvar1111111111111111111111111111111111111",
+          "raw_account_sha256": "91d643ba40c2c2b3c5812a2b1302088d225bc5a2ec173fbd987fd92f7588ea8b",
+          "rent_epoch": 18446744073709551615
+        },
+        "method": "getAccountInfo",
+        "name": "Rent",
+        "params": [
+          "SysvarRent111111111111111111111111111111111",
+          {
+            "commitment": "finalized",
+            "encoding": "base64",
+            "slot": 448195166
+          }
+        ]
+      },
+      {
+        "address": "SysvarEpochSchedu1e111111111111111111111111",
+        "facts": {
+          "data_bytes": 33,
+          "data_sha256": "bc8e8d8331213d875b89f7e267acd9e983e47331fb7136c35eb50cab4f3030a3",
+          "executable": false,
+          "fields": {
+            "first_normal_epoch": 0,
+            "first_normal_slot": 0,
+            "leader_schedule_slot_offset": 432000,
+            "slots_per_epoch": 432000,
+            "warmup": 0
+          },
+          "lamports": 1120560,
+          "owner": "Sysvar1111111111111111111111111111111111111",
+          "raw_account_sha256": "088d7ebbc8beb84023c021e3412f3809cd5d428d2d661224de22f234c9dd833f",
+          "rent_epoch": 18446744073709551615
+        },
+        "method": "getAccountInfo",
+        "name": "EpochSchedule",
+        "params": [
+          "SysvarEpochSchedu1e111111111111111111111111",
+          {
+            "commitment": "finalized",
+            "encoding": "base64",
+            "slot": 448195166
+          }
+        ]
+      }
+    ],
+    "instructions_sysvar": "must be runtime-produced from the complete original eight-instruction v0 message; not constructed here",
+    "native_v0_execution_attempted": false,
+    "null_response_claim": "qualified archive supplied no SlotHashes account at requested S; not proof of mainnet nonexistence or permanent archive absence",
+    "pinned_runtime": "LiteSVM 0.16.0 existing mainnet feature snapshot; no changes",
+    "recent_blockhash": "existing local historical execution disables signature/blockhash validity checks; no T1 message rewritten or executed",
+    "runtime_context_complete": false,
+    "runtime_managed_exclusions_added": [],
+    "slothashes_dependency": "LiteSVM load_lookup_table_addresses obtains the SlotHashes sysvar cache before lookup",
+    "source_boundaries": "Scope interface source is pinned but has not been reproducibly matched to historical ELF"
+  },
+  "09_native_v0_implementation": "not started; generic executor and replay admission unchanged",
+  "10_Scope_execution": "not attempted; retained archive price changes are not local execution",
+  "11_Scope_causal_test": "not attempted; execution prerequisite missing",
+  "12_ATA_execution": "not attempted; complete historical existing-account bytes validated, no runtime path proven",
+  "13_KLend_execution": "not attempted",
+  "14_T1_outcome_fidelity": "not attempted",
+  "15_T1_post_state_fidelity": "not attempted",
+  "16_T1_decision": "T1-D",
+  "17_production_semantic_subjects": 0,
+  "18_first_production_record": null,
+  "19_offline_replay": "not attempted; complete offline evidence reconstruction passed with live transport forbidden",
+  "20_ReplayRecord_schema_decision": "deferred until T1-A; no changes",
+  "21_T2_T4_transport_recovery": "not attempted this phase; T1-A gate not satisfied",
+  "22_T2_T4_replay_results": "not attempted; retained binary transport gaps unchanged",
+  "23_experimental_corpus": null,
+  "24_baseline_self_check": "no production corpus; existing product baseline unchanged",
+  "25_candidate_differential": "not reached; existing U2 synthetic controls passed separately",
+  "26_wrapped_SOL_lifecycle": "not reached",
+  "27_multi_action_replay": "not reached",
+  "28_attribution": "unsupported; unchanged",
+  "29_modern_replay_funnel": {
+    "classified": 4,
+    "complete_historical_execution_input_sets": 0,
+    "complete_historical_state_sets": 1,
+    "complete_observed_binary_sets": 1,
+    "complete_ordinary_account_boundary_sets": 1,
+    "envelope_admitted": 4,
+    "execution_attempted": 0,
+    "frozen_captures": 156,
+    "historically_LUT_proven_transactions": 8,
+    "outcome_matched": 0,
+    "post_state_matched": 0,
+    "production_assured_subjects": 0,
+    "recognized_actions_all_outcomes": 12,
+    "recognized_transactions_all_outcomes": 9,
+    "runtime_context_complete": 0,
+    "semantic_evaluation_possible": 0,
+    "state_count_definition": "ordinary message state and references; runtime bank inputs counted separately",
+    "successful_LUT_proven_actions": 9,
+    "successful_LUT_proven_transactions": 7,
+    "successful_recognized_actions": 10,
+    "successful_recognized_transactions": 8,
+    "targets_with_partial_state_capture": 0
+  },
+  "30_terminal_blockers": {
+    "boundary": "experimental policy blockers; semantic attribution blocks two multi-action contracts before execution, with additional envelope gaps retained",
+    "distribution": {
+      "Envelope": 2,
+      "FailedOriginalPolicy": 1,
+      "RuntimeContext": 1,
+      "SemanticAttribution": 2,
+      "Transport": 3
+    },
+    "evidence": "terminal-blockers.json"
+  },
+  "31_tests": {
+    "Python": {
+      "test_historical_transport.py.log": 10,
+      "test_kamino_u3_baseline.py.log": 30,
+      "test_kamino_u3b_luts.py.log": 24,
+      "test_kamino_u3c_envelopes.py.log": 10,
+      "test_kamino_u3d_inventory.py.log": 8,
+      "test_kamino_u3d_state.py.log": 15,
+      "test_kamino_u3e_runtime.py.log": 5,
+      "test_kamino_u3e_state.py.log": 12
+    },
+    "Rust": 603,
+    "Rust_groups": [
+      421,
+      0,
+      16,
+      4,
+      27,
+      10,
+      16,
+      23,
+      12,
+      20,
+      12,
+      42,
+      0
+    ],
+    "clippy_warnings_denied": true,
+    "primary_VM_executions": 0,
+    "product_controls": {
+      "binary_sha256": "31eb906e842fef52ca6cd74a97b95dd67f427bfa2ef33f9fe6b134096ca57710",
+      "cases": [
+        {
+          "case": "verify",
+          "exit_code": 0,
+          "matches_preserved_u2_bytes": true,
+          "stdout_sha256": "d395a058064535cbeb7547943f34ad3c3a2b109e849e5ecf859c694b54acbcf0"
+        },
+        {
+          "case": "baseline",
+          "exit_code": 0,
+          "matches_preserved_u2_bytes": true,
+          "stdout_sha256": "7be26a66f3e98f9b96ba6f1270003c158d99968d9ed081c336a97f14782d2099"
+        },
+        {
+          "case": "regression",
+          "exit_code": 1,
+          "matches_preserved_u2_bytes": true,
+          "stdout_sha256": "e5e6a4b39ce377d8573099dc646fb37928bd3aa1172ceea4b4fa6c903cd52ee4"
+        },
+        {
+          "case": "bounded",
+          "exit_code": 1,
+          "matches_preserved_u2_bytes": true,
+          "stdout_sha256": "139fd95c2899d54b765511d20bc70dfc63cb7a9532d5b3b5ae62b7626df68d16"
+        },
+        {
+          "case": "stale",
+          "exit_code": 3,
+          "matches_preserved_u2_bytes": true,
+          "stdout_sha256": "8d6a4dc867c39655b58f91395630aac48d8e865b1aa1fee3a36a6ac0bcb9bc63"
+        },
+        {
+          "case": "unevaluable",
+          "exit_code": 5,
+          "matches_preserved_u2_bytes": true,
+          "stdout_sha256": "0c7a3b5231f84b99e58d6ddba6fe76e595cc212ce13a81fac24d9be283ca57d7"
+        }
+      ],
+      "control_commit": "8855edb",
+      "rpc_environment_removed": true
+    },
+    "rust_formatting": true,
+    "total": 717
+  },
+  "32_mutations": {
+    "evidence": "mutations.json",
+    "executed": 16,
+    "killed": 16,
+    "runtime_and_multi_action": "not reached; none counted"
+  },
+  "33_performance": "performance.json",
+  "34_storage": "storage.json",
+  "35_security_scan": "security-scan.json",
+  "36_correctness_findings": [
+    "Old bodyless evidence lacked enough diagnostics to infer cause; new runs distinguish HTTP null from empty transport.",
+    "Offline diagnostics also cross-check retained request identity, headers, timing, classification and qualified provider.",
+    "Explicit zero-lamport authority absence is narrowly allowed; required state and ATA cannot use that exception.",
+    "No production executor correctness bug was established; no production runtime was exercised."
+  ],
+  "37_justified_claims": [
+    "Exact failed mappings context now succeeds; old cause remains unknown.",
+    "T1 ordinary historical account bytes, references and final same-slot screen are complete under existing archive qualification.",
+    "Historical Clock, Rent and EpochSchedule acquired.",
+    "39 diagnosed requests: 38 successes and 1 required-runtime-account null; zero live retries and zero empty bodies."
+  ],
+  "38_prohibited_claims": [
+    "Complete historical runtime environment",
+    "native-v0 or Scope/ATA/KLend execution",
+    "Scope causality",
+    "outcome/post-state fidelity",
+    "production-assured semantics or production replay records",
+    "Kamino production replay above 0/4"
+  ],
+  "39_adapter_4_decision": "B. GENERIC MODERN REPLAY STILL BLOCKS NEW PROTOCOL WORK",
+  "40_adapter_contract_v2_decision": "STILL NEED ADAPTER #4; defer new protocol work until generic replay is resolved",
+  "41_next_phase": "Resolve the SlotHashes historical-runtime boundary in a separate versioned study: acquire/reconstruct exact context or prove the narrow active-LUT runtime treatment sufficient for the entire envelope. Then native-v0 execution and mandatory causality/fidelity tests. No blind transport retry of JSON null.",
+  "commit_created": false,
+  "historical_artifacts_mutated": false,
+  "new_attempt_outcomes": {
+    "missing_account": 1,
+    "success": 38
+  },
+  "probe": {
+    "attempts": 1,
+    "behavior": "prior_empty_response_not_reproduced",
+    "facts": {
+      "context_slot": 448195165,
+      "data_bytes": 29704,
+      "data_sha256": "1d4d40f87f5c82460565a5780e727073cdd787f528636f059628df0a8d55a110",
+      "executable": false,
+      "lamports": 207630762,
+      "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+      "present": true,
+      "raw_account_json_sha256": "245441edd41df68c4fda449c0396d8ab33d351f2b42c754f9f854074c8bd4b32",
+      "rent_epoch": 18446744073709551615,
+      "validator_lamports_match": true
+    },
+    "failure_class": null,
+    "historical_state_complete": false,
+    "kind": "exact_T1_mapping_reproduction",
+    "probe_passed": true,
+    "request": {
+      "address": "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    "runtime_executed": false,
+    "sample_fingerprint": "b97116541aeefc6723ef91a1d38c9be52792d47316b573ac08d49484fd97d0af",
+    "signature": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97"
+  },
+  "production_replay_matches": {
+    "matched": 0,
+    "primary_targets": 4
+  }
+}

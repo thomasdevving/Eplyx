@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "bundle": {
+    "sha256": "5e5b67ac13e4f6b8249348ad81db29885ee8ee897ba78f6de213b55793f4285f",
+    "baseline_sha256": "ec2dfefaa70d560754a0000f39bd2cabc192b895d36205b3c428f601b6e1d7e1",
+    "corpus_sha256": "a4b667316b972685743bf0724b5596b7fbb64dde46468e159f44d773894f69b1",
+    "record_count": 10,
+    "program_id": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+    "adapter": "spl-stake-pool",
+    "adapter_version": 3,
+    "semantic_schema_version": 2,
+    "source_slot_range": {
+      "first": 447850493,
+      "last": 447904974
+    },
+    "limitations": [
+      {
+        "code": "failed_original_transactions_unsupported",
+        "detail": "Transactions that failed on mainnet are observed but not replayed, so no failure path is represented."
+      },
+      {
+        "code": "account_creation_paths_unsupported",
+        "detail": "Interactions that create a token account are outside the exact historical contract and are excluded."
+      },
+      {
+        "code": "replay_runtime_rent_semantics_unsupported",
+        "detail": "Transactions crediting an account that stays below its rent-exempt minimum are accepted by mainnet and refused by the replay runtime, so they are excluded. Tip accounts are the common case."
+      },
+      {
+        "code": "address_lookup_tables_unsupported",
+        "detail": "A v0 message that actually resolves addresses through a lookup table is outside the replay contract and is excluded, so any interaction shape that requires one is unrepresented."
+      }
+    ]
+  },
+  "candidate": {
+    "sha256": "ec2dfefaa70d560754a0000f39bd2cabc192b895d36205b3c428f601b6e1d7e1",
+    "len": 1080464
+  },
+  "coverage": [
+    {
+      "subject": "spl-stake-pool/deposit_sol/economic/pool_tokens_received",
+      "observations": 1
+    },
+    {
+      "subject": "spl-stake-pool/deposit_sol/execution/transaction",
+      "observations": 1
+    },
+    {
+      "subject": "spl-stake-pool/withdraw_sol/economic/pool_tokens_burned",
+      "observations": 9
+    },
+    {
+      "subject": "spl-stake-pool/withdraw_sol/economic/pool_tokens_debited",
+      "observations": 9
+    },
+    {
+      "subject": "spl-stake-pool/withdraw_sol/economic/sol_received_by_user",
+      "observations": 9
+    },
+    {
+      "subject": "spl-stake-pool/withdraw_sol/execution/transaction",
+      "observations": 9
+    }
+  ],
+  "findings": [],
+  "unmatched": [],
+  "failures": [],
+  "summary": {
+    "passed": true,
+    "failure_reasons": [],
+    "exit_code": 0,
+    "expected": 0,
+    "unexpected": 0,
+    "expected_but_exceeded": 0,
+    "stale": 0,
+    "unevaluable": 0
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "killed_by_named_assertions": 8,
+  "mutations_executed": 8,
+  "results": [
+    {
+      "control_passed": true,
+      "description": "current/post state context accepted",
+      "evidence_boundary": "raw partial capture and explicitly synthetic negative controls; no local execution",
+      "killed_by_assertion": true,
+      "mutated_source_sha256": "184dae6a9c3ced4dcabc51112925a6c7d97738790e417bb4e8444e63b5982024",
+      "named_test": "test_current_or_post_scope_state_cannot_seed_pre_state"
+    },
+    {
+      "control_passed": true,
+      "description": "Scope owner ignored",
+      "evidence_boundary": "raw partial capture and explicitly synthetic negative controls; no local execution",
+      "killed_by_assertion": true,
+      "mutated_source_sha256": "6ebf6d1650321f40f4a4e455764b13ca5d9bcc7ca4184365f34fe07cdbc3d05a",
+      "named_test": "test_scope_owner_and_validator_balance_must_match"
+    },
+    {
+      "control_passed": true,
+      "description": "validator balance contradiction ignored",
+      "evidence_boundary": "raw partial capture and explicitly synthetic negative controls; no local execution",
+      "killed_by_assertion": true,
+      "mutated_source_sha256": "4ea5be157430850eb2e306f66ef9d3715c9434c1ceb8813077cddb201253daa1",
+      "named_test": "test_scope_owner_and_validator_balance_must_match"
+    },
+    {
+      "control_passed": true,
+      "description": "missing oracle state accepted",
+      "evidence_boundary": "raw partial capture and explicitly synthetic negative controls; no local execution",
+      "killed_by_assertion": true,
+      "mutated_source_sha256": "5ce319f70964946081b06de73b7fe92c0ab8a5c1d5ce9884207ae9cb50fed63d",
+      "named_test": "test_missing_or_truncated_oracle_state_is_rejected"
+    },
+    {
+      "control_passed": true,
+      "description": "same-slot conflict and coverage ignored",
+      "evidence_boundary": "raw partial capture and explicitly synthetic negative controls; no local execution",
+      "killed_by_assertion": true,
+      "mutated_source_sha256": "2deb815231948b4310efe622ed7c24144a0ac9fc105e805d627507da354dbeef",
+      "named_test": "test_same_slot_ambiguity_and_missing_coverage_rejected"
+    },
+    {
+      "control_passed": true,
+      "description": "raw response hash mismatch ignored",
+      "evidence_boundary": "raw partial capture and explicitly synthetic negative controls; no local execution",
+      "killed_by_assertion": true,
+      "mutated_source_sha256": "4be5ff869658d5f930fe4ba38c61fcd369e356427b47d44f81f3979691b4b2e8",
+      "named_test": "test_raw_hash_mismatch_cannot_be_ignored"
+    },
+    {
+      "control_passed": true,
+      "description": "retry bound exceeded",
+      "evidence_boundary": "raw partial capture and explicitly synthetic negative controls; no local execution",
+      "killed_by_assertion": true,
+      "mutated_source_sha256": "600f58f1d2bbb6bd94dafb6773ff07c8c3c026a6cd5a556291d001be67212029",
+      "named_test": "test_transport_stops_at_bounded_limit_and_retains_empty_bodies"
+    },
+    {
+      "control_passed": true,
+      "description": "ATA wallet check bypassed",
+      "evidence_boundary": "raw partial capture and explicitly synthetic negative controls; no local execution",
+      "killed_by_assertion": true,
+      "mutated_source_sha256": "8a75a6ded7c4cee4789f45864711bd3d59af94079957aa1395219ee2a210bde6",
+      "named_test": "test_synthetic_ata_bytes_must_match_wallet_mint_and_initialized_state"
+    }
+  ],
+  "source_sha256": "0b465e6f122a050c14172658d288f025622013eadb21f3294495ee3f9c48062e",
+  "working_source_unchanged": true
+}

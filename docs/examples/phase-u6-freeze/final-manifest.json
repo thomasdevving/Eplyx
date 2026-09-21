@@ -1,0 +1,164 @@
+{
+  "head": "84ba410287a4a7ed315a7d779dbaad625fe3bf39",
+  "pre_u5_files_rehashed": 1321,
+  "previous_file_changes": [],
+  "self_excluded": true,
+  "u5_files_rehashed": 705,
+  "u6_files": [
+    {
+      "bytes": 10652,
+      "path": "docs/examples/phase-u6-freeze/account-boundary-status.json",
+      "sha256": "053186e7592c6b2a7c41c370359875340297ddd36c731aee7a48ec461f6788e9"
+    },
+    {
+      "bytes": 56262,
+      "path": "docs/examples/phase-u6-freeze/accounts.rs",
+      "sha256": "12ff3ad2ae264928657744306e6a26934703d3a0e44cddf62cd4481a860d5f38"
+    },
+    {
+      "bytes": 325419,
+      "path": "docs/examples/phase-u6-freeze/alchemy-account-archive.html",
+      "sha256": "60f6e9a770da5ed692727146be5fdb6ef42d722417ffde63cc1def365f15cf62"
+    },
+    {
+      "bytes": 383721,
+      "path": "docs/examples/phase-u6-freeze/alchemy-yellowstone-historical-replay.html",
+      "sha256": "8741eec2c88d07f54ad4688da0623f6499d3498454acb01b4d7dd47e2fbfc49c"
+    },
+    {
+      "bytes": 139326,
+      "path": "docs/examples/phase-u6-freeze/alchemy-yellowstone-overview.html",
+      "sha256": "53c7ae4ebda4ba0e070aed6712ea5551460dadcc31bd00cfdef0b3fc9480d1ff"
+    },
+    {
+      "bytes": 0,
+      "path": "docs/examples/phase-u6-freeze/baseline.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 2402,
+      "path": "docs/examples/phase-u6-freeze/baseline.stdout",
+      "sha256": "b7f33953ca35bcdc7949a52a9ea5263739e1be20a1c00ddc1d0d7c89f1a8fe44"
+    },
+    {
+      "bytes": 44,
+      "path": "docs/examples/phase-u6-freeze/current-slot.body",
+      "sha256": "d37096cb12fa3b2a86e77081f5172bc850e6663ba05375534c83b6a921fb206e"
+    },
+    {
+      "bytes": 97,
+      "path": "docs/examples/phase-u6-freeze/docs-demo-archive-probe.body",
+      "sha256": "9842134ff519effd39a97df79d1d733ed70441a345013305ef3bb57b0a6ee1bd"
+    },
+    {
+      "bytes": 12274,
+      "path": "docs/examples/phase-u6-freeze/geyser.proto",
+      "sha256": "2aac393e5b2e75ecbfb990fbff90d2923338f348468b0cb14fe8990d97beb9b6"
+    },
+    {
+      "bytes": 33480,
+      "path": "docs/examples/phase-u6-freeze/geyser_plugin_interface.rs",
+      "sha256": "d5db7f1c1ef404bd8166943d6d54fff27465b3a42e4f46c699b4aee6b8a24642"
+    },
+    {
+      "bytes": 7122,
+      "path": "docs/examples/phase-u6-freeze/initial.json",
+      "sha256": "036607466c1b86fac74719968a7e0c3ca30e95f7c6d5cfa2ac09093396029c78"
+    },
+    {
+      "bytes": 649,
+      "path": "docs/examples/phase-u6-freeze/kamino-controls.json",
+      "sha256": "8a73038daa8ee6ec8b81c79816b6f087086078c923e9e1836712404fc6f4afea"
+    },
+    {
+      "bytes": 365,
+      "path": "docs/examples/phase-u6-freeze/measurement.json",
+      "sha256": "6334a5641e7eb5d02fa98710a813d90e4088d618eaa742e05c4f2fa6568629f4"
+    },
+    {
+      "bytes": 0,
+      "path": "docs/examples/phase-u6-freeze/offline_ci.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 2402,
+      "path": "docs/examples/phase-u6-freeze/offline_ci.stdout",
+      "sha256": "b7f33953ca35bcdc7949a52a9ea5263739e1be20a1c00ddc1d0d7c89f1a8fe44"
+    },
+    {
+      "bytes": 0,
+      "path": "docs/examples/phase-u6-freeze/offline_verify.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 69489,
+      "path": "docs/examples/phase-u6-freeze/offline_verify.stdout",
+      "sha256": "529355d96e95bf81c44debd50a007f3624612009cffcf5cee47cc631d05e3b18"
+    },
+    {
+      "bytes": 1822,
+      "path": "docs/examples/phase-u6-freeze/provider-status.json",
+      "sha256": "b82e268d0b78f96ba7dbe1cb7a7896a2a9681ea48b2d3a3c3bdd4b608ae91185"
+    },
+    {
+      "bytes": 1168,
+      "path": "docs/examples/phase-u6-freeze/segment-feasibility-counts.json",
+      "sha256": "31084673df204a83b83fd510e46b2b68869e471f9084a727800d59e321ee024c"
+    },
+    {
+      "bytes": 989,
+      "path": "docs/examples/phase-u6-freeze/source-provenance.json",
+      "sha256": "feab8f261b8317bc5ab8ec977abe2da0070e4412b7307d3e08e2216b558159ba"
+    },
+    {
+      "bytes": 2609,
+      "path": "docs/examples/phase-u6-freeze/stake-pool-controls/baseline.stdout",
+      "sha256": "7be26a66f3e98f9b96ba6f1270003c158d99968d9ed081c336a97f14782d2099"
+    },
+    {
+      "bytes": 9884,
+      "path": "docs/examples/phase-u6-freeze/stake-pool-controls/bounded.stdout",
+      "sha256": "139fd95c2899d54b765511d20bc70dfc63cb7a9532d5b3b5ae62b7626df68d16"
+    },
+    {
+      "bytes": 1330,
+      "path": "docs/examples/phase-u6-freeze/stake-pool-controls/controls.json",
+      "sha256": "1fab03a55a95edc5d2e643e57ca3855e113c69ace905d5cf640d408b517d7f91"
+    },
+    {
+      "bytes": 9722,
+      "path": "docs/examples/phase-u6-freeze/stake-pool-controls/regression.stdout",
+      "sha256": "e5e6a4b39ce377d8573099dc646fb37928bd3aa1172ceea4b4fa6c903cd52ee4"
+    },
+    {
+      "bytes": 2933,
+      "path": "docs/examples/phase-u6-freeze/stake-pool-controls/stale.stdout",
+      "sha256": "8d6a4dc867c39655b58f91395630aac48d8e865b1aa1fee3a36a6ac0bcb9bc63"
+    },
+    {
+      "bytes": 3129,
+      "path": "docs/examples/phase-u6-freeze/stake-pool-controls/unevaluable.stdout",
+      "sha256": "0c7a3b5231f84b99e58d6ddba6fe76e595cc212ce13a81fac24d9be283ca57d7"
+    },
+    {
+      "bytes": 1628,
+      "path": "docs/examples/phase-u6-freeze/stake-pool-controls/verify.stdout",
+      "sha256": "d395a058064535cbeb7547943f34ad3c3a2b109e849e5ecf859c694b54acbcf0"
+    },
+    {
+      "bytes": 0,
+      "path": "docs/examples/phase-u6-freeze/verify.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 69489,
+      "path": "docs/examples/phase-u6-freeze/verify.stdout",
+      "sha256": "529355d96e95bf81c44debd50a007f3624612009cffcf5cee47cc631d05e3b18"
+    },
+    {
+      "bytes": 16213,
+      "path": "docs/phase-u6-transaction-boundary-feasibility.md",
+      "sha256": "cdcc6a84dc7c587c67fb7132fc880fc7f647adeb43e8b0fae4a48d47db3e5ecd"
+    }
+  ]
+}

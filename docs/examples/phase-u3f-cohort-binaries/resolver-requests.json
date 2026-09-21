@@ -1,0 +1,4160 @@
+[
+  {
+    "method": "getGenesisHash",
+    "params": [],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/029a6d2dbec111f322082624220bd3e2b13a506168a630880f4ebab264b12d94.body",
+        "sha256": "072c547ad3321ad6379bf249c218bcf112eaa3bd0138f07ace4077db1785a37d"
+      },
+      {
+        "archive": "docs/examples/phase-u3d2-binaries/capture.tar.gz",
+        "member": "rpc/029a6d2dbec111f322082624220bd3e2b13a506168a630880f4ebab264b12d94.body",
+        "sha256": "072c547ad3321ad6379bf249c218bcf112eaa3bd0138f07ace4077db1785a37d"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+      {
+        "commitment": "finalized",
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/91d7faf30fcb65e83ac89d1c005db0707426c9e495187c1a58edd31b84540fb0.body",
+        "sha256": "61be7e64c25b49bd4783906cec0d07d984386f6a10db85bf0c36f631ab9eb131"
+      },
+      {
+        "archive": "docs/examples/phase-u3d2-binaries/capture.tar.gz",
+        "member": "rpc/91d7faf30fcb65e83ac89d1c005db0707426c9e495187c1a58edd31b84540fb0.body",
+        "sha256": "61be7e64c25b49bd4783906cec0d07d984386f6a10db85bf0c36f631ab9eb131"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "ComputeBudget111111111111111111111111111111",
+      {
+        "commitment": "finalized",
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/43970eecdb0226c33f56f7d0799d01eeba8bec4d71a3d21d3d679df6091fa118.body",
+        "sha256": "9727a917b40c0695e6f9a7a248074f7121770671cf2c0cea93fa7accc059f15c"
+      },
+      {
+        "archive": "docs/examples/phase-u3d2-binaries/capture.tar.gz",
+        "member": "rpc/43970eecdb0226c33f56f7d0799d01eeba8bec4d71a3d21d3d679df6091fa118.body",
+        "sha256": "9727a917b40c0695e6f9a7a248074f7121770671cf2c0cea93fa7accc059f15c"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+      {
+        "commitment": "finalized",
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/c4774cc3f4ccb7b0d0087010caaa0699a5eab8f22b4d2159ac6c17eb85199035.body",
+        "sha256": "50ce71feddcbd67e6de9e14b13204ec8cea9b1b39705ade91449923b91e214c5"
+      },
+      {
+        "archive": "docs/examples/phase-u3d2-binaries/capture.tar.gz",
+        "member": "rpc/c4774cc3f4ccb7b0d0087010caaa0699a5eab8f22b4d2159ac6c17eb85199035.body",
+        "sha256": "50ce71feddcbd67e6de9e14b13204ec8cea9b1b39705ade91449923b91e214c5"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 0
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/27923f94d6d88e6d4aba50cc63e07c18ce9d88cf68be8e97998aba8393179cc6.body",
+        "sha256": "daabc58bf83520ca9ecb3dde51faab92dcf72c37dfdad92bf0bc1b84bee611df"
+      },
+      {
+        "archive": "docs/examples/phase-u3d2-binaries/capture.tar.gz",
+        "member": "rpc/27923f94d6d88e6d4aba50cc63e07c18ce9d88cf68be8e97998aba8393179cc6.body",
+        "sha256": "daabc58bf83520ca9ecb3dde51faab92dcf72c37dfdad92bf0bc1b84bee611df"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 524288
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/2c8b7ff147934b9721b3ef00451835e00bd0f10dcf20ba15168ae1f468d50645.body",
+        "sha256": "e01c2aa2665475f9f30b6de4934d09186e25a46e4f65d50b301ef3a344a9290c"
+      },
+      {
+        "archive": "docs/examples/phase-u3d2-binaries/capture.tar.gz",
+        "member": "rpc/2c8b7ff147934b9721b3ef00451835e00bd0f10dcf20ba15168ae1f468d50645.body",
+        "sha256": "e01c2aa2665475f9f30b6de4934d09186e25a46e4f65d50b301ef3a344a9290c"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 1048576
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/c6c73701d2113aa100f5689a64c4f9250f6b7d846fa83e7515621b038bfa33c8.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      },
+      {
+        "archive": "docs/examples/phase-u3d2-binaries/capture.tar.gz",
+        "member": "rpc/c6c73701d2113aa100f5689a64c4f9250f6b7d846fa83e7515621b038bfa33c8.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 1572864
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/59f080d1f1affdb0b4ba45f8ecc465719aa2653a76828f42f548e977d6453f0d.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      },
+      {
+        "archive": "docs/examples/phase-u3d2-binaries/capture.tar.gz",
+        "member": "rpc/59f080d1f1affdb0b4ba45f8ecc465719aa2653a76828f42f548e977d6453f0d.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 2097152
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/90169d948a6588b7f0e5e24cdd9054dab990ef7e642d69cb0264d82c694223e6.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      },
+      {
+        "archive": "docs/examples/phase-u3d2-binaries/capture.tar.gz",
+        "member": "rpc/90169d948a6588b7f0e5e24cdd9054dab990ef7e642d69cb0264d82c694223e6.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 2621440
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/eb7eb67b8b7e08979f46f768797a541fdb30e22bd0510295cd5d48cd644752c0.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      },
+      {
+        "archive": "docs/examples/phase-u3d2-binaries/capture.tar.gz",
+        "member": "rpc/eb7eb67b8b7e08979f46f768797a541fdb30e22bd0510295cd5d48cd644752c0.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 3145728
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/5c4681fe0e2f0ae140bda107838548123b412a3fccde5fda4cac22c660dd18e3.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      },
+      {
+        "archive": "docs/examples/phase-u3d2-binaries/capture.tar.gz",
+        "member": "rpc/5c4681fe0e2f0ae140bda107838548123b412a3fccde5fda4cac22c660dd18e3.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 3670016
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/e6603892a13ff10b7aba24baac34a5bcc614c7c16203f2e662ddb8b384cedab7.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      },
+      {
+        "file": "docs/examples/phase-u3f-binary-recovery/rpc/e6603892a13ff10b7aba24baac34a5bcc614c7c16203f2e662ddb8b384cedab7-1.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 4194304
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/01877973e963343715ebb03ef81ece7fac36fc07c24bada3614fdd60434118ba.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 4718592
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/53663957d6852381ce76df4a51cfc32103b41fe7ee0df12458741a371c1202fb.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 5242880
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/57f5773830f4c081adbf7b107a2ac64598d293192c39c834ffbdc904c2e61638.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 5767168
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/58110bca790508e63a3366fa6b92585a1b168cbc590d629c04e9105d6516f0ff.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 6291456
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/9254426079260674d2a25446f3e8484dc6e4e776dab167f26d464c3392d5fa23.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 6815744
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/190195e0a82a9e3e2e5cd0edae36daeb6011acdee51b9a86562e81972db36c86.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 7340032
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/3e3815bc28f73a3518b388a5235e64038787c750a483d628789412ecb10c0f7c.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 7864320
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/5be94758909f9fcb8ada708a3c626e69f69e6f12206f4da420acf0fc2b1d6b87.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 8388608
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/069be7518505fa6fd82c8c0938ea1adde36f5e2b5694b5b3dac905696691257a.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 8912896
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/2449d5f53f382c7aa07cacb16e02ba965e3109c75eba1f4d7dd67ec29fd1e0e0.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 9437184
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/6e3e54b29a388f17c6254104c658f36e47108e62786fb02cf16f5691b00b6a84.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 9961472
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/9222d4a70464f707f01cbfbf2df70bf5c729dbdc0fda2bccb7dfeb57853c36bd.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+      {
+        "commitment": "finalized",
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/2b845e70a06473d943e3d9233920b483612892cc96103fa6559ef7f51060ecc5.body",
+        "sha256": "9c076d1ae1773d2392a3f83b314ee9a2466a23a15a2fef290a1bf5c16b512ab2"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 0
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/f02f0134047a12d531db9553c23f6b85fbfd0e82d2ea2a8773924f4f8ae4aa21.body",
+        "sha256": "ba9425e47c3c2d9b65cd5c2e465dcda3a20e6d272bf1f357f11a5ca7771439dc"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 524288
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/8b0884eac0be00f4b857177d79993816120aac524a1f84fccfc229c6b1a88a8c.body",
+        "sha256": "d653188ad3f8dda35029b3c85a4832d80e6808b063f88b34f9fef6ff9337ca96"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 1048576
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/363f45dee9aaaa52a976271a1643eca51966d3ab7aaf04743120330843e46d75.body",
+        "sha256": "ea1fcc2ac9c868a0afdf594a5e5a20817eabe8749835ff2e062b6564cb7cd64d"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 1572864
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/f1e597a0697cb2ddbc65132ccf5a216f3064413ef4d40eb1dbd5a779a955ffa7.body",
+        "sha256": "ea43aa2eb92fd7a98a2edf8b151497aa796e0b8541429d1137b6188caec7be20"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 2097152
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/eb3b34c5446ca0a998c0c817f515232d97011cbe15df0ac9d8ead2d8b9c79217.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 2621440
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/2d3e1adbf11ba54ba578efb6722530e994f929ec3ccc69aba3f6f1903141d731.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 3145728
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/e43b078a6968f45bdd474a940e419006e4c8a41b6c30eefaaa1849f3623dc7fc.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 3670016
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/7b97a11dac2e725aa9480ddfd65382a69e4a7e8553abf500b742afd3e89d0806.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 4194304
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/64bcd23f85add239da56478119da65fa879231bd0387c3f73103e25b89d3ad55.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 4718592
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/d80c99521a46e13541b35234f1c02b9870b39cbc8aebb45f452f7df7585f8848.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 5242880
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/1a710f2374f7108ab31e0d5481196adcf608236b49ba25f2ce72ef2a692821de.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 5767168
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/39c5fe7ffc1fbced5538f75efe00802ee4bddd5b5bb5114dec3ed485ba514819.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 6291456
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/3dd35d6651f441876c2a232e88a6f4e45a076255996fe7e2a83bf8c8bfd9b298.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 6815744
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/5b2ff14c1434442513202d9b2d01dfbf01fa1221728d54024119d3933ee93a7d.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 7340032
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/2ceb2c3ba2c830c0dd849976bed141fda4ca7ec93d8df03acdcda2f647572e5f.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 7864320
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/34570837ea282f6bbb2f77064f217ec42791483025680fbd250d2a597c910340.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 8388608
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/61964edd427db081ea5bef3a116bd46cefb07098f9c52dffc5765db4d027d321.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 8912896
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/50ca26e48f06b402ad91bd8d49a69fdf531389eb927712dc7f378001f88cc28e.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 9437184
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/5c36bf9ea205b303fc583936674ad60481cc01a5b250b38f6af708c90f00d833.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 9961472
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/12f5f6c308cb32283c4664ce04047b9cffbeae526edaf736b26a6be8689845cf.body",
+        "sha256": "ac0998fdfe0d8da1ca13b1885e71c885e0b255d4255ccea2f0b366b640d7dcfb"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+      {
+        "commitment": "finalized",
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/010ec1df38562a3ef25935cd398e90c06e89961a644a722844888c9f1738596f.body",
+        "sha256": "2892bc2c738dc4d9a886116d1362f16d69f0f5bb94f7d2cc7821da2b9b034a04"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 0
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/65e2dc11deffc6382216ad5a330c808874d296f017c38496bb79c06d1e6e4287.body",
+        "sha256": "f63ad6dd9096fa3d4d1c7d417a9a9b95ffbef99ddc2cf0b05f3e62d42718054c"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 524288
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/a8f7cead30e7924f12ba4c4f3960f07a77e643b0c468c5485e3fcb2f3c32aae3.body",
+        "sha256": "ad5acc95390951533edc6ba4e43deb5c645c2b9a3aa9a7e11c60a10ec9038ea4"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 1048576
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "f0a66b484fccc1f12f196556065b248d22736a5c54b326b0f6f9b0385107875e"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 1572864
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "c68a02a4330d3e29b0374e80e85dde81d32c91fb5cd98cc9e198153233ca89b1"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 2097152
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "f610f08a394a4a93a5475ca475c86d6b8d03926a41c64b7c5fa637c7afb82268"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 2621440
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "f61cc956e196bfe81cbb7463e71cf0154ec897c5cfdf382d6846fe7484c68655"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 3145728
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "0d61041fa8c430f6859a47ef8752b53c6877fdbe96379bfdc2b63467432a9e32"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 3670016
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "3aab60ec08c8e6a05cf5343b539c73fea916a69ae8e3a2e4de6c028cb4c1e208"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 4194304
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "8e471333fd9d8fd916d19a3029278911ccf23e61e24fc0f738aaa4ce57b84293"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 4718592
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "1e60e0285abd53b713cbbe85a4ef0dac3a81f4602ab6b804c65553c720fd157b"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 5242880
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "a7d6a3870fed77b60efbf04e1d52dc6cfb6ea31a7ad6ec4af8cafa93f555d4b0"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 5767168
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "69d14e5220c9f91d63f6170b26f235319b9848bacdc9420fc4cbb3a3bb1d5854"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 6291456
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "5569a399fd5de7d93e308705920e3cb7ecfd71efb280a202ca3bb09eec78c026"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 6815744
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "c3d059db03b9388e374b6ff95c17bfd94505d7f39fb0933a7b92eb465f7f4e42"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 7340032
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "9a1b1ac07ae701ec5cc09dde643a4e952907b8a6f05cd686c865999dea027a41"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 7864320
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "b815af288c0a9b9367d67b6a1b511aca41e25dde62be848c45aee7283d6d4fcc"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 8388608
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "f187cc7cef2f6f46142b337a6cb80aa28ba8de79ad264db991539a125959ec19"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 8912896
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "d52d4a22fdc4b26058b43f87a175b8ee01dab626ffa689ec05c04571a92baa27"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 9437184
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "6193d52c2895ea973d73d9088e2f12f7c060a0addc8f50f31ca534ed9dddbf42"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 9961472
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "4371a85b84f4325077102e58b93caef22fe5a5be009db5b8779c70865a0d54f4"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      {
+        "commitment": "finalized",
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "6f02b68a4c5c728bdf6f451c69fc7250993764f5fdb0c5158d6762e8ec187675"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DoU57AYuPFu2QU514RktNPG22QhApEjnKxnBcu4BHDTY",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 0
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "e6ae8f977b9ee424b5d7c7b3e8103655c6adf78417f347697b37b836c9fb7086"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DoU57AYuPFu2QU514RktNPG22QhApEjnKxnBcu4BHDTY",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 524288
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "ac2dad4f464ac59a238e9c2b2c7c8824720d9dd8096227ba789419acc967fd53"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DoU57AYuPFu2QU514RktNPG22QhApEjnKxnBcu4BHDTY",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 1048576
+        },
+        "encoding": "base64",
+        "slot": 448194516
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "c19f998acce64316a0aa127ee85f9050a2df806865916fbbd6e5246105b891de"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getBlock",
+    "params": [
+      448194517,
+      {
+        "commitment": "finalized",
+        "encoding": "json",
+        "maxSupportedTransactionVersion": 1,
+        "rewards": false,
+        "transactionDetails": "accounts"
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "52ab28cf35e3e3984d2204d0c9e81e08b3fe8c6d9aeb1639e6cff3d8acb3023a"
+      }
+    ],
+    "target": "T2"
+  },
+  {
+    "method": "getGenesisHash",
+    "params": [],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/029a6d2dbec111f322082624220bd3e2b13a506168a630880f4ebab264b12d94.body",
+        "sha256": "072c547ad3321ad6379bf249c218bcf112eaa3bd0138f07ace4077db1785a37d"
+      },
+      {
+        "archive": "docs/examples/phase-u3d2-binaries/capture.tar.gz",
+        "member": "rpc/029a6d2dbec111f322082624220bd3e2b13a506168a630880f4ebab264b12d94.body",
+        "sha256": "072c547ad3321ad6379bf249c218bcf112eaa3bd0138f07ace4077db1785a37d"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+      {
+        "commitment": "finalized",
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3d2-binaries/capture.tar.gz",
+        "member": "rpc/f3a27a3b09158ee3f4232333952557c2a08a56ff27909617c192d79a47468af2.body",
+        "sha256": "e5b3740485a9ac1284f6c215f3499018f15aaa0a6fb22df4d0ba4f0d400b1e30"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "ComputeBudget111111111111111111111111111111",
+      {
+        "commitment": "finalized",
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3d2-binaries/capture.tar.gz",
+        "member": "rpc/3883bcb9581fa6b860bd9de3ee2fc87c790f95e3155a262cf59bd2e747aeee6d.body",
+        "sha256": "25ddaf3997f6050bd196e43ca721f0fe6430412dfaaff15f8883f050bc86e9b1"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+      {
+        "commitment": "finalized",
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3d2-binaries/capture.tar.gz",
+        "member": "rpc/445ee427e31ad9fdcdaf05939a50ee3a93ca62858615e1d5577c3b892346a3bc.body",
+        "sha256": "de25e4036d43d22e09b614cfe4796987c20285335a83012895c5092ea252298c"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 0
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "file": "docs/examples/phase-u3f-binary-recovery/rpc/44ae4612d5eb8a9eb844eb83f750e147fda28272754ec4f34ba9b0cbbdf22bf8-1.body",
+        "sha256": "375291d027daeec95d69098c71f1606a6d49081a9164d08c218b56157bf89d8d"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 524288
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "1b331f2a26a35d5da894f15fbb60e5aa0d5ce2e55a3ec3dc4856e51bbb80a30f"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 1048576
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "c946a14f937848745a01e261a6cf46e68362d1394010fc9ebb826cfec4f525d7"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 1572864
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "af44bbbeb69f54ce84273476a6461ff705e76e08a836ab20ab6f6b63629ab97f"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 2097152
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "f99ee51d0b8b86a891d312db1dc78a3f8e9f97fb14f112b878130dd23fb2463a"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 2621440
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "63c172550c2a57239132f2cb14eb582c5a6547ade63b17010f1748de84ce359d"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 3145728
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "5f007c5eac8b669e23fa487474808a856f8cbd618910324e927a6d6c7c8c6755"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 3670016
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "ee3f79338bcb9e5772608bbc068f281211f133b79840bcb42c47cef944df6a93"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 4194304
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "0a13464ec3fa0bf9973c8cf5e7b0ba5eeee0f7aac7264ceff0bf1a1e50c1bbe5"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 4718592
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "454006051f4d60071c8bb8dbc4838a595b70b07d71827475be30580fc210ecb6"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 5242880
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "7a61f8302693ed92c9a844fbe0e4fc6bb95d273e1f6cc2eb8fcfa96af49e9e21"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 5767168
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "010d9a01f3c74d8acf2f48fce2f6dd0014e10f1baf590157856a7b4d0f79bd65"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 6291456
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "f11a8e94af8d7836ca69a54f2d4991fca5e09d8702e1d72fd9a2233774e13a6d"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 6815744
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "4a27448f170802aba96ddb1aea4a007146f6cde9e4a45955e8186cc0efe3ab8a"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 7340032
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "7595721ab0757afb442da826806e009ebb7df0d644a329fad7f2d60fe0bff20a"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 7864320
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "05f3a9db5fc13500427472c04a4e84707e76355c683e10b7c6a7138ecbfd60e3"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 8388608
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "6f77eef7b795924cd5d32c47f72f01f4e838430c7d86d8fee37908c1e314942a"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 8912896
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "520cda127f7ffe0b6147cf873a3614ddaea630a5ec95be643a0980fafcf29028"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 9437184
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "fd2c1d240b23c868383606f8bbab5e144e6581b941826a7134b1bfce62903d1d"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 9961472
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "0cf74717d4430d2392d795f3e2aa94c076cfd75365680fab364d8a5090759dc9"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+      {
+        "commitment": "finalized",
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "26a78edbce17fce13bba4245f6151d36e0439b8635305671fdc55c76aa1828d1"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 0
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "e769ec863c4582bf6792c7ac0b8522cbd6cb478984e1b1b45a389a786f6d44dd"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 524288
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "cd34fc0f58dbc75ec7c8217dddcdb9fee0a9b656053b800362252af8fca607f2"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 1048576
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "8dc84a47fcaf428dbc2fd4882d2cd2a4a2384705aac6b67ab575964ce369270e"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 1572864
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "bb0a2765d2230c7bdf1d1038ad881b55a262a826560ad2ed3d531d2ab2935fe5"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 2097152
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "ea4ba4fecf1c93a5c6f9afe26662dbf21aa8c85d9aff60aae5c59be4146c13b2"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 2621440
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "180791cad5138e6407b49ef843118899ce4ef1e14305c537e17bfc91411b8032"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 3145728
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "3b4573d7073e63646f7c702f8c9002a152a54084b15e866ca623cc2e5df3aa66"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 3670016
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "e02fc58034abd594616e0d76ed437b89c565812d32019f0966293d9cc993805b"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 4194304
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "d47e888f1eafa0ff56386913b292cdeeac5631436d005932d0ec2d50de5622ef"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 4718592
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "c4ea165f68c5d4ecac9ef184e61c817ab851dd3a991206ac63416b96a17ae672"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 5242880
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "49ba48a70a21d01b4e90652b162b30a02658110aeb9fe924218ee7fd84144e12"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 5767168
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "59e3d7390ad10ee08652a68c577f41c59d580ccc670dcc0843415d46daaf4f24"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 6291456
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "bdadf4fe689a74ec192886ad1371b7a0c03bed23b9edd433000a139fa8e92f91"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 6815744
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "ec3596aa853e91bf4c97d0931d8ced5c66d39eed1168d40b0316b8221462f626"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 7340032
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "6b201a4580eabeed063ee97608bab55223320fb1b72c89b4d175e5f5c3ff12bb"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 7864320
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "9efcbe61774ffbe0a87175ce8ad98ebc02ae77786b554d626bddb5e27f6629af"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 8388608
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "77ca18bebfb89303e0a072f7b5c48a8bf297aefa473f643358f6883e84fabf5f"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 8912896
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "937b217d1358c68294061d82091c9d30399b804688b8c10724d08b3c5a695e56"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 9437184
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "e3e9256d1a327f60f900cca02864033ffbdc6ce98582f019561776c5b665b522"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 9961472
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "fbba650b409aa52082f51c5b3600a7e34f7fe94808020b90f5f5115ccdf96937"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      {
+        "commitment": "finalized",
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "1cbb71843d2c0f007656727872dc268fb253e21b14c810d6641da5a79dd8e4ce"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "3gvYRKWyXRR9xKWe1ZjPhLY5ZJRN7KDB4rFZFGoJfFk2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 0
+        },
+        "encoding": "base64",
+        "slot": 448194461
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "accce21930c1452e93260ca84eb4ffbd1c71a2363c10bf5911841aa423fe147d"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getBlock",
+    "params": [
+      448194462,
+      {
+        "commitment": "finalized",
+        "encoding": "json",
+        "maxSupportedTransactionVersion": 1,
+        "rewards": false,
+        "transactionDetails": "accounts"
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "80fea60ff13d91e5b0a14d955b605ade7a5c2356b323122062db57359f8b88f6"
+      }
+    ],
+    "target": "T3"
+  },
+  {
+    "method": "getGenesisHash",
+    "params": [],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/029a6d2dbec111f322082624220bd3e2b13a506168a630880f4ebab264b12d94.body",
+        "sha256": "072c547ad3321ad6379bf249c218bcf112eaa3bd0138f07ace4077db1785a37d"
+      },
+      {
+        "archive": "docs/examples/phase-u3d2-binaries/capture.tar.gz",
+        "member": "rpc/029a6d2dbec111f322082624220bd3e2b13a506168a630880f4ebab264b12d94.body",
+        "sha256": "072c547ad3321ad6379bf249c218bcf112eaa3bd0138f07ace4077db1785a37d"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+      {
+        "commitment": "finalized",
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+        "member": "rpc/0c003a4bb8732488773d7d087ae282ad0f203c83d7418a0f7defbb77fd4749d5.body",
+        "sha256": "18c505d3ce4c9012bdc66f25917062cf389de0919bfea70532f201403b2a6ef0"
+      },
+      {
+        "archive": "docs/examples/phase-u3d2-binaries/capture.tar.gz",
+        "member": "rpc/0c003a4bb8732488773d7d087ae282ad0f203c83d7418a0f7defbb77fd4749d5.body",
+        "sha256": "18c505d3ce4c9012bdc66f25917062cf389de0919bfea70532f201403b2a6ef0"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "ComputeBudget111111111111111111111111111111",
+      {
+        "commitment": "finalized",
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "archive": "docs/examples/phase-u3d2-binaries/capture.tar.gz",
+        "member": "rpc/a3abca9b8088d01585113d6fd5aaab7fbfedb8f842d24e84ab55c4eb6065063b.body",
+        "sha256": "97c1a4855279b4029bb18c71e0840df12639ac3c1cd749b08d144f7b7def9f2c"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+      {
+        "commitment": "finalized",
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "file": "docs/examples/phase-u3f-binary-recovery/rpc/187707edb53db315718d0d4320f82504d60dacde6c966da39beef3a64da7573f-1.body",
+        "sha256": "de5793cff51634bdbf03f61a0905561dfda34d35b51a8b0e46a5b44a8c9bc205"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 0
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "113de61d45e80f84fe2744484054156b89d3a4abb218f99e78d1a67115bc7ab8"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 524288
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "290f220c1727eb7231d97b21ab2fd518a71251cdc1239e0c2bcc3ab2a3fd06d7"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 1048576
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "e695fc280199b4ac987ddb386e900adb031fabebe158eb55b38d24a76b9c6200"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 1572864
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "e3c7de70266c2df23c332d630fc20d6dadaab06653f2de3ef26aac035127284b"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 2097152
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "75ce17aba91df67f27bd0ebd4490615ddbb232833c69896164fd2a3a03784a6f"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 2621440
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "268b12cfeeb45d9bb5ff8559caed02784e544ca9d80ecec1d571f7470ce81cf9"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 3145728
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "26acfbfd46cb22060b1baedd4744bd8d02815b20295abe8fa9101d57f6cf1f5b"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 3670016
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "63e336577ea641ec5397acce40cd52abd5d98174d7197a4528fcfcc87deb92f7"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 4194304
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "12606ecda9041ba239c3a205074ded7b6cbee40fbba56974ae1828d686d5052c"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 4718592
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "d5511e2f7ad168df6f838caa4b3e57c807b2e1e1acea0093945798937ceab99e"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 5242880
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "46b6802e2c9996d959a770ce84303fb984ebd0fc8a5b738a0066aa14d82bf971"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 5767168
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "6fa2c8738afb8a37f53609cc2025d85bf71df96f5ab32d35d40f3e7ae3074ebe"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 6291456
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "cc4b2778fe1d02df5a7c091a25c1269a6e6abede092ea331e47c5a54e3a69748"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 6815744
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "06c75cee43362fad763fc2e38672c00d076e8a106aeef23b7b5a642a70fd10b8"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 7340032
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "c7ff7ce66ea4542ced1ba55c9a09eaaebe105bf46e9afd6b9b96404d917e5fcd"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 7864320
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "4f42f590d785607ea6cb65be734c1f2ce46fcd782d0a3bf9e448eb1f193d4df8"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 8388608
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "4d9ecfc9a6bb8e52f1bf3c91df1afc6cf4b3eef9730c5417dcb340435bd12e84"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 8912896
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "319531321d522a38e2f2a254dc39e7675e04495b932159eb2011f994f37906f5"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 9437184
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "5aa5ff13911bad87ced8f6a23644249e0cb111acc8667474ddaba73d83b7ff72"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 9961472
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "8f73ad1a5d1ccc5992294664d8832eec48e8cfc9f69d3eb1b33aad21d60b771d"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+      {
+        "commitment": "finalized",
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "3549dfa37592ee9267b266cb22158fb96bc05ccd4ea3c0b04af22032f9585231"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 0
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "96395892c5e272555b77c0ab05382e0c403c79ee08e2b20cb3813e7ff57c2fa3"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 524288
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "3c0daaada9ed39c6960d45a2d3f436227ff8add238bbd835126beb95d94d4a3e"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 1048576
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "a1b5bf0b06811f130eb3d6ae9c278325d3ed2d70a5fc4f658804da39ed54dabe"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 1572864
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "d376163095e00ca86eefe64cfabf7e005b1e16114dbbfeebfc348fc06a0ecafa"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 2097152
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "fc79a8b163bcae18a77c55d58273a5166415605cf3b8dffd837234eddec4c1eb"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 2621440
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "03ac9576fc9a7a7f077477ea27e865d3709c489fdc18e1629ee65979125a0354"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 3145728
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "23a47052a7b6883ecf238792c78c7340d53908aeae252fe1450d38a7e0bf6d57"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 3670016
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "90d1619b46a6b8f27dab2921244210268bac8877631f7f68cebb4eaabc2c6545"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 4194304
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "49a6e20eb989b11d07f1736e55aa19ff3ff8e03ed743cce15edf147309b1905d"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 4718592
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "1ee5603950aaf1fcb45a46dd29f39a261cc35fc026892d5f729e94d15c183da7"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 5242880
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "3ef3d0a943bc7d3fbdbbbccebc573e58fcede0d7757c46718d00d2e53b1b3166"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 5767168
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "6bebecc3e9be04a8e94456bbd43be0dca714f5a1eb36b2322fc6366e600bed8a"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 6291456
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "37a086b0c9f9ab2d3a8ef0f2e184810d50c88ec5f1e3f16d39ee154af104b29a"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 6815744
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "3169a86c4a496873228d5086d995e73e938e8819d0868d136dc2bedbda43ce8e"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 7340032
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "6ce0676aad35b841f091220cbeb60c0bd36a160cb2b1fbfe26c6fbe4e19ccc2e"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 7864320
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "caa71e966e66a797592d41f382d640393644c5991c105fd348628a9530dabc2d"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 8388608
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "c176267d42de0cba716046a27d466ca3e9741ac70944f1bb2c9fbf358cab7bc2"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 8912896
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "0a0fedbc7941a0d0dc352c97d59a4e3e4dfb5ea2dfe13fa58d806134a742c44a"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 9437184
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "76627bf53276c0eef9ef9684ffbc4983d5affbc17518b7bd78228e37554879d5"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 9961472
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "3496db9d0aec781f1ca4515d5676994abccf9459cbdc3e88f50f2c7ba027886c"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+      {
+        "commitment": "finalized",
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "db95b381646bb8232502f00761900093f0d5d4b7510fba34ab54a56a95d8905f"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 0
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "75643e4ccacb842df652b373253544aaddd57556eb408dd29322a292d16ebdc9"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 524288
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "0a0fcb378cfad1130a2a56c05eb706a77138e6f4abac865b84c97e23dfdff71c"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 1048576
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "bc0be85e015d382970bfa32fa0a83ffa294ac9c6e20529594f5061f0709355e5"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 1572864
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "5ca3a45093ad61ead2309dc8ca17c7f0365a2698e6692c63f9fba48d43e521ca"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 2097152
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "1e1e2386b7bc50e4b491d5c670a536b5cb15dac4ca8c3f1793ccea9ef36acdb0"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 2621440
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "819d3c1dac42e1d9d2bb82eb541d43dac632412e28a109b9295d28ebfa0bed4c"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 3145728
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "ee490be466e7582f9e58994110445e03bb01791b639972f86a843a2c518ab9d4"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 3670016
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "3890274bb8fff284cc9cbe81acfd021baeeb5216bb002a99af1749e8bc329f02"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 4194304
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "6a0f797cdcbcc4598bdb1a9dc74e87c1148373758e05a0be32cdcda421fc0401"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 4718592
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "41e859e9cf689942ff39688fe3bb988c1c1cf91c2f0fbec374419a9e91b70d45"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 5242880
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "c4c4e5438eb46f9e7337904062456671a005866f29333fa27aacb08eaf501bbd"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 5767168
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "102941b6ba6508cee6e2169d9d66457dcb2ec080c2a6644cd2703c1719fa3ad5"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 6291456
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "125382336306b58124dd0d4cd7cf33aac3b7a7df0cb7e2ce5dc06a759941fa7f"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 6815744
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "fb40a1155de104ccc35f544651d023ec4a01701eb1a3720c7e221ad4e5a5f354"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 7340032
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "439752d77682b2829d642953c548fed3918b89a633f369aa1c8297c709e69559"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 7864320
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "41dd1c77e41a62628deaf6cc19867d392270c822d7f43561e337d321f6de128d"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 8388608
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "c98d276ae57b828b6d33927b71deb45b7f76c404fa622e91163917158f2d491d"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 8912896
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "b473a59bc9a4be28c2b76ad9f8673414fbc4b02625defb08c0717bfc158d4180"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 9437184
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "f1f596b633bc47a818c9951a8fc2189aaf68bf6b14ace6fad6ca6f2e267d3ff2"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 9961472
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "95e792bf222d1918b1349c6e4cc7040e5b05412d2d3791ecb538051e79e6f158"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      {
+        "commitment": "finalized",
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "e8bf0af15637c2dfa11d12f400fe1caf827dba97bf9ab83dc8a37414dd40c5f3"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getAccountInfo",
+    "params": [
+      "3gvYRKWyXRR9xKWe1ZjPhLY5ZJRN7KDB4rFZFGoJfFk2",
+      {
+        "commitment": "finalized",
+        "dataSlice": {
+          "length": 524288,
+          "offset": 0
+        },
+        "encoding": "base64",
+        "slot": 448194434
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "637b7f95143d740c535a5f0e121c5414fe46e8a24ce336bcdb7d553a23da1d78"
+      }
+    ],
+    "target": "T4"
+  },
+  {
+    "method": "getBlock",
+    "params": [
+      448194435,
+      {
+        "commitment": "finalized",
+        "encoding": "json",
+        "maxSupportedTransactionVersion": 1,
+        "rewards": false,
+        "transactionDetails": "accounts"
+      }
+    ],
+    "sources": [
+      {
+        "receipt": "docs/examples/phase-u3f-cohort-binaries/receipt.json",
+        "request_id": "15a8ef4f59ea62b0c7dfebfce3ffb69962e5e5b754c6a42887f920af5def108a"
+      }
+    ],
+    "target": "T4"
+  }
+]

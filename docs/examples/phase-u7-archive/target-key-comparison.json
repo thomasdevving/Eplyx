@@ -1,0 +1,222 @@
+[
+  {
+    "address": "H6PjRLnqGPz5VEU4roZzKnfJRxKECRzYuJAZ2Hvc1rAc",
+    "post_present": true,
+    "pre_post_equal": false,
+    "pre_present": true,
+    "role": "token_authority",
+    "stream_archive_equal": true,
+    "stream_events": 1,
+    "stream_index": 259
+  },
+  {
+    "address": "8gbSj1AEU8xNbmwwzpBdxots4e55PVqUaFHobwhryuBs",
+    "post_present": false,
+    "pre_post_equal": true,
+    "pre_present": false,
+    "role": "token_owner_account_a",
+    "stream_archive_equal": null,
+    "stream_events": 1,
+    "stream_index": 259
+  },
+  {
+    "address": "AawdCALDWi7ea9JCeCArzjEzLGqwuFSdzydgJZrephXv",
+    "post_present": true,
+    "pre_post_equal": false,
+    "pre_present": true,
+    "role": "token_owner_account_b",
+    "stream_archive_equal": true,
+    "stream_events": 1,
+    "stream_index": 259
+  },
+  {
+    "address": "Eb2KpSC8uMt9GmzyAEm5Eb1AAAgTjRaXWFjKyFXHZxF3",
+    "post_present": true,
+    "pre_post_equal": false,
+    "pre_present": true,
+    "role": null,
+    "stream_archive_equal": true,
+    "stream_events": 1,
+    "stream_index": 259
+  },
+  {
+    "address": "HCyytQceq1kmeMEmKmDutWM74M1c7CMK8nASjbSJWd94",
+    "post_present": true,
+    "pre_post_equal": false,
+    "pre_present": true,
+    "role": null,
+    "stream_archive_equal": true,
+    "stream_events": 1,
+    "stream_index": 259
+  },
+  {
+    "address": "11111111111111111111111111111111",
+    "post_present": true,
+    "pre_post_equal": true,
+    "pre_present": true,
+    "role": null,
+    "stream_archive_equal": null,
+    "stream_events": 0,
+    "stream_index": null
+  },
+  {
+    "address": "ComputeBudget111111111111111111111111111111",
+    "post_present": true,
+    "pre_post_equal": true,
+    "pre_present": true,
+    "role": null,
+    "stream_archive_equal": null,
+    "stream_events": 0,
+    "stream_index": null
+  },
+  {
+    "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "post_present": true,
+    "pre_post_equal": true,
+    "pre_present": true,
+    "role": "token_program_a",
+    "stream_archive_equal": null,
+    "stream_events": 0,
+    "stream_index": null
+  },
+  {
+    "address": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+    "post_present": true,
+    "pre_post_equal": true,
+    "pre_present": true,
+    "role": null,
+    "stream_archive_equal": null,
+    "stream_events": 0,
+    "stream_index": null
+  },
+  {
+    "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+    "post_present": true,
+    "pre_post_equal": true,
+    "pre_present": true,
+    "role": null,
+    "stream_archive_equal": null,
+    "stream_events": 0,
+    "stream_index": null
+  },
+  {
+    "address": "GoCMmS76U4UmibhGqw8razjsNfJv2s81TMhihMDxnWa",
+    "post_present": true,
+    "pre_post_equal": true,
+    "pre_present": true,
+    "role": "tick_array_2",
+    "stream_archive_equal": true,
+    "stream_events": 1,
+    "stream_index": 259
+  },
+  {
+    "address": "3BbFVfXDfM14kM46SFfPaRJXVSub4Ljwox87HfKyv1JA",
+    "post_present": true,
+    "pre_post_equal": false,
+    "pre_present": true,
+    "role": "token_vault_b",
+    "stream_archive_equal": true,
+    "stream_events": 1,
+    "stream_index": 259
+  },
+  {
+    "address": "4joyRY87Qs8mNFh9oyW9hnR5uFVgVusJiQWz2KwFVv2w",
+    "post_present": true,
+    "pre_post_equal": true,
+    "pre_present": true,
+    "role": "tick_array_1",
+    "stream_archive_equal": true,
+    "stream_events": 1,
+    "stream_index": 259
+  },
+  {
+    "address": "DyxxT7XjZRS86nhAN4k8w21kN8af6AVGeUhQSHLsvgcY",
+    "post_present": true,
+    "pre_post_equal": true,
+    "pre_present": true,
+    "role": "tick_array_0",
+    "stream_archive_equal": true,
+    "stream_events": 1,
+    "stream_index": 259
+  },
+  {
+    "address": "EdcxbpnvtssEkHV4KDfdYVFoGDewE7XnYbTakgLxPusR",
+    "post_present": true,
+    "pre_post_equal": false,
+    "pre_present": true,
+    "role": "token_vault_a",
+    "stream_archive_equal": true,
+    "stream_events": 1,
+    "stream_index": 259
+  },
+  {
+    "address": "FBNg5G8CrU46jguTyX55VRSMBtERn5L4ZawiHEpEAgK8",
+    "post_present": true,
+    "pre_post_equal": true,
+    "pre_present": true,
+    "role": "oracle",
+    "stream_archive_equal": true,
+    "stream_events": 1,
+    "stream_index": 259
+  },
+  {
+    "address": "HxrqS96uHco2a8LxTvUwb9e2tS963Ec6nYkvZso9TDii",
+    "post_present": true,
+    "pre_post_equal": false,
+    "pre_present": true,
+    "role": "whirlpool",
+    "stream_archive_equal": true,
+    "stream_events": 1,
+    "stream_index": 259
+  },
+  {
+    "address": "So11111111111111111111111111111111111111112",
+    "post_present": true,
+    "pre_post_equal": true,
+    "pre_present": true,
+    "role": "token_mint_a",
+    "stream_archive_equal": null,
+    "stream_events": 0,
+    "stream_index": null
+  },
+  {
+    "address": "Xsv9hRk1z5ystj9MhnA7Lq4vjSsLwzL2nxrwmwtD3re",
+    "post_present": true,
+    "pre_post_equal": true,
+    "pre_present": true,
+    "role": "token_mint_b",
+    "stream_archive_equal": null,
+    "stream_events": 0,
+    "stream_index": null
+  },
+  {
+    "address": "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+    "post_present": true,
+    "pre_post_equal": true,
+    "pre_present": true,
+    "role": "memo_program",
+    "stream_archive_equal": null,
+    "stream_events": 0,
+    "stream_index": null
+  },
+  {
+    "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+    "post_present": true,
+    "pre_post_equal": true,
+    "pre_present": true,
+    "role": "token_program_b",
+    "stream_archive_equal": null,
+    "stream_events": 0,
+    "stream_index": null
+  },
+  {
+    "address": "SysvarRecentB1ockHashes11111111111111111111",
+    "post_present": false,
+    "pre_post_equal": true,
+    "pre_present": false,
+    "role": null,
+    "stream_archive_equal": null,
+    "stream_events": 1,
+    "stream_index": null
+  }
+]

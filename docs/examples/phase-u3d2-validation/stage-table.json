@@ -1,0 +1,186 @@
+{
+  "T1_decision": "T1-D",
+  "first_blocker_distribution": {
+    "Binary": 3,
+    "HistoricalState": 1
+  },
+  "primary_metrics": {
+    "classified": 4,
+    "complete_historical_state_sets": 0,
+    "complete_observed_binary_sets": 1,
+    "envelope_admitted": 4,
+    "execution_attempted": 0,
+    "outcome_matched": 0,
+    "post_state_matched": 0,
+    "production_assured_subjects": 0,
+    "targets_with_partial_state_capture": 1
+  },
+  "rows": [
+    {
+      "C1": "passed",
+      "C10": "not_attempted",
+      "C2": "passed",
+      "C3": "passed",
+      "C4": "passed",
+      "C5": "partial_acquisition_blocked",
+      "C6": "not_attempted",
+      "C7": "not_attempted",
+      "C8": "not_attempted",
+      "C9": "not_attempted",
+      "account_boundaries_acquired": 2,
+      "binary_failure_request": null,
+      "complete_historical_state_proven": false,
+      "production_replay_eligible": false,
+      "runtime_executed": false,
+      "signature": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97",
+      "slot": 448195166,
+      "state_failure": {
+        "reason": "invalid_json_response",
+        "request": {
+          "address": "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+          "boundary": "pre",
+          "method": "getAccountInfo",
+          "params": [
+            "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        }
+      },
+      "target": "T1"
+    },
+    {
+      "C1": "passed",
+      "C10": "not_attempted",
+      "C2": "passed",
+      "C3": "passed",
+      "C4": "failed",
+      "C5": "not_attempted",
+      "C6": "not_attempted",
+      "C7": "not_attempted",
+      "C8": "not_attempted",
+      "C9": "not_attempted",
+      "account_boundaries_acquired": 0,
+      "binary_failure_request": {
+        "attempted": true,
+        "failure_reason": "invalid_json_response",
+        "method": "getAccountInfo",
+        "params": [
+          "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+          {
+            "commitment": "finalized",
+            "dataSlice": {
+              "length": 524288,
+              "offset": 3670016
+            },
+            "encoding": "base64",
+            "slot": 448194516
+          }
+        ],
+        "request_id": "e6603892a13ff10b7aba24baac34a5bcc614c7c16203f2e662ddb8b384cedab7",
+        "response_bytes": 0,
+        "response_file": "rpc/e6603892a13ff10b7aba24baac34a5bcc614c7c16203f2e662ddb8b384cedab7.body",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "response_withheld": false,
+        "status": "failure",
+        "transport_seconds": 0.12281362497014925
+      },
+      "complete_historical_state_proven": false,
+      "production_replay_eligible": false,
+      "runtime_executed": false,
+      "signature": "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk",
+      "slot": 448194517,
+      "state_failure": null,
+      "target": "T2"
+    },
+    {
+      "C1": "passed",
+      "C10": "not_attempted",
+      "C2": "passed",
+      "C3": "passed",
+      "C4": "failed",
+      "C5": "not_attempted",
+      "C6": "not_attempted",
+      "C7": "not_attempted",
+      "C8": "not_attempted",
+      "C9": "not_attempted",
+      "account_boundaries_acquired": 0,
+      "binary_failure_request": {
+        "attempted": true,
+        "failure_reason": "invalid_json_response",
+        "method": "getAccountInfo",
+        "params": [
+          "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+          {
+            "commitment": "finalized",
+            "dataSlice": {
+              "length": 524288,
+              "offset": 0
+            },
+            "encoding": "base64",
+            "slot": 448194461
+          }
+        ],
+        "request_id": "44ae4612d5eb8a9eb844eb83f750e147fda28272754ec4f34ba9b0cbbdf22bf8",
+        "response_bytes": 0,
+        "response_file": "rpc/44ae4612d5eb8a9eb844eb83f750e147fda28272754ec4f34ba9b0cbbdf22bf8.body",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "response_withheld": false,
+        "status": "failure",
+        "transport_seconds": 0.11789304198464379
+      },
+      "complete_historical_state_proven": false,
+      "production_replay_eligible": false,
+      "runtime_executed": false,
+      "signature": "5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V",
+      "slot": 448194462,
+      "state_failure": null,
+      "target": "T3"
+    },
+    {
+      "C1": "passed",
+      "C10": "not_attempted",
+      "C2": "passed",
+      "C3": "passed",
+      "C4": "failed",
+      "C5": "not_attempted",
+      "C6": "not_attempted",
+      "C7": "not_attempted",
+      "C8": "not_attempted",
+      "C9": "not_attempted",
+      "account_boundaries_acquired": 0,
+      "binary_failure_request": {
+        "attempted": true,
+        "failure_reason": "invalid_json_response",
+        "method": "getAccountInfo",
+        "params": [
+          "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+          {
+            "commitment": "finalized",
+            "encoding": "base64",
+            "slot": 448194434
+          }
+        ],
+        "request_id": "187707edb53db315718d0d4320f82504d60dacde6c966da39beef3a64da7573f",
+        "response_bytes": 0,
+        "response_file": "rpc/187707edb53db315718d0d4320f82504d60dacde6c966da39beef3a64da7573f.body",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "response_withheld": false,
+        "status": "failure",
+        "transport_seconds": 0.11719070799881592
+      },
+      "complete_historical_state_proven": false,
+      "production_replay_eligible": false,
+      "runtime_executed": false,
+      "signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx",
+      "slot": 448194435,
+      "state_failure": null,
+      "target": "T4"
+    }
+  ],
+  "scope_change": "All four independently attempted at user request; no dependent runtime stage bypassed."
+}

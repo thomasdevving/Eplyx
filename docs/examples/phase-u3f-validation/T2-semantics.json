@@ -1,0 +1,95 @@
+{
+  "baseline_self_findings": [],
+  "kind": "existing_U2_evaluation_of_experimental_historical_observation",
+  "legacy_boundary_prover": {
+    "error": "account AEueaqsjpNUHV7v4BSmZfSq39NaoWM9BnYfmpbfP3Fsh is owned by token program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb, not the SPL Token program",
+    "passed": false
+  },
+  "ordinary_production_adapter_admission_changed": false,
+  "post_state_hash": "d53ba2bc187f5448f88fa736bbf6bd0f5d4a285f2df09b3361d476dc0bf65fe6",
+  "pre_state_hash": "8a8fce4b2c1429c9a259f75c63d395617d8231dbda5b2a2cb5ffc5d3173a63c6",
+  "subjects": [
+    {
+      "action": "borrow_obligation_liquidity",
+      "domain": "execution",
+      "protocol": "kamino-klend",
+      "subject": "transaction"
+    },
+    {
+      "action": "borrow_obligation_liquidity",
+      "domain": "economic",
+      "protocol": "kamino-klend",
+      "subject": "liquidity_borrowed"
+    },
+    {
+      "action": "borrow_obligation_liquidity",
+      "domain": "economic",
+      "protocol": "kamino-klend",
+      "subject": "reserve_liquidity_drawn"
+    },
+    {
+      "action": "borrow_obligation_liquidity",
+      "domain": "economic",
+      "protocol": "kamino-klend",
+      "subject": "origination_fee"
+    },
+    {
+      "action": "borrow_obligation_liquidity",
+      "domain": "economic",
+      "protocol": "kamino-klend",
+      "subject": "debt_increased"
+    }
+  ],
+  "summary": [
+    {
+      "economic": true,
+      "name": "liquidity_borrowed",
+      "value": {
+        "amount": "50002.000000",
+        "base_units": 50002000000,
+        "decimals": 6,
+        "type": "quantity"
+      }
+    },
+    {
+      "economic": true,
+      "name": "reserve_liquidity_drawn",
+      "value": {
+        "amount": "50002.000000",
+        "base_units": 50002000000,
+        "decimals": 6,
+        "type": "quantity"
+      }
+    },
+    {
+      "economic": true,
+      "name": "origination_fee",
+      "value": {
+        "amount": "0.000000",
+        "base_units": 0,
+        "decimals": 6,
+        "type": "quantity"
+      }
+    },
+    {
+      "economic": true,
+      "name": "debt_increased",
+      "value": {
+        "amount": "50007.275238",
+        "base_units": 50007275238,
+        "decimals": 6,
+        "type": "quantity"
+      }
+    },
+    {
+      "economic": false,
+      "name": "debt_increased_scaled",
+      "value": {
+        "type": "text",
+        "value": "57654463008739478852261623067"
+      }
+    }
+  ],
+  "target_outer_index": 7,
+  "transaction": "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk"
+}

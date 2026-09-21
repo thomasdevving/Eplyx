@@ -1,0 +1,12 @@
+{
+  "baseline_evidence_sha256": "00dd0b8a5b1c2a3bacc43f1660c323ad206de4ce0c16dc5787f51a9f71c3e4cb",
+  "changed_accounts": [
+    "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+    "Adnj8BDHD9kdvzsSmRHB9ayS12kY1qfXzQCFxBcpq3t1",
+    "d4A2prbA2whesmvHaL88BH6Ewn5N4bTSU2Ze8P6Bc4Q"
+  ],
+  "control": "Scope instruction removed, remaining instruction bytes and full prestate identical",
+  "control_success": true,
+  "historical_fidelity_claim": false,
+  "same_pre_state": true
+}

@@ -1,0 +1,54 @@
+{
+  "U3A_checksums": 344,
+  "U3B_proofs": 8,
+  "U3C_envelopes": 4,
+  "frozen_prior_proofs_revalidated": true,
+  "kamino_tests": 10,
+  "passed": true,
+  "prior_U3D2_requests_revalidated": 77,
+  "product_controls": {
+    "binary_sha256": "31eb906e842fef52ca6cd74a97b95dd67f427bfa2ef33f9fe6b134096ca57710",
+    "cases": [
+      {
+        "case": "verify",
+        "exit_code": 0,
+        "matches_preserved_u2_bytes": true,
+        "stdout_sha256": "d395a058064535cbeb7547943f34ad3c3a2b109e849e5ecf859c694b54acbcf0"
+      },
+      {
+        "case": "baseline",
+        "exit_code": 0,
+        "matches_preserved_u2_bytes": true,
+        "stdout_sha256": "7be26a66f3e98f9b96ba6f1270003c158d99968d9ed081c336a97f14782d2099"
+      },
+      {
+        "case": "regression",
+        "exit_code": 1,
+        "matches_preserved_u2_bytes": true,
+        "stdout_sha256": "e5e6a4b39ce377d8573099dc646fb37928bd3aa1172ceea4b4fa6c903cd52ee4"
+      },
+      {
+        "case": "bounded",
+        "exit_code": 1,
+        "matches_preserved_u2_bytes": true,
+        "stdout_sha256": "139fd95c2899d54b765511d20bc70dfc63cb7a9532d5b3b5ae62b7626df68d16"
+      },
+      {
+        "case": "stale",
+        "exit_code": 3,
+        "matches_preserved_u2_bytes": true,
+        "stdout_sha256": "8d6a4dc867c39655b58f91395630aac48d8e865b1aa1fee3a36a6ac0bcb9bc63"
+      },
+      {
+        "case": "unevaluable",
+        "exit_code": 5,
+        "matches_preserved_u2_bytes": true,
+        "stdout_sha256": "0c7a3b5231f84b99e58d6ddba6fe76e595cc212ce13a81fac24d9be283ca57d7"
+      }
+    ],
+    "control_commit": "8855edb",
+    "rpc_environment_removed": true
+  },
+  "stage": 0,
+  "token2022_tests": 12
+}

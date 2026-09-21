@@ -1,0 +1,207 @@
+{
+  "executed": 16,
+  "killed": 16,
+  "multi_action_mutations_29_32": "not reached",
+  "results": [
+    {
+      "assertion_output": "F\n======================================================================\nFAIL: test_empty_response_is_never_missing_account (__main__.TransportTests.test_empty_response_is_never_missing_account)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/28/7v5c3zn53l96v4_y08c_pzb40000gn/T/eplyx-u3e-mutants-v_io6l8d/test_historical_transport.py\", line 39, in test_empty_response_is_never_missing_account\n    self.assertEqual(failure, 'empty_http_body')\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'missing_account' != 'empty_http_body'\n- missing_account\n+ empty_http_body\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.001s\n\nFAILED (failures=1)\n",
+      "description": "empty body becomes missing account",
+      "evidence_boundary": "acquisition guards and simulated faults; no runtime execution",
+      "killed_by_assertion": true,
+      "mutated_sources_sha256": {
+        "historical_transport.py": "6f8357943a1f25f85b267f1b9c04a0cbbc3859a9d7277ea37dd8ab815ed49819"
+      },
+      "named_assertion": "TransportTests.test_empty_response_is_never_missing_account",
+      "number": 1,
+      "unmutated_control_passed": true
+    },
+    {
+      "assertion_output": "F\n======================================================================\nFAIL: test_four_exact_attempts_with_no_current_or_provider_fallback (__main__.TransportTests.test_four_exact_attempts_with_no_current_or_provider_fallback)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/28/7v5c3zn53l96v4_y08c_pzb40000gn/T/eplyx-u3e-mutants-v_io6l8d/test_historical_transport.py\", line 90, in test_four_exact_attempts_with_no_current_or_provider_fallback\n    self.assertTrue(all(c['params'] == PARAMS for c in calls))\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n----------------------------------------------------------------------\nRan 1 test in 0.018s\n\nFAILED (failures=1)\n",
+      "description": "current state fallback after transport error",
+      "evidence_boundary": "acquisition guards and simulated faults; no runtime execution",
+      "killed_by_assertion": true,
+      "mutated_sources_sha256": {
+        "historical_transport.py": "aaeae3f8b80f7dbc215d60300fb3f60674262e404a3d6eed7e64403c85726639"
+      },
+      "named_assertion": "TransportTests.test_four_exact_attempts_with_no_current_or_provider_fallback",
+      "number": 2,
+      "unmutated_control_passed": true
+    },
+    {
+      "assertion_output": "F\n======================================================================\nFAIL: test_four_exact_attempts_with_no_current_or_provider_fallback (__main__.TransportTests.test_four_exact_attempts_with_no_current_or_provider_fallback)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/28/7v5c3zn53l96v4_y08c_pzb40000gn/T/eplyx-u3e-mutants-v_io6l8d/test_historical_transport.py\", line 90, in test_four_exact_attempts_with_no_current_or_provider_fallback\n    self.assertTrue(all(c['params'] == PARAMS for c in calls))\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n----------------------------------------------------------------------\nRan 1 test in 0.093s\n\nFAILED (failures=1)\n",
+      "description": "retry changes historical slot",
+      "evidence_boundary": "acquisition guards and simulated faults; no runtime execution",
+      "killed_by_assertion": true,
+      "mutated_sources_sha256": {
+        "historical_transport.py": "e534dc86f2139178c2232af2b777a8ad15b67a18c0ee6b5883b000fe88bff705"
+      },
+      "named_assertion": "TransportTests.test_four_exact_attempts_with_no_current_or_provider_fallback",
+      "number": 3,
+      "unmutated_control_passed": true
+    },
+    {
+      "assertion_output": "F\n======================================================================\nFAIL: test_four_exact_attempts_with_no_current_or_provider_fallback (__main__.TransportTests.test_four_exact_attempts_with_no_current_or_provider_fallback)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/28/7v5c3zn53l96v4_y08c_pzb40000gn/T/eplyx-u3e-mutants-v_io6l8d/test_historical_transport.py\", line 91, in test_four_exact_attempts_with_no_current_or_provider_fallback\n    self.assertTrue(all(a['provider'] == 'https://archive.example' for a in client.receipt['attempts']))\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n\n----------------------------------------------------------------------\nRan 1 test in 0.024s\n\nFAILED (failures=1)\n",
+      "description": "silent provider switch",
+      "evidence_boundary": "acquisition guards and simulated faults; no runtime execution",
+      "killed_by_assertion": true,
+      "mutated_sources_sha256": {
+        "historical_transport.py": "d65746ab4b71de8b06673893b04415b34e0c58c542e377f552ae4f0367fe06f3"
+      },
+      "named_assertion": "TransportTests.test_four_exact_attempts_with_no_current_or_provider_fallback",
+      "number": 4,
+      "unmutated_control_passed": true
+    },
+    {
+      "assertion_output": "F\n======================================================================\nFAIL: test_four_exact_attempts_with_no_current_or_provider_fallback (__main__.TransportTests.test_four_exact_attempts_with_no_current_or_provider_fallback)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/28/7v5c3zn53l96v4_y08c_pzb40000gn/T/eplyx-u3e-mutants-v_io6l8d/test_historical_transport.py\", line 86, in test_four_exact_attempts_with_no_current_or_provider_fallback\n    client, calls, delays, failure = self.capture(Path(tmp) / 'attempt', [{'body': b''}])\n                                     ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/var/folders/28/7v5c3zn53l96v4_y08c_pzb40000gn/T/eplyx-u3e-mutants-v_io6l8d/test_historical_transport.py\", line 80, in capture\n    value, facts, failure = client.call('getAccountInfo', copy.deepcopy(PARAMS), validate)\n                            ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/var/folders/28/7v5c3zn53l96v4_y08c_pzb40000gn/T/eplyx-u3e-mutants-v_io6l8d/historical_transport.py\", line 191, in call\n    body, value, record = self.transport.once(method, params, self.policy['request_timeout_seconds'])\n                          ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/private/var/folders/28/7v5c3zn53l96v4_y08c_pzb40000gn/T/eplyx-u3e-mutants-v_io6l8d/historical_transport.py\", line 119, in once\n    process = subprocess.run(['curl', '--config', '-', '--silent', '--show-error',\n        '--max-time', str(timeout), '--max-redirs', '0', '--request', 'POST',\n        '--data', json.dumps({'jsonrpc': '2.0', 'id': 1, 'method': method, 'params': params}),\n        '--output', str(body_file), '--dump-header', str(header_file),\n        '--write-out', '%{http_code}'], input=config.encode(), capture_output=True, timeout=timeout + 5)\n  File \"/var/folders/28/7v5c3zn53l96v4_y08c_pzb40000gn/T/eplyx-u3e-mutants-v_io6l8d/test_historical_transport.py\", line 75, in run\n    self.assertLessEqual(len(calls), 5, 'unbounded retry reached watchdog')\n    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 6 not less than or equal to 5 : unbounded retry reached watchdog\n\n----------------------------------------------------------------------\nRan 1 test in 0.019s\n\nFAILED (failures=1)\n",
+      "description": "infinite retry policy",
+      "evidence_boundary": "acquisition guards and simulated faults; no runtime execution",
+      "killed_by_assertion": true,
+      "mutated_sources_sha256": {
+        "historical_transport.py": "a170746a47ea7635c3fae2fc007c548731303adf94f134a951dbffebdefa4f2d"
+      },
+      "named_assertion": "TransportTests.test_four_exact_attempts_with_no_current_or_provider_fallback",
+      "number": 5,
+      "unmutated_control_passed": true
+    },
+    {
+      "assertion_output": "F\n======================================================================\nFAIL: test_no_credential_url_or_echo_is_persisted (__main__.TransportTests.test_no_credential_url_or_echo_is_persisted)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/28/7v5c3zn53l96v4_y08c_pzb40000gn/T/eplyx-u3e-mutants-v_io6l8d/test_historical_transport.py\", line 63, in test_no_credential_url_or_echo_is_persisted\n    self.assertNotIn(secret, encoded)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\nAssertionError: 'UNIQUE_PRIVATE_SENTINEL' unexpectedly found in '{\\n  \"body_bytes\": 133,\\n  \"body_empty\": false,\\n  \"body_sha256\": \"3b1606801deeb0d8da965b5c3acfbf667057a5f4d35fb06b8d6dadb8b66628b0\",\\n  \"content_length_header\": null,\\n  \"content_type\": \"application/json\",\\n  \"elapsed_seconds\": 0.001765957975294441,\\n  \"failure_class\": \"unknown_transport_failure\",\\n  \"http_status\": 200,\\n  \"json_rpc_error\": {\\n    \"code\": -1,\\n    \"message\": \"https://archive.example\"\\n  },\\n  \"process_exit_code\": 0,\\n  \"process_timeout\": false,\\n  \"provider\": \"https://archive.example/v2/UNIQUE_PRIVATE_SENTINEL?key=UNIQUE_PRIVATE_SENTINEL\",\\n  \"provider_trace_ids\": {\\n    \"x-request-id\": \"[redacted]\"\\n  },\\n  \"response_headers\": {\\n    \"content-type\": \"application/json\",\\n    \"x-request-id\": \"[redacted]\"\\n  },\\n  \"response_withheld\": true,\\n  \"started_at_utc\": \"2026-09-19T13:51:30.573858+00:00\",\\n  \"stderr\": \"request https://archive.example\\\\nAuthorization: [redacted]\",\\n  \"withholding_reason\": \"unsafe_response_withheld\"\\n}\\n'\n\n----------------------------------------------------------------------\nRan 1 test in 0.003s\n\nFAILED (failures=1)\n",
+      "description": "credential URL persisted",
+      "evidence_boundary": "acquisition guards and simulated faults; no runtime execution",
+      "killed_by_assertion": true,
+      "mutated_sources_sha256": {
+        "historical_transport.py": "3f341a170c1c04c4bb4ce3e929d9ba08fc09461cff4a6116a375557783152ccf"
+      },
+      "named_assertion": "TransportTests.test_no_credential_url_or_echo_is_persisted",
+      "number": 6,
+      "unmutated_control_passed": true
+    },
+    {
+      "assertion_output": "F\n======================================================================\nFAIL: test_contradictory_account_not_retried_or_ignored (__main__.TransportTests.test_contradictory_account_not_retried_or_ignored)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/28/7v5c3zn53l96v4_y08c_pzb40000gn/T/eplyx-u3e-mutants-v_io6l8d/test_historical_transport.py\", line 119, in test_contradictory_account_not_retried_or_ignored\n    self.assertEqual(failure, 'contradictory_account')\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: None != 'contradictory_account'\n\n----------------------------------------------------------------------\nRan 1 test in 0.004s\n\nFAILED (failures=1)\n",
+      "description": "contradictory account ignored",
+      "evidence_boundary": "acquisition guards and simulated faults; no runtime execution",
+      "killed_by_assertion": true,
+      "mutated_sources_sha256": {
+        "historical_transport.py": "47e23e6e570714e162fe253b6ebf8cbad351532bb3dcb9ece0ae13f23c3e45be"
+      },
+      "named_assertion": "TransportTests.test_contradictory_account_not_retried_or_ignored",
+      "number": 7,
+      "unmutated_control_passed": true
+    },
+    {
+      "assertion_output": "F\n======================================================================\nFAIL: test_later_success_keeps_failed_attempt_provenance (__main__.TransportTests.test_later_success_keeps_failed_attempt_provenance)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/28/7v5c3zn53l96v4_y08c_pzb40000gn/T/eplyx-u3e-mutants-v_io6l8d/test_historical_transport.py\", line 99, in test_later_success_keeps_failed_attempt_provenance\n    self.assertEqual(len(client.receipt['attempts']), 2)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 1 != 2\n\n----------------------------------------------------------------------\nRan 1 test in 0.009s\n\nFAILED (failures=1)\n",
+      "description": "success deletes failure provenance",
+      "evidence_boundary": "acquisition guards and simulated faults; no runtime execution",
+      "killed_by_assertion": true,
+      "mutated_sources_sha256": {
+        "historical_transport.py": "bc35f456394f99fda136636d999043f525961a5bf8651273c3906343611dfabd"
+      },
+      "named_assertion": "TransportTests.test_later_success_keeps_failed_attempt_provenance",
+      "number": 8,
+      "unmutated_control_passed": true
+    },
+    {
+      "assertion_output": "F\n======================================================================\nFAIL: test_missing_required_account_rejected (__main__.StateTests.test_missing_required_account_rejected)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/28/7v5c3zn53l96v4_y08c_pzb40000gn/T/eplyx-u3e-mutants-v_io6l8d/test_kamino_u3e_state.py\", line 37, in test_missing_required_account_rejected\n    with self.assertRaises(ValueError):\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^\nAssertionError: ValueError not raised\n\n----------------------------------------------------------------------\nRan 1 test in 0.632s\n\nFAILED (failures=1)\n",
+      "description": "required state absence accepted",
+      "evidence_boundary": "acquisition guards and simulated faults; no runtime execution",
+      "killed_by_assertion": true,
+      "mutated_sources_sha256": {
+        "kamino_u3d_state.py": "5ce319f70964946081b06de73b7fe92c0ab8a5c1d5ce9884207ae9cb50fed63d",
+        "kamino_u3e_state.py": "95bfaa4fee223b27b720cd395e88aebbe868eb581bead59192c58cde8871081e"
+      },
+      "named_assertion": "StateTests.test_missing_required_account_rejected",
+      "number": 9,
+      "unmutated_control_passed": true
+    },
+    {
+      "assertion_output": "F\n======================================================================\nFAIL: test_wrong_historical_owner_rejected (__main__.StateTests.test_wrong_historical_owner_rejected)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/28/7v5c3zn53l96v4_y08c_pzb40000gn/T/eplyx-u3e-mutants-v_io6l8d/test_kamino_u3e_state.py\", line 43, in test_wrong_historical_owner_rejected\n    with self.assertRaises(ValueError):\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^\nAssertionError: ValueError not raised\n\n----------------------------------------------------------------------\nRan 1 test in 0.625s\n\nFAILED (failures=1)\n",
+      "description": "wrong owner accepted",
+      "evidence_boundary": "acquisition guards and simulated faults; no runtime execution",
+      "killed_by_assertion": true,
+      "mutated_sources_sha256": {
+        "kamino_u3d_state.py": "6ebf6d1650321f40f4a4e455764b13ca5d9bcc7ca4184365f34fe07cdbc3d05a",
+        "kamino_u3e_state.py": "8fdd5998663e1a074b9227a4ddc1011413c3d1406b65450be41c3070afa781e7"
+      },
+      "named_assertion": "StateTests.test_wrong_historical_owner_rejected",
+      "number": 10,
+      "unmutated_control_passed": true
+    },
+    {
+      "assertion_output": "F\n======================================================================\nFAIL: test_wrong_known_pre_hash_rejected (__main__.StateTests.test_wrong_known_pre_hash_rejected)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/28/7v5c3zn53l96v4_y08c_pzb40000gn/T/eplyx-u3e-mutants-v_io6l8d/test_kamino_u3e_state.py\", line 51, in test_wrong_known_pre_hash_rejected\n    with self.assertRaisesRegex(ValueError, 'prior exact'):\n         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: ValueError not raised\n\n----------------------------------------------------------------------\nRan 1 test in 0.628s\n\nFAILED (failures=1)\n",
+      "description": "wrong historical pre hash accepted",
+      "evidence_boundary": "acquisition guards and simulated faults; no runtime execution",
+      "killed_by_assertion": true,
+      "mutated_sources_sha256": {
+        "kamino_u3e_state.py": "3e7cf1aa4d7905fe4c3bd853b91704c97d49f64c53c856573d337553dd26616f"
+      },
+      "named_assertion": "StateTests.test_wrong_known_pre_hash_rejected",
+      "number": 11,
+      "unmutated_control_passed": true
+    },
+    {
+      "assertion_output": "F\n======================================================================\nFAIL: test_post_state_cannot_seed_pre_boundary (__main__.StateTests.test_post_state_cannot_seed_pre_boundary)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/28/7v5c3zn53l96v4_y08c_pzb40000gn/T/eplyx-u3e-mutants-v_io6l8d/test_kamino_u3e_state.py\", line 57, in test_post_state_cannot_seed_pre_boundary\n    with self.assertRaisesRegex(ValueError, 'context'):\n         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: ValueError not raised\n\n----------------------------------------------------------------------\nRan 1 test in 0.627s\n\nFAILED (failures=1)\n",
+      "description": "post context seeds pre boundary",
+      "evidence_boundary": "acquisition guards and simulated faults; no runtime execution",
+      "killed_by_assertion": true,
+      "mutated_sources_sha256": {
+        "kamino_u3d_state.py": "184dae6a9c3ced4dcabc51112925a6c7d97738790e417bb4e8444e63b5982024"
+      },
+      "named_assertion": "StateTests.test_post_state_cannot_seed_pre_boundary",
+      "number": 12,
+      "unmutated_control_passed": true
+    },
+    {
+      "assertion_output": "F\n======================================================================\nFAIL: test_same_slot_conflict_rejected (__main__.StateTests.test_same_slot_conflict_rejected)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/28/7v5c3zn53l96v4_y08c_pzb40000gn/T/eplyx-u3e-mutants-v_io6l8d/test_kamino_u3e_state.py\", line 69, in test_same_slot_conflict_rejected\n    with self.assertRaisesRegex(ValueError, 'same_slot'):\n         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: ValueError not raised\n\n----------------------------------------------------------------------\nRan 1 test in 0.637s\n\nFAILED (failures=1)\n",
+      "description": "same-slot interference ignored",
+      "evidence_boundary": "acquisition guards and simulated faults; no runtime execution",
+      "killed_by_assertion": true,
+      "mutated_sources_sha256": {
+        "kamino_u3d_state.py": "2deb815231948b4310efe622ed7c24144a0ac9fc105e805d627507da354dbeef"
+      },
+      "named_assertion": "StateTests.test_same_slot_conflict_rejected",
+      "number": 13,
+      "unmutated_control_passed": true
+    },
+    {
+      "assertion_output": "F\n======================================================================\nFAIL: test_mapping_omission_rejected_before_requests (__main__.StateTests.test_mapping_omission_rejected_before_requests)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/28/7v5c3zn53l96v4_y08c_pzb40000gn/T/eplyx-u3e-mutants-v_io6l8d/test_kamino_u3e_state.py\", line 76, in test_mapping_omission_rejected_before_requests\n    with self.assertRaisesRegex(ValueError, 'complete ordered boundary'):\n         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: ValueError not raised\n\n----------------------------------------------------------------------\nRan 1 test in 0.664s\n\nFAILED (failures=1)\n",
+      "description": "Scope mapping omitted",
+      "evidence_boundary": "acquisition guards and simulated faults; no runtime execution",
+      "killed_by_assertion": true,
+      "mutated_sources_sha256": {
+        "kamino_u3e_state.py": "e550df199e2a8d42df409c78cafc1f027e064c23c6416cc06256e7181eba6160"
+      },
+      "named_assertion": "StateTests.test_mapping_omission_rejected_before_requests",
+      "number": 14,
+      "unmutated_control_passed": true
+    },
+    {
+      "assertion_output": "F\n======================================================================\nFAIL: test_ata_metadata_never_substitutes_missing_bytes (__main__.StateTests.test_ata_metadata_never_substitutes_missing_bytes)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/28/7v5c3zn53l96v4_y08c_pzb40000gn/T/eplyx-u3e-mutants-v_io6l8d/test_kamino_u3e_state.py\", line 82, in test_ata_metadata_never_substitutes_missing_bytes\n    with self.assertRaises(ValueError):\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^\nAssertionError: ValueError not raised\n\n----------------------------------------------------------------------\nRan 1 test in 0.651s\n\nFAILED (failures=1)\n",
+      "description": "ATA existence accepted from metadata",
+      "evidence_boundary": "acquisition guards and simulated faults; no runtime execution",
+      "killed_by_assertion": true,
+      "mutated_sources_sha256": {
+        "kamino_u3e_state.py": "1bc51f7732ecc471bc10ba96733a671260ead9a302d9250523fdb324194c7540"
+      },
+      "named_assertion": "StateTests.test_ata_metadata_never_substitutes_missing_bytes",
+      "number": 15,
+      "unmutated_control_passed": true
+    },
+    {
+      "assertion_output": "F\n======================================================================\nFAIL: test_current_oracle_context_rejected (__main__.StateTests.test_current_oracle_context_rejected)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/folders/28/7v5c3zn53l96v4_y08c_pzb40000gn/T/eplyx-u3e-mutants-v_io6l8d/test_kamino_u3e_state.py\", line 63, in test_current_oracle_context_rejected\n    with self.assertRaisesRegex(ValueError, 'context'):\n         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: ValueError not raised\n\n----------------------------------------------------------------------\nRan 1 test in 0.629s\n\nFAILED (failures=1)\n",
+      "description": "current oracle state substituted",
+      "evidence_boundary": "acquisition guards and simulated faults; no runtime execution",
+      "killed_by_assertion": true,
+      "mutated_sources_sha256": {
+        "kamino_u3d_state.py": "184dae6a9c3ced4dcabc51112925a6c7d97738790e417bb4e8444e63b5982024"
+      },
+      "named_assertion": "StateTests.test_current_oracle_context_rejected",
+      "number": 16,
+      "unmutated_control_passed": true
+    }
+  ],
+  "runtime_mutations_17_28": "not reached: execution prerequisite",
+  "source_sha256": {
+    "historical_transport.py": "5d7319dc31f6c8bd8a8877171ee9381882cfcb3ad7b41c46b0ed5cdd17c456f3",
+    "kamino_u3d_state.py": "0b465e6f122a050c14172658d288f025622013eadb21f3294495ee3f9c48062e",
+    "kamino_u3e_state.py": "5a47cbf7e96bba41aa2284607b18411e23d70de2ecdf62a68bad36d10d04c649"
+  }
+}

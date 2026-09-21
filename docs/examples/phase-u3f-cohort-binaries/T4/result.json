@@ -1,0 +1,176 @@
+{
+  "C4_binaries_identified": true,
+  "executable_transaction_constructed": false,
+  "execution_slot": 448194435,
+  "failure": {
+    "code": "dependency_state_unavailable",
+    "detail": "same-slot interference invalidates pre-transaction/post-transaction archive boundaries"
+  },
+  "historical_state_acquisition": "not_attempted",
+  "kind": "experimental_envelope_dependency_capture",
+  "pre_slot": 448194434,
+  "programs": [
+    {
+      "binary_bytes": 105032,
+      "binary_file": "binaries/ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL.so",
+      "discovered_by": [
+        "top_level_instruction",
+        "execution_log"
+      ],
+      "program_id": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+      "provenance": {
+        "deploy_slot": null,
+        "loader": "legacy",
+        "observed_slot": 448194434,
+        "program_id": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "programdata_address": null,
+        "sha256": "6804554e69fd3a58caa191dc4a58f4c67223d30ca28ab8987f39fc18d2f7374d",
+        "upgrade_authority": null
+      },
+      "source": "historical_mainnet"
+    },
+    {
+      "discovered_by": [
+        "top_level_instruction",
+        "execution_log"
+      ],
+      "observed_slot": 448194434,
+      "program_id": "ComputeBudget111111111111111111111111111111",
+      "source": "builtin"
+    },
+    {
+      "binary_bytes": 10485715,
+      "binary_file": "binaries/FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr.so",
+      "discovered_by": [
+        "inner_instruction",
+        "execution_log"
+      ],
+      "program_id": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+      "provenance": {
+        "deploy_slot": 444035168,
+        "loader": "upgradeable",
+        "observed_slot": 448194434,
+        "program_id": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+        "programdata_address": "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+        "sha256": "67c4a989342024efedf6181c1d91cf6aac2bb2bcd17f43b8848c9f3d8ba21011",
+        "upgrade_authority": "CivjSDKgTpmkRNL4zYcmv9D9QqPJg6yTxBVxMGcXvMuY"
+      },
+      "source": "historical_mainnet"
+    },
+    {
+      "binary_bytes": 10485715,
+      "binary_file": "binaries/HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ.so",
+      "discovered_by": [
+        "top_level_instruction",
+        "execution_log"
+      ],
+      "program_id": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+      "provenance": {
+        "deploy_slot": 443102298,
+        "loader": "upgradeable",
+        "observed_slot": 448194434,
+        "program_id": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+        "programdata_address": "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+        "sha256": "c1ddc8a903949eafe175dba8a284c636697dcd50f98a346557320b6b06f3bd87",
+        "upgrade_authority": "4R33WT7isNgzALNyvpZKiZQARtZNAXarWB3prUbPkXX7"
+      },
+      "source": "historical_mainnet"
+    },
+    {
+      "binary_bytes": 10485715,
+      "binary_file": "binaries/KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD.so",
+      "discovered_by": [
+        "program_under_test",
+        "top_level_instruction",
+        "execution_log"
+      ],
+      "program_id": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+      "provenance": {
+        "deploy_slot": 440486775,
+        "loader": "upgradeable",
+        "observed_slot": 448194434,
+        "program_id": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+        "programdata_address": "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+        "sha256": "9db16dd4b7bbfe4f13df850bf880bfc4522fcece06717c0626d625746a3cc85b",
+        "upgrade_authority": "GzFgdRJXmawPhGeBsyRCDLx4jAKPsvbUqoqitzppkzkW"
+      },
+      "source": "historical_mainnet"
+    },
+    {
+      "binary_bytes": 108600,
+      "binary_file": "binaries/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA.so",
+      "discovered_by": [
+        "inner_instruction",
+        "execution_log"
+      ],
+      "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "provenance": {
+        "deploy_slot": 419472000,
+        "loader": "upgradeable",
+        "observed_slot": 448194434,
+        "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "programdata_address": "3gvYRKWyXRR9xKWe1ZjPhLY5ZJRN7KDB4rFZFGoJfFk2",
+        "sha256": "8190d3f7ceb6cb7a7a8d8924bff89f9f611e15ce1f806f2b6237f3311a98f697",
+        "upgrade_authority": null
+      },
+      "source": "historical_mainnet"
+    }
+  ],
+  "runtime_executed": false,
+  "signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx",
+  "slot_screening": {
+    "conflicts": [
+      {
+        "account": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+        "conflicting_index": 596,
+        "conflicting_signature": "3kt5VB1MNtJBk56kYPHzE2YSu2kb3hxQQiAxwogGszNKzjmdzq4dXPsCMJCciRFUvs3fajcKh6vjBWG2zYbpH2cC",
+        "position": "before",
+        "reason": "transaction at index 596 wrote the account earlier in the slot, so the archived end-of-S-1 state is not this transaction's pre-state",
+        "target_index": 946,
+        "target_signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx"
+      },
+      {
+        "account": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "conflicting_index": 560,
+        "conflicting_signature": "3zdY4iMQHLuE1yPd9wSCgHZiKqNaWKayxfsTajzDS79NP14iJeZeMNJ71Qc7WMfgYCyUyfiD1JwLPG1hSr6HEKGz",
+        "position": "before",
+        "reason": "transaction at index 560 wrote the account earlier in the slot, so the archived end-of-S-1 state is not this transaction's pre-state",
+        "target_index": 946,
+        "target_signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx"
+      }
+    ],
+    "required_accounts": [
+      "11111111111111111111111111111111",
+      "2cgzHpjXndKmD8853ehSy7NGAiQ9Xc1HDCBNMGus6wkj",
+      "3NJYftD5sjVfxSnUdZ1wVML8f3aC6mp1CXCL6L7TnU8C",
+      "3gvYRKWyXRR9xKWe1ZjPhLY5ZJRN7KDB4rFZFGoJfFk2",
+      "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+      "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+      "65V56P2A1yDp5XdjRSftyLBQFbrR6dGtaovuiVjn4vth",
+      "9AL1UQ6xSXDiNHRNVojSPLRQ62Hpp2EiJ9k8JBQpKhVv",
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+      "B7nzBEuViVtaQN8iEhhtBY4gQSxBY38ms31DUWUx1bza",
+      "B9spsrMK6pJicYtukaZzDyzsUQLgc3jbx5gHVwdDxb6y",
+      "CTuvNKiwwknG48g6629h27z7htPPeXqj23KozhEN8GJr",
+      "Chpu5ZgfWX5ZzVpUx9Xvv4WPM75Xd7zPJNDPsFnCpLpk",
+      "ComputeBudget111111111111111111111111111111",
+      "DdTmCCjv7zHRD1hJv3E8bpnSEQBzdKkzB1j9ApXX5QoP",
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      "DxXdAyU3kCjnyggvHmY5nAwg5cRbbmdyX3npfDMjjMek",
+      "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+      "GENey8es3EgGiNTM8H8gzA3vf98haQF8LHiYFyErjgrv",
+      "Ga4rZytCpq1unD4DbEJ5bkHeUz9g3oh9AAFEi6vSauXp",
+      "GbpsVomudPRRwmqfTmo3MYQVTikPG6QXxqpzJexA1JRb",
+      "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+      "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "rywFxeqHfCWL5iGq9cDxutwiiR2TabZgzv8aRM1Lceq"
+    ],
+    "slot": 448194435,
+    "target_index": 946,
+    "target_signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx",
+    "transactions_in_slot": 1027
+  }
+}

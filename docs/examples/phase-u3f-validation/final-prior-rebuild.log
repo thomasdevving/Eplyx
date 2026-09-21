@@ -1,0 +1,133 @@
+{
+  "S8_distribution": {
+    "ata_companion": 1,
+    "failed_original": 1,
+    "multiple_actions": 2,
+    "scope_companion": 4
+  },
+  "U3B_proofs_identical": 8,
+  "baseline_fidelity_matches": 0,
+  "envelope_admissible": 4,
+  "frozen_fingerprint": "b97116541aeefc6723ef91a1d38c9be52792d47316b573ac08d49484fd97d0af",
+  "primary_signatures": [
+    "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97",
+    "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk",
+    "5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V",
+    "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx"
+  ],
+  "primary_targets": 4,
+  "production_replay_eligible": 0,
+  "runtime_execution_attempted": 0,
+  "structurally_classified": 4
+}
+
+{
+  "verified": true,
+  "offline_seconds": 5.497794082970358,
+  "stage_table": {
+    "decision": "B",
+    "primary_metrics": {
+      "C4_binary_capture_complete": 1,
+      "J_baseline_attempted": 0,
+      "K_all_historical_dependencies_acquired": 0,
+      "M_admitted": 4,
+      "N_classified": 4,
+      "P_baseline_fidelity": 0
+    },
+    "rows": [
+      {
+        "C1": "passed",
+        "C10": "not_attempted",
+        "C2": "passed",
+        "C3": "passed",
+        "C4": "passed",
+        "C5": "not_attempted",
+        "C6": "not_attempted",
+        "C7": "not_attempted",
+        "C8": "not_attempted",
+        "C9": "not_attempted",
+        "cohort_stop": "bounded historical binary acquisition incomplete for three other primary targets",
+        "execution_slot": 448195166,
+        "next_observed_blocker": null,
+        "signature": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97"
+      },
+      {
+        "C1": "passed",
+        "C10": "not_attempted",
+        "C2": "passed",
+        "C3": "passed",
+        "C4": "failed",
+        "C5": "not_attempted",
+        "C6": "not_attempted",
+        "C7": "not_attempted",
+        "C8": "not_attempted",
+        "C9": "not_attempted",
+        "cohort_stop": null,
+        "execution_slot": 448194517,
+        "next_observed_blocker": {
+          "code": "dependency_binary_unavailable",
+          "detail": "retained transport failure",
+          "program_id": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+          "requested_slot": 448194516
+        },
+        "signature": "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk"
+      },
+      {
+        "C1": "passed",
+        "C10": "not_attempted",
+        "C2": "passed",
+        "C3": "passed",
+        "C4": "failed",
+        "C5": "not_attempted",
+        "C6": "not_attempted",
+        "C7": "not_attempted",
+        "C8": "not_attempted",
+        "C9": "not_attempted",
+        "cohort_stop": null,
+        "execution_slot": 448194462,
+        "next_observed_blocker": {
+          "code": "dependency_binary_unavailable",
+          "detail": "retained transport failure",
+          "program_id": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+          "requested_slot": 448194461
+        },
+        "signature": "5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V"
+      },
+      {
+        "C1": "passed",
+        "C10": "not_attempted",
+        "C2": "passed",
+        "C3": "passed",
+        "C4": "failed",
+        "C5": "not_attempted",
+        "C6": "not_attempted",
+        "C7": "not_attempted",
+        "C8": "not_attempted",
+        "C9": "not_attempted",
+        "cohort_stop": null,
+        "execution_slot": 448194435,
+        "next_observed_blocker": {
+          "code": "dependency_binary_unavailable",
+          "detail": "retained transport failure",
+          "program_id": "ComputeBudget111111111111111111111111111111",
+          "requested_slot": 448194434
+        },
+        "signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx"
+      }
+    ],
+    "runtime_executed": false,
+    "sample_fingerprint": "b97116541aeefc6723ef91a1d38c9be52792d47316b573ac08d49484fd97d0af",
+    "scope": "exact primary structural envelopes; production replay still blocked",
+    "state_requests": 0
+  }
+}
+{"verified": true, "message_accounts": 23, "programdata_accounts": 4, "missing_historical_message_accounts": 16, "inventory_sha256": "db925ad29690298c6ccc65579c91393e34bf31103eeab692626d4c73f66e78c5", "runtime_executed": false}
+{"offline": true, "binary_requests_replayed": 70, "state_transport_attempts_verified": 7, "acquired_boundaries": [2, 0, 0, 0], "runtime_executed": false}
+{
+  "elapsed_seconds": 12.89446645899443,
+  "live_transport_forbidden": true,
+  "offline_revalidation_passed": true,
+  "provider_environment_removed": true,
+  "runtime_replayed": false
+}
+

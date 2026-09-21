@@ -1,11 +1,16 @@
 //! Durable, offline replay and fidelity gate. RPC is never called here.
 use crate::{
     dependencies::{DependencyManifest, ProgramSource},
-    executor::{execute_in_environment, CpiCall, ExecutionResult, LoadedProgram, ProgramVersion},
+    executor::{CpiCall, ExecutionResult, LoadedProgram, ProgramVersion},
     ingest::transactions::{CpiFrame, HistoricalTransaction},
     protocol::{self, EconomicObservation, ProtocolAdapter},
     screening::SlotScreening,
     types::{AccountSnapshot, Category, Fixture, InstructionSpec, NamedAccount},
+    universal::{
+        evidence::EvidenceStore,
+        execution::{ExecutionBackend, ExecutionRequest, LiteSvmBackend, SlotHashesVariant},
+        model::ExecutionInput,
+    },
     versions::{ProgramLoader, LEGACY_BPF_LOADER_ID, UPGRADEABLE_LOADER_ID},
     Report,
 };
@@ -1001,14 +1006,98 @@ impl ReplayRecord {
                 self.id
             );
         }
-        execute_in_environment(
-            &self.fixture(),
-            &self.program_id.parse()?,
-            program,
-            self.clock.clock(),
-            Some(self.message()?),
-            dependencies.programs(),
-        )
+        let fixture = self.fixture();
+        let input = if self.transaction.version == "v0" {
+            ExecutionInput::LegacyV1Compatibility {
+                message: self.message()?,
+                transaction: self.transaction.clone(),
+            }
+        } else {
+            ExecutionInput::Legacy {
+                message: self.message()?,
+                transaction: self.transaction.clone(),
+            }
+        };
+        let resolved = input.resolve(&EvidenceStore::at(""), &self.genesis_hash)?;
+        let seeds = fixture
+            .accounts
+            .iter()
+            .map(|a| (a.address.clone(), a.account.clone()))
+            .collect::<BTreeMap<_, _>>();
+        let mut watched = BTreeSet::new();
+        for label in &fixture.watch {
+            let named = fixture.account(label).with_context(|| {
+                format!("fixture {} watches unknown account {label:?}", fixture.id)
+            })?;
+            watched.insert(named.address.clone());
+        }
+        let watched: Vec<String> = watched.into_iter().collect();
+        let mut programs = dependencies
+            .programs()
+            .iter()
+            .filter(|p| p.program_id.to_string() != self.program_id)
+            .cloned()
+            .collect::<Vec<_>>();
+        programs.push(LoadedProgram {
+            program_id: self.program_id.parse()?,
+            loader: UPGRADEABLE_LOADER_ID.parse()?,
+            bytes: program.bytes.clone(),
+        });
+        let evidence = LiteSvmBackend.execute(&ExecutionRequest {
+            message: &resolved,
+            seeds: &seeds,
+            absent_pre_accounts: &[],
+            watched: &watched,
+            runtime_sysvars: &BTreeMap::new(),
+            clock: Some(self.clock.clock()),
+            programs_to_load: &programs,
+            signature_check: false,
+            blockhash_check: false,
+            unlimited_logs: false,
+            slot_hashes: SlotHashesVariant::BackendDefault,
+            require_complete_state: false,
+        })?;
+        let mut accounts = BTreeMap::new();
+        for label in &fixture.watch {
+            let address = &fixture
+                .account(label)
+                .expect("watch validated above")
+                .address;
+            if let Some(Some(snapshot)) = evidence.post_accounts.get(address) {
+                accounts.insert(label.clone(), snapshot.clone());
+            }
+        }
+        let cpi_calls = evidence
+            .inner_instructions
+            .iter()
+            .flat_map(|group| {
+                group.instructions.iter().map(|inner| {
+                    let index = usize::from(inner.program_id_index);
+                    CpiCall {
+                        program: resolved
+                            .account_keys
+                            .get(index)
+                            .cloned()
+                            .unwrap_or_else(|| format!("<unresolved index {index}>")),
+                        stack_height: inner.stack_height,
+                        outer_index: u8::try_from(group.outer_index).unwrap_or(u8::MAX),
+                        account_count: u8::try_from(inner.accounts.len()).unwrap_or(u8::MAX),
+                        data_len: u32::try_from(inner.data.len()).unwrap_or(u32::MAX),
+                        discriminant: inner.data.first().copied(),
+                    }
+                })
+            })
+            .collect();
+        Ok(ExecutionResult {
+            version: program.label.clone(),
+            success: evidence.success,
+            error: evidence.error,
+            compute_units: Some(evidence.compute_units),
+            fee: evidence.fee,
+            logs: evidence.logs,
+            cpi_calls,
+            accounts,
+        })
     }
     pub fn post_hash(&self, result: &ExecutionResult) -> Result<String> {
         let accounts = self
@@ -1155,23 +1244,7 @@ impl ReplayRecord {
     }
 
     pub fn fidelity(&self, result: &ExecutionResult) -> Result<ReplayFidelity> {
-        if self.state_source == ReplayStateSource::CurrentApproximation {
-            return Ok(ReplayFidelity::Approximate);
-        }
-        let Some(original) = &self.original else {
-            return Ok(ReplayFidelity::Unknown);
-        };
-        let _ = original;
-        if !self.fidelity_failures(result)?.is_empty() {
-            return Ok(ReplayFidelity::Mismatch);
-        }
-        Ok(
-            if self.state_source == ReplayStateSource::ControlledSnapshot {
-                ReplayFidelity::Exact
-            } else {
-                ReplayFidelity::Matched
-            },
-        )
+        Ok(crate::universal::fidelity::compare_v1(self, result)?.status)
     }
 }
 #[derive(Clone, Debug, Serialize, Deserialize)]

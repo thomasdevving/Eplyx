@@ -1,0 +1,33 @@
+{
+  "elapsed_seconds": 18.13120245799655,
+  "live_transport_forbidden": true,
+  "offline_reexecution_passed": true,
+  "provider_environment_removed": true,
+  "record_hashes_verified": false,
+  "variants": [
+    {
+      "evidence_sha256": "83f479faf1fe0f809c7c9c5c1db16047bb6c94d4cf3e1d549fbb3b19bc7f7990",
+      "execution_seconds": 0.016010833,
+      "fidelity": "matched",
+      "pre_state_exact": true,
+      "preparation_seconds": 2.756016667,
+      "variant": "different"
+    },
+    {
+      "evidence_sha256": "83f479faf1fe0f809c7c9c5c1db16047bb6c94d4cf3e1d549fbb3b19bc7f7990",
+      "execution_seconds": 0.0158505,
+      "fidelity": "matched",
+      "pre_state_exact": true,
+      "preparation_seconds": 2.742739875,
+      "variant": "empty"
+    },
+    {
+      "evidence_sha256": "83f479faf1fe0f809c7c9c5c1db16047bb6c94d4cf3e1d549fbb3b19bc7f7990",
+      "execution_seconds": 0.016125875,
+      "fidelity": "matched",
+      "pre_state_exact": true,
+      "preparation_seconds": 2.75274725,
+      "variant": "default"
+    }
+  ]
+}

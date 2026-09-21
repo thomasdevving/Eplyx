@@ -1,0 +1,1 @@
+{"id":1,"jsonrpc":"2.0","result":{"context":{"apiVersion":"4.1.0","slot":448194517},"value":{"data":["2BMAAAAAAAAAAAAAAADwPzI=","base64"],"executable":false,"lamports":1009200,"owner":"Sysvar1111111111111111111111111111111111111","rentEpoch":18446744073709551615,"space":17}}}

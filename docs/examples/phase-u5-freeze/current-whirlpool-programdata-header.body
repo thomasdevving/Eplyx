@@ -1,0 +1,1 @@
+{"jsonrpc":"2.0","result":{"context":{"apiVersion":"4.3.0-rc.0","slot":448800414},"value":{"data":["AwAAAN92PBoAAAAAAezGza8ikrL73BJf2nvfj0M3epeaxgn4Is0mUqub30T8","base64"],"executable":false,"lamports":72981780480,"owner":"BPFLoaderUpgradeab1e11111111111111111111111","rentEpoch":18446744073709551615,"space":10485760}},"id":1}

@@ -1,0 +1,310 @@
+{
+  "accounts": [
+    {
+      "address": "H6PjRLnqGPz5VEU4roZzKnfJRxKECRzYuJAZ2Hvc1rAc",
+      "intra_slot_write_refs": [],
+      "later_writable_transaction_indexes": [],
+      "role": "token_authority",
+      "slot_end_content_ref": null,
+      "slot_start_content_ref": null,
+      "status": "unproven_no_historical_account_stream_or_archive_checkpoint",
+      "target_post_content_ref": null,
+      "target_pre_content_ref": null,
+      "writable_in_target": true
+    },
+    {
+      "address": "8gbSj1AEU8xNbmwwzpBdxots4e55PVqUaFHobwhryuBs",
+      "intra_slot_write_refs": [],
+      "later_writable_transaction_indexes": [],
+      "role": "token_owner_account_a",
+      "slot_end_content_ref": null,
+      "slot_start_content_ref": null,
+      "status": "unproven_no_historical_account_stream_or_archive_checkpoint",
+      "target_post_content_ref": null,
+      "target_pre_content_ref": null,
+      "writable_in_target": true
+    },
+    {
+      "address": "AawdCALDWi7ea9JCeCArzjEzLGqwuFSdzydgJZrephXv",
+      "intra_slot_write_refs": [],
+      "later_writable_transaction_indexes": [],
+      "role": "token_owner_account_b",
+      "slot_end_content_ref": null,
+      "slot_start_content_ref": null,
+      "status": "unproven_no_historical_account_stream_or_archive_checkpoint",
+      "target_post_content_ref": null,
+      "target_pre_content_ref": null,
+      "writable_in_target": true
+    },
+    {
+      "address": "Eb2KpSC8uMt9GmzyAEm5Eb1AAAgTjRaXWFjKyFXHZxF3",
+      "intra_slot_write_refs": [],
+      "later_writable_transaction_indexes": [],
+      "role": null,
+      "slot_end_content_ref": null,
+      "slot_start_content_ref": null,
+      "status": "unproven_no_historical_account_stream_or_archive_checkpoint",
+      "target_post_content_ref": null,
+      "target_pre_content_ref": null,
+      "writable_in_target": true
+    },
+    {
+      "address": "HCyytQceq1kmeMEmKmDutWM74M1c7CMK8nASjbSJWd94",
+      "intra_slot_write_refs": [],
+      "later_writable_transaction_indexes": [],
+      "role": null,
+      "slot_end_content_ref": null,
+      "slot_start_content_ref": null,
+      "status": "unproven_no_historical_account_stream_or_archive_checkpoint",
+      "target_post_content_ref": null,
+      "target_pre_content_ref": null,
+      "writable_in_target": true
+    },
+    {
+      "address": "11111111111111111111111111111111",
+      "intra_slot_write_refs": [],
+      "later_writable_transaction_indexes": [],
+      "role": null,
+      "slot_end_content_ref": null,
+      "slot_start_content_ref": null,
+      "status": "unproven_no_historical_account_stream_or_archive_checkpoint",
+      "target_post_content_ref": null,
+      "target_pre_content_ref": null,
+      "writable_in_target": false
+    },
+    {
+      "address": "ComputeBudget111111111111111111111111111111",
+      "intra_slot_write_refs": [],
+      "later_writable_transaction_indexes": [],
+      "role": null,
+      "slot_end_content_ref": null,
+      "slot_start_content_ref": null,
+      "status": "unproven_no_historical_account_stream_or_archive_checkpoint",
+      "target_post_content_ref": null,
+      "target_pre_content_ref": null,
+      "writable_in_target": false
+    },
+    {
+      "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "intra_slot_write_refs": [],
+      "later_writable_transaction_indexes": [],
+      "role": "token_program_a",
+      "slot_end_content_ref": null,
+      "slot_start_content_ref": null,
+      "status": "unproven_no_historical_account_stream_or_archive_checkpoint",
+      "target_post_content_ref": null,
+      "target_pre_content_ref": null,
+      "writable_in_target": false
+    },
+    {
+      "address": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+      "intra_slot_write_refs": [],
+      "later_writable_transaction_indexes": [],
+      "role": null,
+      "slot_end_content_ref": null,
+      "slot_start_content_ref": null,
+      "status": "unproven_no_historical_account_stream_or_archive_checkpoint",
+      "target_post_content_ref": null,
+      "target_pre_content_ref": null,
+      "writable_in_target": false
+    },
+    {
+      "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+      "intra_slot_write_refs": [],
+      "later_writable_transaction_indexes": [],
+      "role": null,
+      "slot_end_content_ref": null,
+      "slot_start_content_ref": null,
+      "status": "unproven_no_historical_account_stream_or_archive_checkpoint",
+      "target_post_content_ref": null,
+      "target_pre_content_ref": null,
+      "writable_in_target": false
+    },
+    {
+      "address": "GoCMmS76U4UmibhGqw8razjsNfJv2s81TMhihMDxnWa",
+      "intra_slot_write_refs": [],
+      "later_writable_transaction_indexes": [],
+      "role": "tick_array_2",
+      "slot_end_content_ref": null,
+      "slot_start_content_ref": null,
+      "status": "unproven_no_historical_account_stream_or_archive_checkpoint",
+      "target_post_content_ref": null,
+      "target_pre_content_ref": null,
+      "writable_in_target": true
+    },
+    {
+      "address": "3BbFVfXDfM14kM46SFfPaRJXVSub4Ljwox87HfKyv1JA",
+      "intra_slot_write_refs": [],
+      "later_writable_transaction_indexes": [
+        385,
+        857,
+        860,
+        861,
+        896,
+        1114
+      ],
+      "role": "token_vault_b",
+      "slot_end_content_ref": null,
+      "slot_start_content_ref": null,
+      "status": "unproven_no_historical_account_stream_or_archive_checkpoint",
+      "target_post_content_ref": null,
+      "target_pre_content_ref": null,
+      "writable_in_target": true
+    },
+    {
+      "address": "4joyRY87Qs8mNFh9oyW9hnR5uFVgVusJiQWz2KwFVv2w",
+      "intra_slot_write_refs": [],
+      "later_writable_transaction_indexes": [],
+      "role": "tick_array_1",
+      "slot_end_content_ref": null,
+      "slot_start_content_ref": null,
+      "status": "unproven_no_historical_account_stream_or_archive_checkpoint",
+      "target_post_content_ref": null,
+      "target_pre_content_ref": null,
+      "writable_in_target": true
+    },
+    {
+      "address": "DyxxT7XjZRS86nhAN4k8w21kN8af6AVGeUhQSHLsvgcY",
+      "intra_slot_write_refs": [],
+      "later_writable_transaction_indexes": [
+        385,
+        857,
+        860,
+        861,
+        896,
+        1114
+      ],
+      "role": "tick_array_0",
+      "slot_end_content_ref": null,
+      "slot_start_content_ref": null,
+      "status": "unproven_no_historical_account_stream_or_archive_checkpoint",
+      "target_post_content_ref": null,
+      "target_pre_content_ref": null,
+      "writable_in_target": true
+    },
+    {
+      "address": "EdcxbpnvtssEkHV4KDfdYVFoGDewE7XnYbTakgLxPusR",
+      "intra_slot_write_refs": [],
+      "later_writable_transaction_indexes": [
+        385,
+        857,
+        860,
+        861,
+        896,
+        1114
+      ],
+      "role": "token_vault_a",
+      "slot_end_content_ref": null,
+      "slot_start_content_ref": null,
+      "status": "unproven_no_historical_account_stream_or_archive_checkpoint",
+      "target_post_content_ref": null,
+      "target_pre_content_ref": null,
+      "writable_in_target": true
+    },
+    {
+      "address": "FBNg5G8CrU46jguTyX55VRSMBtERn5L4ZawiHEpEAgK8",
+      "intra_slot_write_refs": [],
+      "later_writable_transaction_indexes": [
+        385,
+        857,
+        860,
+        861,
+        896,
+        1114
+      ],
+      "role": "oracle",
+      "slot_end_content_ref": null,
+      "slot_start_content_ref": null,
+      "status": "unproven_no_historical_account_stream_or_archive_checkpoint",
+      "target_post_content_ref": null,
+      "target_pre_content_ref": null,
+      "writable_in_target": true
+    },
+    {
+      "address": "HxrqS96uHco2a8LxTvUwb9e2tS963Ec6nYkvZso9TDii",
+      "intra_slot_write_refs": [],
+      "later_writable_transaction_indexes": [
+        385,
+        857,
+        860,
+        861,
+        896,
+        1114
+      ],
+      "role": "whirlpool",
+      "slot_end_content_ref": null,
+      "slot_start_content_ref": null,
+      "status": "unproven_no_historical_account_stream_or_archive_checkpoint",
+      "target_post_content_ref": null,
+      "target_pre_content_ref": null,
+      "writable_in_target": true
+    },
+    {
+      "address": "So11111111111111111111111111111111111111112",
+      "intra_slot_write_refs": [],
+      "later_writable_transaction_indexes": [
+        819,
+        846
+      ],
+      "role": "token_mint_a",
+      "slot_end_content_ref": null,
+      "slot_start_content_ref": null,
+      "status": "unproven_no_historical_account_stream_or_archive_checkpoint",
+      "target_post_content_ref": null,
+      "target_pre_content_ref": null,
+      "writable_in_target": false
+    },
+    {
+      "address": "Xsv9hRk1z5ystj9MhnA7Lq4vjSsLwzL2nxrwmwtD3re",
+      "intra_slot_write_refs": [],
+      "later_writable_transaction_indexes": [],
+      "role": "token_mint_b",
+      "slot_end_content_ref": null,
+      "slot_start_content_ref": null,
+      "status": "unproven_no_historical_account_stream_or_archive_checkpoint",
+      "target_post_content_ref": null,
+      "target_pre_content_ref": null,
+      "writable_in_target": false
+    },
+    {
+      "address": "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+      "intra_slot_write_refs": [],
+      "later_writable_transaction_indexes": [],
+      "role": "memo_program",
+      "slot_end_content_ref": null,
+      "slot_start_content_ref": null,
+      "status": "unproven_no_historical_account_stream_or_archive_checkpoint",
+      "target_post_content_ref": null,
+      "target_pre_content_ref": null,
+      "writable_in_target": false
+    },
+    {
+      "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "intra_slot_write_refs": [],
+      "later_writable_transaction_indexes": [],
+      "role": "token_program_b",
+      "slot_end_content_ref": null,
+      "slot_start_content_ref": null,
+      "status": "unproven_no_historical_account_stream_or_archive_checkpoint",
+      "target_post_content_ref": null,
+      "target_pre_content_ref": null,
+      "writable_in_target": false
+    },
+    {
+      "address": "SysvarRecentB1ockHashes11111111111111111111",
+      "intra_slot_write_refs": [],
+      "later_writable_transaction_indexes": [],
+      "role": null,
+      "slot_end_content_ref": null,
+      "slot_start_content_ref": null,
+      "status": "unproven_no_historical_account_stream_or_archive_checkpoint",
+      "target_post_content_ref": null,
+      "target_pre_content_ref": null,
+      "writable_in_target": false
+    }
+  ],
+  "scope": "complete_target_message_keyset_for_screening_not_admitted_watched_census",
+  "slot": 448760958,
+  "target_index": 259,
+  "target_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC"
+}

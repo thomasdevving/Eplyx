@@ -1,0 +1,110 @@
+{
+  "Scope_relationships": true,
+  "binary_and_same_slot_screen_revalidated": true,
+  "historical_runtime_context_complete": false,
+  "paired_ordinary_accounts": 16,
+  "runtime_executed": false,
+  "target": "T3",
+  "typed_checks": {
+    "accounts": [
+      {
+        "address": "CgYCkFUg2hZiUUZsxWJovdFNtHxukQDapxL1E4p2xMPM",
+        "boundary": "pre",
+        "fields": "TokenAccount { mint: \"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v\", owner: \"BW1vV7pcnTJ3P1nG8KcPc9NnmvuCkQcvSpRjUrq28oTA\", amount: 0, delegate: None, state: Initialized, native_reserve: None, delegated_amount: 0, close_authority: None }",
+        "type": "TokenAccount"
+      },
+      {
+        "address": "CgYCkFUg2hZiUUZsxWJovdFNtHxukQDapxL1E4p2xMPM",
+        "boundary": "post",
+        "fields": "TokenAccount { mint: \"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v\", owner: \"BW1vV7pcnTJ3P1nG8KcPc9NnmvuCkQcvSpRjUrq28oTA\", amount: 200000000, delegate: None, state: Initialized, native_reserve: None, delegated_amount: 0, close_authority: None }",
+        "type": "TokenAccount"
+      },
+      {
+        "address": "J1Q7PxpfbEZaPDcduKvyTbRY5qGsgkjEUsY9vke6U8vU",
+        "boundary": "pre",
+        "fields": "Obligation { lending_market: \"7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF\", owner: \"BW1vV7pcnTJ3P1nG8KcPc9NnmvuCkQcvSpRjUrq28oTA\", has_debt: true, deposits: [CollateralPosition { index: 0, deposit_reserve: \"HV9KsS5mB4b9CFhDJVKdfxWBAomYfUk5PeUsdgMQsUrB\", deposited_amount: 24251972051 }], borrows: [BorrowPosition { index: 0, borrow_reserve: \"D6q6wuQSrifJKZYpR1M8R4YawnLDtDsMmWM1NbBmgJ59\", borrowed_amount_sf: 196821628516566794726584756 }] }",
+        "type": "Obligation"
+      },
+      {
+        "address": "J1Q7PxpfbEZaPDcduKvyTbRY5qGsgkjEUsY9vke6U8vU",
+        "boundary": "post",
+        "fields": "Obligation { lending_market: \"7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF\", owner: \"BW1vV7pcnTJ3P1nG8KcPc9NnmvuCkQcvSpRjUrq28oTA\", has_debt: true, deposits: [CollateralPosition { index: 0, deposit_reserve: \"HV9KsS5mB4b9CFhDJVKdfxWBAomYfUk5PeUsdgMQsUrB\", deposited_amount: 24251972051 }], borrows: [BorrowPosition { index: 0, borrow_reserve: \"D6q6wuQSrifJKZYpR1M8R4YawnLDtDsMmWM1NbBmgJ59\", borrowed_amount_sf: 427418249063819105268638709 }] }",
+        "type": "Obligation"
+      },
+      {
+        "address": "BbDUrk1bVtSixgQsPLBJFZEF7mwGstnD5joA1WzYvYFX",
+        "boundary": "pre",
+        "fields": "TokenAccount { mint: \"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v\", owner: \"9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo\", amount: 1568525823, delegate: None, state: Initialized, native_reserve: None, delegated_amount: 0, close_authority: None }",
+        "type": "TokenAccount"
+      },
+      {
+        "address": "BbDUrk1bVtSixgQsPLBJFZEF7mwGstnD5joA1WzYvYFX",
+        "boundary": "post",
+        "fields": "TokenAccount { mint: \"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v\", owner: \"9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo\", amount: 1568525823, delegate: None, state: Initialized, native_reserve: None, delegated_amount: 0, close_authority: None }",
+        "type": "TokenAccount"
+      },
+      {
+        "address": "Bgq7trRgVMeq33yt235zM2onQ4bRDBsY5EWiTetF4qw6",
+        "boundary": "pre",
+        "fields": "TokenAccount { mint: \"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v\", owner: \"9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo\", amount: 19063469073209, delegate: None, state: Initialized, native_reserve: None, delegated_amount: 0, close_authority: None }",
+        "type": "TokenAccount"
+      },
+      {
+        "address": "Bgq7trRgVMeq33yt235zM2onQ4bRDBsY5EWiTetF4qw6",
+        "boundary": "post",
+        "fields": "TokenAccount { mint: \"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v\", owner: \"9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo\", amount: 19063269073209, delegate: None, state: Initialized, native_reserve: None, delegated_amount: 0, close_authority: None }",
+        "type": "TokenAccount"
+      },
+      {
+        "address": "D6q6wuQSrifJKZYpR1M8R4YawnLDtDsMmWM1NbBmgJ59",
+        "boundary": "pre",
+        "fields": "Reserve { lending_market: \"7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF\", liquidity_mint: \"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v\", liquidity_supply_vault: \"Bgq7trRgVMeq33yt235zM2onQ4bRDBsY5EWiTetF4qw6\", liquidity_fee_vault: \"BbDUrk1bVtSixgQsPLBJFZEF7mwGstnD5joA1WzYvYFX\", available_amount: 19060542450697, borrowed_amount_sf: 124333751704370239962918557879051, mint_decimals: 6, collateral_mint: \"B8V6WVjPxW1UGwVDfxH2d2r8SyT4cqn7dQRK6XneVa7D\", collateral_total_supply: 105536374570631, collateral_supply_vault: \"3DzjXRfxRm6iejfyyMynR4tScddaanrePJ1NJU2XnPPL\" }",
+        "type": "Reserve"
+      },
+      {
+        "address": "D6q6wuQSrifJKZYpR1M8R4YawnLDtDsMmWM1NbBmgJ59",
+        "boundary": "post",
+        "fields": "Reserve { lending_market: \"7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF\", liquidity_mint: \"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v\", liquidity_supply_vault: \"Bgq7trRgVMeq33yt235zM2onQ4bRDBsY5EWiTetF4qw6\", liquidity_fee_vault: \"BbDUrk1bVtSixgQsPLBJFZEF7mwGstnD5joA1WzYvYFX\", available_amount: 19060342450697, borrowed_amount_sf: 124333984431780159980933930331024, mint_decimals: 6, collateral_mint: \"B8V6WVjPxW1UGwVDfxH2d2r8SyT4cqn7dQRK6XneVa7D\", collateral_total_supply: 105536374570631, collateral_supply_vault: \"3DzjXRfxRm6iejfyyMynR4tScddaanrePJ1NJU2XnPPL\" }",
+        "type": "Reserve"
+      },
+      {
+        "address": "HV9KsS5mB4b9CFhDJVKdfxWBAomYfUk5PeUsdgMQsUrB",
+        "boundary": "pre",
+        "fields": "Reserve { lending_market: \"7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF\", liquidity_mint: \"pSo1f9nQXWgXibFtKf7NWYxb5enAM4qfP6UJSiXRQfL\", liquidity_supply_vault: \"CorvqWkB9rRNQzwXXVyg52ASor8aDpFkEwaYnFhD2vnF\", liquidity_fee_vault: \"BQUkBv9EijTVmBRjgKqNpPEvDtYP3uYDMM539QGcM42N\", available_amount: 54432667413539, borrowed_amount_sf: 1097080067746259944811050490508, mint_decimals: 9, collateral_mint: \"2CZr3QJSktRmE2WqpFoyc46jWzP2ZmZHuQk4hXzC159q\", collateral_total_supply: 55382203364239, collateral_supply_vault: \"JB1i9Mo6SrjkwrLbLaeqfy6FPEQpnno2PfmchkGdFUAA\" }",
+        "type": "Reserve"
+      },
+      {
+        "address": "HV9KsS5mB4b9CFhDJVKdfxWBAomYfUk5PeUsdgMQsUrB",
+        "boundary": "post",
+        "fields": "Reserve { lending_market: \"7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF\", liquidity_mint: \"pSo1f9nQXWgXibFtKf7NWYxb5enAM4qfP6UJSiXRQfL\", liquidity_supply_vault: \"CorvqWkB9rRNQzwXXVyg52ASor8aDpFkEwaYnFhD2vnF\", liquidity_fee_vault: \"BQUkBv9EijTVmBRjgKqNpPEvDtYP3uYDMM539QGcM42N\", available_amount: 54432667413539, borrowed_amount_sf: 1097080443156289854710147102456, mint_decimals: 9, collateral_mint: \"2CZr3QJSktRmE2WqpFoyc46jWzP2ZmZHuQk4hXzC159q\", collateral_total_supply: 55382203364239, collateral_supply_vault: \"JB1i9Mo6SrjkwrLbLaeqfy6FPEQpnno2PfmchkGdFUAA\" }",
+        "type": "Reserve"
+      },
+      {
+        "address": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+        "boundary": "pre",
+        "fields": "existing lending-market discriminator check; full raw bytes retained",
+        "type": "LendingMarket"
+      },
+      {
+        "address": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+        "boundary": "post",
+        "fields": "existing lending-market discriminator check; full raw bytes retained",
+        "type": "LendingMarket"
+      },
+      {
+        "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "boundary": "pre",
+        "fields": "Mint { mint_authority: Some(\"BJE5MMbqXjVwjAF7oxwPYXnTXDyspzZyt4vwenNw5ruG\"), supply: 7581035504336942, decimals: 6, is_initialized: true, freeze_authority: Some(\"7dGbd2QZcCKcTndnHcTL8q7SMVXAkp688NTQYwrRCrar\") }",
+        "type": "Mint"
+      },
+      {
+        "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "boundary": "post",
+        "fields": "Mint { mint_authority: Some(\"BJE5MMbqXjVwjAF7oxwPYXnTXDyspzZyt4vwenNw5ruG\"), supply: 7581035504336942, decimals: 6, is_initialized: true, freeze_authority: Some(\"7dGbd2QZcCKcTndnHcTL8q7SMVXAkp688NTQYwrRCrar\") }",
+        "type": "Mint"
+      }
+    ],
+    "kind": "existing_decoder_validation",
+    "runtime_executed": false
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "endpoint_host": "solana-mainnet.streaming.alchemy.com",
+  "replay_info": {
+    "first_available": 448445693,
+    "has_first_available": true
+  },
+  "version": {
+    "version": "Alchemy Solana Streaming Service"
+  }
+}

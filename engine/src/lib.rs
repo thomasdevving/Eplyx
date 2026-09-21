@@ -55,6 +55,7 @@ pub mod semantics;
 pub mod shrink;
 pub mod standard_programs;
 pub mod types;
+pub mod universal;
 pub mod versions;
 
 use std::path::{Path, PathBuf};

@@ -1,0 +1,13 @@
+{
+  "schema_version": 2,
+  "program_id": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+  "protocol": "kamino-klend",
+  "adapter_version": 1,
+  "genesis_hash": "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d",
+  "record_count": 2,
+  "record_ids": [
+    "858e3dbc07e74a10a36c2e37c2a24d54dd191653f90986d411da151bb3002189",
+    "e56202c8fdcd443d1deba455ab04f2bc6f16689f83a7c107bb98765ec2da626f"
+  ],
+  "canonical_hash": "3346614d53838c27d7de159a6fd2a4d9c01860df3e875833534d3d3b98f4de0d"
+}

@@ -1,0 +1,78 @@
+{
+  "schema_version": 2,
+  "bundle": {
+    "sha256": "4d49fd7d1d7850a54e0f90c5e514f10c5038d0248b4186790814ccaf3e25de60",
+    "baseline_sha256": "9db16dd4b7bbfe4f13df850bf880bfc4522fcece06717c0626d625746a3cc85b",
+    "corpus_sha256": "3346614d53838c27d7de159a6fd2a4d9c01860df3e875833534d3d3b98f4de0d",
+    "record_count": 2,
+    "program_id": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+    "adapter": "kamino-klend",
+    "adapter_version": 1,
+    "semantic_schema_version": 2,
+    "source_slot_range": {
+      "first": 448194517,
+      "last": 448195166
+    },
+    "limitations": [
+      {
+        "code": "bounded_observations",
+        "detail": "This corpus covers only its recorded production interactions; no representativeness is claimed."
+      }
+    ]
+  },
+  "candidate": {
+    "sha256": "9db16dd4b7bbfe4f13df850bf880bfc4522fcece06717c0626d625746a3cc85b",
+    "len": 10485715
+  },
+  "coverage": [
+    {
+      "subject": "kamino-klend/borrow_obligation_liquidity/economic/debt_increased",
+      "observations": 1
+    },
+    {
+      "subject": "kamino-klend/borrow_obligation_liquidity/economic/liquidity_borrowed",
+      "observations": 1
+    },
+    {
+      "subject": "kamino-klend/borrow_obligation_liquidity/economic/origination_fee",
+      "observations": 1
+    },
+    {
+      "subject": "kamino-klend/borrow_obligation_liquidity/economic/reserve_liquidity_drawn",
+      "observations": 1
+    },
+    {
+      "subject": "kamino-klend/borrow_obligation_liquidity/execution/transaction",
+      "observations": 1
+    },
+    {
+      "subject": "kamino-klend/deposit_reserve_liquidity_and_obligation_collateral/economic/liquidity_deposited",
+      "observations": 1
+    },
+    {
+      "subject": "kamino-klend/deposit_reserve_liquidity_and_obligation_collateral/economic/obligation_collateral_deposited",
+      "observations": 1
+    },
+    {
+      "subject": "kamino-klend/deposit_reserve_liquidity_and_obligation_collateral/economic/reserve_liquidity_received",
+      "observations": 1
+    },
+    {
+      "subject": "kamino-klend/deposit_reserve_liquidity_and_obligation_collateral/execution/transaction",
+      "observations": 1
+    }
+  ],
+  "findings": [],
+  "unmatched": [],
+  "failures": [],
+  "summary": {
+    "passed": true,
+    "failure_reasons": [],
+    "exit_code": 0,
+    "expected": 0,
+    "unexpected": 0,
+    "expected_but_exceeded": 0,
+    "stale": 0,
+    "unevaluable": 0
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "inventory_negative_controls": {
+    "cases": [
+      "reordered Scope",
+      "dropped ATA",
+      "reordered native account keys",
+      "screen account omitted",
+      "screen conflict added",
+      "screen wrong slot",
+      "failed original"
+    ],
+    "kind": "malformed-input regression cases, not source mutations or runtime proof",
+    "passed": 7
+  },
+  "prior_u3c_mutants": "13/13 retained in frozen U3C evidence; not rerun or counted as U3D results",
+  "reason": "Stage 1 historical-byte proof blocked before runtime integration; no source mutation result is claimed.",
+  "required_future_campaign": [
+    {
+      "id": 1,
+      "mutation": "seed post-Scope state",
+      "status": "not_attempted"
+    },
+    {
+      "id": 2,
+      "mutation": "skip Scope execution",
+      "status": "not_attempted"
+    },
+    {
+      "id": 3,
+      "mutation": "reorder Scope after refreshReserve",
+      "status": "not_attempted"
+    },
+    {
+      "id": 4,
+      "mutation": "current Scope binary",
+      "status": "not_attempted"
+    },
+    {
+      "id": 5,
+      "mutation": "current KLend binary",
+      "status": "not_attempted"
+    },
+    {
+      "id": 6,
+      "mutation": "ignore historical state hash mismatch",
+      "status": "not_attempted"
+    },
+    {
+      "id": 7,
+      "mutation": "skip same-slot interference",
+      "status": "not_attempted"
+    },
+    {
+      "id": 8,
+      "mutation": "accept missing dependency state",
+      "status": "not_attempted"
+    },
+    {
+      "id": 9,
+      "mutation": "convert native v0 to reordered legacy account list",
+      "status": "not_attempted"
+    },
+    {
+      "id": 10,
+      "mutation": "success as fidelity without post-state",
+      "status": "not_attempted"
+    },
+    {
+      "id": 11,
+      "mutation": "emit subject before fidelity",
+      "status": "not_attempted"
+    },
+    {
+      "id": 12,
+      "mutation": "promote dependency semantics",
+      "status": "not_attempted"
+    },
+    {
+      "id": 13,
+      "mutation": "drop ATA",
+      "status": "not_attempted"
+    },
+    {
+      "id": 14,
+      "mutation": "merge multi-action observations",
+      "status": "not_attempted"
+    },
+    {
+      "id": 15,
+      "mutation": "whole-transaction delta assigned to first action",
+      "status": "not_attempted"
+    },
+    {
+      "id": 16,
+      "mutation": "failed original eligible",
+      "status": "not_attempted"
+    }
+  ],
+  "source_mutations_attempted": 0,
+  "source_mutations_killed": 0
+}

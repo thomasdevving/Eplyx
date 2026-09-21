@@ -1,0 +1,37 @@
+{
+  "historical_SlotHashes_claim": false,
+  "original_message_and_signatures_preserved": true,
+  "post_state_seed_allowed": false,
+  "production_admission": false,
+  "reconstruction_if_material": true,
+  "success_required_for_materiality_proof": true,
+  "variants": [
+    "default",
+    "empty",
+    "different"
+  ],
+  "watch_set": [
+    "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+    "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+    "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+    "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+    "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+    "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+    "ComputeBudget111111111111111111111111111111",
+    "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+    "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+    "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+    "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+    "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+    "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+    "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+    "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+    "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+    "11111111111111111111111111111111",
+    "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+    "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+    "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W"
+  ]
+}

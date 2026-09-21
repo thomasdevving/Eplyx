@@ -1,0 +1,26 @@
+{
+  "schema": "eplyx-orca-u5-sample-policy-v1",
+  "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+  "network": "solana-mainnet-beta",
+  "provider": "https://api.mainnet-beta.solana.com",
+  "anchor": "first finalized getSlot result returned during capture",
+  "slot_window": "inclusive [anchor-2047, anchor]",
+  "source": {
+    "method": "getSignaturesForAddress",
+    "commitment": "finalized",
+    "limit": 1000,
+    "pagination": "none"
+  },
+  "selection": "Keep the first 200 successful signature entries in the provider's newest-to-oldest chain order whose slots are in the frozen window. Fetch exactly those 200 getTransaction responses; retain null, error and transport failures without replacement. Do not seek another time window, provider or later signatures for a convenient candidate.",
+  "transaction_fetch": {
+    "method": "getTransaction",
+    "encoding": "json",
+    "commitment": "finalized",
+    "maxSupportedTransactionVersion": 0,
+    "attempts_per_signature": 1
+  },
+  "classification": "Inspect each frozen top-level compiled instruction against official Whirlpool IDL discriminators; preserve unknown and remaining accounts. Record successful and failed transactions separately.",
+  "first_replay_eligibility": "First successful transaction in frozen source order with exactly one top-level Whirlpool target, a complete legacy or v0 envelope, resolvable LUTs and dependencies, historical target/dependency binaries, exact account pre/post evidence, runtime context, and a clean S-1 boundary for the complete watched set. Record every rejection; no unbounded search.",
+  "same_slot_rule": "For each fetched candidate, inspect all earlier transactions in its slot for writes to the prospective watched set. Any overlap is TransactionBoundaryStateRequired. Never substitute end-of-S or end-of-S-1 as transaction pre-state when the boundary is dirty.",
+  "failure_rule": "If this provider cannot return the sample or exact historical evidence, retain the failure and stop at the acquisition gate. A new policy requires a separate phase and cannot replace this frozen sample."
+}

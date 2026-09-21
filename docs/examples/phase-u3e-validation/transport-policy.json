@@ -1,0 +1,36 @@
+{
+  "backoff_seconds": [
+    0,
+    2,
+    5,
+    10
+  ],
+  "concurrency": 1,
+  "kind": "u3e_exact_historical_transport_policy_v1",
+  "max_attempts_per_context": 4,
+  "mode": "Exact T1 Scope mappings request first; full T1 state only after diagnosed probe success; T2-T4 require T1-A.",
+  "nonretryable": [
+    "http_status",
+    "json_rpc_error",
+    "missing_account",
+    "slot_context_mismatch",
+    "contradictory_account"
+  ],
+  "process_timeout_seconds": 25,
+  "provider_fallback": false,
+  "redirects": false,
+  "request_timeout_seconds": 20,
+  "retryable": [
+    "dns_failure",
+    "connect_failure",
+    "tls_failure",
+    "rate_limited",
+    "gateway_failure",
+    "timeout",
+    "empty_http_body",
+    "truncated_body",
+    "invalid_json",
+    "unknown_transport_failure"
+  ],
+  "slot_fallback": false
+}

@@ -1,0 +1,126 @@
+{
+  "accounts": [
+    {
+      "address": "Adnj8BDHD9kdvzsSmRHB9ayS12kY1qfXzQCFxBcpq3t1",
+      "boundary": "pre",
+      "fields": "Obligation { lending_market: \"7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF\", owner: \"HL2fkpkZ1ZPphr1UnDcN9N2mQQNgbtLeCR4RHmgCKpur\", has_debt: true, deposits: [CollateralPosition { index: 0, deposit_reserve: \"d4A2prbA2whesmvHaL88BH6Ewn5N4bTSU2Ze8P6Bc4Q\", deposited_amount: 7751373462845 }, CollateralPosition { index: 1, deposit_reserve: \"D6q6wuQSrifJKZYpR1M8R4YawnLDtDsMmWM1NbBmgJ59\", deposited_amount: 972 }], borrows: [BorrowPosition { index: 0, borrow_reserve: \"ESCkPWKHmgNE7Msf77n9yzqJd5kQVWWGy3o5Mgxhvavp\", borrowed_amount_sf: 57646599281607819181210269154 }, BorrowPosition { index: 1, borrow_reserve: \"2gc9Dm1eB6UgVYFBUN9bWks6Kes9PbWSaPaa9DqyvEiN\", borrowed_amount_sf: 494162204596972910226396491605 }] }",
+      "type": "Obligation"
+    },
+    {
+      "address": "Adnj8BDHD9kdvzsSmRHB9ayS12kY1qfXzQCFxBcpq3t1",
+      "boundary": "post",
+      "fields": "Obligation { lending_market: \"7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF\", owner: \"HL2fkpkZ1ZPphr1UnDcN9N2mQQNgbtLeCR4RHmgCKpur\", has_debt: true, deposits: [CollateralPosition { index: 0, deposit_reserve: \"d4A2prbA2whesmvHaL88BH6Ewn5N4bTSU2Ze8P6Bc4Q\", deposited_amount: 7751373462845 }, CollateralPosition { index: 1, deposit_reserve: \"D6q6wuQSrifJKZYpR1M8R4YawnLDtDsMmWM1NbBmgJ59\", deposited_amount: 972 }], borrows: [BorrowPosition { index: 0, borrow_reserve: \"ESCkPWKHmgNE7Msf77n9yzqJd5kQVWWGy3o5Mgxhvavp\", borrowed_amount_sf: 57647409092267837420547527236 }, BorrowPosition { index: 1, borrow_reserve: \"2gc9Dm1eB6UgVYFBUN9bWks6Kes9PbWSaPaa9DqyvEiN\", borrowed_amount_sf: 551816667605712389078658114672 }] }",
+      "type": "Obligation"
+    },
+    {
+      "address": "AEueaqsjpNUHV7v4BSmZfSq39NaoWM9BnYfmpbfP3Fsh",
+      "boundary": "pre",
+      "fields": "ExtendedAccount { base: TokenAccount { mint: \"2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo\", owner: \"HL2fkpkZ1ZPphr1UnDcN9N2mQQNgbtLeCR4RHmgCKpur\", amount: 0, delegate: None, state: Initialized, native_reserve: None, delegated_amount: 0, close_authority: None }, extensions: ExtensionList { entries: [(7, []), (2, [0, 0, 0, 0, 0, 0, 0, 0]), (15, [0])], truncated_at: None } }",
+      "type": "TokenAccount"
+    },
+    {
+      "address": "AEueaqsjpNUHV7v4BSmZfSq39NaoWM9BnYfmpbfP3Fsh",
+      "boundary": "post",
+      "fields": "ExtendedAccount { base: TokenAccount { mint: \"2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo\", owner: \"HL2fkpkZ1ZPphr1UnDcN9N2mQQNgbtLeCR4RHmgCKpur\", amount: 50002000000, delegate: None, state: Initialized, native_reserve: None, delegated_amount: 0, close_authority: None }, extensions: ExtensionList { entries: [(7, []), (2, [0, 0, 0, 0, 0, 0, 0, 0]), (15, [0])], truncated_at: None } }",
+      "type": "TokenAccount"
+    },
+    {
+      "address": "2gc9Dm1eB6UgVYFBUN9bWks6Kes9PbWSaPaa9DqyvEiN",
+      "boundary": "pre",
+      "fields": "Reserve { lending_market: \"7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF\", liquidity_mint: \"2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo\", liquidity_supply_vault: \"Gm2itCNPBpBSSrgCA194pmErjwHAFVpvBBFvpdTF5LuJ\", liquidity_fee_vault: \"BcLJRx7GbyX2Jj8RFpYDnEE47Tm36wSskLnm7ALarEC1\", available_amount: 5645705939094, borrowed_amount_sf: 40583996813814723354202863691257, mint_decimals: 6, collateral_mint: \"2dQkXr1e9LBvT2QcfKrzZaWY6gGAAVoCjLgkWFk3Mhkj\", collateral_total_supply: 37829101363038, collateral_supply_vault: \"6LNyxFoeThPa3kPAWUYjEXPMsEd93VQUo5cuJfxcXaGp\" }",
+      "type": "Reserve"
+    },
+    {
+      "address": "2gc9Dm1eB6UgVYFBUN9bWks6Kes9PbWSaPaa9DqyvEiN",
+      "boundary": "post",
+      "fields": "Reserve { lending_market: \"7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF\", liquidity_mint: \"2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo\", liquidity_supply_vault: \"Gm2itCNPBpBSSrgCA194pmErjwHAFVpvBBFvpdTF5LuJ\", liquidity_fee_vault: \"BcLJRx7GbyX2Jj8RFpYDnEE47Tm36wSskLnm7ALarEC1\", available_amount: 5595703939094, borrowed_amount_sf: 40641645912515804239220208292021, mint_decimals: 6, collateral_mint: \"2dQkXr1e9LBvT2QcfKrzZaWY6gGAAVoCjLgkWFk3Mhkj\", collateral_total_supply: 37829101363038, collateral_supply_vault: \"6LNyxFoeThPa3kPAWUYjEXPMsEd93VQUo5cuJfxcXaGp\" }",
+      "type": "Reserve"
+    },
+    {
+      "address": "BcLJRx7GbyX2Jj8RFpYDnEE47Tm36wSskLnm7ALarEC1",
+      "boundary": "pre",
+      "fields": "ExtendedAccount { base: TokenAccount { mint: \"2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo\", owner: \"9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo\", amount: 15, delegate: None, state: Initialized, native_reserve: None, delegated_amount: 0, close_authority: None }, extensions: ExtensionList { entries: [(2, [0, 0, 0, 0, 0, 0, 0, 0]), (15, [0])], truncated_at: None } }",
+      "type": "TokenAccount"
+    },
+    {
+      "address": "BcLJRx7GbyX2Jj8RFpYDnEE47Tm36wSskLnm7ALarEC1",
+      "boundary": "post",
+      "fields": "ExtendedAccount { base: TokenAccount { mint: \"2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo\", owner: \"9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo\", amount: 15, delegate: None, state: Initialized, native_reserve: None, delegated_amount: 0, close_authority: None }, extensions: ExtensionList { entries: [(2, [0, 0, 0, 0, 0, 0, 0, 0]), (15, [0])], truncated_at: None } }",
+      "type": "TokenAccount"
+    },
+    {
+      "address": "d4A2prbA2whesmvHaL88BH6Ewn5N4bTSU2Ze8P6Bc4Q",
+      "boundary": "pre",
+      "fields": "Reserve { lending_market: \"7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF\", liquidity_mint: \"So11111111111111111111111111111111111111112\", liquidity_supply_vault: \"GafNuUXj9rxGLn4y79dPu6MHSuPWeJR6UtTWuexpGh3U\", liquidity_fee_vault: \"3JNof8s453bwG5UqiXBLJc77NRQXezYYEBbk3fqnoKph\", available_amount: 192074629779921, borrowed_amount_sf: 2529873696235105638203657731688049, mint_decimals: 9, collateral_mint: \"2UywZrUdyqs5vDchy7fKQJKau2RVyuzBev2XKGPDSiX1\", collateral_total_supply: 2067889555160341, collateral_supply_vault: \"8NXMyRD91p3nof61BTkJvrfpGTASHygz1cUvc3HvwyGS\" }",
+      "type": "Reserve"
+    },
+    {
+      "address": "d4A2prbA2whesmvHaL88BH6Ewn5N4bTSU2Ze8P6Bc4Q",
+      "boundary": "post",
+      "fields": "Reserve { lending_market: \"7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF\", liquidity_mint: \"So11111111111111111111111111111111111111112\", liquidity_supply_vault: \"GafNuUXj9rxGLn4y79dPu6MHSuPWeJR6UtTWuexpGh3U\", liquidity_fee_vault: \"3JNof8s453bwG5UqiXBLJc77NRQXezYYEBbk3fqnoKph\", available_amount: 192074629779921, borrowed_amount_sf: 2529873764224112920012383791193570, mint_decimals: 9, collateral_mint: \"2UywZrUdyqs5vDchy7fKQJKau2RVyuzBev2XKGPDSiX1\", collateral_total_supply: 2067889555160341, collateral_supply_vault: \"8NXMyRD91p3nof61BTkJvrfpGTASHygz1cUvc3HvwyGS\" }",
+      "type": "Reserve"
+    },
+    {
+      "address": "D6q6wuQSrifJKZYpR1M8R4YawnLDtDsMmWM1NbBmgJ59",
+      "boundary": "pre",
+      "fields": "Reserve { lending_market: \"7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF\", liquidity_mint: \"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v\", liquidity_supply_vault: \"Bgq7trRgVMeq33yt235zM2onQ4bRDBsY5EWiTetF4qw6\", liquidity_fee_vault: \"BbDUrk1bVtSixgQsPLBJFZEF7mwGstnD5joA1WzYvYFX\", available_amount: 19061027782988, borrowed_amount_sf: 124333985503339315827987725418618, mint_decimals: 6, collateral_mint: \"B8V6WVjPxW1UGwVDfxH2d2r8SyT4cqn7dQRK6XneVa7D\", collateral_total_supply: 105536945315227, collateral_supply_vault: \"3DzjXRfxRm6iejfyyMynR4tScddaanrePJ1NJU2XnPPL\" }",
+      "type": "Reserve"
+    },
+    {
+      "address": "D6q6wuQSrifJKZYpR1M8R4YawnLDtDsMmWM1NbBmgJ59",
+      "boundary": "post",
+      "fields": "Reserve { lending_market: \"7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF\", liquidity_mint: \"EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v\", liquidity_supply_vault: \"Bgq7trRgVMeq33yt235zM2onQ4bRDBsY5EWiTetF4qw6\", liquidity_fee_vault: \"BbDUrk1bVtSixgQsPLBJFZEF7mwGstnD5joA1WzYvYFX\", available_amount: 19061027782988, borrowed_amount_sf: 124333987646445444643669602351447, mint_decimals: 6, collateral_mint: \"B8V6WVjPxW1UGwVDfxH2d2r8SyT4cqn7dQRK6XneVa7D\", collateral_total_supply: 105536945315227, collateral_supply_vault: \"3DzjXRfxRm6iejfyyMynR4tScddaanrePJ1NJU2XnPPL\" }",
+      "type": "Reserve"
+    },
+    {
+      "address": "ESCkPWKHmgNE7Msf77n9yzqJd5kQVWWGy3o5Mgxhvavp",
+      "boundary": "pre",
+      "fields": "Reserve { lending_market: \"7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF\", liquidity_mint: \"2u1tszSeqZ3qBWF3uNGPFc8TzMk2tdiwknnRMWGWjGWH\", liquidity_supply_vault: \"DGBo8HmL7pBWBZLGePjHQ73JKRE37HVZ7ZbjA2FYUZHZ\", liquidity_fee_vault: \"39M8hy7EUypjxsHqsZQmNQqXGpknCwoCXzF7r8WMBbAs\", available_amount: 5545107184691, borrowed_amount_sf: 42828345873229750077422487287953, mint_decimals: 6, collateral_mint: \"BG6gsv8goyoJguEbLquUZFNiZ8aGTXgo4DyH9h8z9qao\", collateral_total_supply: 39214065194517, collateral_supply_vault: \"BKGYpZxa2QpTSiRV7Jwc8P8cJaUQwq7maxREFFxboW6m\" }",
+      "type": "Reserve"
+    },
+    {
+      "address": "ESCkPWKHmgNE7Msf77n9yzqJd5kQVWWGy3o5Mgxhvavp",
+      "boundary": "post",
+      "fields": "Reserve { lending_market: \"7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF\", liquidity_mint: \"2u1tszSeqZ3qBWF3uNGPFc8TzMk2tdiwknnRMWGWjGWH\", liquidity_supply_vault: \"DGBo8HmL7pBWBZLGePjHQ73JKRE37HVZ7ZbjA2FYUZHZ\", liquidity_fee_vault: \"39M8hy7EUypjxsHqsZQmNQqXGpknCwoCXzF7r8WMBbAs\", available_amount: 5545107184691, borrowed_amount_sf: 42828346929218268983980021035130, mint_decimals: 6, collateral_mint: \"BG6gsv8goyoJguEbLquUZFNiZ8aGTXgo4DyH9h8z9qao\", collateral_total_supply: 39214065194517, collateral_supply_vault: \"BKGYpZxa2QpTSiRV7Jwc8P8cJaUQwq7maxREFFxboW6m\" }",
+      "type": "Reserve"
+    },
+    {
+      "address": "Gm2itCNPBpBSSrgCA194pmErjwHAFVpvBBFvpdTF5LuJ",
+      "boundary": "pre",
+      "fields": "ExtendedAccount { base: TokenAccount { mint: \"2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo\", owner: \"9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo\", amount: 5645705939094, delegate: None, state: Initialized, native_reserve: None, delegated_amount: 0, close_authority: None }, extensions: ExtensionList { entries: [(2, [0, 0, 0, 0, 0, 0, 0, 0]), (15, [0])], truncated_at: None } }",
+      "type": "TokenAccount"
+    },
+    {
+      "address": "Gm2itCNPBpBSSrgCA194pmErjwHAFVpvBBFvpdTF5LuJ",
+      "boundary": "post",
+      "fields": "ExtendedAccount { base: TokenAccount { mint: \"2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo\", owner: \"9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo\", amount: 5595703939094, delegate: None, state: Initialized, native_reserve: None, delegated_amount: 0, close_authority: None }, extensions: ExtensionList { entries: [(2, [0, 0, 0, 0, 0, 0, 0, 0]), (15, [0])], truncated_at: None } }",
+      "type": "TokenAccount"
+    },
+    {
+      "address": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+      "boundary": "pre",
+      "fields": "ExtendedMint { base: Mint { mint_authority: Some(\"8Jornc27vtAYPkwDzsZVgLQchAYyC8nD7aCNPCDV8Qk2\"), supply: 717980134634813, decimals: 6, is_initialized: true, freeze_authority: Some(\"2apBGMsS6ti9RyF5TwQTDswXBWskiJP2LD4cUEDqYJjk\") }, extensions: ExtensionList { entries: [(3, [23, 133, 50, 97, 239, 106, 184, 83, 42, 103, 240, 83, 134, 90, 173, 49, 41, 63, 207, 7, 207, 18, 10, 181, 185, 161, 87, 6, 84, 141, 192, 43]), (12, [23, 133, 50, 97, 239, 106, 184, 83, 42, 103, 240, 83, 134, 90, 173, 49, 41, 63, 207, 7, 207, 18, 10, 181, 185, 161, 87, 6, 84, 141, 192, 43]), (1, [23, 133, 50, 97, 239, 106, 184, 83, 42, 103, 240, 83, 134, 90, 173, 49, 41, 63, 207, 7, 207, 18, 10, 181, 185, 161, 87, 6, 84, 141, 192, 43, 23, 133, 50, 97, 239, 106, 184, 83, 42, 103, 240, 83, 134, 90, 173, 49, 41, 63, 207, 7, 207, 18, 10, 181, 185, 161, 87, 6, 84, 141, 192, 43, 0, 0, 0, 0, 0, 0, 0, 0, 93, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 93, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), (4, [23, 133, 50, 97, 239, 106, 184, 83, 42, 103, 240, 83, 134, 90, 173, 49, 41, 63, 207, 7, 207, 18, 10, 181, 185, 161, 87, 6, 84, 141, 192, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), (16, [23, 133, 50, 97, 239, 106, 184, 83, 42, 103, 240, 83, 134, 90, 173, 49, 41, 63, 207, 7, 207, 18, 10, 181, 185, 161, 87, 6, 84, 141, 192, 43, 28, 55, 230, 67, 59, 115, 4, 221, 130, 115, 122, 228, 13, 155, 139, 243, 196, 159, 91, 14, 108, 73, 168, 213, 51, 40, 179, 229, 6, 144, 28, 87, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), (14, [23, 133, 50, 97, 239, 106, 184, 83, 42, 103, 240, 83, 134, 90, 173, 49, 41, 63, 207, 7, 207, 18, 10, 181, 185, 161, 87, 6, 84, 141, 192, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), (18, [23, 133, 50, 97, 239, 106, 184, 83, 42, 103, 240, 83, 134, 90, 173, 49, 41, 63, 207, 7, 207, 18, 10, 181, 185, 161, 87, 6, 84, 141, 192, 43, 23, 146, 72, 59, 108, 138, 42, 135, 183, 71, 29, 129, 79, 149, 145, 249, 57, 92, 132, 10, 156, 227, 217, 244, 213, 186, 125, 58, 75, 138, 116, 158]), (19, [23, 133, 50, 97, 239, 106, 184, 83, 42, 103, 240, 83, 134, 90, 173, 49, 41, 63, 207, 7, 207, 18, 10, 181, 185, 161, 87, 6, 84, 141, 192, 43, 23, 146, 72, 59, 108, 138, 42, 135, 183, 71, 29, 129, 79, 149, 145, 249, 57, 92, 132, 10, 156, 227, 217, 244, 213, 186, 125, 58, 75, 138, 116, 158, 10, 0, 0, 0, 80, 97, 121, 80, 97, 108, 32, 85, 83, 68, 5, 0, 0, 0, 80, 89, 85, 83, 68, 79, 0, 0, 0, 104, 116, 116, 112, 115, 58, 47, 47, 116, 111, 107, 101, 110, 45, 109, 101, 116, 97, 100, 97, 116, 97, 46, 112, 97, 120, 111, 115, 46, 99, 111, 109, 47, 112, 121, 117, 115, 100, 95, 109, 101, 116, 97, 100, 97, 116, 97, 47, 112, 114, 111, 100, 47, 115, 111, 108, 97, 110, 97, 47, 112, 121, 117, 115, 100, 95, 109, 101, 116, 97, 100, 97, 116, 97, 46, 106, 115, 111, 110, 0, 0, 0, 0])], truncated_at: None } }",
+      "type": "Mint"
+    },
+    {
+      "address": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+      "boundary": "post",
+      "fields": "ExtendedMint { base: Mint { mint_authority: Some(\"8Jornc27vtAYPkwDzsZVgLQchAYyC8nD7aCNPCDV8Qk2\"), supply: 717980134634813, decimals: 6, is_initialized: true, freeze_authority: Some(\"2apBGMsS6ti9RyF5TwQTDswXBWskiJP2LD4cUEDqYJjk\") }, extensions: ExtensionList { entries: [(3, [23, 133, 50, 97, 239, 106, 184, 83, 42, 103, 240, 83, 134, 90, 173, 49, 41, 63, 207, 7, 207, 18, 10, 181, 185, 161, 87, 6, 84, 141, 192, 43]), (12, [23, 133, 50, 97, 239, 106, 184, 83, 42, 103, 240, 83, 134, 90, 173, 49, 41, 63, 207, 7, 207, 18, 10, 181, 185, 161, 87, 6, 84, 141, 192, 43]), (1, [23, 133, 50, 97, 239, 106, 184, 83, 42, 103, 240, 83, 134, 90, 173, 49, 41, 63, 207, 7, 207, 18, 10, 181, 185, 161, 87, 6, 84, 141, 192, 43, 23, 133, 50, 97, 239, 106, 184, 83, 42, 103, 240, 83, 134, 90, 173, 49, 41, 63, 207, 7, 207, 18, 10, 181, 185, 161, 87, 6, 84, 141, 192, 43, 0, 0, 0, 0, 0, 0, 0, 0, 93, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 93, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), (4, [23, 133, 50, 97, 239, 106, 184, 83, 42, 103, 240, 83, 134, 90, 173, 49, 41, 63, 207, 7, 207, 18, 10, 181, 185, 161, 87, 6, 84, 141, 192, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), (16, [23, 133, 50, 97, 239, 106, 184, 83, 42, 103, 240, 83, 134, 90, 173, 49, 41, 63, 207, 7, 207, 18, 10, 181, 185, 161, 87, 6, 84, 141, 192, 43, 28, 55, 230, 67, 59, 115, 4, 221, 130, 115, 122, 228, 13, 155, 139, 243, 196, 159, 91, 14, 108, 73, 168, 213, 51, 40, 179, 229, 6, 144, 28, 87, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), (14, [23, 133, 50, 97, 239, 106, 184, 83, 42, 103, 240, 83, 134, 90, 173, 49, 41, 63, 207, 7, 207, 18, 10, 181, 185, 161, 87, 6, 84, 141, 192, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), (18, [23, 133, 50, 97, 239, 106, 184, 83, 42, 103, 240, 83, 134, 90, 173, 49, 41, 63, 207, 7, 207, 18, 10, 181, 185, 161, 87, 6, 84, 141, 192, 43, 23, 146, 72, 59, 108, 138, 42, 135, 183, 71, 29, 129, 79, 149, 145, 249, 57, 92, 132, 10, 156, 227, 217, 244, 213, 186, 125, 58, 75, 138, 116, 158]), (19, [23, 133, 50, 97, 239, 106, 184, 83, 42, 103, 240, 83, 134, 90, 173, 49, 41, 63, 207, 7, 207, 18, 10, 181, 185, 161, 87, 6, 84, 141, 192, 43, 23, 146, 72, 59, 108, 138, 42, 135, 183, 71, 29, 129, 79, 149, 145, 249, 57, 92, 132, 10, 156, 227, 217, 244, 213, 186, 125, 58, 75, 138, 116, 158, 10, 0, 0, 0, 80, 97, 121, 80, 97, 108, 32, 85, 83, 68, 5, 0, 0, 0, 80, 89, 85, 83, 68, 79, 0, 0, 0, 104, 116, 116, 112, 115, 58, 47, 47, 116, 111, 107, 101, 110, 45, 109, 101, 116, 97, 100, 97, 116, 97, 46, 112, 97, 120, 111, 115, 46, 99, 111, 109, 47, 112, 121, 117, 115, 100, 95, 109, 101, 116, 97, 100, 97, 116, 97, 47, 112, 114, 111, 100, 47, 115, 111, 108, 97, 110, 97, 47, 112, 121, 117, 115, 100, 95, 109, 101, 116, 97, 100, 97, 116, 97, 46, 106, 115, 111, 110, 0, 0, 0, 0])], truncated_at: None } }",
+      "type": "Mint"
+    },
+    {
+      "address": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+      "boundary": "pre",
+      "fields": "existing lending-market discriminator check; full raw bytes retained",
+      "type": "LendingMarket"
+    },
+    {
+      "address": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+      "boundary": "post",
+      "fields": "existing lending-market discriminator check; full raw bytes retained",
+      "type": "LendingMarket"
+    }
+  ],
+  "kind": "existing_decoder_validation",
+  "runtime_executed": false
+}
