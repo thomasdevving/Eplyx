@@ -1,0 +1,8 @@
+{
+  "Scope_post_state_seeded": false,
+  "all_later_instruction_bytes_and_keys_preserved": true,
+  "baseline_reference": "phase-u3f-materiality-attempt-1/empty.json",
+  "historical_baseline": false,
+  "kind": "controlled_Scope_omission",
+  "same_pre_state": true
+}

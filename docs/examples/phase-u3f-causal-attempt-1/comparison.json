@@ -1,0 +1,11 @@
+{
+  "KLend_target_instruction_bytes_unchanged": true,
+  "baseline_success": true,
+  "changed_post_accounts": [
+    "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH"
+  ],
+  "control_success": true,
+  "historical_fidelity_claim_for_control": false,
+  "kind": "controlled_Scope_omission_comparison",
+  "starting_accounts_identical": true
+}

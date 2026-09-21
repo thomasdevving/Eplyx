@@ -1,0 +1,948 @@
+[
+  {
+    "account_events": [
+      {
+        "address": "H6PjRLnqGPz5VEU4roZzKnfJRxKECRzYuJAZ2Hvc1rAc",
+        "data_length": 0,
+        "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "executable": false,
+        "lamports": 43909044904,
+        "owner": "11111111111111111111111111111111",
+        "raw_event_sha256": "210a2d7aac97fdc392854bde8be657e321ef7eb0a372fb88ec183e8ef8425d37",
+        "rent_epoch": 18446744073709551615,
+        "transaction_index": 259,
+        "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+        "write_version": 1259
+      }
+    ],
+    "address": "H6PjRLnqGPz5VEU4roZzKnfJRxKECRzYuJAZ2Hvc1rAc",
+    "completeness": "unproven_coalesced_historical_account_stream",
+    "role": "token_authority",
+    "slot_end": {
+      "content": {
+        "data_length": 0,
+        "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "executable": false,
+        "lamports": 43909044904,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760958,
+      "present": true,
+      "response_sha256": "742cddb5e3528094c7307086e9227a45fc864cd5b44d15a224a84e813fcae3a2",
+      "slot": 448760958
+    },
+    "slot_start": {
+      "content": {
+        "data_length": 0,
+        "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "executable": false,
+        "lamports": 42755382883,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760957,
+      "present": true,
+      "response_sha256": "0b72921fe99f31952b80fbcb0d0033dc2d3b34db92f7b43cf9841935693f06aa",
+      "slot": 448760957
+    },
+    "terminal_absence_matches_zero_lamport_event": false,
+    "terminal_content_equal": true
+  },
+  {
+    "account_events": [
+      {
+        "address": "8gbSj1AEU8xNbmwwzpBdxots4e55PVqUaFHobwhryuBs",
+        "data_length": 0,
+        "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "executable": false,
+        "lamports": 0,
+        "owner": "11111111111111111111111111111111",
+        "raw_event_sha256": "91191a938641f9b7107f11ce94b7d52b84b44ee130872d32b8982093e27993be",
+        "rent_epoch": 18446744073709551615,
+        "transaction_index": 259,
+        "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+        "write_version": 1259
+      }
+    ],
+    "address": "8gbSj1AEU8xNbmwwzpBdxots4e55PVqUaFHobwhryuBs",
+    "completeness": "unproven_coalesced_historical_account_stream",
+    "role": "token_owner_account_a",
+    "slot_end": {
+      "content": null,
+      "context_slot": 448760958,
+      "present": false,
+      "response_sha256": "ea61b279b76906c319b5a28f679fb3242f1a7470a2d7f1f1b93fc3b3bafd7187",
+      "slot": 448760958
+    },
+    "slot_start": {
+      "content": null,
+      "context_slot": 448760957,
+      "present": false,
+      "response_sha256": "5988d9d04dabd3e567c0ed5777539fde1dcfde10b784cf0716da456a0fb9ca3e",
+      "slot": 448760957
+    },
+    "terminal_absence_matches_zero_lamport_event": true,
+    "terminal_content_equal": null
+  },
+  {
+    "account_events": [
+      {
+        "address": "AawdCALDWi7ea9JCeCArzjEzLGqwuFSdzydgJZrephXv",
+        "data_length": 179,
+        "data_sha256": "904ce75078128789fe4717f6e1bd6d97e6b673c9136fb9dc8f65af13d69d46b3",
+        "executable": false,
+        "lamports": 1559560,
+        "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "raw_event_sha256": "3f90322f39de3a35dbdfc82a99fed49c8c392f5adabc400ec4ec95ffb5d3349c",
+        "rent_epoch": 18446744073709551615,
+        "transaction_index": 259,
+        "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+        "write_version": 1259
+      }
+    ],
+    "address": "AawdCALDWi7ea9JCeCArzjEzLGqwuFSdzydgJZrephXv",
+    "completeness": "unproven_coalesced_historical_account_stream",
+    "role": "token_owner_account_b",
+    "slot_end": {
+      "content": {
+        "data_length": 179,
+        "data_sha256": "904ce75078128789fe4717f6e1bd6d97e6b673c9136fb9dc8f65af13d69d46b3",
+        "executable": false,
+        "lamports": 1559560,
+        "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760958,
+      "present": true,
+      "response_sha256": "2bc9b5d410a2db433a0d432f0ce5af0d3f5ed6ad9782b8185bc4a6846c7224b9",
+      "slot": 448760958
+    },
+    "slot_start": {
+      "content": {
+        "data_length": 179,
+        "data_sha256": "19576a6e3e6521c20ad9e4e24ecc3e299b72a863bf6e45a195bfb9fec3dd0d87",
+        "executable": false,
+        "lamports": 1559560,
+        "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760957,
+      "present": true,
+      "response_sha256": "7db330d9e79def755ce2a56024c33ef478dbb1acf5f02c34d68a0775f03db709",
+      "slot": 448760957
+    },
+    "terminal_absence_matches_zero_lamport_event": false,
+    "terminal_content_equal": true
+  },
+  {
+    "account_events": [
+      {
+        "address": "Eb2KpSC8uMt9GmzyAEm5Eb1AAAgTjRaXWFjKyFXHZxF3",
+        "data_length": 0,
+        "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "executable": false,
+        "lamports": 221757514,
+        "owner": "11111111111111111111111111111111",
+        "raw_event_sha256": "9867bf6f9c0c9554ce0733388afeb5a5ec74dc1c580d72b9469aaf2421de2c48",
+        "rent_epoch": 18446744073709551615,
+        "transaction_index": 259,
+        "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+        "write_version": 1259
+      }
+    ],
+    "address": "Eb2KpSC8uMt9GmzyAEm5Eb1AAAgTjRaXWFjKyFXHZxF3",
+    "completeness": "unproven_coalesced_historical_account_stream",
+    "role": null,
+    "slot_end": {
+      "content": {
+        "data_length": 0,
+        "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "executable": false,
+        "lamports": 221757514,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760958,
+      "present": true,
+      "response_sha256": "4f7d737211c0d8e6686aef19506dfdae1dcee8133bda8bdc7b9a99b73dd545e9",
+      "slot": 448760958
+    },
+    "slot_start": {
+      "content": {
+        "data_length": 0,
+        "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "executable": false,
+        "lamports": 221657514,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760957,
+      "present": true,
+      "response_sha256": "b23b8ade2e4f9dd7100cd771a6a79b88863c216c274ba180453d0eba49c57de0",
+      "slot": 448760957
+    },
+    "terminal_absence_matches_zero_lamport_event": false,
+    "terminal_content_equal": true
+  },
+  {
+    "account_events": [
+      {
+        "address": "HCyytQceq1kmeMEmKmDutWM74M1c7CMK8nASjbSJWd94",
+        "data_length": 80,
+        "data_sha256": "977e3b107c3297c3dd6e732628df848576bef58997c58669f866ba691b7a916d",
+        "executable": false,
+        "lamports": 1500000,
+        "owner": "11111111111111111111111111111111",
+        "raw_event_sha256": "471bf53b9f5993c81facfcea0c71860aa08cb331b59723ff65fd7b380e5218c9",
+        "rent_epoch": 18446744073709551615,
+        "transaction_index": 259,
+        "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+        "write_version": 1259
+      }
+    ],
+    "address": "HCyytQceq1kmeMEmKmDutWM74M1c7CMK8nASjbSJWd94",
+    "completeness": "unproven_coalesced_historical_account_stream",
+    "role": null,
+    "slot_end": {
+      "content": {
+        "data_length": 80,
+        "data_sha256": "977e3b107c3297c3dd6e732628df848576bef58997c58669f866ba691b7a916d",
+        "executable": false,
+        "lamports": 1500000,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760958,
+      "present": true,
+      "response_sha256": "1755f080702066626c1e20ac56ec2be36d3801dc33d2b74e9d69d365e18c5ce0",
+      "slot": 448760958
+    },
+    "slot_start": {
+      "content": {
+        "data_length": 80,
+        "data_sha256": "e48ff1d9e928cd7e3f4393b33b5a09b042201ca57ed6d0d0c2327c091421445c",
+        "executable": false,
+        "lamports": 1500000,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760957,
+      "present": true,
+      "response_sha256": "2060ebe06af222aea46deb0f0ad95f85acd5d0654a0ef3cdd1b5a051cfbfaf64",
+      "slot": 448760957
+    },
+    "terminal_absence_matches_zero_lamport_event": false,
+    "terminal_content_equal": true
+  },
+  {
+    "account_events": [],
+    "address": "11111111111111111111111111111111",
+    "completeness": "unproven_coalesced_historical_account_stream",
+    "role": null,
+    "slot_end": {
+      "content": {
+        "data_length": 21,
+        "data_sha256": "c94b792a6d8b25d3e53ea94d8b80111735ed80d6a7dc8deb937cd342707f5f03",
+        "executable": true,
+        "lamports": 1,
+        "owner": "NativeLoader1111111111111111111111111111111",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760958,
+      "present": true,
+      "response_sha256": "3aa47f2108561bda40bf294ffed3c20986ad3005cf84ba311b54ca6f5d76ed4d",
+      "slot": 448760958
+    },
+    "slot_start": {
+      "content": {
+        "data_length": 21,
+        "data_sha256": "c94b792a6d8b25d3e53ea94d8b80111735ed80d6a7dc8deb937cd342707f5f03",
+        "executable": true,
+        "lamports": 1,
+        "owner": "NativeLoader1111111111111111111111111111111",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760957,
+      "present": true,
+      "response_sha256": "6b42da8bc5c7d6de6d1d27a2c0eeefbbc71b685643cc155745609b4c433d4607",
+      "slot": 448760957
+    },
+    "terminal_absence_matches_zero_lamport_event": false,
+    "terminal_content_equal": null
+  },
+  {
+    "account_events": [],
+    "address": "ComputeBudget111111111111111111111111111111",
+    "completeness": "unproven_coalesced_historical_account_stream",
+    "role": null,
+    "slot_end": {
+      "content": {
+        "data_length": 22,
+        "data_sha256": "005950c007e8e550a16beddf836f0082d26d197f5f645ff7c04a5c8d171cf8a1",
+        "executable": true,
+        "lamports": 1,
+        "owner": "NativeLoader1111111111111111111111111111111",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760958,
+      "present": true,
+      "response_sha256": "abc44447ac90b43d4f9e28a3f66a76a2d1b9f01f6c0f51f68f5c61594333a8e0",
+      "slot": 448760958
+    },
+    "slot_start": {
+      "content": {
+        "data_length": 22,
+        "data_sha256": "005950c007e8e550a16beddf836f0082d26d197f5f645ff7c04a5c8d171cf8a1",
+        "executable": true,
+        "lamports": 1,
+        "owner": "NativeLoader1111111111111111111111111111111",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760957,
+      "present": true,
+      "response_sha256": "6a24bf0c020e1d96ff5e4dca3a381fbf00066ce66898aeb6d633d2562e725737",
+      "slot": 448760957
+    },
+    "terminal_absence_matches_zero_lamport_event": false,
+    "terminal_content_equal": null
+  },
+  {
+    "account_events": [],
+    "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "completeness": "unproven_coalesced_historical_account_stream",
+    "role": "token_program_a",
+    "slot_end": {
+      "content": {
+        "data_length": 36,
+        "data_sha256": "5b31219b7bc4060b1638b933be5f50df3400109acfef12408a196d57ad119748",
+        "executable": true,
+        "lamports": 200653906,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760958,
+      "present": true,
+      "response_sha256": "7de74c21a6acbefece35c3b80f7a770c4d4637e60a2ddd8a7a0bf5ffa2982321",
+      "slot": 448760958
+    },
+    "slot_start": {
+      "content": {
+        "data_length": 36,
+        "data_sha256": "5b31219b7bc4060b1638b933be5f50df3400109acfef12408a196d57ad119748",
+        "executable": true,
+        "lamports": 200653906,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760957,
+      "present": true,
+      "response_sha256": "5fd03a15720e8a406e9901ef959dba0b9cd88d0da552a1343c05fe7655f77741",
+      "slot": 448760957
+    },
+    "terminal_absence_matches_zero_lamport_event": false,
+    "terminal_content_equal": null
+  },
+  {
+    "account_events": [],
+    "address": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+    "completeness": "unproven_coalesced_historical_account_stream",
+    "role": null,
+    "slot_end": {
+      "content": {
+        "data_length": 36,
+        "data_sha256": "5ba0ae1569444542b67322d0f333b289d738efead363c02436c7869cf33c2928",
+        "executable": true,
+        "lamports": 40850581,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760958,
+      "present": true,
+      "response_sha256": "eed724b62594c8e0db688bf913b1e2b6e63ccbfb8b2d5ba76fafc51dec100501",
+      "slot": 448760958
+    },
+    "slot_start": {
+      "content": {
+        "data_length": 36,
+        "data_sha256": "5ba0ae1569444542b67322d0f333b289d738efead363c02436c7869cf33c2928",
+        "executable": true,
+        "lamports": 40850581,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760957,
+      "present": true,
+      "response_sha256": "680fb259396ff58a1bb7435687c90edf15da0a1982a3280bc0cf85eded7fd2b6",
+      "slot": 448760957
+    },
+    "terminal_absence_matches_zero_lamport_event": false,
+    "terminal_content_equal": null
+  },
+  {
+    "account_events": [],
+    "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+    "completeness": "unproven_coalesced_historical_account_stream",
+    "role": null,
+    "slot_end": {
+      "content": {
+        "data_length": 105032,
+        "data_sha256": "6804554e69fd3a58caa191dc4a58f4c67223d30ca28ab8987f39fc18d2f7374d",
+        "executable": true,
+        "lamports": 3388612899,
+        "owner": "BPFLoader2111111111111111111111111111111111",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760958,
+      "present": true,
+      "response_sha256": "fe9e3a53a3615bea7c60eec25a43e1c4c909945807f2963cd121d08176afde47",
+      "slot": 448760958
+    },
+    "slot_start": {
+      "content": {
+        "data_length": 105032,
+        "data_sha256": "6804554e69fd3a58caa191dc4a58f4c67223d30ca28ab8987f39fc18d2f7374d",
+        "executable": true,
+        "lamports": 3388612899,
+        "owner": "BPFLoader2111111111111111111111111111111111",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760957,
+      "present": true,
+      "response_sha256": "178fc19049a8945f113a080f6edae741287e0794c6c22261a8e20c8d79e97a62",
+      "slot": 448760957
+    },
+    "terminal_absence_matches_zero_lamport_event": false,
+    "terminal_content_equal": null
+  },
+  {
+    "account_events": [
+      {
+        "address": "GoCMmS76U4UmibhGqw8razjsNfJv2s81TMhihMDxnWa",
+        "data_length": 148,
+        "data_sha256": "7b2a8096934195f7f4e07a51337d8ff75d673b283f5b1770034ab5ced525d88e",
+        "executable": false,
+        "lamports": 1920960,
+        "owner": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+        "raw_event_sha256": "0eee328917e6d73448bd03556093d9670958a05251938c53ccf0bf48d8f74981",
+        "rent_epoch": 18446744073709551615,
+        "transaction_index": 259,
+        "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+        "write_version": 1259
+      }
+    ],
+    "address": "GoCMmS76U4UmibhGqw8razjsNfJv2s81TMhihMDxnWa",
+    "completeness": "unproven_coalesced_historical_account_stream",
+    "role": "tick_array_2",
+    "slot_end": {
+      "content": {
+        "data_length": 148,
+        "data_sha256": "7b2a8096934195f7f4e07a51337d8ff75d673b283f5b1770034ab5ced525d88e",
+        "executable": false,
+        "lamports": 1920960,
+        "owner": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760958,
+      "present": true,
+      "response_sha256": "3d86da6014c8991938694c2e649e082587ab45513925afefd0a2472af2c6c249",
+      "slot": 448760958
+    },
+    "slot_start": {
+      "content": {
+        "data_length": 148,
+        "data_sha256": "7b2a8096934195f7f4e07a51337d8ff75d673b283f5b1770034ab5ced525d88e",
+        "executable": false,
+        "lamports": 1920960,
+        "owner": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760957,
+      "present": true,
+      "response_sha256": "9fdc75a120e417c84eae94e15bbcf9c110d404a66402c89acf847c4bbd79fd07",
+      "slot": 448760957
+    },
+    "terminal_absence_matches_zero_lamport_event": false,
+    "terminal_content_equal": true
+  },
+  {
+    "account_events": [
+      {
+        "address": "3BbFVfXDfM14kM46SFfPaRJXVSub4Ljwox87HfKyv1JA",
+        "data_length": 179,
+        "data_sha256": "c73025c3db7bc90d54024e83cb0ede608c6a3a65b29f06b03f93999e09d79bff",
+        "executable": false,
+        "lamports": 2136720,
+        "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "raw_event_sha256": "828a2de3716bd8730db75babe7c737e233f45776f5c347225072ec55a97cb0e5",
+        "rent_epoch": 18446744073709551615,
+        "transaction_index": 259,
+        "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+        "write_version": 1259
+      }
+    ],
+    "address": "3BbFVfXDfM14kM46SFfPaRJXVSub4Ljwox87HfKyv1JA",
+    "completeness": "unproven_coalesced_historical_account_stream",
+    "role": "token_vault_b",
+    "slot_end": {
+      "content": {
+        "data_length": 179,
+        "data_sha256": "c73025c3db7bc90d54024e83cb0ede608c6a3a65b29f06b03f93999e09d79bff",
+        "executable": false,
+        "lamports": 2136720,
+        "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760958,
+      "present": true,
+      "response_sha256": "b338fc7b0721df22ff653bbfc0a4edf8ab3ab830de9b904209f59ea11a9c298d",
+      "slot": 448760958
+    },
+    "slot_start": {
+      "content": {
+        "data_length": 179,
+        "data_sha256": "dd623efd6782dc8a9e1b9141c5bbab74550624c9cd62134d0f1649e41a6dad51",
+        "executable": false,
+        "lamports": 2136720,
+        "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760957,
+      "present": true,
+      "response_sha256": "426dc82d405b8ab523c4c0467f5817cf81d4acd369c97052509884bb413a7899",
+      "slot": 448760957
+    },
+    "terminal_absence_matches_zero_lamport_event": false,
+    "terminal_content_equal": true
+  },
+  {
+    "account_events": [
+      {
+        "address": "4joyRY87Qs8mNFh9oyW9hnR5uFVgVusJiQWz2KwFVv2w",
+        "data_length": 708,
+        "data_sha256": "b832f76db55488a0343c2ddb04d6458a6cddf4338626ada87d6f25e2af678960",
+        "executable": false,
+        "lamports": 5818560,
+        "owner": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+        "raw_event_sha256": "c0b5d563e39d2abd5ac2114b16ff16f2aeb9530f1e7b1e15e015c918973eaad8",
+        "rent_epoch": 18446744073709551615,
+        "transaction_index": 259,
+        "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+        "write_version": 1259
+      }
+    ],
+    "address": "4joyRY87Qs8mNFh9oyW9hnR5uFVgVusJiQWz2KwFVv2w",
+    "completeness": "unproven_coalesced_historical_account_stream",
+    "role": "tick_array_1",
+    "slot_end": {
+      "content": {
+        "data_length": 708,
+        "data_sha256": "b832f76db55488a0343c2ddb04d6458a6cddf4338626ada87d6f25e2af678960",
+        "executable": false,
+        "lamports": 5818560,
+        "owner": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760958,
+      "present": true,
+      "response_sha256": "bedee451e85180fbf971e81c8da4e0fb468c886ff72dc63fc3739507e9a07ca8",
+      "slot": 448760958
+    },
+    "slot_start": {
+      "content": {
+        "data_length": 708,
+        "data_sha256": "b832f76db55488a0343c2ddb04d6458a6cddf4338626ada87d6f25e2af678960",
+        "executable": false,
+        "lamports": 5818560,
+        "owner": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760957,
+      "present": true,
+      "response_sha256": "ce52d67ad609058ebf732f78f09576c456bc94ebcd5f8bc23e05b790a346df4a",
+      "slot": 448760957
+    },
+    "terminal_absence_matches_zero_lamport_event": false,
+    "terminal_content_equal": true
+  },
+  {
+    "account_events": [
+      {
+        "address": "DyxxT7XjZRS86nhAN4k8w21kN8af6AVGeUhQSHLsvgcY",
+        "data_length": 6756,
+        "data_sha256": "b031a7fa212e10bc8cd9398739d89c4aa41f71f41839fe7b34240ed7e431a6d6",
+        "executable": false,
+        "lamports": 143793600,
+        "owner": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+        "raw_event_sha256": "f5312a274ec2e3e785514eb6a46a9630d9a0bbd083e8d160e240359638888910",
+        "rent_epoch": 18446744073709551615,
+        "transaction_index": 259,
+        "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+        "write_version": 1259
+      }
+    ],
+    "address": "DyxxT7XjZRS86nhAN4k8w21kN8af6AVGeUhQSHLsvgcY",
+    "completeness": "unproven_coalesced_historical_account_stream",
+    "role": "tick_array_0",
+    "slot_end": {
+      "content": {
+        "data_length": 6756,
+        "data_sha256": "b031a7fa212e10bc8cd9398739d89c4aa41f71f41839fe7b34240ed7e431a6d6",
+        "executable": false,
+        "lamports": 143793600,
+        "owner": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760958,
+      "present": true,
+      "response_sha256": "21b89c2fec273a3e604db23f8cc77aa88b41655234fa0a3b60db9da0bc4c1b9d",
+      "slot": 448760958
+    },
+    "slot_start": {
+      "content": {
+        "data_length": 6756,
+        "data_sha256": "b031a7fa212e10bc8cd9398739d89c4aa41f71f41839fe7b34240ed7e431a6d6",
+        "executable": false,
+        "lamports": 143793600,
+        "owner": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760957,
+      "present": true,
+      "response_sha256": "8abb61065b99272492b3e291ace1ae744e28450c32e60bdb8ca8d788da3d5b3c",
+      "slot": 448760957
+    },
+    "terminal_absence_matches_zero_lamport_event": false,
+    "terminal_content_equal": true
+  },
+  {
+    "account_events": [
+      {
+        "address": "EdcxbpnvtssEkHV4KDfdYVFoGDewE7XnYbTakgLxPusR",
+        "data_length": 165,
+        "data_sha256": "2794af1a37ed8e8b5561d21166c1608a78f0e936c9efbfa2f2e41fef06d1f914",
+        "executable": false,
+        "lamports": 915487996482,
+        "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "raw_event_sha256": "85dc8af3f614a44181a56c37b0eef8a859a7f8077f790003c8ab36d7e4b901dc",
+        "rent_epoch": 18446744073709551615,
+        "transaction_index": 259,
+        "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+        "write_version": 1259
+      }
+    ],
+    "address": "EdcxbpnvtssEkHV4KDfdYVFoGDewE7XnYbTakgLxPusR",
+    "completeness": "unproven_coalesced_historical_account_stream",
+    "role": "token_vault_a",
+    "slot_end": {
+      "content": {
+        "data_length": 165,
+        "data_sha256": "2794af1a37ed8e8b5561d21166c1608a78f0e936c9efbfa2f2e41fef06d1f914",
+        "executable": false,
+        "lamports": 915487996482,
+        "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760958,
+      "present": true,
+      "response_sha256": "491fd24d50eed064f6331e30a22e6a9c817f089c5e1aa1321abfd45e37891e54",
+      "slot": 448760958
+    },
+    "slot_start": {
+      "content": {
+        "data_length": 165,
+        "data_sha256": "315a35ea28e868900e5357b56d32fe0a3ae66c6bb1c3074f99bd1ea43eb87ee9",
+        "executable": false,
+        "lamports": 916641764253,
+        "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760957,
+      "present": true,
+      "response_sha256": "3f0812b79e1361a016a56cf7f7ec932a4e7693b47df7e2f7be59cc6579303ec1",
+      "slot": 448760957
+    },
+    "terminal_absence_matches_zero_lamport_event": false,
+    "terminal_content_equal": true
+  },
+  {
+    "account_events": [
+      {
+        "address": "FBNg5G8CrU46jguTyX55VRSMBtERn5L4ZawiHEpEAgK8",
+        "data_length": 254,
+        "data_sha256": "de5668e024ac326572de46946226a78c2833f713aad99dc683bb5ad0f12b6f28",
+        "executable": false,
+        "lamports": 2658720,
+        "owner": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+        "raw_event_sha256": "9cfe50eb7783aabebf45a16e6e31f91ece897262291723d7bba96cf7f45a0447",
+        "rent_epoch": 18446744073709551615,
+        "transaction_index": 259,
+        "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+        "write_version": 1259
+      }
+    ],
+    "address": "FBNg5G8CrU46jguTyX55VRSMBtERn5L4ZawiHEpEAgK8",
+    "completeness": "unproven_coalesced_historical_account_stream",
+    "role": "oracle",
+    "slot_end": {
+      "content": {
+        "data_length": 254,
+        "data_sha256": "de5668e024ac326572de46946226a78c2833f713aad99dc683bb5ad0f12b6f28",
+        "executable": false,
+        "lamports": 2658720,
+        "owner": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760958,
+      "present": true,
+      "response_sha256": "02257a0026bc33193e018eac7a136ee6731439519e37f0372a8deaf8f9d9a25d",
+      "slot": 448760958
+    },
+    "slot_start": {
+      "content": {
+        "data_length": 254,
+        "data_sha256": "de5668e024ac326572de46946226a78c2833f713aad99dc683bb5ad0f12b6f28",
+        "executable": false,
+        "lamports": 2658720,
+        "owner": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760957,
+      "present": true,
+      "response_sha256": "3d069c6682bdcd332ae126b48b6befb54eaa5e714157ae9c3a1775c7ab53ffc7",
+      "slot": 448760957
+    },
+    "terminal_absence_matches_zero_lamport_event": false,
+    "terminal_content_equal": true
+  },
+  {
+    "account_events": [
+      {
+        "address": "HxrqS96uHco2a8LxTvUwb9e2tS963Ec6nYkvZso9TDii",
+        "data_length": 653,
+        "data_sha256": "6b4b7d0d45befee9d48c5a5fa96a22d63a8d55102bd60353a314a82a7dca69d3",
+        "executable": false,
+        "lamports": 5435760,
+        "owner": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+        "raw_event_sha256": "5e3d342b959ad20342cbaec80c797d8c1c8483fc3d749e392139fdf2dfae9352",
+        "rent_epoch": 18446744073709551615,
+        "transaction_index": 259,
+        "txn_signature": "2oBLMEw1UwzVLaFn8Ync4jtMkPtHahRD5jgx4g4ucLpwuADDY9Ew8eDFckS9bFv3dDEiZDsYTS2QUqugzX5zWeFC",
+        "write_version": 1259
+      }
+    ],
+    "address": "HxrqS96uHco2a8LxTvUwb9e2tS963Ec6nYkvZso9TDii",
+    "completeness": "unproven_coalesced_historical_account_stream",
+    "role": "whirlpool",
+    "slot_end": {
+      "content": {
+        "data_length": 653,
+        "data_sha256": "6b4b7d0d45befee9d48c5a5fa96a22d63a8d55102bd60353a314a82a7dca69d3",
+        "executable": false,
+        "lamports": 5435760,
+        "owner": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760958,
+      "present": true,
+      "response_sha256": "31cd6f573cbbbcf731233625ca785b852052e8fe1892cf835c53d2e1b8e40759",
+      "slot": 448760958
+    },
+    "slot_start": {
+      "content": {
+        "data_length": 653,
+        "data_sha256": "55b243f232741cca4664fb17a6aaf20c7721136c217256dc94645152e145720a",
+        "executable": false,
+        "lamports": 5435760,
+        "owner": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760957,
+      "present": true,
+      "response_sha256": "9ebcbf69e64e66518b7c811549db299c19b776c55dfd57a178767a498ec344ca",
+      "slot": 448760957
+    },
+    "terminal_absence_matches_zero_lamport_event": false,
+    "terminal_content_equal": true
+  },
+  {
+    "account_events": [],
+    "address": "So11111111111111111111111111111111111111112",
+    "completeness": "unproven_coalesced_historical_account_stream",
+    "role": "token_mint_a",
+    "slot_end": {
+      "content": {
+        "data_length": 82,
+        "data_sha256": "b0f919425a529f4971ef8dabd535aec34947d5c8c4885df80dae91635b98c5f3",
+        "executable": false,
+        "lamports": 1838483635267,
+        "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760958,
+      "present": true,
+      "response_sha256": "db7eb23585f27b3887032e6e25e146cd9e858f7685c89a715c30298f8a888057",
+      "slot": 448760958
+    },
+    "slot_start": {
+      "content": {
+        "data_length": 82,
+        "data_sha256": "b0f919425a529f4971ef8dabd535aec34947d5c8c4885df80dae91635b98c5f3",
+        "executable": false,
+        "lamports": 1838483635267,
+        "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760957,
+      "present": true,
+      "response_sha256": "b5b742c19a5075b440b7bbcdcef59e12d49aacdac97f4c06babd4765a5dd2215",
+      "slot": 448760957
+    },
+    "terminal_absence_matches_zero_lamport_event": false,
+    "terminal_content_equal": null
+  },
+  {
+    "account_events": [],
+    "address": "Xsv9hRk1z5ystj9MhnA7Lq4vjSsLwzL2nxrwmwtD3re",
+    "completeness": "unproven_coalesced_historical_account_stream",
+    "role": "token_mint_b",
+    "slot_end": {
+      "content": {
+        "data_length": 675,
+        "data_sha256": "92c344d3bb59ba0552bd76bcfb2da05f08f3e7fefbd5cbdedceaef8e959495c8",
+        "executable": false,
+        "lamports": 5588880,
+        "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760958,
+      "present": true,
+      "response_sha256": "7f6fe22b7ae28a1dc2ce79ee9794560705612acaf37d978937b42dd03b132fa3",
+      "slot": 448760958
+    },
+    "slot_start": {
+      "content": {
+        "data_length": 675,
+        "data_sha256": "92c344d3bb59ba0552bd76bcfb2da05f08f3e7fefbd5cbdedceaef8e959495c8",
+        "executable": false,
+        "lamports": 5588880,
+        "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760957,
+      "present": true,
+      "response_sha256": "eb29900d39cce8b6bd56a9d91ffd141db5bd592e71878ec8f7a86a8d6685ed23",
+      "slot": 448760957
+    },
+    "terminal_absence_matches_zero_lamport_event": false,
+    "terminal_content_equal": null
+  },
+  {
+    "account_events": [],
+    "address": "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+    "completeness": "unproven_coalesced_historical_account_stream",
+    "role": "memo_program",
+    "slot_end": {
+      "content": {
+        "data_length": 74800,
+        "data_sha256": "f520eaf096361abbb9639ea4dc3e5388a87b9330e121f476607b87c46ef67954",
+        "executable": true,
+        "lamports": 523015135,
+        "owner": "BPFLoader2111111111111111111111111111111111",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760958,
+      "present": true,
+      "response_sha256": "988fde81a0b8e8da62e5da95aa3a7c7195608a663025b10a31f8de8b0602a822",
+      "slot": 448760958
+    },
+    "slot_start": {
+      "content": {
+        "data_length": 74800,
+        "data_sha256": "f520eaf096361abbb9639ea4dc3e5388a87b9330e121f476607b87c46ef67954",
+        "executable": true,
+        "lamports": 523015135,
+        "owner": "BPFLoader2111111111111111111111111111111111",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760957,
+      "present": true,
+      "response_sha256": "3399775f44da5d6bd58e96751787a79b0bbb7e0fae12de1627a54f2fc027847a",
+      "slot": 448760957
+    },
+    "terminal_absence_matches_zero_lamport_event": false,
+    "terminal_content_equal": null
+  },
+  {
+    "account_events": [],
+    "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+    "completeness": "unproven_coalesced_historical_account_stream",
+    "role": "token_program_b",
+    "slot_end": {
+      "content": {
+        "data_length": 36,
+        "data_sha256": "bae3e5d63e30c0c3e6fe788b9e027bf003ca5e5bb46d3a9627e034bb3002ea5c",
+        "executable": true,
+        "lamports": 70128638,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760958,
+      "present": true,
+      "response_sha256": "43a2cab8edecb336252386a1ba6395cb39ce3679a9b69d0854678aa8b4e96569",
+      "slot": 448760958
+    },
+    "slot_start": {
+      "content": {
+        "data_length": 36,
+        "data_sha256": "bae3e5d63e30c0c3e6fe788b9e027bf003ca5e5bb46d3a9627e034bb3002ea5c",
+        "executable": true,
+        "lamports": 70128638,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "rent_epoch": 18446744073709551615
+      },
+      "context_slot": 448760957,
+      "present": true,
+      "response_sha256": "aa3e4e6a502f75cca16b189b90513f256b19abb3ee23d90b7549d8f6664edd9e",
+      "slot": 448760957
+    },
+    "terminal_absence_matches_zero_lamport_event": false,
+    "terminal_content_equal": null
+  },
+  {
+    "account_events": [
+      {
+        "address": "SysvarRecentB1ockHashes11111111111111111111",
+        "data_length": 6008,
+        "data_sha256": "5b6e7f56eb69a1ac533ed81f352603a9dda558ce85d09e52f5b2320c2c9990e5",
+        "executable": false,
+        "lamports": 42706560,
+        "owner": "Sysvar1111111111111111111111111111111111111",
+        "raw_event_sha256": "c71442850bb47780e00081abb100f3091831fbb2bf9f625f6b183719abda917d",
+        "rent_epoch": 18446744073709551615,
+        "transaction_index": null,
+        "txn_signature": null,
+        "write_version": 8589934594
+      }
+    ],
+    "address": "SysvarRecentB1ockHashes11111111111111111111",
+    "completeness": "unproven_coalesced_historical_account_stream",
+    "role": null,
+    "slot_end": {
+      "content": null,
+      "context_slot": 448760958,
+      "present": false,
+      "response_sha256": "ea61b279b76906c319b5a28f679fb3242f1a7470a2d7f1f1b93fc3b3bafd7187",
+      "slot": 448760958
+    },
+    "slot_start": {
+      "content": null,
+      "context_slot": 448760957,
+      "present": false,
+      "response_sha256": "5988d9d04dabd3e567c0ed5777539fde1dcfde10b784cf0716da456a0fb9ca3e",
+      "slot": 448760957
+    },
+    "terminal_absence_matches_zero_lamport_event": false,
+    "terminal_content_equal": null
+  }
+]

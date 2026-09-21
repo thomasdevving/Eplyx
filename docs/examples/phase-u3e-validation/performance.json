@@ -1,0 +1,65 @@
+{
+  "captures": {
+    "boundary-proof": {
+      "decoded_account_bytes": 0,
+      "failed_attempts": 0,
+      "files": 3,
+      "first_request_start_to_last_response_seconds": 4.957052230834961,
+      "raw_response_bytes": 3754542,
+      "requests": 1,
+      "retries": 0,
+      "stored_bytes": 3785960,
+      "transport_seconds": 4.957052209007088
+    },
+    "mapping-probe": {
+      "decoded_account_bytes": 29704,
+      "failed_attempts": 0,
+      "files": 3,
+      "first_request_start_to_last_response_seconds": 0.8362658023834229,
+      "raw_response_bytes": 39866,
+      "requests": 1,
+      "retries": 0,
+      "stored_bytes": 43855,
+      "transport_seconds": 0.8362658330006525
+    },
+    "runtime": {
+      "decoded_account_bytes": 90,
+      "failed_attempts": 1,
+      "files": 6,
+      "first_request_start_to_last_response_seconds": 1.0706658363342285,
+      "raw_response_bytes": 978,
+      "requests": 4,
+      "retries": 0,
+      "stored_bytes": 12783,
+      "transport_seconds": 1.034620207909029
+    },
+    "state": {
+      "decoded_account_bytes": 858284,
+      "failed_attempts": 0,
+      "files": 35,
+      "first_request_start_to_last_response_seconds": 17.449214458465576,
+      "raw_response_bytes": 1152289,
+      "requests": 33,
+      "retries": 0,
+      "stored_bytes": 1245201,
+      "transport_seconds": 16.30849500320619
+    }
+  },
+  "historical_binary_acquisition": "not repeated",
+  "historical_runtime_input_acquisition": {
+    "decoded_account_bytes": 90,
+    "failed_attempts": 1,
+    "files": 6,
+    "first_request_start_to_last_response_seconds": 1.0706658363342285,
+    "raw_response_bytes": 978,
+    "requests": 4,
+    "retries": 0,
+    "stored_bytes": 12783,
+    "transport_seconds": 1.034620207909029
+  },
+  "native_v0_execution": "not attempted",
+  "post_state_fidelity_comparison": "not attempted",
+  "runtime_context_construction": "not completed",
+  "semantic_evaluation": "not attempted",
+  "timing_boundary": "per-request curl/response parsing; span excludes prerequisites and final validation/receipt writes"
+}

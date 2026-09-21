@@ -1,0 +1,30 @@
+{
+  "all_required_context_values_proven": false,
+  "blockhash": "Existing legacy historical path disables signature and recent blockhash verification while retaining message bytes; no T1 blockhash replacement or native v0 execution performed.",
+  "clock": {
+    "address": "SysvarC1ock11111111111111111111111111111111",
+    "epoch": null,
+    "epoch_start_timestamp": null,
+    "execution_slot": 448195166,
+    "historical_clock_acquired": false,
+    "leader_schedule_epoch": null,
+    "source_requirement": "Frozen Scope refresh and KLend refreshReserve source use Clock::get; source is not reproducibly matched to the deployed ELF.",
+    "transaction_block_time": 1789764316,
+    "unix_timestamp_proven_from_clock_bytes": null
+  },
+  "engine_unchanged": true,
+  "epoch_schedule": "Needed if deriving epoch data; historical bank reconstruction remains pending.",
+  "feature_profile": "Existing execute_in_environment calls LiteSVM::new(); pinned 0.16.0 new() enables mainnet features from its 2026-08-24 snapshot. No slot-accurate bank proof.",
+  "instructions_sysvar": "Must be constructed by runtime from unchanged native v0 loaded message and current outer index. Not an archived S-1 account. Native integration not implemented.",
+  "litesvm_version": "0.16.0",
+  "local_crate_source_hashes": {
+    "src/features.rs": "bdac6060ca99e43dd54aaa26ca696fb05923b06ab578ac02f89f73b495ab1e42",
+    "src/lib.rs": "7c11a398084b8b709b5e1d8a6ca0e18e6ea130282e947f4a5a1537a877218e1b"
+  },
+  "native_loaders": "Existing observed dependency captures pin legacy, upgradeable and native loader identities. System account is passed but not observed invoked; historical account metadata is missing.",
+  "native_v0": "Pinned LiteSVM send_transaction accepts Into<VersionedTransaction>; Eplyx generic execution still accepts Option<Message> and makes an unsigned legacy Transaction. No implementation changed.",
+  "rent": "LiteSVM installs feature-dependent rent; historical applicability and actual deployed program use remain unproven.",
+  "slot_hashes": "T1 LUT proof has no SlotHashes evidence dependency (active table); this is not proof programs never read SlotHashes.",
+  "stake_history": "No observed explicit account or demonstrated requirement; do not add a guessed historical value.",
+  "status": "preliminary_read_only_review_not_Stage_2_acceptance"
+}

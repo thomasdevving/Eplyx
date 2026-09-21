@@ -1,0 +1,271 @@
+{
+  "distribution": {
+    "Envelope": 2,
+    "FailedOriginalPolicy": 1,
+    "RuntimeContext": 1,
+    "SemanticAttribution": 2,
+    "Transport": 3
+  },
+  "interpretation": "multi-action attribution is the first experimental policy blocker; additional envelope dependency blockers remain visible, and no whole-transaction replay was attempted",
+  "transactions": [
+    {
+      "cause": "RuntimeContext",
+      "evidence": {
+        "reason": "missing_account",
+        "request": {
+          "address": "SysvarS1otHashes111111111111111111111111111",
+          "method": "getAccountInfo",
+          "name": "SlotHashes",
+          "params": [
+            "SysvarS1otHashes111111111111111111111111111",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ]
+        }
+      },
+      "signature": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97"
+    },
+    {
+      "cause": "Transport",
+      "evidence": {
+        "attempted": true,
+        "failure_reason": "invalid_json_response",
+        "method": "getAccountInfo",
+        "params": [
+          "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+          {
+            "commitment": "finalized",
+            "dataSlice": {
+              "length": 524288,
+              "offset": 3670016
+            },
+            "encoding": "base64",
+            "slot": 448194516
+          }
+        ],
+        "request_id": "e6603892a13ff10b7aba24baac34a5bcc614c7c16203f2e662ddb8b384cedab7",
+        "response_bytes": 0,
+        "response_file": "rpc/e6603892a13ff10b7aba24baac34a5bcc614c7c16203f2e662ddb8b384cedab7.body",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "response_withheld": false,
+        "status": "failure",
+        "transport_seconds": 0.12281362497014925
+      },
+      "signature": "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk"
+    },
+    {
+      "cause": "Transport",
+      "evidence": {
+        "attempted": true,
+        "failure_reason": "invalid_json_response",
+        "method": "getAccountInfo",
+        "params": [
+          "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+          {
+            "commitment": "finalized",
+            "dataSlice": {
+              "length": 524288,
+              "offset": 0
+            },
+            "encoding": "base64",
+            "slot": 448194461
+          }
+        ],
+        "request_id": "44ae4612d5eb8a9eb844eb83f750e147fda28272754ec4f34ba9b0cbbdf22bf8",
+        "response_bytes": 0,
+        "response_file": "rpc/44ae4612d5eb8a9eb844eb83f750e147fda28272754ec4f34ba9b0cbbdf22bf8.body",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "response_withheld": false,
+        "status": "failure",
+        "transport_seconds": 0.11789304198464379
+      },
+      "signature": "5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V"
+    },
+    {
+      "cause": "Transport",
+      "evidence": {
+        "attempted": true,
+        "failure_reason": "invalid_json_response",
+        "method": "getAccountInfo",
+        "params": [
+          "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+          {
+            "commitment": "finalized",
+            "encoding": "base64",
+            "slot": 448194434
+          }
+        ],
+        "request_id": "187707edb53db315718d0d4320f82504d60dacde6c966da39beef3a64da7573f",
+        "response_bytes": 0,
+        "response_file": "rpc/187707edb53db315718d0d4320f82504d60dacde6c966da39beef3a64da7573f.body",
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "response_withheld": false,
+        "status": "failure",
+        "transport_seconds": 0.11719070799881592
+      },
+      "signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx"
+    },
+    {
+      "cause": "Envelope",
+      "evidence": [
+        {
+          "code": "envelope_shape_unsupported",
+          "detail": "outside observed Scope/ATA/refresh/target/compute envelope; unexpected extra or reordered dependency",
+          "outer_index": null
+        }
+      ],
+      "execution_attempted": false,
+      "signature": "2dc94E8Mvh83c8MiecgRekd7Vj8YE6aexfVeCJK58K46LQcTRjpDomii6pYmwbdeYmdTM3bVbHw6rhFdtwRtSTnT"
+    },
+    {
+      "cause": "SemanticAttribution",
+      "evidence": [
+        {
+          "code": "unsupported_multi_action_attribution",
+          "detail": "all target observations preserved; whole-transaction deltas cannot be attributed independently by the existing evaluator",
+          "outer_index": null
+        },
+        {
+          "code": "unsupported_execution_dependency",
+          "detail": "unknown external companion; no program wildcard",
+          "outer_index": 9
+        }
+      ],
+      "execution_attempted": false,
+      "signature": "37XJKQbB9fRX1R76cKKGSENNNA2RSY1WvjkCx2Q7joN2irKfTTZ5Z6bHgH4rfgDPJvhXf3peTe4mwxisfpSEmimu"
+    },
+    {
+      "cause": "SemanticAttribution",
+      "evidence": [
+        {
+          "code": "unsupported_multi_action_attribution",
+          "detail": "all target observations preserved; whole-transaction deltas cannot be attributed independently by the existing evaluator",
+          "outer_index": null
+        },
+        {
+          "code": "unsupported_execution_dependency",
+          "detail": "unsupported_execution_dependency: ATA creation/unknown lifecycle; existing-token boundary and no-creation CPI evidence required",
+          "outer_index": 0
+        },
+        {
+          "code": "unsupported_execution_dependency",
+          "detail": "unknown external companion; no program wildcard",
+          "outer_index": 3
+        },
+        {
+          "code": "unsupported_execution_dependency",
+          "detail": "unknown external companion; no program wildcard",
+          "outer_index": 4
+        },
+        {
+          "code": "unsupported_execution_dependency",
+          "detail": "unsupported KLend prerequisite/action",
+          "outer_index": 5
+        },
+        {
+          "code": "unsupported_execution_dependency",
+          "detail": "unsupported KLend prerequisite/action",
+          "outer_index": 6
+        },
+        {
+          "code": "unsupported_execution_dependency",
+          "detail": "target data/arity/signer/amount outside unchanged U2 contract",
+          "outer_index": 13
+        },
+        {
+          "code": "unsupported_execution_dependency",
+          "detail": "unknown external companion; no program wildcard",
+          "outer_index": 14
+        },
+        {
+          "code": "unsupported_execution_dependency",
+          "detail": "unsupported KLend prerequisite/action",
+          "outer_index": 15
+        },
+        {
+          "code": "envelope_shape_unsupported",
+          "detail": "matching refreshReserve must precede matching refreshObligation and target",
+          "outer_index": 13
+        }
+      ],
+      "execution_attempted": false,
+      "signature": "3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q"
+    },
+    {
+      "cause": "FailedOriginalPolicy",
+      "evidence": [
+        {
+          "code": "failed_original",
+          "detail": "existing successful-original corpus policy",
+          "outer_index": null
+        },
+        {
+          "code": "unsupported_multi_action_attribution",
+          "detail": "all target observations preserved; whole-transaction deltas cannot be attributed independently by the existing evaluator",
+          "outer_index": null
+        },
+        {
+          "code": "unsupported_execution_dependency",
+          "detail": "unsupported_execution_dependency: ATA creation/unknown lifecycle; existing-token boundary and no-creation CPI evidence required",
+          "outer_index": 0
+        },
+        {
+          "code": "unsupported_execution_dependency",
+          "detail": "unknown external companion; no program wildcard",
+          "outer_index": 3
+        },
+        {
+          "code": "unsupported_execution_dependency",
+          "detail": "unknown external companion; no program wildcard",
+          "outer_index": 4
+        },
+        {
+          "code": "unsupported_execution_dependency",
+          "detail": "unsupported KLend prerequisite/action",
+          "outer_index": 5
+        },
+        {
+          "code": "unsupported_execution_dependency",
+          "detail": "unsupported KLend prerequisite/action",
+          "outer_index": 6
+        },
+        {
+          "code": "unsupported_execution_dependency",
+          "detail": "target data/arity/signer/amount outside unchanged U2 contract",
+          "outer_index": 13
+        },
+        {
+          "code": "unsupported_execution_dependency",
+          "detail": "unknown external companion; no program wildcard",
+          "outer_index": 14
+        },
+        {
+          "code": "unsupported_execution_dependency",
+          "detail": "unsupported KLend prerequisite/action",
+          "outer_index": 15
+        },
+        {
+          "code": "envelope_shape_unsupported",
+          "detail": "matching refreshReserve must precede matching refreshObligation and target",
+          "outer_index": 13
+        }
+      ],
+      "execution_attempted": false,
+      "signature": "47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf"
+    },
+    {
+      "cause": "Envelope",
+      "evidence": {
+        "class": "B",
+        "code": "unsupported_transaction",
+        "detail": "unsupported program 11111111111111111111111111111111 in a Kamino KLend replay; the supported contract admits KLend and compute-budget instructions only",
+        "stage": "admission"
+      },
+      "execution_attempted": false,
+      "signature": "2bcGD3XPZoBaQ9VL1oL4HtJ45sSatCYwPycGuLCNh9NxqhHtcahXYFYsYfZNvYk5HgXGaCYZAJrn256ZLgoHMjv6"
+    }
+  ]
+}

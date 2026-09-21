@@ -1,0 +1,178 @@
+{
+  "Instructions_sysvar": "runtime-generated context, no historical ordinary-account post reference; exact native envelope and Scope check retained",
+  "compute_units": {
+    "diagnostic_match": true,
+    "local": 182642,
+    "original": 182642
+  },
+  "decision": "T1-B",
+  "failures": [
+    "return_data"
+  ],
+  "fee_matched": true,
+  "fidelity": "mismatched",
+  "inner_instructions_exact": true,
+  "kind": "strict_native_v0_historical_fidelity",
+  "logs_byte_identical": true,
+  "outcome_matched": true,
+  "raw_post_state_matched": true,
+  "return_data_matched": false,
+  "runtime_managed_exclusions_added": [],
+  "tolerance_used": false,
+  "watched_accounts": [
+    {
+      "actual_data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "address": "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+      "different_fields": [],
+      "expected_data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matched": true
+    },
+    {
+      "actual_data_sha256": "d107cdaeb3b97e7dc14c30bc05e4fe49cd72617a1a1b947e25cd3279eb6018ac",
+      "address": "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+      "different_fields": [],
+      "expected_data_sha256": "d107cdaeb3b97e7dc14c30bc05e4fe49cd72617a1a1b947e25cd3279eb6018ac",
+      "matched": true
+    },
+    {
+      "actual_data_sha256": "5e0570ccdb8401db8969fb6fd400cdf2357fc3bcf975fe089c51096130e3554c",
+      "address": "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+      "different_fields": [],
+      "expected_data_sha256": "5e0570ccdb8401db8969fb6fd400cdf2357fc3bcf975fe089c51096130e3554c",
+      "matched": true
+    },
+    {
+      "actual_data_sha256": "1f45eae302bcc52b52e28ccc4f7a67589b520445b87d731df116edcada9c2072",
+      "address": "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+      "different_fields": [],
+      "expected_data_sha256": "1f45eae302bcc52b52e28ccc4f7a67589b520445b87d731df116edcada9c2072",
+      "matched": true
+    },
+    {
+      "actual_data_sha256": "1d4d40f87f5c82460565a5780e727073cdd787f528636f059628df0a8d55a110",
+      "address": "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+      "different_fields": [],
+      "expected_data_sha256": "1d4d40f87f5c82460565a5780e727073cdd787f528636f059628df0a8d55a110",
+      "matched": true
+    },
+    {
+      "actual_data_sha256": "6804554e69fd3a58caa191dc4a58f4c67223d30ca28ab8987f39fc18d2f7374d",
+      "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+      "different_fields": [],
+      "expected_data_sha256": "6804554e69fd3a58caa191dc4a58f4c67223d30ca28ab8987f39fc18d2f7374d",
+      "matched": true
+    },
+    {
+      "actual_data_sha256": "005950c007e8e550a16beddf836f0082d26d197f5f645ff7c04a5c8d171cf8a1",
+      "address": "ComputeBudget111111111111111111111111111111",
+      "different_fields": [],
+      "expected_data_sha256": "005950c007e8e550a16beddf836f0082d26d197f5f645ff7c04a5c8d171cf8a1",
+      "matched": true
+    },
+    {
+      "actual_data_sha256": "f4aba07704156a828ec27a590398cc17b3227924465d012c6b2edf3163af05b3",
+      "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+      "different_fields": [],
+      "expected_data_sha256": "f4aba07704156a828ec27a590398cc17b3227924465d012c6b2edf3163af05b3",
+      "matched": true
+    },
+    {
+      "actual_data_sha256": "3374eaba1ea2962395dccc0308b847b7c630e2a97c054c14609ad930754c18b9",
+      "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+      "different_fields": [],
+      "expected_data_sha256": "3374eaba1ea2962395dccc0308b847b7c630e2a97c054c14609ad930754c18b9",
+      "matched": true
+    },
+    {
+      "actual_data_sha256": "1808e8ed8df1172b183662cdf5220eb26b12f39a35649801b400fd929f0135f5",
+      "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+      "different_fields": [],
+      "expected_data_sha256": "1808e8ed8df1172b183662cdf5220eb26b12f39a35649801b400fd929f0135f5",
+      "matched": true
+    },
+    {
+      "actual_data_sha256": "7b412449f556f471ca5623ec1731f03366675455a1509a349388e89e90d231bc",
+      "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+      "different_fields": [],
+      "expected_data_sha256": "7b412449f556f471ca5623ec1731f03366675455a1509a349388e89e90d231bc",
+      "matched": true
+    },
+    {
+      "actual_data_sha256": "e1d479cdb52442dc16c6476e9299f111e27cca058917dddcc36f65ef1854a8db",
+      "address": "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+      "different_fields": [],
+      "expected_data_sha256": "e1d479cdb52442dc16c6476e9299f111e27cca058917dddcc36f65ef1854a8db",
+      "matched": true
+    },
+    {
+      "actual_data_sha256": "9a08be63b7c6b8191e6661b1aec5bdfc93af7753c6aceb11426041028126042d",
+      "address": "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+      "different_fields": [],
+      "expected_data_sha256": "9a08be63b7c6b8191e6661b1aec5bdfc93af7753c6aceb11426041028126042d",
+      "matched": true
+    },
+    {
+      "actual_data_sha256": "d92020439aa6f2194864291155bde3d6f4c80dd91a32a8371787516ef474ee4f",
+      "address": "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+      "different_fields": [],
+      "expected_data_sha256": "d92020439aa6f2194864291155bde3d6f4c80dd91a32a8371787516ef474ee4f",
+      "matched": true
+    },
+    {
+      "actual_data_sha256": "9a7ec50642479595301e3807120f1b7df0c56f32f7f2bab18664d53543e5504d",
+      "address": "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+      "different_fields": [],
+      "expected_data_sha256": "9a7ec50642479595301e3807120f1b7df0c56f32f7f2bab18664d53543e5504d",
+      "matched": true
+    },
+    {
+      "actual_data_sha256": "88114b83a3bc84f0d0c3a72c0ef651cc6206230872683dbbf150c85a26eb5c92",
+      "address": "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+      "different_fields": [],
+      "expected_data_sha256": "88114b83a3bc84f0d0c3a72c0ef651cc6206230872683dbbf150c85a26eb5c92",
+      "matched": true
+    },
+    {
+      "actual_data_sha256": "c94b792a6d8b25d3e53ea94d8b80111735ed80d6a7dc8deb937cd342707f5f03",
+      "address": "11111111111111111111111111111111",
+      "different_fields": [],
+      "expected_data_sha256": "c94b792a6d8b25d3e53ea94d8b80111735ed80d6a7dc8deb937cd342707f5f03",
+      "matched": true
+    },
+    {
+      "actual_data_sha256": null,
+      "address": "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+      "different_fields": [],
+      "expected_data_sha256": null,
+      "matched": true
+    },
+    {
+      "actual_data_sha256": "ab5a8e3831db3fdfd87ef8c0dd0bcebd57df853ce4affacc65bdca9e37194777",
+      "address": "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+      "different_fields": [],
+      "expected_data_sha256": "ab5a8e3831db3fdfd87ef8c0dd0bcebd57df853ce4affacc65bdca9e37194777",
+      "matched": true
+    },
+    {
+      "actual_data_sha256": "5b31219b7bc4060b1638b933be5f50df3400109acfef12408a196d57ad119748",
+      "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "different_fields": [],
+      "expected_data_sha256": "5b31219b7bc4060b1638b933be5f50df3400109acfef12408a196d57ad119748",
+      "matched": true
+    },
+    {
+      "actual_data_sha256": "bae3e5d63e30c0c3e6fe788b9e027bf003ca5e5bb46d3a9627e034bb3002ea5c",
+      "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "different_fields": [],
+      "expected_data_sha256": "bae3e5d63e30c0c3e6fe788b9e027bf003ca5e5bb46d3a9627e034bb3002ea5c",
+      "matched": true
+    },
+    {
+      "actual_data_sha256": "3a0cde7377b2c441b76eab17cbcc5747aeac9ddaa423cce4f496f39ff2eb92cb",
+      "address": "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+      "different_fields": [],
+      "expected_data_sha256": "3a0cde7377b2c441b76eab17cbcc5747aeac9ddaa423cce4f496f39ff2eb92cb",
+      "matched": true
+    }
+  ]
+}

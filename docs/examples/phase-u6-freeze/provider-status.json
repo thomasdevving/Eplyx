@@ -1,0 +1,45 @@
+{
+  "account_write_stream_event_count": 0,
+  "alchemy_documentation": {
+    "account_archive": {
+      "snapshot_sha256": "60f6e9a770da5ed692727146be5fdb6ef42d722417ffde63cc1def365f15cf62",
+      "url": "https://www.alchemy.com/docs/solana/account-archive"
+    },
+    "historical_replay": {
+      "reported_max_slots": 432000,
+      "snapshot_sha256": "8741eec2c88d07f54ad4688da0623f6499d3498454acb01b4d7dd47e2fbfc49c",
+      "url": "https://www.alchemy.com/docs/reference/yellowstone-grpc-historical-replay"
+    },
+    "overview": {
+      "reported_max_slots": 6000,
+      "snapshot_sha256": "53c7ae4ebda4ba0e070aed6712ea5551460dadcc31bd00cfdef0b3fc9480d1ff",
+      "url": "https://www.alchemy.com/docs/reference/yellowstone-grpc-overview"
+    }
+  },
+  "availability_conclusion": "unverified_without_authenticated_provider_response",
+  "checked_at_utc": "2026-09-20T22:39:36.137805+00:00",
+  "configured_archive_provider": false,
+  "configured_historical_stream_provider": false,
+  "current_finalized_slot": 448867718,
+  "docs_demo_probe": {
+    "body_sha256": "9842134ff519effd39a97df79d1d733ed70441a345013305ef3bb57b0a6ee1bd",
+    "error": {
+      "code": -32600,
+      "message": "Unspecified origin not on whitelist."
+    },
+    "url": "https://solana-mainnet.g.alchemy.com/v2/docs-demo"
+  },
+  "public_get_slot": {
+    "body_sha256": "d37096cb12fa3b2a86e77081f5172bc850e6663ba05375534c83b6a921fb206e",
+    "url": "https://api.mainnet-beta.solana.com"
+  },
+  "raw_stream_event_count": 0,
+  "target_age_slots": 106760,
+  "target_slot": 448760958,
+  "transaction_stream_event_count": 0,
+  "u5_public_rpc_historical_probe": {
+    "body_sha256": "87547d7aeb55c3852336e3f55dec41564eb4c3efdae56e1290dee7198bc1719a",
+    "classification": "historical_account_capability_absent",
+    "returned_context_slot": 448800601
+  }
+}

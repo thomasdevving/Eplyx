@@ -1,0 +1,22 @@
+test_account_fields_all_strict (__main__.NativeEnvelopeTests.test_account_fields_all_strict) ... ok
+test_actual_prestate_audit_rejects_post_seed (__main__.NativeEnvelopeTests.test_actual_prestate_audit_rejects_post_seed) ... ok
+test_changed_native_message_rejected (__main__.NativeEnvelopeTests.test_changed_native_message_rejected) ... ok
+test_current_clock_rejected (__main__.NativeEnvelopeTests.test_current_clock_rejected) ... ok
+test_duplicate_seed_rejected (__main__.NativeEnvelopeTests.test_duplicate_seed_rejected) ... ok
+test_missing_seed_rejected (__main__.NativeEnvelopeTests.test_missing_seed_rejected) ... ok
+test_missing_watch_rejected (__main__.NativeEnvelopeTests.test_missing_watch_rejected) ... ok
+test_no_semantics_when_fidelity_fails (__main__.NativeEnvelopeTests.test_no_semantics_when_fidelity_fails) ... ok
+test_original_executes_and_actual_prestate_is_historical (__main__.NativeEnvelopeTests.test_original_executes_and_actual_prestate_is_historical) ... ok
+test_outcome_metadata_strict (__main__.NativeEnvelopeTests.test_outcome_metadata_strict) ... ok
+test_post_context_seed_rejected (__main__.NativeEnvelopeTests.test_post_context_seed_rejected) ... ok
+test_post_scope_bytes_cannot_masquerade_as_pre (__main__.NativeEnvelopeTests.test_post_scope_bytes_cannot_masquerade_as_pre) ... ok
+test_scope_control_has_no_fidelity_admission (__main__.NativeEnvelopeTests.test_scope_control_has_no_fidelity_admission) ... ok
+test_success_is_not_fidelity (__main__.NativeEnvelopeTests.test_success_is_not_fidelity) ... ok
+test_three_distinct_slothashes_have_identical_success (__main__.NativeEnvelopeTests.test_three_distinct_slothashes_have_identical_success) ... ok
+test_wrong_historical_elf_rejected (__main__.NativeEnvelopeTests.test_wrong_historical_elf_rejected) ... ok
+test_wrong_lut_seed_rejected (__main__.NativeEnvelopeTests.test_wrong_lut_seed_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 24.996s
+
+OK

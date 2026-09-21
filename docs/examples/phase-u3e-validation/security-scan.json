@@ -1,0 +1,2924 @@
+{
+  "archive_members_scanned": 199,
+  "authorization_cookie_headers_retained": false,
+  "files": [
+    {
+      "path": "docs/examples/phase-u3-baseline/before-rejections.json",
+      "sha256": "0c7bb8085801eec1ab7bb1fb4a00e18e766d64e47f5d83ba6a8dec4d0bfd7548"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/capture-receipt.json",
+      "sha256": "00daa0b08b1540433e29eeaee027bf16ea12511d62878a054ce59bb14d47ab4f"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/checksums.sha256",
+      "sha256": "55eef5e2ba0e4cadbdaef6322b21b2daa6b5fdd0f404f58882a0c6cbb03c6ad9"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/classifications.json",
+      "sha256": "dabafe084c4e91168e022d1691037db68f52882893567d5d190b1d88e0ac40e9"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/fetch-membership.json",
+      "sha256": "a04c9d28a9130b91da61ad985efd7838541aac60ed62e98bf95453b12359599b"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/manifest.json",
+      "sha256": "a9f8b9e78cc49484c2002ea1d614745b49dc36bea221ca7ed9a1703752e79674"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/anchor.json",
+      "sha256": "fd6a9e5937bd67c88dad31add4a7c20c07334d4f91399cc0c6b6226e1240f69a"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/23Qwt1So9LwakQPpLPcpJonbWHJ6i6jn4zbz7VFhz1FE3QKCjtWEhVQ9LUBM4eU5myX1NVbZJv3QBXm9BNxFSFje-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/23Qwt1So9LwakQPpLPcpJonbWHJ6i6jn4zbz7VFhz1FE3QKCjtWEhVQ9LUBM4eU5myX1NVbZJv3QBXm9BNxFSFje-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/23Qwt1So9LwakQPpLPcpJonbWHJ6i6jn4zbz7VFhz1FE3QKCjtWEhVQ9LUBM4eU5myX1NVbZJv3QBXm9BNxFSFje-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2KYQ8dLfuakEVTah1RXYX1qie75J5Vo3VCDxsi6kmfz796xsRhQsmspq8eJXmrL7thxGQTSYsCRg7R4FbcarXDPw-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2KYQ8dLfuakEVTah1RXYX1qie75J5Vo3VCDxsi6kmfz796xsRhQsmspq8eJXmrL7thxGQTSYsCRg7R4FbcarXDPw-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2KYQ8dLfuakEVTah1RXYX1qie75J5Vo3VCDxsi6kmfz796xsRhQsmspq8eJXmrL7thxGQTSYsCRg7R4FbcarXDPw-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2SBi3oiVnG31CBNGkQzwifctokwN2Hd8eE3yPas5ySXBaXv3NmmwbmhCPjn8nLhp1rKbSnYwcDM1RQVZaFXc9usn-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2SBi3oiVnG31CBNGkQzwifctokwN2Hd8eE3yPas5ySXBaXv3NmmwbmhCPjn8nLhp1rKbSnYwcDM1RQVZaFXc9usn-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2SBi3oiVnG31CBNGkQzwifctokwN2Hd8eE3yPas5ySXBaXv3NmmwbmhCPjn8nLhp1rKbSnYwcDM1RQVZaFXc9usn-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2TJdUfzMSqNJYrhmEE1fRUMiEnCB4sYmb5hVj54knHvMUCmgmdo72Vtm66t6cs5Jwy664MaLYZ42r3D1D2WEDCR3-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2TJdUfzMSqNJYrhmEE1fRUMiEnCB4sYmb5hVj54knHvMUCmgmdo72Vtm66t6cs5Jwy664MaLYZ42r3D1D2WEDCR3-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2TJdUfzMSqNJYrhmEE1fRUMiEnCB4sYmb5hVj54knHvMUCmgmdo72Vtm66t6cs5Jwy664MaLYZ42r3D1D2WEDCR3-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2b2NnCHrtTf6MYzsH1wroerQ7dqLRtEYhLT73cfh2aZscbR68GkA9NMtipFXbYEmsWAsa8YXWDq2RW7bzUnFQGJs-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2b2NnCHrtTf6MYzsH1wroerQ7dqLRtEYhLT73cfh2aZscbR68GkA9NMtipFXbYEmsWAsa8YXWDq2RW7bzUnFQGJs-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2eNuuoKXd1Ur67B2JH4RxeoaFzwi4wJyG8hECBo6BN51PnjWot4sbj6krqhFtGiTWy1191kCJNzncSUXWfXvf9Du-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2ijQZDMddD7tPidjsAh3nEX5bQj6eNLfsPGeec5mcJjEuHA9VKn1F1Ctgr4trqtsECHAS6DbmbajgwYoiU2JfkK7-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2ijQZDMddD7tPidjsAh3nEX5bQj6eNLfsPGeec5mcJjEuHA9VKn1F1Ctgr4trqtsECHAS6DbmbajgwYoiU2JfkK7-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2ijQZDMddD7tPidjsAh3nEX5bQj6eNLfsPGeec5mcJjEuHA9VKn1F1Ctgr4trqtsECHAS6DbmbajgwYoiU2JfkK7-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2jjFCANqu6T3GDn5cbWCcaeXrijX6dWDFNdCDNTJxTuDj6u6WTVDLY6JB9R938SBLUbtdPyku9P5U4nWLPFmeiTN-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2noMpLife7WsZEv2Wc3MGorUpLLbxC4e7x5ZCBQobCD2qRKGrfmyrLEUG2XiPv16unH9GwgJg7bT3Uz9PEuNTyqb-1.json",
+      "sha256": "814ff049b9fde535614692239f1629e26881bfca9bac9d4e19261c0ec1dec81d"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2noMpLife7WsZEv2Wc3MGorUpLLbxC4e7x5ZCBQobCD2qRKGrfmyrLEUG2XiPv16unH9GwgJg7bT3Uz9PEuNTyqb-2.json",
+      "sha256": "814ff049b9fde535614692239f1629e26881bfca9bac9d4e19261c0ec1dec81d"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2noMpLife7WsZEv2Wc3MGorUpLLbxC4e7x5ZCBQobCD2qRKGrfmyrLEUG2XiPv16unH9GwgJg7bT3Uz9PEuNTyqb-3.json",
+      "sha256": "814ff049b9fde535614692239f1629e26881bfca9bac9d4e19261c0ec1dec81d"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2ucTHjV56VBNrJ1LZy2oZjBaJSkHPEs2VerRFPYp8kuiRz2YH1PrTaAiroWGoUQqNgS6dFdUZCbQDxngS6UTeFEQ-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2ucTHjV56VBNrJ1LZy2oZjBaJSkHPEs2VerRFPYp8kuiRz2YH1PrTaAiroWGoUQqNgS6dFdUZCbQDxngS6UTeFEQ-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2ucTHjV56VBNrJ1LZy2oZjBaJSkHPEs2VerRFPYp8kuiRz2YH1PrTaAiroWGoUQqNgS6dFdUZCbQDxngS6UTeFEQ-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2xNibSbL3bXp3Mvdzdyn7mFRUR4zk8WBp7sZbwpQhUQ5ro2x975nf8fqfppmcp5oBjcwjTwPePiRRPeyLadRbgiy-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2xNibSbL3bXp3Mvdzdyn7mFRUR4zk8WBp7sZbwpQhUQ5ro2x975nf8fqfppmcp5oBjcwjTwPePiRRPeyLadRbgiy-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2xNibSbL3bXp3Mvdzdyn7mFRUR4zk8WBp7sZbwpQhUQ5ro2x975nf8fqfppmcp5oBjcwjTwPePiRRPeyLadRbgiy-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2xx1CPE6nrZiuudMtARxwRLsTiH4XEjnjyfAQ9kaZRye9x5cE1N6X8PJ3VNQk4Ju3KGgzC7ovCRnd4z3XadYMh3a-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2xx1CPE6nrZiuudMtARxwRLsTiH4XEjnjyfAQ9kaZRye9x5cE1N6X8PJ3VNQk4Ju3KGgzC7ovCRnd4z3XadYMh3a-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2xx1CPE6nrZiuudMtARxwRLsTiH4XEjnjyfAQ9kaZRye9x5cE1N6X8PJ3VNQk4Ju3KGgzC7ovCRnd4z3XadYMh3a-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/2y1PFY6f1dEtycr7uCkcdkjYBzrAMsB4M6FebtyqsBYBVVzSRgdVDCVDFUF2GCimo1R2S53xrm8wUxQPZiF6yccb-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/33SCTn6zThguBy6WSqbDNqTXZiQKxfybLkdKbQSDHBkcZQAcWc9FdHJmPz86VQNzxP1HRGTvREvSMi678xHVz8vg-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/33SCTn6zThguBy6WSqbDNqTXZiQKxfybLkdKbQSDHBkcZQAcWc9FdHJmPz86VQNzxP1HRGTvREvSMi678xHVz8vg-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/33SCTn6zThguBy6WSqbDNqTXZiQKxfybLkdKbQSDHBkcZQAcWc9FdHJmPz86VQNzxP1HRGTvREvSMi678xHVz8vg-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/33pMgcxugQkvnDQaDHGTAqXvn3HhxV8GKs9WNPZHx9areyD92zf8MGCnNrzWp9XU4GLAe5FZ47BqivAneVAN5Li7-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/33pMgcxugQkvnDQaDHGTAqXvn3HhxV8GKs9WNPZHx9areyD92zf8MGCnNrzWp9XU4GLAe5FZ47BqivAneVAN5Li7-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/36rmKwGuk3qYrNZz1X4TMJ1t1yR5jFQMkA36ddP2PixgZ8mVXxqzGZNzbKLcwEWWSppr8spDehQbzd9tt2vDBWMw-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/36rmKwGuk3qYrNZz1X4TMJ1t1yR5jFQMkA36ddP2PixgZ8mVXxqzGZNzbKLcwEWWSppr8spDehQbzd9tt2vDBWMw-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/36rmKwGuk3qYrNZz1X4TMJ1t1yR5jFQMkA36ddP2PixgZ8mVXxqzGZNzbKLcwEWWSppr8spDehQbzd9tt2vDBWMw-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/37XJKQbB9fRX1R76cKKGSENNNA2RSY1WvjkCx2Q7joN2irKfTTZ5Z6bHgH4rfgDPJvhXf3peTe4mwxisfpSEmimu-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/37ybknhJiQL3o9LPMQBHC2WrcJWFWDJBdnPMvDKCUxgiyYW3hkmPCSi68TGXYEkZKNBbTs9wrZ6Dw2RsN3B1CmSu-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/382kvTE2hWEW5LH9bddiUrAnTYFtrVmkSTeFBPRUE5nubcwVoYtPk29q5zgJah5av8CrSJbofBuEYKPfjmVSDM2M-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/382kvTE2hWEW5LH9bddiUrAnTYFtrVmkSTeFBPRUE5nubcwVoYtPk29q5zgJah5av8CrSJbofBuEYKPfjmVSDM2M-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/382kvTE2hWEW5LH9bddiUrAnTYFtrVmkSTeFBPRUE5nubcwVoYtPk29q5zgJah5av8CrSJbofBuEYKPfjmVSDM2M-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/3Bb4PRCRxv5cyVkbeLwfQ9MvRebbTdj89yxkij6cuJNKQCS64vxDKrWszJzd7KgmGn7jdAiHj38XBC77a4gj4Wht-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/3Bb4PRCRxv5cyVkbeLwfQ9MvRebbTdj89yxkij6cuJNKQCS64vxDKrWszJzd7KgmGn7jdAiHj38XBC77a4gj4Wht-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/3Bb4PRCRxv5cyVkbeLwfQ9MvRebbTdj89yxkij6cuJNKQCS64vxDKrWszJzd7KgmGn7jdAiHj38XBC77a4gj4Wht-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/3Lr7r3cBHUr5Pbs4XTtvh8TwStmyBcP6t6jF75YArmRFd1ZCxoTDh866DfLogMJMNj1wDbUeLzQp9defWES1Jbhf-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/3Lr7r3cBHUr5Pbs4XTtvh8TwStmyBcP6t6jF75YArmRFd1ZCxoTDh866DfLogMJMNj1wDbUeLzQp9defWES1Jbhf-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/3Lr7r3cBHUr5Pbs4XTtvh8TwStmyBcP6t6jF75YArmRFd1ZCxoTDh866DfLogMJMNj1wDbUeLzQp9defWES1Jbhf-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/3Qe9H5SDwKLoN6zaa9ibuGZfJvdqyBhHoMJU69nA9nQwFcu2sauG7W4r59WqAVUPVMh6n94pPpgoDAHFzZdZmPJx-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/3SHtYbH4AMUXwjRSU1skRtHaQnpZzpmgqiM1Duj5VJ9UXsApAyAFi9KqAAbfAFwuFYegaquXtrF5GPCMAYnB9yNa-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/3SHtYbH4AMUXwjRSU1skRtHaQnpZzpmgqiM1Duj5VJ9UXsApAyAFi9KqAAbfAFwuFYegaquXtrF5GPCMAYnB9yNa-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/3WcgShUksW8zmJtyqD8aUYXx1i6NjMnFZQWhn3vyGWLKH6mfdzurUHrJHC8nA9X84rZ1naCV1ekUueTkWTxSBaT8-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/3WcgShUksW8zmJtyqD8aUYXx1i6NjMnFZQWhn3vyGWLKH6mfdzurUHrJHC8nA9X84rZ1naCV1ekUueTkWTxSBaT8-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/3WcgShUksW8zmJtyqD8aUYXx1i6NjMnFZQWhn3vyGWLKH6mfdzurUHrJHC8nA9X84rZ1naCV1ekUueTkWTxSBaT8-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/3ooLZDA9vjoHfyYhUpZq4NvysXg8MUXbjd2HBq533RJDGmUmNbT8E1qzVM31zBvkNRmB13udnnNXVa3dt3yqKi2u-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/3ooLZDA9vjoHfyYhUpZq4NvysXg8MUXbjd2HBq533RJDGmUmNbT8E1qzVM31zBvkNRmB13udnnNXVa3dt3yqKi2u-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/3ooLZDA9vjoHfyYhUpZq4NvysXg8MUXbjd2HBq533RJDGmUmNbT8E1qzVM31zBvkNRmB13udnnNXVa3dt3yqKi2u-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/3sstnZfkanaxynf5rsZfD1U5J6NsF5WXZZqBVA9qy8kBCLL6qS78VCL8xKrXXiot28Q7BNqKDiWoQFJfE8qX1jv3-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/43YqMGaxfkqiSNwYCoktgfmg4k2JkptYkRhp4RQiUkDA2egwoiS1yisge18adTKGn6b2F5emt146DQywZxH1Eou2-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/43YqMGaxfkqiSNwYCoktgfmg4k2JkptYkRhp4RQiUkDA2egwoiS1yisge18adTKGn6b2F5emt146DQywZxH1Eou2-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/43YqMGaxfkqiSNwYCoktgfmg4k2JkptYkRhp4RQiUkDA2egwoiS1yisge18adTKGn6b2F5emt146DQywZxH1Eou2-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/44wAkiEhvo2kUBzhpmQ94L7CPvkUTxc1WKmbu3TYAh4oJizgKvfY1PVQhQsvbEwnENnminR2Kqrfkb1g5EQrdP3j-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4DrZNXwS9KBLB82sbSwSUL1SAy5jDt5wDYPjPJNX5ZxTNpf7Rdd7xteB2hjYzXmYrjwL13yFn5TFTE3P4NdQ12Pv-1.json",
+      "sha256": "814ff049b9fde535614692239f1629e26881bfca9bac9d4e19261c0ec1dec81d"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4DrZNXwS9KBLB82sbSwSUL1SAy5jDt5wDYPjPJNX5ZxTNpf7Rdd7xteB2hjYzXmYrjwL13yFn5TFTE3P4NdQ12Pv-2.json",
+      "sha256": "814ff049b9fde535614692239f1629e26881bfca9bac9d4e19261c0ec1dec81d"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4DrZNXwS9KBLB82sbSwSUL1SAy5jDt5wDYPjPJNX5ZxTNpf7Rdd7xteB2hjYzXmYrjwL13yFn5TFTE3P4NdQ12Pv-3.json",
+      "sha256": "814ff049b9fde535614692239f1629e26881bfca9bac9d4e19261c0ec1dec81d"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4EAbE1PfNSAryNmDL8T9D4NUUszKYcz9XQQffggto9rANW3FFV51TeZhpswAWSVfQjW2n3zhEfqmqY1B3eDHjdtR-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4EAbE1PfNSAryNmDL8T9D4NUUszKYcz9XQQffggto9rANW3FFV51TeZhpswAWSVfQjW2n3zhEfqmqY1B3eDHjdtR-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4EAbE1PfNSAryNmDL8T9D4NUUszKYcz9XQQffggto9rANW3FFV51TeZhpswAWSVfQjW2n3zhEfqmqY1B3eDHjdtR-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4H6X2AAGdPUkYAJxhac4c47SravWYLLohZtvysYzhagn9bvkSppHtGWvc5AS2aLCBpjYeqnmrosUZ95HPCY6uRhF-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4H6X2AAGdPUkYAJxhac4c47SravWYLLohZtvysYzhagn9bvkSppHtGWvc5AS2aLCBpjYeqnmrosUZ95HPCY6uRhF-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4H6X2AAGdPUkYAJxhac4c47SravWYLLohZtvysYzhagn9bvkSppHtGWvc5AS2aLCBpjYeqnmrosUZ95HPCY6uRhF-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4HMQVmuyHNrHRjQm271DYAVpNUTRidaFr2s6JLDpdFqrPawjHWnpsnwAEW28Gk9Fcp4tQgWxTg47gtvRP7V4MxzQ-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4HMQVmuyHNrHRjQm271DYAVpNUTRidaFr2s6JLDpdFqrPawjHWnpsnwAEW28Gk9Fcp4tQgWxTg47gtvRP7V4MxzQ-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4HMQVmuyHNrHRjQm271DYAVpNUTRidaFr2s6JLDpdFqrPawjHWnpsnwAEW28Gk9Fcp4tQgWxTg47gtvRP7V4MxzQ-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4JEpu9Gz2URycJ8xSm4fwZAxW4nT2hUuqQcUo4JVBoJbSEQ3X1cWrnZqUKBJUYzuGYBfaVNpmWUdzJ2faY2Ujeay-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4JEpu9Gz2URycJ8xSm4fwZAxW4nT2hUuqQcUo4JVBoJbSEQ3X1cWrnZqUKBJUYzuGYBfaVNpmWUdzJ2faY2Ujeay-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4NtWXmGgWMB6cUezszrbqm5ab8C6sFciq5RYiuw9MYYRZKiK4UDwuUqPD3oC5vQ2MwZCAwyv4w23V4c2d9W419MJ-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4NtWXmGgWMB6cUezszrbqm5ab8C6sFciq5RYiuw9MYYRZKiK4UDwuUqPD3oC5vQ2MwZCAwyv4w23V4c2d9W419MJ-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4NtWXmGgWMB6cUezszrbqm5ab8C6sFciq5RYiuw9MYYRZKiK4UDwuUqPD3oC5vQ2MwZCAwyv4w23V4c2d9W419MJ-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4RLjuw3iy2md5HFxCqdt6oLT6qwkbEqLgKcKAigczo9hXjPZyvbtgn9qGLL6QQgVm72iBfyGZposKJdRqS6wZwta-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4RLjuw3iy2md5HFxCqdt6oLT6qwkbEqLgKcKAigczo9hXjPZyvbtgn9qGLL6QQgVm72iBfyGZposKJdRqS6wZwta-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4RLjuw3iy2md5HFxCqdt6oLT6qwkbEqLgKcKAigczo9hXjPZyvbtgn9qGLL6QQgVm72iBfyGZposKJdRqS6wZwta-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4f9WzRjXWHxjnnYzzHmcUVM3XWtBHFv8iC9Sh3gRQbLWeSAFMnFT2CqvZTMXYzniJ2Z8iwDHm6XSR6BXcJBEsgyu-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4gGKXP9KgqGfRcpKg1sAo5dikjSChdpgoHa9yHxaAdF8asmPYeg7egMyhptcreq89QU8QrGH7EdNorvAe6DzCVGg-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4jq4kCk3W8oUC8K97PhqQ4e6jLjeajCyywws3AcnfitHqeq1SW5yTa8c9UGx6gTSkZaXKCNukUqiog7SJxNWRchS-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4jq4kCk3W8oUC8K97PhqQ4e6jLjeajCyywws3AcnfitHqeq1SW5yTa8c9UGx6gTSkZaXKCNukUqiog7SJxNWRchS-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4uxc5dSghScF7qzWY9AVre41ogtR6WpyZgUR9VKh6FRp8YABdqA7njrtUVvJhDdYeGHnrmdC6xHCuFxz4oeMo836-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4uxc5dSghScF7qzWY9AVre41ogtR6WpyZgUR9VKh6FRp8YABdqA7njrtUVvJhDdYeGHnrmdC6xHCuFxz4oeMo836-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4uxc5dSghScF7qzWY9AVre41ogtR6WpyZgUR9VKh6FRp8YABdqA7njrtUVvJhDdYeGHnrmdC6xHCuFxz4oeMo836-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4wQF3XiedJNbxpiEKXMbpp5ifvods9TgRfssJFjwTcVYnsrJJenuQw2MToxNQZRHrdC33ws2ZpGfo2at5sxVzEp6-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4xsSXrjKtFLfK7rqx9urZZxZ7dANy1N86tZSBUNeyu5rkpxgUZzsYHcXReunqiZ4ib98dkKPuoiwcuqRoYScB8by-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4xsSXrjKtFLfK7rqx9urZZxZ7dANy1N86tZSBUNeyu5rkpxgUZzsYHcXReunqiZ4ib98dkKPuoiwcuqRoYScB8by-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4xsSXrjKtFLfK7rqx9urZZxZ7dANy1N86tZSBUNeyu5rkpxgUZzsYHcXReunqiZ4ib98dkKPuoiwcuqRoYScB8by-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4zMV2FaHEHRdwU5YgGBZQpU5oydkRSUN69rLpP8AUtst3V5HW7YRL6XJb4ZcbG5trrdc4BGxQRUDoMWtinvq11Ev-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4zMV2FaHEHRdwU5YgGBZQpU5oydkRSUN69rLpP8AUtst3V5HW7YRL6XJb4ZcbG5trrdc4BGxQRUDoMWtinvq11Ev-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/4zMV2FaHEHRdwU5YgGBZQpU5oydkRSUN69rLpP8AUtst3V5HW7YRL6XJb4ZcbG5trrdc4BGxQRUDoMWtinvq11Ev-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/53ra2JSBCCadPQV61gZTy1EfAChduoRXPvf61b5JJaFYp4k1gVMgnHHsHLvkhTqVbQxbGtGUdHiEMrUAnVzi3FA5-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/53ra2JSBCCadPQV61gZTy1EfAChduoRXPvf61b5JJaFYp4k1gVMgnHHsHLvkhTqVbQxbGtGUdHiEMrUAnVzi3FA5-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/53ra2JSBCCadPQV61gZTy1EfAChduoRXPvf61b5JJaFYp4k1gVMgnHHsHLvkhTqVbQxbGtGUdHiEMrUAnVzi3FA5-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/54qrnkEse6TEonT9yftUmpAL3BYKbfcUa5znUgcMRpc4s5egzP2QM1xnb2HYK9cRb1v1TsmXWqWPJcta49VLGkv-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/54qrnkEse6TEonT9yftUmpAL3BYKbfcUa5znUgcMRpc4s5egzP2QM1xnb2HYK9cRb1v1TsmXWqWPJcta49VLGkv-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/54qrnkEse6TEonT9yftUmpAL3BYKbfcUa5znUgcMRpc4s5egzP2QM1xnb2HYK9cRb1v1TsmXWqWPJcta49VLGkv-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/58vCDXcGHzamhN9yK1cTBEEuCw3czUXA5L92KFPpyU7EvU4FddqraTsAU4gKawna1C1o5b5x29UgNz6oj8zHL1b3-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/59AkaHTVnw35GiqnwrLYm4UHoJ1HjyJ1SsprTEZ6V34MN915ATJazJSpbNdteB91bGs1rLTyVFCnuHsu7Tow49bZ-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/59AkaHTVnw35GiqnwrLYm4UHoJ1HjyJ1SsprTEZ6V34MN915ATJazJSpbNdteB91bGs1rLTyVFCnuHsu7Tow49bZ-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/59AkaHTVnw35GiqnwrLYm4UHoJ1HjyJ1SsprTEZ6V34MN915ATJazJSpbNdteB91bGs1rLTyVFCnuHsu7Tow49bZ-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/59v5NZvjnwcrep7hJpkWRRVPB29dvHCkJpx1ajL77EiHdqTJ2Rac8Wzpz9iidopHE9AmanMUFSm7PLFvamUZzwKM-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/5AC28vi6etijb4tFh2d6pW9ehfGEojQnboY86yKxHRwi2qXyCi3yX5DhiSvzsLsaoD8NMVAXJCVhphp6cFZUW2tT-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/5AMEHpVwuVMrowkNQHsc1bGTk42MsBmsqeS6RCcr7CE9d2kihYn6Qcsdwp2CNThiB4CTY1Wh6gLNgUzyGt6R8NPT-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/5AMEHpVwuVMrowkNQHsc1bGTk42MsBmsqeS6RCcr7CE9d2kihYn6Qcsdwp2CNThiB4CTY1Wh6gLNgUzyGt6R8NPT-2.json",
+      "sha256": "814ff049b9fde535614692239f1629e26881bfca9bac9d4e19261c0ec1dec81d"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/5AMEHpVwuVMrowkNQHsc1bGTk42MsBmsqeS6RCcr7CE9d2kihYn6Qcsdwp2CNThiB4CTY1Wh6gLNgUzyGt6R8NPT-3.json",
+      "sha256": "814ff049b9fde535614692239f1629e26881bfca9bac9d4e19261c0ec1dec81d"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/5BAd5JmcyjdR4YxLywB9S21mjvAeAMZvrBWPCGuZMDhc9cFU9KA26CbbAu6hKdRRLG4diLv2V2SoijmDNxWypfGG-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/5Jnp9JkEdaGUZJHXuxPUpGywawEThuJmXHQAHwp7skqzmSwkVJdMxRh4Yw2tNp8fsRG4U9uJgN1EPnRboGWp9xhi-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/5NR5CrwMRYVZeXBfrrjVCSj4TiLhP1nsYErCKG2XCc5wJwYVFkTaZHUgeTrBoAsaddUGrkri9oRaKKiY26nfcMeS-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/5SYTdUJiSzKdVbY41zayMkSAcUSDobfRoZTqRAiZBdeML4VpMDh5jco1n5fETVctsGNAxrVPDpyVq2ZoFYTxqEdN-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/5TrfWpvZgDfNnoCyBzf1NdC5Yp24aYNLyZBSZByYfyaE1BGsw7Fm1U4C6Tiu183NxVP5oSg7r9uDwkxzwqvC9dqB-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/5n6QBnTzkmc6o5dktdqWWpS35CxaFA9F2k6W4ehTKrUgeAev8qkZcrUsb1gVrVYkpSfCYnVdWUqdZ3rxDFewqMSJ-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/5n6QBnTzkmc6o5dktdqWWpS35CxaFA9F2k6W4ehTKrUgeAev8qkZcrUsb1gVrVYkpSfCYnVdWUqdZ3rxDFewqMSJ-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/5n6QBnTzkmc6o5dktdqWWpS35CxaFA9F2k6W4ehTKrUgeAev8qkZcrUsb1gVrVYkpSfCYnVdWUqdZ3rxDFewqMSJ-3.json",
+      "sha256": "814ff049b9fde535614692239f1629e26881bfca9bac9d4e19261c0ec1dec81d"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/5p3C4yoKFGz4gZ1HK5hHp4zbts4ZPJaneV3L1dU6QgJGG6x1GXKgTHY96wbxpfgBFdb9smdZm8LqECm4goyg9V75-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/5p3C4yoKFGz4gZ1HK5hHp4zbts4ZPJaneV3L1dU6QgJGG6x1GXKgTHY96wbxpfgBFdb9smdZm8LqECm4goyg9V75-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/5p3C4yoKFGz4gZ1HK5hHp4zbts4ZPJaneV3L1dU6QgJGG6x1GXKgTHY96wbxpfgBFdb9smdZm8LqECm4goyg9V75-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/5tXRhxyBXMFZJedUkHDCzn2MjDAEY8qMcDUjRTBDoeC7XthmNkemfzags48WHoDTRR7YisTNDu5urevDDtxkyCT1-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/5tXRhxyBXMFZJedUkHDCzn2MjDAEY8qMcDUjRTBDoeC7XthmNkemfzags48WHoDTRR7YisTNDu5urevDDtxkyCT1-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/5tzrE862CmFrR4TZXu1NfaAvbRiNvuuZ9sHzjgYjSkp2fAGZFyzgXE2WXcopVyK3sL3M5b486JRRwTgd8NWghR1V-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/632hW5rdkcufNitrZ7CGqL2AGU9WjbgsMeVBjdKquSNZejdrM9mdpHYNPG42uCyUth3eX4Tiy9yBS63dkKcewLCw-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/632hW5rdkcufNitrZ7CGqL2AGU9WjbgsMeVBjdKquSNZejdrM9mdpHYNPG42uCyUth3eX4Tiy9yBS63dkKcewLCw-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/632hW5rdkcufNitrZ7CGqL2AGU9WjbgsMeVBjdKquSNZejdrM9mdpHYNPG42uCyUth3eX4Tiy9yBS63dkKcewLCw-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/64Q1JroKRCTBdr1KG261ahJHJwJAeyinz4nqaTbNdPTgaQiRpRzWtgDZSWwSZGHNjv3r41ULMZegP1LfmCwVfNbh-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/64Q1JroKRCTBdr1KG261ahJHJwJAeyinz4nqaTbNdPTgaQiRpRzWtgDZSWwSZGHNjv3r41ULMZegP1LfmCwVfNbh-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/674kT1kY3ZEuRQasD1Khv9vGT2jKxgZu52esr9JSgVD1jCEyRix165DBpG6FYrJycFKfBca6t7isFQHyWBX7RjYu-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/674kT1kY3ZEuRQasD1Khv9vGT2jKxgZu52esr9JSgVD1jCEyRix165DBpG6FYrJycFKfBca6t7isFQHyWBX7RjYu-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/674kT1kY3ZEuRQasD1Khv9vGT2jKxgZu52esr9JSgVD1jCEyRix165DBpG6FYrJycFKfBca6t7isFQHyWBX7RjYu-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/67AvFEqUK4Zjt8Q2sr9pACtYFD4fBVRaGF4quy6AuEudVy8CMvn55dQ4GpKBwhX6X2fAQCn2nefjucWXriMRbmu5-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/67AvFEqUK4Zjt8Q2sr9pACtYFD4fBVRaGF4quy6AuEudVy8CMvn55dQ4GpKBwhX6X2fAQCn2nefjucWXriMRbmu5-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/67AvFEqUK4Zjt8Q2sr9pACtYFD4fBVRaGF4quy6AuEudVy8CMvn55dQ4GpKBwhX6X2fAQCn2nefjucWXriMRbmu5-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/6Z9u2sHYdH9uViDFxBLVaYdUfvVXAozxEKUpeVwxXw7yckiXmNuPmBpgNFSBqfDVEvptVQ1cbwaFMqnEPxBrkL4-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/6Z9u2sHYdH9uViDFxBLVaYdUfvVXAozxEKUpeVwxXw7yckiXmNuPmBpgNFSBqfDVEvptVQ1cbwaFMqnEPxBrkL4-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/6Z9u2sHYdH9uViDFxBLVaYdUfvVXAozxEKUpeVwxXw7yckiXmNuPmBpgNFSBqfDVEvptVQ1cbwaFMqnEPxBrkL4-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/DQK4JCYRUE3bZ2fRzm11Y9BjfTqq7ArbwAJhgBk1y6YTHWYMUsEXKa6GhYAMogrRhdiBkoGFm8atHeYgTVUn9jd-1.json",
+      "sha256": "814ff049b9fde535614692239f1629e26881bfca9bac9d4e19261c0ec1dec81d"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/DQK4JCYRUE3bZ2fRzm11Y9BjfTqq7ArbwAJhgBk1y6YTHWYMUsEXKa6GhYAMogrRhdiBkoGFm8atHeYgTVUn9jd-2.json",
+      "sha256": "814ff049b9fde535614692239f1629e26881bfca9bac9d4e19261c0ec1dec81d"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/DQK4JCYRUE3bZ2fRzm11Y9BjfTqq7ArbwAJhgBk1y6YTHWYMUsEXKa6GhYAMogrRhdiBkoGFm8atHeYgTVUn9jd-3.json",
+      "sha256": "814ff049b9fde535614692239f1629e26881bfca9bac9d4e19261c0ec1dec81d"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/E1sHV3EJ17F1gSTmhV51GWTcyoGoQyWLdB9nQYufmpmegXQtXRY8FztiQYNVXe9PZabK4t9qWft5LDdLFsuv7wh-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/E1sHV3EJ17F1gSTmhV51GWTcyoGoQyWLdB9nQYufmpmegXQtXRY8FztiQYNVXe9PZabK4t9qWft5LDdLFsuv7wh-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/E1sHV3EJ17F1gSTmhV51GWTcyoGoQyWLdB9nQYufmpmegXQtXRY8FztiQYNVXe9PZabK4t9qWft5LDdLFsuv7wh-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/G8Ui561avRH2zo6VyAZtdfeREPjvW2aZP4xt42tQYxi7ai8Jx1isWPdoQzeoh1oic4NpdLjzzA5Mad2sfZCGLSg-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/KsQaksoZnsJZ2aQiFSV3EdRmgjiiCXyrpQNPpQuK2Xtop8c7LYC8jnQzZPoWtm6gwbMWZvNDfN4xsx39BHXVy7D-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/KsQaksoZnsJZ2aQiFSV3EdRmgjiiCXyrpQNPpQuK2Xtop8c7LYC8jnQzZPoWtm6gwbMWZvNDfN4xsx39BHXVy7D-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/PGbH5tBEUMAmP1g5zKNVoUP5qCCx5icAfhDnDE9SfVvjVkULjhw8E5DNk77C8tb7FdRC5psijmT4WeCpg4YVme2-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/PGbH5tBEUMAmP1g5zKNVoUP5qCCx5icAfhDnDE9SfVvjVkULjhw8E5DNk77C8tb7FdRC5psijmT4WeCpg4YVme2-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/PGbH5tBEUMAmP1g5zKNVoUP5qCCx5icAfhDnDE9SfVvjVkULjhw8E5DNk77C8tb7FdRC5psijmT4WeCpg4YVme2-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/XQp7HtMbR6oa8KbUZd9gAMkdep1smnJhVceDNNMVRUNhp1mv7Bt2i6PKEiADWTuaVy8CT5rPv1b8Vj2T9jpgNSh-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/XQp7HtMbR6oa8KbUZd9gAMkdep1smnJhVceDNNMVRUNhp1mv7Bt2i6PKEiADWTuaVy8CT5rPv1b8Vj2T9jpgNSh-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/Yj5PYvbLqajKjKFkeEqqvvis5jZGefLjor7dbwJtyLnayJaxEqvDbnSdAeLceBDnPX5r73EcP2js6op1qND6zs3-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/Yj5PYvbLqajKjKFkeEqqvvis5jZGefLjor7dbwJtyLnayJaxEqvDbnSdAeLceBDnPX5r73EcP2js6op1qND6zs3-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/Yj5PYvbLqajKjKFkeEqqvvis5jZGefLjor7dbwJtyLnayJaxEqvDbnSdAeLceBDnPX5r73EcP2js6op1qND6zs3-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/hAE4R7FsZ1Ltbr7WnbcGDz2QfJ7M5bJ7JFzhntPu2296KHoYYUPxipEoPACngaePfAgMBxJpXD9gn62X5b4H5eX-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/o3gfxkEgWsB28VZBFMA6FwmHP1G2vRdawtj6LN82VHoSZGKUtchjP9X8tXb92ad6uHenn85jtW6Ykvh4EijvbNr-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/o3gfxkEgWsB28VZBFMA6FwmHP1G2vRdawtj6LN82VHoSZGKUtchjP9X8tXb92ad6uHenn85jtW6Ykvh4EijvbNr-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/o3gfxkEgWsB28VZBFMA6FwmHP1G2vRdawtj6LN82VHoSZGKUtchjP9X8tXb92ad6uHenn85jtW6Ykvh4EijvbNr-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/rZP6GET1Wv5xbfyL9CjMG9DiiaEZQ3pC1xnBHFaAuCn2sV2rnAcTsJ93YChYjZAAF9hRmGxQYWtkxU7jVbupem2-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/sQiSXnev5LhCDcaMweXnHkATLYfeTxT345ERRt9Zc8fpgCf1nvhyS6NcywGQTZEFPPjSAC86kEgtebQ4VeynhFH-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/sQiSXnev5LhCDcaMweXnHkATLYfeTxT345ERRt9Zc8fpgCf1nvhyS6NcywGQTZEFPPjSAC86kEgtebQ4VeynhFH-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/sQiSXnev5LhCDcaMweXnHkATLYfeTxT345ERRt9Zc8fpgCf1nvhyS6NcywGQTZEFPPjSAC86kEgtebQ4VeynhFH-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/sTKCsNxBsU9qfaBbdzvUbDN7AsHGFps5ECc5NBE6JSJ6xMjHte1mKAynJBhDKSoTbifPFuQx4yDHqHjxPZFE7w7-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/sTKCsNxBsU9qfaBbdzvUbDN7AsHGFps5ECc5NBE6JSJ6xMjHte1mKAynJBhDKSoTbifPFuQx4yDHqHjxPZFE7w7-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/sTKCsNxBsU9qfaBbdzvUbDN7AsHGFps5ECc5NBE6JSJ6xMjHte1mKAynJBhDKSoTbifPFuQx4yDHqHjxPZFE7w7-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/taJetigkX64qUxsooBSMss1qe4XzzGAnhxpHuc9zBh4MH1fEEFHn99XE2JtrhpuKubCw7uo3QgxUdCQth7sXEYS-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/xEvpjjzH6EUYFyooK6DdnkpUF3JnAhxghRiQXqy6Asqkvy7uBWn6zmtwpxMRtv99siaCvECWw9zQV6iZCeKz2TK-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/xEvpjjzH6EUYFyooK6DdnkpUF3JnAhxghRiQXqy6Asqkvy7uBWn6zmtwpxMRtv99siaCvECWw9zQV6iZCeKz2TK-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/xEvpjjzH6EUYFyooK6DdnkpUF3JnAhxghRiQXqy6Asqkvy7uBWn6zmtwpxMRtv99siaCvECWw9zQV6iZCeKz2TK-3.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/attempts/y9WvMMYdoS6rg9UcY5XSLWQerBUJRDmfRv8dAUAgnSjdL1akiM2Psmc5tZ8zgLFmLNZx6VGWY8ekyv3AY7fiBgA-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/genesis.json",
+      "sha256": "072c547ad3321ad6379bf249c218bcf112eaa3bd0138f07ace4077db1785a37d"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/rpc/source.json",
+      "sha256": "70d1fb93d69513bef928ab5f34489be4b569f4475477d93ed92cbe8f3776f772"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/sampling-policy.json",
+      "sha256": "3a95c98305aa69e2b7f0502c6e9472f47aea863c3fdf32c12e3644a06a0180c3"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/source-signatures.json",
+      "sha256": "8b24adc076b0804781823853878b87d4e9bbc56a41838bfd34c61528adc71a3b"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/summary.json",
+      "sha256": "3946f9a03abff5d41824b05959972c58b98868b3ca1579af57ce54ec8855e00a"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/supported-observations.json",
+      "sha256": "21d72d1713640dbc0b037557cfb1ffb73b60a8ae75740bec14282d759011fe57"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/22KRPsoLATJx9HDL8CQxZ6vW5Y3MfGuKyjHjkvfo4TDMF3xrcDUBrDHSgJ1hRG2dj5HPCdwgiPe7omgdwYcTfAjE.json",
+      "sha256": "3e73ee96cfceb261b00fe1070c83784f6308dc3639dd5f8aed356d26ff82a6e5"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/2D1r9CbXqgFtc5gzyXQiGn5ETLQcyPEPAgGzqNFJ1exAR8FKDvTdirj9dBGfnF975Z7u9z9Nku4vodGBzBGZ1rN9.json",
+      "sha256": "2f92871d84b59e70bf7afa96e2e46d15b2456a353faa121f16e7550d67175064"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/2Ekqwxc6cNyJyur7AuBUd7hsaLJqdxcgVURHPHAr329jx1oU9yChL8LDSthF9PcJ75AxWxi216A6R8J2aki2aTrf.json",
+      "sha256": "9f5408260c135aa62b037d0b8b1fc3b07881fb88005bddcb12ed1c3c32b34a51"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/2GQ5Fq7BMS4PrToDHenVvkMNQRmGWEW4TisZxdaY9ZjXREEyDAVJJFBL45gG6DKwMeJK9pL2tSdgwqrudusZuzao.json",
+      "sha256": "978e1a023caa6773b0febe63ccbd44e58ed41222a5966b6f1a0c1695bb67661e"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/2MhqpvGJcFyEifHGocTH6WxRTiwviu9CuGr8iyF5Tn9Kad2y7WgLcCNizTzNvcEJwftJLbdF7xkuYVmq1PoDi2C3.json",
+      "sha256": "9a6d1d3dbb6a97d4b6495d9202715352f642dac4347a6a78bbd654a9eab8f3cf"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/2PAnFn7ASmFCAr1eRM8LcJ1Ko4JEEx91veLGFgpz5w5Qv9U3F1NxF59up58LD1TZJbfoux1Lox4hmRmLgRXuzkem.json",
+      "sha256": "ad322fcd1c1b5f21901868cb066ff966abc84250465bdd251840a85cbd26b4a6"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/2Q9rqbjVDGm7Gm7d8TkQvByauPmi4nL9dsmcZY45BZhHoKD9p8ZevWsndfcBsqwa11tKkatvmgfo5Rm7J25t3LMS.json",
+      "sha256": "0fed5377377bae7660b037bec944d9aae17aa6778f79a3362863d80c04c93366"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/2WQGSCExwiTURoBzvBn1cCAESwTgHv1NasyEVKmBAnVxVoNKfxFcNb92PGUpNJ4SfPmLSNRERWGCYzsk3SnUP1Vj.json",
+      "sha256": "c39757c482eb86ebd074d69c3a1834c71618d040624a5382841a25186f1b448c"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/2XtoMVvumxWzw8K9Q1svoTvKMxRQYARUrNq1SFDA3awDmK7v8sAF7peHVuQxi37qskZqRRPR4Dpz5AvpG3jC7SWE.json",
+      "sha256": "91daf24c3b0129849bf8ea0128633b411fd4a814da7d1b334a69bec3e3e8bb3c"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/2YRdVrFeFjj3eAeAWEtTZqUnUH84aVwLPmCicVhSVwwNAKRregFkZmuD6zTYGcdpgQkoUsBcPj67UX95PJPJSUZ6.json",
+      "sha256": "f2d99bfdda7661617af37a539009da25fda13b66701aefdb68fe121e12f853a7"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/2b2NnCHrtTf6MYzsH1wroerQ7dqLRtEYhLT73cfh2aZscbR68GkA9NMtipFXbYEmsWAsa8YXWDq2RW7bzUnFQGJs.json",
+      "sha256": "2700b1ff037395819234a6568c68b9d6624c0d1e2c0840d7fd8a2f94ee7ee1f9"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/2bcGD3XPZoBaQ9VL1oL4HtJ45sSatCYwPycGuLCNh9NxqhHtcahXYFYsYfZNvYk5HgXGaCYZAJrn256ZLgoHMjv6.json",
+      "sha256": "fc90bc8d646ab5a86a7412ba799b9cccdc16907169a63ffaf07af737a7fbeea2"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/2dc94E8Mvh83c8MiecgRekd7Vj8YE6aexfVeCJK58K46LQcTRjpDomii6pYmwbdeYmdTM3bVbHw6rhFdtwRtSTnT.json",
+      "sha256": "e5f9f9fcaf408291c4affa034943411bb7b1810b78870188917fb44dc13550c8"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/2eNuuoKXd1Ur67B2JH4RxeoaFzwi4wJyG8hECBo6BN51PnjWot4sbj6krqhFtGiTWy1191kCJNzncSUXWfXvf9Du.json",
+      "sha256": "639680da0eeabcbb9cf7dcbd9e130eabd37d20e7a9b2759ae3d4e0435bbdba97"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/2jjFCANqu6T3GDn5cbWCcaeXrijX6dWDFNdCDNTJxTuDj6u6WTVDLY6JB9R938SBLUbtdPyku9P5U4nWLPFmeiTN.json",
+      "sha256": "1e598f9ab289847a7de5935557b0c7b4b766d40371d9e839092dac9658fe2745"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/2wKAaBt32bnYWcStLGu18Kwxw6bz4jDyugpTZskhujSsd6BpxxeFJn4iryChfxcapNiGNwEQxkRwCtaFUrCspfaV.json",
+      "sha256": "f9bf8ce977f2efa3353503ffe94c8cbedacd219c1a1dab4fd02d6e289285ea37"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/2wtNunVdrRvxcMEVeonkbSUe2TBZK2fLqvuHib4sJFbPjGwbqk1d5RKcibq86g3Fv7pkxJ5DXQeJzinL3gXLYVjG.json",
+      "sha256": "1974da41f2e757b321cf486ca81f4c8fff781d2c2585530007e21468913ab1e1"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/2xM7q4PNeHVLC3TDc6szGnhYQs1YFELUvmYXW75TZomdBs1xqwtSyBwHNtjFdMhrL1HEvcQ9cMD4oDFHqVbE3y8q.json",
+      "sha256": "d098b8c7e38f8608e17fdf2aea19e6ce5d24c061b49fc4f2d24c06a40ef24d65"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/2y1PFY6f1dEtycr7uCkcdkjYBzrAMsB4M6FebtyqsBYBVVzSRgdVDCVDFUF2GCimo1R2S53xrm8wUxQPZiF6yccb.json",
+      "sha256": "1e5915aaddf6720298a4357d98bb666b8f6dbee4eb0163e4d2959e6f3b44ad96"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/2zXvVUooDjTfWwNuChrEfqzgY5xhv6tZKHX9EPvaLKroGLVDQCXHUfWKRTwwU1uWJRrf41ABMdQkYXQfvMhPrJ5p.json",
+      "sha256": "28db4acb217e924777e4c92b20bcb75516fc4b54b79ea9f92dcd2519e9c2bc77"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/33pMgcxugQkvnDQaDHGTAqXvn3HhxV8GKs9WNPZHx9areyD92zf8MGCnNrzWp9XU4GLAe5FZ47BqivAneVAN5Li7.json",
+      "sha256": "cba7a9c0a6348f3b3e2914211167654b5f4521a4e88745e34cd94e221bc6cf1d"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/34TzayvtYLb1NHBBQGcbuSRwD9d4ziFyE5LBBJRrofdibpLxE8RbuF3nxBWdAnPDQDmz96ND8yqvaMB8oc6yARXG.json",
+      "sha256": "6ac4f8ce9cd3cf14f7311e09fab72e112210523bd1f09b2eac40a6ace7906442"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/34m29BtySsoUGNQf2T7zooXUiP91JRSPr1N8JeZvruwDYh94uUsm9BsHf3Pv8GfJZeWQEZNW4x1svACJhrh4ypKe.json",
+      "sha256": "d93c67e1f7d71d7e03416fc05be633d54fb1b1f326856ef040bbce4c7bb9afd0"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/35w772ESi6YJg1rEQse4vc2HLzEuqMx89xwj9wo14zvaeGbkf6UPi2t5bPAsoHjiXb8u91TEbiF3ZhQNt2hxqjQy.json",
+      "sha256": "8b6df1cc1bcfd80b19004f2746736db429c4c2fe848a100515774f402b471734"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/37VaR11w3xC7gSsBW97U2DQ8rGMnz74RAp6YSyFDEn56UhPCMNiNgVWkqnAJ2gbhqGQc7pxFH7ptcmvxsSBZiA2.json",
+      "sha256": "5756555d12fd6c32cb6f0a5649ee57cfbad8e2a5a4708637df297f67501e4a79"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/37XJKQbB9fRX1R76cKKGSENNNA2RSY1WvjkCx2Q7joN2irKfTTZ5Z6bHgH4rfgDPJvhXf3peTe4mwxisfpSEmimu.json",
+      "sha256": "510c77d857f8e23b2e86f1bde458ed02c69a273065bad30e3d228cb2f225cbc2"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/37ybknhJiQL3o9LPMQBHC2WrcJWFWDJBdnPMvDKCUxgiyYW3hkmPCSi68TGXYEkZKNBbTs9wrZ6Dw2RsN3B1CmSu.json",
+      "sha256": "ff174a0b7db84ed4881ac0067f6a498a19a6f77ceabe6eba21cc027210541db8"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3B2cPJWBKLaRS97KfL7MWRaZmkfC3qgFZNd1gozPk7TAgLU1LFxjozpJ3614xV44zw9WgkPvhQVFjTrpzeRk9j2p.json",
+      "sha256": "e2690c174b77ec35193e4500530647d3f1fd2bcb4683926ceb88a6f0ae1f566c"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3DVGKHnELw9aVRHuDir84dZDRhPC5oo67PSeUv9p3wFRdG8n4FDrayEcFkACcDH6H91jVGCx5MQr7YQM5UfY4nDJ.json",
+      "sha256": "44f069d4d794946f08b5b69fa0730514ed7adbb204d793c1e41372b9fdff38e8"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3FCpEZgSsWxfAmRe1UzzrXMW1XTaB3CxKwiPRDn2GSsyCUzBP6AsMhPvFzYhh2QhzEn3LWWYmWUUBTM2ZsP3pvDf.json",
+      "sha256": "62f22d05c6fd2328c5c5aeb80c395057045af739c6bc88af76542c35fab46152"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3Jsp4mbvBcuGqNYE89m7co8vPSJgrU44LDhq4QasA2zaUNoMgnxpUeBzJBVyBypRUfuZiGhkacNqadSDftWdCMiG.json",
+      "sha256": "d774d9b52d81477185c438eab7ccc42439670663f6df9f0f0b9d8624d6e43daa"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3LvVm2A3jxGqaRyRK3FDtqQyXsin7PpWLuhgAuCB9t2FTq7XwmjpX3NEpanFrZLcX7wvcqf87iB76SJ2RH8iK77J.json",
+      "sha256": "a310e0bb925ad0c458b6a4825a840b6d68e89c4c285487e77a96b9e06bf1fa24"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3QW9A9dcbHdDRs3uZ4G1uwAN19uLXyzsKvXkxEy1Dr7tdqfSmhHu77vX6nsjKQzGgheDBojS9s1xQQ9mVvWeb9bw.json",
+      "sha256": "7a6675b17e47a0f8c09035241d63602b34dd1ba2b5a64ba56de1cc8c07a596a2"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3Qe9H5SDwKLoN6zaa9ibuGZfJvdqyBhHoMJU69nA9nQwFcu2sauG7W4r59WqAVUPVMh6n94pPpgoDAHFzZdZmPJx.json",
+      "sha256": "b8776e60280d00055adda36e9303d768f079cece130629c95dd15621faf4748e"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3SHtYbH4AMUXwjRSU1skRtHaQnpZzpmgqiM1Duj5VJ9UXsApAyAFi9KqAAbfAFwuFYegaquXtrF5GPCMAYnB9yNa.json",
+      "sha256": "b0f72418e6401f2fb23a2bc727a968af390844c6c1fb845b7f63523a143ebea0"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3UDQ28vxihdUkCPj3vhWh722NPDcWCWEkMejLrQypfp6eQTzzedjktMrrfzPpy6n2CNfxSMAWJEvRN6gSnb2M1px.json",
+      "sha256": "b7e153d1d346f8cd3178aa77214a83342736cf0e814c4880607e346161c166d7"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3WMfzU7BacNDSZVjdmdMydcdFtPLXUNU53GR5dma8b6ngTrTztTNKwyPV5sTjUkWksFrFMkDyKAa78247EwK4d74.json",
+      "sha256": "41f36c42f1365910f78fe9df5e70dcbfe70d0ac5a5c06655587c98004524c60a"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3X7z2JrmCXFwNMmnGVQYF2v9qRrsepndY94rUqp8PNqyGCk4onFNCZBod5SGuGi83RTYDpKdRp4qPJ3jfhN8GYSK.json",
+      "sha256": "242e9b8959481871f7435e666f2ea0f71940db504e8454718251b99aabc8e7af"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3Z1Aub8Jd8ftVFcqbpjD5C95beHfc2Zkx2cPEXYcvju7MfSiijHuutucTJBcR8MZxf714CZcujpwgQ2GS3pHiv91.json",
+      "sha256": "f448375c8ca04a0d7b61e2856a84335c5412fd38862be8eec529332feddcad9a"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3caMrdgnyQm1Ca7bdnHuzodNLun38pDoBKggupS38xkNTSb3qLn24bRjc2AjWFdhtxoXKZQzMQMSsg8jjUviYYVH.json",
+      "sha256": "5485bbf8ad0579e3360ce364247945b0a80d5b74f00732d025c4a5539566c87e"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3cfYRp3yNmFN5eAGbm62QjZZq64kDvXyRfFV2ac2u1LecDLeSfF3vzjeZfWrUndqWEDv2jX1bchjbT6CraL5rWLb.json",
+      "sha256": "82bfbae15bf5a0f8b7fd1d7a14e0672f9fa9da4bf18882459ae9d83446dee007"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3e1AsDETri6KhMdoiCHpmPQzJZPdKg8PwFPujV8Rj6cpzJWdvaVp1oYfqx81EhEPRUrrXj3rUZVnQqz3MvjWarxu.json",
+      "sha256": "e017528a8bbe7183c90b6c647c4271549a4b21178cf446729892969c393b5bc4"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3g3UaAfQfKU95kc4SyQe8qxWJx3hguxfbapmjP7Z1ubeMyYUUqtJCjoYBujRYjukxU3cEwKoCXjdXzqHEJR1aRpX.json",
+      "sha256": "da1c5678e9c84df7b551fbeab9f9d77e084fda5f3039483f89686ffb5af3d061"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3qXKNcuaR18gUnL5cC97kJYSkiN6o2dbnfqjMX6qFtPscyTGxbtHm7HgvNhXaGRfE8GJA3rzzpNAqZhocuJyZ4gX.json",
+      "sha256": "0280c558da78994450233a0553f019328deafb406ceb58cb7690796feca4a88a"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3sWv6F38kn2mYgZVdRrLUiQSHChiDUMKk3pRdn2et3SxbaWJzZky7vJtWShUaz8ZmxZwHsxFKG7VFjACgFvsc9UE.json",
+      "sha256": "cee0753c3e3f615f9e45d863f4102188b442ade13c88a780919da0a6e5e7166b"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3sstnZfkanaxynf5rsZfD1U5J6NsF5WXZZqBVA9qy8kBCLL6qS78VCL8xKrXXiot28Q7BNqKDiWoQFJfE8qX1jv3.json",
+      "sha256": "8bc7c29f3d0f4affcc85baff99e7f03e0ff8762fb7da59f8def3c2651c8c490f"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3vysit4ESLnsCnYNtxFhdBUSer4znJiPXfLhSzCa52QRHR2QnuaJ3hF18JEwk4x55bqRALYe8VGseUY3aGN3EVjC.json",
+      "sha256": "3eec1c4c9df6dd091441f7f7eae5e23c4c695926647a3dbaae6894abb2e7e18c"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3wH841yZagqdpxst3Qce8oMwVYeWt5WZbyFwo12QAShXF21dfQTeRkL32Zuwmd264SmZ8tpJ5F12JpRLvVtxUb6S.json",
+      "sha256": "b020594337d1fe93c2d963b5ede9995b4fd803e694ce0d2e33e699a1ff678f9a"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3wKxQbRrDZNBhJwLrktvzoNbKS9MkkMp6qKYVvyvrMTZzgR1uReFq2maxoopBNvgVvZrnfovPR1itmHXhYfneoim.json",
+      "sha256": "354056d8145ffbb661550712f558482ca7ecfd9fca369bf706b3b11f96867f85"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q.json",
+      "sha256": "9f33e8525af03a1c3b27ce50bc9c627770e062f47b410bc69ad52dbfc4381ec8"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/44wAkiEhvo2kUBzhpmQ94L7CPvkUTxc1WKmbu3TYAh4oJizgKvfY1PVQhQsvbEwnENnminR2Kqrfkb1g5EQrdP3j.json",
+      "sha256": "11a79f4b2c9a758aa12ee42ad42194d7e60d17234f411ed57bbfa21c72bf9498"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf.json",
+      "sha256": "436855ec3ae45ea8e8661dab7d493b0a61fd016e2a4971b7e0f7c4e39257bda8"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/47km3b2rkBzyj1jKawSpFyBC1j8y6ckqAnoJdV4dBCbWCdfbWJ5tKZRzVoTMN1o6KMEvfxPKNkjD7r98fKRsU67U.json",
+      "sha256": "79b613ade1c570959f8c19095bb742ba1166748d83a16644f4aa60193eefd70d"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx.json",
+      "sha256": "b32f4181b93633abc7463bf5affe191a218fc8a6d4d3260d2d2642f6a3002ca2"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4Bnuy1W1ovYco5cfAkvCJaWz4oaTfMxPq7go8mCWWDMb23Acsdj2vDmR3FJF2rFixVE8XaniQ4CfAAzeb9VtAEck.json",
+      "sha256": "bd473b989d11e43d88bbe65b84c8e1335b2138d8c4620ea137bb6b253a3fd580"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4Bp9tyi7Kw3nNfkhpqexZV4D66XHHqRjpDkgMx9e9wKGGPgyvX6Kfwm2uHr7ZU4iLougv1mbrJauboFu9A6FmVm1.json",
+      "sha256": "c72e38139c25743024913f0a9e758cce68299be1d4845954510e6fbee0f9d625"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4CvFFGgYjZz733uPSJ9Zi8TsS3X7hbVz4kPjuvEHfgHu9gUgaxv6pdgmch3nEuLg3Q9dkCQWgAgWv1p8UoQeErsS.json",
+      "sha256": "32d940bb9f5566b2fd77f7d8ac65f55af0fa1b42a093467aa2e46cf97581cd15"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4Dv7bKXa7aCUnawhj41suxMboJJCbKtdFCbdyCew3NfRNVG4262Ernx8VwVx9wLtVrzhfTkkrzDE78Rzx7Gwhvt4.json",
+      "sha256": "f46e45dd501e611b5b7c70d23c572b8de4479d921fee21084f1f0c6e2b6eaadc"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4Gadj1FTxaqCVj1CsZbNn4SWyXFGhtyKeNShzJ9JgHT5D5eEZ1D4qErPV1ppwvFTzKHFSqSyUqgyDukkTbo2gTm7.json",
+      "sha256": "f5b8eb9861d50cfaf9585719b99b935c08169ac61dc6ff9d8fce16fff135ee5e"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4JEpu9Gz2URycJ8xSm4fwZAxW4nT2hUuqQcUo4JVBoJbSEQ3X1cWrnZqUKBJUYzuGYBfaVNpmWUdzJ2faY2Ujeay.json",
+      "sha256": "e36ff3ec1d83b254f9c9408c0799e1f609b7b48473a660686702112e5ee1e06d"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4MJqCJqhtzFy26Ru71qjprnMSednWbnVK4cC7a7EubSQFRYiJBeTRAvbhGzCbH5Jxyo8DVXnQFjPcGkK4zTWy17R.json",
+      "sha256": "364ec52fc4a28e3bf441f0f50dee580251af675891d819ad200f3f52e5f8a442"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4Na2MKZWd5ekbFxmVtoiobLBp49JvUCibfhtMuuhFS1RGNfo5LWkna6ikeKf9xDFYMMiT9LLHnPufsdDjmLVY1Vs.json",
+      "sha256": "b59be20af0689898e50b936266ba6c1378d52e724a988c59c1113bb58c8bf574"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4RN8Rdq9kCGhBE2i9tCxQWpaqmRtqt9pJja23EvZdYm8euTmmFaKEXWdVFdonDQZ6sVzGq5puFF1VLxEDY47kTCd.json",
+      "sha256": "31552795fe270c96e592933631ec4acbf296eac5f529498f56ccf361ae2cae9c"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4TTETJpLJLzBiSv7Jq5ywLSb4gqtkFbxe7ufPxbZBR5a9jLoGU43YAUUUewDcC822BAYKF8KWnR6ovuBJcmXNFAb.json",
+      "sha256": "b90c7b79b9126453004694c592f464e8de50a9c7eaccae1f9184a00b73f4e067"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4f9WzRjXWHxjnnYzzHmcUVM3XWtBHFv8iC9Sh3gRQbLWeSAFMnFT2CqvZTMXYzniJ2Z8iwDHm6XSR6BXcJBEsgyu.json",
+      "sha256": "c9359af115b0b6edbf655cb2f7eaf7a696af41bdadb88550772e4a91139d8cdf"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4gGKXP9KgqGfRcpKg1sAo5dikjSChdpgoHa9yHxaAdF8asmPYeg7egMyhptcreq89QU8QrGH7EdNorvAe6DzCVGg.json",
+      "sha256": "145fc357652009a293495398ee0dac009596c5e07746444faf44ed235f3ddedd"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4ioEVeJm95D4VUHXEknJYoVX5c78dJUSqBqgHJW16kUZis8yy9kYxKirUFtkbBdKFqieppg5ocW3sFwn2j8BZAtu.json",
+      "sha256": "7b9209f0bc0131fb250140d33357dc89fcd694edd864e32ebda5197242c55108"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4jq4kCk3W8oUC8K97PhqQ4e6jLjeajCyywws3AcnfitHqeq1SW5yTa8c9UGx6gTSkZaXKCNukUqiog7SJxNWRchS.json",
+      "sha256": "c5fe1da80a26bc27a6c1cebd991df14217f01b4048c5abde8e305e36e2dd4e01"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4k8RMgrvg7vf4zph9NtLrU1sDRY4eaUkbrCs5HaRNrmy2uks3LyVKoZHnAkR4EpPh6FXngHsadfVpiAEPbDwJsXk.json",
+      "sha256": "50a305b265944e8073ac83f4ba9cf9023db9ddc5b41c8e4c84f781a48eb7768a"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4kCSZ5Vcqdfvy3EoZ5zkEk8iM3YhDRXhn7NBQQ4Z65rR6di1SuLmsw7nyLr78reksqb4wt3Hrd5dzWGTp6U9aCYm.json",
+      "sha256": "6a0462cdb9a61c04578eae1a66c5b2422ae6b82328e621b9e9623d34cb26c8f5"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4mreqMdAFUVeSjF5fZtprVmNHgXcUvzXuJaQFsdgLdZEW9E6MKG1Uj7fvdD3hc34edrSS3htH6r72huUteBoZSMZ.json",
+      "sha256": "a3cc221245c32a60b9d1d17d252ded3005bae111bf30a361fadf838e7615ec47"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4nASPa1yd6LjyVckFxLgJxpfM8F2QVnnJKHtHYmMAoxdoR87QYcrwTmHzjJN7bnuzoTP4mVLMHCCuvHrz4rHBw5M.json",
+      "sha256": "171f2e11e969657a72c414793e15cb0ac0ab205115825ac32c38a48f1bce5373"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4r24FiVQAVQQvDW8TNqkWXTJuXtUJwGoXZZYxA8TYMAaPHdNSWAH6rXdJ4SjGcfWwpDSU2GWDfHMR1rb6iJ9Crej.json",
+      "sha256": "c1336f205a932b20ff32c2405d42e696eeadd8e5bc87909713699489f71050e7"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4tCXRunhJFwmuQvPVzjbwC28VtmeLS9oRJLKSb4NkmLuoBEW9Xow6GCDZnGyC4grRyNfF4YM5hcapX1FjednHGDY.json",
+      "sha256": "f58f27dd3d01e8f0dd7e21682dd8072079c439b0acd6a48f25241f3cb4be40ca"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4twqzMg6g2SHqZLe86PEwu7vmEa5bCYxXxAoMqBHhwtEBjzrnfGPbqobKbrpghuTWZLH1fqzhir7jfgPB8DfVUAy.json",
+      "sha256": "ca1f8a95787c37d123bfb1f4e18944bbde6a61e960927f5f3c6cda12bf242ff2"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4vmZxx1ot3x729LjE98kcw2mJLUuj7J6Fj2L8zcP2pJAUDQ7QgeKisVgqdwGrAHSzfnpNqUc8KRLnfoHqd4megmt.json",
+      "sha256": "879f0e7f3e2bc90d68de55238718cbc042d1253854d174103a0e7d166b929063"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4wQF3XiedJNbxpiEKXMbpp5ifvods9TgRfssJFjwTcVYnsrJJenuQw2MToxNQZRHrdC33ws2ZpGfo2at5sxVzEp6.json",
+      "sha256": "9a4cf71fa844075197bedb04dc356565125c03c1b2e90b6dabc3ed6290601939"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4wZ7VDKhx2TN3dMiM6dpjN5ro9N1gCZeFiYAWVx4DbxVgP3dge94KikZ28gh9puUMdh2KiRQmThNgUNsJJu9u3Sv.json",
+      "sha256": "1c57c0fe4ae2f5916d46ede92efeabfddcea631dc95ae0cad9b7bba324bc0fb3"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/4xJ2FTExtpPRbTHc1uT3v4WAJJwRiQhZMevkb5D9wtroJmPC9vgHqSQUKAvuZJ4T4h8oN7t5cLAnt55v7YtWUdBD.json",
+      "sha256": "e97fd58e0362f58313702da46bccd42d5f58b576b7082095c7199c721749fd57"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/525zGesCtLFsgSSR2XxkPTAFU9oim3FzWzZtqWevaGW9gicYY9ZXJSauTguSnTyiYea5CAhU9wh4RiPGwjdNFDuH.json",
+      "sha256": "71ebc72352be908a48d4d366d548d4d25c0e527e962c637325324ad07579afe9"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/52cxufScwJgNUSaYjJVjANiyVxHuvLAasQZaF1KW55eqK6cLSL4Su8doezDrK9KADPY7KhJBcZ8SGrw3Ev5MkUmH.json",
+      "sha256": "1ccfd9d38919f58c474579146253ba824dee7f6908ea9826aed363dab4e42617"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/53CcVTKZ8tq4TyxMPUggzmT4T5og2m2CdPv11rydHx9rZi8wtGWigAwpTkwRiUjq2oTjRmFpypXShMBNfRy8eckd.json",
+      "sha256": "fd88be3e7dfdd2b23e2c293377b281824d9bf9387fb3fd8d5b2278e0ca33e07b"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk.json",
+      "sha256": "df4e89d2ca98b295e5985e8e8747ec941103ae7386e9afa50e40346831ff67f5"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/56pYLsymXo5S6GPavPKKxHCxSQFsPigRjBseLnnX7yWQsLp1xEvSuMZLzYN8fL3Hg437YEMDsYQFTGGVbc4HDKcR.json",
+      "sha256": "9477f7caf15d7690c1b9a7600d0a6f829a814f712338c84bede4dc820dcccf95"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/57TXqev97pxU7qxrtu4k9BNHyHMuJx73kCJ8kaXKgcr7Ntr64PsGDWR2tzrhfnH8JZDGs6YaYPHb7reBL81KwPEi.json",
+      "sha256": "6b63e2e9178aeefe575db3f2710e093dde74c57e8c485583e707cd39540b0ebc"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/58BG9X7HRgzRux9TJWNe7EJNNV1PYm3BmCa1BjqR4UEVmdLHoWVcxQBBPMTLdANT69NZcc5MpZXhPFWnhPy1uz75.json",
+      "sha256": "7c3232ce4d990074affe9c7d70f5f5ae8981b6172553f224d209ef0d92119e7a"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/58vCDXcGHzamhN9yK1cTBEEuCw3czUXA5L92KFPpyU7EvU4FddqraTsAU4gKawna1C1o5b5x29UgNz6oj8zHL1b3.json",
+      "sha256": "13345dccdb7af094c39d9f65f855a38f819146ffdeffaa2731213cc4dea0da55"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/58yjpp74RnSHyNHciovvoSoV6oxN4bMVNdjDAMK1DuLQu88tFXGcnyxRnWagWmau39Bu851mm5wgqatMF4YCFiQE.json",
+      "sha256": "fa0ab3fb6e686b793c05da6fb175729c4da9ecb392ed4f76ca736d83b6d80166"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/59v5NZvjnwcrep7hJpkWRRVPB29dvHCkJpx1ajL77EiHdqTJ2Rac8Wzpz9iidopHE9AmanMUFSm7PLFvamUZzwKM.json",
+      "sha256": "25fa89106b3b5fe9ac0840c53847bdd4445c175f5439b7ef1a3fe304ed5cd4d0"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5AC28vi6etijb4tFh2d6pW9ehfGEojQnboY86yKxHRwi2qXyCi3yX5DhiSvzsLsaoD8NMVAXJCVhphp6cFZUW2tT.json",
+      "sha256": "c1b7553a511b394b434a054b8539bd8694fa3083a3a82692e009537efaf1fd78"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5BAd5JmcyjdR4YxLywB9S21mjvAeAMZvrBWPCGuZMDhc9cFU9KA26CbbAu6hKdRRLG4diLv2V2SoijmDNxWypfGG.json",
+      "sha256": "baddc370c2b7e2751e3a79cee845ec2a964af23f7d9454fa560d5c220c8a41dc"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5CTF4PZVQ5aBw4uLnuCNhLCYCDa7b2GgR87v7uKBPeCJWMn5bF2tUVfz1p1RpkjR9DC47wWXoaZAwKSxHbDDGFXn.json",
+      "sha256": "f14d90204f6e6bb809064bead0064e36e5c77403095f038850f35b264cd8b6e1"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5CZFH24AZHhmbYDZSq331Cuw4rAuN7ZKuuZiaj4AZd4i6tnU3ABN774CPd9zHnNYVsqEoXSMic8hVH9sNTVMNnfD.json",
+      "sha256": "1a4b86ccefff227552e7e048a277b00bd2daa45369ed26d33c2a06dbe6104e28"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5JirycpkPAFbBUgKnCpJVMkUZCzuk3SmGLYAPSX2KEaYNdQyEFMMshimisqdd1uJ9fFkRTQBQWyYrvPbvwsi9RRf.json",
+      "sha256": "363183afca091b3a8680d6a1ade1744f59f5b67c672704f90c94c9eb25753be4"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5Jnp9JkEdaGUZJHXuxPUpGywawEThuJmXHQAHwp7skqzmSwkVJdMxRh4Yw2tNp8fsRG4U9uJgN1EPnRboGWp9xhi.json",
+      "sha256": "18097c4d63a2cd1c1d7fd4aaf1bc9ce3038f623bf578cbbb40140e7d5c521cf4"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V.json",
+      "sha256": "04b2b326125766e85498d21c00b81e49f7d918affc65456b2c248371c7f786b7"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5NR5CrwMRYVZeXBfrrjVCSj4TiLhP1nsYErCKG2XCc5wJwYVFkTaZHUgeTrBoAsaddUGrkri9oRaKKiY26nfcMeS.json",
+      "sha256": "426915225058aa20056cde47cd2935c0faeac26b0ad1552882de3f7161fe6981"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5P1grf6omndGzVgZFqMRcimtxFRbiNdVJ2WHVKcz747uCws1X5s8CL51v5sgPA4juoFi7cX6kQk5NRRqudtNHvkd.json",
+      "sha256": "1679c1c316f4e491eb86ef41a1a31f373e66efc72888a60eaf8db8f0a7e03767"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5PP71ps5QJEfZuVcnyHu7eG1So7ZT44qeiBuXrzRfPpniY1AVweaWFxddfprcfdtAn3wmQWwZgq4xjqStFow4yGr.json",
+      "sha256": "f7407afb38e7a44b4104a5451d2da949a7190beeebfdbe5e2e795c2cbd406772"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5Q6KB7xKu6f7H4p8P2waL3F4wLyY4YJv25S8cRudJb85KGSzSrUurMNzgZDi7TANd278dAKvnscLcd5htE1fa9WM.json",
+      "sha256": "7b6ff7d2144ec30bdb452821b6ba682e73915c42a1e4e141babce8a08a6163f1"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5QtDZnUsESmBhhDvVTWt8ptzqUQ9JU88awHEPHqEYyNgkowjT9MmYGRNFsrvBn9A65HutjHgTGq6T5CdJKMEgEST.json",
+      "sha256": "c718f5dc2546f32e0a539eb6d9401f08607158cdc21840fc0ef3ef2390502fa9"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5R6Hz3m4126eFaE5vgiKxHat5WwDw2JqJJqjk41efNE846Mo3eKHRmb6XaXCUuwm2WQBaT7U1KQZNhwH5MJgLrcq.json",
+      "sha256": "1bed3c9034b451c0120283e3fbca2215e6b4249647b29067c9330850af216884"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5SYTdUJiSzKdVbY41zayMkSAcUSDobfRoZTqRAiZBdeML4VpMDh5jco1n5fETVctsGNAxrVPDpyVq2ZoFYTxqEdN.json",
+      "sha256": "4b38af4496fa6e3764a59c8cf51f5ecebbefc1354f68987042d493836a28eda1"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5TrfWpvZgDfNnoCyBzf1NdC5Yp24aYNLyZBSZByYfyaE1BGsw7Fm1U4C6Tiu183NxVP5oSg7r9uDwkxzwqvC9dqB.json",
+      "sha256": "4d662184d4d20501628fa0b019ed8ed439d404b0cf742fc872f33cf3768f4804"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5WB8KVaanjtWhfrAqhERuXUL2zEFTY6rqNzSdL5dYd7DW2UbkUTCrxqZLGEUU5q4987G3NyWZf9YpU2CobJCrfdK.json",
+      "sha256": "2e8364b5fac724ed9bbe487f7f2204188d40f94478b050412cc2497d1a7c16ee"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5Xi1wGBLKp1CyqECDx6mMqsBJuA3qjkx2mwW6UXwPYEpUkGfJ6y7EC5SYKHs5JRzLTqkCHvpZboayP7w796QL5L.json",
+      "sha256": "b742fc580e3dea1d8cb4b6598a0806d28506d0665e45f24f95a7e3e8a6d826f3"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5ZbXkGn2KAAycWtz1GjVzEXv4tK4FNanZvXhZR7Ft13ueGt8y8iJKQpaKgSzx2rEuFwhXeq7rayRbj3mafy5XkJx.json",
+      "sha256": "71c1935d20a3a11e63251ff0be41a8a4a9711ee3aa4c19b501c6a08724b46a92"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5ZbqxCX6hFqvmfJ2CMdE4WrmDeDoCdSBFRMcFj3W6qjpk5BHXodJirzJAnrgEAwo2pZNqLpa5rRN5b92yuGsgQF8.json",
+      "sha256": "e94b43cefd09294dbd24ed3399c5d9639af8d403764869058dcf58eb159155a0"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5cVhVVCg1Y3XdJz6LvTZfbNpFaQX8abuGuQ3Coqt8977Rx32T3KNMcpfbxKB2WEyuehpRP26B8ta9Jxd85g4Fad2.json",
+      "sha256": "1fd734ab93352e47968d12db3e78ada0195355afc0c9205f23ee1c6f2fdda96c"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5dMhAGJ8WCWEYoFfUZtNkDD35wGDzqnE2hroP8QRMnUX7Vjh9HidFuNgmnGd8YPW3eDKYryQ17PDNh67wRHzK5K6.json",
+      "sha256": "6741e664381eaccf8df775ba3c188fe2c3ce08226cefebbc8dbd464a38ecd15a"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97.json",
+      "sha256": "e6c0d270fa2516e3ba3da1004c51918d263ca10f747734ee66a1cd86fa1ff56a"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5gxnXE5JW8k61mXQEB8nQswPGZByyqQLTSxgRTrSP4akYFuW9pLYBdFoBbwBqVhC4sRCLn5gbZWoH6dDznbimE4T.json",
+      "sha256": "411e4bbf04ec3e18fc8a8d30a79fb055e1f19b4d2ec3217e3ca07f8120918ad9"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5h6BnSGxFCCgsDJaeuCYbqusUC5qVBmhYi82brXqu7dGuWvGruyotqWBQ8arbQvLz7Vvsqm81kosXrgnXbGQtFfh.json",
+      "sha256": "e5fe4229edc0a2d0fff4d98e39e6034cbba9d7b200a430127c67a887d1547602"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5mx6BZrHppdWbqK3oBYbwLC5K9UdpXHQQJnXRboZGotxT3Gyvdk36qQUJ9NS8RN7xcbyWA8B5iH892LUTKZsmb4B.json",
+      "sha256": "08a5ac643cddbfdaf6c0c257dd02295e5d64c6a521f851aadbb96cc858434362"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5nBpTB3wQFRQGBmc8atuBfhVJgW2NFi3Xm9tjtgCo1xrgV6WUYA5zzSJFAiKwsia9yMuGMLPcsUWi4ehoCuz4o2H.json",
+      "sha256": "ecc11a8411e3afca2041bc2bc9be90a767f67557232fe9ad56162c4f35f9cc81"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5qTSX6W3wGnmrWcVHXoc4hntssZZWRMQVU51hkaXDjGWPHTGXHUW8ieUfNtrY2ZXKCrUTuBsEj9enBjEkUkkVs4U.json",
+      "sha256": "1e5b51d3607bf310b403f538a880d66d740252384ee5870b7e5a6ca4835cfdb0"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5qia1ZcST9rBUp6cHDLYf7DYPLmjtm4H786wu9pGcWEMD2f5WedQcQ2HsT5m4zw9LRR1h4HnYcNGbd2ViekhN7DA.json",
+      "sha256": "12603d35ef21a44ed6a8215197c99d080fdf518caf14d680385812bac7080349"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5ro58NhLhtnvPX1J7wE4e3fXxg8WhxNK6WSuc4syB6RAijnRyAjEqsvjPmv2TL7nuDK44dFRK6r1qFuWTSWES2Se.json",
+      "sha256": "56f68db32e5597d2ab650f956d486cafdadd0053901801395d76835b5e7e0dec"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5sp38jxpoPZUpoup6nw4xYPLWh8tQWkwVmMYPSwFKikveBHLN9LKpWPpHXktdwJ59prJLLU6WBNPNH7PvL6pWMnp.json",
+      "sha256": "2ffc250b94e3aab086ca608b7c238bf17f03793492e4dbf8744f43eeeb792481"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5tXRhxyBXMFZJedUkHDCzn2MjDAEY8qMcDUjRTBDoeC7XthmNkemfzags48WHoDTRR7YisTNDu5urevDDtxkyCT1.json",
+      "sha256": "6e99e834a9fdbfa60e2692d43ddc8f7f17d7b8a2dbf1ca3928a1b90b13613be9"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5tzrE862CmFrR4TZXu1NfaAvbRiNvuuZ9sHzjgYjSkp2fAGZFyzgXE2WXcopVyK3sL3M5b486JRRwTgd8NWghR1V.json",
+      "sha256": "cd7b836219a31d49e9e770030f5dd4c422710f2eb11e9ee7f84f08fe663dbeb1"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/5wqto8NatSEBJQke1obTaukPcvUg71sFRyVn6Hhwbr3jxKShK8JXPjLYx4qmZUxE2GuFMtK4ewnswPKMj4dKAAgh.json",
+      "sha256": "39bbef2740465dc2ce446b078d6a0e509beebe3b87403071e636a071adef9689"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/61WJR6dwXCw65pyPcVpgTKpfhNr8ndyD5cEMoiQVMiBLydGTvVRtEjuevr1boVCBvV5bTcJwjJQQaRCxx7cY9Jxa.json",
+      "sha256": "b548544af9491243b5bfaf74bc628c1e4381daddfce6636aa4327240432ce31d"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/62bScKCjqbTrXpLavmgCpqrhgeiaGBkAGtqtFhwj1JghZPezRmXthnRcf1jg6QyKap22ttuGgaQyrFhuWYYSyXyj.json",
+      "sha256": "6713334533c67b78c0681efff6b85a716006f11f7b895453ca56a30d6292503a"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/6393k6BPKsGZcoU5CEvcY16ceMwssnFvqCVEYMd8XAWjsHEgaRaSWfsEQDE4MWU694jkxP6xWMMyYQHJwfsSNe6X.json",
+      "sha256": "ed1d0f53558fe18177bbd5becef0c34042cdd3e98430efd8d304a45170056a75"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/64MpCdGW3gFXmt8LmKm8XWfLaesGz398ZWKatdv9c2Z1egSkPgbT2CQZUpNmnU9iBSSiUKcsHrmNuzMRyvJZkdBZ.json",
+      "sha256": "9c22c913b8554438b7f97c9c15a91e2a4dcc1ab906b2cb210180c92141067988"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/64Q1JroKRCTBdr1KG261ahJHJwJAeyinz4nqaTbNdPTgaQiRpRzWtgDZSWwSZGHNjv3r41ULMZegP1LfmCwVfNbh.json",
+      "sha256": "51caf5e7ec522115963aef4db27daff969037cd9308cbb74da19a44dd16dade6"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/65MYDS5KWhqcSpNMynynCCQbgAmv1d6gACXpyk4zhcC5RhLPS7KUAm95Wv6QuQAFDs3KcUnQ3Yxm9KQ7E8j85Niy.json",
+      "sha256": "bb49e8c28877f059da1d38856f64cc465862cc1df3f405ef8730b643bebd7474"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/66aJeUtGNJPyRmRAGGuxpdCww36P5RB3AfYbuGyChjHUcFX4eNbwBJV757Dd2xqsQisq3Kbfu4URcEfqYVCxZbZj.json",
+      "sha256": "33e2b62b5f8e480720d8fbfe2e4268ca54d55eb0b453e89cdb30671e91c28c46"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/67AUazTby3i8ovmJ4BMxRFvM8ExTCWEDSUYAriHE9VjGM4QydehGAfU3SCv3sD2NGQvtp93QLLwLtfgjmPgE2rdj.json",
+      "sha256": "9078c9a1fe7b45f9daa2d4602a4ac6e0a1cb41a57e483c038c8d36c30013bcf0"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/6VFDsASLGUQhbnhQwoB2gMZtYpCKgHNRASpNMxpB18yPxw3kqz4ZoUPV5DFGF7KMZZE6QcBVi71uf4z2Hh2tqpT.json",
+      "sha256": "14de0ebd8799dd2e8014a4671c48edde3c69f6f45064ad343b58293d739aba07"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/9CfRoqHmsXPGZyXBEksvy9h8rC4ae88Qnxa8348EZZjHeAk2HdsTbdCFRP49tSLYFsSqHXctxPFrvQFhk9YfAPc.json",
+      "sha256": "e91cb4a549ddacc3b7c0a1a151a8f0aeacbeb3c1ce9f8d563870bfe457f55006"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/B7m1vAxqwuPgFxAnmGCVLkS9dzsFbYJCPBoPpbGs1ajk5nb5Kebt4vSfR3SsJK3f9tFL9KwkHyHeCoCTi2gCWbu.json",
+      "sha256": "871f9ef5729af4d5fcf588a7cc54d84c6e049fb3d20906e3b0a54d225e03c25c"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/DvesQFN5bbJiRYavwrRb2fBm4dLbagczE1f6Pq6UU5zkUKA1Ss6aSNr62X3wrby8Gf6Kx9oriCdKtWyMUXPiMbu.json",
+      "sha256": "42c5b7c310ba89ce26906f127745a12274390642ca4b28564675d7990ddef504"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/E9Cf3SdaMsw4zq1yYPB78Mwqp9hvZwnnGSsfDVC6AG8Wvmi3KquYAW3SPYbMXdyKN5dACbuyYaEnRRrZL1RpMja.json",
+      "sha256": "e6fa38012b389755bfa423e0e3c7f577bd8a85c318e6fbec44ea714b86c6812b"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/G8Ui561avRH2zo6VyAZtdfeREPjvW2aZP4xt42tQYxi7ai8Jx1isWPdoQzeoh1oic4NpdLjzzA5Mad2sfZCGLSg.json",
+      "sha256": "7a2f39fe39cffdcc49075f5aaed9a40c75cc098cf54724c9d46b5ad2f9e94406"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/KsQaksoZnsJZ2aQiFSV3EdRmgjiiCXyrpQNPpQuK2Xtop8c7LYC8jnQzZPoWtm6gwbMWZvNDfN4xsx39BHXVy7D.json",
+      "sha256": "e6e50f8324ae70429d7e37f34d038236deac2d30a2b1d0b2eed6a69b3c8527ff"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/RcM8gTcibestDSmGrgbRSjagov7dPvzBMnoef7KCb9LcYc2FhqiSbWAG9sJo3pKrqnxWdMhn67BzZDPoPyAq5Dr.json",
+      "sha256": "abae9aaa5f421ffb8cb84e4a69c396f58383ed63b41b7f740f14c2f1393234a7"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/RgepZUQx2F649PwwZXj7T6zD5eZsZZMJfBFfKrkAGcpG96DSQU3j7T6YrzxqjBbSM6d2tndXUxrhok2oNvRGi5X.json",
+      "sha256": "8b6d3f16769eb6740ed6e7483b30f041b2d62e147e2a49db603f5dc566d82a6c"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/SHUJKSTj5LoWX2KR6EWQdD39vDkVXnk5L5qSmCmkfQAUXr2MssdmfBLtXCrNQ3NQKLRZGBBHREhnCMs8BKMsrpq.json",
+      "sha256": "af4f5f67dc7de4cb2a6d8001afb4625179c7c86fbe25bc6f16095103774b6089"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/XQp7HtMbR6oa8KbUZd9gAMkdep1smnJhVceDNNMVRUNhp1mv7Bt2i6PKEiADWTuaVy8CT5rPv1b8Vj2T9jpgNSh.json",
+      "sha256": "8e4b51e97f434c01e5e9d548ba408c14a6f972182bb663aa86c7572c59b6b6ec"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/ax3gU2G2cLg9h5i686SvsGqTkbBgfQCyNZSNP6eqJNbs66SV2EEppFwVp51ojKZqrsYB3FBZWagcCsbZhT5a6te.json",
+      "sha256": "44cf4d143d5c295c893cbaee1a94f5796669c6c68bde4c30af1eaf9100fa5582"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/bRDETkYMY2EKtMwjjyoWgCQajnQVMQaw1KjzyDxPS8a6cN64RVmprTWDcvPZH2fAUir4gP2QVeurB8PRQgecAHx.json",
+      "sha256": "3c947e1715d41b40421d1b585c5e259fa861cd8b37056e3a3c54407ebe86a02e"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/f1xDU99kjcNWDFhvNhEUVSyCgwroGuERRpvfPhygLwcw6YtFj7ahQ1Evxdz7FXFrHq3HHRCFau99BuNLR3xR2JP.json",
+      "sha256": "2c4a3ae1ee0f13f590313d7f744753fc563a52abdf5de3a6395c982e07adf98a"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/fL3VrfMdoNcKTqhdLUDJt63LSKuFRhdN2nzGQKAi66irgYBSeQkiRjygrhE9SQaYfssigbD6SB2qo8L6rK2aLmh.json",
+      "sha256": "8c21deba8717ebd5faf04b3cf4b20b352dd9603c55ee3f3f70aacbdda33a1d61"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/fyJedrC1uGMHpnK46qck6hfeCWJPHsNftWGvhW27MNjC4TBz5BhunFGefxz2eMkApiZkBqtCqWtUavXNNwSj4cK.json",
+      "sha256": "2d687bdeb2b8672877aa02c4188a47d05dea929cad18f55f044b923704479c8e"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/hAE4R7FsZ1Ltbr7WnbcGDz2QfJ7M5bJ7JFzhntPu2296KHoYYUPxipEoPACngaePfAgMBxJpXD9gn62X5b4H5eX.json",
+      "sha256": "c630c96f0a98e594fb1791dc92f98df2d6793b2e90f710da05eb2a7b73e7fa9c"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/iGbtddhPPcyZBLmT9gAbamJmxj8LdqJbUh9WnLexnk1TCFQLPCpfhXdLy3cBPG88KUgWURz9sJpnJGW8Hh3FPmh.json",
+      "sha256": "75256aa50b89d398fd1f760c4d9a7d716c0135c1874a832b4b94177e3598752a"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/oDaBBJ8RFkLk7ikVkG1uNqEMcj1GorXPChtm2KVGkkDvgTxD5wuQCDPJc88TN9oABzKtPidnySRXHfxToNCru4J.json",
+      "sha256": "b91a1d2751e565dcd1706b536150fb1a65ddfb6e11ae95726b09c1ba14c4c202"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/pYoB6sV12HRtyd2J9qsTBBG6HJ2QA448Ph8BLQhFQrtQaU3CssV8YJbRkoXhZmXc5zuCkV9xpgYHaHWVqwvrxxY.json",
+      "sha256": "c4085bb37193db2eb41118f53d1b9291e61eb584ebc8582e3ce12c247f349e54"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/rZP6GET1Wv5xbfyL9CjMG9DiiaEZQ3pC1xnBHFaAuCn2sV2rnAcTsJ93YChYjZAAF9hRmGxQYWtkxU7jVbupem2.json",
+      "sha256": "4b29559893fe93fb8f3820776bc2668bcbf7c7b28b58842df5f88db03f948f75"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/sZtbYMwjAkQApTB8Y8WfNLU94VgqqHciCsG66BC4wvWhCeFDMY4z8WXZZJy9vUVV7RXQ9RBT8WBxGbhGwbyQTTg.json",
+      "sha256": "ad53f060a4e9ef0dedd3b7935b877d13286ddf1a559946e839c6a4240c4de66e"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/taJetigkX64qUxsooBSMss1qe4XzzGAnhxpHuc9zBh4MH1fEEFHn99XE2JtrhpuKubCw7uo3QgxUdCQth7sXEYS.json",
+      "sha256": "dc5e93d624fa0a3d417d9ad852b9cf40ca1da3ca4f86108349b353a985599a75"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/uNbVymDL6V7o2GNGGB9gAwX3pUXwcvJFoA4XiBNPCv6Phtn6rt2ntNZygQXba2zepPak2kjBzAJtxkaggRg6nFA.json",
+      "sha256": "b668b04e9d1d3361e068774a191e71b587ce9e25723c30b59ee1591cb387f1d2"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/whVFGm3S1FLFceA3BFVpfh25c7eFt3tUAWyN5CtcH4X7ULtSh9yEWevxvV2YqfWL35hPt8iNVDViU8VUSHWojQe.json",
+      "sha256": "f6bd8f5ba54a7bd4b0cfcc780171ecdae9dd69e2b5f444e7163a9ec4990312bd"
+    },
+    {
+      "path": "docs/examples/phase-u3-baseline/transactions/y9WvMMYdoS6rg9UcY5XSLWQerBUJRDmfRv8dAUAgnSjdL1akiM2Psmc5tZ8zgLFmLNZx6VGWY8ekyv3AY7fiBgA.json",
+      "sha256": "6f02fa6ae240ead1a70fd0688e3a3d75c101da7121cc3eb161500e9636a9dbde"
+    },
+    {
+      "path": "docs/examples/phase-u3-before/census-source.py",
+      "sha256": "35719945da5cf9ffd37a6dbaafb1cef647d9844b7af8f4a761805c5aef7475c0"
+    },
+    {
+      "path": "docs/examples/phase-u3-before/census.json",
+      "sha256": "a179c254b8ada5888d76a8544d9bf9e2eed562f713aec0505442322834f49ba5"
+    },
+    {
+      "path": "docs/examples/phase-u3-before/controls.json",
+      "sha256": "2a565174c52784890f98fbed7628b5271a3982ef1e9cbbda7dd9590c903c8d9a"
+    },
+    {
+      "path": "docs/examples/phase-u3-before/lifecycle-diagnosis.json",
+      "sha256": "05b995895df2c4b59a0f2dbadd83fd08e6bf207ec72fb4eb0179ea1e8ad7c0d5"
+    },
+    {
+      "path": "docs/examples/phase-u3-before/manifest.json",
+      "sha256": "8bbf77c043e7fb770f43e0ad894c02694eef2c83e4619ab4cf38ae54a893a580"
+    },
+    {
+      "path": "docs/examples/phase-u3-before/rejections.json",
+      "sha256": "ac922513b5c115eb75e65ed2622ec4e297a6e5eb2029289c0a01799f5f63474c"
+    },
+    {
+      "path": "docs/examples/phase-u3-before/tx-dep1.json",
+      "sha256": "cb46e938a131749745a886af2b84b4ac7c22cd55a48653ddab17196b9a7e816c"
+    },
+    {
+      "path": "docs/examples/phase-u3-before/tx-dep2.json",
+      "sha256": "60b3c09ee616fea7fc7e23ef1bc4c70d132b78968e7d93eb0433d75e9685cf95"
+    },
+    {
+      "path": "docs/examples/phase-u3a-validation/capture-revision.json",
+      "sha256": "099c1e0a020f6bf871645f9b1844bad935de11709e54e6399cdc19f64f1348f6"
+    },
+    {
+      "path": "docs/examples/phase-u3a-validation/capture-v1-invalidated.json",
+      "sha256": "3a83f4a28c210757764d70c73dc2d243812ea314c912c5282a6776db0223d550"
+    },
+    {
+      "path": "docs/examples/phase-u3a-validation/capture-v1-policy.json",
+      "sha256": "03bf8d0fbed56b8d256d8fbf11e2b0d9f9c715eefc58182db71d1201252b327f"
+    },
+    {
+      "path": "docs/examples/phase-u3a-validation/checksums.sha256",
+      "sha256": "178c684e504f0368a2e4d5597d4300be110bd239667d9b0dc486d2b9963ce082"
+    },
+    {
+      "path": "docs/examples/phase-u3a-validation/controls.json",
+      "sha256": "338e9f809224eb8991da953a5bd0c34d956bff02325018bd92fdd2e7b334f9e4"
+    },
+    {
+      "path": "docs/examples/phase-u3a-validation/determinism.json",
+      "sha256": "fb6f7ab177f9c0995dc209b395fd26919d4f03d6ba38ba2f42359e5e1ffe862e"
+    },
+    {
+      "path": "docs/examples/phase-u3a-validation/hygiene.json",
+      "sha256": "42a1d42fb5da15b5b5c17986abb59afc88b2605319894e0209bee1c45c5deb12"
+    },
+    {
+      "path": "docs/examples/phase-u3a-validation/mutations.json",
+      "sha256": "f79e34131617cb206763e369d76197e702bfe22c14cd9c953baac188578bacdd"
+    },
+    {
+      "path": "docs/examples/phase-u3a-validation/preserved-preflight.json",
+      "sha256": "a2d77e368b01cfd0cbc8536c33b848fe092d58a241e3803eaf1c11906164b7cd"
+    },
+    {
+      "path": "docs/examples/phase-u3a-validation/recovery.json",
+      "sha256": "1f7fad2efd59090ec2a9874cd53ef9e13424ae8c83ae8e8794b5273916273166"
+    },
+    {
+      "path": "docs/examples/phase-u3a-validation/reports/baseline.json",
+      "sha256": "7be26a66f3e98f9b96ba6f1270003c158d99968d9ed081c336a97f14782d2099"
+    },
+    {
+      "path": "docs/examples/phase-u3a-validation/reports/bounded.json",
+      "sha256": "139fd95c2899d54b765511d20bc70dfc63cb7a9532d5b3b5ae62b7626df68d16"
+    },
+    {
+      "path": "docs/examples/phase-u3a-validation/reports/regression.json",
+      "sha256": "e5e6a4b39ce377d8573099dc646fb37928bd3aa1172ceea4b4fa6c903cd52ee4"
+    },
+    {
+      "path": "docs/examples/phase-u3a-validation/reports/stale.json",
+      "sha256": "8d6a4dc867c39655b58f91395630aac48d8e865b1aa1fee3a36a6ac0bcb9bc63"
+    },
+    {
+      "path": "docs/examples/phase-u3a-validation/reports/unevaluable.json",
+      "sha256": "0c7a3b5231f84b99e58d6ddba6fe76e595cc212ce13a81fac24d9be283ca57d7"
+    },
+    {
+      "path": "docs/examples/phase-u3a-validation/reports/verify.txt",
+      "sha256": "d395a058064535cbeb7547943f34ad3c3a2b109e849e5ecf859c694b54acbcf0"
+    },
+    {
+      "path": "docs/examples/phase-u3a-validation/unchanged-source.json",
+      "sha256": "8621e538313e4808cbcb9c035a191a3f19c5b49d90237b508171d6520d8568af"
+    },
+    {
+      "path": "docs/examples/phase-u3b-lut/acquisition-timing.json",
+      "sha256": "7fbe10fb13b5c104543e9d7113e7ae9c07ad087d68a8a29ec641a4c1ae42dc66"
+    },
+    {
+      "path": "docs/examples/phase-u3b-lut/acquisition.json",
+      "sha256": "5c2f6a3341f826b38f62f3250db395a3b09fa2692c50340ee510faddfa5e635d"
+    },
+    {
+      "path": "docs/examples/phase-u3b-lut/checksums.sha256",
+      "sha256": "85bf5f1f9facb4b2838e276e57451f3c651731db68835b2d8d8d3b13458287d0"
+    },
+    {
+      "path": "docs/examples/phase-u3b-lut/proofs/2dc94E8Mvh83c8MiecgRekd7Vj8YE6aexfVeCJK58K46LQcTRjpDomii6pYmwbdeYmdTM3bVbHw6rhFdtwRtSTnT.json",
+      "sha256": "0d4d9162693f7b5914f47942871d3f88073d2777822da8ac699715274fcac02e"
+    },
+    {
+      "path": "docs/examples/phase-u3b-lut/proofs/37XJKQbB9fRX1R76cKKGSENNNA2RSY1WvjkCx2Q7joN2irKfTTZ5Z6bHgH4rfgDPJvhXf3peTe4mwxisfpSEmimu.json",
+      "sha256": "945fe3d14a73eb54d75a0a3f96d30b8105da4d13add286014e4f3dd2983794f8"
+    },
+    {
+      "path": "docs/examples/phase-u3b-lut/proofs/3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q.json",
+      "sha256": "7fd434344c59158057b12f3aa9428d47116fea70e9bdb230f8bc4393860b6d03"
+    },
+    {
+      "path": "docs/examples/phase-u3b-lut/proofs/47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf.json",
+      "sha256": "638b1f70a7bb2da4165172386092eb9bff7bc7259cba670deb1063c392a900d7"
+    },
+    {
+      "path": "docs/examples/phase-u3b-lut/proofs/49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx.json",
+      "sha256": "44ee1efe33c5a2d795c51acd9b24869bab8083b60e4198f48fd89176c4d1157c"
+    },
+    {
+      "path": "docs/examples/phase-u3b-lut/proofs/55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk.json",
+      "sha256": "73c5b0cc91565719980c22853563e52044d2f3de3bd6a3bb4718a6ed83a012b3"
+    },
+    {
+      "path": "docs/examples/phase-u3b-lut/proofs/5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V.json",
+      "sha256": "2263543a3139d70fad5fc3cb0e929ff633a531567f8ba47eac5de079ecb27c46"
+    },
+    {
+      "path": "docs/examples/phase-u3b-lut/proofs/5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97.json",
+      "sha256": "c85dab71b60c6acaefbe640d9ec55401a3817926d28579bc2cca977910ace2d4"
+    },
+    {
+      "path": "docs/examples/phase-u3b-lut/stage-table.json",
+      "sha256": "490b91803bbb1c4b2af43835aa9e7c94a944dfff7af22cc0229e5f4cc4ccf88a"
+    },
+    {
+      "path": "docs/examples/phase-u3b-lut/summary.json",
+      "sha256": "a1d416614c3e60b9aea2f6ebb382e3643e4118326e607028e60546652d31c74b"
+    },
+    {
+      "path": "docs/examples/phase-u3b-lut/targets.json",
+      "sha256": "3a300f1ea6b9f762582bee9c847b9b16d63b2ac0fea2e950f33a6aca12f420e0"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/after/baseline.stdout",
+      "sha256": "7be26a66f3e98f9b96ba6f1270003c158d99968d9ed081c336a97f14782d2099"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/after/bounded.stdout",
+      "sha256": "139fd95c2899d54b765511d20bc70dfc63cb7a9532d5b3b5ae62b7626df68d16"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/after/controls.json",
+      "sha256": "300a078d0e782c798118518192a065cc9c5efd39a4d57cb1004dfa33636a9f05"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/after/regression.stdout",
+      "sha256": "e5e6a4b39ce377d8573099dc646fb37928bd3aa1172ceea4b4fa6c903cd52ee4"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/after/stale.stdout",
+      "sha256": "8d6a4dc867c39655b58f91395630aac48d8e865b1aa1fee3a36a6ac0bcb9bc63"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/after/unevaluable.stdout",
+      "sha256": "0c7a3b5231f84b99e58d6ddba6fe76e595cc212ce13a81fac24d9be283ca57d7"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/after/verify.stdout",
+      "sha256": "d395a058064535cbeb7547943f34ad3c3a2b109e849e5ecf859c694b54acbcf0"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/before/baseline.stdout",
+      "sha256": "7be26a66f3e98f9b96ba6f1270003c158d99968d9ed081c336a97f14782d2099"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/before/bounded.stdout",
+      "sha256": "139fd95c2899d54b765511d20bc70dfc63cb7a9532d5b3b5ae62b7626df68d16"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/before/controls.json",
+      "sha256": "ac97b591ed6595167051d248f7c96b1d27f0c1f6bbc8abe2f9bed74a7759c830"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/before/regression.stdout",
+      "sha256": "e5e6a4b39ce377d8573099dc646fb37928bd3aa1172ceea4b4fa6c903cd52ee4"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/before/stale.stdout",
+      "sha256": "8d6a4dc867c39655b58f91395630aac48d8e865b1aa1fee3a36a6ac0bcb9bc63"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/before/unevaluable.stdout",
+      "sha256": "0c7a3b5231f84b99e58d6ddba6fe76e595cc212ce13a81fac24d9be283ca57d7"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/before/verify.stdout",
+      "sha256": "d395a058064535cbeb7547943f34ad3c3a2b109e849e5ecf859c694b54acbcf0"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/checksums.sha256",
+      "sha256": "156368f596a5f0a0eafb15f1d5046e794a5fea3dcfaed92f3332e2e8f73e747b"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/controls.json",
+      "sha256": "e72b303ec725bc5a668a22b459995f7301c637709a7424c76f9bd7b21a28409d"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/final-report.json",
+      "sha256": "ac40722fc371866a38bb66eb923abb07529f728e3adccc0a71908aa1b81e1d0e"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/mutations.json",
+      "sha256": "4ee91c9b7e2a9733705356fc6130dac807944df3f5700506d2bb154d83e8cbb8"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/offline-timing-reverse.json",
+      "sha256": "1fd5b941a7741bff85f2d326dabb30a53bfde4cddba6088e16d4422c05446b84"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/offline-timing.json",
+      "sha256": "770dcb7456bb0ed8f8bfb8979bdbacb81ce0667a35b5d33840812992ffa32057"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/preimplementation.json",
+      "sha256": "0849eb82fe6d79b520a23c010bf17fcd103833b0b1b2f798fe4a375e3323ae4f"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/secret-scan.json",
+      "sha256": "c351b30614274710f4685518a208dd3be5bd89daff6ad5383813c138cdcf9fcf"
+    },
+    {
+      "path": "docs/examples/phase-u3b-validation/tests.json",
+      "sha256": "c388bf9923ca02f1848642e690d5e15460382fee027c87cedbba9696d0b13506"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/acquisition-timing.json",
+      "sha256": "ab45a1ffc3d0813c96c3fed235d53ea9ef5bd43e3c944e0ded8f4ab617502149"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/acquisition.json",
+      "sha256": "39f42265bc57813b8f8be2b6ce829d8f731d2b772be5ad9b7fc20797d826aa86"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/archive-validation.json",
+      "sha256": "c21a90f2a47425dfa4f925c344bcbbd4d667367547bf3c559f74c35a121e95e4"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/checksums.sha256",
+      "sha256": "4825b843d9c1f33f094c66eb4470c83acc254a9a41daca232d4723e7437e7a15"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/inventory.sha256",
+      "sha256": "6af4d63f6787fd983ac24cb1766064c44d8e63536382d87be2c7fbdf4f042f1a"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/proofs/2dc94E8Mvh83c8MiecgRekd7Vj8YE6aexfVeCJK58K46LQcTRjpDomii6pYmwbdeYmdTM3bVbHw6rhFdtwRtSTnT.json",
+      "sha256": "f39f0860959cfaa594028ce8a12eefccd5d77421d16a00ade218b73a36b5aef4"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/proofs/37XJKQbB9fRX1R76cKKGSENNNA2RSY1WvjkCx2Q7joN2irKfTTZ5Z6bHgH4rfgDPJvhXf3peTe4mwxisfpSEmimu.json",
+      "sha256": "25c7f1c956e40ef14774bf00b0be49c55a74bd976dd9d7cd4bf88392e3b1a846"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/proofs/3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q.json",
+      "sha256": "9cbddbac3b9fe9c6faca04c323f31472220ebc4edd13cebd6a0b74d23a7b0404"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/proofs/47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf.json",
+      "sha256": "c5f0381683af407eb28b0d1edc42e9290df5a3d064ab9be35d09fe11daac28ae"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/proofs/49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx.json",
+      "sha256": "9ed768bcdbe7a063fcb0a3247ea44a376d5dd2379e67fbd01c8ebae66484a4e9"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/proofs/55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk.json",
+      "sha256": "ad1be821b014bba34e2397b138dc2d59eef5795db40f12b3e4195b594e6c3325"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/proofs/5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V.json",
+      "sha256": "37a1760cd65c04370305f80ee5e32c05a1ab640ad3ef3866345ca95654dd4fdc"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/proofs/5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97.json",
+      "sha256": "96dd0b48c20b4ededd679e4853bc09d40da1ce9493e49a019ba8f4ee86881421"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/qualification/provider.rs",
+      "sha256": "f0497b5ba426023e2f227ad2614b9ff81b4eea9247dfdaf77082ec013d18a665"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/qualification/record.json",
+      "sha256": "453b38ac6e17a78f59b60b74edd120158b9da459ad64ff1f84f3cf4051ce71ad"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/qualification/reference.json",
+      "sha256": "5a43bd216bd144c3906b65543152fd17bbb4715ba773f7c18f60f25c56188310"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/rpc/genesis.body",
+      "sha256": "072c547ad3321ad6379bf249c218bcf112eaa3bd0138f07ace4077db1785a37d"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/rpc/table-0.body",
+      "sha256": "4df704265a3f28c17c72cbb4d5d9130ce4be9b2644491a66867dd06894a1db64"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/rpc/table-1.body",
+      "sha256": "b5d045129a355b40a03ec1727d93cc7f454cbdb25484cd7ad8598fc5fb9eab32"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/rpc/table-10.body",
+      "sha256": "4a203fd3c0fb1ae5998698c7fe69b3d7e417d8c2012634f769dbe03f6fa0713a"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/rpc/table-11.body",
+      "sha256": "095453cbe25e467668e9da15615d73e33719ff28fac270913522353f74876093"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/rpc/table-12.body",
+      "sha256": "26da38a4be86b1aa632b2abd04908c8addf6197aecceb90f12fbaa44308bb258"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/rpc/table-13.body",
+      "sha256": "767658f2bc0449797af9a19ad34555b144ce363b546daa80fbe11ef5bc40e08e"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/rpc/table-14.body",
+      "sha256": "415a3665d7d90b8869784cf5f61c56e7f3f48eb95d8d04bc3331ee62ba828f04"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/rpc/table-15.body",
+      "sha256": "ef8ad97112fc87d5e3de28ddd8a80628800f8be95cbb71e898732e2baf3fc7d5"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/rpc/table-2.body",
+      "sha256": "9fe3756b034b3b0933499a917cb6d7ef614022aaef5d3490fb4e4a5a8955f772"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/rpc/table-3.body",
+      "sha256": "ec165ea104f0a6725a5fb8ffbc01d418712a6ce7b2082f75258b0b62fb5d2f64"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/rpc/table-4.body",
+      "sha256": "2a946b7245603c10a427d307df384d7ca75699d385b9b32efef4ea0b7ecb784b"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/rpc/table-5.body",
+      "sha256": "128629eebe93adc497a8654766e2e6395148716bbcce409363a07733304e400a"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/rpc/table-6.body",
+      "sha256": "e10f622d8f6f8070b65c244ba248beb7f429bb47698023482965a3270ae98ece"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/rpc/table-7.body",
+      "sha256": "8fc2032a8407fc6f9afe52cefac3ada2dd7424c03e0a82c0e2856162827d3dcf"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/rpc/table-8.body",
+      "sha256": "783818ff17e1f1e920ed552bee930c968cefa40515714e353321df1f527a41cd"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/rpc/table-9.body",
+      "sha256": "7587a63ac6a3c62c99253cc2790e998b722d457b11bdee4582ccb4a9c6d51996"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/stage-table.json",
+      "sha256": "677fb752095c4ab7d687882ecda5b99d02751a8d80100f87c1d67449193f0d46"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/summary.json",
+      "sha256": "49dbe2b108bfc3da459e6cc42acda128b1dd8fcba34ea9f0bdc1af3b81478b9d"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-lut/targets.json",
+      "sha256": "3a300f1ea6b9f762582bee9c847b9b16d63b2ac0fea2e950f33a6aca12f420e0"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-validation/attempt-2/acquisition-timing.json",
+      "sha256": "b21c3d0c205c30fc1993bac9d1b8e8151df928b85eb90c122ad19a36f588db57"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-validation/attempt-2/acquisition.json",
+      "sha256": "c3192a9ca0e9864ab221eff75dff69f51581f77cbc6b14c576465e6f86ec48c9"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-validation/checksums.sha256",
+      "sha256": "42a0186ba55e4bee6c4a8e46d2f664872454271e0415b852ec8c5f5122d2fed0"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-validation/determinism.json",
+      "sha256": "a8ee15be01016a48ec325a26664cf04074f6ebe4a461134b17ab073b67ff4334"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-validation/final-report.json",
+      "sha256": "9f04ce28cd2657be912cd87e3588dab8a3e4ee8234bb66502da7d5553ed62eb8"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-validation/mutations.json",
+      "sha256": "b50f914320b6ba628b3f0de28edc1eebf5230b63f6326f4b6df1a31a3c57338e"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-validation/reports/baseline.stdout",
+      "sha256": "7be26a66f3e98f9b96ba6f1270003c158d99968d9ed081c336a97f14782d2099"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-validation/reports/bounded.stdout",
+      "sha256": "139fd95c2899d54b765511d20bc70dfc63cb7a9532d5b3b5ae62b7626df68d16"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-validation/reports/controls.json",
+      "sha256": "ae81fd42ef6a46c5908aebb35843d0bb809b3feec8a86aaf7685369253bae4c3"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-validation/reports/regression.stdout",
+      "sha256": "e5e6a4b39ce377d8573099dc646fb37928bd3aa1172ceea4b4fa6c903cd52ee4"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-validation/reports/stale.stdout",
+      "sha256": "8d6a4dc867c39655b58f91395630aac48d8e865b1aa1fee3a36a6ac0bcb9bc63"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-validation/reports/unevaluable.stdout",
+      "sha256": "0c7a3b5231f84b99e58d6ddba6fe76e595cc212ce13a81fac24d9be283ca57d7"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-validation/reports/verify.stdout",
+      "sha256": "d395a058064535cbeb7547943f34ad3c3a2b109e849e5ecf859c694b54acbcf0"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-validation/secret-scan.json",
+      "sha256": "3835281dc5499992f7716f978fac3f96059a8f5ccbcf0545a0f98f389dc1cfba"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-validation/tests.json",
+      "sha256": "7a85cca2fd8ecd04f3ab6600ca52daac1c4a125df3be7e932562f0f8a1141c46"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-validation/timing-normal.json",
+      "sha256": "f05a729c8f49955493370dc6e4a6a0b43bdbb4e1dde73b69a681245ab38b59ec"
+    },
+    {
+      "path": "docs/examples/phase-u3b2-validation/timing-reverse.json",
+      "sha256": "935237c4edb7b3af32d0f902dac7fdb177c0e0a4c00b8e96d161d62bf91d9cd0"
+    },
+    {
+      "path": "docs/examples/phase-u3c-dependencies/capture-index.json",
+      "sha256": "185b8fde155ec2f6dd9c7c41acca83ecfbf181e47b9ad9a38c861eff39ca2b09"
+    },
+    {
+      "path": "docs/examples/phase-u3c-dependencies/capture.tar.gz",
+      "sha256": "f99efa7fa8ee5ce71e0af3ff10bd52caf5e811296b8b87ee87b2686d0e093afc"
+    },
+    {
+      "path": "docs/examples/phase-u3c-dependencies/checksums.sha256",
+      "sha256": "2caf1f37dd917bac499f0cd30841277cdf2d4a5062c9c1990ce3364743db0851"
+    },
+    {
+      "path": "docs/examples/phase-u3c-dependencies/inventory.sha256",
+      "sha256": "64c6f1d0a82d2782613c7a2924a4f65762e038ca40e0723614b5f73a00ce2c5d"
+    },
+    {
+      "path": "docs/examples/phase-u3c-dependencies/resolved/49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx.json",
+      "sha256": "61563b17efcf743156ec28cc5bdd56556ea1fdb4c05fc1355fcdefa4f74fb8f6"
+    },
+    {
+      "path": "docs/examples/phase-u3c-dependencies/resolved/55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk.json",
+      "sha256": "a9046b81ada61822f8722b1e11ce79327c32845cdfd4a292a9d3c16aa58af4ef"
+    },
+    {
+      "path": "docs/examples/phase-u3c-dependencies/resolved/5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V.json",
+      "sha256": "e0b051e5691af03cc29406573bbf00c553900e67aeffd69124e7fbc53876f732"
+    },
+    {
+      "path": "docs/examples/phase-u3c-dependencies/resolved/5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97.json",
+      "sha256": "3401b1cd07c87c197075406d28d08b165c25424fe9a965e3a7b279a0bcbe1ed3"
+    },
+    {
+      "path": "docs/examples/phase-u3c-dependencies/stage-table.json",
+      "sha256": "ed60d9f86e5a6a11f5d459d77b456bf2ea0c3fdf5774a7bfeca9e97fa4a16031"
+    },
+    {
+      "path": "docs/examples/phase-u3c-envelope/checksums.sha256",
+      "sha256": "9c48f6902d70e85f8316b87d6f928b999307bea52f54ecb345b4ea5130838cdb"
+    },
+    {
+      "path": "docs/examples/phase-u3c-envelope/inventory.sha256",
+      "sha256": "eae6e3b9f2676309fa948db7f284ff7d731cdfe3d4756c6b3210dc2381f0c534"
+    },
+    {
+      "path": "docs/examples/phase-u3c-envelope/structure-analysis.json",
+      "sha256": "904bb85cdf48a70df6132fbeaaf0ed870c736570ffbfccf07fe64657a2932aa9"
+    },
+    {
+      "path": "docs/examples/phase-u3c-envelope/summary.json",
+      "sha256": "8a6c4e05cdfe57018501c154be45febfb38e5d529b0d702156f6b65393088bad"
+    },
+    {
+      "path": "docs/examples/phase-u3c-envelope/transactions/2dc94E8Mvh83c8MiecgRekd7Vj8YE6aexfVeCJK58K46LQcTRjpDomii6pYmwbdeYmdTM3bVbHw6rhFdtwRtSTnT.json",
+      "sha256": "e4067b6280dacbcee1e02f66c0370c567de3438a010e037b15a725c81457ec1b"
+    },
+    {
+      "path": "docs/examples/phase-u3c-envelope/transactions/37XJKQbB9fRX1R76cKKGSENNNA2RSY1WvjkCx2Q7joN2irKfTTZ5Z6bHgH4rfgDPJvhXf3peTe4mwxisfpSEmimu.json",
+      "sha256": "5a6c89cd496a299402ab8d4d40c2a162d850ee4d7136e11bce4bb4e0590bb3a3"
+    },
+    {
+      "path": "docs/examples/phase-u3c-envelope/transactions/3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q.json",
+      "sha256": "b857885a47c530d72211ce61225a0200ee22d23c9c284ad5951fb62612fcfc02"
+    },
+    {
+      "path": "docs/examples/phase-u3c-envelope/transactions/47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf.json",
+      "sha256": "d32ddfea37d057f17cae3c3b9169a3c17b5b26fb5718fcb48f92cc0be768c69e"
+    },
+    {
+      "path": "docs/examples/phase-u3c-envelope/transactions/49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx.json",
+      "sha256": "e8fa71cb7db0c3d8b7f2b3a29b8b7a4483b1eccc8b6e9ab565c7f56e0475035b"
+    },
+    {
+      "path": "docs/examples/phase-u3c-envelope/transactions/55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk.json",
+      "sha256": "71b33fc41d1ad0a0f8f5935a9e6405f4df87cf0bd76c154fe21c5f217880dcee"
+    },
+    {
+      "path": "docs/examples/phase-u3c-envelope/transactions/5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V.json",
+      "sha256": "73e7b908f8b9bdb1add5dd5570349f7a126bbc9e27f795130b7836b23c822ce3"
+    },
+    {
+      "path": "docs/examples/phase-u3c-envelope/transactions/5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97.json",
+      "sha256": "0f0da755631b027e97633f49c08d00d0d0c8bc3a0b5ff11fadf0c7561d61e378"
+    },
+    {
+      "path": "docs/examples/phase-u3c-interface/NOTICE.md",
+      "sha256": "0f6a6bee5d188d2628d179ff217724ce22dbbe08b152155d17f78526e86cbd32"
+    },
+    {
+      "path": "docs/examples/phase-u3c-interface/inventory.sha256",
+      "sha256": "17c9715f6fc2910960e575fb2d711006ead55347795b86de85009d1c64e48d18"
+    },
+    {
+      "path": "docs/examples/phase-u3c-interface/klend/LICENSE",
+      "sha256": "bbac42262e13c89488141e02fc8897d56acf478a9408da43d283155d6392a612"
+    },
+    {
+      "path": "docs/examples/phase-u3c-interface/klend/programs/klend/src/handlers/handler_refresh_reserve.rs",
+      "sha256": "96a3f1a7b0c0b7c175404692ddf8a20c7207c789baf124f54be6da151578fc50"
+    },
+    {
+      "path": "docs/examples/phase-u3c-interface/manifest.json",
+      "sha256": "9f1aafddd01b309127f02339294e65b64eda5619cb665dc6f36bcc23502e46e3"
+    },
+    {
+      "path": "docs/examples/phase-u3c-interface/scope/LICENSE",
+      "sha256": "0388ef6a0ae8cd89d040229a0d822cd6081467db30238669b6f4453a4ae49948"
+    },
+    {
+      "path": "docs/examples/phase-u3c-interface/scope/programs/scope/src/handlers/handler_refresh_prices.rs",
+      "sha256": "2669d4807e2af5627b98886df3d7801451da67aae260efaadfb71fc1ed859bfe"
+    },
+    {
+      "path": "docs/examples/phase-u3c-interface/scope/programs/scope/src/lib.rs",
+      "sha256": "443a5e55a2fad5bae1247b9bde811d2928e7e363710c2dfb8cc8233bb378ef55"
+    },
+    {
+      "path": "docs/examples/phase-u3c-interface/scope/programs/scope/src/oracles/mod.rs",
+      "sha256": "0e9a964e3eeb07e359742ca4d02d87c3368bca067f7c8699f46fd8373e1bec74"
+    },
+    {
+      "path": "docs/examples/phase-u3c-interface/scope/programs/scope/src/program_id.rs",
+      "sha256": "fcadc03a76507ae39969f508b00f70d10fd2c83b11952a317155ad306373ad9f"
+    },
+    {
+      "path": "docs/examples/phase-u3c-interface/scope-sdk/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "docs/examples/phase-u3c-interface/scope-sdk/src/@codegen/scope/instructions/refreshPriceList.ts",
+      "sha256": "7a2cd19d53b3761e6848c19c31bdd8f70832be2e6a3e335343d44c5128b10959"
+    },
+    {
+      "path": "docs/examples/phase-u3c-interface/scope-sdk/src/@codegen/scope/programs/scope.ts",
+      "sha256": "0455511108f8fdfd8ee8c9bf627feb08ec021ec07a38f722fbf5a1f40e10c65a"
+    },
+    {
+      "path": "docs/examples/phase-u3c-validation/after/baseline.stdout",
+      "sha256": "7be26a66f3e98f9b96ba6f1270003c158d99968d9ed081c336a97f14782d2099"
+    },
+    {
+      "path": "docs/examples/phase-u3c-validation/after/bounded.stdout",
+      "sha256": "139fd95c2899d54b765511d20bc70dfc63cb7a9532d5b3b5ae62b7626df68d16"
+    },
+    {
+      "path": "docs/examples/phase-u3c-validation/after/controls.json",
+      "sha256": "9a56fee540cecfe5c365e44303412c557ee1fc3a5a23fcc164b034e201de6e34"
+    },
+    {
+      "path": "docs/examples/phase-u3c-validation/after/regression.stdout",
+      "sha256": "e5e6a4b39ce377d8573099dc646fb37928bd3aa1172ceea4b4fa6c903cd52ee4"
+    },
+    {
+      "path": "docs/examples/phase-u3c-validation/after/stale.stdout",
+      "sha256": "8d6a4dc867c39655b58f91395630aac48d8e865b1aa1fee3a36a6ac0bcb9bc63"
+    },
+    {
+      "path": "docs/examples/phase-u3c-validation/after/unevaluable.stdout",
+      "sha256": "0c7a3b5231f84b99e58d6ddba6fe76e595cc212ce13a81fac24d9be283ca57d7"
+    },
+    {
+      "path": "docs/examples/phase-u3c-validation/after/verify.stdout",
+      "sha256": "d395a058064535cbeb7547943f34ad3c3a2b109e849e5ecf859c694b54acbcf0"
+    },
+    {
+      "path": "docs/examples/phase-u3c-validation/before/baseline.stdout",
+      "sha256": "7be26a66f3e98f9b96ba6f1270003c158d99968d9ed081c336a97f14782d2099"
+    },
+    {
+      "path": "docs/examples/phase-u3c-validation/before/bounded.stdout",
+      "sha256": "139fd95c2899d54b765511d20bc70dfc63cb7a9532d5b3b5ae62b7626df68d16"
+    },
+    {
+      "path": "docs/examples/phase-u3c-validation/before/controls.json",
+      "sha256": "300a078d0e782c798118518192a065cc9c5efd39a4d57cb1004dfa33636a9f05"
+    },
+    {
+      "path": "docs/examples/phase-u3c-validation/before/regression.stdout",
+      "sha256": "e5e6a4b39ce377d8573099dc646fb37928bd3aa1172ceea4b4fa6c903cd52ee4"
+    },
+    {
+      "path": "docs/examples/phase-u3c-validation/before/stale.stdout",
+      "sha256": "8d6a4dc867c39655b58f91395630aac48d8e865b1aa1fee3a36a6ac0bcb9bc63"
+    },
+    {
+      "path": "docs/examples/phase-u3c-validation/before/unevaluable.stdout",
+      "sha256": "0c7a3b5231f84b99e58d6ddba6fe76e595cc212ce13a81fac24d9be283ca57d7"
+    },
+    {
+      "path": "docs/examples/phase-u3c-validation/before/verify.stdout",
+      "sha256": "d395a058064535cbeb7547943f34ad3c3a2b109e849e5ecf859c694b54acbcf0"
+    },
+    {
+      "path": "docs/examples/phase-u3c-validation/binary-provenance.json",
+      "sha256": "3b04ed077585610c4c83ad6543279e8ba984fc9323811bd6f7551ec2b4f1a87f"
+    },
+    {
+      "path": "docs/examples/phase-u3c-validation/determinism.json",
+      "sha256": "66a873c9ed8a94cee93dfd89e662b7838f5f4be1a71c174d3b1d3849b3646e5a"
+    },
+    {
+      "path": "docs/examples/phase-u3c-validation/final-report.json",
+      "sha256": "67e3a55e48490a752cd63fae63de0f98d6bffa796e5c85f687ba8dbdb3b86de1"
+    },
+    {
+      "path": "docs/examples/phase-u3c-validation/inventory.sha256",
+      "sha256": "57035ab00a7d60d2ba94a8125157a2529688c9779e33f5aa6054e0359c681f69"
+    },
+    {
+      "path": "docs/examples/phase-u3c-validation/mutations.json",
+      "sha256": "24eaae252aec734c8111583ad16c4e0920d3a452d12556ea4d12ccbc9feb18f8"
+    },
+    {
+      "path": "docs/examples/phase-u3c-validation/preimplementation.json",
+      "sha256": "654c858da1f27bfe0515703af2b20c773c692246d0653c38e22deaa6c02c03c7"
+    },
+    {
+      "path": "docs/examples/phase-u3c-validation/secret-scan.json",
+      "sha256": "d98336373dbfdff2d8aa365a848d4b6e76874214d3a9b7b319bd5880f3a64d7e"
+    },
+    {
+      "path": "docs/examples/phase-u3c-validation/tests.json",
+      "sha256": "1256d553c9dd5a5ae412651924e0e9e09dba00d19d69418ec995b2d22cb8986d"
+    },
+    {
+      "path": "docs/examples/phase-u3d-inventory/checksums.sha256",
+      "sha256": "e5216f1a6e1a8489667b26122367a64ae3503d70d108b85409142f0ed4092d78"
+    },
+    {
+      "path": "docs/examples/phase-u3d-inventory/inventory.json",
+      "sha256": "db925ad29690298c6ccc65579c91393e34bf31103eeab692626d4c73f66e78c5"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/adapters-corrected.log",
+      "sha256": "db41bbb6f3a1ad36e1f11a005b441fa8620151ce43a195b6a904ca8b3c4fbe0b"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/adapters.log",
+      "sha256": "b00ec652af8e56a80388c7f66b9d3ab7f788ac935e0dba162bcc338fed6ff5be"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/after/baseline.stdout",
+      "sha256": "7be26a66f3e98f9b96ba6f1270003c158d99968d9ed081c336a97f14782d2099"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/after/bounded.stdout",
+      "sha256": "139fd95c2899d54b765511d20bc70dfc63cb7a9532d5b3b5ae62b7626df68d16"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/after/controls.json",
+      "sha256": "9a56fee540cecfe5c365e44303412c557ee1fc3a5a23fcc164b034e201de6e34"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/after/regression.stdout",
+      "sha256": "e5e6a4b39ce377d8573099dc646fb37928bd3aa1172ceea4b4fa6c903cd52ee4"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/after/stale.stdout",
+      "sha256": "8d6a4dc867c39655b58f91395630aac48d8e865b1aa1fee3a36a6ac0bcb9bc63"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/after/unevaluable.stdout",
+      "sha256": "0c7a3b5231f84b99e58d6ddba6fe76e595cc212ce13a81fac24d9be283ca57d7"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/after/verify.stdout",
+      "sha256": "d395a058064535cbeb7547943f34ad3c3a2b109e849e5ecf859c694b54acbcf0"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/before/baseline.stdout",
+      "sha256": "7be26a66f3e98f9b96ba6f1270003c158d99968d9ed081c336a97f14782d2099"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/before/bounded.stdout",
+      "sha256": "139fd95c2899d54b765511d20bc70dfc63cb7a9532d5b3b5ae62b7626df68d16"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/before/controls.json",
+      "sha256": "8c87c22887b29f1de939ecfa36c2575af8af2c8d44269f06ca28db9c64388c72"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/before/regression.stdout",
+      "sha256": "e5e6a4b39ce377d8573099dc646fb37928bd3aa1172ceea4b4fa6c903cd52ee4"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/before/stale.stdout",
+      "sha256": "8d6a4dc867c39655b58f91395630aac48d8e865b1aa1fee3a36a6ac0bcb9bc63"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/before/unevaluable.stdout",
+      "sha256": "0c7a3b5231f84b99e58d6ddba6fe76e595cc212ce13a81fac24d9be283ca57d7"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/before/verify.stdout",
+      "sha256": "d395a058064535cbeb7547943f34ad3c3a2b109e849e5ecf859c694b54acbcf0"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/blockers.json",
+      "sha256": "125a2bfa596cb6548c43a52c3e67e0d38b35d61c7da5020a2d4fa663ac0a033a"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/build.log",
+      "sha256": "083897711e135647e0b27b912a058556e9a3b7800cf1015e722ccad819daf50d"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/environment-check.json",
+      "sha256": "8d3bacd9e43beee8752909301069d0b099a76c6f9129cdd6bd3ba888e51f5341"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/final-report.json",
+      "sha256": "42f105063e05022b0626b7ffc76bfdeab43216bccb13bd117abfe5cd3c17a92e"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/inventory-tests.log",
+      "sha256": "e6a59c7b282096d046bad7150f00d701a5dbf9705371110237cb793f809f6cf8"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/inventory-timing.json",
+      "sha256": "66811974c0dc2b794c12a9a5f36ff6d6dd20ccfdcd189a163049e16d1fa47c57"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/inventory.sha256",
+      "sha256": "f5e45bdcf0f0ee480865e49958b141a4b9f975d7eb944664ace15788b3c19239"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/mutations.json",
+      "sha256": "10427e0ee71b2630262fe5e933e8871485362e562ffe2ae6a9c5babcd82baa35"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/preimplementation.json",
+      "sha256": "323e0e47b6c2a70e9be6505371eeffd0beb057ceba54c97960a69112943c1850"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/rebuild.log",
+      "sha256": "57900fde20ab557d7fe6841273307f4ed5a8796167f467e80032b4213f1333cd"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/runtime-review.json",
+      "sha256": "33d970988e9082cdd3a3f8b9f1da18207b0d9b55b663f7b779c9e97394cf5f27"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/rust-controls.log",
+      "sha256": "c451637d7eb0771246b4ee9a7663bda64dc75cd6b7ed93dc08b3199db98036c5"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/stage-0.json",
+      "sha256": "9dfd2243a4981d9169ca6801b27b3b35cec79ac186dbebe669f026a8a92a22ad"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/storage.json",
+      "sha256": "e284e19f36888df7aaef5a8c5dda04de6c402802616e25db5c8a8d846ed58c43"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/tests.json",
+      "sha256": "84e47bb84bba2ef1f830a9235413c8fc11be068e11954b9d92916af9606e12a3"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/u3a-tests.log",
+      "sha256": "e038fe6f1942f1c902a6b21ad86e6d1cc2ce7be929d6b09718464a0f0f23c68d"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/u3a.log",
+      "sha256": "1e4299df9e4caa65e3964e2a31aabc80c83162d63aa67803a5ad063c336223bc"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/u3b-tests.log",
+      "sha256": "586591c171065fe29a2d0f57e5776251c1bb704b0198b72701fab43994680ee3"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/u3b.log",
+      "sha256": "a1d416614c3e60b9aea2f6ebb382e3643e4118326e607028e60546652d31c74b"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/u3b2.log",
+      "sha256": "49dbe2b108bfc3da459e6cc42acda128b1dd8fcba34ea9f0bdc1af3b81478b9d"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/u3c-tests.log",
+      "sha256": "f47af82254924bd706e3928b1b21b1ef0ad718f3a4b0dc6b2fd9e47c23b0b116"
+    },
+    {
+      "path": "docs/examples/phase-u3d-validation/u3c.log",
+      "sha256": "a3745998f0a61d1ff1efa1fba9d283c9fa57ba8046f08f4f27e2c074265b7977"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-binaries/49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx/result.json",
+      "sha256": "bfc0e6795b57e786eedf68f84d4c89f8fd43470667cb42335b6fe315088d1415"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-binaries/55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk/result.json",
+      "sha256": "0e3318923fa80238fb687570103e4655f09b61adfb34870e0af86de61c42578a"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-binaries/5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V/result.json",
+      "sha256": "2e41fd016713104b1b6dea50e54c102a76aee722daf5a521a1a4188f2ce1b851"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-binaries/5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97/result.json",
+      "sha256": "65d2c528bc8fb62cf0e00d4aefa3fb0f1e1dc52c0acf7e7b2c0faa649e5704a1"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-binaries/capture-index.json",
+      "sha256": "9cef6bec6136ccb3495d8172f242e698dc343b62568c05758c4b7caac3f7d2a9"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-binaries/capture.tar.gz",
+      "sha256": "d7effc58e920ff3b5fc628b69e899b4ca616a063baadcbaaffb656130dc99b2d"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-binaries/receipt.json",
+      "sha256": "05b61771214542d0e8c86d49c86660ce486c447d217ec5af9505ff2f63cf9818"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-binaries/timing.json",
+      "sha256": "d4b33fa367ac8838c4e112003fb9cb89e180eb4b574c5673812be52b5e9a3fe2"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-state/receipt.json",
+      "sha256": "c182d72cefa162e343ce2604f65a4208f2f17ab357fbdbceb8230decc3ed280d"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-state/result.json",
+      "sha256": "9fbd46dda5584678762b5bc65683fcf4543c01130de9179bb21f64c865e40c12"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-state/rpc/029a6d2dbec111f322082624220bd3e2b13a506168a630880f4ebab264b12d94-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-state/rpc/029a6d2dbec111f322082624220bd3e2b13a506168a630880f4ebab264b12d94-2.body",
+      "sha256": "072c547ad3321ad6379bf249c218bcf112eaa3bd0138f07ace4077db1785a37d"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-state/rpc/2bc51b465d29c8165688fc0449e8f7101248212a1cd200cd4b5d780b1d3b65c8-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-state/rpc/2bc51b465d29c8165688fc0449e8f7101248212a1cd200cd4b5d780b1d3b65c8-2.body",
+      "sha256": "65c6e5c44058c8593c048ae962d9a5dc0a105f26d60faea1659c8aad40bc6eaf"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-state/rpc/397adf7fd4e5fee0d74a815b4829c1477e37e0ad1f4640cbd5318be45862a5af-1.body",
+      "sha256": "c8f1e240dd765942770a85120c3602f0c0cbfaefbc1f1ee06d0dfdf79f076edb"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-state/rpc/9880a48ca6d6fba8cabf64e12f33a6da9b401fdb82c9745ee21c7a1d24b9e67c-1.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-state/rpc/9880a48ca6d6fba8cabf64e12f33a6da9b401fdb82c9745ee21c7a1d24b9e67c-2.body",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-state/timing.json",
+      "sha256": "3a01665b699648ea2d019de51e636570c1db40b2b76be34197f10315155f2c52"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/account-inventories.json",
+      "sha256": "de05072c9ea48581169c951be7403a187b386942c79b1d9ae4c874db599f6ab0"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/after/baseline.stdout",
+      "sha256": "7be26a66f3e98f9b96ba6f1270003c158d99968d9ed081c336a97f14782d2099"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/after/bounded.stdout",
+      "sha256": "139fd95c2899d54b765511d20bc70dfc63cb7a9532d5b3b5ae62b7626df68d16"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/after/controls.json",
+      "sha256": "9a56fee540cecfe5c365e44303412c557ee1fc3a5a23fcc164b034e201de6e34"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/after/regression.stdout",
+      "sha256": "e5e6a4b39ce377d8573099dc646fb37928bd3aa1172ceea4b4fa6c903cd52ee4"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/after/stale.stdout",
+      "sha256": "8d6a4dc867c39655b58f91395630aac48d8e865b1aa1fee3a36a6ac0bcb9bc63"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/after/unevaluable.stdout",
+      "sha256": "0c7a3b5231f84b99e58d6ddba6fe76e595cc212ce13a81fac24d9be283ca57d7"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/after/verify.stdout",
+      "sha256": "d395a058064535cbeb7547943f34ad3c3a2b109e849e5ecf859c694b54acbcf0"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/attempt-summary.json",
+      "sha256": "d3097e9e58c0e61ba66d63c2e9af35fbf3608fc774468b313b1e7fddd76e47dc"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/binary-capture.log",
+      "sha256": "c69dcfbe55e1906a3c9e775b129a790b634a61bfdd05657a770cd20b707187f1"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/binary-revalidation.json",
+      "sha256": "229a56b1ac00490be83334cfb7a47d814a48e3ce70f485d3c8443bbb30c5ef5e"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/clippy.log",
+      "sha256": "cb3e4d724c05dfb2ce88cfee6ec46aefb19ec09e81d0549951020b32bcf14b69"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/envelope-mutations.json",
+      "sha256": "24eaae252aec734c8111583ad16c4e0920d3a452d12556ea4d12ccbc9feb18f8"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/envelope-mutations.log",
+      "sha256": "668f38815444719659f6a5090ad41dc281a80bebdb11bce9c6e0de9b54d3d48b"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/final-offline-rebuild.log",
+      "sha256": "e2f8045c9445b441b7acb6f59f3dcb6262c5a91d2e9aaff5e773bdfe07af419f"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/final-report.json",
+      "sha256": "0862dae2d6007211e59767ed26deab2e90fde4efa3ffc0efbfd1fc497de6d581"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/frozen-rebuild.log",
+      "sha256": "89ca346fca4f0344ee96e75dbe0553ae5a3e92dca87ff510f65d9a27745952e0"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/inventory-tests.log",
+      "sha256": "86e2715b89fdc0a783cf0d9ee8e4597d5e770499e14d26662260a19ca910a4c8"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/inventory.sha256",
+      "sha256": "a3e0031d998bb60522b355e1c46f7aeced91662ef2e70b248024bf3a58775ee5"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/offline-rebuild.log",
+      "sha256": "e2f8045c9445b441b7acb6f59f3dcb6262c5a91d2e9aaff5e773bdfe07af419f"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/preimplementation.json",
+      "sha256": "53c33cae7415523aa81f86114c3a5a99f56e408d09d462df2fb52dbb522d22e5"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/product-controls.log",
+      "sha256": "b2b1c82f8b4cbb1bb4dca1e667029860dcde8b00ae04bdc1a58f26c391c04542"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/requested-mutation-coverage.json",
+      "sha256": "530371da500fe9bde1dd3d6fb04af3cd4ddb88c700bd8cffc18b73b070a44efc"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/rust-all-tests.log",
+      "sha256": "4b40bfec55227a2c6058fb1327754779cb608dc34a3f38796706a3f78ffc2c3a"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/scope-price-boundary-diff.json",
+      "sha256": "023e387077851b135faf06108f26301e337451e5b1162106fc4b4e9b77adaf3a"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/stage-table.json",
+      "sha256": "843688ea308500af950c89ee3dc6b42605c6409e07f0cf7bcdc9fad945682158"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/state-capture.log",
+      "sha256": "da849e6241cf54423173a82e38f976ffc38e63793a8552159dbb777188d4fb93"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/state-mutations.json",
+      "sha256": "8f9cf4752df55a7d58369350c4328c924524beb9d1168497157089df9089abd4"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/state-mutations.log",
+      "sha256": "853fff979a21883466e864c084c4867e0c60285658e2504cc35e57c298b4a55d"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/state-offline.log",
+      "sha256": "558a65b075dc3edd9d8ec30504a289cc013b1aee16b1b2daa485fe2f122f3644"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/state-tests.log",
+      "sha256": "da9eef46c4dfc871d570339a0f6b8e3f61ccf4575f0a09db91e14b77d66f97fa"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/storage.json",
+      "sha256": "944718c532076a9e839cf8091b1eaee42fc14b06b9434fcd51d297aa1accbd45"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/t1-prior-comparison.json",
+      "sha256": "11df2b7ba47d526e072e314a915ed37e7a913940fd6f7950aa251822c2cf58a4"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/tests.json",
+      "sha256": "6199b21271ff554f328f7ec39bc3119bfc9a9ec0a8ead136cd241f3135383089"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/u3a-tests.log",
+      "sha256": "53e4d9e4cf21a6e5add72daa59a4e8304b08b9c400c443dff4652d5157da746a"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/u3b-tests.log",
+      "sha256": "ceab9f3f3a104e07d95b5257298d9cfc467a4d5c49b5237998b8a4b795e011c6"
+    },
+    {
+      "path": "docs/examples/phase-u3d2-validation/u3c-tests.log",
+      "sha256": "bb04dffccd764e6110da4c1227599fefeaabf77f5c151f0977a3d472beeba591"
+    },
+    {
+      "path": "docs/examples/phase-u3e-boundary-proof/receipt.json",
+      "sha256": "26bebd6f2d0b1c21091fce7e29dc851a68a3904848414e9dbe329b6c6c310bbe"
+    },
+    {
+      "path": "docs/examples/phase-u3e-boundary-proof/result.json",
+      "sha256": "c0ab60ec0287bb9879e06408c50624ac19b331dcca7bde4db4d0f13601bed255"
+    },
+    {
+      "path": "docs/examples/phase-u3e-boundary-proof/rpc/2db0cd30797e243278c975c9564c411bfb850a82f7d4fcc53592a40354c87f44-1.body",
+      "sha256": "e374aeebae17742cb10cb684467b5133fb3d5f638ab4b139a097224ee798e73e"
+    },
+    {
+      "path": "docs/examples/phase-u3e-interface/LICENSE",
+      "sha256": "0388ef6a0ae8cd89d040229a0d822cd6081467db30238669b6f4453a4ae49948"
+    },
+    {
+      "path": "docs/examples/phase-u3e-interface/manifest.json",
+      "sha256": "cfef8df955280693f4c1276a8ce518b7bbed5e0a59ebdb8145aaa22a4edaeb29"
+    },
+    {
+      "path": "docs/examples/phase-u3e-interface/programs/scope/src/oracles/fixed_price.rs",
+      "sha256": "27aa1f0f66c4fab2641028c9f35dbd2b5a551d422e09b77ebe2cd1f969322ca7"
+    },
+    {
+      "path": "docs/examples/phase-u3e-interface/programs/scope/src/states/dated_price.rs",
+      "sha256": "89b3c8da8fbe3c54dd1b69e1ac1c829c48e747dbc74f0953439efa9ad617a3c0"
+    },
+    {
+      "path": "docs/examples/phase-u3e-interface/programs/scope/src/states/mod.rs",
+      "sha256": "39294ee85025e1371158c173b619b5f6f32c123b7c0f6f4a6e769b0b38dc4edc"
+    },
+    {
+      "path": "docs/examples/phase-u3e-interface/programs/scope/src/states/oracle_mappings.rs",
+      "sha256": "b6b45ef1c1af35c3aa9c7ef51d2be77ce8f3a9d1d402852957784945b0fbee28"
+    },
+    {
+      "path": "docs/examples/phase-u3e-interface/programs/scope/src/states/oracle_prices.rs",
+      "sha256": "b273d29667c2a8698f5ec5dd141678c08f36660d694687001b1b55f5faf822f1"
+    },
+    {
+      "path": "docs/examples/phase-u3e-interface/programs/scope/src/states/oracle_twaps.rs",
+      "sha256": "2ebcd82f7ebeba46e16f554b3243b971de9ea0305b4d8395ebfc83f156961159"
+    },
+    {
+      "path": "docs/examples/phase-u3e-interface/programs/scope/src/states/oracle_type.rs",
+      "sha256": "a1413429efc4eb7f475755233251bb717d77161f8cb54e45b094f97435dde7d5"
+    },
+    {
+      "path": "docs/examples/phase-u3e-interface/programs/scope/src/states/states_internal.rs",
+      "sha256": "be7fdecee58e82928fe0e4e0866c15671c31cbe48689d4dd05648b7c152c7dc9"
+    },
+    {
+      "path": "docs/examples/phase-u3e-mapping-probe/receipt.json",
+      "sha256": "0a25ee527e5d406e46039a037ffecabe40746cf4b4b5461ab4aa120894f499a0"
+    },
+    {
+      "path": "docs/examples/phase-u3e-mapping-probe/result.json",
+      "sha256": "a966ad5e8b0a2e46aa02f6036ff5f9b805a488682c7844ea75fa98ca577f117f"
+    },
+    {
+      "path": "docs/examples/phase-u3e-mapping-probe/rpc/9880a48ca6d6fba8cabf64e12f33a6da9b401fdb82c9745ee21c7a1d24b9e67c-1.body",
+      "sha256": "c581a4e9fcc5694f7cbc72a21a8b6a03476bc52cad60e40d04f0f6364b453456"
+    },
+    {
+      "path": "docs/examples/phase-u3e-runtime/receipt.json",
+      "sha256": "3a450d8f1e98e2a47f12303a669b1b36cc06afaa0df1b35fa6aa91f80a38e731"
+    },
+    {
+      "path": "docs/examples/phase-u3e-runtime/result.json",
+      "sha256": "b4c95993c695fb8d458794c4a281ce63a9cfc35cf8dd843a5da10ca9495fa0cf"
+    },
+    {
+      "path": "docs/examples/phase-u3e-runtime/rpc/3d25da3f801f9ee64956772360cc9c45e720faba27d66fe6933ac393972e87d3-1.body",
+      "sha256": "4e4fc5d49567497dfaf3742fe547706ceca976b77cd6e125e905042535df1690"
+    },
+    {
+      "path": "docs/examples/phase-u3e-runtime/rpc/413621cc188f17ba287ab78ebd4f99cbcc0cf53596de2dd4367c80701bc2d07d-1.body",
+      "sha256": "b2cf109dd02eca37994561f0d58318601fabd47df0c3395fe0f6ef605cb7b748"
+    },
+    {
+      "path": "docs/examples/phase-u3e-runtime/rpc/431d54c29f7101c2290603064a7a0987ef04cf7b0524933e61e18ebddcd84142-1.body",
+      "sha256": "32530439dd507275e3f40fe6acecef9176ff423af0d024f65c42fd330f519b24"
+    },
+    {
+      "path": "docs/examples/phase-u3e-runtime/rpc/9648e69345368c47af1b898e14a12f81b4161df04332a2f6a1e82c40544a14dc-1.body",
+      "sha256": "5fd858ec68cd6b74c33a120a1aded1d557ebd50b8d09d87fcceaee03fe6ea121"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/receipt.json",
+      "sha256": "6e2b1a5f7db908e27390047e77589a0d87a169f61a965d93b7838f37543be8eb"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/result.json",
+      "sha256": "e5651421a9fa03369c4f6eabf3a7e0e262f96bcde17eeec61676da408da59da2"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/029a6d2dbec111f322082624220bd3e2b13a506168a630880f4ebab264b12d94-1.body",
+      "sha256": "072c547ad3321ad6379bf249c218bcf112eaa3bd0138f07ace4077db1785a37d"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/06f6816899300658a9e29b8d78b0ea64fcb30c550802561fd1059a311472ffa4-1.body",
+      "sha256": "aabe61b88c8da5b77a5d79599f689425f019d59fbb3cf263b09e6fe1029d6a28"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/06ff06d1c65b02b13dfd88b6ccfd4a4fa56d4520496d47ac3d0c3f8a059d5895-1.body",
+      "sha256": "56b8c3e77c044d0e1cf5c5eac78fe6070a36f8860b32698511d466438c905fb8"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/1da22ca0d5292b10d543c5300a758e1640127c807ae03ff701b5c7c7bd963a7e-1.body",
+      "sha256": "839c2e40f35e5dbadf63c9f743d9bff995077fe3d3dde099638e0ce72c24be7b"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/2bc51b465d29c8165688fc0449e8f7101248212a1cd200cd4b5d780b1d3b65c8-1.body",
+      "sha256": "65c6e5c44058c8593c048ae962d9a5dc0a105f26d60faea1659c8aad40bc6eaf"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/2cc54d02c7ef6c12e221f9ff10e8f8f391cddc9eb0e8c37bfbd1ecea133fcbaf-1.body",
+      "sha256": "3f94d19fc8b7b08e806585a2ef091cf9a0e68b7585d93dbc3441d6042f7dae27"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/2f1451ea1a3ad3589f9944c268f438999d421a79abb76e07bbdecec2573d103e-1.body",
+      "sha256": "3b05b64b888cceed421d98a21cc96a28d8b038a7f8b8dae037bb55b8daf964a1"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/32f22e5ad56916acb72d6359761c64f46a0fdd1a10a149fd244c70c455487c1a-1.body",
+      "sha256": "bcbae7dfafeee5460a808b1edf865d79472bbf65455c29d8fdbabbbcdcb6bff3"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/352aff7721914c953c83d4ae5811c2b76e4e9bff65e2add4d4982b1a7ea88c36-1.body",
+      "sha256": "9ec7e14a7c7dfc651cc70bc119ea69198c986fe4224c386c34122e69e67a3065"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/397adf7fd4e5fee0d74a815b4829c1477e37e0ad1f4640cbd5318be45862a5af-1.body",
+      "sha256": "c8f1e240dd765942770a85120c3602f0c0cbfaefbc1f1ee06d0dfdf79f076edb"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/3c8c2eaf200ea44525ffc50d709094040a8f30014569d0b714b09f931b1da90e-1.body",
+      "sha256": "41dae4011caf652be92b29b67b7714eb9a350d338495cf6bc0cba0e8fcc0f325"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/565bc2ab46b29e753d4635045e27edae4a5bfaf8ccf1560a70036daa65f4864f-1.body",
+      "sha256": "0b9ad8d0ba8e9e392517b37a6cee5ad5e797ef7fb4f207c13cc2adebfc281412"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/5cada57fe8e19709029dd0c37467fdecaa788d804f99df8729edd81e1f094961-1.body",
+      "sha256": "c74ea497abd6d5b646d98cc7b9983262a1fd4abd0b2e34b745951f7d3a897f2e"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/5db7bf27cf505656405d232de97d8a2d0b63af955f33a295480328d2572fe41e-1.body",
+      "sha256": "7ad3e026c949c0272f1481f834ffcaea9e6217f6e77e1493e668338bda6d36d1"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/626b53bf01573a1c63bef92c75993152fe2ab1d9d17864c5ec4ad6460eea18e0-1.body",
+      "sha256": "48b6000ecfa0348fe0aefe1c1913ee257fbbcf61e3728c14ff7e84a2e54a5e5f"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/66a3088df9a0f82864ba0b8867e08ee5aec4be735c6c1b5ac02f1cc4ba2be8e1-1.body",
+      "sha256": "7422e63e6c0ab82020ae6ec26793f0194fc6a06ecd6405f86519b5bece92201c"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/6be79f330abbd26b128bf665daeb36904c02719df9d96b4e4d4836b41be8dc16-1.body",
+      "sha256": "a0f3b6033460b34ce5036745785a3682fde84640552a49801469df05d885a959"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/71396ebf2eae68ba44989e2f6ab02b44558d356af5262cff7b622b581947056f-1.body",
+      "sha256": "706d06ac11deff8ba7694d260b8113a1b00e51fa2be6f2c64c2f82389d082555"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/7c1b3b9dee87d0e5aea07b7efbd42bc5cd204b565083eb80cf5282d115dd9dfb-1.body",
+      "sha256": "4c36ed88d7f09e6edc7c93ec7da930139d6b7784fc026047b65b7fed294ddcfd"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/7c9ef13a6dfe0ef188782b2c509cdc0d1f411a4721f6f6cc08e6ae13e61ba0b0-1.body",
+      "sha256": "e13f03429d01c55a2d1f9ce45ecbaf80a9f34094747477d1d1b8cfd5e1bb98e7"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/7cb21e4f77537c36e60d7b59bf49136baa5ff6f6074070c8d95991e900fabf29-1.body",
+      "sha256": "fd07c8b570b674858a3910dae65fe5eb1b5c64c30c571a5be736aa7c8a2d3001"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/80bf15e4bca207cb58aa9584437ce4e06a0cd343244621a046a0fba002d846f7-1.body",
+      "sha256": "3d8bc0acb4ed32551c828f039cef4d9efac82429948310608e185812f666b98c"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/884bd808b655b22a7e3e81a0391b3166a2a314bc7922a22b54a4f8c75b4cd6ce-1.body",
+      "sha256": "25a7a638375387c75ff8e66383d8975bab2d0cdac32350f1ee76246e38f4b845"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/97a6eebc141c80cd68689c883c1d47bb78ca2a69b0972ac724c40bc41284e4d9-1.body",
+      "sha256": "953dc80f36ef35e82482e8fd378a2f07a6b07af46a21972725b0c36c8846384e"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/9880a48ca6d6fba8cabf64e12f33a6da9b401fdb82c9745ee21c7a1d24b9e67c-1.body",
+      "sha256": "c581a4e9fcc5694f7cbc72a21a8b6a03476bc52cad60e40d04f0f6364b453456"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/a5bcf8cbc7a26af5ded8359369c9b307697cb46626d77bdc591e0045bb0ae48e-1.body",
+      "sha256": "4a8cf92565760010200df28e4129e4e6735a021caf248f5e2aba832f9a12d953"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/a73668f6cc4e339dfd2684c1af9492793081dc9f4d992e65820df49d159b5bb6-1.body",
+      "sha256": "6a227d344a8b3a1b3e305ba3c0e7c10616dc4db16f7705b62b84b85bdf66d1c3"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/ad5d81144cee6e8ce314fdb71a3915da5a6ad114df04a1008e382adf06113138-1.body",
+      "sha256": "5fd858ec68cd6b74c33a120a1aded1d557ebd50b8d09d87fcceaee03fe6ea121"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/b394be5d2e463072a3ac1d8958453e06be0551115e58d4b86b5dd7c3bd0de88f-1.body",
+      "sha256": "dc6de405ad42fb416522d5118eaed0dba7ee1c1c8e52ea4e539af1ccdcde9b98"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/b9ca0c3ddd82ad76db6d52e8176ee64cdc9deb86b896119b781678678d71a635-1.body",
+      "sha256": "8eca4adf2c6c34ec464dc1e71456512de3c5ef5ea3c1f0f81cea6710d7063ab4"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/de2854211c7cf0599cf453c2a4d77d4ddcfd60b63504a307382978ef025c05e5-1.body",
+      "sha256": "4cc93a80535f0730969a18c862973932f63b532ad38ece7993205d3aaa1b52b4"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/f368b73196a0afe1c8f217fd1b0a9e4d9afbf84d262414c4f84203173d8ca621-1.body",
+      "sha256": "5e762b1074200f8cfead414447c6e484ac7aaf34bce187612db12f317ed45043"
+    },
+    {
+      "path": "docs/examples/phase-u3e-state/rpc/f68b38c7bc4a5e2c34aa65b4ed477e55a7134e150d42fc903f3c4b248d2c94e0-1.body",
+      "sha256": "869ba0627c3d0f13c638c3d463e0154bbae971bfd633b44fe6b0d9db82b9d1a4"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/adapter-controls.log",
+      "sha256": "fc6a8d5c04d54d5889f69aae030e4e1c7bd5a1657713736da4636333b23b8abf"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/after/baseline.stdout",
+      "sha256": "7be26a66f3e98f9b96ba6f1270003c158d99968d9ed081c336a97f14782d2099"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/after/bounded.stdout",
+      "sha256": "139fd95c2899d54b765511d20bc70dfc63cb7a9532d5b3b5ae62b7626df68d16"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/after/controls.json",
+      "sha256": "9a56fee540cecfe5c365e44303412c557ee1fc3a5a23fcc164b034e201de6e34"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/after/regression.stdout",
+      "sha256": "e5e6a4b39ce377d8573099dc646fb37928bd3aa1172ceea4b4fa6c903cd52ee4"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/after/stale.stdout",
+      "sha256": "8d6a4dc867c39655b58f91395630aac48d8e865b1aa1fee3a36a6ac0bcb9bc63"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/after/unevaluable.stdout",
+      "sha256": "0c7a3b5231f84b99e58d6ddba6fe76e595cc212ce13a81fac24d9be283ca57d7"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/after/verify.stdout",
+      "sha256": "d395a058064535cbeb7547943f34ad3c3a2b109e849e5ecf859c694b54acbcf0"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/before/baseline.stdout",
+      "sha256": "7be26a66f3e98f9b96ba6f1270003c158d99968d9ed081c336a97f14782d2099"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/before/bounded.stdout",
+      "sha256": "139fd95c2899d54b765511d20bc70dfc63cb7a9532d5b3b5ae62b7626df68d16"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/before/controls.json",
+      "sha256": "9a56fee540cecfe5c365e44303412c557ee1fc3a5a23fcc164b034e201de6e34"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/before/regression.stdout",
+      "sha256": "e5e6a4b39ce377d8573099dc646fb37928bd3aa1172ceea4b4fa6c903cd52ee4"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/before/stale.stdout",
+      "sha256": "8d6a4dc867c39655b58f91395630aac48d8e865b1aa1fee3a36a6ac0bcb9bc63"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/before/unevaluable.stdout",
+      "sha256": "0c7a3b5231f84b99e58d6ddba6fe76e595cc212ce13a81fac24d9be283ca57d7"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/before/verify.stdout",
+      "sha256": "d395a058064535cbeb7547943f34ad3c3a2b109e849e5ecf859c694b54acbcf0"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/boundary-proof.log",
+      "sha256": "dd10fb44b3c3b2d5189c34c749a17b0dd5ab928bf25041c9fec9337b4cbff94b"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/clippy.log",
+      "sha256": "24439cb62f8fb8392fc6d68a0841dbe995d1647a345357814b703be805a25681"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/final-account-inventory.json",
+      "sha256": "81b5048b07452e6dd27ea8043562ec35916f9980ed226e10e66461d8f0ac3772"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/final-offline-rebuild.log",
+      "sha256": "203aa59755833cc77bec33fc847c4aed81d7592c9766e7df5e0e2e80437555f9"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/final-report.json",
+      "sha256": "4207a2ea44236f647d019e52e92a5a31ec18ab208b892f76fd049ab1fdf685c0"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/mapping-probe.log",
+      "sha256": "b0e516bde9fe16b690b018fdf8fb071f8ea396c20495d6eecd5daf1318eb7d08"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/modern-funnel.json",
+      "sha256": "e39705336d62fe566169032d3d1c3263fb759d689120fadb031464a450d98314"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/mutation-run.log",
+      "sha256": "6c478ce441826b34129832d59ed34b3672ce8c7188f901f1f45403f6fd023009"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/mutations.json",
+      "sha256": "b24450ae936e680ecb924c70fa92634c331863b7e4d09bfd23fa3d8b181bb23a"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/performance.json",
+      "sha256": "ada754c2922e27d0ad1155f3944f4b08c4411f109541835deacc634bd8e0d704"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/preimplementation.json",
+      "sha256": "6fb551c6419cb66792e865e9b45c2926d690c9283acd225ec83ee933436a48e1"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/primary-stage-table.json",
+      "sha256": "64dbd1ad95c547e98dd90320280311eb206875ddbb69b3786ab883be9ff4a393"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/prior-rebuild.log",
+      "sha256": "2b8bba0551d79844285f60b2777877c20dc9e9db4ae3a0d5258e6901e3bb0f4c"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/probe-offline.log",
+      "sha256": "b0e516bde9fe16b690b018fdf8fb071f8ea396c20495d6eecd5daf1318eb7d08"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/product-after.log",
+      "sha256": "b2b1c82f8b4cbb1bb4dca1e667029860dcde8b00ae04bdc1a58f26c391c04542"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/product-before.log",
+      "sha256": "b2b1c82f8b4cbb1bb4dca1e667029860dcde8b00ae04bdc1a58f26c391c04542"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/runtime-capture.log",
+      "sha256": "c80079fd2d975d2c043b9121207fb75df192e81efba60b1aca694425a2124383"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/runtime-model.json",
+      "sha256": "ee1658e96b87c250f70132b4f0ff19cd7d40695d4bed83de06c2e3fc30a7f6a1"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/runtime-offline.log",
+      "sha256": "c80079fd2d975d2c043b9121207fb75df192e81efba60b1aca694425a2124383"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/runtime-source-pins.json",
+      "sha256": "32d4c41c71c4aac1e9be137bd869a13fc4ae9053b914578f484d68a4264368fb"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/runtime-tests.log",
+      "sha256": "46885b66d2b1edc46d24ca1ce7772212b8a0fd02ab0ff8d339521c3983127c75"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/rust-tests.log",
+      "sha256": "69e2cfde57e25e11588adc65b810db63d197236c267a16d7a6a79ecab3f5f5c1"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/source-hashes.json",
+      "sha256": "30b96e2d3a3aa82cf99fa716f86d5e51d292d4f15ffcd2933d6d69a8c1580b5b"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/stage-0.json",
+      "sha256": "31d4113a5341f529172080c7106fdecdaa977d33b4855e7536b1dbb5d1668517"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/state-capture.log",
+      "sha256": "65c06f8c74ff413291ab309152b7ff5b94484fe580d187a344c02e74b5f2e070"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/state-inventory.json",
+      "sha256": "5296a70875e9b237ba843c3541e95a5ba36e02acd7d03f3d41e62cd083903a81"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/state-offline.log",
+      "sha256": "65c06f8c74ff413291ab309152b7ff5b94484fe580d187a344c02e74b5f2e070"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/state-tests.log",
+      "sha256": "02ad6cf417fa5bb3ed495ce81d942396f9e1c5a64058a6fba8de67109ba9fe67"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/state-verifier-build.log",
+      "sha256": "5fbd80fe960a5b25668beded4c156d5f3fe415296e3e31faa8b86452143dce06"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/storage.json",
+      "sha256": "15b6e128184c1b9687efa53a788ae69a5d1454738f92b9ca4f23d8104d69e8b4"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/terminal-blockers.json",
+      "sha256": "aebbe633b4c417bae6f901021c57e275cc00f1ddf0885e9b9d1b04b4da34b311"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/test_historical_transport.py.log",
+      "sha256": "71c460cc879031f1385a3b8a38a4bf4442a78f505183958f653d75ef48d7fb1f"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/test_kamino_u3_baseline.py.log",
+      "sha256": "386011e38b480cb6a12c0c1b337dacb72ee20b61675756ed5570bb050d8cf3bd"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/test_kamino_u3b_luts.py.log",
+      "sha256": "ee2854976ae3dabf8581857118ea4568a1674e5144171d4358fcabd796840471"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/test_kamino_u3c_envelopes.py.log",
+      "sha256": "fe85ade1c64179c4c8752ff3e4fb4cdf7944c7a85aa44641491e06cdd6fbd407"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/test_kamino_u3d_inventory.py.log",
+      "sha256": "186a2c2d4a942be32047f21ae1554adebfa360f7687eb4f6b676e7f9192d37c8"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/test_kamino_u3d_state.py.log",
+      "sha256": "80b5c6181707b130cd0f8e077aa790cece864996124c957593b367f3a20b2675"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/test_kamino_u3e_runtime.py.log",
+      "sha256": "5a0df550367bcff1da3a511cddb8f3e051f7e2c36fce0b03d796bf71a803248d"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/test_kamino_u3e_state.py.log",
+      "sha256": "3d07167924e6cd461af21356aa5b21655274c9f00c90d47eca4231dd7add757d"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/transport-policy.json",
+      "sha256": "dcda6ed45d6741706cbbe46dbf6a1cb09601928bee343580c5b87d0e21533ad9"
+    },
+    {
+      "path": "docs/examples/phase-u3e-validation/transport-tests.log",
+      "sha256": "3a01010acc1ad50ffa93d17a901c40285687a87519d5881aacda6884dc5cc42d"
+    },
+    {
+      "path": "docs/phase-u3e-t1-state-and-runtime.md",
+      "sha256": "460c62f5fe32dcc7b4834c85fcd902a29ef0e347f747a0481d2aba7cff55bbde"
+    }
+  ],
+  "files_scanned": 728,
+  "frozen_public_demo_source_exception": "phase-u3-before/census-source.py, exact frozen SHA-256 checked; public demo configuration is not a private credential and immutable source was preserved",
+  "new_acquisition_provider_paths_queries_userinfo_retained": false,
+  "passed": true,
+  "private_credentials_read_or_used": false,
+  "qualification": "retained evidence checked; synthetic sentinel credentials in negative-test source are not real credentials"
+}

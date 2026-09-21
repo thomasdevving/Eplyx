@@ -1,0 +1,2290 @@
+[
+  {
+    "accounts": [
+      {
+        "address": "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+        "instruction_references": [
+          {
+            "account_position": 0,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          },
+          {
+            "account_position": 2,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          },
+          {
+            "account_position": 0,
+            "instruction_identity": "depositReserveLiquidityAndObligationCollateralV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": true,
+        "is_writable": true,
+        "message_index": 0,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+        "instruction_references": [
+          {
+            "account_position": 2,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 1,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+        "instruction_references": [
+          {
+            "account_position": 1,
+            "instruction_identity": "refreshObligation",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 4
+          },
+          {
+            "account_position": 1,
+            "instruction_identity": "depositReserveLiquidityAndObligationCollateralV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 2,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+        "instruction_references": [
+          {
+            "account_position": 1,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          },
+          {
+            "account_position": 9,
+            "instruction_identity": "depositReserveLiquidityAndObligationCollateralV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 3,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+        "instruction_references": [
+          {
+            "account_position": 1,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 4,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "instruction_references": [],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 5,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "ComputeBudget111111111111111111111111111111",
+        "instruction_references": [],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 6,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+        "instruction_references": [
+          {
+            "account_position": 16,
+            "instruction_identity": "depositReserveLiquidityAndObligationCollateralV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 7,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+        "instruction_references": [
+          {
+            "account_position": 4,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 5,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 6,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 7,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 8,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+        "instruction_references": [
+          {
+            "account_position": 2,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 3,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 4,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 2,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          },
+          {
+            "account_position": 3,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          },
+          {
+            "account_position": 4,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          },
+          {
+            "account_position": 10,
+            "instruction_identity": "depositReserveLiquidityAndObligationCollateralV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          },
+          {
+            "account_position": 14,
+            "instruction_identity": "depositReserveLiquidityAndObligationCollateralV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          },
+          {
+            "account_position": 15,
+            "instruction_identity": "depositReserveLiquidityAndObligationCollateralV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 9,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+        "instruction_references": [
+          {
+            "account_position": 0,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 5,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 5,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 10,
+        "message_origin": "lookup_loaded",
+        "post_reference": {
+          "context_slot": 448195166,
+          "data_bytes": 28712,
+          "data_sha256": "7b412449f556f471ca5623ec1731f03366675455a1509a349388e89e90d231bc",
+          "executable": false,
+          "lamports": 200726443,
+          "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+          "present": true,
+          "raw_account_json_sha256": "867025d5688e6f8600adc9a0331e765b74a9d58f0e52b5a7cd91ee822280e110",
+          "rent_epoch": 18446744073709551615,
+          "validator_lamports_match": true
+        },
+        "pre_state": {
+          "context_slot": 448195165,
+          "data_bytes": 28712,
+          "data_sha256": "c3fe3908e3c8778f0b99f6c83def59cc07c95ca7468e8f4585c5fe3d0caf6884",
+          "executable": false,
+          "lamports": 200726443,
+          "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+          "present": true,
+          "raw_account_json_sha256": "88f1b591553c84a75ad449b8cda67fe0f4c9a4bc5599cb7f96a8f9fcb138f37c",
+          "rent_epoch": 18446744073709551615,
+          "validator_lamports_match": true
+        }
+      },
+      {
+        "address": "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+        "instruction_references": [
+          {
+            "account_position": 7,
+            "instruction_identity": "depositReserveLiquidityAndObligationCollateralV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 11,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+        "instruction_references": [
+          {
+            "account_position": 0,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 3,
+            "instruction_identity": "refreshObligation",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 4
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 12,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+        "instruction_references": [
+          {
+            "account_position": 6,
+            "instruction_identity": "depositReserveLiquidityAndObligationCollateralV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 13,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+        "instruction_references": [
+          {
+            "account_position": 8,
+            "instruction_identity": "depositReserveLiquidityAndObligationCollateralV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 14,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+        "instruction_references": [
+          {
+            "account_position": 0,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          },
+          {
+            "account_position": 2,
+            "instruction_identity": "refreshObligation",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 4
+          },
+          {
+            "account_position": 4,
+            "instruction_identity": "depositReserveLiquidityAndObligationCollateralV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 15,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "11111111111111111111111111111111",
+        "instruction_references": [
+          {
+            "account_position": 4,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 16,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+        "instruction_references": [
+          {
+            "account_position": 3,
+            "instruction_identity": "depositReserveLiquidityAndObligationCollateralV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 17,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+        "instruction_references": [
+          {
+            "account_position": 1,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 1,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          },
+          {
+            "account_position": 0,
+            "instruction_identity": "refreshObligation",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 4
+          },
+          {
+            "account_position": 2,
+            "instruction_identity": "depositReserveLiquidityAndObligationCollateralV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 18,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "Sysvar1nstructions1111111111111111111111111",
+        "instruction_references": [
+          {
+            "account_position": 3,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 13,
+            "instruction_identity": "depositReserveLiquidityAndObligationCollateralV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 19,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "instruction_references": [
+          {
+            "account_position": 11,
+            "instruction_identity": "depositReserveLiquidityAndObligationCollateralV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 20,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "instruction_references": [
+          {
+            "account_position": 5,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          },
+          {
+            "account_position": 12,
+            "instruction_identity": "depositReserveLiquidityAndObligationCollateralV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 21,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+        "instruction_references": [
+          {
+            "account_position": 3,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          },
+          {
+            "account_position": 5,
+            "instruction_identity": "depositReserveLiquidityAndObligationCollateralV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 22,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      }
+    ],
+    "frozen_transaction_sha256": "e6c0d270fa2516e3ba3da1004c51918d263ca10f747734ee66a1cd86fa1ff56a",
+    "inventory_scope": "Every original message account and ordered instruction reference; state proof and hidden runtime dependency closure not complete",
+    "lut_proof_id": "8a5552a3e5d2b23106f4b23fc5862c5c275f49792e950e78064985498a0bf207",
+    "signature": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97",
+    "slot": 448195166,
+    "target": "T1"
+  },
+  {
+    "accounts": [
+      {
+        "address": "HL2fkpkZ1ZPphr1UnDcN9N2mQQNgbtLeCR4RHmgCKpur",
+        "instruction_references": [
+          {
+            "account_position": 0,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          },
+          {
+            "account_position": 2,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          },
+          {
+            "account_position": 0,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 7
+          }
+        ],
+        "is_signer": true,
+        "is_writable": true,
+        "message_index": 0,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+        "instruction_references": [
+          {
+            "account_position": 0,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 5,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 5,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          },
+          {
+            "account_position": 5,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 4
+          },
+          {
+            "account_position": 5,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 1,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+        "instruction_references": [
+          {
+            "account_position": 2,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 2,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "7BaAjTopWTHMo7FPSGZrGaiw4SogZvTnYN6Vdif4A8zH",
+        "instruction_references": [
+          {
+            "account_position": 12,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 7
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 3,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "Adnj8BDHD9kdvzsSmRHB9ayS12kY1qfXzQCFxBcpq3t1",
+        "instruction_references": [
+          {
+            "account_position": 1,
+            "instruction_identity": "refreshObligation",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 6
+          },
+          {
+            "account_position": 1,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 7
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 4,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "AEueaqsjpNUHV7v4BSmZfSq39NaoWM9BnYfmpbfP3Fsh",
+        "instruction_references": [
+          {
+            "account_position": 1,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          },
+          {
+            "account_position": 8,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 7
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 5,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+        "instruction_references": [
+          {
+            "account_position": 1,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 6,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo",
+        "instruction_references": [
+          {
+            "account_position": 3,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 7
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 7,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "instruction_references": [],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 8,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "ComputeBudget111111111111111111111111111111",
+        "instruction_references": [],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 9,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+        "instruction_references": [
+          {
+            "account_position": 14,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 7
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 10,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+        "instruction_references": [
+          {
+            "account_position": 4,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 5,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 6,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 7,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 8,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 9,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 10,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 11,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 11,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+        "instruction_references": [
+          {
+            "account_position": 2,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 3,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 4,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 2,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          },
+          {
+            "account_position": 3,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          },
+          {
+            "account_position": 4,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          },
+          {
+            "account_position": 2,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 4
+          },
+          {
+            "account_position": 3,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 4
+          },
+          {
+            "account_position": 4,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 4
+          },
+          {
+            "account_position": 2,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 5
+          },
+          {
+            "account_position": 3,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 5
+          },
+          {
+            "account_position": 4,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 5
+          },
+          {
+            "account_position": 9,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 7
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 12,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "instruction_references": [
+          {
+            "account_position": 5,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          },
+          {
+            "account_position": 10,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 7
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 13,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "2gc9Dm1eB6UgVYFBUN9bWks6Kes9PbWSaPaa9DqyvEiN",
+        "instruction_references": [
+          {
+            "account_position": 0,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 5
+          },
+          {
+            "account_position": 5,
+            "instruction_identity": "refreshObligation",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 6
+          },
+          {
+            "account_position": 4,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 7
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 14,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "BcLJRx7GbyX2Jj8RFpYDnEE47Tm36wSskLnm7ALarEC1",
+        "instruction_references": [
+          {
+            "account_position": 7,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 7
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 15,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "d4A2prbA2whesmvHaL88BH6Ewn5N4bTSU2Ze8P6Bc4Q",
+        "instruction_references": [
+          {
+            "account_position": 0,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 2,
+            "instruction_identity": "refreshObligation",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 6
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 16,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "D6q6wuQSrifJKZYpR1M8R4YawnLDtDsMmWM1NbBmgJ59",
+        "instruction_references": [
+          {
+            "account_position": 0,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          },
+          {
+            "account_position": 3,
+            "instruction_identity": "refreshObligation",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 6
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 17,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "ESCkPWKHmgNE7Msf77n9yzqJd5kQVWWGy3o5Mgxhvavp",
+        "instruction_references": [
+          {
+            "account_position": 0,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 4
+          },
+          {
+            "account_position": 4,
+            "instruction_identity": "refreshObligation",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 6
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 18,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "Gm2itCNPBpBSSrgCA194pmErjwHAFVpvBBFvpdTF5LuJ",
+        "instruction_references": [
+          {
+            "account_position": 6,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 7
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 19,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "GmJ2vXsDt8R5DNimAZc7Rtphr4oqecBVAx1psaTcVtrX",
+        "instruction_references": [
+          {
+            "account_position": 13,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 7
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 20,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "11111111111111111111111111111111",
+        "instruction_references": [
+          {
+            "account_position": 4,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 21,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+        "instruction_references": [
+          {
+            "account_position": 3,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          },
+          {
+            "account_position": 5,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 7
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 22,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+        "instruction_references": [
+          {
+            "account_position": 1,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 1,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          },
+          {
+            "account_position": 1,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 4
+          },
+          {
+            "account_position": 1,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 5
+          },
+          {
+            "account_position": 0,
+            "instruction_identity": "refreshObligation",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 6
+          },
+          {
+            "account_position": 2,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 7
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 23,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "Sysvar1nstructions1111111111111111111111111",
+        "instruction_references": [
+          {
+            "account_position": 3,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 11,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 7
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 24,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      }
+    ],
+    "frozen_transaction_sha256": "df4e89d2ca98b295e5985e8e8747ec941103ae7386e9afa50e40346831ff67f5",
+    "inventory_scope": "Every original message account and ordered instruction reference; state proof and hidden runtime dependency closure not complete",
+    "lut_proof_id": "67e3648c8508420803ac814e4fe9801e7cdbe90f8571aeb2d6a3817e86fda04a",
+    "signature": "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk",
+    "slot": 448194517,
+    "target": "T2"
+  },
+  {
+    "accounts": [
+      {
+        "address": "BW1vV7pcnTJ3P1nG8KcPc9NnmvuCkQcvSpRjUrq28oTA",
+        "instruction_references": [
+          {
+            "account_position": 0,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          },
+          {
+            "account_position": 2,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          },
+          {
+            "account_position": 0,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": true,
+        "is_writable": true,
+        "message_index": 0,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+        "instruction_references": [
+          {
+            "account_position": 0,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 5,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 5,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 1,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+        "instruction_references": [
+          {
+            "account_position": 2,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 2,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "CgYCkFUg2hZiUUZsxWJovdFNtHxukQDapxL1E4p2xMPM",
+        "instruction_references": [
+          {
+            "account_position": 1,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          },
+          {
+            "account_position": 8,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 3,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "J1Q7PxpfbEZaPDcduKvyTbRY5qGsgkjEUsY9vke6U8vU",
+        "instruction_references": [
+          {
+            "account_position": 1,
+            "instruction_identity": "refreshObligation",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 4
+          },
+          {
+            "account_position": 1,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 4,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+        "instruction_references": [
+          {
+            "account_position": 1,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 5,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "9DrvZvyWh1HuAoZxvYWMvkf2XCzryCpGgHqrMjyDWpmo",
+        "instruction_references": [
+          {
+            "account_position": 3,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 6,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "instruction_references": [],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 7,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "ComputeBudget111111111111111111111111111111",
+        "instruction_references": [],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 8,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+        "instruction_references": [
+          {
+            "account_position": 14,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 9,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+        "instruction_references": [
+          {
+            "account_position": 5,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 7,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 8,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 9,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 10,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+        "instruction_references": [
+          {
+            "account_position": 2,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 3,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 4,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 2,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          },
+          {
+            "account_position": 3,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          },
+          {
+            "account_position": 4,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          },
+          {
+            "account_position": 9,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          },
+          {
+            "account_position": 12,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          },
+          {
+            "account_position": 13,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 11,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "pSPcvR8GmG9aKDUbn9nbKYjkxt9hxMS7kF1qqKJaPqJ",
+        "instruction_references": [
+          {
+            "account_position": 4,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 6,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 12,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "BbDUrk1bVtSixgQsPLBJFZEF7mwGstnD5joA1WzYvYFX",
+        "instruction_references": [
+          {
+            "account_position": 7,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 13,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "Bgq7trRgVMeq33yt235zM2onQ4bRDBsY5EWiTetF4qw6",
+        "instruction_references": [
+          {
+            "account_position": 6,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 14,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "D6q6wuQSrifJKZYpR1M8R4YawnLDtDsMmWM1NbBmgJ59",
+        "instruction_references": [
+          {
+            "account_position": 0,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          },
+          {
+            "account_position": 3,
+            "instruction_identity": "refreshObligation",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 4
+          },
+          {
+            "account_position": 4,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 15,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "HV9KsS5mB4b9CFhDJVKdfxWBAomYfUk5PeUsdgMQsUrB",
+        "instruction_references": [
+          {
+            "account_position": 0,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 2,
+            "instruction_identity": "refreshObligation",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 4
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 16,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "11111111111111111111111111111111",
+        "instruction_references": [
+          {
+            "account_position": 4,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 17,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "7u3HeHxYDLhnCoErrtycNokbQYbWGzLs6JSDqGAv5PfF",
+        "instruction_references": [
+          {
+            "account_position": 1,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 1,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          },
+          {
+            "account_position": 0,
+            "instruction_identity": "refreshObligation",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 4
+          },
+          {
+            "account_position": 2,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 18,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "instruction_references": [
+          {
+            "account_position": 3,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          },
+          {
+            "account_position": 5,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 19,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "Sysvar1nstructions1111111111111111111111111",
+        "instruction_references": [
+          {
+            "account_position": 3,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 11,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 20,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "instruction_references": [
+          {
+            "account_position": 5,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          },
+          {
+            "account_position": 10,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 21,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      }
+    ],
+    "frozen_transaction_sha256": "04b2b326125766e85498d21c00b81e49f7d918affc65456b2c248371c7f786b7",
+    "inventory_scope": "Every original message account and ordered instruction reference; state proof and hidden runtime dependency closure not complete",
+    "lut_proof_id": "b75157021d53ee662c432ddede6ff1115bd1b283b12156b5dc866af9d1d38ae2",
+    "signature": "5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V",
+    "slot": 448194462,
+    "target": "T3"
+  },
+  {
+    "accounts": [
+      {
+        "address": "CTuvNKiwwknG48g6629h27z7htPPeXqj23KozhEN8GJr",
+        "instruction_references": [
+          {
+            "account_position": 0,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          },
+          {
+            "account_position": 2,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          },
+          {
+            "account_position": 0,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": true,
+        "is_writable": true,
+        "message_index": 0,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "2cgzHpjXndKmD8853ehSy7NGAiQ9Xc1HDCBNMGus6wkj",
+        "instruction_references": [
+          {
+            "account_position": 1,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          },
+          {
+            "account_position": 8,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 1,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "65V56P2A1yDp5XdjRSftyLBQFbrR6dGtaovuiVjn4vth",
+        "instruction_references": [
+          {
+            "account_position": 1,
+            "instruction_identity": "refreshObligation",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 4
+          },
+          {
+            "account_position": 1,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 2,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "9AL1UQ6xSXDiNHRNVojSPLRQ62Hpp2EiJ9k8JBQpKhVv",
+        "instruction_references": [
+          {
+            "account_position": 12,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 3,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+        "instruction_references": [
+          {
+            "account_position": 5,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 4,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "instruction_references": [],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 5,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "ComputeBudget111111111111111111111111111111",
+        "instruction_references": [],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 6,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+        "instruction_references": [
+          {
+            "account_position": 14,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 7,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+        "instruction_references": [
+          {
+            "account_position": 4,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 5,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 8,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+        "instruction_references": [
+          {
+            "account_position": 2,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 3,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 4,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 2,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          },
+          {
+            "account_position": 3,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          },
+          {
+            "account_position": 4,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          },
+          {
+            "account_position": 9,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 9,
+        "message_origin": "static",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "3NJYftD5sjVfxSnUdZ1wVML8f3aC6mp1CXCL6L7TnU8C",
+        "instruction_references": [
+          {
+            "account_position": 0,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 5,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 10,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "B7nzBEuViVtaQN8iEhhtBY4gQSxBY38ms31DUWUx1bza",
+        "instruction_references": [
+          {
+            "account_position": 13,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 11,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "DdTmCCjv7zHRD1hJv3E8bpnSEQBzdKkzB1j9ApXX5QoP",
+        "instruction_references": [
+          {
+            "account_position": 0,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 2,
+            "instruction_identity": "refreshObligation",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 4
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 12,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "Ga4rZytCpq1unD4DbEJ5bkHeUz9g3oh9AAFEi6vSauXp",
+        "instruction_references": [
+          {
+            "account_position": 0,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          },
+          {
+            "account_position": 3,
+            "instruction_identity": "refreshObligation",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 4
+          },
+          {
+            "account_position": 4,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 13,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "GbpsVomudPRRwmqfTmo3MYQVTikPG6QXxqpzJexA1JRb",
+        "instruction_references": [
+          {
+            "account_position": 2,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 14,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "GENey8es3EgGiNTM8H8gzA3vf98haQF8LHiYFyErjgrv",
+        "instruction_references": [
+          {
+            "account_position": 6,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 15,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "rywFxeqHfCWL5iGq9cDxutwiiR2TabZgzv8aRM1Lceq",
+        "instruction_references": [
+          {
+            "account_position": 7,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": true,
+        "message_index": 16,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "11111111111111111111111111111111",
+        "instruction_references": [
+          {
+            "account_position": 4,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 17,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "B9spsrMK6pJicYtukaZzDyzsUQLgc3jbx5gHVwdDxb6y",
+        "instruction_references": [
+          {
+            "account_position": 3,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 18,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "Chpu5ZgfWX5ZzVpUx9Xvv4WPM75Xd7zPJNDPsFnCpLpk",
+        "instruction_references": [
+          {
+            "account_position": 1,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 19,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "DxXdAyU3kCjnyggvHmY5nAwg5cRbbmdyX3npfDMjjMek",
+        "instruction_references": [
+          {
+            "account_position": 1,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 2
+          },
+          {
+            "account_position": 1,
+            "instruction_identity": "refreshReserve",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 3
+          },
+          {
+            "account_position": 0,
+            "instruction_identity": "refreshObligation",
+            "instruction_role": "target_prerequisite",
+            "outer_index": 4
+          },
+          {
+            "account_position": 2,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 20,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "instruction_references": [
+          {
+            "account_position": 3,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          },
+          {
+            "account_position": 5,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 21,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "Sysvar1nstructions1111111111111111111111111",
+        "instruction_references": [
+          {
+            "account_position": 3,
+            "instruction_identity": "refreshPriceList",
+            "instruction_role": "execution_dependency",
+            "outer_index": 0
+          },
+          {
+            "account_position": 11,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 22,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      },
+      {
+        "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "instruction_references": [
+          {
+            "account_position": 5,
+            "instruction_identity": "CreateIdempotentExistingAccount",
+            "instruction_role": "execution_dependency",
+            "outer_index": 1
+          },
+          {
+            "account_position": 10,
+            "instruction_identity": "borrowObligationLiquidityV2",
+            "instruction_role": "semantic_target",
+            "outer_index": 5
+          }
+        ],
+        "is_signer": false,
+        "is_writable": false,
+        "message_index": 23,
+        "message_origin": "lookup_loaded",
+        "post_reference": null,
+        "pre_state": null
+      }
+    ],
+    "frozen_transaction_sha256": "b32f4181b93633abc7463bf5affe191a218fc8a6d4d3260d2d2642f6a3002ca2",
+    "inventory_scope": "Every original message account and ordered instruction reference; state proof and hidden runtime dependency closure not complete",
+    "lut_proof_id": "98f87ad74a05e1f2bf1b20c4c3ffe2037c9d8ede088957e06128a96a0f6ff796",
+    "signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx",
+    "slot": 448194435,
+    "target": "T4"
+  }
+]

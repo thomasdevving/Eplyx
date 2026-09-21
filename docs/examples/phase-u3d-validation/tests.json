@@ -1,0 +1,32 @@
+{
+  "Python": {
+    "u3a": 30,
+    "u3b": 24,
+    "u3c": 10,
+    "u3d_inventory": 8
+  },
+  "Rust": {
+    "historical": 4,
+    "historical_lut": 27,
+    "kamino": 10,
+    "library": 421,
+    "replay": 16,
+    "token2022": 12,
+    "transaction_envelope": 20
+  },
+  "all_product_report_hashes_unchanged": true,
+  "new_historical_acquisition_tests": 0,
+  "new_runtime_tests": 0,
+  "new_tests": 8,
+  "normal_tests_passed": 582,
+  "product_report_exit_codes": [
+    0,
+    0,
+    1,
+    1,
+    3,
+    5
+  ],
+  "runtime_scope_mutation_test": "not_attempted; execution stage not reached",
+  "test_scope": "Existing controls and new offline inventory; no new production replay capability"
+}

@@ -1,0 +1,54 @@
+{
+  "verified": false,
+  "targets": [
+    {
+      "signature": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97",
+      "acquired_boundaries": 2,
+      "raw_state_capture_complete": false,
+      "failure": {
+        "reason": "invalid_json_response",
+        "request": {
+          "address": "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+          "boundary": "pre",
+          "slot": 448195165,
+          "method": "getAccountInfo",
+          "params": [
+            "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+            {
+              "encoding": "base64",
+              "commitment": "finalized",
+              "slot": 448195165
+            }
+          ]
+        }
+      }
+    },
+    {
+      "signature": "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk",
+      "acquired_boundaries": 0,
+      "raw_state_capture_complete": false,
+      "failure": {
+        "reason": "historical_binary_set_incomplete",
+        "request": null
+      }
+    },
+    {
+      "signature": "5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V",
+      "acquired_boundaries": 0,
+      "raw_state_capture_complete": false,
+      "failure": {
+        "reason": "historical_binary_set_incomplete",
+        "request": null
+      }
+    },
+    {
+      "signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx",
+      "acquired_boundaries": 0,
+      "raw_state_capture_complete": false,
+      "failure": {
+        "reason": "historical_binary_set_incomplete",
+        "request": null
+      }
+    }
+  ]
+}

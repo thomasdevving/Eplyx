@@ -1,0 +1,31 @@
+{
+  "actual_account_state_rpc_attempts": 5,
+  "binary_failures": 3,
+  "binary_requests": 70,
+  "binary_successes": 67,
+  "binary_timing": {
+    "account_requests": 68,
+    "block_requests": 1,
+    "failed_requests": 3,
+    "full_capture_seconds": 43.69254762498895,
+    "requests": 70,
+    "successful_requests": 67,
+    "transport_seconds": 39.34987487382023
+  },
+  "capture_archive": 3783157,
+  "distinct_state_account_boundaries_acquired": 2,
+  "distinct_state_accounts_acquired": 1,
+  "earlier_U3D_checkpoint_preserved": true,
+  "expanded_binary_capture_bytes": 62138141,
+  "original_U3C_attempt_preserved": true,
+  "state_timing": {
+    "requests": 7,
+    "transport_seconds": 2.2829649581108242,
+    "wall_seconds": 2.515566249960102
+  },
+  "state_transport_failures": 4,
+  "state_transport_requests": 7,
+  "state_transport_successes": 3,
+  "total_network_requests": 77,
+  "transport_failure_interpretation": "Measured zero-byte response failures; not nonexistent programs or permanently missing history."
+}

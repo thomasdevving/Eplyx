@@ -1,0 +1,19 @@
+{"variant": "default", "submitted": true, "success": true, "error": null}
+{"variant": "empty", "submitted": true, "success": true, "error": null}
+{"variant": "different", "submitted": true, "success": true, "error": null}
+{
+  "all_submitted_to_vm": true,
+  "all_succeeded": true,
+  "baseline_fidelity_matched": false,
+  "evidence_hashes": {
+    "default": "83f479faf1fe0f809c7c9c5c1db16047bb6c94d4cf3e1d549fbb3b19bc7f7990",
+    "different": "83f479faf1fe0f809c7c9c5c1db16047bb6c94d4cf3e1d549fbb3b19bc7f7990",
+    "empty": "83f479faf1fe0f809c7c9c5c1db16047bb6c94d4cf3e1d549fbb3b19bc7f7990"
+  },
+  "execution_evidence_byte_identical": true,
+  "full_T1_materiality_proven": true,
+  "kind": "SlotHashes_materiality_experiment",
+  "production_replay_eligible": false,
+  "variants": 3
+}
+

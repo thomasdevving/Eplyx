@@ -1,0 +1,33 @@
+EPLYX CI BUNDLE
+===============
+
+program:           SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy
+adapter:           spl-stake-pool@3, cross-program invocation
+selection policy:  stratified-diversity v1
+
+baseline sha256:   ec2dfefaa70d560754a0000f39bd2cabc192b895d36205b3c428f601b6e1d7e1
+corpus sha256:     a4b667316b972685743bf0724b5596b7fbb64dde46468e159f44d773894f69b1
+bundle sha256:     5e5b67ac13e4f6b8249348ad81db29885ee8ee897ba78f6de213b55793f4285f
+
+records:           10 validated historical observations
+production window: slots 447850493 -> 447904974
+
+COVERAGE
+  deposit            1 tested
+  withdraw           9 tested
+
+PINNED DEPENDENCIES
+  Stake11111111111111111111111111111111111111  3d2d39c596ce8be2  212056 bytes
+  TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA  8190d3f7ceb6cb7a  108600 bytes
+
+KNOWN LIMITATIONS
+  - failed_original_transactions_unsupported
+    Transactions that failed on mainnet are observed but not replayed, so no failure path is represented.
+  - account_creation_paths_unsupported
+    Interactions that create a token account are outside the exact historical contract and are excluded.
+  - replay_runtime_rent_semantics_unsupported
+    Transactions crediting an account that stays below its rent-exempt minimum are accepted by mainnet and refused by the replay runtime, so they are excluded. Tip accounts are the common case.
+  - address_lookup_tables_unsupported
+    A v0 message that actually resolves addresses through a lookup table is outside the replay contract and is excluded, so any interaction shape that requires one is unrepresented.
+
+Every hash verified against the bytes on disk.

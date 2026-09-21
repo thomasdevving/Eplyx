@@ -1,0 +1,14 @@
+{
+  "execution_seconds": null,
+  "network_requests": 0,
+  "operation": "offline frozen-hash verification and inventory rederivation",
+  "result": {
+    "inventory_sha256": "db925ad29690298c6ccc65579c91393e34bf31103eeab692626d4c73f66e78c5",
+    "message_accounts": 23,
+    "missing_historical_message_accounts": 16,
+    "programdata_accounts": 4,
+    "runtime_executed": false,
+    "verified": true
+  },
+  "wall_seconds": 1.636507041985169
+}

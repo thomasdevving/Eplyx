@@ -1,0 +1,201 @@
+{
+  "metrics": {
+    "J_baselines_attempted": 2,
+    "M_envelope_admitted": 4,
+    "N_classified": 4,
+    "P_fidelity_matched": 2,
+    "binary_complete": 4,
+    "experimental_records": 2,
+    "ordinary_product_eligible": 0,
+    "paired_ordinary_state_proven": 3,
+    "runtime_inputs_demonstrated_sufficient": 2,
+    "stages": [
+      {
+        "C1": "passed",
+        "C10": "passed",
+        "C2": "passed",
+        "C3": "passed",
+        "C4": "passed",
+        "C5": "passed",
+        "C5_definition": "paired ordinary state/typed validation, separate from runtime context",
+        "C6": "passed",
+        "C7": "passed",
+        "C8": "passed",
+        "C9": "passed",
+        "next_blocker": null,
+        "production_ReplayRecord_eligible": false,
+        "target": "T1"
+      },
+      {
+        "C1": "passed",
+        "C10": "passed",
+        "C2": "passed",
+        "C3": "passed",
+        "C4": "passed",
+        "C5": "passed",
+        "C5_definition": "paired ordinary state/typed validation, separate from runtime context",
+        "C6": "passed",
+        "C7": "passed",
+        "C8": "passed",
+        "C9": "passed",
+        "next_blocker": null,
+        "production_ReplayRecord_eligible": false,
+        "target": "T2"
+      },
+      {
+        "C1": "passed",
+        "C10": "not_attempted",
+        "C2": "passed",
+        "C3": "passed",
+        "C4": "passed",
+        "C5": "passed",
+        "C5_definition": "paired ordinary state/typed validation, separate from runtime context",
+        "C6": "not_attempted",
+        "C7": "not_attempted",
+        "C8": "not_attempted",
+        "C9": "not_attempted",
+        "next_blocker": {
+          "EpochSchedule": "not_attempted",
+          "account": "Rent",
+          "failure": "rate_limited after four exact-context attempts",
+          "kind": "runtime_account_acquisition",
+          "slot": 448194462
+        },
+        "production_ReplayRecord_eligible": false,
+        "target": "T3"
+      },
+      {
+        "C1": "passed",
+        "C10": "not_attempted",
+        "C2": "passed",
+        "C3": "passed",
+        "C4": "passed",
+        "C5": "not_attempted",
+        "C5_definition": "paired ordinary state/typed validation, separate from runtime context",
+        "C6": "not_attempted",
+        "C7": "not_attempted",
+        "C8": "not_attempted",
+        "C9": "not_attempted",
+        "next_blocker": {
+          "conflicts": [
+            {
+              "account": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+              "conflicting_index": 596,
+              "conflicting_signature": "3kt5VB1MNtJBk56kYPHzE2YSu2kb3hxQQiAxwogGszNKzjmdzq4dXPsCMJCciRFUvs3fajcKh6vjBWG2zYbpH2cC",
+              "position": "before",
+              "reason": "transaction at index 596 wrote the account earlier in the slot, so the archived end-of-S-1 state is not this transaction's pre-state",
+              "target_index": 946,
+              "target_signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx"
+            },
+            {
+              "account": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+              "conflicting_index": 560,
+              "conflicting_signature": "3zdY4iMQHLuE1yPd9wSCgHZiKqNaWKayxfsTajzDS79NP14iJeZeMNJ71Qc7WMfgYCyUyfiD1JwLPG1hSr6HEKGz",
+              "position": "before",
+              "reason": "transaction at index 560 wrote the account earlier in the slot, so the archived end-of-S-1 state is not this transaction's pre-state",
+              "target_index": 946,
+              "target_signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx"
+            }
+          ],
+          "kind": "same_slot_interference"
+        },
+        "production_ReplayRecord_eligible": false,
+        "target": "T4"
+      }
+    ]
+  },
+  "rows": [
+    {
+      "C1": "passed",
+      "C10": "passed",
+      "C2": "passed",
+      "C3": "passed",
+      "C4": "passed",
+      "C5": "passed",
+      "C5_definition": "paired ordinary state/typed validation, separate from runtime context",
+      "C6": "passed",
+      "C7": "passed",
+      "C8": "passed",
+      "C9": "passed",
+      "next_blocker": null,
+      "production_ReplayRecord_eligible": false,
+      "target": "T1"
+    },
+    {
+      "C1": "passed",
+      "C10": "passed",
+      "C2": "passed",
+      "C3": "passed",
+      "C4": "passed",
+      "C5": "passed",
+      "C5_definition": "paired ordinary state/typed validation, separate from runtime context",
+      "C6": "passed",
+      "C7": "passed",
+      "C8": "passed",
+      "C9": "passed",
+      "next_blocker": null,
+      "production_ReplayRecord_eligible": false,
+      "target": "T2"
+    },
+    {
+      "C1": "passed",
+      "C10": "not_attempted",
+      "C2": "passed",
+      "C3": "passed",
+      "C4": "passed",
+      "C5": "passed",
+      "C5_definition": "paired ordinary state/typed validation, separate from runtime context",
+      "C6": "not_attempted",
+      "C7": "not_attempted",
+      "C8": "not_attempted",
+      "C9": "not_attempted",
+      "next_blocker": {
+        "EpochSchedule": "not_attempted",
+        "account": "Rent",
+        "failure": "rate_limited after four exact-context attempts",
+        "kind": "runtime_account_acquisition",
+        "slot": 448194462
+      },
+      "production_ReplayRecord_eligible": false,
+      "target": "T3"
+    },
+    {
+      "C1": "passed",
+      "C10": "not_attempted",
+      "C2": "passed",
+      "C3": "passed",
+      "C4": "passed",
+      "C5": "not_attempted",
+      "C5_definition": "paired ordinary state/typed validation, separate from runtime context",
+      "C6": "not_attempted",
+      "C7": "not_attempted",
+      "C8": "not_attempted",
+      "C9": "not_attempted",
+      "next_blocker": {
+        "conflicts": [
+          {
+            "account": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+            "conflicting_index": 596,
+            "conflicting_signature": "3kt5VB1MNtJBk56kYPHzE2YSu2kb3hxQQiAxwogGszNKzjmdzq4dXPsCMJCciRFUvs3fajcKh6vjBWG2zYbpH2cC",
+            "position": "before",
+            "reason": "transaction at index 596 wrote the account earlier in the slot, so the archived end-of-S-1 state is not this transaction's pre-state",
+            "target_index": 946,
+            "target_signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx"
+          },
+          {
+            "account": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            "conflicting_index": 560,
+            "conflicting_signature": "3zdY4iMQHLuE1yPd9wSCgHZiKqNaWKayxfsTajzDS79NP14iJeZeMNJ71Qc7WMfgYCyUyfiD1JwLPG1hSr6HEKGz",
+            "position": "before",
+            "reason": "transaction at index 560 wrote the account earlier in the slot, so the archived end-of-S-1 state is not this transaction's pre-state",
+            "target_index": 946,
+            "target_signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx"
+          }
+        ],
+        "kind": "same_slot_interference"
+      },
+      "production_ReplayRecord_eligible": false,
+      "target": "T4"
+    }
+  ]
+}

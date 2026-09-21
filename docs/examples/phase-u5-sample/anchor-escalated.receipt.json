@@ -1,0 +1,18 @@
+{
+  "body_bytes": 43,
+  "body_sha256": "498f3b82a711d5e7fb3a22d0e0f131aab63156dd51f887a1a5ccde19105707d8",
+  "endpoint": "https://api.mainnet-beta.solana.com",
+  "note": "The first successful response was returned as tool stdout and transcribed byte-for-byte; source signature pages were written directly by curl.",
+  "request": {
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "getSlot",
+    "params": [
+      {
+        "commitment": "finalized"
+      }
+    ]
+  },
+  "result": 448760961,
+  "transport": "escalated curl stdout"
+}

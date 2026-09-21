@@ -1,0 +1,8 @@
+killed: current/post state context accepted
+killed: Scope owner ignored
+killed: validator balance contradiction ignored
+killed: missing oracle state accepted
+killed: same-slot conflict and coverage ignored
+killed: raw response hash mismatch ignored
+killed: retry bound exceeded
+killed: ATA wallet check bypassed

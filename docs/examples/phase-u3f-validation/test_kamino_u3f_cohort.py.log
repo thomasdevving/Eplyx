@@ -1,0 +1,10 @@
+test_T2_scope_changes_reserve_and_obligation (__main__.CohortTests.test_T2_scope_changes_reserve_and_obligation) ... ok
+test_T2_three_full_native_runs_exact_fidelity (__main__.CohortTests.test_T2_three_full_native_runs_exact_fidelity) ... ok
+test_T3_no_retry_bound_reset_or_runtime_claim (__main__.CohortTests.test_T3_no_retry_bound_reset_or_runtime_claim) ... ok
+test_T4_interference_rederived_from_raw_block (__main__.CohortTests.test_T4_interference_rederived_from_raw_block) ... ok
+test_seven_existing_subjects_only (__main__.CohortTests.test_seven_existing_subjects_only) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 20.299s
+
+OK

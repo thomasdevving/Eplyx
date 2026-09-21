@@ -1,0 +1,81 @@
+{
+  "baseline_self_findings": [],
+  "kind": "existing_U2_evaluation_of_experimental_historical_observation",
+  "legacy_boundary_prover": {
+    "error": "account ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY is owned by token program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb, not the SPL Token program",
+    "passed": false
+  },
+  "ordinary_production_adapter_admission_changed": false,
+  "post_state_hash": "f16514f4199aa720b5d895e15c74ba2e5fdc6a151f5ecd64942882c001701272",
+  "pre_state_hash": "8cb5d32a0a04e045d5df63f254d09f96b66b04e3c9ec10be47b149a40a87dd86",
+  "subjects": [
+    {
+      "action": "deposit_reserve_liquidity_and_obligation_collateral",
+      "domain": "execution",
+      "protocol": "kamino-klend",
+      "subject": "transaction"
+    },
+    {
+      "action": "deposit_reserve_liquidity_and_obligation_collateral",
+      "domain": "economic",
+      "protocol": "kamino-klend",
+      "subject": "liquidity_deposited"
+    },
+    {
+      "action": "deposit_reserve_liquidity_and_obligation_collateral",
+      "domain": "economic",
+      "protocol": "kamino-klend",
+      "subject": "reserve_liquidity_received"
+    },
+    {
+      "action": "deposit_reserve_liquidity_and_obligation_collateral",
+      "domain": "economic",
+      "protocol": "kamino-klend",
+      "subject": "obligation_collateral_deposited"
+    }
+  ],
+  "summary": [
+    {
+      "economic": true,
+      "name": "liquidity_deposited",
+      "value": {
+        "amount": "0.46523144",
+        "base_units": 46523144,
+        "decimals": 8,
+        "type": "quantity"
+      }
+    },
+    {
+      "economic": true,
+      "name": "reserve_liquidity_received",
+      "value": {
+        "amount": "0.46523144",
+        "base_units": 46523144,
+        "decimals": 8,
+        "type": "quantity"
+      }
+    },
+    {
+      "economic": true,
+      "name": "collateral_minted",
+      "value": {
+        "amount": "46472114",
+        "base_units": 46472114,
+        "decimals": 0,
+        "type": "quantity"
+      }
+    },
+    {
+      "economic": true,
+      "name": "obligation_collateral_deposited",
+      "value": {
+        "amount": "46472114",
+        "base_units": 46472114,
+        "decimals": 0,
+        "type": "quantity"
+      }
+    }
+  ],
+  "target_outer_index": 5,
+  "transaction": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97"
+}

@@ -1,0 +1,35 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.91s
+     Running tests/kamino.rs (target/debug/deps/kamino-e9089c442060da1d)
+
+running 10 tests
+test every_supported_discriminator_matches_anchors_derivation ... ok
+test no_adapter_specification_language_was_introduced ... ok
+test no_new_coarse_semantic_action_was_added_for_kamino ... ok
+test the_adapter_reads_token_accounts_under_both_token_programs ... ok
+test the_interface_provenance_is_recorded_and_not_overclaimed ... ok
+test the_adapter_claims_only_the_two_families_it_supports ... ok
+test the_layout_decodes_real_mainnet_accounts ... ok
+test the_kamino_adapter_delegates_proof_and_pairing_to_the_shared_layer ... ok
+test the_kamino_path_uses_no_floating_point ... ok
+test the_kamino_adapter_contains_no_token_layout_of_its_own ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/token2022.rs (target/debug/deps/token2022-0dd785e472514825)
+
+running 12 tests
+test committed_mainnet_record_is_historical_state_ready_and_self_consistent ... ok
+test a_lamport_boundary_mismatch_names_the_side_it_failed_on ... ok
+test a_read_only_account_that_changed_across_the_boundary_is_refused ... ok
+test a_snapshot_contradicting_validator_metadata_is_refused ... ok
+test an_empty_system_account_takes_its_boundary_from_transaction_metadata ... ok
+test the_record_states_what_its_proof_rests_on ... ok
+test economic_interpretation_reports_the_token_delta_with_mint_decimals ... ok
+test a_versioned_message_resolving_no_lookup_tables_replays ... ok
+test acquired_snapshots_decode_to_the_validator_observed_amounts ... ok
+test archive_acquisition_builds_a_valid_stateful_record ... ok
+test version_resolution_reads_the_deployment_live_at_the_slot ... ok
+test unsupported_transaction_shapes_are_refused ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+

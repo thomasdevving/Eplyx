@@ -1,0 +1,65 @@
+[
+  {
+    "path": "programs/scope/src/states/oracle_mappings.rs",
+    "repository": "Kamino-Finance/scope",
+    "revision": "fe5352366a7215dda5c6f7b867a6bb5929d52c94",
+    "sha256": "b6b45ef1c1af35c3aa9c7ef51d2be77ce8f3a9d1d402852957784945b0fbee28",
+    "source_url": "https://raw.githubusercontent.com/Kamino-Finance/scope/fe5352366a7215dda5c6f7b867a6bb5929d52c94/programs/scope/src/states/oracle_mappings.rs"
+  },
+  {
+    "path": "programs/scope/src/states/oracle_prices.rs",
+    "repository": "Kamino-Finance/scope",
+    "revision": "fe5352366a7215dda5c6f7b867a6bb5929d52c94",
+    "sha256": "b273d29667c2a8698f5ec5dd141678c08f36660d694687001b1b55f5faf822f1",
+    "source_url": "https://raw.githubusercontent.com/Kamino-Finance/scope/fe5352366a7215dda5c6f7b867a6bb5929d52c94/programs/scope/src/states/oracle_prices.rs"
+  },
+  {
+    "path": "programs/scope/src/states/oracle_twaps.rs",
+    "repository": "Kamino-Finance/scope",
+    "revision": "fe5352366a7215dda5c6f7b867a6bb5929d52c94",
+    "sha256": "2ebcd82f7ebeba46e16f554b3243b971de9ea0305b4d8395ebfc83f156961159",
+    "source_url": "https://raw.githubusercontent.com/Kamino-Finance/scope/fe5352366a7215dda5c6f7b867a6bb5929d52c94/programs/scope/src/states/oracle_twaps.rs"
+  },
+  {
+    "path": "programs/scope/src/states/oracle_type.rs",
+    "repository": "Kamino-Finance/scope",
+    "revision": "fe5352366a7215dda5c6f7b867a6bb5929d52c94",
+    "sha256": "a1413429efc4eb7f475755233251bb717d77161f8cb54e45b094f97435dde7d5",
+    "source_url": "https://raw.githubusercontent.com/Kamino-Finance/scope/fe5352366a7215dda5c6f7b867a6bb5929d52c94/programs/scope/src/states/oracle_type.rs"
+  },
+  {
+    "path": "programs/scope/src/states/dated_price.rs",
+    "repository": "Kamino-Finance/scope",
+    "revision": "fe5352366a7215dda5c6f7b867a6bb5929d52c94",
+    "sha256": "89b3c8da8fbe3c54dd1b69e1ac1c829c48e747dbc74f0953439efa9ad617a3c0",
+    "source_url": "https://raw.githubusercontent.com/Kamino-Finance/scope/fe5352366a7215dda5c6f7b867a6bb5929d52c94/programs/scope/src/states/dated_price.rs"
+  },
+  {
+    "path": "programs/scope/src/states/mod.rs",
+    "repository": "Kamino-Finance/scope",
+    "revision": "fe5352366a7215dda5c6f7b867a6bb5929d52c94",
+    "sha256": "39294ee85025e1371158c173b619b5f6f32c123b7c0f6f4a6e769b0b38dc4edc",
+    "source_url": "https://raw.githubusercontent.com/Kamino-Finance/scope/fe5352366a7215dda5c6f7b867a6bb5929d52c94/programs/scope/src/states/mod.rs"
+  },
+  {
+    "path": "programs/scope/src/states/states_internal.rs",
+    "repository": "Kamino-Finance/scope",
+    "revision": "fe5352366a7215dda5c6f7b867a6bb5929d52c94",
+    "sha256": "be7fdecee58e82928fe0e4e0866c15671c31cbe48689d4dd05648b7c152c7dc9",
+    "source_url": "https://raw.githubusercontent.com/Kamino-Finance/scope/fe5352366a7215dda5c6f7b867a6bb5929d52c94/programs/scope/src/states/states_internal.rs"
+  },
+  {
+    "path": "programs/scope/src/oracles/fixed_price.rs",
+    "repository": "Kamino-Finance/scope",
+    "revision": "fe5352366a7215dda5c6f7b867a6bb5929d52c94",
+    "sha256": "27aa1f0f66c4fab2641028c9f35dbd2b5a551d422e09b77ebe2cd1f969322ca7",
+    "source_url": "https://raw.githubusercontent.com/Kamino-Finance/scope/fe5352366a7215dda5c6f7b867a6bb5929d52c94/programs/scope/src/oracles/fixed_price.rs"
+  },
+  {
+    "path": "LICENSE",
+    "repository": "Kamino-Finance/scope",
+    "revision": "fe5352366a7215dda5c6f7b867a6bb5929d52c94",
+    "sha256": "0388ef6a0ae8cd89d040229a0d822cd6081467db30238669b6f4453a4ae49948",
+    "source_url": "https://raw.githubusercontent.com/Kamino-Finance/scope/fe5352366a7215dda5c6f7b867a6bb5929d52c94/LICENSE"
+  }
+]

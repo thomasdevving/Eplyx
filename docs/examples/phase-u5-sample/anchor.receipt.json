@@ -1,0 +1,11 @@
+{
+  "method": "getSlot",
+  "endpoint": "https://api.mainnet-beta.solana.com",
+  "exit": 6,
+  "http_status": "000",
+  "body_bytes": 0,
+  "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "result": null,
+  "rpc_error": null,
+  "stderr": "curl: (6) Could not resolve host: api.mainnet-beta.solana.com\n"
+}

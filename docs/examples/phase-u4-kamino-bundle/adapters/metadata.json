@@ -1,0 +1,21 @@
+{
+  "name": "kamino-klend",
+  "version": 1,
+  "supports_cpi": true,
+  "actions": [
+    {
+      "semantic_action": "deposit",
+      "observations": 1
+    },
+    {
+      "semantic_action": "unknown",
+      "observations": 1
+    }
+  ],
+  "limitations": [
+    {
+      "code": "bounded_observations",
+      "detail": "This corpus covers only its recorded production interactions; no representativeness is claimed."
+    }
+  ]
+}

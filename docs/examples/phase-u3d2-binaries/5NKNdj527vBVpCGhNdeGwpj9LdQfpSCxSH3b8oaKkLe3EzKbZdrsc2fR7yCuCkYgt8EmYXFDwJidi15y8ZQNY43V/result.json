@@ -1,0 +1,47 @@
+{
+  "C4_binaries_identified": false,
+  "executable_transaction_constructed": false,
+  "execution_slot": 448194462,
+  "failure": {
+    "code": "dependency_binary_unavailable",
+    "detail": "retained transport failure",
+    "program_id": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+    "requested_slot": 448194461
+  },
+  "historical_state_acquisition": "not_attempted",
+  "kind": "experimental_envelope_dependency_capture",
+  "pre_slot": 448194461,
+  "programs": [
+    {
+      "binary_bytes": 105032,
+      "binary_file": "binaries/ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL.so",
+      "discovered_by": [
+        "top_level_instruction",
+        "execution_log"
+      ],
+      "program_id": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+      "provenance": {
+        "deploy_slot": null,
+        "loader": "legacy",
+        "observed_slot": 448194461,
+        "program_id": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "programdata_address": null,
+        "sha256": "6804554e69fd3a58caa191dc4a58f4c67223d30ca28ab8987f39fc18d2f7374d",
+        "upgrade_authority": null
+      },
+      "source": "historical_mainnet"
+    },
+    {
+      "discovered_by": [
+        "top_level_instruction",
+        "execution_log"
+      ],
+      "observed_slot": 448194461,
+      "program_id": "ComputeBudget111111111111111111111111111111",
+      "source": "builtin"
+    }
+  ],
+  "runtime_executed": false,
+  "signature": "5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V",
+  "slot_screening": null
+}

@@ -1,0 +1,583 @@
+{
+  "kind": "experimental_primary_raw_state_capture",
+  "production_replay_eligible": false,
+  "runtime_executed": false,
+  "sample_fingerprint": "b97116541aeefc6723ef91a1d38c9be52792d47316b573ac08d49484fd97d0af",
+  "targets": [
+    {
+      "acquired": [
+        {
+          "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+          "boundary": "pre",
+          "facts": {
+            "context_slot": 448195165,
+            "data_bytes": 28712,
+            "data_sha256": "c3fe3908e3c8778f0b99f6c83def59cc07c95ca7468e8f4585c5fe3d0caf6884",
+            "executable": false,
+            "lamports": 200726443,
+            "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+            "present": true,
+            "raw_account_json_sha256": "88f1b591553c84a75ad449b8cda67fe0f4c9a4bc5599cb7f96a8f9fcb138f37c",
+            "rent_epoch": 18446744073709551615,
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+          "boundary": "post",
+          "facts": {
+            "context_slot": 448195166,
+            "data_bytes": 28712,
+            "data_sha256": "7b412449f556f471ca5623ec1731f03366675455a1509a349388e89e90d231bc",
+            "executable": false,
+            "lamports": 200726443,
+            "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+            "present": true,
+            "raw_account_json_sha256": "867025d5688e6f8600adc9a0331e765b74a9d58f0e52b5a7cd91ee822280e110",
+            "rent_epoch": 18446744073709551615,
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        }
+      ],
+      "binary_evidence_sha256": "65d2c528bc8fb62cf0e00d4aefa3fb0f1e1dc52c0acf7e7b2c0faa649e5704a1",
+      "binary_evidence_source": "docs/examples/phase-u3d2-binaries/5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97/result.json",
+      "complete_historical_state_proven": false,
+      "failure": {
+        "reason": "invalid_json_response",
+        "request": {
+          "address": "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+          "boundary": "pre",
+          "method": "getAccountInfo",
+          "params": [
+            "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        }
+      },
+      "planned": [
+        {
+          "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+          "boundary": "pre",
+          "method": "getAccountInfo",
+          "params": [
+            "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+          "boundary": "post",
+          "method": "getAccountInfo",
+          "params": [
+            "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        },
+        {
+          "address": "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+          "boundary": "pre",
+          "method": "getAccountInfo",
+          "params": [
+            "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+          "boundary": "post",
+          "method": "getAccountInfo",
+          "params": [
+            "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        },
+        {
+          "address": "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+          "boundary": "pre",
+          "method": "getAccountInfo",
+          "params": [
+            "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+          "boundary": "post",
+          "method": "getAccountInfo",
+          "params": [
+            "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        },
+        {
+          "address": "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+          "boundary": "pre",
+          "method": "getAccountInfo",
+          "params": [
+            "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+          "boundary": "post",
+          "method": "getAccountInfo",
+          "params": [
+            "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        },
+        {
+          "address": "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+          "boundary": "pre",
+          "method": "getAccountInfo",
+          "params": [
+            "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+          "boundary": "post",
+          "method": "getAccountInfo",
+          "params": [
+            "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        },
+        {
+          "address": "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+          "boundary": "pre",
+          "method": "getAccountInfo",
+          "params": [
+            "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+          "boundary": "post",
+          "method": "getAccountInfo",
+          "params": [
+            "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        },
+        {
+          "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+          "boundary": "pre",
+          "method": "getAccountInfo",
+          "params": [
+            "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+          "boundary": "post",
+          "method": "getAccountInfo",
+          "params": [
+            "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        },
+        {
+          "address": "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+          "boundary": "pre",
+          "method": "getAccountInfo",
+          "params": [
+            "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+          "boundary": "post",
+          "method": "getAccountInfo",
+          "params": [
+            "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        },
+        {
+          "address": "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+          "boundary": "pre",
+          "method": "getAccountInfo",
+          "params": [
+            "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+          "boundary": "post",
+          "method": "getAccountInfo",
+          "params": [
+            "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        },
+        {
+          "address": "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+          "boundary": "pre",
+          "method": "getAccountInfo",
+          "params": [
+            "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+          "boundary": "post",
+          "method": "getAccountInfo",
+          "params": [
+            "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        },
+        {
+          "address": "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+          "boundary": "pre",
+          "method": "getAccountInfo",
+          "params": [
+            "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+          "boundary": "post",
+          "method": "getAccountInfo",
+          "params": [
+            "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        },
+        {
+          "address": "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+          "boundary": "pre",
+          "method": "getAccountInfo",
+          "params": [
+            "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+          "boundary": "post",
+          "method": "getAccountInfo",
+          "params": [
+            "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        },
+        {
+          "address": "11111111111111111111111111111111",
+          "boundary": "pre",
+          "method": "getAccountInfo",
+          "params": [
+            "11111111111111111111111111111111",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "11111111111111111111111111111111",
+          "boundary": "post",
+          "method": "getAccountInfo",
+          "params": [
+            "11111111111111111111111111111111",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        },
+        {
+          "address": "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+          "boundary": "pre",
+          "method": "getAccountInfo",
+          "params": [
+            "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+          "boundary": "post",
+          "method": "getAccountInfo",
+          "params": [
+            "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        },
+        {
+          "address": "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+          "boundary": "pre",
+          "method": "getAccountInfo",
+          "params": [
+            "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+          "boundary": "post",
+          "method": "getAccountInfo",
+          "params": [
+            "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        },
+        {
+          "address": "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+          "boundary": "pre",
+          "method": "getAccountInfo",
+          "params": [
+            "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+          "boundary": "post",
+          "method": "getAccountInfo",
+          "params": [
+            "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        }
+      ],
+      "raw_state_capture_complete": false,
+      "runtime_executed": false,
+      "signature": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97",
+      "slot": 448195166
+    },
+    {
+      "acquired": [],
+      "binary_evidence_sha256": "0e3318923fa80238fb687570103e4655f09b61adfb34870e0af86de61c42578a",
+      "binary_evidence_source": "docs/examples/phase-u3d2-binaries/55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk/result.json",
+      "complete_historical_state_proven": false,
+      "failure": {
+        "reason": "historical_binary_set_incomplete",
+        "request": null
+      },
+      "planned": [],
+      "raw_state_capture_complete": false,
+      "runtime_executed": false,
+      "signature": "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk",
+      "slot": 448194517
+    },
+    {
+      "acquired": [],
+      "binary_evidence_sha256": "2e41fd016713104b1b6dea50e54c102a76aee722daf5a521a1a4188f2ce1b851",
+      "binary_evidence_source": "docs/examples/phase-u3d2-binaries/5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V/result.json",
+      "complete_historical_state_proven": false,
+      "failure": {
+        "reason": "historical_binary_set_incomplete",
+        "request": null
+      },
+      "planned": [],
+      "raw_state_capture_complete": false,
+      "runtime_executed": false,
+      "signature": "5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V",
+      "slot": 448194462
+    },
+    {
+      "acquired": [],
+      "binary_evidence_sha256": "bfc0e6795b57e786eedf68f84d4c89f8fd43470667cb42335b6fe315088d1415",
+      "binary_evidence_source": "docs/examples/phase-u3d2-binaries/49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx/result.json",
+      "complete_historical_state_proven": false,
+      "failure": {
+        "reason": "historical_binary_set_incomplete",
+        "request": null
+      },
+      "planned": [],
+      "raw_state_capture_complete": false,
+      "runtime_executed": false,
+      "signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx",
+      "slot": 448194435
+    }
+  ]
+}

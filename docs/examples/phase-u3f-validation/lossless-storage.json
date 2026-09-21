@@ -1,0 +1,37 @@
+{
+  "encoding": "gzip, every original JSON byte retained",
+  "files": [
+    {
+      "original_file": "docs/examples/phase-u3f-T2-attempt-1/empty.json",
+      "original_bytes": 45335556,
+      "original_sha256": "df728338865e682087ed050770f03bae22895eaae5f38947e7c4735398d4f5fc",
+      "retained_file": "docs/examples/phase-u3f-T2-attempt-1/empty.json.gz",
+      "compressed_bytes": 1874804,
+      "compressed_sha256": "fdf4df92341579dce6002fa3f03379acb8745870da89ae85a2c76d084efbb223"
+    },
+    {
+      "original_file": "docs/examples/phase-u3f-T2-attempt-1/different.json",
+      "original_bytes": 45335727,
+      "original_sha256": "4a3c73d72e1e4a62820d742683ee98d08d7a1618686d63fbf5b55583843b20bc",
+      "retained_file": "docs/examples/phase-u3f-T2-attempt-1/different.json.gz",
+      "compressed_bytes": 1874886,
+      "compressed_sha256": "225b6b0652f5d7894b027d6db3107f14211e72e50a936e078fa68fd7ac9f2a22"
+    },
+    {
+      "original_file": "docs/examples/phase-u3f-T2-attempt-1/default.json",
+      "original_bytes": 45335643,
+      "original_sha256": "7e350302790e2261965a201941c062138ae76883529193518dd93bfb8b4d7042",
+      "retained_file": "docs/examples/phase-u3f-T2-attempt-1/default.json.gz",
+      "compressed_bytes": 1874848,
+      "compressed_sha256": "92d665594803a9351a0959d090b7604aa417abaac926ffc49eefcd43d9ba4fef"
+    },
+    {
+      "original_file": "docs/examples/phase-u3f-T2-causal-attempt-1/skip-scope.json",
+      "original_bytes": 45334995,
+      "original_sha256": "ff0da270522e76bb785e187e31c81bd2dcbc438bc0529b119aa6d424459d3853",
+      "retained_file": "docs/examples/phase-u3f-T2-causal-attempt-1/skip-scope.json.gz",
+      "compressed_bytes": 1874457,
+      "compressed_sha256": "fa802d0c8a2ae0c9e493b21e5aa19fe16014c478c10ffda22cbb7a440ad88d31"
+    }
+  ]
+}

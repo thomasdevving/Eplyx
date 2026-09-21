@@ -342,6 +342,11 @@ struct CorpusSelectArgs {
 
 #[derive(Subcommand)]
 enum CorpusCommand {
+    /// Publish the deterministic index for an existing immutable record store.
+    Publish {
+        #[arg(long)]
+        corpus: PathBuf,
+    },
     Build {
         #[arg(long)]
         cache: PathBuf,
@@ -1053,6 +1058,21 @@ fn run() -> Result<ExitCode> {
         Command::Corpus {
             command: CorpusCommand::Select(select_args),
         } => corpus_select(select_args),
+        Command::Corpus {
+            command: CorpusCommand::Publish { corpus },
+        } => {
+            let store = eplyx_engine::corpus_store::CorpusStore::open(&corpus)?;
+            let records = store.load_v2()?;
+            for record in &records {
+                store.insert_v2(record)?;
+            }
+            let manifest = store.publish_v2()?;
+            println!(
+                "published {} schema-2 observations: {}",
+                manifest.record_count, manifest.canonical_hash
+            );
+            Ok(ExitCode::SUCCESS)
+        }
         Command::Ci {
             command: CiCommand::Check(check_args),
         } => ci_check(check_args),
@@ -1518,8 +1538,14 @@ fn ci_check(args: CiCheckArgs) -> Result<ExitCode> {
             let code = error.exit_code();
             match args.format {
                 Format::Json => {
+                    let report_schema = std::fs::read(args.bundle.join("bundle.json"))
+                        .ok()
+                        .and_then(|bytes| serde_json::from_slice::<serde_json::Value>(&bytes).ok())
+                        .and_then(|manifest| manifest["schema_version"].as_u64())
+                        .filter(|version| *version == 2)
+                        .unwrap_or(u64::from(eplyx_engine::ci::CI_REPORT_SCHEMA));
                     let body = serde_json::json!({
-                        "schema_version": eplyx_engine::ci::CI_REPORT_SCHEMA,
+                        "schema_version": report_schema,
                         "status": "error",
                         "exit_code": code,
                         "error": format!("{error}"),
@@ -1690,6 +1716,20 @@ fn render_ci(report: &eplyx_engine::ci::CiReport) -> String {
 fn bundle_build(args: BundleBuildArgs) -> Result<ExitCode> {
     use eplyx_engine::bundle;
 
+    let corpus_manifest: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(args.corpus.join("manifest.json"))?)?;
+    if corpus_manifest["schema_version"] == 2 {
+        anyhow::ensure!(
+            args.target_size.is_none(),
+            "schema-2 bundle selection is not implemented; bundle the complete reviewed corpus"
+        );
+        let built =
+            eplyx_engine::universal::bundle::build(&args.corpus, &args.baseline, &args.out)?;
+        println!("EPLYX CI BUNDLE\n===============\n\nprogram: {}\nrecords: {}\nbundle sha256: {}\n\nwrote {}",
+            built.manifest.program_id, built.manifest.record_count, built.manifest.bundle_sha256, args.out.display());
+        return Ok(ExitCode::SUCCESS);
+    }
+
     let store = eplyx_engine::corpus_store::CorpusStore::open(&args.corpus)?;
     let all = store.load()?;
     let dependencies = args
@@ -1756,6 +1796,17 @@ fn bundle_build(args: BundleBuildArgs) -> Result<ExitCode> {
 
 /// Re-hash every byte a bundle pins.
 fn bundle_verify(args: BundleVerifyArgs) -> Result<ExitCode> {
+    let manifest: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(args.bundle.join("bundle.json"))?)?;
+    if manifest["schema_version"] == 2 {
+        let bundle = eplyx_engine::universal::bundle::UniversalBundle::open(&args.bundle)?;
+        match args.format {
+            Format::Json => println!("{}", serde_json::to_string_pretty(&bundle.manifest)?),
+            Format::Text => println!("EPLYX CI BUNDLE\n===============\n\nprogram: {}\nrecords: {}\nbundle sha256: {}\n\nEvery hash and historical reference verified against the bytes on disk.",
+                bundle.manifest.program_id, bundle.manifest.record_count, bundle.manifest.bundle_sha256),
+        }
+        return Ok(ExitCode::SUCCESS);
+    }
     let bundle = eplyx_engine::bundle::CiBundle::open(&args.bundle)?;
     match args.format {
         Format::Json => println!("{}", serde_json::to_string_pretty(bundle.manifest())?),

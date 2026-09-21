@@ -1,0 +1,80 @@
+{
+  "T1_gate": "T1-A verified from raw evidence",
+  "kind": "exact_T2_T4_missing_context_recovery",
+  "targets": [
+    {
+      "binary_set_complete": false,
+      "facts": {
+        "data_bytes": 524288,
+        "data_sha256": "07854d2fef297a06ba81685e660c332de36d5d18d546927d30daad6d7fda1541",
+        "executable": false,
+        "lamports": 72981780480,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      },
+      "failure": null,
+      "method": "getAccountInfo",
+      "params": [
+        "5Fz4tY19ihWJAW1j9RNoEQJKSdn5mQHjcVrcZ5BRK5E9",
+        {
+          "commitment": "finalized",
+          "dataSlice": {
+            "length": 524288,
+            "offset": 3670016
+          },
+          "encoding": "base64",
+          "slot": 448194516
+        }
+      ],
+      "runtime_executed": false,
+      "target": "T2"
+    },
+    {
+      "binary_set_complete": false,
+      "facts": {
+        "data_bytes": 524288,
+        "data_sha256": "0a3b1b212d9fa59a3d16fe9ed2f1addd11e53d7cdd066140ea096337b548b0c7",
+        "executable": false,
+        "lamports": 72981780480,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      },
+      "failure": null,
+      "method": "getAccountInfo",
+      "params": [
+        "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+        {
+          "commitment": "finalized",
+          "dataSlice": {
+            "length": 524288,
+            "offset": 0
+          },
+          "encoding": "base64",
+          "slot": 448194461
+        }
+      ],
+      "runtime_executed": false,
+      "target": "T3"
+    },
+    {
+      "binary_set_complete": false,
+      "facts": {
+        "data_bytes": 36,
+        "data_sha256": "f4aba07704156a828ec27a590398cc17b3227924465d012c6b2edf3163af05b3",
+        "executable": true,
+        "lamports": 1141440,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111"
+      },
+      "failure": null,
+      "method": "getAccountInfo",
+      "params": [
+        "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448194434
+        }
+      ],
+      "runtime_executed": false,
+      "target": "T4"
+    }
+  ]
+}

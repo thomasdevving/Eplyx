@@ -1,0 +1,116 @@
+{
+  "T1": {
+    "ATA_executed_locally": false,
+    "ATA_historical_existing_account_proof": false,
+    "Scope_executed_locally": false,
+    "Scope_to_Kamino_effect": "not measured",
+    "blocker_category": "HistoricalState",
+    "blocker_detail": "Qualified archive configuration unavailable in process. This is not an observed provider transport/state failure.",
+    "decision": "T1-D",
+    "historical_protocol_state_accounts_acquired": 0,
+    "lookup_table_accounts": 1,
+    "message_accounts": 23,
+    "missing_historical_message_accounts": 16,
+    "native_v0_integration": "not attempted; engine unchanged",
+    "network_requests": 0,
+    "outcome_fidelity": "not attempted",
+    "post_state_fidelity": "not attempted",
+    "production_record_exists": false,
+    "programdata_accounts": 4,
+    "runtime_context_complete": false,
+    "semantic_evaluation": "not attempted",
+    "signature": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97",
+    "state_requests": 0
+  },
+  "T2_T4": {
+    "binary_retries": "not attempted; original failures preserved",
+    "replay": "not attempted"
+  },
+  "adapter_4_decision": "B. MODERN REPLAY STILL HAS A GENERIC BLOCKER",
+  "adapter_contract_v2_decision": "STILL NEED ADAPTER #4; defer that adapter until generic replay requirements are closed",
+  "blockers": {
+    "Binary": 3,
+    "Envelope": 4,
+    "FailedOriginalPolicy": 1,
+    "HistoricalState": 1
+  },
+  "claims_justified": [
+    "Existing U3A/U3B/U3C controls independently reproduced offline",
+    "T1 exact message and observed executable account inventory derived without RPC",
+    "Historical owners not acquired remain unknown",
+    "Existing complete account screen preserved"
+  ],
+  "claims_prohibited": [
+    "complete historical execution environment",
+    "native v0 production execution",
+    "Scope mutation or causal effect proven locally",
+    "historical ATA no-creation path proven",
+    "outcome/post-state fidelity",
+    "production-assured Kamino subjects",
+    "production-derived Kamino ReplayRecord",
+    "production corpus or candidate differential"
+  ],
+  "commit_created": false,
+  "controlled_candidate_differential": "not reached",
+  "corpus_baseline_self_check": "not reached",
+  "correctness_bugs_found": [],
+  "experimental_corpus": "not constructed",
+  "final_head": "84ba410287a4a7ed315a7d779dbaad625fe3bf39",
+  "funnel": {
+    "captured_transactions": 156,
+    "complete_historical_state_sets": 0,
+    "complete_observed_binary_sets": 1,
+    "execution_attempted": 0,
+    "lut_proven_successful_action_observations": 9,
+    "lut_proven_successful_transactions": 7,
+    "lut_proven_transactions_all_status": 8,
+    "outcome_matched": 0,
+    "post_state_fidelity_matched": 0,
+    "primary_envelope_admitted_transactions": 4,
+    "production_assured_semantic_subjects": 0,
+    "recognized_action_observations_all_status": 12,
+    "recognized_action_transactions_all_status": 9,
+    "successful_recognized_action_observations": 10,
+    "successful_recognized_transactions": 8
+  },
+  "initial_head": "84ba410287a4a7ed315a7d779dbaad625fe3bf39",
+  "kind": "U3D_T1_inventory_blocked_report",
+  "multi_action_attribution": "still unsupported; no observations merged",
+  "mutations": {
+    "new_source_mutants_attempted": 0,
+    "required_runtime_campaign": "deferred at stage gate; not passed"
+  },
+  "next_phase": "Resume T1 only with qualified archive configuration; acquire/prove Stage 1 bytes, establish Stage 2 bank context, complete Stage 3 acquisition checks, then native v0 and fidelity stages. Keep all later cohort expansion gated on T1-A.",
+  "performance": {
+    "execution_seconds": null,
+    "network_requests": 0,
+    "operation": "offline frozen-hash verification and inventory rederivation",
+    "result": {
+      "inventory_sha256": "db925ad29690298c6ccc65579c91393e34bf31103eeab692626d4c73f66e78c5",
+      "message_accounts": 23,
+      "missing_historical_message_accounts": 16,
+      "programdata_accounts": 4,
+      "runtime_executed": false,
+      "verified": true
+    },
+    "wall_seconds": 1.636507041985169
+  },
+  "separate_ATA_case": "not broadened",
+  "stages": {
+    "0": "passed",
+    "1": "partial: complete message/observed-binary inventory; historical Scope/KLend/ATA bytes not proven",
+    "16-19": "terminal reporting and decisions only",
+    "2-7": "not reached; preliminary runtime source review only",
+    "8": "T1-D stop classification",
+    "9-15": "not reached; no broadening"
+  },
+  "storage": "See storage.json; no new raw account/binary/state acquisition bytes",
+  "tests": {
+    "new_inventory_tests": 8,
+    "new_runtime_tests": 0,
+    "normal_passed": 582
+  },
+  "validated_production_Kamino_observations": 0,
+  "worktree": "additive uncommitted inventory scripts, tests, documentation and evidence; existing tracked files unchanged",
+  "wrapped_SOL_System_lifecycle": "not reached"
+}

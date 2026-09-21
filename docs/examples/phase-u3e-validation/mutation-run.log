@@ -1,0 +1,16 @@
+1: killed: empty body becomes missing account
+2: killed: current state fallback after transport error
+3: killed: retry changes historical slot
+4: killed: silent provider switch
+5: killed: infinite retry policy
+6: killed: credential URL persisted
+7: killed: contradictory account ignored
+8: killed: success deletes failure provenance
+9: killed: required state absence accepted
+10: killed: wrong owner accepted
+11: killed: wrong historical pre hash accepted
+12: killed: post context seeds pre boundary
+13: killed: same-slot interference ignored
+14: killed: Scope mapping omitted
+15: killed: ATA existence accepted from metadata
+16: killed: current oracle state substituted

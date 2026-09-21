@@ -1,0 +1,45 @@
+{
+  "accounts_mode_screen_attempts": 6,
+  "accounts_mode_screen_body_bytes": 15918351,
+  "accounts_mode_screen_successes": 6,
+  "bundle_bytes": 0,
+  "cas_evidence_bytes": 0,
+  "classification_json_bytes": 96376,
+  "full_block_attempts": 22,
+  "full_block_body_bytes": 51547802,
+  "full_block_http_statuses": {
+    "200": 13,
+    "429": 9
+  },
+  "full_block_successes": 13,
+  "get_transaction_body_bytes": 123496,
+  "get_transaction_curl_elapsed_sum_seconds": 12.633,
+  "get_transaction_http_statuses": {
+    "200": 10,
+    "429": 190
+  },
+  "get_transaction_v1_unsupported": 3,
+  "local_diagnostics": [
+    {
+      "elapsed_seconds": 0.695,
+      "exit": 0,
+      "output_sha256": "875d0a93c72b8d647e1341d88c164e44a7e4dba58b1c35c217373af3e29a24df",
+      "output_unchanged": true,
+      "step": "sample_classification"
+    },
+    {
+      "elapsed_seconds": 0.669,
+      "exit": 0,
+      "output_sha256": "e9720ca6cecb0cd8a6cf2c053f0f2e9f47b953e3e6ba91ef3ebfc6faf979e13a",
+      "output_unchanged": true,
+      "step": "same_slot_screen"
+    }
+  ],
+  "offline_replay_performed": false,
+  "record_bytes": 0,
+  "same_slot_json_bytes": 44601,
+  "sample_dir_bytes_excluding_measurement": 71163686,
+  "sample_dir_files_excluding_measurement": 670,
+  "transaction_requests": 200,
+  "valid_get_transaction": 7
+}

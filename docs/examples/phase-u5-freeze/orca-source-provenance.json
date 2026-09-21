@@ -1,0 +1,103 @@
+{
+  "current_binary_equivalent_to_historical": null,
+  "current_program_observation": {
+    "context_slot": 448800320,
+    "loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+    "programdata_address": "CtXfPzz36dH5Ws4UYKZvrQ1Xqzn42ecDW6y8NKuiN8nD",
+    "requested_historical": false,
+    "response_sha256": "ce8e92b21724feddc9c93b182f3d5c691e5b21e8b8609173b376fc8ab2b9e14c"
+  },
+  "current_programdata_header_observation": {
+    "account_space": 10485760,
+    "authority": "GwH3Hiv5mACLX3ufTw1pFsrhSPon5tdw252DBs4Rx4PV",
+    "context_slot": 448800414,
+    "deployment_slot": 440170207,
+    "requested_historical": false,
+    "response_sha256": "8dd9693340e17d3073543148c14dc953e6473f7aac87431eda5af2669cbb370a"
+  },
+  "historical_elf_acquired": false,
+  "official_idl_instruction_count": 66,
+  "official_idl_sha256": "f3e95ddf321d24b71ce56f5ba842055899f32a1feee3be9f0d3ccf2bd6a55bb8",
+  "official_idl_url": "https://cdn.jsdelivr.net/npm/@orca-so/whirlpools-sdk@0.22.0/dist/artifacts/whirlpool.json",
+  "official_repository": "https://github.com/orca-so/whirlpools",
+  "osec_current_status": {
+    "commit": "None",
+    "is_verified": false,
+    "on_chain_hash": "46328660fd235e5666e879fdc1a3556fe62980aff504b5a2dfc8acc610154992",
+    "response_sha256": "c1558bcdcf3eaf17c09e816ec050f1d613b548f5fc3dff77b2d98045d9c96598"
+  },
+  "replayer_commit": "95b595cad50f1f5147c3524613c805c516f03005",
+  "replayer_consulted_for_documentation": true,
+  "replayer_executed": false,
+  "replayer_license": "MIT",
+  "replayer_repository": "https://github.com/orca-so/whirlpool-tx-replayer",
+  "source_commit": "408c945fef4c49ab70def4303377cfaf8f0f3c99",
+  "source_files": [
+    {
+      "git_blob_sha1": "b23af5cac9948597e9f20dce031eb7bd9d16377d",
+      "path": "LICENSE",
+      "size": 8306
+    },
+    {
+      "git_blob_sha1": "62c6eb00e0b96fdcadffec26e5539970283e40d3",
+      "path": "README.md",
+      "size": 6436
+    },
+    {
+      "git_blob_sha1": "33e112398ab494bc65079b1a6240b99b834300d0",
+      "path": "idl/README.md",
+      "size": 184
+    },
+    {
+      "git_blob_sha1": "3ee6f9f65a9722b8d01ac8e30fa8d935611e7a25",
+      "path": "legacy-sdk/whirlpool/package.json",
+      "size": 1495
+    },
+    {
+      "git_blob_sha1": "0fffa255e01f8ac5cbe7e3b03845bf19d14f72b7",
+      "path": "programs/whirlpool/src/instructions/swap.rs",
+      "size": 4778
+    },
+    {
+      "git_blob_sha1": "2284b67082c0e1e60bd67b2f96065a627066292a",
+      "path": "programs/whirlpool/src/instructions/v2/swap.rs",
+      "size": 11666
+    },
+    {
+      "git_blob_sha1": "69e2367f6323ebf45bfb6abe8e182db0a023aa29",
+      "path": "programs/whirlpool/src/lib.rs",
+      "size": 62738
+    },
+    {
+      "git_blob_sha1": "7159756d7c4fd8e2e1feb9ff9034c194e7bf390f",
+      "path": "programs/whirlpool/src/state/dynamic_tick_array.rs",
+      "size": 39908
+    },
+    {
+      "git_blob_sha1": "6410e4ea10ad2fecdce7db71a490e4ba8d8bc54a",
+      "path": "programs/whirlpool/src/state/fixed_tick_array.rs",
+      "size": 15284
+    },
+    {
+      "git_blob_sha1": "026e54a01bb09c18719b3b58e6e2c093b2c71555",
+      "path": "programs/whirlpool/src/state/oracle.rs",
+      "size": 87206
+    },
+    {
+      "git_blob_sha1": "f5e318425a0f9672fc8b30873fd29fed34381dab",
+      "path": "programs/whirlpool/src/state/tick.rs",
+      "size": 11499
+    },
+    {
+      "git_blob_sha1": "6c7a97d3b837d4dca1c035ddab5f89c039303523",
+      "path": "programs/whirlpool/src/state/tick_array.rs",
+      "size": 30041
+    },
+    {
+      "git_blob_sha1": "bc02ce0140434ae3ef0414ae72ad5a33eb451e01",
+      "path": "programs/whirlpool/src/state/whirlpool.rs",
+      "size": 27097
+    }
+  ],
+  "source_license": "Orca License (since 2025-02-27; prior code Apache-2.0)"
+}

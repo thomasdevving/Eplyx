@@ -1,0 +1,74 @@
+{
+  "T1": {
+    "elapsed_seconds": 26.290944124979433,
+    "live_transport_forbidden": true,
+    "offline_reexecution_passed": true,
+    "provider_environment_removed": true,
+    "record_hashes_verified": true,
+    "variants": [
+      {
+        "evidence_sha256": "83f479faf1fe0f809c7c9c5c1db16047bb6c94d4cf3e1d549fbb3b19bc7f7990",
+        "execution_seconds": 0.021731875,
+        "fidelity": "matched",
+        "pre_state_exact": true,
+        "preparation_seconds": 3.710712291,
+        "variant": "different"
+      },
+      {
+        "evidence_sha256": "83f479faf1fe0f809c7c9c5c1db16047bb6c94d4cf3e1d549fbb3b19bc7f7990",
+        "execution_seconds": 0.074599875,
+        "fidelity": "matched",
+        "pre_state_exact": true,
+        "preparation_seconds": 4.138848833,
+        "variant": "empty"
+      },
+      {
+        "evidence_sha256": "83f479faf1fe0f809c7c9c5c1db16047bb6c94d4cf3e1d549fbb3b19bc7f7990",
+        "execution_seconds": 0.022967333,
+        "fidelity": "matched",
+        "pre_state_exact": true,
+        "preparation_seconds": 4.192085125,
+        "variant": "default"
+      }
+    ]
+  },
+  "T2": [
+    {
+      "baseline_self_findings": [],
+      "comparison_seconds": 0.002757832990027964,
+      "evidence_sha256": "00dd0b8a5b1c2a3bacc43f1660c323ad206de4ce0c16dc5787f51a9f71c3e4cb",
+      "execution_seconds": 0.027748959,
+      "fidelity": "matched",
+      "pre_state_exact": true,
+      "preparation_seconds": 5.943552,
+      "semantic_seconds_including_wrapper": 0.18470150005305186,
+      "variant": "different"
+    },
+    {
+      "baseline_self_findings": [],
+      "comparison_seconds": 0.0026467920397408307,
+      "evidence_sha256": "00dd0b8a5b1c2a3bacc43f1660c323ad206de4ce0c16dc5787f51a9f71c3e4cb",
+      "execution_seconds": 0.035358334,
+      "fidelity": "matched",
+      "pre_state_exact": true,
+      "preparation_seconds": 5.59331875,
+      "semantic_seconds_including_wrapper": 0.10403820901410654,
+      "variant": "empty"
+    },
+    {
+      "baseline_self_findings": [],
+      "comparison_seconds": 0.005684915988240391,
+      "evidence_sha256": "00dd0b8a5b1c2a3bacc43f1660c323ad206de4ce0c16dc5787f51a9f71c3e4cb",
+      "execution_seconds": 0.035676417,
+      "fidelity": "matched",
+      "pre_state_exact": true,
+      "preparation_seconds": 5.274472542,
+      "semantic_seconds_including_wrapper": 0.15622679103398696,
+      "variant": "default"
+    }
+  ],
+  "elapsed_seconds": 57.945065499981865,
+  "offline_reexecution_passed": true,
+  "record_hashes_verified": true,
+  "records": 2
+}

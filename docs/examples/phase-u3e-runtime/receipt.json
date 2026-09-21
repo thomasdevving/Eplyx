@@ -1,0 +1,209 @@
+{
+  "attempts": [
+    {
+      "account": "SysvarC1ock11111111111111111111111111111111",
+      "attempt": 1,
+      "backoff_seconds": 0,
+      "body_bytes": 308,
+      "body_empty": false,
+      "body_file": "rpc/413621cc188f17ba287ab78ebd4f99cbcc0cf53596de2dd4367c80701bc2d07d-1.body",
+      "body_sha256": "b2cf109dd02eca37994561f0d58318601fabd47df0c3395fe0f6ef605cb7b748",
+      "content_length_header": "308",
+      "content_type": "application/json",
+      "elapsed_seconds": 0.18769233400234953,
+      "failure_class": null,
+      "http_status": 200,
+      "json_rpc_error": null,
+      "logical_request_id": "413621cc188f17ba287ab78ebd4f99cbcc0cf53596de2dd4367c80701bc2d07d",
+      "method": "getAccountInfo",
+      "params": [
+        "SysvarC1ock11111111111111111111111111111111",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "process_exit_code": 0,
+      "process_timeout": false,
+      "provider": "https://solana-mainnet.g.alchemy.com",
+      "provider_trace_ids": {},
+      "requested_slot": 448195166,
+      "response_headers": {
+        "content-length": "308",
+        "content-type": "application/json",
+        "date": "Sat, 19 Sep 2026 13:37:01 GMT",
+        "server": "istio-envoy"
+      },
+      "response_withheld": false,
+      "started_at_utc": "2026-09-19T13:37:00.914633+00:00",
+      "stderr": "",
+      "validation_failure": null
+    },
+    {
+      "account": "SysvarRent111111111111111111111111111111111",
+      "attempt": 1,
+      "backoff_seconds": 0,
+      "body_bytes": 276,
+      "body_empty": false,
+      "body_file": "rpc/3d25da3f801f9ee64956772360cc9c45e720faba27d66fe6933ac393972e87d3-1.body",
+      "body_sha256": "4e4fc5d49567497dfaf3742fe547706ceca976b77cd6e125e905042535df1690",
+      "content_length_header": "276",
+      "content_type": "application/json",
+      "elapsed_seconds": 0.3390458329813555,
+      "failure_class": null,
+      "http_status": 200,
+      "json_rpc_error": null,
+      "logical_request_id": "3d25da3f801f9ee64956772360cc9c45e720faba27d66fe6933ac393972e87d3",
+      "method": "getAccountInfo",
+      "params": [
+        "SysvarRent111111111111111111111111111111111",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "process_exit_code": 0,
+      "process_timeout": false,
+      "provider": "https://solana-mainnet.g.alchemy.com",
+      "provider_trace_ids": {},
+      "requested_slot": 448195166,
+      "response_headers": {
+        "content-length": "276",
+        "content-type": "application/json",
+        "date": "Sat, 19 Sep 2026 13:37:01 GMT",
+        "server": "istio-envoy"
+      },
+      "response_withheld": false,
+      "started_at_utc": "2026-09-19T13:37:01.136261+00:00",
+      "stderr": "",
+      "validation_failure": null
+    },
+    {
+      "account": "SysvarEpochSchedu1e111111111111111111111111",
+      "attempt": 1,
+      "backoff_seconds": 0,
+      "body_bytes": 296,
+      "body_empty": false,
+      "body_file": "rpc/431d54c29f7101c2290603064a7a0987ef04cf7b0524933e61e18ebddcd84142-1.body",
+      "body_sha256": "32530439dd507275e3f40fe6acecef9176ff423af0d024f65c42fd330f519b24",
+      "content_length_header": "296",
+      "content_type": "application/json",
+      "elapsed_seconds": 0.3471502079628408,
+      "failure_class": null,
+      "http_status": 200,
+      "json_rpc_error": null,
+      "logical_request_id": "431d54c29f7101c2290603064a7a0987ef04cf7b0524933e61e18ebddcd84142",
+      "method": "getAccountInfo",
+      "params": [
+        "SysvarEpochSchedu1e111111111111111111111111",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "process_exit_code": 0,
+      "process_timeout": false,
+      "provider": "https://solana-mainnet.g.alchemy.com",
+      "provider_trace_ids": {},
+      "requested_slot": 448195166,
+      "response_headers": {
+        "content-length": "296",
+        "content-type": "application/json",
+        "date": "Sat, 19 Sep 2026 13:37:02 GMT",
+        "server": "istio-envoy"
+      },
+      "response_withheld": false,
+      "started_at_utc": "2026-09-19T13:37:01.476318+00:00",
+      "stderr": "",
+      "validation_failure": null
+    },
+    {
+      "account": "SysvarS1otHashes111111111111111111111111111",
+      "attempt": 1,
+      "backoff_seconds": 0,
+      "body_bytes": 98,
+      "body_empty": false,
+      "body_file": "rpc/9648e69345368c47af1b898e14a12f81b4161df04332a2f6a1e82c40544a14dc-1.body",
+      "body_sha256": "5fd858ec68cd6b74c33a120a1aded1d557ebd50b8d09d87fcceaee03fe6ea121",
+      "content_length_header": "98",
+      "content_type": "application/json",
+      "elapsed_seconds": 0.16073183296248317,
+      "failure_class": "missing_account",
+      "http_status": 200,
+      "json_rpc_error": null,
+      "logical_request_id": "9648e69345368c47af1b898e14a12f81b4161df04332a2f6a1e82c40544a14dc",
+      "method": "getAccountInfo",
+      "params": [
+        "SysvarS1otHashes111111111111111111111111111",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "process_exit_code": 0,
+      "process_timeout": false,
+      "provider": "https://solana-mainnet.g.alchemy.com",
+      "provider_trace_ids": {},
+      "requested_slot": 448195166,
+      "response_headers": {
+        "content-length": "98",
+        "content-type": "application/json",
+        "date": "Sat, 19 Sep 2026 13:37:02 GMT",
+        "server": "istio-envoy"
+      },
+      "response_withheld": false,
+      "started_at_utc": "2026-09-19T13:37:01.824567+00:00",
+      "stderr": "",
+      "validation_failure": null
+    }
+  ],
+  "complete": true,
+  "kind": "u3e_diagnostic_transport",
+  "policy": {
+    "backoff_seconds": [
+      0,
+      2,
+      5,
+      10
+    ],
+    "concurrency": 1,
+    "kind": "u3e_exact_historical_transport_policy_v1",
+    "max_attempts_per_context": 4,
+    "mode": "Exact T1 Scope mappings request first; full T1 state only after diagnosed probe success; T2-T4 require T1-A.",
+    "nonretryable": [
+      "http_status",
+      "json_rpc_error",
+      "missing_account",
+      "slot_context_mismatch",
+      "contradictory_account"
+    ],
+    "process_timeout_seconds": 25,
+    "provider_fallback": false,
+    "redirects": false,
+    "request_timeout_seconds": 20,
+    "retryable": [
+      "dns_failure",
+      "connect_failure",
+      "tls_failure",
+      "rate_limited",
+      "gateway_failure",
+      "timeout",
+      "empty_http_body",
+      "truncated_body",
+      "invalid_json",
+      "unknown_transport_failure"
+    ],
+    "slot_fallback": false
+  },
+  "provider": "https://solana-mainnet.g.alchemy.com",
+  "qualification": {
+    "genesis_hash": "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d",
+    "scheme_host": "https://solana-mainnet.g.alchemy.com",
+    "validation_artifact_sha256": "c21a90f2a47425dfa4f925c344bcbbd4d667367547bf3c559f74c35a121e95e4",
+    "visibility": "finalized_end_of_execution_slot"
+  }
+}

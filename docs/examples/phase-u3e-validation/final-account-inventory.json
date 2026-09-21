@@ -1,0 +1,3416 @@
+{
+  "account_rows": [
+    {
+      "PostStateReference": {
+        "kind": "historical_account_and_validator_metadata",
+        "slot": 448195166
+      },
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+      "binary_provenance": null,
+      "captured_boundary_facts": [
+        {
+          "address": "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+          "boundary": "pre",
+          "facts": {
+            "anchor_type": null,
+            "context_slot": 448195165,
+            "data_bytes": 0,
+            "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 84251529,
+            "owner": "11111111111111111111111111111111",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "d2a17b03067e0d37e341148de9f82407eee6eaa57ab3baeeb9cb21f94f490e85",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+          "boundary": "post",
+          "facts": {
+            "anchor_type": null,
+            "context_slot": 448195166,
+            "data_bytes": 0,
+            "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 84186003,
+            "owner": "11111111111111111111111111111111",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "96c6f88f76db5f92c9fcd9fea403e4ba592c2662e60923dc418e3c8a41a1be0a",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        }
+      ],
+      "categories": [
+        "Payer",
+        "Authority"
+      ],
+      "classes": [
+        "static",
+        "writable",
+        "signer"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": null,
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "pre_boundary_facts": {
+          "anchor_type": null,
+          "context_slot": 448195165,
+          "data_bytes": 0,
+          "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "executable": false,
+          "execution_seed_admitted": false,
+          "lamports": 84251529,
+          "owner": "11111111111111111111111111111111",
+          "owner_check": "role_and_historical_boundary",
+          "present": true,
+          "raw_account_json_sha256": "d2a17b03067e0d37e341148de9f82407eee6eaa57ab3baeeb9cb21f94f490e85",
+          "rent_epoch": 18446744073709551615,
+          "typed_protocol_and_extension_validation": "pending",
+          "validator_lamports_match": true
+        },
+        "source": "phase-u3e-state"
+      },
+      "historically_acquired": true,
+      "is_signer": true,
+      "is_writable": true,
+      "message_index": 0,
+      "observed_invocation": false,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "11111111111111111111111111111111",
+      "owner_evidence": "historical_raw_boundary_response",
+      "post_reference_slot": 448195166,
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "roles": [
+        {
+          "account_position": 0,
+          "outer_index": 1,
+          "role": "ata-payer"
+        },
+        {
+          "account_position": 2,
+          "outer_index": 1,
+          "role": "ata-wallet"
+        },
+        {
+          "account_position": 0,
+          "outer_index": 5,
+          "role": "owner"
+        }
+      ],
+      "runtime_provided": false,
+      "token_metadata": null
+    },
+    {
+      "PostStateReference": {
+        "kind": "historical_account_and_validator_metadata",
+        "slot": 448195166
+      },
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+      "binary_provenance": null,
+      "captured_boundary_facts": [
+        {
+          "address": "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+          "boundary": "pre",
+          "facts": {
+            "anchor_type": "OracleTwaps",
+            "context_slot": 448195165,
+            "data_bytes": 344136,
+            "data_sha256": "d107cdaeb3b97e7dc14c30bc05e4fe49cd72617a1a1b947e25cd3279eb6018ac",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 2396077462,
+            "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "7678bbbfe3d11f85c6d487b9fafb01cc087af1c0c729ab5f54561ecd4bd02814",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+          "boundary": "post",
+          "facts": {
+            "anchor_type": "OracleTwaps",
+            "context_slot": 448195166,
+            "data_bytes": 344136,
+            "data_sha256": "d107cdaeb3b97e7dc14c30bc05e4fe49cd72617a1a1b947e25cd3279eb6018ac",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 2396077462,
+            "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "7678bbbfe3d11f85c6d487b9fafb01cc087af1c0c729ab5f54561ecd4bd02814",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        }
+      ],
+      "categories": [
+        "OracleState"
+      ],
+      "classes": [
+        "static",
+        "writable",
+        "oracle_state"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "pre_boundary_facts": {
+          "anchor_type": "OracleTwaps",
+          "context_slot": 448195165,
+          "data_bytes": 344136,
+          "data_sha256": "d107cdaeb3b97e7dc14c30bc05e4fe49cd72617a1a1b947e25cd3279eb6018ac",
+          "executable": false,
+          "execution_seed_admitted": false,
+          "lamports": 2396077462,
+          "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+          "owner_check": "role_and_historical_boundary",
+          "present": true,
+          "raw_account_json_sha256": "7678bbbfe3d11f85c6d487b9fafb01cc087af1c0c729ab5f54561ecd4bd02814",
+          "rent_epoch": 18446744073709551615,
+          "typed_protocol_and_extension_validation": "pending",
+          "validator_lamports_match": true
+        },
+        "source": "phase-u3e-state"
+      },
+      "historically_acquired": true,
+      "is_signer": false,
+      "is_writable": true,
+      "message_index": 1,
+      "observed_invocation": false,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+      "owner_evidence": "historical_raw_boundary_response",
+      "post_reference_slot": 448195166,
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "roles": [
+        {
+          "account_position": 2,
+          "outer_index": 0,
+          "role": "oracle-twaps"
+        }
+      ],
+      "runtime_provided": false,
+      "token_metadata": null
+    },
+    {
+      "PostStateReference": {
+        "kind": "historical_account_and_validator_metadata",
+        "slot": 448195166
+      },
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+      "binary_provenance": null,
+      "captured_boundary_facts": [
+        {
+          "address": "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+          "boundary": "pre",
+          "facts": {
+            "anchor_type": "Obligation",
+            "context_slot": 448195165,
+            "data_bytes": 3344,
+            "data_sha256": "68051b7f5f658e9549d92dd8ecd86301410a807d0de32c6bb65ddef9d6f030ed",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 24165120,
+            "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "5463477d6ef99348002591e2c02c6b1cb72d3fb72021e414b41be0b09bebdc3b",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+          "boundary": "post",
+          "facts": {
+            "anchor_type": "Obligation",
+            "context_slot": 448195166,
+            "data_bytes": 3344,
+            "data_sha256": "5e0570ccdb8401db8969fb6fd400cdf2357fc3bcf975fe089c51096130e3554c",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 24165120,
+            "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "62860eab446fd64fd12349db7db39862377eae715bb27df6e8fb969a72d05433",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        }
+      ],
+      "categories": [
+        "ProtocolState"
+      ],
+      "classes": [
+        "static",
+        "writable",
+        "protocol_state"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "pre_boundary_facts": {
+          "anchor_type": "Obligation",
+          "context_slot": 448195165,
+          "data_bytes": 3344,
+          "data_sha256": "68051b7f5f658e9549d92dd8ecd86301410a807d0de32c6bb65ddef9d6f030ed",
+          "executable": false,
+          "execution_seed_admitted": false,
+          "lamports": 24165120,
+          "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+          "owner_check": "role_and_historical_boundary",
+          "present": true,
+          "raw_account_json_sha256": "5463477d6ef99348002591e2c02c6b1cb72d3fb72021e414b41be0b09bebdc3b",
+          "rent_epoch": 18446744073709551615,
+          "typed_protocol_and_extension_validation": "pending",
+          "validator_lamports_match": true
+        },
+        "source": "phase-u3e-state"
+      },
+      "historically_acquired": true,
+      "is_signer": false,
+      "is_writable": true,
+      "message_index": 2,
+      "observed_invocation": false,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+      "owner_evidence": "historical_raw_boundary_response",
+      "post_reference_slot": 448195166,
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "roles": [
+        {
+          "account_position": 1,
+          "outer_index": 4,
+          "role": "obligation"
+        },
+        {
+          "account_position": 1,
+          "outer_index": 5,
+          "role": "obligation"
+        }
+      ],
+      "runtime_provided": false,
+      "token_metadata": null
+    },
+    {
+      "PostStateReference": {
+        "kind": "historical_account_and_validator_metadata",
+        "slot": 448195166
+      },
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+      "binary_provenance": null,
+      "captured_boundary_facts": [
+        {
+          "address": "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+          "boundary": "pre",
+          "facts": {
+            "anchor_type": null,
+            "context_slot": 448195165,
+            "data_bytes": 179,
+            "data_sha256": "4b8b6a0b70d8176b0087132f360533337f84400b884970ceecd54bde42672f8e",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 2136720,
+            "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "4e611d3cc808437860b5a93b252599ced63f8dece3b18af722e2790621f1a29a",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+          "boundary": "post",
+          "facts": {
+            "anchor_type": null,
+            "context_slot": 448195166,
+            "data_bytes": 179,
+            "data_sha256": "1f45eae302bcc52b52e28ccc4f7a67589b520445b87d731df116edcada9c2072",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 2136720,
+            "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "b3d6f6f9d7f05b5495c6ae9908013e76704dd7fa919ac7f0c370acbdc3b5aac8",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        }
+      ],
+      "categories": [
+        "TokenAccount"
+      ],
+      "classes": [
+        "static",
+        "writable",
+        "token_account"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "pre_boundary_facts": {
+          "anchor_type": null,
+          "context_slot": 448195165,
+          "data_bytes": 179,
+          "data_sha256": "4b8b6a0b70d8176b0087132f360533337f84400b884970ceecd54bde42672f8e",
+          "executable": false,
+          "execution_seed_admitted": false,
+          "lamports": 2136720,
+          "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "owner_check": "role_and_historical_boundary",
+          "present": true,
+          "raw_account_json_sha256": "4e611d3cc808437860b5a93b252599ced63f8dece3b18af722e2790621f1a29a",
+          "rent_epoch": 18446744073709551615,
+          "typed_protocol_and_extension_validation": "pending",
+          "validator_lamports_match": true
+        },
+        "source": "phase-u3e-state"
+      },
+      "historically_acquired": true,
+      "is_signer": false,
+      "is_writable": true,
+      "message_index": 3,
+      "observed_invocation": false,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "owner_evidence": "historical_raw_boundary_response",
+      "post_reference_slot": 448195166,
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "roles": [
+        {
+          "account_position": 1,
+          "outer_index": 1,
+          "role": "associated-token-account"
+        },
+        {
+          "account_position": 9,
+          "outer_index": 5,
+          "role": "user-source-liquidity"
+        }
+      ],
+      "runtime_provided": false,
+      "token_metadata": {
+        "account_index": 3,
+        "amount": 46523145,
+        "decimals": 8,
+        "mint": "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+        "program_id": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+      }
+    },
+    {
+      "PostStateReference": {
+        "kind": "historical_account_and_validator_metadata",
+        "slot": 448195166
+      },
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+      "binary_provenance": null,
+      "captured_boundary_facts": [
+        {
+          "address": "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+          "boundary": "pre",
+          "facts": {
+            "anchor_type": "OracleMappings",
+            "context_slot": 448195165,
+            "data_bytes": 29704,
+            "data_sha256": "1d4d40f87f5c82460565a5780e727073cdd787f528636f059628df0a8d55a110",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 207630762,
+            "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "245441edd41df68c4fda449c0396d8ab33d351f2b42c754f9f854074c8bd4b32",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+          "boundary": "post",
+          "facts": {
+            "anchor_type": "OracleMappings",
+            "context_slot": 448195166,
+            "data_bytes": 29704,
+            "data_sha256": "1d4d40f87f5c82460565a5780e727073cdd787f528636f059628df0a8d55a110",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 207630762,
+            "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "245441edd41df68c4fda449c0396d8ab33d351f2b42c754f9f854074c8bd4b32",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        }
+      ],
+      "categories": [
+        "OracleState"
+      ],
+      "classes": [
+        "static",
+        "readonly",
+        "oracle_state"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "pre_boundary_facts": {
+          "anchor_type": "OracleMappings",
+          "context_slot": 448195165,
+          "data_bytes": 29704,
+          "data_sha256": "1d4d40f87f5c82460565a5780e727073cdd787f528636f059628df0a8d55a110",
+          "executable": false,
+          "execution_seed_admitted": false,
+          "lamports": 207630762,
+          "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+          "owner_check": "role_and_historical_boundary",
+          "present": true,
+          "raw_account_json_sha256": "245441edd41df68c4fda449c0396d8ab33d351f2b42c754f9f854074c8bd4b32",
+          "rent_epoch": 18446744073709551615,
+          "typed_protocol_and_extension_validation": "pending",
+          "validator_lamports_match": true
+        },
+        "source": "phase-u3e-state"
+      },
+      "historically_acquired": true,
+      "is_signer": false,
+      "is_writable": false,
+      "message_index": 4,
+      "observed_invocation": false,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+      "owner_evidence": "historical_raw_boundary_response",
+      "post_reference_slot": 448195166,
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "roles": [
+        {
+          "account_position": 1,
+          "outer_index": 0,
+          "role": "oracle-mappings"
+        }
+      ],
+      "runtime_provided": false,
+      "token_metadata": null
+    },
+    {
+      "PostStateReference": null,
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+      "binary_provenance": {
+        "binary_bytes": 105032,
+        "binary_file": "binaries/ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL.so",
+        "discovered_by": [
+          "top_level_instruction",
+          "execution_log"
+        ],
+        "program_id": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+        "provenance": {
+          "deploy_slot": null,
+          "loader": "legacy",
+          "observed_slot": 448195165,
+          "program_id": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+          "programdata_address": null,
+          "sha256": "6804554e69fd3a58caa191dc4a58f4c67223d30ca28ab8987f39fc18d2f7374d",
+          "upgrade_authority": null
+        },
+        "source": "historical_mainnet"
+      },
+      "captured_boundary_facts": [],
+      "categories": [
+        "ProgramBinary"
+      ],
+      "classes": [
+        "static",
+        "readonly",
+        "program"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": null,
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "context_slot": 448195165,
+        "data_is_slice": false,
+        "executable": true,
+        "lamports": 3388612899,
+        "owner": "BPFLoader2111111111111111111111111111111111",
+        "response_file_in_u3c_archive": "rpc/5983f490691fb82448dfb1b870e00668638a1ae9ff00c5474d03a940b7b4de61.body",
+        "response_sha256": "0b2cf977439aa636567f86550a301daa4cccc30d5b2b4060b322dda4eeff9b12"
+      },
+      "historically_acquired": true,
+      "is_signer": false,
+      "is_writable": false,
+      "message_index": 5,
+      "observed_invocation": true,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "BPFLoader2111111111111111111111111111111111",
+      "owner_evidence": "historical_raw_response",
+      "post_reference_slot": null,
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "roles": [],
+      "runtime_provided": false,
+      "token_metadata": null
+    },
+    {
+      "PostStateReference": null,
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "ComputeBudget111111111111111111111111111111",
+      "binary_provenance": {
+        "discovered_by": [
+          "top_level_instruction",
+          "execution_log"
+        ],
+        "observed_slot": 448195165,
+        "program_id": "ComputeBudget111111111111111111111111111111",
+        "source": "builtin"
+      },
+      "captured_boundary_facts": [],
+      "categories": [
+        "StandardProgram"
+      ],
+      "classes": [
+        "static",
+        "readonly",
+        "program"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": null,
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "context_slot": 448195165,
+        "data_is_slice": false,
+        "executable": true,
+        "lamports": 1,
+        "owner": "NativeLoader1111111111111111111111111111111",
+        "response_file_in_u3c_archive": "rpc/ba3b7ffb4021279084b83906eb6d96a3d20d410e2187474abd3d8ac76c1c6a0f.body",
+        "response_sha256": "7909c0e57064f18aa5889fdfdf7026a947f7a8685225e1d92da77f1ae60fddef"
+      },
+      "historically_acquired": true,
+      "is_signer": false,
+      "is_writable": false,
+      "message_index": 6,
+      "observed_invocation": true,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "NativeLoader1111111111111111111111111111111",
+      "owner_evidence": "historical_raw_response",
+      "post_reference_slot": null,
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "roles": [],
+      "runtime_provided": false,
+      "token_metadata": null
+    },
+    {
+      "PostStateReference": {
+        "kind": "historical_account_and_validator_metadata",
+        "slot": 448195166
+      },
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+      "binary_provenance": null,
+      "captured_boundary_facts": [
+        {
+          "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+          "boundary": "pre",
+          "facts": {
+            "anchor_type": null,
+            "context_slot": 448195165,
+            "data_bytes": 36,
+            "data_sha256": "f4aba07704156a828ec27a590398cc17b3227924465d012c6b2edf3163af05b3",
+            "executable": true,
+            "execution_seed_admitted": false,
+            "lamports": 1141440,
+            "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "273fe6d66bed40568e2eadaa874aeb76deacc3690de75ec67d96e88d8a2ed4f1",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+          "boundary": "post",
+          "facts": {
+            "anchor_type": null,
+            "context_slot": 448195166,
+            "data_bytes": 36,
+            "data_sha256": "f4aba07704156a828ec27a590398cc17b3227924465d012c6b2edf3163af05b3",
+            "executable": true,
+            "execution_seed_admitted": false,
+            "lamports": 1141440,
+            "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "273fe6d66bed40568e2eadaa874aeb76deacc3690de75ec67d96e88d8a2ed4f1",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        }
+      ],
+      "categories": [
+        "StandardProgram"
+      ],
+      "classes": [
+        "static",
+        "readonly",
+        "program"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": null,
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "pre_boundary_facts": {
+          "anchor_type": null,
+          "context_slot": 448195165,
+          "data_bytes": 36,
+          "data_sha256": "f4aba07704156a828ec27a590398cc17b3227924465d012c6b2edf3163af05b3",
+          "executable": true,
+          "execution_seed_admitted": false,
+          "lamports": 1141440,
+          "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+          "owner_check": "role_and_historical_boundary",
+          "present": true,
+          "raw_account_json_sha256": "273fe6d66bed40568e2eadaa874aeb76deacc3690de75ec67d96e88d8a2ed4f1",
+          "rent_epoch": 18446744073709551615,
+          "typed_protocol_and_extension_validation": "pending",
+          "validator_lamports_match": true
+        },
+        "source": "phase-u3e-state"
+      },
+      "historically_acquired": true,
+      "is_signer": false,
+      "is_writable": false,
+      "message_index": 7,
+      "observed_invocation": false,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "owner_evidence": "historical_raw_boundary_response",
+      "post_reference_slot": 448195166,
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "roles": [
+        {
+          "account_position": 16,
+          "outer_index": 5,
+          "role": "farms-program"
+        }
+      ],
+      "runtime_provided": false,
+      "token_metadata": null
+    },
+    {
+      "PostStateReference": null,
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+      "binary_provenance": {
+        "binary_bytes": 10485715,
+        "binary_file": "binaries/HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ.so",
+        "discovered_by": [
+          "top_level_instruction",
+          "execution_log"
+        ],
+        "program_id": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+        "provenance": {
+          "deploy_slot": 443102298,
+          "loader": "upgradeable",
+          "observed_slot": 448195165,
+          "program_id": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+          "programdata_address": "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+          "sha256": "c1ddc8a903949eafe175dba8a284c636697dcd50f98a346557320b6b06f3bd87",
+          "upgrade_authority": "4R33WT7isNgzALNyvpZKiZQARtZNAXarWB3prUbPkXX7"
+        },
+        "source": "historical_mainnet"
+      },
+      "captured_boundary_facts": [],
+      "categories": [
+        "ProgramBinary"
+      ],
+      "classes": [
+        "static",
+        "readonly",
+        "program"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": null,
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "context_slot": 448195165,
+        "data_is_slice": false,
+        "executable": true,
+        "lamports": 21141440,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "response_file_in_u3c_archive": "rpc/ba1d39afe8036fe9ba8eaed62b6dcb9fc7137bf15b2c84eacab4a76aac871e86.body",
+        "response_sha256": "2f4a661e5eb677319eb41e5ed1630da329f2849d41714ea21bd0dabfe20cb189"
+      },
+      "historically_acquired": true,
+      "is_signer": false,
+      "is_writable": false,
+      "message_index": 8,
+      "observed_invocation": true,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "owner_evidence": "historical_raw_response",
+      "post_reference_slot": null,
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "roles": [
+        {
+          "account_position": 4,
+          "outer_index": 0,
+          "role": "scope-remaining-account"
+        },
+        {
+          "account_position": 5,
+          "outer_index": 0,
+          "role": "scope-remaining-account"
+        },
+        {
+          "account_position": 6,
+          "outer_index": 0,
+          "role": "scope-remaining-account"
+        },
+        {
+          "account_position": 7,
+          "outer_index": 0,
+          "role": "scope-remaining-account"
+        }
+      ],
+      "runtime_provided": false,
+      "token_metadata": null
+    },
+    {
+      "PostStateReference": null,
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+      "binary_provenance": {
+        "binary_bytes": 10485715,
+        "binary_file": "binaries/KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD.so",
+        "discovered_by": [
+          "program_under_test",
+          "top_level_instruction",
+          "execution_log"
+        ],
+        "program_id": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+        "provenance": {
+          "deploy_slot": 440486775,
+          "loader": "upgradeable",
+          "observed_slot": 448195165,
+          "program_id": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+          "programdata_address": "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+          "sha256": "9db16dd4b7bbfe4f13df850bf880bfc4522fcece06717c0626d625746a3cc85b",
+          "upgrade_authority": "GzFgdRJXmawPhGeBsyRCDLx4jAKPsvbUqoqitzppkzkW"
+        },
+        "source": "historical_mainnet"
+      },
+      "captured_boundary_facts": [],
+      "categories": [
+        "ProgramBinary"
+      ],
+      "classes": [
+        "static",
+        "readonly",
+        "program"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": null,
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "context_slot": 448195165,
+        "data_is_slice": false,
+        "executable": true,
+        "lamports": 33141440,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "response_file_in_u3c_archive": "rpc/758cc9d787a6bdaa2cfdf3acb9fa10a53d668e00f504bc4fae51d6c2dbbb3fa8.body",
+        "response_sha256": "b9efa5532769669af4077bb389e9159986a555c7fdc8c1007b19356c5a489922"
+      },
+      "historically_acquired": true,
+      "is_signer": false,
+      "is_writable": false,
+      "message_index": 9,
+      "observed_invocation": true,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "owner_evidence": "historical_raw_response",
+      "post_reference_slot": null,
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "roles": [
+        {
+          "account_position": 2,
+          "outer_index": 2,
+          "role": "optional-pyth-oracle"
+        },
+        {
+          "account_position": 3,
+          "outer_index": 2,
+          "role": "optional-switchboard-price"
+        },
+        {
+          "account_position": 4,
+          "outer_index": 2,
+          "role": "optional-switchboard-twap"
+        },
+        {
+          "account_position": 2,
+          "outer_index": 3,
+          "role": "optional-pyth-oracle"
+        },
+        {
+          "account_position": 3,
+          "outer_index": 3,
+          "role": "optional-switchboard-price"
+        },
+        {
+          "account_position": 4,
+          "outer_index": 3,
+          "role": "optional-switchboard-twap"
+        },
+        {
+          "account_position": 10,
+          "outer_index": 5,
+          "role": "placeholder-user-destination-collateral"
+        },
+        {
+          "account_position": 14,
+          "outer_index": 5,
+          "role": "obligation-farm-user-state"
+        },
+        {
+          "account_position": 15,
+          "outer_index": 5,
+          "role": "reserve-farm-state"
+        }
+      ],
+      "runtime_provided": false,
+      "token_metadata": null
+    },
+    {
+      "PostStateReference": {
+        "kind": "historical_account_and_validator_metadata",
+        "slot": 448195166
+      },
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+      "binary_provenance": null,
+      "captured_boundary_facts": [
+        {
+          "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+          "boundary": "pre",
+          "facts": {
+            "anchor_type": "OraclePrices",
+            "context_slot": 448195165,
+            "data_bytes": 28712,
+            "data_sha256": "c3fe3908e3c8778f0b99f6c83def59cc07c95ca7468e8f4585c5fe3d0caf6884",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 200726443,
+            "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "88f1b591553c84a75ad449b8cda67fe0f4c9a4bc5599cb7f96a8f9fcb138f37c",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+          "boundary": "post",
+          "facts": {
+            "anchor_type": "OraclePrices",
+            "context_slot": 448195166,
+            "data_bytes": 28712,
+            "data_sha256": "7b412449f556f471ca5623ec1731f03366675455a1509a349388e89e90d231bc",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 200726443,
+            "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "867025d5688e6f8600adc9a0331e765b74a9d58f0e52b5a7cd91ee822280e110",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        }
+      ],
+      "categories": [
+        "OracleState"
+      ],
+      "classes": [
+        "lookup_loaded",
+        "writable",
+        "oracle_state"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "pre_boundary_facts": {
+          "anchor_type": "OraclePrices",
+          "context_slot": 448195165,
+          "data_bytes": 28712,
+          "data_sha256": "c3fe3908e3c8778f0b99f6c83def59cc07c95ca7468e8f4585c5fe3d0caf6884",
+          "executable": false,
+          "execution_seed_admitted": false,
+          "lamports": 200726443,
+          "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+          "owner_check": "role_and_historical_boundary",
+          "present": true,
+          "raw_account_json_sha256": "88f1b591553c84a75ad449b8cda67fe0f4c9a4bc5599cb7f96a8f9fcb138f37c",
+          "rent_epoch": 18446744073709551615,
+          "typed_protocol_and_extension_validation": "pending",
+          "validator_lamports_match": true
+        },
+        "source": "phase-u3e-state"
+      },
+      "historically_acquired": true,
+      "is_signer": false,
+      "is_writable": true,
+      "message_index": 10,
+      "observed_invocation": false,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+      "owner_evidence": "historical_raw_boundary_response",
+      "post_reference_slot": 448195166,
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "roles": [
+        {
+          "account_position": 0,
+          "outer_index": 0,
+          "role": "oracle-prices"
+        },
+        {
+          "account_position": 5,
+          "outer_index": 2,
+          "role": "scope-price-oracle"
+        },
+        {
+          "account_position": 5,
+          "outer_index": 3,
+          "role": "scope-price-oracle"
+        }
+      ],
+      "runtime_provided": false,
+      "token_metadata": null
+    },
+    {
+      "PostStateReference": {
+        "kind": "historical_account_and_validator_metadata",
+        "slot": 448195166
+      },
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+      "binary_provenance": null,
+      "captured_boundary_facts": [
+        {
+          "address": "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+          "boundary": "pre",
+          "facts": {
+            "anchor_type": null,
+            "context_slot": 448195165,
+            "data_bytes": 82,
+            "data_sha256": "e07b45060053455599b0d8aa820516572ca4632167928a1848770f267fc111f5",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 1461600,
+            "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "606989ae8f92c503b6d5b5979241aa203bbecc3d791686b1af414f8d97b59b1d",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+          "boundary": "post",
+          "facts": {
+            "anchor_type": null,
+            "context_slot": 448195166,
+            "data_bytes": 82,
+            "data_sha256": "e1d479cdb52442dc16c6476e9299f111e27cca058917dddcc36f65ef1854a8db",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 1461600,
+            "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "e4e2ff322fcaf058335883bf93ce3eb625a06af3d4b873d7e845b368a54629ae",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        }
+      ],
+      "categories": [
+        "Mint"
+      ],
+      "classes": [
+        "lookup_loaded",
+        "writable",
+        "mint"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": null,
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "pre_boundary_facts": {
+          "anchor_type": null,
+          "context_slot": 448195165,
+          "data_bytes": 82,
+          "data_sha256": "e07b45060053455599b0d8aa820516572ca4632167928a1848770f267fc111f5",
+          "executable": false,
+          "execution_seed_admitted": false,
+          "lamports": 1461600,
+          "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "owner_check": "role_and_historical_boundary",
+          "present": true,
+          "raw_account_json_sha256": "606989ae8f92c503b6d5b5979241aa203bbecc3d791686b1af414f8d97b59b1d",
+          "rent_epoch": 18446744073709551615,
+          "typed_protocol_and_extension_validation": "pending",
+          "validator_lamports_match": true
+        },
+        "source": "phase-u3e-state"
+      },
+      "historically_acquired": true,
+      "is_signer": false,
+      "is_writable": true,
+      "message_index": 11,
+      "observed_invocation": false,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "owner_evidence": "historical_raw_boundary_response",
+      "post_reference_slot": 448195166,
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "roles": [
+        {
+          "account_position": 7,
+          "outer_index": 5,
+          "role": "reserve-collateral-mint"
+        }
+      ],
+      "runtime_provided": false,
+      "token_metadata": null
+    },
+    {
+      "PostStateReference": {
+        "kind": "historical_account_and_validator_metadata",
+        "slot": 448195166
+      },
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+      "binary_provenance": null,
+      "captured_boundary_facts": [
+        {
+          "address": "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+          "boundary": "pre",
+          "facts": {
+            "anchor_type": "Reserve",
+            "context_slot": 448195165,
+            "data_bytes": 8624,
+            "data_sha256": "784688a29c0ceeb79fb1f6e41327fa9373b938e1739499cbb1b6eb3faddbe188",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 60913920,
+            "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "7f5ffff482796e498ef641fa21a0b9cbda7fd442398396c90277efbdb22ff000",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+          "boundary": "post",
+          "facts": {
+            "anchor_type": "Reserve",
+            "context_slot": 448195166,
+            "data_bytes": 8624,
+            "data_sha256": "9a08be63b7c6b8191e6661b1aec5bdfc93af7753c6aceb11426041028126042d",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 60913920,
+            "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "1a59eaba828f499407ace9d2c0fa7f8d83c78429938fc588af5d00cd6ce92203",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        }
+      ],
+      "categories": [
+        "ProtocolState"
+      ],
+      "classes": [
+        "lookup_loaded",
+        "writable",
+        "protocol_state"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "pre_boundary_facts": {
+          "anchor_type": "Reserve",
+          "context_slot": 448195165,
+          "data_bytes": 8624,
+          "data_sha256": "784688a29c0ceeb79fb1f6e41327fa9373b938e1739499cbb1b6eb3faddbe188",
+          "executable": false,
+          "execution_seed_admitted": false,
+          "lamports": 60913920,
+          "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+          "owner_check": "role_and_historical_boundary",
+          "present": true,
+          "raw_account_json_sha256": "7f5ffff482796e498ef641fa21a0b9cbda7fd442398396c90277efbdb22ff000",
+          "rent_epoch": 18446744073709551615,
+          "typed_protocol_and_extension_validation": "pending",
+          "validator_lamports_match": true
+        },
+        "source": "phase-u3e-state"
+      },
+      "historically_acquired": true,
+      "is_signer": false,
+      "is_writable": true,
+      "message_index": 12,
+      "observed_invocation": false,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+      "owner_evidence": "historical_raw_boundary_response",
+      "post_reference_slot": 448195166,
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "roles": [
+        {
+          "account_position": 0,
+          "outer_index": 2,
+          "role": "reserve"
+        },
+        {
+          "account_position": 3,
+          "outer_index": 4,
+          "role": "obligation-reserve"
+        }
+      ],
+      "runtime_provided": false,
+      "token_metadata": null
+    },
+    {
+      "PostStateReference": {
+        "kind": "historical_account_and_validator_metadata",
+        "slot": 448195166
+      },
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+      "binary_provenance": null,
+      "captured_boundary_facts": [
+        {
+          "address": "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+          "boundary": "pre",
+          "facts": {
+            "anchor_type": null,
+            "context_slot": 448195165,
+            "data_bytes": 175,
+            "data_sha256": "5ccafb6924124f66dcfc755ee0ed01f5b3e12571b2e801acaa1b592cf77c5914",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 2108880,
+            "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "172f582ff650afded7d5da49db1257cc5f536f4c17b052d3b99053ab5af2b462",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+          "boundary": "post",
+          "facts": {
+            "anchor_type": null,
+            "context_slot": 448195166,
+            "data_bytes": 175,
+            "data_sha256": "d92020439aa6f2194864291155bde3d6f4c80dd91a32a8371787516ef474ee4f",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 2108880,
+            "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "2f5271b2aa6be57281ed1e56a89876243e45f9054f2ee9f27575ef6e29f8f8bb",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        }
+      ],
+      "categories": [
+        "TokenAccount"
+      ],
+      "classes": [
+        "lookup_loaded",
+        "writable",
+        "token_account"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "pre_boundary_facts": {
+          "anchor_type": null,
+          "context_slot": 448195165,
+          "data_bytes": 175,
+          "data_sha256": "5ccafb6924124f66dcfc755ee0ed01f5b3e12571b2e801acaa1b592cf77c5914",
+          "executable": false,
+          "execution_seed_admitted": false,
+          "lamports": 2108880,
+          "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "owner_check": "role_and_historical_boundary",
+          "present": true,
+          "raw_account_json_sha256": "172f582ff650afded7d5da49db1257cc5f536f4c17b052d3b99053ab5af2b462",
+          "rent_epoch": 18446744073709551615,
+          "typed_protocol_and_extension_validation": "pending",
+          "validator_lamports_match": true
+        },
+        "source": "phase-u3e-state"
+      },
+      "historically_acquired": true,
+      "is_signer": false,
+      "is_writable": true,
+      "message_index": 13,
+      "observed_invocation": false,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "owner_evidence": "historical_raw_boundary_response",
+      "post_reference_slot": 448195166,
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "roles": [
+        {
+          "account_position": 6,
+          "outer_index": 5,
+          "role": "reserve-liquidity-supply"
+        }
+      ],
+      "runtime_provided": false,
+      "token_metadata": {
+        "account_index": 13,
+        "amount": 535716858928,
+        "decimals": 8,
+        "mint": "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+        "program_id": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+      }
+    },
+    {
+      "PostStateReference": {
+        "kind": "historical_account_and_validator_metadata",
+        "slot": 448195166
+      },
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+      "binary_provenance": null,
+      "captured_boundary_facts": [
+        {
+          "address": "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+          "boundary": "pre",
+          "facts": {
+            "anchor_type": null,
+            "context_slot": 448195165,
+            "data_bytes": 165,
+            "data_sha256": "c97710319bb2703a9ce0ee68eb15d4fc0e95b6ae3a5a06767fec359862465b68",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 2039280,
+            "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "65b7d7148c273c123cc7c7bd814740ff1550316910e6cea3e21bb90b4a8daa6d",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+          "boundary": "post",
+          "facts": {
+            "anchor_type": null,
+            "context_slot": 448195166,
+            "data_bytes": 165,
+            "data_sha256": "9a7ec50642479595301e3807120f1b7df0c56f32f7f2bab18664d53543e5504d",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 2039280,
+            "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "55a668993738a610eaf1e6ecb41a5203843bb84360d36c7ccc824eb363af50e5",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        }
+      ],
+      "categories": [
+        "TokenAccount"
+      ],
+      "classes": [
+        "lookup_loaded",
+        "writable",
+        "token_account"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "pre_boundary_facts": {
+          "anchor_type": null,
+          "context_slot": 448195165,
+          "data_bytes": 165,
+          "data_sha256": "c97710319bb2703a9ce0ee68eb15d4fc0e95b6ae3a5a06767fec359862465b68",
+          "executable": false,
+          "execution_seed_admitted": false,
+          "lamports": 2039280,
+          "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "owner_check": "role_and_historical_boundary",
+          "present": true,
+          "raw_account_json_sha256": "65b7d7148c273c123cc7c7bd814740ff1550316910e6cea3e21bb90b4a8daa6d",
+          "rent_epoch": 18446744073709551615,
+          "typed_protocol_and_extension_validation": "pending",
+          "validator_lamports_match": true
+        },
+        "source": "phase-u3e-state"
+      },
+      "historically_acquired": true,
+      "is_signer": false,
+      "is_writable": true,
+      "message_index": 14,
+      "observed_invocation": false,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "owner_evidence": "historical_raw_boundary_response",
+      "post_reference_slot": 448195166,
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "roles": [
+        {
+          "account_position": 8,
+          "outer_index": 5,
+          "role": "reserve-destination-deposit-collateral"
+        }
+      ],
+      "runtime_provided": false,
+      "token_metadata": {
+        "account_index": 14,
+        "amount": 547508455665,
+        "decimals": 6,
+        "mint": "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+        "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+      }
+    },
+    {
+      "PostStateReference": {
+        "kind": "historical_account_and_validator_metadata",
+        "slot": 448195166
+      },
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+      "binary_provenance": null,
+      "captured_boundary_facts": [
+        {
+          "address": "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+          "boundary": "pre",
+          "facts": {
+            "anchor_type": "Reserve",
+            "context_slot": 448195165,
+            "data_bytes": 8624,
+            "data_sha256": "fe1cc0faea5ac1617d44efaee7c586eb8b6827f5b08db9697eb65cbaa648da20",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 60913920,
+            "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "a2fbfe5d1f430aa3aae4d48367724b022e822215f621bd2ebfa55cb4dd056c59",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+          "boundary": "post",
+          "facts": {
+            "anchor_type": "Reserve",
+            "context_slot": 448195166,
+            "data_bytes": 8624,
+            "data_sha256": "88114b83a3bc84f0d0c3a72c0ef651cc6206230872683dbbf150c85a26eb5c92",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 60913920,
+            "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "8e521e82956aafaacb38de4bc01836f3f2bbc0a4040dcdbc4a5b7b7a8722f772",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        }
+      ],
+      "categories": [
+        "ProtocolState"
+      ],
+      "classes": [
+        "lookup_loaded",
+        "writable",
+        "protocol_state"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "pre_boundary_facts": {
+          "anchor_type": "Reserve",
+          "context_slot": 448195165,
+          "data_bytes": 8624,
+          "data_sha256": "fe1cc0faea5ac1617d44efaee7c586eb8b6827f5b08db9697eb65cbaa648da20",
+          "executable": false,
+          "execution_seed_admitted": false,
+          "lamports": 60913920,
+          "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+          "owner_check": "role_and_historical_boundary",
+          "present": true,
+          "raw_account_json_sha256": "a2fbfe5d1f430aa3aae4d48367724b022e822215f621bd2ebfa55cb4dd056c59",
+          "rent_epoch": 18446744073709551615,
+          "typed_protocol_and_extension_validation": "pending",
+          "validator_lamports_match": true
+        },
+        "source": "phase-u3e-state"
+      },
+      "historically_acquired": true,
+      "is_signer": false,
+      "is_writable": true,
+      "message_index": 15,
+      "observed_invocation": false,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+      "owner_evidence": "historical_raw_boundary_response",
+      "post_reference_slot": 448195166,
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "roles": [
+        {
+          "account_position": 0,
+          "outer_index": 3,
+          "role": "reserve"
+        },
+        {
+          "account_position": 2,
+          "outer_index": 4,
+          "role": "obligation-reserve"
+        },
+        {
+          "account_position": 4,
+          "outer_index": 5,
+          "role": "reserve"
+        }
+      ],
+      "runtime_provided": false,
+      "token_metadata": null
+    },
+    {
+      "PostStateReference": {
+        "kind": "historical_account_and_validator_metadata",
+        "slot": 448195166
+      },
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "11111111111111111111111111111111",
+      "binary_provenance": null,
+      "captured_boundary_facts": [
+        {
+          "address": "11111111111111111111111111111111",
+          "boundary": "pre",
+          "facts": {
+            "anchor_type": null,
+            "context_slot": 448195165,
+            "data_bytes": 21,
+            "data_sha256": "c94b792a6d8b25d3e53ea94d8b80111735ed80d6a7dc8deb937cd342707f5f03",
+            "executable": true,
+            "execution_seed_admitted": false,
+            "lamports": 1,
+            "owner": "NativeLoader1111111111111111111111111111111",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "39cc4ec7ee47c3f2ad2382421046ad8a88c66ad5f3292dd7a9a9c01ea06ca623",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "11111111111111111111111111111111",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "11111111111111111111111111111111",
+          "boundary": "post",
+          "facts": {
+            "anchor_type": null,
+            "context_slot": 448195166,
+            "data_bytes": 21,
+            "data_sha256": "c94b792a6d8b25d3e53ea94d8b80111735ed80d6a7dc8deb937cd342707f5f03",
+            "executable": true,
+            "execution_seed_admitted": false,
+            "lamports": 1,
+            "owner": "NativeLoader1111111111111111111111111111111",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "39cc4ec7ee47c3f2ad2382421046ad8a88c66ad5f3292dd7a9a9c01ea06ca623",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "11111111111111111111111111111111",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        }
+      ],
+      "categories": [
+        "StandardProgram"
+      ],
+      "classes": [
+        "lookup_loaded",
+        "readonly",
+        "program"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": null,
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "pre_boundary_facts": {
+          "anchor_type": null,
+          "context_slot": 448195165,
+          "data_bytes": 21,
+          "data_sha256": "c94b792a6d8b25d3e53ea94d8b80111735ed80d6a7dc8deb937cd342707f5f03",
+          "executable": true,
+          "execution_seed_admitted": false,
+          "lamports": 1,
+          "owner": "NativeLoader1111111111111111111111111111111",
+          "owner_check": "role_and_historical_boundary",
+          "present": true,
+          "raw_account_json_sha256": "39cc4ec7ee47c3f2ad2382421046ad8a88c66ad5f3292dd7a9a9c01ea06ca623",
+          "rent_epoch": 18446744073709551615,
+          "typed_protocol_and_extension_validation": "pending",
+          "validator_lamports_match": true
+        },
+        "source": "phase-u3e-state"
+      },
+      "historically_acquired": true,
+      "is_signer": false,
+      "is_writable": false,
+      "message_index": 16,
+      "observed_invocation": false,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "NativeLoader1111111111111111111111111111111",
+      "owner_evidence": "historical_raw_boundary_response",
+      "post_reference_slot": 448195166,
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "roles": [
+        {
+          "account_position": 4,
+          "outer_index": 1,
+          "role": "system-program"
+        }
+      ],
+      "runtime_provided": false,
+      "token_metadata": null
+    },
+    {
+      "PostStateReference": {
+        "kind": "historical_account_and_validator_metadata",
+        "slot": 448195166
+      },
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+      "binary_provenance": null,
+      "captured_boundary_facts": [
+        {
+          "address": "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+          "boundary": "pre",
+          "facts": {
+            "absence_requires_pair_validation": true,
+            "present": false,
+            "validator_lamports": 0
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+          "boundary": "post",
+          "facts": {
+            "absence_requires_pair_validation": true,
+            "present": false,
+            "validator_lamports": 0
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        }
+      ],
+      "categories": [
+        "Authority"
+      ],
+      "classes": [
+        "lookup_loaded",
+        "readonly",
+        "authority_pda_presence_unknown"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": null,
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "pre_boundary_facts": {
+          "absence_requires_pair_validation": true,
+          "present": false,
+          "validator_lamports": 0
+        },
+        "source": "phase-u3e-state"
+      },
+      "historically_acquired": true,
+      "is_signer": false,
+      "is_writable": false,
+      "message_index": 17,
+      "observed_invocation": false,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": null,
+      "owner_evidence": "paired_explicit_historical_absence",
+      "post_reference_slot": 448195166,
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "roles": [
+        {
+          "account_position": 3,
+          "outer_index": 5,
+          "role": "lending-market-authority"
+        }
+      ],
+      "runtime_provided": false,
+      "token_metadata": null
+    },
+    {
+      "PostStateReference": {
+        "kind": "historical_account_and_validator_metadata",
+        "slot": 448195166
+      },
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+      "binary_provenance": null,
+      "captured_boundary_facts": [
+        {
+          "address": "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+          "boundary": "pre",
+          "facts": {
+            "anchor_type": "LendingMarket",
+            "context_slot": 448195165,
+            "data_bytes": 4664,
+            "data_sha256": "ab5a8e3831db3fdfd87ef8c0dd0bcebd57df853ce4affacc65bdca9e37194777",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 33352320,
+            "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "b16318321a21258d7a6865f30962ecfa0080bcd082f8158edbd47f660991aa2f",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+          "boundary": "post",
+          "facts": {
+            "anchor_type": "LendingMarket",
+            "context_slot": 448195166,
+            "data_bytes": 4664,
+            "data_sha256": "ab5a8e3831db3fdfd87ef8c0dd0bcebd57df853ce4affacc65bdca9e37194777",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 33352320,
+            "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "b16318321a21258d7a6865f30962ecfa0080bcd082f8158edbd47f660991aa2f",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        }
+      ],
+      "categories": [
+        "ProtocolState"
+      ],
+      "classes": [
+        "lookup_loaded",
+        "readonly",
+        "protocol_state"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "pre_boundary_facts": {
+          "anchor_type": "LendingMarket",
+          "context_slot": 448195165,
+          "data_bytes": 4664,
+          "data_sha256": "ab5a8e3831db3fdfd87ef8c0dd0bcebd57df853ce4affacc65bdca9e37194777",
+          "executable": false,
+          "execution_seed_admitted": false,
+          "lamports": 33352320,
+          "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+          "owner_check": "role_and_historical_boundary",
+          "present": true,
+          "raw_account_json_sha256": "b16318321a21258d7a6865f30962ecfa0080bcd082f8158edbd47f660991aa2f",
+          "rent_epoch": 18446744073709551615,
+          "typed_protocol_and_extension_validation": "pending",
+          "validator_lamports_match": true
+        },
+        "source": "phase-u3e-state"
+      },
+      "historically_acquired": true,
+      "is_signer": false,
+      "is_writable": false,
+      "message_index": 18,
+      "observed_invocation": false,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+      "owner_evidence": "historical_raw_boundary_response",
+      "post_reference_slot": 448195166,
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "roles": [
+        {
+          "account_position": 1,
+          "outer_index": 2,
+          "role": "lending-market"
+        },
+        {
+          "account_position": 1,
+          "outer_index": 3,
+          "role": "lending-market"
+        },
+        {
+          "account_position": 0,
+          "outer_index": 4,
+          "role": "lending-market"
+        },
+        {
+          "account_position": 2,
+          "outer_index": 5,
+          "role": "lending-market"
+        }
+      ],
+      "runtime_provided": false,
+      "token_metadata": null
+    },
+    {
+      "PostStateReference": null,
+      "PreStateBoundary": {
+        "kind": "original_execution_instruction_context"
+      },
+      "address": "Sysvar1nstructions1111111111111111111111111",
+      "binary_provenance": null,
+      "captured_boundary_facts": [],
+      "categories": [
+        "Sysvar",
+        "RuntimeProvided"
+      ],
+      "classes": [
+        "lookup_loaded",
+        "readonly",
+        "sysvar",
+        "runtime_provided"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": null,
+      "historical_bytes_still_required": false,
+      "historical_capture": null,
+      "historically_acquired": false,
+      "is_signer": false,
+      "is_writable": false,
+      "message_index": 19,
+      "observed_invocation": false,
+      "ordinary_boundary_bytes_validated": false,
+      "owner": null,
+      "owner_evidence": "not_acquired",
+      "post_reference_slot": null,
+      "requested_pre_slot": null,
+      "required_boundary": "execution_bank_instruction_context",
+      "roles": [
+        {
+          "account_position": 3,
+          "outer_index": 0,
+          "role": "instructions-sysvar"
+        },
+        {
+          "account_position": 13,
+          "outer_index": 5,
+          "role": "instruction-sysvar"
+        }
+      ],
+      "runtime_provided": true,
+      "token_metadata": null
+    },
+    {
+      "PostStateReference": null,
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "binary_provenance": {
+        "binary_bytes": 108600,
+        "binary_file": "binaries/TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA.so",
+        "discovered_by": [
+          "inner_instruction",
+          "execution_log"
+        ],
+        "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "provenance": {
+          "deploy_slot": 419472000,
+          "loader": "upgradeable",
+          "observed_slot": 448195165,
+          "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "programdata_address": "3gvYRKWyXRR9xKWe1ZjPhLY5ZJRN7KDB4rFZFGoJfFk2",
+          "sha256": "8190d3f7ceb6cb7a7a8d8924bff89f9f611e15ce1f806f2b6237f3311a98f697",
+          "upgrade_authority": null
+        },
+        "source": "historical_mainnet"
+      },
+      "captured_boundary_facts": [],
+      "categories": [
+        "ProgramBinary"
+      ],
+      "classes": [
+        "lookup_loaded",
+        "readonly",
+        "program"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": null,
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "context_slot": 448195165,
+        "data_is_slice": false,
+        "executable": true,
+        "lamports": 200653906,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "response_file_in_u3c_archive": "rpc/dc8de13a29b013ca6f4a0c078a80e8348e17908198bbfb16d7d3cb9a74889ffd.body",
+        "response_sha256": "c34d041c3ae0fa6b4fc8814a64df953106c16cad59eae70b51a7f1413d4dddad"
+      },
+      "historically_acquired": true,
+      "is_signer": false,
+      "is_writable": false,
+      "message_index": 20,
+      "observed_invocation": true,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "owner_evidence": "historical_raw_response",
+      "post_reference_slot": null,
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "roles": [
+        {
+          "account_position": 11,
+          "outer_index": 5,
+          "role": "collateral-token-program"
+        }
+      ],
+      "runtime_provided": false,
+      "token_metadata": null
+    },
+    {
+      "PostStateReference": null,
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "binary_provenance": {
+        "binary_bytes": 1382016,
+        "binary_file": "binaries/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb.so",
+        "discovered_by": [
+          "inner_instruction",
+          "execution_log"
+        ],
+        "program_id": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "provenance": {
+          "deploy_slot": 427147035,
+          "loader": "upgradeable",
+          "observed_slot": 448195165,
+          "program_id": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "programdata_address": "DoU57AYuPFu2QU514RktNPG22QhApEjnKxnBcu4BHDTY",
+          "sha256": "0999dbf708971e723b08d1caafc988826a59c6001ed6dc02260da07defbe1469",
+          "upgrade_authority": "AeLmXCbPaQHGWRLr2saFsEVfmMNuKnxRAbWCT9P5twgz"
+        },
+        "source": "historical_mainnet"
+      },
+      "captured_boundary_facts": [],
+      "categories": [
+        "ProgramBinary"
+      ],
+      "classes": [
+        "lookup_loaded",
+        "readonly",
+        "program"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": null,
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "context_slot": 448195165,
+        "data_is_slice": false,
+        "executable": true,
+        "lamports": 70128638,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "response_file_in_u3c_archive": "rpc/cf0608962e2a6109ba0232a1e5c38a11e2dd2311dc71e4a44c6adf16cf8ad428.body",
+        "response_sha256": "342d903c7d24cc25340601b45f72d93bd0f5af40bcf6f1f191daa536cdf381ce"
+      },
+      "historically_acquired": true,
+      "is_signer": false,
+      "is_writable": false,
+      "message_index": 21,
+      "observed_invocation": true,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "owner_evidence": "historical_raw_response",
+      "post_reference_slot": null,
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "roles": [
+        {
+          "account_position": 5,
+          "outer_index": 1,
+          "role": "ata-token-program"
+        },
+        {
+          "account_position": 12,
+          "outer_index": 5,
+          "role": "liquidity-token-program"
+        }
+      ],
+      "runtime_provided": false,
+      "token_metadata": null
+    },
+    {
+      "PostStateReference": {
+        "kind": "historical_account_and_validator_metadata",
+        "slot": 448195166
+      },
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+      "binary_provenance": null,
+      "captured_boundary_facts": [
+        {
+          "address": "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+          "boundary": "pre",
+          "facts": {
+            "anchor_type": null,
+            "context_slot": 448195165,
+            "data_bytes": 676,
+            "data_sha256": "3a0cde7377b2c441b76eab17cbcc5747aeac9ddaa423cce4f496f39ff2eb92cb",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 36662853,
+            "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "9d974e04d6850a71f4e5b62b5cf80744e14aeb405c0ded44d389303b7290ec87",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195165
+            }
+          ],
+          "slot": 448195165
+        },
+        {
+          "address": "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+          "boundary": "post",
+          "facts": {
+            "anchor_type": null,
+            "context_slot": 448195166,
+            "data_bytes": 676,
+            "data_sha256": "3a0cde7377b2c441b76eab17cbcc5747aeac9ddaa423cce4f496f39ff2eb92cb",
+            "executable": false,
+            "execution_seed_admitted": false,
+            "lamports": 36662853,
+            "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "owner_check": "role_and_historical_boundary",
+            "present": true,
+            "raw_account_json_sha256": "9d974e04d6850a71f4e5b62b5cf80744e14aeb405c0ded44d389303b7290ec87",
+            "rent_epoch": 18446744073709551615,
+            "typed_protocol_and_extension_validation": "pending",
+            "validator_lamports_match": true
+          },
+          "method": "getAccountInfo",
+          "params": [
+            "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+            {
+              "commitment": "finalized",
+              "encoding": "base64",
+              "slot": 448195166
+            }
+          ],
+          "slot": 448195166
+        }
+      ],
+      "categories": [
+        "Mint"
+      ],
+      "classes": [
+        "lookup_loaded",
+        "readonly",
+        "mint"
+      ],
+      "execution_seed_admitted": false,
+      "expected_owner": null,
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "pre_boundary_facts": {
+          "anchor_type": null,
+          "context_slot": 448195165,
+          "data_bytes": 676,
+          "data_sha256": "3a0cde7377b2c441b76eab17cbcc5747aeac9ddaa423cce4f496f39ff2eb92cb",
+          "executable": false,
+          "execution_seed_admitted": false,
+          "lamports": 36662853,
+          "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+          "owner_check": "role_and_historical_boundary",
+          "present": true,
+          "raw_account_json_sha256": "9d974e04d6850a71f4e5b62b5cf80744e14aeb405c0ded44d389303b7290ec87",
+          "rent_epoch": 18446744073709551615,
+          "typed_protocol_and_extension_validation": "pending",
+          "validator_lamports_match": true
+        },
+        "source": "phase-u3e-state"
+      },
+      "historically_acquired": true,
+      "is_signer": false,
+      "is_writable": false,
+      "message_index": 22,
+      "observed_invocation": false,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "owner_evidence": "historical_raw_boundary_response",
+      "post_reference_slot": 448195166,
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "roles": [
+        {
+          "account_position": 3,
+          "outer_index": 1,
+          "role": "ata-mint"
+        },
+        {
+          "account_position": 5,
+          "outer_index": 5,
+          "role": "reserve-liquidity-mint"
+        }
+      ],
+      "runtime_provided": false,
+      "token_metadata": null
+    },
+    {
+      "PostStateReference": null,
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "3gvYRKWyXRR9xKWe1ZjPhLY5ZJRN7KDB4rFZFGoJfFk2",
+      "captured_boundary_facts": [],
+      "categories": [
+        "ProgramData"
+      ],
+      "classes": [
+        "programdata"
+      ],
+      "execution_seed_admitted": false,
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "context_slot": 448195165,
+        "data_is_slice": true,
+        "executable": false,
+        "lamports": 759682820,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "response_file_in_u3c_archive": "rpc/d2b302510efc2d717ff9b78fe26383353ba895654a83506238593b71d9128a2e.body",
+        "response_sha256": "46c3e471bcd1dafe0b0fcdac3ef6edcc28ffa03c6847359eacb23a364e09b504"
+      },
+      "historically_acquired": true,
+      "message_index": null,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "runtime_provided": false
+    },
+    {
+      "PostStateReference": null,
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      "captured_boundary_facts": [],
+      "categories": [
+        "ProgramData"
+      ],
+      "classes": [
+        "programdata"
+      ],
+      "execution_seed_admitted": false,
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "context_slot": 448195165,
+        "data_is_slice": true,
+        "executable": false,
+        "lamports": 72981780480,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "response_file_in_u3c_archive": "rpc/2846207d7efd4c4caef01bf3ec5357093238e358fed330cde5cc5aa543ee50aa.body",
+        "response_sha256": "20cadced5c765d959f299a63eff9eb97fb017f102983ffb2fe5826e5c1fb200e"
+      },
+      "historically_acquired": true,
+      "message_index": null,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "program": "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "runtime_provided": false
+    },
+    {
+      "PostStateReference": null,
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "DoU57AYuPFu2QU514RktNPG22QhApEjnKxnBcu4BHDTY",
+      "captured_boundary_facts": [],
+      "categories": [
+        "ProgramData"
+      ],
+      "classes": [
+        "programdata"
+      ],
+      "execution_seed_admitted": false,
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "context_slot": 448195165,
+        "data_is_slice": true,
+        "executable": false,
+        "lamports": 9620035440,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "response_file_in_u3c_archive": "rpc/21f12d46e78fffe2cdb8821b172c988ad9a6b833bec08c65b9269ea629e5fb50.body",
+        "response_sha256": "26246cc3299655d882987bc01bfcd6debd8507f0839c264b110883d611b0ed33"
+      },
+      "historically_acquired": true,
+      "message_index": null,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "runtime_provided": false
+    },
+    {
+      "PostStateReference": null,
+      "PreStateBoundary": {
+        "kind": "historical_account",
+        "slot": 448195165
+      },
+      "address": "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      "captured_boundary_facts": [],
+      "categories": [
+        "ProgramData"
+      ],
+      "classes": [
+        "programdata"
+      ],
+      "execution_seed_admitted": false,
+      "historical_bytes_still_required": false,
+      "historical_capture": {
+        "context_slot": 448195165,
+        "data_is_slice": true,
+        "executable": false,
+        "lamports": 72981780480,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "response_file_in_u3c_archive": "rpc/1a4166df29292f57147c613f8d5c6bf95b3344ed99abdf73570b70446e15f941.body",
+        "response_sha256": "08dc9790f4e6a27a55a69de51f8cf8bd3781ed63054fdb96ca612ce9eb40d9c1"
+      },
+      "historically_acquired": true,
+      "message_index": null,
+      "ordinary_boundary_bytes_validated": true,
+      "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "program": "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+      "requested_pre_slot": 448195165,
+      "required_boundary": "end_of_S_minus_1_under_unchanged_screen",
+      "runtime_provided": false
+    }
+  ],
+  "all_historical_inputs_complete": false,
+  "boundary_limits": [
+    "Clean screen proves no other transaction declares these 26 accounts writable in S; it does not acquire state.",
+    "S-1 is sufficient for ordinary account writes only under the qualified archive contract and unchanged screen; validate bytes and validator balances before admission.",
+    "Runtime bank updates and sysvars require execution-bank treatment, not blind S-1 seeding.",
+    "System and Farms are passed accounts without observed invocation; prove their account headers before deciding runtime treatment.",
+    "Optional KLend accounts alias KLend itself; do not invent separate oracle/farm state.",
+    "ATA metadata and PDA admission do not prove historical token owner, mint, state or extensions.",
+    "Scope mapping/TWAP/configuration closure and every hidden sysvar requirement remain unproven without historical state and runtime analysis."
+  ],
+  "execution_slot": 448195166,
+  "historical_runtime_inputs": {
+    "acquired": [
+      {
+        "address": "SysvarC1ock11111111111111111111111111111111",
+        "facts": {
+          "data_bytes": 40,
+          "data_sha256": "652923b2d3e34bcba34fad51675b849b50fc2148baf9d04c2f16172f55a4920c",
+          "executable": false,
+          "fields": {
+            "epoch": 1037,
+            "epoch_start_timestamp": 1789708003,
+            "leader_schedule_epoch": 1038,
+            "slot": 448195166,
+            "unix_timestamp": 1789764316
+          },
+          "lamports": 1169280,
+          "owner": "Sysvar1111111111111111111111111111111111111",
+          "raw_account_sha256": "7b03eed9be41709838187ba299d9133fae10ac91ff1826542a30af3c08a7d5ab",
+          "rent_epoch": 18446744073709551615
+        },
+        "method": "getAccountInfo",
+        "name": "Clock",
+        "params": [
+          "SysvarC1ock11111111111111111111111111111111",
+          {
+            "commitment": "finalized",
+            "encoding": "base64",
+            "slot": 448195166
+          }
+        ]
+      },
+      {
+        "address": "SysvarRent111111111111111111111111111111111",
+        "facts": {
+          "data_bytes": 17,
+          "data_sha256": "e6833309a1b7d9ce57849bd64d1d5834144a14cbc659346a9fda424a3e7ae219",
+          "executable": false,
+          "fields": {
+            "burn_percent": 50,
+            "exemption_threshold": 1.0,
+            "lamports_per_byte_year": 5080
+          },
+          "lamports": 1009200,
+          "owner": "Sysvar1111111111111111111111111111111111111",
+          "raw_account_sha256": "91d643ba40c2c2b3c5812a2b1302088d225bc5a2ec173fbd987fd92f7588ea8b",
+          "rent_epoch": 18446744073709551615
+        },
+        "method": "getAccountInfo",
+        "name": "Rent",
+        "params": [
+          "SysvarRent111111111111111111111111111111111",
+          {
+            "commitment": "finalized",
+            "encoding": "base64",
+            "slot": 448195166
+          }
+        ]
+      },
+      {
+        "address": "SysvarEpochSchedu1e111111111111111111111111",
+        "facts": {
+          "data_bytes": 33,
+          "data_sha256": "bc8e8d8331213d875b89f7e267acd9e983e47331fb7136c35eb50cab4f3030a3",
+          "executable": false,
+          "fields": {
+            "first_normal_epoch": 0,
+            "first_normal_slot": 0,
+            "leader_schedule_slot_offset": 432000,
+            "slots_per_epoch": 432000,
+            "warmup": 0
+          },
+          "lamports": 1120560,
+          "owner": "Sysvar1111111111111111111111111111111111111",
+          "raw_account_sha256": "088d7ebbc8beb84023c021e3412f3809cd5d428d2d661224de22f234c9dd833f",
+          "rent_epoch": 18446744073709551615
+        },
+        "method": "getAccountInfo",
+        "name": "EpochSchedule",
+        "params": [
+          "SysvarEpochSchedu1e111111111111111111111111",
+          {
+            "commitment": "finalized",
+            "encoding": "base64",
+            "slot": 448195166
+          }
+        ]
+      }
+    ],
+    "failure": {
+      "reason": "missing_account",
+      "request": {
+        "address": "SysvarS1otHashes111111111111111111111111111",
+        "method": "getAccountInfo",
+        "name": "SlotHashes",
+        "params": [
+          "SysvarS1otHashes111111111111111111111111111",
+          {
+            "commitment": "finalized",
+            "encoding": "base64",
+            "slot": 448195166
+          }
+        ]
+      }
+    },
+    "historical_runtime_inputs_captured": false,
+    "kind": "u3e_historical_runtime_input_capture",
+    "planned": [
+      {
+        "address": "SysvarC1ock11111111111111111111111111111111",
+        "method": "getAccountInfo",
+        "name": "Clock",
+        "params": [
+          "SysvarC1ock11111111111111111111111111111111",
+          {
+            "commitment": "finalized",
+            "encoding": "base64",
+            "slot": 448195166
+          }
+        ]
+      },
+      {
+        "address": "SysvarRent111111111111111111111111111111111",
+        "method": "getAccountInfo",
+        "name": "Rent",
+        "params": [
+          "SysvarRent111111111111111111111111111111111",
+          {
+            "commitment": "finalized",
+            "encoding": "base64",
+            "slot": 448195166
+          }
+        ]
+      },
+      {
+        "address": "SysvarEpochSchedu1e111111111111111111111111",
+        "method": "getAccountInfo",
+        "name": "EpochSchedule",
+        "params": [
+          "SysvarEpochSchedu1e111111111111111111111111",
+          {
+            "commitment": "finalized",
+            "encoding": "base64",
+            "slot": 448195166
+          }
+        ]
+      },
+      {
+        "address": "SysvarS1otHashes111111111111111111111111111",
+        "method": "getAccountInfo",
+        "name": "SlotHashes",
+        "params": [
+          "SysvarS1otHashes111111111111111111111111111",
+          {
+            "commitment": "finalized",
+            "encoding": "base64",
+            "slot": 448195166
+          }
+        ]
+      }
+    ],
+    "runtime_context_proven": false,
+    "runtime_executed": false
+  },
+  "inventory_complete_for_message_and_observed_binaries": true,
+  "kind": "u3e_recomputed_T1_inventory",
+  "lut_boundary": "existing execution-slot proof; message resolution input, not protocol pre-state",
+  "lut_input_reference": "docs/examples/phase-u3b2-lut/proofs/5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97.json",
+  "lut_proof_id": "8a5552a3e5d2b23106f4b23fc5862c5c275f49792e950e78064985498a0bf207",
+  "message_resolution_inputs": [
+    {
+      "address": "8ofreL6hKfEet1DnhHVGvCTnSdz4pg85PpbuCUHnEcKm",
+      "class": "address_lookup_table",
+      "historically_acquired": true,
+      "not_a_protocol_seed_account": true,
+      "owner": "AddressLookupTab1e1111111111111111111111111",
+      "owner_evidence": "validated_by_frozen_U3B_proof",
+      "raw_account_sha256": "995ecf43e032f66abae2560d389ba27e12a20ceefb6956f8e41e8be361226261",
+      "raw_response_sha256": "9fe3756b034b3b0933499a917cb6d7ef614022aaef5d3490fb4e4a5a8955f772",
+      "requested_slot": 448195166,
+      "required_boundary": "execution_slot_active_address_resolution",
+      "returned_context_slot": 448195166,
+      "runtime_provided": false
+    }
+  ],
+  "missing_historical_message_accounts": [],
+  "planned_boundary_requests": [
+    {
+      "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "11111111111111111111111111111111",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "11111111111111111111111111111111",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "11111111111111111111111111111111",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "11111111111111111111111111111111",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    },
+    {
+      "address": "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+      "boundary": "pre",
+      "method": "getAccountInfo",
+      "params": [
+        "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "slot": 448195165
+    },
+    {
+      "address": "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+      "boundary": "post",
+      "method": "getAccountInfo",
+      "params": [
+        "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "slot": 448195166
+    }
+  ],
+  "production_replay_eligible": false,
+  "protocol_state_accounts_acquired": 4,
+  "runtime_dependency_closure_proven": false,
+  "runtime_executed": false,
+  "runtime_requirements": [
+    {
+      "category": "RuntimeProvided",
+      "name": "Clock",
+      "status": "not_yet_proven"
+    },
+    {
+      "category": "RuntimeProvided",
+      "name": "Rent",
+      "status": "not_yet_proven"
+    },
+    {
+      "category": "RuntimeProvided",
+      "name": "SlotHashes_if_required",
+      "status": "not_yet_proven"
+    },
+    {
+      "category": "RuntimeProvided",
+      "name": "epoch",
+      "status": "not_yet_proven"
+    },
+    {
+      "category": "RuntimeProvided",
+      "name": "feature_profile",
+      "status": "not_yet_proven"
+    },
+    {
+      "category": "RuntimeProvided",
+      "name": "recent_blockhash",
+      "status": "not_yet_proven"
+    },
+    {
+      "category": "RuntimeProvided",
+      "name": "native_programs",
+      "status": "not_yet_proven"
+    },
+    {
+      "category": "RuntimeProvided",
+      "name": "loaders",
+      "status": "not_yet_proven"
+    },
+    {
+      "category": "RuntimeProvided",
+      "name": "compute_budget",
+      "status": "not_yet_proven"
+    }
+  ],
+  "same_slot_screen": {
+    "conflicts": [],
+    "required_accounts": [
+      "11111111111111111111111111111111",
+      "2Z7zhqp1eddmHNmEqexftST6DFPWmoL4QqfgiG5uJMJx",
+      "3gvYRKWyXRR9xKWe1ZjPhLY5ZJRN7KDB4rFZFGoJfFk2",
+      "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+      "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+      "5wJeMrUYECGq41fxRESKALVcHnNX26TAWy4W98yULsua",
+      "6L6vUts9tYqxHVUCEFVc2mzZw6yxMn8C6a44cp5ga7e9",
+      "7wTJ4aRrdwzfaGgWGq1qmJpjfQoanJMQvNcuUpfQs2ia",
+      "97zoywd8mPZsGTg8q1wdD2Wgkdrs2tqusp1Qqcxbyj7E",
+      "9uSbGW1y9H5Av6H5TKxQ1wnFApSq2t3oEpfF2YfjDQGA",
+      "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+      "AUmDGkQoKCDNqJh5V7FqDhsSLoJTwzznGRxaB3VXhynk",
+      "CjYJmMj61rXQUTcrZQRXVWpTfsP7zMiRPHN3K9dZz3Uz",
+      "ComputeBudget111111111111111111111111111111",
+      "DoU57AYuPFu2QU514RktNPG22QhApEjnKxnBcu4BHDTY",
+      "DuKtB88SQGJbow5jxmUSwgJWmC7zma8mX3Nodz1Gsjs2",
+      "ELTUJbafWtk3AqnNDNzf4KsGS8HEdnrnwqFma8LswThY",
+      "FarmsPZpWu9i7Kky8tPN37rs2TpmMrAZrC7S7vJa91Hr",
+      "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+      "He9ARPf5E3nEAiiwJohjAwp7U7t1BiSbjnEkapjUSKbu",
+      "HzBfWNAqKtkBvZYzt7DhM42wxEXUhCkzGgFYF7Y5qFfy",
+      "KLend2g3cP87fffoy8q1mQqGKjrxjC8boSyAYavgmjD",
+      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "UvXjBuC7YZYaGB9Rn1PpBD1GySmjzunXgE8Zev9ua8d",
+      "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W"
+    ],
+    "slot": 448195166,
+    "target_index": 63,
+    "target_signature": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97",
+    "transactions_in_slot": 712
+  },
+  "sample_fingerprint": "b97116541aeefc6723ef91a1d38c9be52792d47316b573ac08d49484fd97d0af",
+  "scope_ordered_remaining_accounts": [
+    "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+    "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+    "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ",
+    "HFn8GnPADiny6XqUoWE8uRPPxb29ikn4yTuPa9MF2fWJ"
+  ],
+  "scope_tokens": [
+    344,
+    279,
+    13,
+    456
+  ],
+  "signature": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97"
+}

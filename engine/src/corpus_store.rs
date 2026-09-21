@@ -25,6 +25,7 @@ use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 
 use crate::replay::{hash_bytes, ReplayRecord};
+use crate::universal::{evidence::EvidenceStore, model::ReplayObservationV2};
 
 pub const CORPUS_MANIFEST_SCHEMA: u32 = 1;
 
@@ -120,6 +121,89 @@ impl CorpusStore {
         }
         std::fs::write(&path, &bytes).with_context(|| format!("writing {}", path.display()))?;
         Ok(Insert::Added)
+    }
+
+    /// Insert a schema-2 observation into the same immutable record store.
+    /// Its referenced evidence is resolved before admission.
+    pub fn insert_v2(&self, record: &ReplayObservationV2) -> Result<Insert> {
+        record.resolve(&EvidenceStore::at(self.root.join("evidence")))?;
+        let bytes = serde_json::to_vec(record)?;
+        let path = self.record_path(&record.id);
+        if path.exists() {
+            let existing = std::fs::read(&path)?;
+            anyhow::ensure!(
+                existing == bytes,
+                "observation ID already exists with different content"
+            );
+            return Ok(Insert::AlreadyPresent);
+        }
+        std::fs::write(path, bytes)?;
+        Ok(Insert::Added)
+    }
+
+    pub fn load_v2(&self) -> Result<Vec<ReplayObservationV2>> {
+        let mut records = BTreeMap::new();
+        for entry in std::fs::read_dir(self.root.join("records"))? {
+            let path = entry?.path();
+            if path.extension().and_then(|s| s.to_str()) != Some("json") {
+                continue;
+            }
+            let record: ReplayObservationV2 = serde_json::from_slice(&std::fs::read(&path)?)
+                .with_context(|| format!("parsing {}", path.display()))?;
+            record.validate_identity()?;
+            anyhow::ensure!(
+                path.file_stem().and_then(|s| s.to_str()) == Some(record.id.as_str()),
+                "record file does not match schema-2 observation ID"
+            );
+            anyhow::ensure!(
+                records.insert(record.id.clone(), record).is_none(),
+                "duplicate schema-2 record ID"
+            );
+        }
+        Ok(records.into_values().collect())
+    }
+
+    pub fn describe_v2(&self, records: &[ReplayObservationV2]) -> Result<CorpusManifest> {
+        anyhow::ensure!(!records.is_empty(), "empty schema-2 corpus");
+        let first = &records[0];
+        let mut digest = Vec::new();
+        let mut previous = None;
+        for record in records {
+            record.validate_identity()?;
+            anyhow::ensure!(
+                record.program_id == first.program_id
+                    && record.genesis_hash == first.genesis_hash
+                    && record.protocol == first.protocol,
+                "schema-2 corpus mixes program, genesis or protocol"
+            );
+            if let Some(previous) = previous {
+                anyhow::ensure!(
+                    previous < record.id.as_str(),
+                    "schema-2 corpus IDs not unique and sorted"
+                );
+            }
+            previous = Some(record.id.as_str());
+            digest.extend_from_slice(hash_bytes(&serde_json::to_vec(record)?).as_bytes());
+        }
+        Ok(CorpusManifest {
+            schema_version: 2,
+            program_id: first.program_id.clone(),
+            protocol: Some(first.protocol.clone()),
+            adapter_version: crate::protocol::adapter_for(&first.program_id)
+                .map(|adapter| adapter.adapter_version()),
+            genesis_hash: first.genesis_hash.clone(),
+            record_count: records.len(),
+            record_ids: records.iter().map(|r| r.id.clone()).collect(),
+            canonical_hash: hash_bytes(&digest),
+        })
+    }
+
+    pub fn publish_v2(&self) -> Result<CorpusManifest> {
+        let records = self.load_v2()?;
+        let manifest = self.describe_v2(&records)?;
+        crate::ingest::write_json(&self.corpus_path(), &manifest.record_ids)?;
+        crate::ingest::write_json(&self.manifest_path(), &manifest)?;
+        Ok(manifest)
     }
 
     /// Every stored record, in canonical ID order.

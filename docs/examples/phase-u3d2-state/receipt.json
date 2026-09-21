@@ -1,0 +1,144 @@
+{
+  "archive_validation_sha256": "c21a90f2a47425dfa4f925c344bcbbd4d667367547bf3c559f74c35a121e95e4",
+  "complete": true,
+  "fallback": false,
+  "kind": "u3d2_bounded_state_transport",
+  "max_attempts_per_context": 2,
+  "provider": "https://solana-mainnet.g.alchemy.com",
+  "raw_artifact_hashes": {
+    "rpc/029a6d2dbec111f322082624220bd3e2b13a506168a630880f4ebab264b12d94-1.body": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "rpc/029a6d2dbec111f322082624220bd3e2b13a506168a630880f4ebab264b12d94-2.body": "072c547ad3321ad6379bf249c218bcf112eaa3bd0138f07ace4077db1785a37d",
+    "rpc/2bc51b465d29c8165688fc0449e8f7101248212a1cd200cd4b5d780b1d3b65c8-1.body": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "rpc/2bc51b465d29c8165688fc0449e8f7101248212a1cd200cd4b5d780b1d3b65c8-2.body": "65c6e5c44058c8593c048ae962d9a5dc0a105f26d60faea1659c8aad40bc6eaf",
+    "rpc/397adf7fd4e5fee0d74a815b4829c1477e37e0ad1f4640cbd5318be45862a5af-1.body": "c8f1e240dd765942770a85120c3602f0c0cbfaefbc1f1ee06d0dfdf79f076edb",
+    "rpc/9880a48ca6d6fba8cabf64e12f33a6da9b401fdb82c9745ee21c7a1d24b9e67c-1.body": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "rpc/9880a48ca6d6fba8cabf64e12f33a6da9b401fdb82c9745ee21c7a1d24b9e67c-2.body": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "requests": [
+    {
+      "attempt": 1,
+      "method": "getGenesisHash",
+      "params": [],
+      "request_id": "029a6d2dbec111f322082624220bd3e2b13a506168a630880f4ebab264b12d94",
+      "response_bytes": 0,
+      "response_file": "rpc/029a6d2dbec111f322082624220bd3e2b13a506168a630880f4ebab264b12d94-1.body",
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "seconds": 0.2916851250338368,
+      "transport_error": "invalid_json_response",
+      "withheld": false
+    },
+    {
+      "attempt": 2,
+      "method": "getGenesisHash",
+      "params": [],
+      "request_id": "029a6d2dbec111f322082624220bd3e2b13a506168a630880f4ebab264b12d94",
+      "response_bytes": 81,
+      "response_file": "rpc/029a6d2dbec111f322082624220bd3e2b13a506168a630880f4ebab264b12d94-2.body",
+      "response_sha256": "072c547ad3321ad6379bf249c218bcf112eaa3bd0138f07ace4077db1785a37d",
+      "seconds": 0.3804387910058722,
+      "transport_error": null,
+      "withheld": false
+    },
+    {
+      "attempt": 1,
+      "method": "getAccountInfo",
+      "params": [
+        "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "request_id": "397adf7fd4e5fee0d74a815b4829c1477e37e0ad1f4640cbd5318be45862a5af",
+      "response_bytes": 38542,
+      "response_file": "rpc/397adf7fd4e5fee0d74a815b4829c1477e37e0ad1f4640cbd5318be45862a5af-1.body",
+      "response_sha256": "c8f1e240dd765942770a85120c3602f0c0cbfaefbc1f1ee06d0dfdf79f076edb",
+      "seconds": 0.5205597500316799,
+      "transport_error": null,
+      "withheld": false
+    },
+    {
+      "attempt": 1,
+      "method": "getAccountInfo",
+      "params": [
+        "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "request_id": "2bc51b465d29c8165688fc0449e8f7101248212a1cd200cd4b5d780b1d3b65c8",
+      "response_bytes": 0,
+      "response_file": "rpc/2bc51b465d29c8165688fc0449e8f7101248212a1cd200cd4b5d780b1d3b65c8-1.body",
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "seconds": 0.1433174170088023,
+      "transport_error": "invalid_json_response",
+      "withheld": false
+    },
+    {
+      "attempt": 2,
+      "method": "getAccountInfo",
+      "params": [
+        "3t4JZcueEzTbVP6kLxXrL3VpWx45jDer4eqysweBchNH",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ],
+      "request_id": "2bc51b465d29c8165688fc0449e8f7101248212a1cd200cd4b5d780b1d3b65c8",
+      "response_bytes": 38542,
+      "response_file": "rpc/2bc51b465d29c8165688fc0449e8f7101248212a1cd200cd4b5d780b1d3b65c8-2.body",
+      "response_sha256": "65c6e5c44058c8593c048ae962d9a5dc0a105f26d60faea1659c8aad40bc6eaf",
+      "seconds": 0.6341382500249892,
+      "transport_error": null,
+      "withheld": false
+    },
+    {
+      "attempt": 1,
+      "method": "getAccountInfo",
+      "params": [
+        "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "request_id": "9880a48ca6d6fba8cabf64e12f33a6da9b401fdb82c9745ee21c7a1d24b9e67c",
+      "response_bytes": 0,
+      "response_file": "rpc/9880a48ca6d6fba8cabf64e12f33a6da9b401fdb82c9745ee21c7a1d24b9e67c-1.body",
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "seconds": 0.18408287497004494,
+      "transport_error": "invalid_json_response",
+      "withheld": false
+    },
+    {
+      "attempt": 2,
+      "method": "getAccountInfo",
+      "params": [
+        "4zh6bmb77qX2CL7t5AJYCqa6YqFafbz3QJNeFvZjLowg",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195165
+        }
+      ],
+      "request_id": "9880a48ca6d6fba8cabf64e12f33a6da9b401fdb82c9745ee21c7a1d24b9e67c",
+      "response_bytes": 0,
+      "response_file": "rpc/9880a48ca6d6fba8cabf64e12f33a6da9b401fdb82c9745ee21c7a1d24b9e67c-2.body",
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "seconds": 0.12874275003559887,
+      "transport_error": "invalid_json_response",
+      "withheld": false
+    }
+  ],
+  "retry_only": [
+    "transport_exit_*",
+    "transport_timeout",
+    "invalid_json_response"
+  ],
+  "sample_fingerprint": "b97116541aeefc6723ef91a1d38c9be52792d47316b573ac08d49484fd97d0af"
+}

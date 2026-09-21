@@ -1,0 +1,26 @@
+[
+  {
+    "case": "verify",
+    "exit": 0,
+    "matches_u5": true,
+    "stdout_sha256": "529355d96e95bf81c44debd50a007f3624612009cffcf5cee47cc631d05e3b18"
+  },
+  {
+    "case": "baseline",
+    "exit": 0,
+    "matches_u5": true,
+    "stdout_sha256": "b7f33953ca35bcdc7949a52a9ea5263739e1be20a1c00ddc1d0d7c89f1a8fe44"
+  },
+  {
+    "case": "offline_verify",
+    "exit": 0,
+    "matches_u5": true,
+    "stdout_sha256": "529355d96e95bf81c44debd50a007f3624612009cffcf5cee47cc631d05e3b18"
+  },
+  {
+    "case": "offline_ci",
+    "exit": 0,
+    "matches_u5": true,
+    "stdout_sha256": "b7f33953ca35bcdc7949a52a9ea5263739e1be20a1c00ddc1d0d7c89f1a8fe44"
+  }
+]

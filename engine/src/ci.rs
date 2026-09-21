@@ -157,6 +157,14 @@ impl CiReport {
     }
 }
 
+/// Both fidelity profiles use the same fail-closed semantic coverage rule.
+pub fn semantic_coverage_failure(coverage: &[ObservationCoverage]) -> Option<FailureReason> {
+    coverage
+        .iter()
+        .all(|entry| entry.subjects.is_empty())
+        .then_some(FailureReason::NoSemanticCoverage)
+}
+
 /// Why the gate could not run.
 ///
 /// Two kinds, because the fix is different. A bundle problem is repaired by
@@ -202,6 +210,15 @@ pub fn check(
     candidate: &Path,
     expectations: Option<&Path>,
 ) -> std::result::Result<CiReport, CheckError> {
+    let manifest_bytes = std::fs::read(bundle_dir.join("bundle.json"))
+        .context("reading the CI bundle manifest")
+        .map_err(CheckError::Bundle)?;
+    let manifest: serde_json::Value = serde_json::from_slice(&manifest_bytes)
+        .context("parsing the CI bundle manifest")
+        .map_err(CheckError::Bundle)?;
+    if manifest["schema_version"].as_u64() == Some(2) {
+        return check_v2(bundle_dir, candidate, expectations);
+    }
     // ---- preflight: nothing executes until all of this holds ------------
     let bundle = CiBundle::open(bundle_dir)
         .context("opening the CI bundle")
@@ -246,6 +263,315 @@ pub fn check(
         &replay,
         &declarations,
     ))
+}
+
+fn semantic_snapshot(
+    account: Option<&crate::types::AccountSnapshot>,
+) -> crate::types::AccountSnapshot {
+    account.cloned().unwrap_or(crate::types::AccountSnapshot {
+        owner: "11111111111111111111111111111111".into(),
+        lamports: 0,
+        data: Vec::new(),
+        executable: false,
+        rent_epoch: 0,
+    })
+}
+
+/// Adapt complete execution evidence to the established economic adapter API.
+pub fn semantic_result(
+    evidence: &crate::universal::execution::ExecutionEvidence,
+    labels: &BTreeMap<String, String>,
+    account_keys: &[String],
+) -> Result<crate::executor::ExecutionResult> {
+    let mut accounts = BTreeMap::new();
+    for (address, account) in &evidence.post_accounts {
+        let label = labels
+            .get(address)
+            .context("watched account lacks semantic label")?;
+        anyhow::ensure!(
+            accounts
+                .insert(label.clone(), semantic_snapshot(account.as_ref()))
+                .is_none(),
+            "semantic labels are not unique"
+        );
+    }
+    let mut cpi_calls = Vec::new();
+    for group in &evidence.inner_instructions {
+        for ix in &group.instructions {
+            cpi_calls.push(crate::executor::CpiCall {
+                program: account_keys
+                    .get(usize::from(ix.program_id_index))
+                    .context("CPI program index outside message key space")?
+                    .clone(),
+                stack_height: ix.stack_height,
+                outer_index: u8::try_from(group.outer_index)?,
+                account_count: u8::try_from(ix.accounts.len())?,
+                data_len: u32::try_from(ix.data.len())?,
+                discriminant: ix.data.first().copied(),
+            });
+        }
+    }
+    Ok(crate::executor::ExecutionResult {
+        version: "schema-2".into(),
+        success: evidence.success,
+        error: evidence.error.clone(),
+        compute_units: Some(evidence.compute_units),
+        fee: evidence.fee,
+        logs: evidence.logs.clone(),
+        cpi_calls,
+        accounts,
+    })
+}
+
+fn check_v2(
+    bundle_dir: &Path,
+    candidate: &Path,
+    expectations: Option<&Path>,
+) -> std::result::Result<CiReport, CheckError> {
+    use crate::universal::{bundle::UniversalBundle, pipeline};
+    let bundle = UniversalBundle::open(bundle_dir)
+        .context("opening the schema-2 CI bundle")
+        .map_err(CheckError::Bundle)?;
+    let candidate_bytes = std::fs::read(candidate)
+        .with_context(|| format!("reading the candidate program {}", candidate.display()))
+        .map_err(CheckError::Configuration)?;
+    let candidate_sha256 = hash_bytes(&candidate_bytes);
+    let declarations = match expectations {
+        Some(path) => ExpectationFile::load(path).map_err(CheckError::Configuration)?,
+        None => ExpectationFile::empty(),
+    };
+    let adapter = crate::protocol::adapter_for(&bundle.manifest.program_id);
+    let mut observed = Vec::new();
+    let mut coverage = Vec::new();
+    let mut structural: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
+    for (record, resolved) in bundle.records.iter().zip(&bundle.resolved) {
+        let (baseline, _) = pipeline::baseline(record, resolved)
+            .with_context(|| format!("baseline replay for {}", record.id))
+            .map_err(CheckError::Configuration)?;
+        let candidate_run = pipeline::execute(record, resolved, &candidate_bytes)
+            .with_context(|| format!("candidate replay for {}", record.id))
+            .map_err(CheckError::Configuration)?;
+        let tx = &resolved.message.transaction;
+        let labels = resolved
+            .message
+            .account_keys
+            .iter()
+            .enumerate()
+            .map(|(index, address)| {
+                (
+                    address.clone(),
+                    adapter
+                        .map(|a| a.label(tx, index))
+                        .unwrap_or_else(|| format!("account-{index}")),
+                )
+            })
+            .collect::<BTreeMap<_, _>>();
+        let pre = resolved
+            .watched
+            .iter()
+            .map(|address| crate::types::NamedAccount {
+                label: labels
+                    .get(address)
+                    .cloned()
+                    .unwrap_or_else(|| address.clone()),
+                address: address.clone(),
+                account: semantic_snapshot(resolved.seeds.get(address)),
+            })
+            .collect::<Vec<_>>();
+        let before = semantic_result(&baseline, &labels, &resolved.message.account_keys)
+            .map_err(CheckError::Configuration)?;
+        let after = semantic_result(&candidate_run, &labels, &resolved.message.account_keys)
+            .map_err(CheckError::Configuration)?;
+        let subjects = adapter
+            .map(|a| a.evaluable_subjects(tx, &pre))
+            .unwrap_or_default();
+        let named = adapter
+            .map(|a| a.named_findings(tx, &pre, &before, &after))
+            .unwrap_or_default();
+        let entity = adapter
+            .and_then(|a| a.economic_entity_id(tx, &pre))
+            .map(|v| v.to_string());
+        coverage.push(ObservationCoverage {
+            observation_id: record.id.clone(),
+            subjects,
+        });
+        for finding in &named {
+            observed.push(ObservedFinding {
+                observation_id: record.id.clone(),
+                entity: entity.clone(),
+                finding: finding.clone(),
+            });
+        }
+        // Every byte that the semantic vocabulary does not explain remains a
+        // failing structural finding. This is deliberately conservative for
+        // protocols whose adapter has no promoted subjects.
+        let outcome_named = named
+            .iter()
+            .any(|f| f.fingerprint.domain == crate::semantics::FindingDomain::Execution);
+        if (baseline.success, &baseline.error) != (candidate_run.success, &candidate_run.error)
+            && !outcome_named
+        {
+            structural
+                .entry("transaction outcome".into())
+                .or_default()
+                .insert(record.id.clone());
+        }
+        if baseline.fee != candidate_run.fee {
+            structural
+                .entry("transaction fee".into())
+                .or_default()
+                .insert(record.id.clone());
+        }
+        if baseline.logs != candidate_run.logs {
+            structural
+                .entry("execution logs".into())
+                .or_default()
+                .insert(record.id.clone());
+        }
+        if baseline.inner_instructions != candidate_run.inner_instructions {
+            structural
+                .entry("inner instructions".into())
+                .or_default()
+                .insert(record.id.clone());
+        }
+        if baseline.return_data != candidate_run.return_data {
+            structural
+                .entry("return data".into())
+                .or_default()
+                .insert(record.id.clone());
+        }
+        let explained = named
+            .iter()
+            .flat_map(|finding| {
+                adapter
+                    .map(|a| a.decoded_sources_of(finding.fingerprint.subject.as_str()))
+                    .unwrap_or(&[])
+                    .iter()
+                    .copied()
+            })
+            .collect::<BTreeSet<_>>();
+        for (address, prior) in &baseline.post_accounts {
+            let next = candidate_run
+                .post_accounts
+                .get(address)
+                .context("candidate omitted a watched account")
+                .map_err(CheckError::Configuration)?;
+            if prior == next {
+                continue;
+            }
+            let label = labels.get(address).map(String::as_str).unwrap_or(address);
+            let change = match (prior, next) {
+                (Some(a), Some(b))
+                    if a.owner == b.owner
+                        && a.lamports == b.lamports
+                        && a.executable == b.executable
+                        && a.rent_epoch == b.rent_epoch =>
+                {
+                    let ranges = adapter.map(|a| a.decoded_byte_ranges(label)).unwrap_or(&[]);
+                    let accounted = explained.iter().any(|(source, _)| *source == label);
+                    let unexplained = a
+                        .data
+                        .iter()
+                        .zip(&b.data)
+                        .enumerate()
+                        .find(|(offset, (x, y))| {
+                            x != y && (!accounted || !ranges.iter().any(|r| r.contains(offset)))
+                        })
+                        .map(|(offset, _)| offset);
+                    let first = if a.data.len() != b.data.len() {
+                        Some(a.data.len().min(b.data.len()))
+                    } else {
+                        unexplained
+                    };
+                    let Some(first) = first else {
+                        continue;
+                    };
+                    format!("{label} bytes at offset {first}")
+                }
+                _ => format!("{label} account state"),
+            };
+            structural
+                .entry(change)
+                .or_default()
+                .insert(record.id.clone());
+        }
+    }
+    observed.sort_by(|a, b| {
+        a.finding
+            .fingerprint
+            .cmp(&b.finding.fingerprint)
+            .then_with(|| a.observation_id.cmp(&b.observation_id))
+    });
+    coverage.sort_by(|a, b| a.observation_id.cmp(&b.observation_id));
+    let mut reviewed = review(&observed, &coverage, &declarations);
+    let undeclarable = structural
+        .into_iter()
+        .map(|(description, observations)| UndeclarableChange {
+            layer: EvidenceLayer::Structural,
+            description,
+            observations: observations.into_iter().collect(),
+        })
+        .collect::<Vec<_>>();
+    if let Some(reason) = semantic_coverage_failure(&coverage) {
+        reviewed.failures.push(reason);
+    }
+    if !undeclarable.is_empty() {
+        reviewed.failures.push(FailureReason::UndeclarableChange);
+    }
+    reviewed.failures.sort();
+    reviewed.failures.dedup();
+    let mut per_subject: BTreeMap<String, usize> = BTreeMap::new();
+    for entry in &coverage {
+        for subject in entry
+            .subjects
+            .iter()
+            .map(ToString::to_string)
+            .collect::<BTreeSet<_>>()
+        {
+            *per_subject.entry(subject).or_default() += 1;
+        }
+    }
+    let summary = ReviewSummary {
+        passed: reviewed.passed(),
+        failure_reasons: reviewed.failures.clone(),
+        exit_code: reviewed.exit_code(),
+        expected: reviewed.count(ReviewStatus::Expected),
+        unexpected: reviewed.count(ReviewStatus::Unexpected),
+        expected_but_exceeded: reviewed.count(ReviewStatus::ExpectedButExceeded),
+        stale: reviewed.count(ReviewStatus::Stale),
+        unevaluable: reviewed.count(ReviewStatus::Unevaluable),
+    };
+    Ok(CiReport {
+        schema_version: 2,
+        bundle: BundleRef {
+            sha256: bundle.manifest.bundle_sha256.clone(),
+            baseline_sha256: bundle.manifest.baseline_program_sha256.clone(),
+            corpus_sha256: bundle.manifest.corpus_sha256.clone(),
+            record_count: bundle.manifest.record_count,
+            program_id: bundle.manifest.program_id.clone(),
+            adapter: bundle.adapter.name.clone(),
+            adapter_version: bundle.adapter.version,
+            semantic_schema_version: bundle.manifest.semantic_schema_version,
+            source_slot_range: bundle.manifest.source_slot_range,
+            limitations: bundle.adapter.limitations.clone(),
+        },
+        candidate: CandidateRef {
+            sha256: candidate_sha256,
+            len: candidate_bytes.len() as u64,
+        },
+        coverage: per_subject
+            .into_iter()
+            .map(|(subject, observations)| SubjectCoverage {
+                subject,
+                observations,
+            })
+            .collect(),
+        undeclarable,
+        findings: reviewed.findings,
+        unmatched: reviewed.unmatched,
+        failures: reviewed.failures,
+        summary,
+    })
 }
 
 /// Changes the engine detected that no expectation can name.
@@ -556,8 +882,8 @@ pub fn assemble(
     // the adapter chose to name, and a change it decoded but did not promote
     // disappears into a passing report.
     let undeclarable = undeclarable_changes(bundle, replay);
-    if coverage.iter().all(|entry| entry.subjects.is_empty()) {
-        reviewed.failures.push(FailureReason::NoSemanticCoverage);
+    if let Some(reason) = semantic_coverage_failure(&coverage) {
+        reviewed.failures.push(reason);
     }
     if !undeclarable.is_empty() {
         reviewed.failures.push(FailureReason::UndeclarableChange);

@@ -1,0 +1,17 @@
+{
+  "commitment": "finalized",
+  "endpoint_host": "solana-mainnet.streaming.alchemy.com",
+  "event_bytes": 35,
+  "event_kind": "slot",
+  "event_sha256": "e8130c66baeda8cee25572714af81d163bd209f04fd869e53ce2d0801bebe8d5",
+  "event_slot": 448760927,
+  "filters": [
+    "slots",
+    "blocks_meta",
+    "transactions_touching_whirlpool",
+    "five_account_addresses"
+  ],
+  "request_sha256": "865426c0c8ec7c5dcf27f398cac86242127e2c8d2568247e19a94a5d41b928ee",
+  "requested_from_slot": 448760958,
+  "result": "first_event"
+}

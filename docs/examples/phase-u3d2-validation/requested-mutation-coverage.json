@@ -1,0 +1,103 @@
+{
+  "full_requested_runtime_campaign_complete": false,
+  "mapping": [
+    {
+      "evidence_boundary": "acquisition guard; no runtime seed executed",
+      "id": 1,
+      "named_assertion": "test_current_or_post_scope_state_cannot_seed_pre_state",
+      "requested_mutation": "seed post-Scope state"
+    },
+    {
+      "evidence_boundary": "planning guard only; actual runtime mutation not reached",
+      "id": 2,
+      "named_assertion": "complete_sequence_cannot_strip_or_reorder_dependency",
+      "requested_mutation": "skip Scope execution"
+    },
+    {
+      "evidence_boundary": "structural guard; actual runtime mutation not reached",
+      "id": 3,
+      "named_assertion": "scope_after_reserve_refresh_is_rejected",
+      "requested_mutation": "reorder Scope after refreshReserve"
+    },
+    {
+      "evidence_boundary": "provenance/retained-byte guards; no runtime loading",
+      "id": 4,
+      "named_assertion": "current_external_binary_is_rejected; test_wrong_scope_or_klend_binary_bytes_rejected",
+      "requested_mutation": "load current Scope binary"
+    },
+    {
+      "evidence_boundary": "KLend byte tamper tested; current-deployment runtime substitution not reached",
+      "id": 5,
+      "named_assertion": "test_wrong_scope_or_klend_binary_bytes_rejected",
+      "requested_mutation": "load current KLend binary"
+    },
+    {
+      "evidence_boundary": "new source mutant killed",
+      "id": 6,
+      "named_assertion": "test_raw_hash_mismatch_cannot_be_ignored",
+      "requested_mutation": "ignore historical state hash mismatch"
+    },
+    {
+      "evidence_boundary": "new source mutant killed",
+      "id": 7,
+      "named_assertion": "test_same_slot_ambiguity_and_missing_coverage_rejected",
+      "requested_mutation": "skip same-slot interference"
+    },
+    {
+      "evidence_boundary": "new source mutant killed; full dependency closure remains unproved",
+      "id": 8,
+      "named_assertion": "test_missing_or_truncated_oracle_state_is_rejected",
+      "requested_mutation": "accept missing dependency state"
+    },
+    {
+      "evidence_boundary": "inventory negative control only; executor mutation not reached",
+      "id": 9,
+      "named_assertion": "test_native_account_order_is_preserved",
+      "requested_mutation": "convert native v0 to reordered legacy"
+    },
+    {
+      "evidence_boundary": "not reached; no new executor/fidelity path",
+      "id": 10,
+      "named_assertion": null,
+      "requested_mutation": "success as fidelity without post-state"
+    },
+    {
+      "evidence_boundary": "not reached; no semantic evaluation",
+      "id": 11,
+      "named_assertion": null,
+      "requested_mutation": "emit subject before baseline fidelity"
+    },
+    {
+      "evidence_boundary": "existing envelope mutant killed; no dependency semantics added",
+      "id": 12,
+      "named_assertion": "dependency_has_no_scope_semantic_support",
+      "requested_mutation": "dependency semantically supported"
+    },
+    {
+      "evidence_boundary": "inventory negative control only; actual runtime mutation not reached",
+      "id": 13,
+      "named_assertion": "test_instruction_order_and_ata_membership_cannot_change",
+      "requested_mutation": "drop ATA"
+    },
+    {
+      "evidence_boundary": "existing envelope source mutants killed",
+      "id": 14,
+      "named_assertion": "real_multi_action_observations_preserve_both_outer_indices; real_multi_action_ids_are_not_merged",
+      "requested_mutation": "merge multi-action observations"
+    },
+    {
+      "evidence_boundary": "existing envelope source mutant killed",
+      "id": 15,
+      "named_assertion": "real_multi_action_whole_transaction_delta_is_unevaluable",
+      "requested_mutation": "assign whole transaction delta to first action"
+    },
+    {
+      "evidence_boundary": "existing envelope source mutant killed",
+      "id": 16,
+      "named_assertion": "real_failed_original_policy_survives_exact_lut_proof",
+      "requested_mutation": "failed original eligible"
+    }
+  ],
+  "scope_state_effect_experiment": "not attempted; state acquisition incomplete",
+  "source_mutants_killed": 21
+}

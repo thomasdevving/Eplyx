@@ -1,0 +1,67 @@
+{
+  "command_corrections": [
+    "Initial test invocation used nonexistent names token2022_adapter/kamino_adapter; rerun with token2022/kamino passed.",
+    "Default U3B script verifies original unavailable attempt; explicit phase-u3b2-lut verification also passed."
+  ],
+  "fingerprint": "b97116541aeefc6723ef91a1d38c9be52792d47316b573ac08d49484fd97d0af",
+  "head": "84ba410287a4a7ed315a7d779dbaad625fe3bf39",
+  "kamino_tests": 10,
+  "policy_sha256": "3a95c98305aa69e2b7f0502c6e9472f47aea863c3fdf32c12e3644a06a0180c3",
+  "product_controls": {
+    "binary_sha256": "7c0321f3e6d196ed6fe38f30f1945075a8b7ea1d8da1ddf9fddbb2835e2157b1",
+    "cases": [
+      {
+        "case": "verify",
+        "exit_code": 0,
+        "matches_preserved_u2_bytes": true,
+        "stdout_sha256": "d395a058064535cbeb7547943f34ad3c3a2b109e849e5ecf859c694b54acbcf0"
+      },
+      {
+        "case": "baseline",
+        "exit_code": 0,
+        "matches_preserved_u2_bytes": true,
+        "stdout_sha256": "7be26a66f3e98f9b96ba6f1270003c158d99968d9ed081c336a97f14782d2099"
+      },
+      {
+        "case": "regression",
+        "exit_code": 1,
+        "matches_preserved_u2_bytes": true,
+        "stdout_sha256": "e5e6a4b39ce377d8573099dc646fb37928bd3aa1172ceea4b4fa6c903cd52ee4"
+      },
+      {
+        "case": "bounded",
+        "exit_code": 1,
+        "matches_preserved_u2_bytes": true,
+        "stdout_sha256": "139fd95c2899d54b765511d20bc70dfc63cb7a9532d5b3b5ae62b7626df68d16"
+      },
+      {
+        "case": "stale",
+        "exit_code": 3,
+        "matches_preserved_u2_bytes": true,
+        "stdout_sha256": "8d6a4dc867c39655b58f91395630aac48d8e865b1aa1fee3a36a6ac0bcb9bc63"
+      },
+      {
+        "case": "unevaluable",
+        "exit_code": 5,
+        "matches_preserved_u2_bytes": true,
+        "stdout_sha256": "0c7a3b5231f84b99e58d6ddba6fe76e595cc212ce13a81fac24d9be283ca57d7"
+      }
+    ],
+    "control_commit": "8855edb",
+    "rpc_environment_removed": true
+  },
+  "source_hashes": {
+    "Cargo.lock": "6922c627de8a29f22e27f54f9fd1148eb19f1d84c67ebbd02163539eb0bd8682",
+    "Cargo.toml": "c195f0413490ac5dd984a6931d812caf25b2d9c48a9db3326cbfe9f044b78031",
+    "engine/src/executor.rs": "c053a49468da41e4fe0969b75f1af18c70f3aa7a2a44c986a4ec88914582f901",
+    "engine/src/historical.rs": "f0497b5ba426023e2f227ad2614b9ff81b4eea9247dfdaf77082ec013d18a665",
+    "engine/src/protocol/kamino/mod.rs": "e772e0361206a300fccae0a776ac252cd01a90c347471695a2ee54c0c9d4558d",
+    "engine/src/screening.rs": "72d8c1d93e403e6ed04ee28ee10c6335611d0719a33e799965a8d3ad59fdc1b9"
+  },
+  "stage": 0,
+  "status": "passed",
+  "token2022_tests": 12,
+  "u3a_checksums": 344,
+  "u3b2_proofs": 8,
+  "u3c_admitted": 4
+}

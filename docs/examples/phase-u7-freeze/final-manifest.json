@@ -1,0 +1,479 @@
+{
+  "head": "84ba410287a4a7ed315a7d779dbaad625fe3bf39",
+  "prior_check": "docs/examples/phase-u7-freeze/prior-artifact-check.json",
+  "self_excluded": true,
+  "u7_file_count": 94,
+  "u7_files": [
+    {
+      "bytes": 273,
+      "path": "docs/examples/phase-u7-archive/448760957-11111111111111111111111111111111.body",
+      "sha256": "6b42da8bc5c7d6de6d1d27a2c0eeefbbc71b685643cc155745609b4c433d4607"
+    },
+    {
+      "bytes": 493,
+      "path": "docs/examples/phase-u7-archive/448760957-3BbFVfXDfM14kM46SFfPaRJXVSub4Ljwox87HfKyv1JA.body",
+      "sha256": "426dc82d405b8ab523c4c0467f5817cf81d4acd369c97052509884bb413a7899"
+    },
+    {
+      "bytes": 1197,
+      "path": "docs/examples/phase-u7-archive/448760957-4joyRY87Qs8mNFh9oyW9hnR5uFVgVusJiQWz2KwFVv2w.body",
+      "sha256": "ce52d67ad609058ebf732f78f09576c456bc94ebcd5f8bc23e05b790a346df4a"
+    },
+    {
+      "bytes": 98,
+      "path": "docs/examples/phase-u7-archive/448760957-8gbSj1AEU8xNbmwwzpBdxots4e55PVqUaFHobwhryuBs.body",
+      "sha256": "5988d9d04dabd3e567c0ed5777539fde1dcfde10b784cf0716da456a0fb9ca3e"
+    },
+    {
+      "bytes": 140302,
+      "path": "docs/examples/phase-u7-archive/448760957-ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL.body",
+      "sha256": "178fc19049a8945f113a080f6edae741287e0794c6c22261a8e20c8d79e97a62"
+    },
+    {
+      "bytes": 493,
+      "path": "docs/examples/phase-u7-archive/448760957-AawdCALDWi7ea9JCeCArzjEzLGqwuFSdzydgJZrephXv.body",
+      "sha256": "7db330d9e79def755ce2a56024c33ef478dbb1acf5f02c34d68a0775f03db709"
+    },
+    {
+      "bytes": 277,
+      "path": "docs/examples/phase-u7-archive/448760957-ComputeBudget111111111111111111111111111111.body",
+      "sha256": "6a24bf0c020e1d96ff5e4dca3a381fbf00066ce66898aeb6d633d2562e725737"
+    },
+    {
+      "bytes": 9264,
+      "path": "docs/examples/phase-u7-archive/448760957-DyxxT7XjZRS86nhAN4k8w21kN8af6AVGeUhQSHLsvgcY.body",
+      "sha256": "8abb61065b99272492b3e291ace1ae744e28450c32e60bdb8ca8d788da3d5b3c"
+    },
+    {
+      "bytes": 242,
+      "path": "docs/examples/phase-u7-archive/448760957-Eb2KpSC8uMt9GmzyAEm5Eb1AAAgTjRaXWFjKyFXHZxF3.body",
+      "sha256": "b23b8ade2e4f9dd7100cd771a6a79b88863c216c274ba180453d0eba49c57de0"
+    },
+    {
+      "bytes": 478,
+      "path": "docs/examples/phase-u7-archive/448760957-EdcxbpnvtssEkHV4KDfdYVFoGDewE7XnYbTakgLxPusR.body",
+      "sha256": "3f0812b79e1361a016a56cf7f7ec932a4e7693b47df7e2f7be59cc6579303ec1"
+    },
+    {
+      "bytes": 593,
+      "path": "docs/examples/phase-u7-archive/448760957-FBNg5G8CrU46jguTyX55VRSMBtERn5L4ZawiHEpEAgK8.body",
+      "sha256": "3d069c6682bdcd332ae126b48b6befb54eaa5e714157ae9c3a1775c7ab53ffc7"
+    },
+    {
+      "bytes": 453,
+      "path": "docs/examples/phase-u7-archive/448760957-GoCMmS76U4UmibhGqw8razjsNfJv2s81TMhihMDxnWa.body",
+      "sha256": "9fdc75a120e417c84eae94e15bbcf9c110d404a66402c89acf847c4bbd79fd07"
+    },
+    {
+      "bytes": 244,
+      "path": "docs/examples/phase-u7-archive/448760957-H6PjRLnqGPz5VEU4roZzKnfJRxKECRzYuJAZ2Hvc1rAc.body",
+      "sha256": "0b72921fe99f31952b80fbcb0d0033dc2d3b34db92f7b43cf9841935693f06aa"
+    },
+    {
+      "bytes": 349,
+      "path": "docs/examples/phase-u7-archive/448760957-HCyytQceq1kmeMEmKmDutWM74M1c7CMK8nASjbSJWd94.body",
+      "sha256": "2060ebe06af222aea46deb0f0ad95f85acd5d0654a0ef3cdd1b5a051cfbfaf64"
+    },
+    {
+      "bytes": 1125,
+      "path": "docs/examples/phase-u7-archive/448760957-HxrqS96uHco2a8LxTvUwb9e2tS963Ec6nYkvZso9TDii.body",
+      "sha256": "9ebcbf69e64e66518b7c811549db299c19b776c55dfd57a178767a498ec344ca"
+    },
+    {
+      "bytes": 99992,
+      "path": "docs/examples/phase-u7-archive/448760957-MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr.body",
+      "sha256": "3399775f44da5d6bd58e96751787a79b0bbb7e0fae12de1627a54f2fc027847a"
+    },
+    {
+      "bytes": 370,
+      "path": "docs/examples/phase-u7-archive/448760957-So11111111111111111111111111111111111111112.body",
+      "sha256": "b5b742c19a5075b440b7bbcdcef59e12d49aacdac97f4c06babd4765a5dd2215"
+    },
+    {
+      "bytes": 98,
+      "path": "docs/examples/phase-u7-archive/448760957-SysvarRecentB1ockHashes11111111111111111111.body",
+      "sha256": "5988d9d04dabd3e567c0ed5777539fde1dcfde10b784cf0716da456a0fb9ca3e"
+    },
+    {
+      "bytes": 301,
+      "path": "docs/examples/phase-u7-archive/448760957-TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA.body",
+      "sha256": "5fd03a15720e8a406e9901ef959dba0b9cd88d0da552a1343c05fe7655f77741"
+    },
+    {
+      "bytes": 300,
+      "path": "docs/examples/phase-u7-archive/448760957-TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb.body",
+      "sha256": "aa3e4e6a502f75cca16b189b90513f256b19abb3ee23d90b7549d8f6664edd9e"
+    },
+    {
+      "bytes": 1153,
+      "path": "docs/examples/phase-u7-archive/448760957-Xsv9hRk1z5ystj9MhnA7Lq4vjSsLwzL2nxrwmwtD3re.body",
+      "sha256": "eb29900d39cce8b6bd56a9d91ffd141db5bd592e71878ec8f7a86a8d6685ed23"
+    },
+    {
+      "bytes": 300,
+      "path": "docs/examples/phase-u7-archive/448760957-whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc.body",
+      "sha256": "680fb259396ff58a1bb7435687c90edf15da0a1982a3280bc0cf85eded7fd2b6"
+    },
+    {
+      "bytes": 273,
+      "path": "docs/examples/phase-u7-archive/448760958-11111111111111111111111111111111.body",
+      "sha256": "3aa47f2108561bda40bf294ffed3c20986ad3005cf84ba311b54ca6f5d76ed4d"
+    },
+    {
+      "bytes": 493,
+      "path": "docs/examples/phase-u7-archive/448760958-3BbFVfXDfM14kM46SFfPaRJXVSub4Ljwox87HfKyv1JA.body",
+      "sha256": "b338fc7b0721df22ff653bbfc0a4edf8ab3ab830de9b904209f59ea11a9c298d"
+    },
+    {
+      "bytes": 1197,
+      "path": "docs/examples/phase-u7-archive/448760958-4joyRY87Qs8mNFh9oyW9hnR5uFVgVusJiQWz2KwFVv2w.body",
+      "sha256": "bedee451e85180fbf971e81c8da4e0fb468c886ff72dc63fc3739507e9a07ca8"
+    },
+    {
+      "bytes": 98,
+      "path": "docs/examples/phase-u7-archive/448760958-8gbSj1AEU8xNbmwwzpBdxots4e55PVqUaFHobwhryuBs.body",
+      "sha256": "ea61b279b76906c319b5a28f679fb3242f1a7470a2d7f1f1b93fc3b3bafd7187"
+    },
+    {
+      "bytes": 140302,
+      "path": "docs/examples/phase-u7-archive/448760958-ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL.body",
+      "sha256": "fe9e3a53a3615bea7c60eec25a43e1c4c909945807f2963cd121d08176afde47"
+    },
+    {
+      "bytes": 493,
+      "path": "docs/examples/phase-u7-archive/448760958-AawdCALDWi7ea9JCeCArzjEzLGqwuFSdzydgJZrephXv.body",
+      "sha256": "2bc9b5d410a2db433a0d432f0ce5af0d3f5ed6ad9782b8185bc4a6846c7224b9"
+    },
+    {
+      "bytes": 277,
+      "path": "docs/examples/phase-u7-archive/448760958-ComputeBudget111111111111111111111111111111.body",
+      "sha256": "abc44447ac90b43d4f9e28a3f66a76a2d1b9f01f6c0f51f68f5c61594333a8e0"
+    },
+    {
+      "bytes": 9264,
+      "path": "docs/examples/phase-u7-archive/448760958-DyxxT7XjZRS86nhAN4k8w21kN8af6AVGeUhQSHLsvgcY.body",
+      "sha256": "21b89c2fec273a3e604db23f8cc77aa88b41655234fa0a3b60db9da0bc4c1b9d"
+    },
+    {
+      "bytes": 242,
+      "path": "docs/examples/phase-u7-archive/448760958-Eb2KpSC8uMt9GmzyAEm5Eb1AAAgTjRaXWFjKyFXHZxF3.body",
+      "sha256": "4f7d737211c0d8e6686aef19506dfdae1dcee8133bda8bdc7b9a99b73dd545e9"
+    },
+    {
+      "bytes": 478,
+      "path": "docs/examples/phase-u7-archive/448760958-EdcxbpnvtssEkHV4KDfdYVFoGDewE7XnYbTakgLxPusR.body",
+      "sha256": "491fd24d50eed064f6331e30a22e6a9c817f089c5e1aa1321abfd45e37891e54"
+    },
+    {
+      "bytes": 593,
+      "path": "docs/examples/phase-u7-archive/448760958-FBNg5G8CrU46jguTyX55VRSMBtERn5L4ZawiHEpEAgK8.body",
+      "sha256": "02257a0026bc33193e018eac7a136ee6731439519e37f0372a8deaf8f9d9a25d"
+    },
+    {
+      "bytes": 453,
+      "path": "docs/examples/phase-u7-archive/448760958-GoCMmS76U4UmibhGqw8razjsNfJv2s81TMhihMDxnWa.body",
+      "sha256": "3d86da6014c8991938694c2e649e082587ab45513925afefd0a2472af2c6c249"
+    },
+    {
+      "bytes": 244,
+      "path": "docs/examples/phase-u7-archive/448760958-H6PjRLnqGPz5VEU4roZzKnfJRxKECRzYuJAZ2Hvc1rAc.body",
+      "sha256": "742cddb5e3528094c7307086e9227a45fc864cd5b44d15a224a84e813fcae3a2"
+    },
+    {
+      "bytes": 349,
+      "path": "docs/examples/phase-u7-archive/448760958-HCyytQceq1kmeMEmKmDutWM74M1c7CMK8nASjbSJWd94.body",
+      "sha256": "1755f080702066626c1e20ac56ec2be36d3801dc33d2b74e9d69d365e18c5ce0"
+    },
+    {
+      "bytes": 1125,
+      "path": "docs/examples/phase-u7-archive/448760958-HxrqS96uHco2a8LxTvUwb9e2tS963Ec6nYkvZso9TDii.body",
+      "sha256": "31cd6f573cbbbcf731233625ca785b852052e8fe1892cf835c53d2e1b8e40759"
+    },
+    {
+      "bytes": 99992,
+      "path": "docs/examples/phase-u7-archive/448760958-MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr.body",
+      "sha256": "988fde81a0b8e8da62e5da95aa3a7c7195608a663025b10a31f8de8b0602a822"
+    },
+    {
+      "bytes": 370,
+      "path": "docs/examples/phase-u7-archive/448760958-So11111111111111111111111111111111111111112.body",
+      "sha256": "db7eb23585f27b3887032e6e25e146cd9e858f7685c89a715c30298f8a888057"
+    },
+    {
+      "bytes": 98,
+      "path": "docs/examples/phase-u7-archive/448760958-SysvarRecentB1ockHashes11111111111111111111.body",
+      "sha256": "ea61b279b76906c319b5a28f679fb3242f1a7470a2d7f1f1b93fc3b3bafd7187"
+    },
+    {
+      "bytes": 301,
+      "path": "docs/examples/phase-u7-archive/448760958-TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA.body",
+      "sha256": "7de74c21a6acbefece35c3b80f7a770c4d4637e60a2ddd8a7a0bf5ffa2982321"
+    },
+    {
+      "bytes": 300,
+      "path": "docs/examples/phase-u7-archive/448760958-TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb.body",
+      "sha256": "43a2cab8edecb336252386a1ba6395cb39ce3679a9b69d0854678aa8b4e96569"
+    },
+    {
+      "bytes": 1153,
+      "path": "docs/examples/phase-u7-archive/448760958-Xsv9hRk1z5ystj9MhnA7Lq4vjSsLwzL2nxrwmwtD3re.body",
+      "sha256": "7f6fe22b7ae28a1dc2ce79ee9794560705612acaf37d978937b42dd03b132fa3"
+    },
+    {
+      "bytes": 300,
+      "path": "docs/examples/phase-u7-archive/448760958-whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc.body",
+      "sha256": "eed724b62594c8e0db688bf913b1e2b6e63ccbfb8b2d5ba76fafc51dec100501"
+    },
+    {
+      "bytes": 16036,
+      "path": "docs/examples/phase-u7-archive/archive-receipts.json",
+      "sha256": "a4ab114bf57da4d960ae1f3a73c977bc9f8ed1991794a9b7280c3c7a94bd5ac5"
+    },
+    {
+      "bytes": 245,
+      "path": "docs/examples/phase-u7-archive/fee-payer-history-after.body",
+      "sha256": "cd37c39052b59f994d6aa5bb67bbfbd54b3759330b1a5fddb386798e4a3ff004"
+    },
+    {
+      "bytes": 245,
+      "path": "docs/examples/phase-u7-archive/fee-payer-history-before.body",
+      "sha256": "cd37c39052b59f994d6aa5bb67bbfbd54b3759330b1a5fddb386798e4a3ff004"
+    },
+    {
+      "bytes": 414,
+      "path": "docs/examples/phase-u7-archive/fee-payer-history-receipt.json",
+      "sha256": "07c10780e97c9c0e677d3c5a0c17682c58f63e84ad9e0247504847102a4d559a"
+    },
+    {
+      "bytes": 5695,
+      "path": "docs/examples/phase-u7-archive/target-key-comparison.json",
+      "sha256": "ff70f97bb164600a119c105958ab1ed355d0002bd5bd20c46a9dce98b3e02cee"
+    },
+    {
+      "bytes": 35847,
+      "path": "docs/examples/phase-u7-archive/target-timelines.json",
+      "sha256": "6fadff396c77a2244fd8f7f136684db683e6cf6d2e685868e6cceba017db5f36"
+    },
+    {
+      "bytes": 3,
+      "path": "docs/examples/phase-u7-block-rejection/stream-index.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "bytes": 931,
+      "path": "docs/examples/phase-u7-block-rejection/stream-receipt.json",
+      "sha256": "256ae9650dfdde80527b73d6a2d335dd9eab73c28586624c77d052013ff355b2"
+    },
+    {
+      "bytes": 0,
+      "path": "docs/examples/phase-u7-block-rejection/stream.pbseq",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "docs/examples/phase-u7-freeze/baseline.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 2402,
+      "path": "docs/examples/phase-u7-freeze/baseline.stdout",
+      "sha256": "b7f33953ca35bcdc7949a52a9ea5263739e1be20a1c00ddc1d0d7c89f1a8fe44"
+    },
+    {
+      "bytes": 649,
+      "path": "docs/examples/phase-u7-freeze/kamino-controls.json",
+      "sha256": "42a550e8bd0cb4254b5c3c21000efd31d458dab633037be1da88de10c89fd662"
+    },
+    {
+      "bytes": 0,
+      "path": "docs/examples/phase-u7-freeze/offline_ci.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 2402,
+      "path": "docs/examples/phase-u7-freeze/offline_ci.stdout",
+      "sha256": "b7f33953ca35bcdc7949a52a9ea5263739e1be20a1c00ddc1d0d7c89f1a8fe44"
+    },
+    {
+      "bytes": 0,
+      "path": "docs/examples/phase-u7-freeze/offline_verify.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 69489,
+      "path": "docs/examples/phase-u7-freeze/offline_verify.stdout",
+      "sha256": "529355d96e95bf81c44debd50a007f3624612009cffcf5cee47cc631d05e3b18"
+    },
+    {
+      "bytes": 1233,
+      "path": "docs/examples/phase-u7-freeze/prior-artifact-check.json",
+      "sha256": "99beaf92eb6aeecc261ca9df7b1252b27f1f267725527c4a76aa018a886e1f70"
+    },
+    {
+      "bytes": 159,
+      "path": "docs/examples/phase-u7-freeze/rewind-coverage-probe.body",
+      "sha256": "0a4a057f6782d1ccfee8332c2ce1c1e16f687ee21359dc3733d5926d31828a63"
+    },
+    {
+      "bytes": 742,
+      "path": "docs/examples/phase-u7-freeze/second-provider.json",
+      "sha256": "ab70a4b9c6fbad1dd91200f1be2a3c897fc1f8543b4f7f9d5bc7a8cbb6bce753"
+    },
+    {
+      "bytes": 2609,
+      "path": "docs/examples/phase-u7-freeze/stake-pool-controls/baseline.stdout",
+      "sha256": "7be26a66f3e98f9b96ba6f1270003c158d99968d9ed081c336a97f14782d2099"
+    },
+    {
+      "bytes": 9884,
+      "path": "docs/examples/phase-u7-freeze/stake-pool-controls/bounded.stdout",
+      "sha256": "139fd95c2899d54b765511d20bc70dfc63cb7a9532d5b3b5ae62b7626df68d16"
+    },
+    {
+      "bytes": 1330,
+      "path": "docs/examples/phase-u7-freeze/stake-pool-controls/controls.json",
+      "sha256": "1fab03a55a95edc5d2e643e57ca3855e113c69ace905d5cf640d408b517d7f91"
+    },
+    {
+      "bytes": 9722,
+      "path": "docs/examples/phase-u7-freeze/stake-pool-controls/regression.stdout",
+      "sha256": "e5e6a4b39ce377d8573099dc646fb37928bd3aa1172ceea4b4fa6c903cd52ee4"
+    },
+    {
+      "bytes": 2933,
+      "path": "docs/examples/phase-u7-freeze/stake-pool-controls/stale.stdout",
+      "sha256": "8d6a4dc867c39655b58f91395630aac48d8e865b1aa1fee3a36a6ac0bcb9bc63"
+    },
+    {
+      "bytes": 3129,
+      "path": "docs/examples/phase-u7-freeze/stake-pool-controls/unevaluable.stdout",
+      "sha256": "0c7a3b5231f84b99e58d6ddba6fe76e595cc212ce13a81fac24d9be283ca57d7"
+    },
+    {
+      "bytes": 1628,
+      "path": "docs/examples/phase-u7-freeze/stake-pool-controls/verify.stdout",
+      "sha256": "d395a058064535cbeb7547943f34ad3c3a2b109e849e5ecf859c694b54acbcf0"
+    },
+    {
+      "bytes": 0,
+      "path": "docs/examples/phase-u7-freeze/verify.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 69489,
+      "path": "docs/examples/phase-u7-freeze/verify.stdout",
+      "sha256": "529355d96e95bf81c44debd50a007f3624612009cffcf5cee47cc631d05e3b18"
+    },
+    {
+      "bytes": 1233,
+      "path": "docs/examples/phase-u7-full-slot/README.md",
+      "sha256": "3afabbd7fa24846b7464260f97167eb19c5948d93635aa51cc21a9582e1251df"
+    },
+    {
+      "bytes": 12655,
+      "path": "docs/examples/phase-u7-full-slot/analysis.json",
+      "sha256": "4e3bc8b6a9e83ad081c15eb2896508c25b354088e3237ef5fc0e5cfee46e64d0"
+    },
+    {
+      "bytes": 5436,
+      "path": "docs/examples/phase-u7-full-slot/coalescing-witness.json",
+      "sha256": "af6b03ffb1476c8f0993c7812d84c039590e384bb6f164725eb34c3d81259086"
+    },
+    {
+      "bytes": 94,
+      "path": "docs/examples/phase-u7-full-slot/filter-comparison.json",
+      "sha256": "b40e7f8412aed0a90817e1f5dbeabed7d05680f7ac58bdaa18bc649fd3ec9f58"
+    },
+    {
+      "bytes": 1208729,
+      "path": "docs/examples/phase-u7-full-slot/stream-index.json",
+      "sha256": "b5a19ea306e1883650818af9ffb8c8097fee3c5f069aa60c65fec2a5eea5b021"
+    },
+    {
+      "bytes": 1636,
+      "path": "docs/examples/phase-u7-full-slot/stream-receipt.json",
+      "sha256": "ce3ce97dcc27c79c751e82aec69ca5f7994f5fb10afca393a6c06fcc3458ea35"
+    },
+    {
+      "bytes": 16701389,
+      "path": "docs/examples/phase-u7-full-slot/stream.pbseq",
+      "sha256": "c5ad0e12566077d26f749e8e79a8e1fe71385920e62e1cae85a8c5dc1a47196c"
+    },
+    {
+      "bytes": 81,
+      "path": "docs/examples/phase-u7-live/archive-genesis.body",
+      "sha256": "072c547ad3321ad6379bf249c218bcf112eaa3bd0138f07ace4077db1785a37d"
+    },
+    {
+      "bytes": 1125,
+      "path": "docs/examples/phase-u7-live/archive-history-after.body",
+      "sha256": "c3a4370769fc70a4bcde5b51a50b46afc6d16251c64bddc915da9e01a74f10a7"
+    },
+    {
+      "bytes": 1125,
+      "path": "docs/examples/phase-u7-live/archive-history-before.body",
+      "sha256": "13cc4c54bc9ce5dd01b82e7d77f805f144e4bafd12ec60e7e554f61878f09088"
+    },
+    {
+      "bytes": 1133,
+      "path": "docs/examples/phase-u7-live/archive-whirlpool-448760957.body",
+      "sha256": "0498efcb039691718685515da8f5a555271ffee18a8a2ea70823893acd3f6e2a"
+    },
+    {
+      "bytes": 1133,
+      "path": "docs/examples/phase-u7-live/archive-whirlpool-448760958.body",
+      "sha256": "be1796c936ef3ac348a6ba845e11c4ce41f3fc420ba104d0cccee4f83adf42f9"
+    },
+    {
+      "bytes": 10599,
+      "path": "docs/examples/phase-u7-live/stream-index.json",
+      "sha256": "aaf8c533f67bff6386cba0907f0377afd70fdcf020fc9407bc281ca27069961f"
+    },
+    {
+      "bytes": 1613,
+      "path": "docs/examples/phase-u7-live/stream-receipt.json",
+      "sha256": "69c131a75e2fe406e9066fd8327570b0305af2689b926cff524634cf50e8aa65"
+    },
+    {
+      "bytes": 105254,
+      "path": "docs/examples/phase-u7-live/stream.pbseq",
+      "sha256": "ce41c5e4d5c5c87419b6b16c5f9e408a75c599f3cb558c492deb0b5175bbcf3c"
+    },
+    {
+      "bytes": 222,
+      "path": "docs/examples/phase-u7-live/yellowstone-capabilities.json",
+      "sha256": "9269317800365415d89a7dd0ac745772ffb8a5c882aaa82b014d40ac9c9bdbd0"
+    },
+    {
+      "bytes": 35,
+      "path": "docs/examples/phase-u7-live/yellowstone-first-event.pb",
+      "sha256": "e8130c66baeda8cee25572714af81d163bd209f04fd869e53ce2d0801bebe8d5"
+    },
+    {
+      "bytes": 520,
+      "path": "docs/examples/phase-u7-live/yellowstone-retention-probe.json",
+      "sha256": "eca5097a2790c4c07a1a38ba344082926e2336697df46e8e54b7818addc47e16"
+    },
+    {
+      "bytes": 13431,
+      "path": "docs/phase-u7-live-boundary-qualification.md",
+      "sha256": "9d93952fe5fcea646630af1f7af5dd48b6aa6f64480be6c4d4d83388d2dd1955"
+    },
+    {
+      "bytes": 6772,
+      "path": "scripts/analyze-u7-yellowstone.py",
+      "sha256": "50907901ddcca7a351ea9f1aa3ad0bff80b5211f67e95ff59982518d491b15d6"
+    },
+    {
+      "bytes": 3033,
+      "path": "scripts/capture-u7-archive.py",
+      "sha256": "14bd4473adb43767cba0d670e2fee732c6277c285fb70bcf62ff60615188bf9f"
+    },
+    {
+      "bytes": 7061,
+      "path": "scripts/capture-u7-yellowstone.py",
+      "sha256": "d9af7145acf770e1bfc9fabde4b222a4bb3a1ce193c802a9687f0c24737458cc"
+    }
+  ],
+  "u7_total_bytes": 18838315
+}

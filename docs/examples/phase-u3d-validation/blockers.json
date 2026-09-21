@@ -1,0 +1,103 @@
+{
+  "denominator": "nine frozen transactions with recognized U2 actions, including one failed original",
+  "fetch_failures": 44,
+  "first_blocker_distribution": {
+    "Binary": 3,
+    "Envelope": 4,
+    "FailedOriginalPolicy": 1,
+    "HistoricalState": 1
+  },
+  "not_fetch_selected": 800,
+  "note": "Out-of-contract or uncaptured inputs are not diagnosed as runtime/fidelity failures.",
+  "other_captures": {
+    "klend_top_level_without_recognized_action": 87,
+    "no_klend_top_level": 60
+  },
+  "rows": [
+    {
+      "action_observations": 1,
+      "category": "Envelope",
+      "new_attempt": false,
+      "reason": "separate ATA-only or System/wrapped-SOL lifecycle outside primary Scope envelope",
+      "secondary_unresolved": [],
+      "signature": "2bcGD3XPZoBaQ9VL1oL4HtJ45sSatCYwPycGuLCNh9NxqhHtcahXYFYsYfZNvYk5HgXGaCYZAJrn256ZLgoHMjv6",
+      "slot": 448195333
+    },
+    {
+      "action_observations": 1,
+      "category": "HistoricalState",
+      "new_attempt": false,
+      "reason": "qualified archive configuration absent; historical state not attempted, not a measured provider failure",
+      "secondary_unresolved": [],
+      "signature": "5eLacZQNT4qYoCd6w9KyULUmycVFeEMjcuoS9sEZXsUifVKXi6AkGUx93zgmzEGZ2KUDzfB8Z7m8ZoAo3fvSWg97",
+      "slot": 448195166
+    },
+    {
+      "action_observations": 2,
+      "category": "Envelope",
+      "new_attempt": false,
+      "reason": "multiple targets outside primary single-target envelope",
+      "secondary_unresolved": [
+        "SemanticAttribution: action-boundary measurements remain unproven"
+      ],
+      "signature": "3zswY7FXGLsVCVJTg8LawCQZp27xBza4M4Cp7mtBm2LxP97kn8eZrXPkCCJv3dt3qMb9fvRXKT3qZTXiucgR6y4Q",
+      "slot": 448195147
+    },
+    {
+      "action_observations": 2,
+      "category": "FailedOriginalPolicy",
+      "new_attempt": false,
+      "reason": "failed frozen original; unchanged successful-original policy",
+      "secondary_unresolved": [],
+      "signature": "47XZ8dNPUBxMTnJ3zrxeCKt37PRsckvhKzPSutdUp2NavU1UTTNYRd7rnvEP3pSmHQszrLW3cdB56zTw3kyrwZUf",
+      "slot": 448195003
+    },
+    {
+      "action_observations": 2,
+      "category": "Envelope",
+      "new_attempt": false,
+      "reason": "multiple targets outside primary single-target envelope",
+      "secondary_unresolved": [
+        "SemanticAttribution: action-boundary measurements remain unproven"
+      ],
+      "signature": "37XJKQbB9fRX1R76cKKGSENNNA2RSY1WvjkCx2Q7joN2irKfTTZ5Z6bHgH4rfgDPJvhXf3peTe4mwxisfpSEmimu",
+      "slot": 448194959
+    },
+    {
+      "action_observations": 1,
+      "category": "Binary",
+      "new_attempt": false,
+      "reason": "retained transport failure",
+      "secondary_unresolved": [],
+      "signature": "55EdbRGcpNETQZ2AerE4KuvKC1xKCFzHkFHxxN98gjz7DWzGCGbgXKSXW6q3SoABZBbvEsEKb6sVBt9eGThj2kvk",
+      "slot": 448194517
+    },
+    {
+      "action_observations": 1,
+      "category": "Binary",
+      "new_attempt": false,
+      "reason": "retained transport failure",
+      "secondary_unresolved": [],
+      "signature": "5NKNdj527vBVpCGhNdeGwpj9LdQfpSCxSH3b8oaKkLe3EzKbZdrsc2fR7yCuCkYgt8EmYXFDwJidi15y8ZQNY43V",
+      "slot": 448194462
+    },
+    {
+      "action_observations": 1,
+      "category": "Binary",
+      "new_attempt": false,
+      "reason": "retained transport failure",
+      "secondary_unresolved": [],
+      "signature": "49zi8hsUATfn3oM7x3bx8fBWULY9mN6DGHtFCVWRLcuPJFyBkP54XVdZGWbqVecwHzsSzFkVQdvLKPp8r8929Amx",
+      "slot": 448194435
+    },
+    {
+      "action_observations": 1,
+      "category": "Envelope",
+      "new_attempt": false,
+      "reason": "separate ATA-only or System/wrapped-SOL lifecycle outside primary Scope envelope",
+      "secondary_unresolved": [],
+      "signature": "2dc94E8Mvh83c8MiecgRekd7Vj8YE6aexfVeCJK58K46LQcTRjpDomii6pYmwbdeYmdTM3bVbHw6rhFdtwRtSTnT",
+      "slot": 448194341
+    }
+  ]
+}

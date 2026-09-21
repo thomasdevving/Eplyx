@@ -1,0 +1,164 @@
+{
+  "acquired": [
+    {
+      "address": "SysvarC1ock11111111111111111111111111111111",
+      "facts": {
+        "data_bytes": 40,
+        "data_sha256": "652923b2d3e34bcba34fad51675b849b50fc2148baf9d04c2f16172f55a4920c",
+        "executable": false,
+        "fields": {
+          "epoch": 1037,
+          "epoch_start_timestamp": 1789708003,
+          "leader_schedule_epoch": 1038,
+          "slot": 448195166,
+          "unix_timestamp": 1789764316
+        },
+        "lamports": 1169280,
+        "owner": "Sysvar1111111111111111111111111111111111111",
+        "raw_account_sha256": "7b03eed9be41709838187ba299d9133fae10ac91ff1826542a30af3c08a7d5ab",
+        "rent_epoch": 18446744073709551615
+      },
+      "method": "getAccountInfo",
+      "name": "Clock",
+      "params": [
+        "SysvarC1ock11111111111111111111111111111111",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ]
+    },
+    {
+      "address": "SysvarRent111111111111111111111111111111111",
+      "facts": {
+        "data_bytes": 17,
+        "data_sha256": "e6833309a1b7d9ce57849bd64d1d5834144a14cbc659346a9fda424a3e7ae219",
+        "executable": false,
+        "fields": {
+          "burn_percent": 50,
+          "exemption_threshold": 1.0,
+          "lamports_per_byte_year": 5080
+        },
+        "lamports": 1009200,
+        "owner": "Sysvar1111111111111111111111111111111111111",
+        "raw_account_sha256": "91d643ba40c2c2b3c5812a2b1302088d225bc5a2ec173fbd987fd92f7588ea8b",
+        "rent_epoch": 18446744073709551615
+      },
+      "method": "getAccountInfo",
+      "name": "Rent",
+      "params": [
+        "SysvarRent111111111111111111111111111111111",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ]
+    },
+    {
+      "address": "SysvarEpochSchedu1e111111111111111111111111",
+      "facts": {
+        "data_bytes": 33,
+        "data_sha256": "bc8e8d8331213d875b89f7e267acd9e983e47331fb7136c35eb50cab4f3030a3",
+        "executable": false,
+        "fields": {
+          "first_normal_epoch": 0,
+          "first_normal_slot": 0,
+          "leader_schedule_slot_offset": 432000,
+          "slots_per_epoch": 432000,
+          "warmup": 0
+        },
+        "lamports": 1120560,
+        "owner": "Sysvar1111111111111111111111111111111111111",
+        "raw_account_sha256": "088d7ebbc8beb84023c021e3412f3809cd5d428d2d661224de22f234c9dd833f",
+        "rent_epoch": 18446744073709551615
+      },
+      "method": "getAccountInfo",
+      "name": "EpochSchedule",
+      "params": [
+        "SysvarEpochSchedu1e111111111111111111111111",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ]
+    }
+  ],
+  "failure": {
+    "reason": "missing_account",
+    "request": {
+      "address": "SysvarS1otHashes111111111111111111111111111",
+      "method": "getAccountInfo",
+      "name": "SlotHashes",
+      "params": [
+        "SysvarS1otHashes111111111111111111111111111",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ]
+    }
+  },
+  "historical_runtime_inputs_captured": false,
+  "kind": "u3e_historical_runtime_input_capture",
+  "planned": [
+    {
+      "address": "SysvarC1ock11111111111111111111111111111111",
+      "method": "getAccountInfo",
+      "name": "Clock",
+      "params": [
+        "SysvarC1ock11111111111111111111111111111111",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ]
+    },
+    {
+      "address": "SysvarRent111111111111111111111111111111111",
+      "method": "getAccountInfo",
+      "name": "Rent",
+      "params": [
+        "SysvarRent111111111111111111111111111111111",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ]
+    },
+    {
+      "address": "SysvarEpochSchedu1e111111111111111111111111",
+      "method": "getAccountInfo",
+      "name": "EpochSchedule",
+      "params": [
+        "SysvarEpochSchedu1e111111111111111111111111",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ]
+    },
+    {
+      "address": "SysvarS1otHashes111111111111111111111111111",
+      "method": "getAccountInfo",
+      "name": "SlotHashes",
+      "params": [
+        "SysvarS1otHashes111111111111111111111111111",
+        {
+          "commitment": "finalized",
+          "encoding": "base64",
+          "slot": 448195166
+        }
+      ]
+    }
+  ],
+  "runtime_context_proven": false,
+  "runtime_executed": false
+}
+

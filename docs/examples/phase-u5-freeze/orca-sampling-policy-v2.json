@@ -1,0 +1,31 @@
+{
+  "schema": "eplyx-orca-u5-sample-policy-v2",
+  "supersedes_sha256": "4dc7c808d56bf1eb2406f2e88b8b02fbddb785658a80ec8e83b03b0e3078f9a3",
+  "correction_reason": "The first 1000-signature response contained zero signatures at or before the frozen anchor, because the Whirlpool address accumulated more than 1000 references between getSlot and source capture. No transaction or candidate was fetched or classified before this correction.",
+  "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+  "network": "solana-mainnet-beta",
+  "provider": "https://api.mainnet-beta.solana.com",
+  "anchor_slot": 448760961,
+  "slot_window_first": 448758914,
+  "slot_window_last": 448760961,
+  "source": {
+    "method": "getSignaturesForAddress",
+    "commitment": "finalized",
+    "limit_per_page": 1000,
+    "max_pages": 4,
+    "first_page_sha256": "746450ba84f33733a1c5e70223b2c2d59a1f4026a95d6a7368c8a8c59730aabe",
+    "cursor": "For each subsequent page, use before equal to the final signature in the preceding raw page. Stop after the first page containing a slot at or below anchor_slot, or after 4 total pages. Retain every raw page and transport failure."
+  },
+  "selection": "From fetched pages, keep the first 200 successful signature entries in newest-to-oldest source order whose slots are in the frozen window. Fetch exactly those 200 getTransaction responses; retain null, error and transport failures without replacement. No new anchor, provider or later candidate search is allowed.",
+  "transaction_fetch": {
+    "method": "getTransaction",
+    "encoding": "json",
+    "commitment": "finalized",
+    "maxSupportedTransactionVersion": 0,
+    "attempts_per_signature": 1
+  },
+  "classification": "Inspect each frozen top-level compiled instruction against official Whirlpool IDL discriminators; preserve unknown and remaining accounts. Record successful and failed transactions separately.",
+  "first_replay_eligibility": "First successful transaction in frozen source order with exactly one top-level Whirlpool target, a complete legacy or v0 envelope, resolvable LUTs and dependencies, historical target/dependency binaries, exact account pre/post evidence, runtime context, and a clean S-1 boundary for the complete watched set. Record every rejection; no unbounded search.",
+  "same_slot_rule": "For each fetched candidate, inspect all earlier transactions in its slot for writes to the prospective watched set. Any overlap is TransactionBoundaryStateRequired. Never substitute end-of-S or end-of-S-1 as transaction pre-state when the boundary is dirty.",
+  "failure_rule": "If this provider cannot return the sample or exact historical evidence, retain the failure and stop at the acquisition gate."
+}

@@ -1,0 +1,47 @@
+{
+  "bundle_bytes": 120202905,
+  "independent_evidence_bytes": 183796335,
+  "per_record_evidence_bytes": {
+    "858e3dbc07e74a10a36c2e37c2a24d54dd191653f90986d411da151bb3002189": 108098226,
+    "e56202c8fdcd443d1deba455ab04f2bc6f16689f83a7c107bb98765ec2da626f": 75698109
+  },
+  "record_manifest_bytes": 115883,
+  "records": 2,
+  "saved_by_shared_references_bytes": 74265562,
+  "shared_categories": {
+    "accounts/chunked-observations": {
+      "bytes": 55162,
+      "objects": 20
+    },
+    "accounts/chunks": {
+      "bytes": 7887396,
+      "objects": 23
+    },
+    "accounts/content": {
+      "bytes": 68101161,
+      "objects": 68
+    },
+    "accounts/observations": {
+      "bytes": 64926,
+      "objects": 76
+    },
+    "accounts/responses": {
+      "bytes": 55421,
+      "objects": 117
+    },
+    "programs": {
+      "bytes": 33052793,
+      "objects": 6
+    },
+    "transactions": {
+      "bytes": 18642,
+      "objects": 2
+    },
+    "validator": {
+      "bytes": 295272,
+      "objects": 2
+    }
+  },
+  "shared_physical_evidence_bytes": 109530773,
+  "shared_referenced_evidence_bytes": 109530773
+}
