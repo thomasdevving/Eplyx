@@ -11,7 +11,9 @@ use eplyx_engine::{
     types::AccountSnapshot,
     universal::{
         evidence::{AccountBoundary, AccountObservation, EvidenceKind, EvidenceStore},
-        execution::{ExecutionBackend, ExecutionRequest, LiteSvmBackend, SlotHashesVariant},
+        execution::{
+            ExecutionBackend, ExecutionRequest, LiteSvmBackend, RuntimeProfile, SlotHashesVariant,
+        },
         model::ExecutionInput,
     },
 };
@@ -103,6 +105,15 @@ fn run(input: &Value) -> Result<Value> {
         .iter()
         .map(|value| value.as_str().context("absent address").map(str::to_string))
         .collect::<Result<Vec<_>>>()?;
+    let runtime_profile = RuntimeProfile::resolve(
+        None,
+        &runtime_sysvars,
+        "LiteSVM 0.16.0 mainnet",
+        false,
+        false,
+        "runtime_generated_from_complete_message",
+        "materiality_checked_default",
+    )?;
     let output = LiteSvmBackend.execute(&ExecutionRequest {
         message: &resolved,
         seeds: &seeds,
@@ -111,8 +122,7 @@ fn run(input: &Value) -> Result<Value> {
         runtime_sysvars: &runtime_sysvars,
         clock: None,
         programs_to_load: &[],
-        signature_check: false,
-        blockhash_check: false,
+        runtime_profile: &runtime_profile,
         unlimited_logs: true,
         slot_hashes: SlotHashesVariant::BackendDefault,
         require_complete_state: true,

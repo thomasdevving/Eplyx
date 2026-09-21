@@ -10,7 +10,7 @@ use super::{
         AccountBoundary, AccountObservation, ChunkedAccountObservation, EvidenceKind, EvidenceRef,
         EvidenceStore,
     },
-    execution::{InnerGroup, InnerInstruction, ReturnData},
+    execution::{InnerGroup, InnerInstruction, ReturnData, RuntimeProfile},
     model::{
         AccountSeed, ExpectedAccountSource, ReplayObservationV2, ResolvedMessage, RuntimeCapability,
     },
@@ -26,6 +26,7 @@ pub struct ResolvedReplayInput {
     pub message: ResolvedMessage,
     pub seeds: BTreeMap<String, AccountSnapshot>,
     pub runtime_sysvars: BTreeMap<String, AccountSnapshot>,
+    pub runtime_profile: RuntimeProfile,
     pub absent_pre_accounts: Vec<String>,
     pub watched: Vec<String>,
     pub expected_accounts: BTreeMap<String, Option<AccountSnapshot>>,
@@ -527,10 +528,20 @@ impl ReplayObservationV2 {
                     .count(),
             "complete watched account vector required"
         );
+        let runtime_profile = RuntimeProfile::resolve(
+            self.runtime.historical_evidence.as_ref(),
+            &runtime_sysvars,
+            &self.runtime.feature_profile,
+            self.runtime.signature_check,
+            self.runtime.blockhash_check,
+            &self.runtime.instructions_rule,
+            &self.runtime.slot_hashes_policy,
+        )?;
         Ok(ResolvedReplayInput {
             message,
             seeds,
             runtime_sysvars,
+            runtime_profile,
             absent_pre_accounts: absent.into_iter().collect(),
             watched,
             expected_accounts,
