@@ -1,0 +1,51 @@
+{
+  "name": "orca-whirlpool",
+  "version": 1,
+  "supports_cpi": true,
+  "actions": [
+    {
+      "semantic_action": "swap",
+      "observations": 1
+    }
+  ],
+  "limitations": [
+    {
+      "code": "bounded_observations",
+      "detail": "This corpus covers only its recorded production interactions; no representativeness is claimed."
+    }
+  ],
+  "semantic_bindings": [
+    {
+      "observation_id": "3c29a93121461bc22305bde8ec5c6ef89fb1da01c7427578ef52e86a8e5fe528",
+      "binding": {
+        "level": "execution_corroborated_external_interface",
+        "source": {
+          "repository": "https://github.com/orca-so/whirlpools",
+          "commit": "408c945fef4c49ab70def4303377cfaf8f0f3c99",
+          "source_blobs": [
+            {
+              "path": "programs/whirlpool/src/instructions/v2/swap.rs",
+              "git_blob_sha1": "2284b67082c0e1e60bd67b2f96065a627066292a"
+            },
+            {
+              "path": "programs/whirlpool/src/state/whirlpool.rs",
+              "git_blob_sha1": "bc02ce0140434ae3ef0414ae72ad5a33eb451e01"
+            }
+          ]
+        },
+        "facts": [
+          "instruction_shape",
+          "signer_role",
+          "token_program_ownership",
+          "mint_identity",
+          "token_account_authority",
+          "pool_mint_vault_relationship",
+          "observed_flow_direction",
+          "baseline_execution_success"
+        ],
+        "historical_elf_sha256": "610b1e394973bd1b86de8afc983524bd21dea177e87bfae75ec289d4c350f9ae",
+        "execution_evidence_sha256": "166b16f4f474fade260a70cde32de44f52e1210b602690a126b3f32db35833a0"
+      }
+    }
+  ]
+}

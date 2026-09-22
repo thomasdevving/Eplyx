@@ -12,6 +12,7 @@ use super::{ProtocolAdapter, SemanticAction, SemanticField};
 use crate::{
     executor::ExecutionResult,
     ingest::transactions::HistoricalTransaction,
+    semantic_binding::{CorroboratedFact, RepositoryInterface, SemanticBinding, SourceBlob},
     semantics::{
         ActionId, ChangeKind, EvaluableSubject, FindingDomain, FindingFingerprint, NamedFinding,
         SemanticSubject, SemanticValue,
@@ -19,11 +20,13 @@ use crate::{
     standard_programs::{spl_token, token2022, Decoded},
     types::{AccountSnapshot, InstructionSpec, NamedAccount},
 };
+use std::collections::BTreeMap;
 
 pub const PROGRAM_ID: &str = "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc";
 const MEMO_PROGRAM_ID: &str = "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr";
 // Anchor sha256("global:swap_v2")[..8].
 const SWAP_V2: [u8; 8] = [0x2b, 0x04, 0xed, 0x0b, 0x1a, 0xc9, 0x1e, 0x62];
+const WHIRLPOOL_ACCOUNT: [u8; 8] = [0x3f, 0x95, 0xd1, 0x0c, 0xe1, 0x80, 0x63, 0x09];
 const ROLE_LABELS: [&str; 15] = [
     "token-program-a",
     "token-program-b",
@@ -244,6 +247,28 @@ fn subject_names(a_to_b: bool) -> [&'static str; 3] {
     }
 }
 
+fn source_interface() -> RepositoryInterface {
+    RepositoryInterface {
+        repository: "https://github.com/orca-so/whirlpools".into(),
+        commit: "408c945fef4c49ab70def4303377cfaf8f0f3c99".into(),
+        source_blobs: vec![
+            SourceBlob {
+                path: "programs/whirlpool/src/instructions/v2/swap.rs".into(),
+                git_blob_sha1: "2284b67082c0e1e60bd67b2f96065a627066292a".into(),
+            },
+            SourceBlob {
+                path: "programs/whirlpool/src/state/whirlpool.rs".into(),
+                git_blob_sha1: "bc02ce0140434ae3ef0414ae72ad5a33eb451e01".into(),
+            },
+        ],
+    }
+}
+
+fn pool_address_at(data: &[u8], offset: usize) -> Option<String> {
+    let bytes: [u8; 32] = data.get(offset..offset + 32)?.try_into().ok()?;
+    Some(solana_address::Address::new_from_array(bytes).to_string())
+}
+
 impl ProtocolAdapter for OrcaSwapV2Adapter {
     fn name(&self) -> &'static str {
         "orca-whirlpool"
@@ -256,6 +281,89 @@ impl ProtocolAdapter for OrcaSwapV2Adapter {
     }
     fn adapter_version(&self) -> u32 {
         1
+    }
+    fn semantic_binding(
+        &self,
+        transaction: &HistoricalTransaction,
+        pre: &BTreeMap<String, AccountSnapshot>,
+        baseline_elf: &[u8],
+        baseline: &crate::universal::execution::ExecutionEvidence,
+    ) -> Result<SemanticBinding> {
+        let shape = match swap(transaction) {
+            Ok(shape) => shape,
+            Err(_) => return Ok(SemanticBinding::ManualOrUnknown),
+        };
+        let source = source_interface();
+        // The retained successful transaction is B -> A. An opposite-direction
+        // shape may share the repository interface, but this one execution does
+        // not independently corroborate its economic role mapping.
+        if shape.a_to_b {
+            return Ok(SemanticBinding::RepositorySourceClaim { source });
+        }
+        let role = |index: usize| &shape.instruction.accounts[index].address;
+        let pool = pre
+            .get(role(4))
+            .ok_or_else(|| anyhow::anyhow!("missing historical Whirlpool state"))?;
+        ensure!(
+            pool.owner == PROGRAM_ID
+                && pool.data.len() == 653
+                && pool.data[..8] == WHIRLPOOL_ACCOUNT,
+            "historical Whirlpool state does not match the claimed account layout"
+        );
+        // Offsets include the 8-byte Anchor account discriminator. These four
+        // fields are from the pinned source layout, not a verified ELF build.
+        for (offset, index) in [(101, 5), (133, 8), (181, 6), (213, 10)] {
+            ensure!(
+                pool_address_at(&pool.data, offset).as_deref() == Some(role(index)),
+                "historical Whirlpool mint/vault relationship differs"
+            );
+        }
+        let checked = |index: usize,
+                       program: usize,
+                       mint: usize,
+                       authority: usize|
+         -> Result<(u64, u64)> {
+            let address = role(index);
+            let start = pre
+                .get(address)
+                .ok_or_else(|| anyhow::anyhow!("missing measured token pre-state"))?;
+            let end = baseline
+                .post_accounts
+                .get(address)
+                .and_then(Option::as_ref)
+                .ok_or_else(|| anyhow::anyhow!("missing measured token post-state"))?;
+            let read = |account| {
+                token_amount(account, role(program), role(mint), role(authority)).ok_or_else(|| {
+                    anyhow::anyhow!("historical token role, owner, mint or authority differs")
+                })
+            };
+            Ok((read(start)?, read(end)?))
+        };
+        let (user_b_pre, user_b_post) = checked(9, 1, 6, 3)?;
+        let (vault_a_pre, vault_a_post) = checked(8, 0, 5, 4)?;
+        let (vault_b_pre, vault_b_post) = checked(10, 1, 6, 4)?;
+        ensure!(
+            baseline.success
+                && user_b_pre > user_b_post
+                && vault_a_pre > vault_a_post
+                && vault_b_post > vault_b_pre,
+            "historical execution does not corroborate B-to-A token flow"
+        );
+        Ok(SemanticBinding::ExecutionCorroboratedExternalInterface {
+            source,
+            facts: vec![
+                CorroboratedFact::InstructionShape,
+                CorroboratedFact::SignerRole,
+                CorroboratedFact::TokenProgramOwnership,
+                CorroboratedFact::MintIdentity,
+                CorroboratedFact::TokenAccountAuthority,
+                CorroboratedFact::PoolMintVaultRelationship,
+                CorroboratedFact::ObservedFlowDirection,
+                CorroboratedFact::BaselineExecutionSuccess,
+            ],
+            historical_elf_sha256: crate::replay::hash_bytes(baseline_elf),
+            execution_evidence_sha256: crate::universal::pipeline::evidence_hash(baseline)?,
+        })
     }
     fn semantic_action(&self, transaction: &HistoricalTransaction) -> SemanticAction {
         if swap(transaction).is_ok() {

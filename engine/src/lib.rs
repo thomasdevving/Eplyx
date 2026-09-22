@@ -51,6 +51,7 @@ pub mod report;
 pub mod review;
 pub mod screening;
 pub mod select;
+pub mod semantic_binding;
 pub mod semantics;
 pub mod shrink;
 pub mod standard_programs;

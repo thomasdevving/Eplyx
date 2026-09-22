@@ -72,6 +72,22 @@ pub fn render(report: &CiReport) -> String {
     let _ = writeln!(out);
 
     let _ = writeln!(out, "### Corpus\n");
+    if let Some(binding) = &report.semantic_binding {
+        let _ = writeln!(
+            out,
+            "Semantic binding (exact source-to-ELF verified: `{}`):\n",
+            binding.exact_source_to_elf_verified
+        );
+        for observation in &binding.observations {
+            let _ = writeln!(
+                out,
+                "- `{}`: `{}`",
+                observation.observation_id,
+                observation.binding.level()
+            );
+        }
+        let _ = writeln!(out);
+    }
     let _ = writeln!(
         out,
         "{} validated historical observations, production slots {} → {}.\n",
