@@ -400,11 +400,23 @@ pub struct ExpectedHistoricalOutcome {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct CheckpointedExecutionProof {
+    #[serde(
+        default = "legacy_checkpoint_contract",
+        skip_serializing_if = "is_legacy_checkpoint_contract"
+    )]
+    pub proof_contract_version: u32,
     pub start_checkpoint: EvidenceRef,
     pub terminal_checkpoint: EvidenceRef,
     pub closure_proof: EvidenceRef,
     pub deterministic_execution: EvidenceRef,
     pub validation_outputs: Vec<String>,
+}
+
+fn legacy_checkpoint_contract() -> u32 {
+    1
+}
+fn is_legacy_checkpoint_contract(version: &u32) -> bool {
+    *version == 1
 }
 
 /// Schema 2 is a small manifest: account and binary bytes live in shared CAS.

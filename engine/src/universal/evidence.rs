@@ -538,6 +538,10 @@ impl AccountObservation {
         provider: ArchiveProvenance,
         raw: &[u8],
     ) -> Result<EvidenceRef> {
+        ensure!(
+            boundary != AccountBoundary::BeforeTargetExecution,
+            "archived account cannot claim before-target execution"
+        );
         provider.validate()?;
         address.parse::<solana_address::Address>()?;
         let requested = boundary.requested_slot(transaction_slot)?;
@@ -615,6 +619,10 @@ impl AccountObservation {
         boundary: AccountBoundary,
         genesis: &str,
     ) -> Result<(Option<AccountSnapshot>, Vec<u8>)> {
+        ensure!(
+            boundary != AccountBoundary::BeforeTargetExecution,
+            "archived account cannot claim before-target execution"
+        );
         ensure!(
             reference.kind == EvidenceKind::AccountObservation,
             "account observation reference has wrong kind"

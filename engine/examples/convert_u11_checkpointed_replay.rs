@@ -253,6 +253,8 @@ fn closure_proof(
         rollback_rule: FailedTransactionRollbackRule::FeePayerAndDurableNonceOnly,
         block_accounts_evidence,
         conflict_census_evidence,
+        full_block_evidence: None,
+        rollback_provenance: None,
     }
     .store(store)
 }
@@ -784,6 +786,7 @@ fn main() -> Result<()> {
         expected,
         fidelity_profile: FidelityProfile::CheckpointedExecutionV1,
         checkpointed_execution: Some(CheckpointedExecutionProof {
+            proof_contract_version: 1,
             start_checkpoint,
             terminal_checkpoint,
             closure_proof,

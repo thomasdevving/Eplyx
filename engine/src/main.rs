@@ -1599,10 +1599,15 @@ fn render_ci(report: &eplyx_engine::ci::CiReport) -> String {
         report.bundle.record_count
     );
     if let Some(proof) = &report.replay_proof {
+        let contract = if proof.proof_contract_versions.is_empty() {
+            String::new()
+        } else {
+            format!(", proof contracts {:?}", proof.proof_contract_versions)
+        };
         let _ = writeln!(
             text,
-            "Replay/proof: {} ({:?}, {} observations)",
-            proof.status, proof.profile, proof.observations
+            "Replay/proof: {} ({:?}, {} observations{})",
+            proof.status, proof.profile, proof.observations, contract
         );
     }
 

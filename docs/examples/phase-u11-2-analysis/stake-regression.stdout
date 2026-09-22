@@ -1,0 +1,265 @@
+{
+  "schema_version": 1,
+  "bundle": {
+    "sha256": "5e5b67ac13e4f6b8249348ad81db29885ee8ee897ba78f6de213b55793f4285f",
+    "baseline_sha256": "ec2dfefaa70d560754a0000f39bd2cabc192b895d36205b3c428f601b6e1d7e1",
+    "corpus_sha256": "a4b667316b972685743bf0724b5596b7fbb64dde46468e159f44d773894f69b1",
+    "record_count": 10,
+    "program_id": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+    "adapter": "spl-stake-pool",
+    "adapter_version": 3,
+    "semantic_schema_version": 2,
+    "source_slot_range": {
+      "first": 447850493,
+      "last": 447904974
+    },
+    "limitations": [
+      {
+        "code": "failed_original_transactions_unsupported",
+        "detail": "Transactions that failed on mainnet are observed but not replayed, so no failure path is represented."
+      },
+      {
+        "code": "account_creation_paths_unsupported",
+        "detail": "Interactions that create a token account are outside the exact historical contract and are excluded."
+      },
+      {
+        "code": "replay_runtime_rent_semantics_unsupported",
+        "detail": "Transactions crediting an account that stays below its rent-exempt minimum are accepted by mainnet and refused by the replay runtime, so they are excluded. Tip accounts are the common case."
+      },
+      {
+        "code": "address_lookup_tables_unsupported",
+        "detail": "A v0 message that actually resolves addresses through a lookup table is outside the replay contract and is excluded, so any interaction shape that requires one is unrepresented."
+      }
+    ]
+  },
+  "candidate": {
+    "sha256": "fcd76f1d341869c7751d103a1853b267182355065161010bba72438969a54b0b",
+    "len": 32048
+  },
+  "coverage": [
+    {
+      "subject": "spl-stake-pool/deposit_sol/economic/pool_tokens_received",
+      "observations": 1
+    },
+    {
+      "subject": "spl-stake-pool/deposit_sol/execution/transaction",
+      "observations": 1
+    },
+    {
+      "subject": "spl-stake-pool/withdraw_sol/economic/pool_tokens_burned",
+      "observations": 9
+    },
+    {
+      "subject": "spl-stake-pool/withdraw_sol/economic/pool_tokens_debited",
+      "observations": 9
+    },
+    {
+      "subject": "spl-stake-pool/withdraw_sol/economic/sol_received_by_user",
+      "observations": 9
+    },
+    {
+      "subject": "spl-stake-pool/withdraw_sol/execution/transaction",
+      "observations": 9
+    }
+  ],
+  "undeclarable": [
+    {
+      "layer": "decoded_economic",
+      "description": "manager-fee amount",
+      "observations": [
+        "mainnet-spl-stake-pool-0c4fe6c80dd53827",
+        "mainnet-spl-stake-pool-13f83ad421a7c1b5",
+        "mainnet-spl-stake-pool-1575fae8f62d7fe1",
+        "mainnet-spl-stake-pool-1970f44e62cb6be7",
+        "mainnet-spl-stake-pool-a61d372b8976c9e9",
+        "mainnet-spl-stake-pool-a8b2f3a9fc36f2dc",
+        "mainnet-spl-stake-pool-d5a70b997bcf1d00",
+        "mainnet-spl-stake-pool-d5e15c805ba927b7",
+        "mainnet-spl-stake-pool-eeffb53e253469b7"
+      ]
+    },
+    {
+      "layer": "decoded_economic",
+      "description": "pool-mint supply",
+      "observations": [
+        "mainnet-spl-stake-pool-0c4fe6c80dd53827",
+        "mainnet-spl-stake-pool-13f83ad421a7c1b5",
+        "mainnet-spl-stake-pool-151010f709e113e7",
+        "mainnet-spl-stake-pool-1575fae8f62d7fe1",
+        "mainnet-spl-stake-pool-1970f44e62cb6be7",
+        "mainnet-spl-stake-pool-a61d372b8976c9e9",
+        "mainnet-spl-stake-pool-a8b2f3a9fc36f2dc",
+        "mainnet-spl-stake-pool-d5a70b997bcf1d00",
+        "mainnet-spl-stake-pool-d5e15c805ba927b7",
+        "mainnet-spl-stake-pool-eeffb53e253469b7"
+      ]
+    },
+    {
+      "layer": "decoded_economic",
+      "description": "reserve-stake lamports",
+      "observations": [
+        "mainnet-spl-stake-pool-0c4fe6c80dd53827",
+        "mainnet-spl-stake-pool-13f83ad421a7c1b5",
+        "mainnet-spl-stake-pool-1575fae8f62d7fe1",
+        "mainnet-spl-stake-pool-1970f44e62cb6be7",
+        "mainnet-spl-stake-pool-a61d372b8976c9e9",
+        "mainnet-spl-stake-pool-a8b2f3a9fc36f2dc",
+        "mainnet-spl-stake-pool-d5a70b997bcf1d00",
+        "mainnet-spl-stake-pool-d5e15c805ba927b7",
+        "mainnet-spl-stake-pool-eeffb53e253469b7"
+      ]
+    },
+    {
+      "layer": "decoded_economic",
+      "description": "source-pool-token amount",
+      "observations": [
+        "mainnet-spl-stake-pool-0c4fe6c80dd53827",
+        "mainnet-spl-stake-pool-13f83ad421a7c1b5",
+        "mainnet-spl-stake-pool-1575fae8f62d7fe1",
+        "mainnet-spl-stake-pool-1970f44e62cb6be7",
+        "mainnet-spl-stake-pool-a61d372b8976c9e9",
+        "mainnet-spl-stake-pool-a8b2f3a9fc36f2dc",
+        "mainnet-spl-stake-pool-d5a70b997bcf1d00",
+        "mainnet-spl-stake-pool-d5e15c805ba927b7",
+        "mainnet-spl-stake-pool-eeffb53e253469b7"
+      ]
+    },
+    {
+      "layer": "decoded_economic",
+      "description": "stake-pool pool_token_supply",
+      "observations": [
+        "mainnet-spl-stake-pool-0c4fe6c80dd53827",
+        "mainnet-spl-stake-pool-13f83ad421a7c1b5",
+        "mainnet-spl-stake-pool-151010f709e113e7",
+        "mainnet-spl-stake-pool-1575fae8f62d7fe1",
+        "mainnet-spl-stake-pool-1970f44e62cb6be7",
+        "mainnet-spl-stake-pool-a61d372b8976c9e9",
+        "mainnet-spl-stake-pool-a8b2f3a9fc36f2dc",
+        "mainnet-spl-stake-pool-d5a70b997bcf1d00",
+        "mainnet-spl-stake-pool-d5e15c805ba927b7",
+        "mainnet-spl-stake-pool-eeffb53e253469b7"
+      ]
+    },
+    {
+      "layer": "decoded_economic",
+      "description": "stake-pool total_lamports",
+      "observations": [
+        "mainnet-spl-stake-pool-0c4fe6c80dd53827",
+        "mainnet-spl-stake-pool-13f83ad421a7c1b5",
+        "mainnet-spl-stake-pool-1575fae8f62d7fe1",
+        "mainnet-spl-stake-pool-1970f44e62cb6be7",
+        "mainnet-spl-stake-pool-a61d372b8976c9e9",
+        "mainnet-spl-stake-pool-a8b2f3a9fc36f2dc",
+        "mainnet-spl-stake-pool-d5a70b997bcf1d00",
+        "mainnet-spl-stake-pool-d5e15c805ba927b7",
+        "mainnet-spl-stake-pool-eeffb53e253469b7"
+      ]
+    },
+    {
+      "layer": "structural",
+      "description": "destination-lamports lamports",
+      "observations": [
+        "mainnet-spl-stake-pool-0c4fe6c80dd53827",
+        "mainnet-spl-stake-pool-13f83ad421a7c1b5",
+        "mainnet-spl-stake-pool-1575fae8f62d7fe1",
+        "mainnet-spl-stake-pool-1970f44e62cb6be7",
+        "mainnet-spl-stake-pool-a61d372b8976c9e9",
+        "mainnet-spl-stake-pool-a8b2f3a9fc36f2dc",
+        "mainnet-spl-stake-pool-d5a70b997bcf1d00",
+        "mainnet-spl-stake-pool-d5e15c805ba927b7",
+        "mainnet-spl-stake-pool-eeffb53e253469b7"
+      ]
+    },
+    {
+      "layer": "structural",
+      "description": "invocation shape",
+      "observations": [
+        "mainnet-spl-stake-pool-0c4fe6c80dd53827",
+        "mainnet-spl-stake-pool-13f83ad421a7c1b5",
+        "mainnet-spl-stake-pool-1575fae8f62d7fe1",
+        "mainnet-spl-stake-pool-1970f44e62cb6be7",
+        "mainnet-spl-stake-pool-a61d372b8976c9e9",
+        "mainnet-spl-stake-pool-a8b2f3a9fc36f2dc",
+        "mainnet-spl-stake-pool-d5a70b997bcf1d00",
+        "mainnet-spl-stake-pool-d5e15c805ba927b7",
+        "mainnet-spl-stake-pool-eeffb53e253469b7"
+      ]
+    },
+    {
+      "layer": "structural",
+      "description": "source-pool-token bytes at offset 76",
+      "observations": [
+        "mainnet-spl-stake-pool-0c4fe6c80dd53827",
+        "mainnet-spl-stake-pool-13f83ad421a7c1b5",
+        "mainnet-spl-stake-pool-1575fae8f62d7fe1",
+        "mainnet-spl-stake-pool-1970f44e62cb6be7",
+        "mainnet-spl-stake-pool-a61d372b8976c9e9",
+        "mainnet-spl-stake-pool-a8b2f3a9fc36f2dc",
+        "mainnet-spl-stake-pool-d5a70b997bcf1d00",
+        "mainnet-spl-stake-pool-d5e15c805ba927b7",
+        "mainnet-spl-stake-pool-eeffb53e253469b7"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "fingerprint": "spl-stake-pool/deposit_sol/economic/pool_tokens_received/decreased",
+      "severity": "high",
+      "status": "unexpected",
+      "observations": [
+        "mainnet-spl-stake-pool-151010f709e113e7"
+      ],
+      "entities": [
+        "EpomeRdrhUeAmVyECwima2gBpY3jUoA6cee89EcADaPT"
+      ],
+      "covered_observations": 1,
+      "max_relative_delta_bps": -1
+    },
+    {
+      "fingerprint": "spl-stake-pool/withdraw_sol/execution/transaction/now_reverts",
+      "severity": "critical",
+      "status": "unexpected",
+      "observations": [
+        "mainnet-spl-stake-pool-0c4fe6c80dd53827",
+        "mainnet-spl-stake-pool-13f83ad421a7c1b5",
+        "mainnet-spl-stake-pool-1575fae8f62d7fe1",
+        "mainnet-spl-stake-pool-1970f44e62cb6be7",
+        "mainnet-spl-stake-pool-a61d372b8976c9e9",
+        "mainnet-spl-stake-pool-a8b2f3a9fc36f2dc",
+        "mainnet-spl-stake-pool-d5a70b997bcf1d00",
+        "mainnet-spl-stake-pool-d5e15c805ba927b7",
+        "mainnet-spl-stake-pool-eeffb53e253469b7"
+      ],
+      "entities": [
+        "3aSTyNmQM8p35BNrTzpuhq5NWuPqLZSxejy9jMY5KyFK",
+        "8FUuggMzs1WnTCQ6Jt2V4LAyCmvsc7YLoH9SBTmf6BTc",
+        "ALm3fQr6QfiqQJGf9SuqLHcU3FXsHdLoh3ebBb8iMjuq",
+        "ASHiGqebt6HeHHzquWNP1GLRMJdN2vDNwaREtp9qS11F",
+        "AgXAfCC6CsJZTFA11QQjLhM1Kxzh9txRC6NPm22bHqs2",
+        "DTL6bkGpJFQZEBRpFJVLAQpc6tN1bLzpQZ8Mo2jcvqZe",
+        "EMTGbv938S5vrV3MeDaYDYkL5shVBEXLVax6VxDCbpsM",
+        "GYypwmvd27wdd96K5H2fnboca87D1TeTH35tsUx3Dh4W",
+        "J8se5meWgUY6EzutSVmXZrRqVeshmwxBDbxm2nY2qixz"
+      ],
+      "covered_observations": 9
+    }
+  ],
+  "unmatched": [],
+  "failures": [
+    "undeclarable_change",
+    "undeclared_change"
+  ],
+  "summary": {
+    "passed": false,
+    "failure_reasons": [
+      "undeclarable_change",
+      "undeclared_change"
+    ],
+    "exit_code": 1,
+    "expected": 0,
+    "unexpected": 2,
+    "expected_but_exceeded": 0,
+    "stale": 0,
+    "unevaluable": 0
+  }
+}
