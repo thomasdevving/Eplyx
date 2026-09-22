@@ -351,7 +351,13 @@ fn check_v2(
         Some(path) => ExpectationFile::load(path).map_err(CheckError::Configuration)?,
         None => ExpectationFile::empty(),
     };
-    let adapter = crate::protocol::adapter_for(&bundle.manifest.program_id);
+    // The bundle records the semantic interpreter used at publication. A
+    // replay-only bundle remains replay-only after this engine gains an adapter.
+    let adapter = if bundle.adapter.name == "none" {
+        None
+    } else {
+        crate::protocol::adapter_for(&bundle.manifest.program_id)
+    };
     let checkpointed_observations = bundle
         .records
         .iter()

@@ -122,6 +122,17 @@ pub struct UniversalBundle {
     pub resolved: Vec<ResolvedReplayInput>,
 }
 
+// A corpus published before an adapter existed keeps its signed `None`
+// version. Attaching a later semantic adapter changes bundle metadata, not
+// the immutable observations or their corpus identity.
+fn corpus_manifest_matches(recorded: &CorpusManifest, described: &CorpusManifest) -> bool {
+    let mut comparable = described.clone();
+    if recorded.adapter_version.is_none() {
+        comparable.adapter_version = None;
+    }
+    recorded == &comparable
+}
+
 impl UniversalBundle {
     pub fn root(&self) -> &Path {
         &self.root
@@ -176,7 +187,7 @@ impl UniversalBundle {
         let recorded_manifest: CorpusManifest =
             serde_json::from_slice(&fs::read(store.manifest_path())?)?;
         ensure!(
-            recorded_manifest == corpus,
+            corpus_manifest_matches(&recorded_manifest, &corpus),
             "schema-2 corpus manifest differs"
         );
         let recorded_index: Vec<String> = serde_json::from_slice(&fs::read(store.corpus_path())?)?;
@@ -197,9 +208,13 @@ impl UniversalBundle {
             "source slot range differs"
         );
         let expected_adapter = crate::protocol::adapter_for(&manifest.program_id);
+        let current = adapter.name == expected_adapter.map(|a| a.name()).unwrap_or("none")
+            && adapter.version == expected_adapter.map(|a| a.adapter_version()).unwrap_or(0);
+        let historical_none = adapter.name == "none"
+            && adapter.version == 0
+            && recorded_manifest.adapter_version.is_none();
         ensure!(
-            adapter.name == expected_adapter.map(|a| a.name()).unwrap_or("none")
-                && adapter.version == expected_adapter.map(|a| a.adapter_version()).unwrap_or(0),
+            current || historical_none,
             "adapter metadata differs from engine"
         );
         let evidence = EvidenceStore::at(root.join("evidence"));
@@ -236,7 +251,7 @@ pub fn build(corpus_dir: &Path, baseline: &Path, out: &Path) -> Result<Universal
     let corpus = store.describe_v2(&records)?;
     let recorded: CorpusManifest = serde_json::from_slice(&fs::read(store.manifest_path())?)?;
     ensure!(
-        recorded == corpus,
+        corpus_manifest_matches(&recorded, &corpus),
         "corpus must be published before bundle build"
     );
     let baseline_bytes = fs::read(baseline)?;

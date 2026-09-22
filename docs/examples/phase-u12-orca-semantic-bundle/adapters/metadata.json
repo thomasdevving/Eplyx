@@ -1,0 +1,17 @@
+{
+  "name": "orca-whirlpool",
+  "version": 1,
+  "supports_cpi": true,
+  "actions": [
+    {
+      "semantic_action": "swap",
+      "observations": 1
+    }
+  ],
+  "limitations": [
+    {
+      "code": "bounded_observations",
+      "detail": "This corpus covers only its recorded production interactions; no representativeness is claimed."
+    }
+  ]
+}

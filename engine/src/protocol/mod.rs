@@ -18,6 +18,7 @@
 //! double in most consumers, and a u64 token amount does not survive that.
 
 pub mod kamino;
+pub mod orca;
 pub mod stake_pool;
 pub mod token2022;
 
@@ -784,7 +785,8 @@ pub fn adapters() -> &'static [&'static dyn ProtocolAdapter] {
     const TOKEN_2022: token2022::Token2022Adapter = token2022::Token2022Adapter;
     const STAKE_POOL: stake_pool::StakePoolAdapter = stake_pool::StakePoolAdapter;
     const KAMINO: kamino::KaminoKlendAdapter = kamino::KaminoKlendAdapter;
-    &[&TOKEN_2022, &STAKE_POOL, &KAMINO]
+    const ORCA: orca::OrcaSwapV2Adapter = orca::OrcaSwapV2Adapter;
+    &[&TOKEN_2022, &STAKE_POOL, &KAMINO, &ORCA]
 }
 
 pub fn adapter_for(program_id: &str) -> Option<&'static dyn ProtocolAdapter> {
