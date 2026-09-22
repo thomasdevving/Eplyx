@@ -127,6 +127,8 @@ pub struct ReplayProofSummary {
     pub profile: crate::universal::model::FidelityProfile,
     pub status: String,
     pub observations: usize,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub proof_contract_versions: Vec<u32>,
 }
 
 /// The CI result contract.
@@ -358,6 +360,21 @@ fn check_v2(
                 == crate::universal::model::FidelityProfile::CheckpointedExecutionV1
         })
         .count();
+    let checkpoint_contracts = bundle
+        .records
+        .iter()
+        .filter_map(|record| {
+            record
+                .checkpointed_execution
+                .as_ref()
+                .map(|proof| proof.proof_contract_version)
+        })
+        .collect::<BTreeSet<_>>();
+    let proof_contract_versions = if checkpoint_contracts.iter().all(|version| *version == 1) {
+        Vec::new()
+    } else {
+        checkpoint_contracts.into_iter().collect()
+    };
     let mut observed = Vec::new();
     let mut coverage = Vec::new();
     let mut structural: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
@@ -580,6 +597,7 @@ fn check_v2(
             profile: crate::universal::model::FidelityProfile::CheckpointedExecutionV1,
             status: "matched".into(),
             observations: checkpointed_observations,
+            proof_contract_versions,
         }),
         coverage: per_subject
             .into_iter()

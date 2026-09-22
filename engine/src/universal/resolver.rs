@@ -6,7 +6,10 @@ use base64::{prelude::BASE64_STANDARD, Engine};
 use serde_json::Value;
 
 use super::{
-    checkpoint::{DerivedAccountEvidenceV1, ObservedCheckpointV1, TransactionClosureProofV1},
+    checkpoint::{
+        DerivedAccountEvidenceV1, DerivedAccountEvidenceV2, ObservedCheckpointV1,
+        TransactionClosureProofV1,
+    },
     evidence::{
         AccountBoundary, AccountObservation, ChunkedAccountObservation, EvidenceKind, EvidenceRef,
         EvidenceStore,
@@ -40,6 +43,7 @@ fn resolve_account(
     seed: &AccountSeed,
     slot: u64,
     genesis: &str,
+    checkpoint_contract: u32,
 ) -> Result<Option<AccountSnapshot>> {
     match seed.observation.kind {
         EvidenceKind::AccountObservation => AccountObservation::resolve(
@@ -63,13 +67,23 @@ fn resolve_account(
                 genesis,
             )?))
         }
-        EvidenceKind::DerivedAccount => Ok(Some(DerivedAccountEvidenceV1::resolve(
-            store,
-            &seed.observation,
-            &seed.address,
-            slot,
-            seed.boundary,
-        )?)),
+        EvidenceKind::DerivedAccount => Ok(Some(if checkpoint_contract == 2 {
+            DerivedAccountEvidenceV2::resolve(
+                store,
+                &seed.observation,
+                &seed.address,
+                slot,
+                seed.boundary,
+            )?
+        } else {
+            DerivedAccountEvidenceV1::resolve(
+                store,
+                &seed.observation,
+                &seed.address,
+                slot,
+                seed.boundary,
+            )?
+        })),
         _ => anyhow::bail!("account seed reference has wrong evidence category"),
     }
 }
@@ -355,6 +369,14 @@ fn verify_binary(
 impl ReplayObservationV2 {
     pub fn resolve(&self, store: &EvidenceStore) -> Result<ResolvedReplayInput> {
         self.validate_identity()?;
+        let checkpoint_contract = self
+            .checkpointed_execution
+            .as_ref()
+            .map_or(1, |proof| proof.proof_contract_version);
+        ensure!(
+            checkpoint_contract == 1 || checkpoint_contract == 2,
+            "unsupported checkpoint proof contract"
+        );
         let message = self.execution.resolve(store, &self.genesis_hash)?;
         ensure!(
             message.transaction.signature == self.signature
@@ -421,8 +443,14 @@ impl ReplayObservationV2 {
         let mut seeds = BTreeMap::new();
         let mut seed_refs = BTreeMap::new();
         for seed in &self.account_seeds {
-            let account = resolve_account(store, seed, self.slot, &self.genesis_hash)?
-                .context("present account seed is absent")?;
+            let account = resolve_account(
+                store,
+                seed,
+                self.slot,
+                &self.genesis_hash,
+                checkpoint_contract,
+            )?
+            .context("present account seed is absent")?;
             ensure!(
                 seeds.insert(seed.address.clone(), account).is_none()
                     && seed_refs
@@ -441,8 +469,14 @@ impl ReplayObservationV2 {
                 valid_boundary,
                 "runtime sysvar requires proven execution context"
             );
-            let account = resolve_account(store, seed, self.slot, &self.genesis_hash)?
-                .context("runtime sysvar absent")?;
+            let account = resolve_account(
+                store,
+                seed,
+                self.slot,
+                &self.genesis_hash,
+                checkpoint_contract,
+            )?
+            .context("runtime sysvar absent")?;
             ensure!(
                 runtime_sysvars
                     .insert(seed.address.clone(), account.clone())
@@ -468,7 +502,14 @@ impl ReplayObservationV2 {
         for seed in &self.absent_pre_accounts {
             ensure!(
                 seed.boundary == AccountBoundary::BeforeTransaction
-                    && resolve_account(store, seed, self.slot, &self.genesis_hash)?.is_none()
+                    && resolve_account(
+                        store,
+                        seed,
+                        self.slot,
+                        &self.genesis_hash,
+                        checkpoint_contract
+                    )?
+                    .is_none()
                     && absent.insert(seed.address.clone()),
                 "absence evidence differs"
             );
@@ -566,7 +607,13 @@ impl ReplayObservationV2 {
                         boundary: AccountBoundary::EndOfExecutionSlot,
                         observation: reference.clone(),
                     };
-                    resolve_account(store, &seed, self.slot, &self.genesis_hash)?
+                    resolve_account(
+                        store,
+                        &seed,
+                        self.slot,
+                        &self.genesis_hash,
+                        checkpoint_contract,
+                    )?
                 }
                 ExpectedAccountSource::PreRetained(reference) => {
                     ensure!(
@@ -685,6 +732,7 @@ impl ReplayObservationV2 {
                     self,
                     &message,
                     &proof.validation_outputs,
+                    proof.proof_contract_version,
                 )?;
                 verify_deterministic_execution(
                     self,
