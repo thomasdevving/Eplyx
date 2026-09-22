@@ -233,6 +233,7 @@ impl ExecutionInput {
 pub enum FidelityProfile {
     HistoricalReplayV1,
     CompleteExecutionV2,
+    CheckpointedExecutionV1,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -275,6 +276,11 @@ pub struct RuntimeContext {
     pub provenance: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub historical_evidence: Option<HistoricalRuntimeEvidence>,
+    /// CAS copy of `historical_evidence`. Checkpoint-derived profiles require
+    /// the independently inventoried object; older observations remain byte
+    /// stable because this field is omitted when absent.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub historical_evidence_ref: Option<EvidenceRef>,
 }
 
 /// A runtime limitation is about the replay backend or its evidence, never a
@@ -383,10 +389,22 @@ pub struct ExpectedHistoricalOutcome {
     pub success: bool,
     pub error: Option<String>,
     pub fee: u64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub compute_units: Option<u64>,
     pub logs: Vec<String>,
     pub inner_instructions: Vec<InnerGroup>,
     pub return_data: Option<ReturnData>,
     pub watched_accounts: Vec<WatchedAccount>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct CheckpointedExecutionProof {
+    pub start_checkpoint: EvidenceRef,
+    pub terminal_checkpoint: EvidenceRef,
+    pub closure_proof: EvidenceRef,
+    pub deterministic_execution: EvidenceRef,
+    pub validation_outputs: Vec<String>,
 }
 
 /// Schema 2 is a small manifest: account and binary bytes live in shared CAS.
@@ -409,6 +427,8 @@ pub struct ReplayObservationV2 {
     pub runtime: RuntimeContext,
     pub expected: ExpectedHistoricalOutcome,
     pub fidelity_profile: FidelityProfile,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub checkpointed_execution: Option<CheckpointedExecutionProof>,
 }
 
 impl ReplayObservationV2 {
@@ -423,10 +443,19 @@ impl ReplayObservationV2 {
 
     pub fn validate_identity(&self) -> Result<()> {
         ensure!(self.schema_version == 2, "wrong observation schema");
-        ensure!(
-            self.fidelity_profile == FidelityProfile::CompleteExecutionV2,
-            "new observations require complete execution fidelity"
-        );
+        match self.fidelity_profile {
+            FidelityProfile::CompleteExecutionV2 => ensure!(
+                self.checkpointed_execution.is_none(),
+                "complete execution fidelity cannot claim checkpoint-derived provenance"
+            ),
+            FidelityProfile::CheckpointedExecutionV1 => ensure!(
+                self.checkpointed_execution.is_some(),
+                "checkpoint-derived fidelity requires its proof"
+            ),
+            FidelityProfile::HistoricalReplayV1 => {
+                anyhow::bail!("new observations cannot use historical replay V1 fidelity")
+            }
+        }
         ensure!(
             !matches!(self.execution, ExecutionInput::LegacyV1Compatibility { .. }),
             "legacy v0 flattening is restricted to historical V1 records"

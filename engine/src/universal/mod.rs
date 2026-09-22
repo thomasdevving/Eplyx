@@ -4,6 +4,7 @@
 //! observation about a transaction, not a request to run a particular adapter.
 
 pub mod bundle;
+pub mod checkpoint;
 pub mod evidence;
 pub mod execution;
 pub mod fidelity;

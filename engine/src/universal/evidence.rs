@@ -18,8 +18,12 @@ use crate::{
 pub enum EvidenceKind {
     AccountContent,
     AccountObservation,
+    DerivedAccount,
     AccountChunk,
     ChunkedAccountObservation,
+    Checkpoint,
+    ClosureProof,
+    Execution,
     ResponseTemplate,
     Transaction,
     ProgramBinary,
@@ -32,8 +36,12 @@ impl EvidenceKind {
         match self {
             Self::AccountContent => "accounts/content",
             Self::AccountObservation => "accounts/observations",
+            Self::DerivedAccount => "accounts/derived",
             Self::AccountChunk => "accounts/chunks",
             Self::ChunkedAccountObservation => "accounts/chunked-observations",
+            Self::Checkpoint => "checkpoints",
+            Self::ClosureProof => "closure",
+            Self::Execution => "execution",
             Self::ResponseTemplate => "accounts/responses",
             Self::Transaction => "transactions",
             Self::ProgramBinary => "programs",
@@ -126,6 +134,7 @@ impl EvidenceStore {
 #[serde(rename_all = "snake_case")]
 pub enum AccountBoundary {
     BeforeTransaction,
+    BeforeTargetExecution,
     EndOfExecutionSlot,
 }
 
@@ -135,6 +144,7 @@ impl AccountBoundary {
             Self::BeforeTransaction => transaction_slot
                 .checked_sub(1)
                 .context("transaction has no predecessor slot"),
+            Self::BeforeTargetExecution => Ok(transaction_slot),
             Self::EndOfExecutionSlot => Ok(transaction_slot),
         }
     }

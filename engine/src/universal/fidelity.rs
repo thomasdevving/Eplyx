@@ -55,12 +55,35 @@ pub fn compare_v2(
     expected_accounts: &BTreeMap<String, Option<AccountSnapshot>>,
     local: &ExecutionEvidence,
 ) -> FidelityResult {
+    compare_execution(
+        expected,
+        expected_accounts,
+        local,
+        FidelityProfile::CompleteExecutionV2,
+    )
+}
+
+/// Exact execution comparison shared by direct-boundary and
+/// checkpoint-derived profiles. The profile remains explicit in the result so
+/// a match never erases how the post-state was established.
+pub fn compare_execution(
+    expected: &ExpectedHistoricalOutcome,
+    expected_accounts: &BTreeMap<String, Option<AccountSnapshot>>,
+    local: &ExecutionEvidence,
+    profile: FidelityProfile,
+) -> FidelityResult {
     let mut failures = Vec::new();
     if expected.success != local.success || expected.error != local.error {
         failures.push("outcome".into());
     }
     if expected.fee != local.fee {
         failures.push("fee".into());
+    }
+    if expected
+        .compute_units
+        .is_some_and(|expected| expected != local.compute_units)
+    {
+        failures.push("compute_units".into());
     }
     if expected.logs != local.logs {
         failures.push("logs".into());
@@ -112,7 +135,7 @@ pub fn compare_v2(
         }
     }
     FidelityResult {
-        profile: FidelityProfile::CompleteExecutionV2,
+        profile,
         status: if failures.is_empty() {
             ReplayFidelity::Matched
         } else {
@@ -152,6 +175,7 @@ mod tests {
             success: true,
             error: None,
             fee: 5000,
+            compute_units: None,
             logs: vec!["log".into()],
             inner_instructions: Vec::new(),
             return_data: None,

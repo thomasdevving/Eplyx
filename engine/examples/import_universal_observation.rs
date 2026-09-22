@@ -406,6 +406,7 @@ fn build(import: &Value, output: &std::path::Path) -> Result<ReplayObservationV2
         success: meta["err"].is_null(),
         error: (!meta["err"].is_null()).then(|| meta["err"].to_string()),
         fee: meta["fee"].as_u64().context("fee")?,
+        compute_units: None,
         logs,
         inner_instructions: inner(meta)?,
         return_data,
@@ -444,8 +445,9 @@ fn build(import: &Value, output: &std::path::Path) -> Result<ReplayObservationV2
             slot_hashes_policy: "materiality_checked_default".into(), signature_check: false,
             blockhash_check: false, instructions_rule: "runtime_generated_from_complete_message".into(),
             provenance: "U3F three-profile SlotHashes materiality control; exact Clock/Rent/EpochSchedule account observations".into(),
-            historical_evidence: None },
-        expected, fidelity_profile: FidelityProfile::CompleteExecutionV2 };
+            historical_evidence: None, historical_evidence_ref: None },
+        expected, fidelity_profile: FidelityProfile::CompleteExecutionV2,
+        checkpointed_execution: None };
     record.id = record.identity()?;
     record.resolve(&store)?;
     let records = output.join("records");

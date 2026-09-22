@@ -1,0 +1,12 @@
+{
+  "schema_version": 2,
+  "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+  "protocol": "orca-whirlpool",
+  "adapter_version": null,
+  "genesis_hash": "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d",
+  "record_count": 1,
+  "record_ids": [
+    "9e2fa3d54661a5981d1b7abf60d0e05de40bc183de7abb0a79c9e5cecbdf2cc6"
+  ],
+  "canonical_hash": "ad81e16ce2b49b406d9b629945cb67193bb8b870225e7e61ac151572d0e84ea1"
+}
