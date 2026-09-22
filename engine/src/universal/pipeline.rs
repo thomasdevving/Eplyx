@@ -7,7 +7,7 @@ use super::{
     execution::{
         ExecutionBackend, ExecutionEvidence, ExecutionRequest, LiteSvmBackend, SlotHashesVariant,
     },
-    fidelity::{compare_v2, FidelityResult},
+    fidelity::{compare_execution, FidelityResult},
     model::ReplayObservationV2,
     resolver::ResolvedReplayInput,
 };
@@ -93,7 +93,12 @@ pub fn baseline(
     resolved: &ResolvedReplayInput,
 ) -> Result<(ExecutionEvidence, FidelityResult)> {
     let result = execute(record, resolved, &resolved.baseline_elf)?;
-    let fidelity = compare_v2(&record.expected, &resolved.expected_accounts, &result);
+    let fidelity = compare_execution(
+        &record.expected,
+        &resolved.expected_accounts,
+        &result,
+        record.fidelity_profile,
+    );
     ensure!(
         fidelity.matched(),
         "baseline historical fidelity differs: {}",

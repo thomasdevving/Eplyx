@@ -14,7 +14,7 @@ fn main() -> Result<()> {
     let record: ReplayObservationV2 = serde_json::from_slice(&std::fs::read(&record_path)?)?;
     let store = EvidenceStore::at(evidence_path);
     let resolved = record.resolve(&store)?;
-    let (baseline, fidelity) = pipeline::baseline(&record, &resolved)?;
+    let (baseline, _fidelity) = pipeline::baseline(&record, &resolved)?;
     let candidate = if let Some(path) = candidate_path {
         let bytes = std::fs::read(path)?;
         let result = pipeline::execute(&record, &resolved, &bytes)?;

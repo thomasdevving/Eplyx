@@ -1598,6 +1598,13 @@ fn render_ci(report: &eplyx_engine::ci::CiReport) -> String {
         "\nCorpus:     {} validated historical observations",
         report.bundle.record_count
     );
+    if let Some(proof) = &report.replay_proof {
+        let _ = writeln!(
+            text,
+            "Replay/proof: {} ({:?}, {} observations)",
+            proof.status, proof.profile, proof.observations
+        );
+    }
 
     let _ = writeln!(text, "\nCOVERAGE");
     for subject in &report.coverage {

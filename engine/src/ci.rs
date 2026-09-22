@@ -122,6 +122,13 @@ pub struct ReviewSummary {
     pub unevaluable: usize,
 }
 
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ReplayProofSummary {
+    pub profile: crate::universal::model::FidelityProfile,
+    pub status: String,
+    pub observations: usize,
+}
+
 /// The CI result contract.
 ///
 /// Every list in it is sorted canonically — by fingerprint, then by observation
@@ -132,6 +139,8 @@ pub struct CiReport {
     pub schema_version: u32,
     pub bundle: BundleRef,
     pub candidate: CandidateRef,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub replay_proof: Option<ReplayProofSummary>,
     pub coverage: Vec<SubjectCoverage>,
     /// Detected changes outside the declarable vocabulary. Never empty-and-
     /// ignored: each one fails the gate, because the alternative is reporting a
@@ -341,6 +350,14 @@ fn check_v2(
         None => ExpectationFile::empty(),
     };
     let adapter = crate::protocol::adapter_for(&bundle.manifest.program_id);
+    let checkpointed_observations = bundle
+        .records
+        .iter()
+        .filter(|record| {
+            record.fidelity_profile
+                == crate::universal::model::FidelityProfile::CheckpointedExecutionV1
+        })
+        .count();
     let mut observed = Vec::new();
     let mut coverage = Vec::new();
     let mut structural: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
@@ -559,6 +576,11 @@ fn check_v2(
             sha256: candidate_sha256,
             len: candidate_bytes.len() as u64,
         },
+        replay_proof: (checkpointed_observations > 0).then_some(ReplayProofSummary {
+            profile: crate::universal::model::FidelityProfile::CheckpointedExecutionV1,
+            status: "matched".into(),
+            observations: checkpointed_observations,
+        }),
         coverage: per_subject
             .into_iter()
             .map(|(subject, observations)| SubjectCoverage {
@@ -938,6 +960,7 @@ pub fn assemble(
             sha256: candidate_sha256,
             len: candidate_len,
         },
+        replay_proof: None,
         undeclarable,
         findings: reviewed.findings,
         unmatched: reviewed.unmatched,

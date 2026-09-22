@@ -6,13 +6,15 @@ use base64::{prelude::BASE64_STANDARD, Engine};
 use serde_json::Value;
 
 use super::{
+    checkpoint::{DerivedAccountEvidenceV1, ObservedCheckpointV1, TransactionClosureProofV1},
     evidence::{
         AccountBoundary, AccountObservation, ChunkedAccountObservation, EvidenceKind, EvidenceRef,
         EvidenceStore,
     },
-    execution::{InnerGroup, InnerInstruction, ReturnData, RuntimeProfile},
+    execution::{ExecutionEvidence, InnerGroup, InnerInstruction, ReturnData, RuntimeProfile},
     model::{
-        AccountSeed, ExpectedAccountSource, ReplayObservationV2, ResolvedMessage, RuntimeCapability,
+        AccountSeed, ExpectedAccountSource, FidelityProfile, ReplayObservationV2, ResolvedMessage,
+        RuntimeCapability,
     },
 };
 use crate::{
@@ -61,6 +63,13 @@ fn resolve_account(
                 genesis,
             )?))
         }
+        EvidenceKind::DerivedAccount => Ok(Some(DerivedAccountEvidenceV1::resolve(
+            store,
+            &seed.observation,
+            &seed.address,
+            slot,
+            seed.boundary,
+        )?)),
         _ => anyhow::bail!("account seed reference has wrong evidence category"),
     }
 }
@@ -154,6 +163,61 @@ fn verify_validator_outcome(record: &ReplayObservationV2, store: &EvidenceStore)
     ensure!(
         record.expected.return_data == return_data,
         "historical return data differs from frozen validator result"
+    );
+    if let Some(expected) = record.expected.compute_units {
+        ensure!(
+            meta["computeUnitsConsumed"].as_u64() == Some(expected),
+            "historical compute units differ from frozen validator result"
+        );
+    }
+    Ok(())
+}
+
+fn verify_deterministic_execution(
+    record: &ReplayObservationV2,
+    store: &EvidenceStore,
+    reference: &EvidenceRef,
+    expected_accounts: &BTreeMap<String, Option<AccountSnapshot>>,
+) -> Result<()> {
+    ensure!(
+        reference.kind == EvidenceKind::Execution,
+        "deterministic execution reference has wrong evidence category"
+    );
+    let execution: ExecutionEvidence = serde_json::from_slice(&store.get(reference)?)?;
+    ensure!(
+        execution.success == record.expected.success
+            && execution.error == record.expected.error
+            && execution.fee == record.expected.fee
+            && record
+                .expected
+                .compute_units
+                .is_some_and(|units| units == execution.compute_units)
+            && execution.logs == record.expected.logs,
+        "deterministic execution outcome differs from observation"
+    );
+    let inner = execution
+        .inner_instructions
+        .iter()
+        .filter(|group| !group.instructions.is_empty())
+        .cloned()
+        .collect::<Vec<_>>();
+    ensure!(
+        inner == record.expected.inner_instructions,
+        "deterministic execution CPI differs from observation"
+    );
+    match &record.expected.return_data {
+        Some(expected) => ensure!(
+            &execution.return_data == expected,
+            "deterministic execution return data differs"
+        ),
+        None => ensure!(
+            execution.return_data.data.is_empty(),
+            "deterministic execution has unexpected return data"
+        ),
+    }
+    ensure!(
+        &execution.post_accounts == expected_accounts,
+        "derived validation-output post-state differs from terminal checkpoint"
     );
     Ok(())
 }
@@ -313,6 +377,38 @@ impl ReplayObservationV2 {
             "this observation requires one explicit semantic target"
         );
         verify_validator_outcome(self, store)?;
+        match (
+            self.fidelity_profile,
+            &self.runtime.historical_evidence,
+            &self.runtime.historical_evidence_ref,
+        ) {
+            (FidelityProfile::CheckpointedExecutionV1, Some(inline), Some(reference)) => {
+                ensure!(
+                    reference.kind == EvidenceKind::Runtime,
+                    "historical runtime reference has wrong evidence category"
+                );
+                let retained = serde_json::from_slice(&store.get(reference)?)?;
+                ensure!(
+                    inline == &retained,
+                    "historical runtime evidence differs from CAS object"
+                );
+            }
+            (FidelityProfile::CheckpointedExecutionV1, _, _) => {
+                anyhow::bail!("checkpoint-derived profile requires retained runtime evidence")
+            }
+            (_, Some(inline), Some(reference)) => {
+                ensure!(
+                    reference.kind == EvidenceKind::Runtime,
+                    "historical runtime reference has wrong evidence category"
+                );
+                let retained = serde_json::from_slice(&store.get(reference)?)?;
+                ensure!(
+                    inline == &retained,
+                    "historical runtime evidence differs from CAS object"
+                );
+            }
+            _ => {}
+        }
         match self.runtime.capability() {
             RuntimeCapability::SupportedByCurrentBackend => {}
             RuntimeCapability::UnsupportedRuntimeFeature(feature) => {
@@ -337,9 +433,13 @@ impl ReplayObservationV2 {
         }
         let mut runtime_sysvars = BTreeMap::new();
         for seed in &self.runtime.sysvars {
+            let valid_boundary = seed.boundary == AccountBoundary::EndOfExecutionSlot
+                || (self.fidelity_profile == FidelityProfile::CheckpointedExecutionV1
+                    && seed.boundary == AccountBoundary::BeforeTargetExecution
+                    && seed.observation.kind == EvidenceKind::DerivedAccount);
             ensure!(
-                seed.boundary == AccountBoundary::EndOfExecutionSlot,
-                "runtime sysvar requires execution-slot context"
+                valid_boundary,
+                "runtime sysvar requires proven execution context"
             );
             let account = resolve_account(store, seed, self.slot, &self.genesis_hash)?
                 .context("runtime sysvar absent")?;
@@ -519,15 +619,82 @@ impl ReplayObservationV2 {
             watched.push(address.clone());
         }
         verify_token_balances(&message, &post_present, false)?;
-        ensure!(
-            self.expected.watched_accounts.len()
-                == message
-                    .account_keys
-                    .iter()
-                    .filter(|k| *k != "Sysvar1nstructions1111111111111111111111111")
-                    .count(),
-            "complete watched account vector required"
-        );
+        match self.fidelity_profile {
+            FidelityProfile::CompleteExecutionV2 => ensure!(
+                self.expected.watched_accounts.len()
+                    == message
+                        .account_keys
+                        .iter()
+                        .filter(|k| *k != "Sysvar1nstructions1111111111111111111111111")
+                        .count(),
+                "complete watched account vector required"
+            ),
+            FidelityProfile::CheckpointedExecutionV1 => {
+                let proof = self
+                    .checkpointed_execution
+                    .as_ref()
+                    .context("checkpoint-derived proof missing")?;
+                ensure!(
+                    proof.validation_outputs == watched,
+                    "validation-output set differs from watched accounts"
+                );
+                let start = ObservedCheckpointV1::resolve(
+                    store,
+                    &proof.start_checkpoint,
+                    self.slot,
+                    AccountBoundary::BeforeTransaction,
+                    &self.genesis_hash,
+                )?;
+                ensure!(
+                    start.keys().cloned().collect::<Vec<_>>()
+                        == message
+                            .account_keys
+                            .iter()
+                            .cloned()
+                            .collect::<BTreeSet<_>>()
+                            .into_iter()
+                            .collect::<Vec<_>>(),
+                    "start checkpoint account set differs from execution inputs"
+                );
+                for (address, observed) in &start {
+                    match observed {
+                        Some(account) => ensure!(
+                            seeds.get(address) == Some(account),
+                            "execution seed differs from observed start checkpoint: {address}"
+                        ),
+                        None => ensure!(
+                            absent.contains(address) || runtime_sysvars.contains_key(address),
+                            "observed-absent start account was silently seeded: {address}"
+                        ),
+                    }
+                }
+                let terminal = ObservedCheckpointV1::resolve(
+                    store,
+                    &proof.terminal_checkpoint,
+                    self.slot,
+                    AccountBoundary::EndOfExecutionSlot,
+                    &self.genesis_hash,
+                )?;
+                ensure!(
+                    terminal == expected_accounts,
+                    "terminal checkpoint differs from validation-output evidence"
+                );
+                TransactionClosureProofV1::verify(
+                    store,
+                    &proof.closure_proof,
+                    self,
+                    &message,
+                    &proof.validation_outputs,
+                )?;
+                verify_deterministic_execution(
+                    self,
+                    store,
+                    &proof.deterministic_execution,
+                    &expected_accounts,
+                )?;
+            }
+            FidelityProfile::HistoricalReplayV1 => unreachable!("identity validation rejects V1"),
+        }
         let runtime_profile = RuntimeProfile::resolve(
             self.runtime.historical_evidence.as_ref(),
             &runtime_sysvars,

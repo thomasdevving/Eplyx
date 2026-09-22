@@ -126,7 +126,13 @@ impl CorpusStore {
     /// Insert a schema-2 observation into the same immutable record store.
     /// Its referenced evidence is resolved before admission.
     pub fn insert_v2(&self, record: &ReplayObservationV2) -> Result<Insert> {
-        record.resolve(&EvidenceStore::at(self.root.join("evidence")))?;
+        let evidence = EvidenceStore::at(self.root.join("evidence"));
+        let resolved = record.resolve(&evidence)?;
+        if record.fidelity_profile
+            == crate::universal::model::FidelityProfile::CheckpointedExecutionV1
+        {
+            crate::universal::pipeline::baseline(record, &resolved)?;
+        }
         let bytes = serde_json::to_vec(record)?;
         let path = self.record_path(&record.id);
         if path.exists() {

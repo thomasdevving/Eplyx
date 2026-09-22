@@ -207,11 +207,14 @@ impl UniversalBundle {
             .iter()
             .map(|record| record.resolve(&evidence))
             .collect::<Result<Vec<_>>>()?;
-        for input in &resolved {
+        for (record, input) in records.iter().zip(&resolved) {
             ensure!(
                 input.baseline_elf == baseline,
                 "observation target binary differs from bundled baseline"
             );
+            if record.fidelity_profile == super::model::FidelityProfile::CheckpointedExecutionV1 {
+                super::pipeline::baseline(record, input)?;
+            }
         }
         Ok(Self {
             root,
@@ -259,7 +262,7 @@ pub fn build(corpus_dir: &Path, baseline: &Path, out: &Path) -> Result<Universal
     }
     fs::copy(store.manifest_path(), out.join("corpus/manifest.json"))?;
     fs::copy(store.corpus_path(), out.join("corpus/corpus.json"))?;
-    for path in files(&evidence.root().to_path_buf())? {
+    for path in files(evidence.root())? {
         let relative = path.strip_prefix(evidence.root())?;
         let destination = out.join("evidence").join(relative);
         fs::create_dir_all(
