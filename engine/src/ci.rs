@@ -143,6 +143,8 @@ pub struct CiReport {
     pub candidate: CandidateRef,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub replay_proof: Option<ReplayProofSummary>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub semantic_binding: Option<crate::semantic_binding::SemanticBindingReport>,
     pub coverage: Vec<SubjectCoverage>,
     /// Detected changes outside the declarable vocabulary. Never empty-and-
     /// ignored: each one fails the gate, because the alternative is reporting a
@@ -605,6 +607,11 @@ fn check_v2(
             observations: checkpointed_observations,
             proof_contract_versions,
         }),
+        semantic_binding: bundle
+            .adapter
+            .semantic_bindings
+            .clone()
+            .map(crate::semantic_binding::SemanticBindingReport::new),
         coverage: per_subject
             .into_iter()
             .map(|(subject, observations)| SubjectCoverage {
@@ -985,6 +992,7 @@ pub fn assemble(
             len: candidate_len,
         },
         replay_proof: None,
+        semantic_binding: None,
         undeclarable,
         findings: reviewed.findings,
         unmatched: reviewed.unmatched,
@@ -1045,6 +1053,7 @@ mod tests {
             supports_cpi: adapter.supports_cpi(),
             actions: Vec::new(),
             limitations: Vec::new(),
+            semantic_bindings: None,
         }
     }
 

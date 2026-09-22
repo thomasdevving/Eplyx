@@ -29,6 +29,7 @@ use crate::{
 };
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 use std::fmt;
 
 /// An integer token amount, interpreted against its mint's decimal count.
@@ -516,6 +517,20 @@ pub trait ProtocolAdapter: Sync {
     /// `economic_entity_id`, `state_features` or `boundaries` change meaning.
     fn adapter_version(&self) -> u32 {
         1
+    }
+
+    /// Recompute how strongly this observation's protocol meaning is bound to
+    /// its historical execution. Bundle verification reruns this method; the
+    /// serialized claim alone has no authority. Older adapters conservatively
+    /// report unknown provenance.
+    fn semantic_binding(
+        &self,
+        _transaction: &HistoricalTransaction,
+        _pre: &BTreeMap<String, AccountSnapshot>,
+        _baseline_elf: &[u8],
+        _baseline: &crate::universal::execution::ExecutionEvidence,
+    ) -> Result<crate::semantic_binding::SemanticBinding> {
+        Ok(crate::semantic_binding::SemanticBinding::ManualOrUnknown)
     }
 
     /// What this interaction does, in the protocol's vocabulary.

@@ -222,13 +222,46 @@ impl UniversalBundle {
             .iter()
             .map(|record| record.resolve(&evidence))
             .collect::<Result<Vec<_>>>()?;
-        for (record, input) in records.iter().zip(&resolved) {
+        let binding_records = adapter.semantic_bindings.as_ref();
+        if let Some(bindings) = binding_records {
+            ensure!(
+                current && bindings.len() == records.len(),
+                "semantic binding observation set differs"
+            );
+        }
+        for (index, (record, input)) in records.iter().zip(&resolved).enumerate() {
             ensure!(
                 input.baseline_elf == baseline,
                 "observation target binary differs from bundled baseline"
             );
-            if record.fidelity_profile == super::model::FidelityProfile::CheckpointedExecutionV1 {
-                super::pipeline::baseline(record, input)?;
+            if record.fidelity_profile == super::model::FidelityProfile::CheckpointedExecutionV1
+                || binding_records.is_some()
+            {
+                let (baseline_execution, _) = super::pipeline::baseline(record, input)?;
+                if let Some(bindings) = binding_records {
+                    let recorded = &bindings[index];
+                    ensure!(
+                        recorded.observation_id == record.id,
+                        "semantic binding observation identity differs"
+                    );
+                    let derived = expected_adapter
+                        .context("semantic binding adapter unavailable")?
+                        .semantic_binding(
+                            &input.message.transaction,
+                            &input.seeds,
+                            &input.baseline_elf,
+                            &baseline_execution,
+                        )?;
+                    derived.validate(
+                        &record.program_id,
+                        &input.baseline_elf,
+                        &baseline_execution,
+                    )?;
+                    ensure!(
+                        recorded.binding == derived,
+                        "semantic binding differs from reconstructed historical evidence"
+                    );
+                }
             }
         }
         Ok(Self {
@@ -256,13 +289,32 @@ pub fn build(corpus_dir: &Path, baseline: &Path, out: &Path) -> Result<Universal
     );
     let baseline_bytes = fs::read(baseline)?;
     let evidence = EvidenceStore::at(corpus_dir.join("evidence"));
+    let handle = crate::protocol::adapter_for(&corpus.program_id);
+    let mut semantic_bindings = Vec::new();
     for record in &records {
         let resolved = record.resolve(&evidence)?;
         ensure!(
             resolved.baseline_elf == baseline_bytes,
             "record target binary differs from requested baseline"
         );
-        super::pipeline::baseline(record, &resolved)?;
+        let (baseline_execution, _) = super::pipeline::baseline(record, &resolved)?;
+        if let Some(adapter) = handle {
+            let binding = adapter.semantic_binding(
+                &resolved.message.transaction,
+                &resolved.seeds,
+                &resolved.baseline_elf,
+                &baseline_execution,
+            )?;
+            binding.validate(
+                &record.program_id,
+                &resolved.baseline_elf,
+                &baseline_execution,
+            )?;
+            semantic_bindings.push(crate::semantic_binding::ObservationSemanticBinding {
+                observation_id: record.id.clone(),
+                binding,
+            });
+        }
     }
     fs::create_dir_all(out.join("corpus/records"))?;
     fs::create_dir_all(out.join("binaries"))?;
@@ -288,7 +340,6 @@ pub fn build(corpus_dir: &Path, baseline: &Path, out: &Path) -> Result<Universal
         fs::copy(path, destination)?;
     }
     fs::write(out.join("binaries/current.so"), &baseline_bytes)?;
-    let handle = crate::protocol::adapter_for(&corpus.program_id);
     let mut actions = BTreeMap::new();
     for record in &records {
         let resolved = record.execution.resolve(&evidence, &record.genesis_hash)?;
@@ -306,7 +357,8 @@ pub fn build(corpus_dir: &Path, baseline: &Path, out: &Path) -> Result<Universal
         supports_cpi: handle.is_some_and(|a| a.supports_cpi()),
         actions: actions.into_iter().map(|(semantic_action, observations)| ActionCoverage { semantic_action, observations }).collect(),
         limitations: vec![BundledLimitation { code: "bounded_observations".into(),
-            detail: "This corpus covers only its recorded production interactions; no representativeness is claimed.".into() }] };
+            detail: "This corpus covers only its recorded production interactions; no representativeness is claimed.".into() }],
+        semantic_bindings: handle.map(|_| semantic_bindings) };
     let adapter_bytes = serde_json::to_vec_pretty(&adapter)?;
     fs::write(out.join("adapters/metadata.json"), &adapter_bytes)?;
     let mut manifest = BundleManifestV2 {

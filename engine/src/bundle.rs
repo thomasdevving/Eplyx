@@ -82,6 +82,10 @@ pub struct AdapterMetadata {
     /// limitations is a bundle that overclaims.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub limitations: Vec<BundledLimitation>,
+    /// Reconstructed at bundle verification. Absent in historical bundles;
+    /// absence means unclassified provenance, never an exact build claim.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub semantic_bindings: Option<Vec<crate::semantic_binding::ObservationSemanticBinding>>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -469,6 +473,7 @@ pub fn build(inputs: BundleInputs<'_>, out: &Path) -> Result<CiBundle> {
         } else {
             inputs.limitations
         },
+        semantic_bindings: None,
     };
     let adapter_bytes = serde_json::to_vec_pretty(&adapter).context("encoding adapter metadata")?;
     write_bytes(&CiBundle::adapter_path(out), &adapter_bytes)?;

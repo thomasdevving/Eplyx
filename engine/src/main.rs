@@ -1610,6 +1610,21 @@ fn render_ci(report: &eplyx_engine::ci::CiReport) -> String {
             proof.status, proof.profile, proof.observations, contract
         );
     }
+    if let Some(binding) = &report.semantic_binding {
+        let _ = writeln!(
+            text,
+            "Semantic binding: exact source-to-ELF verified = {}",
+            binding.exact_source_to_elf_verified
+        );
+        for observation in &binding.observations {
+            let _ = writeln!(
+                text,
+                "  {}: {}",
+                observation.observation_id,
+                observation.binding.level()
+            );
+        }
+    }
 
     let _ = writeln!(text, "\nCOVERAGE");
     for subject in &report.coverage {
