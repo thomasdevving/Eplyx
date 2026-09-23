@@ -1,0 +1,1085 @@
+{
+  "schema": "U13_1ConservativeCausalFrontierV1",
+  "source": {
+    "path": "docs/examples/phase-u13-drift-witness/raw/block-409942000.json",
+    "sha256": "e6e3065b6792dbdebe5ace25333af607cb13e57bc03784ca9697bc132a1af304",
+    "slot": 409942000,
+    "parentSlot": 409941999,
+    "blockhash": "Hr6DYa2X8UV6rEyUaWNkEa2LcGki6x7nJiWwbNNma5do",
+    "transactionCount": 1382
+  },
+  "target": {
+    "index": 73,
+    "signature": "2BD3UJFPUPJbxoJMAntwyZrzLjzKv3yeuQERTu2rPRZLf4H8Wdjihsh6xChwC4Vxruxy9qyrrknmnvi7UJqCHRSK",
+    "contaminatedOutput": "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+    "laterSuccessfulWriters": [
+      428,
+      431,
+      438,
+      1245
+    ]
+  },
+  "policy": {
+    "successfulWrite": "all_declared_writable_accounts_possible",
+    "failedWrite": "fee_payer_and_first_instruction_durable_nonce_only",
+    "input": "all_resolved_message_keys_including_readonly_plus_LUT_and_ProgramData",
+    "predecessor": "last_prior_possible_committed_writer"
+  },
+  "summary": {
+    "includedTransactions": 5,
+    "includedSuccessful": 5,
+    "includedFailed": 0,
+    "fractionOfBlock": 0.00361794500723589,
+    "uniqueAccounts": 24,
+    "parentSeedAccounts": 24,
+    "terminalAccounts": 9,
+    "terminalContaminatedAccounts": 0,
+    "distinctProgramIds": 2,
+    "distinctLuts": 2,
+    "blockFailedTransactions": 96,
+    "failedDeclaredOverlapCount": 0,
+    "innerInstructionGroups": 0,
+    "preTokenBalanceRows": 0,
+    "postTokenBalanceRows": 0,
+    "longestDependencyDepth": 4,
+    "earliestIndex": 73,
+    "latestIndex": 1245
+  },
+  "transactionIndexes": [
+    73,
+    428,
+    431,
+    438,
+    1245
+  ],
+  "transactions": [
+    {
+      "index": 73,
+      "signature": "2BD3UJFPUPJbxoJMAntwyZrzLjzKv3yeuQERTu2rPRZLf4H8Wdjihsh6xChwC4Vxruxy9qyrrknmnvi7UJqCHRSK",
+      "success": true,
+      "fee": 6216,
+      "feePayer": "maCYbwXrJDnnP5ft3ySoH4ogwv5yFph8fFacgMa51de",
+      "durableNonceAccount": null,
+      "messageVersion": 0,
+      "accountReads": [
+        "maCYbwXrJDnnP5ft3ySoH4ogwv5yFph8fFacgMa51de",
+        "JE9m89yHHiCGzzL2FAeeZgHKAFwjkW4Qp1GfjegWnojR",
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+        "7QAtMC3AaAc91W4XuwYXM1Mtffq9h9Z8dTxcJrKRHu1z",
+        "ComputeBudget111111111111111111111111111111",
+        "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+        "5zpq7DvB6UdFFvpmBPspGPNfUGoBRRCE2HHg5u3gxcsN",
+        "GXWqPpjQpdz7KZw9p7f5PX2eGxHAhvpNXiviFkAB8zXg",
+        "9VCioxmni2gDLv11qufWzT3RDERhQE4iY5Gf7NTfYyAV",
+        "3m6i4RFWEDw2Ft4tFHPJtYgmpPe21k56M3FHeWYrgGBz",
+        "HN7qfUNM5Q7gQTwyEucmYdCF4CjwUrspj3DbNQ4V8P52",
+        "CXZhzKePYajrZgZyrzgvHYFKK3c5tNgDrRobAgySo8Nb",
+        "93FG52TzNKCnMiasV14Ba34BYcHDb9p4zK4GjZnLwqWR",
+        "3x85u7SWkmmr7YQGYhtjARgxwegTLJgkSLRprfXod6rh",
+        "HpR1bLcW6rsXrBigRhW18WnQNwAVBq7wBPhteRKGBU5z",
+        "25Eax9W8SA3wpCQFhJEGyHhQ2NDHEshZEDzyMNtthR8D"
+      ],
+      "implicitStateInputs": [
+        "7dLgmtcTavcguNoynVimF9ZNVb13FvhXVRfj2HyrDGaP"
+      ],
+      "requiredStateInputs": [
+        "maCYbwXrJDnnP5ft3ySoH4ogwv5yFph8fFacgMa51de",
+        "JE9m89yHHiCGzzL2FAeeZgHKAFwjkW4Qp1GfjegWnojR",
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+        "7QAtMC3AaAc91W4XuwYXM1Mtffq9h9Z8dTxcJrKRHu1z",
+        "ComputeBudget111111111111111111111111111111",
+        "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+        "5zpq7DvB6UdFFvpmBPspGPNfUGoBRRCE2HHg5u3gxcsN",
+        "GXWqPpjQpdz7KZw9p7f5PX2eGxHAhvpNXiviFkAB8zXg",
+        "9VCioxmni2gDLv11qufWzT3RDERhQE4iY5Gf7NTfYyAV",
+        "3m6i4RFWEDw2Ft4tFHPJtYgmpPe21k56M3FHeWYrgGBz",
+        "HN7qfUNM5Q7gQTwyEucmYdCF4CjwUrspj3DbNQ4V8P52",
+        "CXZhzKePYajrZgZyrzgvHYFKK3c5tNgDrRobAgySo8Nb",
+        "93FG52TzNKCnMiasV14Ba34BYcHDb9p4zK4GjZnLwqWR",
+        "3x85u7SWkmmr7YQGYhtjARgxwegTLJgkSLRprfXod6rh",
+        "HpR1bLcW6rsXrBigRhW18WnQNwAVBq7wBPhteRKGBU5z",
+        "25Eax9W8SA3wpCQFhJEGyHhQ2NDHEshZEDzyMNtthR8D",
+        "7dLgmtcTavcguNoynVimF9ZNVb13FvhXVRfj2HyrDGaP"
+      ],
+      "declaredWritableAccounts": [
+        "maCYbwXrJDnnP5ft3ySoH4ogwv5yFph8fFacgMa51de",
+        "JE9m89yHHiCGzzL2FAeeZgHKAFwjkW4Qp1GfjegWnojR",
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+        "7QAtMC3AaAc91W4XuwYXM1Mtffq9h9Z8dTxcJrKRHu1z"
+      ],
+      "committedWrites": [
+        "maCYbwXrJDnnP5ft3ySoH4ogwv5yFph8fFacgMa51de",
+        "JE9m89yHHiCGzzL2FAeeZgHKAFwjkW4Qp1GfjegWnojR",
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+        "7QAtMC3AaAc91W4XuwYXM1Mtffq9h9Z8dTxcJrKRHu1z"
+      ],
+      "programIds": [
+        "ComputeBudget111111111111111111111111111111",
+        "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH"
+      ],
+      "lutReferences": [],
+      "innerInstructionGroups": 0,
+      "preTokenBalanceRows": 0,
+      "postTokenBalanceRows": 0,
+      "loadedWritableCount": 0,
+      "loadedReadonlyCount": 0,
+      "inclusionReasons": [
+        {
+          "kind": "distinguished_target"
+        },
+        {
+          "kind": "last_preceding_committed_writer",
+          "account": "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+          "consumerIndex": 428
+        }
+      ],
+      "predecessorIndexes": [],
+      "inputSources": [
+        {
+          "account": "maCYbwXrJDnnP5ft3ySoH4ogwv5yFph8fFacgMa51de",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "JE9m89yHHiCGzzL2FAeeZgHKAFwjkW4Qp1GfjegWnojR",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "7QAtMC3AaAc91W4XuwYXM1Mtffq9h9Z8dTxcJrKRHu1z",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "ComputeBudget111111111111111111111111111111",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "5zpq7DvB6UdFFvpmBPspGPNfUGoBRRCE2HHg5u3gxcsN",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "GXWqPpjQpdz7KZw9p7f5PX2eGxHAhvpNXiviFkAB8zXg",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "9VCioxmni2gDLv11qufWzT3RDERhQE4iY5Gf7NTfYyAV",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "3m6i4RFWEDw2Ft4tFHPJtYgmpPe21k56M3FHeWYrgGBz",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "HN7qfUNM5Q7gQTwyEucmYdCF4CjwUrspj3DbNQ4V8P52",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "CXZhzKePYajrZgZyrzgvHYFKK3c5tNgDrRobAgySo8Nb",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "93FG52TzNKCnMiasV14Ba34BYcHDb9p4zK4GjZnLwqWR",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "3x85u7SWkmmr7YQGYhtjARgxwegTLJgkSLRprfXod6rh",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "HpR1bLcW6rsXrBigRhW18WnQNwAVBq7wBPhteRKGBU5z",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "25Eax9W8SA3wpCQFhJEGyHhQ2NDHEshZEDzyMNtthR8D",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "7dLgmtcTavcguNoynVimF9ZNVb13FvhXVRfj2HyrDGaP",
+          "source": "parent_slot",
+          "transactionIndex": null
+        }
+      ],
+      "dependencyDepth": 0
+    },
+    {
+      "index": 428,
+      "signature": "4MLdGz1Gieizn7Pzs9PujFCAKJ1hzw69KErF4AgMZtW6MANi2K5hE1p6uxLZZBdGJgoYGdtsdozfHeeRaLcLHXPB",
+      "success": true,
+      "fee": 5000,
+      "feePayer": "2Zsxk1jSe5h2uDVVKKRkv5PevhL3w4SEgyeywgFq2vwd",
+      "durableNonceAccount": null,
+      "messageVersion": 0,
+      "accountReads": [
+        "2Zsxk1jSe5h2uDVVKKRkv5PevhL3w4SEgyeywgFq2vwd",
+        "3e5QUcAj1qWHRjtphaKVguitkZx6Rnun6CSCJibnwxZM",
+        "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+        "ComputeBudget111111111111111111111111111111",
+        "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+        "5zpq7DvB6UdFFvpmBPspGPNfUGoBRRCE2HHg5u3gxcsN",
+        "3x85u7SWkmmr7YQGYhtjARgxwegTLJgkSLRprfXod6rh",
+        "3m6i4RFWEDw2Ft4tFHPJtYgmpPe21k56M3FHeWYrgGBz",
+        "9VCioxmni2gDLv11qufWzT3RDERhQE4iY5Gf7NTfYyAV"
+      ],
+      "implicitStateInputs": [
+        "Fpys8GRa5RBWfyeN7AaDUwFGD1zkDCA4z3t4CJLV8dfL",
+        "EiWSskK5HXnBTptiS5DH6gpAJRVNQ3cAhTKBGaiaysAb",
+        "7dLgmtcTavcguNoynVimF9ZNVb13FvhXVRfj2HyrDGaP"
+      ],
+      "requiredStateInputs": [
+        "2Zsxk1jSe5h2uDVVKKRkv5PevhL3w4SEgyeywgFq2vwd",
+        "3e5QUcAj1qWHRjtphaKVguitkZx6Rnun6CSCJibnwxZM",
+        "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+        "ComputeBudget111111111111111111111111111111",
+        "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+        "5zpq7DvB6UdFFvpmBPspGPNfUGoBRRCE2HHg5u3gxcsN",
+        "3x85u7SWkmmr7YQGYhtjARgxwegTLJgkSLRprfXod6rh",
+        "3m6i4RFWEDw2Ft4tFHPJtYgmpPe21k56M3FHeWYrgGBz",
+        "9VCioxmni2gDLv11qufWzT3RDERhQE4iY5Gf7NTfYyAV",
+        "Fpys8GRa5RBWfyeN7AaDUwFGD1zkDCA4z3t4CJLV8dfL",
+        "EiWSskK5HXnBTptiS5DH6gpAJRVNQ3cAhTKBGaiaysAb",
+        "7dLgmtcTavcguNoynVimF9ZNVb13FvhXVRfj2HyrDGaP"
+      ],
+      "declaredWritableAccounts": [
+        "2Zsxk1jSe5h2uDVVKKRkv5PevhL3w4SEgyeywgFq2vwd",
+        "3e5QUcAj1qWHRjtphaKVguitkZx6Rnun6CSCJibnwxZM",
+        "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3"
+      ],
+      "committedWrites": [
+        "2Zsxk1jSe5h2uDVVKKRkv5PevhL3w4SEgyeywgFq2vwd",
+        "3e5QUcAj1qWHRjtphaKVguitkZx6Rnun6CSCJibnwxZM",
+        "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3"
+      ],
+      "programIds": [
+        "ComputeBudget111111111111111111111111111111",
+        "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH"
+      ],
+      "lutReferences": [
+        "Fpys8GRa5RBWfyeN7AaDUwFGD1zkDCA4z3t4CJLV8dfL",
+        "EiWSskK5HXnBTptiS5DH6gpAJRVNQ3cAhTKBGaiaysAb"
+      ],
+      "innerInstructionGroups": 0,
+      "preTokenBalanceRows": 0,
+      "postTokenBalanceRows": 0,
+      "loadedWritableCount": 1,
+      "loadedReadonlyCount": 4,
+      "inclusionReasons": [
+        {
+          "kind": "later_successful_validation_output_writer",
+          "account": "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3"
+        },
+        {
+          "kind": "last_preceding_committed_writer",
+          "account": "2Zsxk1jSe5h2uDVVKKRkv5PevhL3w4SEgyeywgFq2vwd",
+          "consumerIndex": 431
+        },
+        {
+          "kind": "last_preceding_committed_writer",
+          "account": "3e5QUcAj1qWHRjtphaKVguitkZx6Rnun6CSCJibnwxZM",
+          "consumerIndex": 431
+        },
+        {
+          "kind": "last_preceding_committed_writer",
+          "account": "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+          "consumerIndex": 431
+        },
+        {
+          "kind": "last_preceding_committed_writer",
+          "account": "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+          "consumerIndex": 431
+        }
+      ],
+      "predecessorIndexes": [
+        73
+      ],
+      "inputSources": [
+        {
+          "account": "2Zsxk1jSe5h2uDVVKKRkv5PevhL3w4SEgyeywgFq2vwd",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "3e5QUcAj1qWHRjtphaKVguitkZx6Rnun6CSCJibnwxZM",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "ComputeBudget111111111111111111111111111111",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+          "source": "transaction",
+          "transactionIndex": 73
+        },
+        {
+          "account": "5zpq7DvB6UdFFvpmBPspGPNfUGoBRRCE2HHg5u3gxcsN",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "3x85u7SWkmmr7YQGYhtjARgxwegTLJgkSLRprfXod6rh",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "3m6i4RFWEDw2Ft4tFHPJtYgmpPe21k56M3FHeWYrgGBz",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "9VCioxmni2gDLv11qufWzT3RDERhQE4iY5Gf7NTfYyAV",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "Fpys8GRa5RBWfyeN7AaDUwFGD1zkDCA4z3t4CJLV8dfL",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "EiWSskK5HXnBTptiS5DH6gpAJRVNQ3cAhTKBGaiaysAb",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "7dLgmtcTavcguNoynVimF9ZNVb13FvhXVRfj2HyrDGaP",
+          "source": "parent_slot",
+          "transactionIndex": null
+        }
+      ],
+      "dependencyDepth": 1
+    },
+    {
+      "index": 431,
+      "signature": "47YKrAiJJQsCbABRwhMFy5G1mqFYzSZZjiVKvyxPZEHbCJg3twhQhW46F6sSZFfaRcMrX8kF1489mKqFywuigRJZ",
+      "success": true,
+      "fee": 5000,
+      "feePayer": "2Zsxk1jSe5h2uDVVKKRkv5PevhL3w4SEgyeywgFq2vwd",
+      "durableNonceAccount": null,
+      "messageVersion": 0,
+      "accountReads": [
+        "2Zsxk1jSe5h2uDVVKKRkv5PevhL3w4SEgyeywgFq2vwd",
+        "3e5QUcAj1qWHRjtphaKVguitkZx6Rnun6CSCJibnwxZM",
+        "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+        "ComputeBudget111111111111111111111111111111",
+        "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+        "5zpq7DvB6UdFFvpmBPspGPNfUGoBRRCE2HHg5u3gxcsN",
+        "3x85u7SWkmmr7YQGYhtjARgxwegTLJgkSLRprfXod6rh",
+        "3m6i4RFWEDw2Ft4tFHPJtYgmpPe21k56M3FHeWYrgGBz",
+        "9VCioxmni2gDLv11qufWzT3RDERhQE4iY5Gf7NTfYyAV"
+      ],
+      "implicitStateInputs": [
+        "Fpys8GRa5RBWfyeN7AaDUwFGD1zkDCA4z3t4CJLV8dfL",
+        "EiWSskK5HXnBTptiS5DH6gpAJRVNQ3cAhTKBGaiaysAb",
+        "7dLgmtcTavcguNoynVimF9ZNVb13FvhXVRfj2HyrDGaP"
+      ],
+      "requiredStateInputs": [
+        "2Zsxk1jSe5h2uDVVKKRkv5PevhL3w4SEgyeywgFq2vwd",
+        "3e5QUcAj1qWHRjtphaKVguitkZx6Rnun6CSCJibnwxZM",
+        "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+        "ComputeBudget111111111111111111111111111111",
+        "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+        "5zpq7DvB6UdFFvpmBPspGPNfUGoBRRCE2HHg5u3gxcsN",
+        "3x85u7SWkmmr7YQGYhtjARgxwegTLJgkSLRprfXod6rh",
+        "3m6i4RFWEDw2Ft4tFHPJtYgmpPe21k56M3FHeWYrgGBz",
+        "9VCioxmni2gDLv11qufWzT3RDERhQE4iY5Gf7NTfYyAV",
+        "Fpys8GRa5RBWfyeN7AaDUwFGD1zkDCA4z3t4CJLV8dfL",
+        "EiWSskK5HXnBTptiS5DH6gpAJRVNQ3cAhTKBGaiaysAb",
+        "7dLgmtcTavcguNoynVimF9ZNVb13FvhXVRfj2HyrDGaP"
+      ],
+      "declaredWritableAccounts": [
+        "2Zsxk1jSe5h2uDVVKKRkv5PevhL3w4SEgyeywgFq2vwd",
+        "3e5QUcAj1qWHRjtphaKVguitkZx6Rnun6CSCJibnwxZM",
+        "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3"
+      ],
+      "committedWrites": [
+        "2Zsxk1jSe5h2uDVVKKRkv5PevhL3w4SEgyeywgFq2vwd",
+        "3e5QUcAj1qWHRjtphaKVguitkZx6Rnun6CSCJibnwxZM",
+        "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3"
+      ],
+      "programIds": [
+        "ComputeBudget111111111111111111111111111111",
+        "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH"
+      ],
+      "lutReferences": [
+        "Fpys8GRa5RBWfyeN7AaDUwFGD1zkDCA4z3t4CJLV8dfL",
+        "EiWSskK5HXnBTptiS5DH6gpAJRVNQ3cAhTKBGaiaysAb"
+      ],
+      "innerInstructionGroups": 0,
+      "preTokenBalanceRows": 0,
+      "postTokenBalanceRows": 0,
+      "loadedWritableCount": 1,
+      "loadedReadonlyCount": 4,
+      "inclusionReasons": [
+        {
+          "kind": "later_successful_validation_output_writer",
+          "account": "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3"
+        },
+        {
+          "kind": "last_preceding_committed_writer",
+          "account": "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+          "consumerIndex": 438
+        },
+        {
+          "kind": "last_preceding_committed_writer",
+          "account": "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+          "consumerIndex": 438
+        }
+      ],
+      "predecessorIndexes": [
+        428
+      ],
+      "inputSources": [
+        {
+          "account": "2Zsxk1jSe5h2uDVVKKRkv5PevhL3w4SEgyeywgFq2vwd",
+          "source": "transaction",
+          "transactionIndex": 428
+        },
+        {
+          "account": "3e5QUcAj1qWHRjtphaKVguitkZx6Rnun6CSCJibnwxZM",
+          "source": "transaction",
+          "transactionIndex": 428
+        },
+        {
+          "account": "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+          "source": "transaction",
+          "transactionIndex": 428
+        },
+        {
+          "account": "ComputeBudget111111111111111111111111111111",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+          "source": "transaction",
+          "transactionIndex": 428
+        },
+        {
+          "account": "5zpq7DvB6UdFFvpmBPspGPNfUGoBRRCE2HHg5u3gxcsN",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "3x85u7SWkmmr7YQGYhtjARgxwegTLJgkSLRprfXod6rh",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "3m6i4RFWEDw2Ft4tFHPJtYgmpPe21k56M3FHeWYrgGBz",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "9VCioxmni2gDLv11qufWzT3RDERhQE4iY5Gf7NTfYyAV",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "Fpys8GRa5RBWfyeN7AaDUwFGD1zkDCA4z3t4CJLV8dfL",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "EiWSskK5HXnBTptiS5DH6gpAJRVNQ3cAhTKBGaiaysAb",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "7dLgmtcTavcguNoynVimF9ZNVb13FvhXVRfj2HyrDGaP",
+          "source": "parent_slot",
+          "transactionIndex": null
+        }
+      ],
+      "dependencyDepth": 2
+    },
+    {
+      "index": 438,
+      "signature": "3pjwtrCE8NqPrjakAMyrci4ryk6JAZZAN9FEbf5Yqk2JZcpcu8ybu1AHJ6gtLckYAxJ8AdfydAL2tS8RRNcvmbc1",
+      "success": true,
+      "fee": 5000,
+      "feePayer": "AVHUQjWAxUgRWdMrxf9w2CEwqLBwkjjFtzobadSXNRZ7",
+      "durableNonceAccount": null,
+      "messageVersion": 0,
+      "accountReads": [
+        "AVHUQjWAxUgRWdMrxf9w2CEwqLBwkjjFtzobadSXNRZ7",
+        "EzxyKMKL6W1MLBDJumJTpARKwf1MXyy6DcebUcWkHjaa",
+        "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+        "ComputeBudget111111111111111111111111111111",
+        "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+        "5zpq7DvB6UdFFvpmBPspGPNfUGoBRRCE2HHg5u3gxcsN",
+        "3x85u7SWkmmr7YQGYhtjARgxwegTLJgkSLRprfXod6rh",
+        "3m6i4RFWEDw2Ft4tFHPJtYgmpPe21k56M3FHeWYrgGBz",
+        "9VCioxmni2gDLv11qufWzT3RDERhQE4iY5Gf7NTfYyAV"
+      ],
+      "implicitStateInputs": [
+        "Fpys8GRa5RBWfyeN7AaDUwFGD1zkDCA4z3t4CJLV8dfL",
+        "EiWSskK5HXnBTptiS5DH6gpAJRVNQ3cAhTKBGaiaysAb",
+        "7dLgmtcTavcguNoynVimF9ZNVb13FvhXVRfj2HyrDGaP"
+      ],
+      "requiredStateInputs": [
+        "AVHUQjWAxUgRWdMrxf9w2CEwqLBwkjjFtzobadSXNRZ7",
+        "EzxyKMKL6W1MLBDJumJTpARKwf1MXyy6DcebUcWkHjaa",
+        "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+        "ComputeBudget111111111111111111111111111111",
+        "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+        "5zpq7DvB6UdFFvpmBPspGPNfUGoBRRCE2HHg5u3gxcsN",
+        "3x85u7SWkmmr7YQGYhtjARgxwegTLJgkSLRprfXod6rh",
+        "3m6i4RFWEDw2Ft4tFHPJtYgmpPe21k56M3FHeWYrgGBz",
+        "9VCioxmni2gDLv11qufWzT3RDERhQE4iY5Gf7NTfYyAV",
+        "Fpys8GRa5RBWfyeN7AaDUwFGD1zkDCA4z3t4CJLV8dfL",
+        "EiWSskK5HXnBTptiS5DH6gpAJRVNQ3cAhTKBGaiaysAb",
+        "7dLgmtcTavcguNoynVimF9ZNVb13FvhXVRfj2HyrDGaP"
+      ],
+      "declaredWritableAccounts": [
+        "AVHUQjWAxUgRWdMrxf9w2CEwqLBwkjjFtzobadSXNRZ7",
+        "EzxyKMKL6W1MLBDJumJTpARKwf1MXyy6DcebUcWkHjaa",
+        "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3"
+      ],
+      "committedWrites": [
+        "AVHUQjWAxUgRWdMrxf9w2CEwqLBwkjjFtzobadSXNRZ7",
+        "EzxyKMKL6W1MLBDJumJTpARKwf1MXyy6DcebUcWkHjaa",
+        "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3"
+      ],
+      "programIds": [
+        "ComputeBudget111111111111111111111111111111",
+        "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH"
+      ],
+      "lutReferences": [
+        "Fpys8GRa5RBWfyeN7AaDUwFGD1zkDCA4z3t4CJLV8dfL",
+        "EiWSskK5HXnBTptiS5DH6gpAJRVNQ3cAhTKBGaiaysAb"
+      ],
+      "innerInstructionGroups": 0,
+      "preTokenBalanceRows": 0,
+      "postTokenBalanceRows": 0,
+      "loadedWritableCount": 1,
+      "loadedReadonlyCount": 4,
+      "inclusionReasons": [
+        {
+          "kind": "later_successful_validation_output_writer",
+          "account": "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3"
+        },
+        {
+          "kind": "last_preceding_committed_writer",
+          "account": "AVHUQjWAxUgRWdMrxf9w2CEwqLBwkjjFtzobadSXNRZ7",
+          "consumerIndex": 1245
+        },
+        {
+          "kind": "last_preceding_committed_writer",
+          "account": "EzxyKMKL6W1MLBDJumJTpARKwf1MXyy6DcebUcWkHjaa",
+          "consumerIndex": 1245
+        },
+        {
+          "kind": "last_preceding_committed_writer",
+          "account": "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+          "consumerIndex": 1245
+        },
+        {
+          "kind": "last_preceding_committed_writer",
+          "account": "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+          "consumerIndex": 1245
+        }
+      ],
+      "predecessorIndexes": [
+        431
+      ],
+      "inputSources": [
+        {
+          "account": "AVHUQjWAxUgRWdMrxf9w2CEwqLBwkjjFtzobadSXNRZ7",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "EzxyKMKL6W1MLBDJumJTpARKwf1MXyy6DcebUcWkHjaa",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+          "source": "transaction",
+          "transactionIndex": 431
+        },
+        {
+          "account": "ComputeBudget111111111111111111111111111111",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+          "source": "transaction",
+          "transactionIndex": 431
+        },
+        {
+          "account": "5zpq7DvB6UdFFvpmBPspGPNfUGoBRRCE2HHg5u3gxcsN",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "3x85u7SWkmmr7YQGYhtjARgxwegTLJgkSLRprfXod6rh",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "3m6i4RFWEDw2Ft4tFHPJtYgmpPe21k56M3FHeWYrgGBz",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "9VCioxmni2gDLv11qufWzT3RDERhQE4iY5Gf7NTfYyAV",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "Fpys8GRa5RBWfyeN7AaDUwFGD1zkDCA4z3t4CJLV8dfL",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "EiWSskK5HXnBTptiS5DH6gpAJRVNQ3cAhTKBGaiaysAb",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "7dLgmtcTavcguNoynVimF9ZNVb13FvhXVRfj2HyrDGaP",
+          "source": "parent_slot",
+          "transactionIndex": null
+        }
+      ],
+      "dependencyDepth": 3
+    },
+    {
+      "index": 1245,
+      "signature": "2QFKnUZWaVUnga2LcXS9dX4Miqe1hWXNnyoR1yBNudodtuuzsZ3num9fXadWoXS1mMMnfBpV3iHqTNrfP4Qe8zVk",
+      "success": true,
+      "fee": 5000,
+      "feePayer": "AVHUQjWAxUgRWdMrxf9w2CEwqLBwkjjFtzobadSXNRZ7",
+      "durableNonceAccount": null,
+      "messageVersion": 0,
+      "accountReads": [
+        "AVHUQjWAxUgRWdMrxf9w2CEwqLBwkjjFtzobadSXNRZ7",
+        "EzxyKMKL6W1MLBDJumJTpARKwf1MXyy6DcebUcWkHjaa",
+        "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+        "ComputeBudget111111111111111111111111111111",
+        "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+        "5zpq7DvB6UdFFvpmBPspGPNfUGoBRRCE2HHg5u3gxcsN",
+        "3x85u7SWkmmr7YQGYhtjARgxwegTLJgkSLRprfXod6rh",
+        "3m6i4RFWEDw2Ft4tFHPJtYgmpPe21k56M3FHeWYrgGBz",
+        "9VCioxmni2gDLv11qufWzT3RDERhQE4iY5Gf7NTfYyAV"
+      ],
+      "implicitStateInputs": [
+        "Fpys8GRa5RBWfyeN7AaDUwFGD1zkDCA4z3t4CJLV8dfL",
+        "EiWSskK5HXnBTptiS5DH6gpAJRVNQ3cAhTKBGaiaysAb",
+        "7dLgmtcTavcguNoynVimF9ZNVb13FvhXVRfj2HyrDGaP"
+      ],
+      "requiredStateInputs": [
+        "AVHUQjWAxUgRWdMrxf9w2CEwqLBwkjjFtzobadSXNRZ7",
+        "EzxyKMKL6W1MLBDJumJTpARKwf1MXyy6DcebUcWkHjaa",
+        "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+        "ComputeBudget111111111111111111111111111111",
+        "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+        "5zpq7DvB6UdFFvpmBPspGPNfUGoBRRCE2HHg5u3gxcsN",
+        "3x85u7SWkmmr7YQGYhtjARgxwegTLJgkSLRprfXod6rh",
+        "3m6i4RFWEDw2Ft4tFHPJtYgmpPe21k56M3FHeWYrgGBz",
+        "9VCioxmni2gDLv11qufWzT3RDERhQE4iY5Gf7NTfYyAV",
+        "Fpys8GRa5RBWfyeN7AaDUwFGD1zkDCA4z3t4CJLV8dfL",
+        "EiWSskK5HXnBTptiS5DH6gpAJRVNQ3cAhTKBGaiaysAb",
+        "7dLgmtcTavcguNoynVimF9ZNVb13FvhXVRfj2HyrDGaP"
+      ],
+      "declaredWritableAccounts": [
+        "AVHUQjWAxUgRWdMrxf9w2CEwqLBwkjjFtzobadSXNRZ7",
+        "EzxyKMKL6W1MLBDJumJTpARKwf1MXyy6DcebUcWkHjaa",
+        "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3"
+      ],
+      "committedWrites": [
+        "AVHUQjWAxUgRWdMrxf9w2CEwqLBwkjjFtzobadSXNRZ7",
+        "EzxyKMKL6W1MLBDJumJTpARKwf1MXyy6DcebUcWkHjaa",
+        "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3"
+      ],
+      "programIds": [
+        "ComputeBudget111111111111111111111111111111",
+        "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH"
+      ],
+      "lutReferences": [
+        "Fpys8GRa5RBWfyeN7AaDUwFGD1zkDCA4z3t4CJLV8dfL",
+        "EiWSskK5HXnBTptiS5DH6gpAJRVNQ3cAhTKBGaiaysAb"
+      ],
+      "innerInstructionGroups": 0,
+      "preTokenBalanceRows": 0,
+      "postTokenBalanceRows": 0,
+      "loadedWritableCount": 1,
+      "loadedReadonlyCount": 4,
+      "inclusionReasons": [
+        {
+          "kind": "later_successful_validation_output_writer",
+          "account": "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3"
+        }
+      ],
+      "predecessorIndexes": [
+        438
+      ],
+      "inputSources": [
+        {
+          "account": "AVHUQjWAxUgRWdMrxf9w2CEwqLBwkjjFtzobadSXNRZ7",
+          "source": "transaction",
+          "transactionIndex": 438
+        },
+        {
+          "account": "EzxyKMKL6W1MLBDJumJTpARKwf1MXyy6DcebUcWkHjaa",
+          "source": "transaction",
+          "transactionIndex": 438
+        },
+        {
+          "account": "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+          "source": "transaction",
+          "transactionIndex": 438
+        },
+        {
+          "account": "ComputeBudget111111111111111111111111111111",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+          "source": "transaction",
+          "transactionIndex": 438
+        },
+        {
+          "account": "5zpq7DvB6UdFFvpmBPspGPNfUGoBRRCE2HHg5u3gxcsN",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "3x85u7SWkmmr7YQGYhtjARgxwegTLJgkSLRprfXod6rh",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "3m6i4RFWEDw2Ft4tFHPJtYgmpPe21k56M3FHeWYrgGBz",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "9VCioxmni2gDLv11qufWzT3RDERhQE4iY5Gf7NTfYyAV",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "Fpys8GRa5RBWfyeN7AaDUwFGD1zkDCA4z3t4CJLV8dfL",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "EiWSskK5HXnBTptiS5DH6gpAJRVNQ3cAhTKBGaiaysAb",
+          "source": "parent_slot",
+          "transactionIndex": null
+        },
+        {
+          "account": "7dLgmtcTavcguNoynVimF9ZNVb13FvhXVRfj2HyrDGaP",
+          "source": "parent_slot",
+          "transactionIndex": null
+        }
+      ],
+      "dependencyDepth": 4
+    }
+  ],
+  "dependencyEdges": [
+    {
+      "from": 73,
+      "to": 428,
+      "account": "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3"
+    },
+    {
+      "from": 428,
+      "to": 431,
+      "account": "2Zsxk1jSe5h2uDVVKKRkv5PevhL3w4SEgyeywgFq2vwd"
+    },
+    {
+      "from": 428,
+      "to": 431,
+      "account": "3e5QUcAj1qWHRjtphaKVguitkZx6Rnun6CSCJibnwxZM"
+    },
+    {
+      "from": 428,
+      "to": 431,
+      "account": "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL"
+    },
+    {
+      "from": 428,
+      "to": 431,
+      "account": "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3"
+    },
+    {
+      "from": 431,
+      "to": 438,
+      "account": "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL"
+    },
+    {
+      "from": 431,
+      "to": 438,
+      "account": "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3"
+    },
+    {
+      "from": 438,
+      "to": 1245,
+      "account": "AVHUQjWAxUgRWdMrxf9w2CEwqLBwkjjFtzobadSXNRZ7"
+    },
+    {
+      "from": 438,
+      "to": 1245,
+      "account": "EzxyKMKL6W1MLBDJumJTpARKwf1MXyy6DcebUcWkHjaa"
+    },
+    {
+      "from": 438,
+      "to": 1245,
+      "account": "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL"
+    },
+    {
+      "from": 438,
+      "to": 1245,
+      "account": "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3"
+    }
+  ],
+  "parentStateFrontier": [
+    "25Eax9W8SA3wpCQFhJEGyHhQ2NDHEshZEDzyMNtthR8D",
+    "2Zsxk1jSe5h2uDVVKKRkv5PevhL3w4SEgyeywgFq2vwd",
+    "3e5QUcAj1qWHRjtphaKVguitkZx6Rnun6CSCJibnwxZM",
+    "3m6i4RFWEDw2Ft4tFHPJtYgmpPe21k56M3FHeWYrgGBz",
+    "3x85u7SWkmmr7YQGYhtjARgxwegTLJgkSLRprfXod6rh",
+    "5zpq7DvB6UdFFvpmBPspGPNfUGoBRRCE2HHg5u3gxcsN",
+    "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+    "7QAtMC3AaAc91W4XuwYXM1Mtffq9h9Z8dTxcJrKRHu1z",
+    "7dLgmtcTavcguNoynVimF9ZNVb13FvhXVRfj2HyrDGaP",
+    "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+    "93FG52TzNKCnMiasV14Ba34BYcHDb9p4zK4GjZnLwqWR",
+    "9VCioxmni2gDLv11qufWzT3RDERhQE4iY5Gf7NTfYyAV",
+    "AVHUQjWAxUgRWdMrxf9w2CEwqLBwkjjFtzobadSXNRZ7",
+    "CXZhzKePYajrZgZyrzgvHYFKK3c5tNgDrRobAgySo8Nb",
+    "ComputeBudget111111111111111111111111111111",
+    "EiWSskK5HXnBTptiS5DH6gpAJRVNQ3cAhTKBGaiaysAb",
+    "EzxyKMKL6W1MLBDJumJTpARKwf1MXyy6DcebUcWkHjaa",
+    "Fpys8GRa5RBWfyeN7AaDUwFGD1zkDCA4z3t4CJLV8dfL",
+    "GXWqPpjQpdz7KZw9p7f5PX2eGxHAhvpNXiviFkAB8zXg",
+    "HN7qfUNM5Q7gQTwyEucmYdCF4CjwUrspj3DbNQ4V8P52",
+    "HpR1bLcW6rsXrBigRhW18WnQNwAVBq7wBPhteRKGBU5z",
+    "JE9m89yHHiCGzzL2FAeeZgHKAFwjkW4Qp1GfjegWnojR",
+    "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+    "maCYbwXrJDnnP5ft3ySoH4ogwv5yFph8fFacgMa51de"
+  ],
+  "terminalStateFrontier": [
+    "2Zsxk1jSe5h2uDVVKKRkv5PevhL3w4SEgyeywgFq2vwd",
+    "3e5QUcAj1qWHRjtphaKVguitkZx6Rnun6CSCJibnwxZM",
+    "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+    "7QAtMC3AaAc91W4XuwYXM1Mtffq9h9Z8dTxcJrKRHu1z",
+    "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+    "AVHUQjWAxUgRWdMrxf9w2CEwqLBwkjjFtzobadSXNRZ7",
+    "EzxyKMKL6W1MLBDJumJTpARKwf1MXyy6DcebUcWkHjaa",
+    "JE9m89yHHiCGzzL2FAeeZgHKAFwjkW4Qp1GfjegWnojR",
+    "maCYbwXrJDnnP5ft3ySoH4ogwv5yFph8fFacgMa51de"
+  ],
+  "accountWriterCensus": [
+    {
+      "account": "25Eax9W8SA3wpCQFhJEGyHhQ2NDHEshZEDzyMNtthR8D",
+      "committedWriterIndexes": [
+        864
+      ]
+    },
+    {
+      "account": "2Zsxk1jSe5h2uDVVKKRkv5PevhL3w4SEgyeywgFq2vwd",
+      "committedWriterIndexes": [
+        428,
+        431
+      ]
+    },
+    {
+      "account": "3e5QUcAj1qWHRjtphaKVguitkZx6Rnun6CSCJibnwxZM",
+      "committedWriterIndexes": [
+        428,
+        431
+      ]
+    },
+    {
+      "account": "3m6i4RFWEDw2Ft4tFHPJtYgmpPe21k56M3FHeWYrgGBz",
+      "committedWriterIndexes": []
+    },
+    {
+      "account": "3x85u7SWkmmr7YQGYhtjARgxwegTLJgkSLRprfXod6rh",
+      "committedWriterIndexes": []
+    },
+    {
+      "account": "5zpq7DvB6UdFFvpmBPspGPNfUGoBRRCE2HHg5u3gxcsN",
+      "committedWriterIndexes": []
+    },
+    {
+      "account": "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+      "committedWriterIndexes": [
+        73,
+        428,
+        431,
+        438,
+        1245
+      ]
+    },
+    {
+      "account": "7QAtMC3AaAc91W4XuwYXM1Mtffq9h9Z8dTxcJrKRHu1z",
+      "committedWriterIndexes": [
+        73
+      ]
+    },
+    {
+      "account": "7dLgmtcTavcguNoynVimF9ZNVb13FvhXVRfj2HyrDGaP",
+      "committedWriterIndexes": []
+    },
+    {
+      "account": "8qc5mTJKvZVXph8jTjXWhZgP7p8CYYL6wAVtibEDZcbL",
+      "committedWriterIndexes": [
+        428,
+        431,
+        438,
+        1245
+      ]
+    },
+    {
+      "account": "93FG52TzNKCnMiasV14Ba34BYcHDb9p4zK4GjZnLwqWR",
+      "committedWriterIndexes": []
+    },
+    {
+      "account": "9VCioxmni2gDLv11qufWzT3RDERhQE4iY5Gf7NTfYyAV",
+      "committedWriterIndexes": []
+    },
+    {
+      "account": "AVHUQjWAxUgRWdMrxf9w2CEwqLBwkjjFtzobadSXNRZ7",
+      "committedWriterIndexes": [
+        438,
+        1245
+      ]
+    },
+    {
+      "account": "CXZhzKePYajrZgZyrzgvHYFKK3c5tNgDrRobAgySo8Nb",
+      "committedWriterIndexes": []
+    },
+    {
+      "account": "ComputeBudget111111111111111111111111111111",
+      "committedWriterIndexes": []
+    },
+    {
+      "account": "EiWSskK5HXnBTptiS5DH6gpAJRVNQ3cAhTKBGaiaysAb",
+      "committedWriterIndexes": []
+    },
+    {
+      "account": "EzxyKMKL6W1MLBDJumJTpARKwf1MXyy6DcebUcWkHjaa",
+      "committedWriterIndexes": [
+        438,
+        1245
+      ]
+    },
+    {
+      "account": "Fpys8GRa5RBWfyeN7AaDUwFGD1zkDCA4z3t4CJLV8dfL",
+      "committedWriterIndexes": []
+    },
+    {
+      "account": "GXWqPpjQpdz7KZw9p7f5PX2eGxHAhvpNXiviFkAB8zXg",
+      "committedWriterIndexes": []
+    },
+    {
+      "account": "HN7qfUNM5Q7gQTwyEucmYdCF4CjwUrspj3DbNQ4V8P52",
+      "committedWriterIndexes": []
+    },
+    {
+      "account": "HpR1bLcW6rsXrBigRhW18WnQNwAVBq7wBPhteRKGBU5z",
+      "committedWriterIndexes": [
+        868
+      ]
+    },
+    {
+      "account": "JE9m89yHHiCGzzL2FAeeZgHKAFwjkW4Qp1GfjegWnojR",
+      "committedWriterIndexes": [
+        73
+      ]
+    },
+    {
+      "account": "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+      "committedWriterIndexes": []
+    },
+    {
+      "account": "maCYbwXrJDnnP5ft3ySoH4ogwv5yFph8fFacgMa51de",
+      "committedWriterIndexes": [
+        73
+      ]
+    }
+  ],
+  "unanchoredTerminalOutputs": [],
+  "distinctProgramIds": [
+    "ComputeBudget111111111111111111111111111111",
+    "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH"
+  ],
+  "distinctLutReferences": [
+    "EiWSskK5HXnBTptiS5DH6gpAJRVNQ3cAhTKBGaiaysAb",
+    "Fpys8GRa5RBWfyeN7AaDUwFGD1zkDCA4z3t4CJLV8dfL"
+  ],
+  "failedTransactionIndexes": [],
+  "failedDeclaredOverlaps": []
+}

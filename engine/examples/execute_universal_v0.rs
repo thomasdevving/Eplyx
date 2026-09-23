@@ -125,6 +125,7 @@ fn run(input: &Value) -> Result<Value> {
         runtime_profile: &runtime_profile,
         unlimited_logs: true,
         slot_hashes: SlotHashesVariant::BackendDefault,
+        recent_blockhashes: Default::default(),
         require_complete_state: true,
     })?;
     let tables = proof

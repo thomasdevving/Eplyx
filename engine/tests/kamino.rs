@@ -333,11 +333,11 @@ fn no_adapter_specification_language_was_introduced() {
             path.display()
         );
     }
-    // And the adapter is compiled in, like the other two.
+    // And the adapter is compiled in with the other current adapters.
     assert_eq!(
         eplyx_engine::protocol::adapters().len(),
-        3,
-        "three adapters, all compiled in"
+        4,
+        "four adapters, all compiled in"
     );
 }
 

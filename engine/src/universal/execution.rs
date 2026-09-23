@@ -4,6 +4,7 @@ use std::{
     time::{Duration, Instant},
 };
 
+use agave_feature_set::FeatureSet;
 use anyhow::{anyhow, ensure, Result};
 use litesvm::{InvocationInspectCallback, LiteSVM};
 use serde::{Deserialize, Serialize};
@@ -14,10 +15,13 @@ use solana_hash::Hash;
 use solana_message::VersionedMessage;
 use solana_program_runtime::invoke_context::InvokeContext;
 use solana_slot_hashes::SlotHashes;
+#[allow(deprecated)]
+use solana_sysvar::recent_blockhashes::{IterItem, RecentBlockhashes};
 use solana_transaction::{
     sanitized::SanitizedTransaction, versioned::VersionedTransaction, Transaction,
 };
 
+use super::historical_features::HistoricalFeatureSetEvidence;
 use super::model::ResolvedMessage;
 use crate::{executor::LoadedProgram, replay::hash_bytes, types::AccountSnapshot};
 
@@ -29,6 +33,8 @@ pub struct HistoricalRuntimeEvidence {
     pub feature_profile: String,
     pub native_program_profile: String,
     pub provenance: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub historical_feature_set: Option<HistoricalFeatureSetEvidence>,
 }
 
 impl HistoricalRuntimeEvidence {
@@ -46,6 +52,7 @@ impl HistoricalRuntimeEvidence {
             feature_profile,
             native_program_profile,
             provenance,
+            historical_feature_set: None,
         };
         evidence.evidence_id = evidence.identity()?;
         Ok(evidence)
@@ -60,7 +67,24 @@ impl HistoricalRuntimeEvidence {
         ))?))
     }
 
+    pub fn with_historical_feature_set(
+        mut self,
+        feature_set: HistoricalFeatureSetEvidence,
+    ) -> Result<Self> {
+        feature_set.validate()?;
+        self.historical_feature_set = Some(feature_set);
+        self.evidence_id = self.identity()?;
+        Ok(self)
+    }
+
     pub fn validate(&self) -> Result<()> {
+        if let Some(feature_set) = &self.historical_feature_set {
+            feature_set.validate()?;
+            ensure!(
+                self.feature_profile == "LiteSVM 0.16.0 historical evidence",
+                "historical feature profile label differs"
+            );
+        }
         ensure!(
             !self.environment_blockhash.is_empty()
                 && !self.sysvar_snapshot_hash.is_empty()
@@ -94,6 +118,8 @@ pub struct RuntimeProfile {
     pub recent_blockhash_check: bool,
     pub instructions_rule: String,
     pub slot_hashes_policy: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub historical_feature_set: Option<HistoricalFeatureSetEvidence>,
 }
 
 impl RuntimeProfile {
@@ -117,25 +143,30 @@ impl RuntimeProfile {
         slot_hashes_policy: &str,
     ) -> Result<Self> {
         let sysvar_snapshot_hash = Self::sysvar_snapshot_hash(runtime_sysvars)?;
-        let (historical_evidence_id, environment_blockhash, native_program_profile) =
-            if let Some(evidence) = evidence {
-                evidence.validate()?;
-                ensure!(
-                    evidence.sysvar_snapshot_hash == sysvar_snapshot_hash,
-                    "historical runtime sysvar snapshot differs"
-                );
-                ensure!(
-                    evidence.feature_profile == feature_profile,
-                    "historical runtime feature profile differs"
-                );
-                (
-                    Some(evidence.evidence_id.clone()),
-                    Some(evidence.environment_blockhash.clone()),
-                    evidence.native_program_profile.clone(),
-                )
-            } else {
-                (None, None, "litesvm-default-native-programs".into())
-            };
+        let (
+            historical_evidence_id,
+            environment_blockhash,
+            native_program_profile,
+            historical_feature_set,
+        ) = if let Some(evidence) = evidence {
+            evidence.validate()?;
+            ensure!(
+                evidence.sysvar_snapshot_hash == sysvar_snapshot_hash,
+                "historical runtime sysvar snapshot differs"
+            );
+            ensure!(
+                evidence.feature_profile == feature_profile,
+                "historical runtime feature profile differs"
+            );
+            (
+                Some(evidence.evidence_id.clone()),
+                Some(evidence.environment_blockhash.clone()),
+                evidence.native_program_profile.clone(),
+                evidence.historical_feature_set.clone(),
+            )
+        } else {
+            (None, None, "litesvm-default-native-programs".into(), None)
+        };
         let mut profile = Self {
             profile_id: String::new(),
             historical_evidence_id,
@@ -147,6 +178,7 @@ impl RuntimeProfile {
             recent_blockhash_check,
             instructions_rule: instructions_rule.into(),
             slot_hashes_policy: slot_hashes_policy.into(),
+            historical_feature_set,
         };
         profile.profile_id = profile.identity()?;
         Ok(profile)
@@ -174,6 +206,9 @@ impl RuntimeProfile {
     }
 
     pub fn validate(&self) -> Result<()> {
+        if let Some(feature_set) = &self.historical_feature_set {
+            feature_set.validate()?;
+        }
         ensure!(
             self.profile_id == self.identity()?,
             "resolved runtime profile identity differs"
@@ -193,12 +228,16 @@ impl RuntimeProfile {
         match &self.historical_evidence_id {
             Some(_) => ensure!(
                 self.environment_blockhash.is_some()
-                    && self.feature_profile == "LiteSVM 0.16.0 mainnet"
+                    && ((self.historical_feature_set.is_none()
+                        && self.feature_profile == "LiteSVM 0.16.0 mainnet")
+                        || (self.historical_feature_set.is_some()
+                            && self.feature_profile == "LiteSVM 0.16.0 historical evidence"))
                     && self.native_program_profile == "agave-4.2.2-native-system-compute",
                 "unsupported historical runtime profile"
             ),
             None => ensure!(
                 self.environment_blockhash.is_none()
+                    && self.historical_feature_set.is_none()
                     && self.feature_profile == "LiteSVM 0.16.0 mainnet"
                     && self.native_program_profile == "litesvm-default-native-programs",
                 "unsupported default runtime profile"
@@ -257,12 +296,21 @@ pub struct ExecutionRequest<'a> {
     pub runtime_profile: &'a RuntimeProfile,
     pub unlimited_logs: bool,
     pub slot_hashes: SlotHashesVariant,
+    pub recent_blockhashes: RecentBlockhashesVariant,
     /// V2 requires a full account census; V1 retains its historical contract.
     pub require_complete_state: bool,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum SlotHashesVariant {
+    BackendDefault,
+    Empty,
+    Different,
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum RecentBlockhashesVariant {
+    #[default]
     BackendDefault,
     Empty,
     Different,
@@ -340,6 +388,30 @@ impl LiteSvmBackend {
         &self,
         request: &ExecutionRequest<'_>,
     ) -> Result<(ExecutionEvidence, BackendTimings)> {
+        self.execute_timed_with_feature_override(request, None)
+    }
+
+    /// Counterfactual feature control for isolated feasibility experiments.
+    /// The returned execution is never evidence-bound by the RuntimeProfile.
+    pub fn execute_diagnostic_feature_set(
+        &self,
+        request: &ExecutionRequest<'_>,
+        feature_set: &FeatureSet,
+    ) -> Result<ExecutionEvidence> {
+        ensure!(
+            request.runtime_profile.historical_feature_set.is_some(),
+            "diagnostic feature control requires a historical feature profile"
+        );
+        Ok(self
+            .execute_timed_with_feature_override(request, Some(feature_set))?
+            .0)
+    }
+
+    fn execute_timed_with_feature_override(
+        &self,
+        request: &ExecutionRequest<'_>,
+        diagnostic_feature_set: Option<&FeatureSet>,
+    ) -> Result<(ExecutionEvidence, BackendTimings)> {
         let mut timings = BackendTimings::default();
         let started = Instant::now();
         request.runtime_profile.validate()?;
@@ -348,7 +420,25 @@ impl LiteSvmBackend {
                 == RuntimeProfile::sysvar_snapshot_hash(request.runtime_sysvars)?,
             "runtime sysvar snapshot differs from resolved profile"
         );
-        let mut svm = LiteSVM::new()
+        if let Some(feature_set) = &request.runtime_profile.historical_feature_set {
+            ensure!(
+                feature_set.target_slot == request.message.transaction.slot,
+                "historical feature slot differs from transaction"
+            );
+        }
+        // The explicit set must precede builtins, environments, sysvars and
+        // feature accounts. This mirrors LiteSVM 0.16.0 `into_basic` exactly;
+        // this workspace does not enable LiteSVM's optional precompiles feature.
+        let svm = if let Some(features) = &request.runtime_profile.historical_feature_set {
+            let selected_features = match diagnostic_feature_set {
+                Some(set) => set.clone(),
+                None => features.feature_set()?,
+            };
+            historical_litesvm(selected_features)
+        } else {
+            LiteSVM::new()
+        };
+        let mut svm = svm
             .with_sigverify(request.runtime_profile.signature_check)
             .with_blockhash_check(request.runtime_profile.recent_blockhash_check);
         if let Some(blockhash) = &request.runtime_profile.environment_blockhash {
@@ -377,6 +467,17 @@ impl LiteSvmBackend {
                     (slot - 1, Hash::new_from_array([17; 32])),
                     (slot - 7, Hash::new_from_array([99; 32])),
                 ]));
+            }
+        }
+        #[allow(deprecated)]
+        match request.recent_blockhashes {
+            RecentBlockhashesVariant::BackendDefault => {}
+            RecentBlockhashesVariant::Empty => svm.set_sysvar(&RecentBlockhashes::default()),
+            RecentBlockhashesVariant::Different => {
+                let different = Hash::new_from_array([37; 32]);
+                svm.set_sysvar(&RecentBlockhashes::from_iter([IterItem(
+                    0, &different, 5_000,
+                )]));
             }
         }
         timings.runtime_setup = started.elapsed();
@@ -483,8 +584,36 @@ impl LiteSvmBackend {
     }
 }
 
+fn historical_litesvm(features: FeatureSet) -> LiteSVM {
+    LiteSVM::default()
+        .with_feature_set(features)
+        .with_builtins()
+        .with_lamports(1_000_000u64.wrapping_mul(1_000_000_000))
+        .with_sysvars()
+        .with_feature_accounts()
+        .with_default_programs()
+        .with_sigverify(true)
+        .with_blockhash_check(true)
+}
+
 impl ExecutionBackend for LiteSvmBackend {
     fn execute(&self, request: &ExecutionRequest<'_>) -> Result<ExecutionEvidence> {
         Ok(self.execute_timed(request)?.0)
+    }
+}
+
+#[cfg(test)]
+mod feature_constructor_tests {
+    use super::*;
+    use solana_rent::Rent;
+
+    #[test]
+    fn historical_feature_set_precedes_runtime_visible_rent_sysvar() {
+        let empty = FeatureSet::default();
+        let correct = historical_litesvm(empty.clone()).get_sysvar::<Rent>();
+        let late_replacement = LiteSVM::new().with_feature_set(empty).get_sysvar::<Rent>();
+        assert_eq!(correct.lamports_per_byte, 3_480);
+        assert_eq!(late_replacement.lamports_per_byte, 6_960);
+        assert_ne!(correct, late_replacement);
     }
 }

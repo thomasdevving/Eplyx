@@ -114,6 +114,7 @@ fn main() -> Result<()> {
             runtime_profile: &resolved.runtime_profile,
             unlimited_logs: true,
             slot_hashes: SlotHashesVariant::BackendDefault,
+            recent_blockhashes: Default::default(),
             require_complete_state: true,
         };
         let (execution, backend) = LiteSvmBackend.execute_timed(&request)?;

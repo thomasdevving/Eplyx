@@ -1,0 +1,282 @@
+{
+  "classification": "feasibility_only",
+  "computeUnits": 97801,
+  "controls": {
+    "currentDefault": {
+      "computeUnits": 97801,
+      "error": null,
+      "fee": 6216,
+      "innerInstructions": [
+        {
+          "instructions": [],
+          "outer_index": 0
+        },
+        {
+          "instructions": [],
+          "outer_index": 1
+        },
+        {
+          "instructions": [],
+          "outer_index": 2
+        }
+      ],
+      "logsSha256": "78ffc8b955900b8ca0511d84f3bb0d0850ff3cbc6f2227908e376ca0efc130d9",
+      "outputs": {
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3": {
+          "dataSha256": "edceea1f1e0ef731ebb9903d5651c5e1bee47ca219a4b13b306598a729cf8f85",
+          "lamports": 6291851
+        },
+        "7QAtMC3AaAc91W4XuwYXM1Mtffq9h9Z8dTxcJrKRHu1z": {
+          "dataSha256": "bcab16dc365298027a8af69b6df80df30c4d149eac43a35b0b112413e15a561b",
+          "lamports": 9354240
+        },
+        "JE9m89yHHiCGzzL2FAeeZgHKAFwjkW4Qp1GfjegWnojR": {
+          "dataSha256": "7d1df1644b81a18a085a9b7c6bd60d0f61921f00f0aa8884fd1e6521f76e2e67",
+          "lamports": 31347840
+        }
+      },
+      "returnData": {
+        "data": "",
+        "program": "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH"
+      },
+      "success": true
+    },
+    "currentDefaultEqual": true,
+    "differentEnvironment": {
+      "computeUnits": 97801,
+      "error": null,
+      "fee": 6216,
+      "innerInstructions": [
+        {
+          "instructions": [],
+          "outer_index": 0
+        },
+        {
+          "instructions": [],
+          "outer_index": 1
+        },
+        {
+          "instructions": [],
+          "outer_index": 2
+        }
+      ],
+      "logsSha256": "78ffc8b955900b8ca0511d84f3bb0d0850ff3cbc6f2227908e376ca0efc130d9",
+      "outputs": {
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3": {
+          "dataSha256": "edceea1f1e0ef731ebb9903d5651c5e1bee47ca219a4b13b306598a729cf8f85",
+          "lamports": 6291851
+        },
+        "7QAtMC3AaAc91W4XuwYXM1Mtffq9h9Z8dTxcJrKRHu1z": {
+          "dataSha256": "bcab16dc365298027a8af69b6df80df30c4d149eac43a35b0b112413e15a561b",
+          "lamports": 9354240
+        },
+        "JE9m89yHHiCGzzL2FAeeZgHKAFwjkW4Qp1GfjegWnojR": {
+          "dataSha256": "7d1df1644b81a18a085a9b7c6bd60d0f61921f00f0aa8884fd1e6521f76e2e67",
+          "lamports": 31347840
+        }
+      },
+      "returnData": {
+        "data": "",
+        "program": "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH"
+      },
+      "success": true
+    },
+    "differentRecentBlockhashes": {
+      "computeUnits": 97801,
+      "error": null,
+      "fee": 6216,
+      "innerInstructions": [
+        {
+          "instructions": [],
+          "outer_index": 0
+        },
+        {
+          "instructions": [],
+          "outer_index": 1
+        },
+        {
+          "instructions": [],
+          "outer_index": 2
+        }
+      ],
+      "logsSha256": "78ffc8b955900b8ca0511d84f3bb0d0850ff3cbc6f2227908e376ca0efc130d9",
+      "outputs": {
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3": {
+          "dataSha256": "edceea1f1e0ef731ebb9903d5651c5e1bee47ca219a4b13b306598a729cf8f85",
+          "lamports": 6291851
+        },
+        "7QAtMC3AaAc91W4XuwYXM1Mtffq9h9Z8dTxcJrKRHu1z": {
+          "dataSha256": "bcab16dc365298027a8af69b6df80df30c4d149eac43a35b0b112413e15a561b",
+          "lamports": 9354240
+        },
+        "JE9m89yHHiCGzzL2FAeeZgHKAFwjkW4Qp1GfjegWnojR": {
+          "dataSha256": "7d1df1644b81a18a085a9b7c6bd60d0f61921f00f0aa8884fd1e6521f76e2e67",
+          "lamports": 31347840
+        }
+      },
+      "returnData": {
+        "data": "",
+        "program": "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH"
+      },
+      "success": true
+    },
+    "emptyRecentBlockhashes": {
+      "computeUnits": 97801,
+      "error": null,
+      "fee": 6216,
+      "innerInstructions": [
+        {
+          "instructions": [],
+          "outer_index": 0
+        },
+        {
+          "instructions": [],
+          "outer_index": 1
+        },
+        {
+          "instructions": [],
+          "outer_index": 2
+        }
+      ],
+      "logsSha256": "78ffc8b955900b8ca0511d84f3bb0d0850ff3cbc6f2227908e376ca0efc130d9",
+      "outputs": {
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3": {
+          "dataSha256": "edceea1f1e0ef731ebb9903d5651c5e1bee47ca219a4b13b306598a729cf8f85",
+          "lamports": 6291851
+        },
+        "7QAtMC3AaAc91W4XuwYXM1Mtffq9h9Z8dTxcJrKRHu1z": {
+          "dataSha256": "bcab16dc365298027a8af69b6df80df30c4d149eac43a35b0b112413e15a561b",
+          "lamports": 9354240
+        },
+        "JE9m89yHHiCGzzL2FAeeZgHKAFwjkW4Qp1GfjegWnojR": {
+          "dataSha256": "7d1df1644b81a18a085a9b7c6bd60d0f61921f00f0aa8884fd1e6521f76e2e67",
+          "lamports": 31347840
+        }
+      },
+      "returnData": {
+        "data": "",
+        "program": "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH"
+      },
+      "success": true
+    },
+    "environmentBlockhashDifferentEqual": true,
+    "recentBlockhashesDifferentEqual": true,
+    "recentBlockhashesEmptyEqual": true,
+    "slotHashesDifferentEqual": true,
+    "slotHashesEmptyEqual": true,
+    "targetPlus26": {
+      "computeUnits": 97801,
+      "error": null,
+      "fee": 6216,
+      "innerInstructions": [
+        {
+          "instructions": [],
+          "outer_index": 0
+        },
+        {
+          "instructions": [],
+          "outer_index": 1
+        },
+        {
+          "instructions": [],
+          "outer_index": 2
+        }
+      ],
+      "logsSha256": "78ffc8b955900b8ca0511d84f3bb0d0850ff3cbc6f2227908e376ca0efc130d9",
+      "outputs": {
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3": {
+          "dataSha256": "edceea1f1e0ef731ebb9903d5651c5e1bee47ca219a4b13b306598a729cf8f85",
+          "lamports": 6291851
+        },
+        "7QAtMC3AaAc91W4XuwYXM1Mtffq9h9Z8dTxcJrKRHu1z": {
+          "dataSha256": "bcab16dc365298027a8af69b6df80df30c4d149eac43a35b0b112413e15a561b",
+          "lamports": 9354240
+        },
+        "JE9m89yHHiCGzzL2FAeeZgHKAFwjkW4Qp1GfjegWnojR": {
+          "dataSha256": "7d1df1644b81a18a085a9b7c6bd60d0f61921f00f0aa8884fd1e6521f76e2e67",
+          "lamports": 31347840
+        }
+      },
+      "returnData": {
+        "data": "",
+        "program": "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH"
+      },
+      "success": true
+    },
+    "targetPlus26Equal": true
+  },
+  "error": null,
+  "featureInventoryId": "e20728870f96f8aa9d7d491acbdd05eba00c7ba486420c57469a3317e1f38da5",
+  "featureSetHash": "9e20e164cd1299081370bf19eacc592f2990ecdd30d1854a9dfd3ff851a0d18c",
+  "fee": 6216,
+  "innerInstructions": [
+    {
+      "instructions": [],
+      "outer_index": 0
+    },
+    {
+      "instructions": [],
+      "outer_index": 1
+    },
+    {
+      "instructions": [],
+      "outer_index": 2
+    }
+  ],
+  "logs": [
+    "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+    "Program ComputeBudget111111111111111111111111111111 success",
+    "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+    "Program ComputeBudget111111111111111111111111111111 success",
+    "Program dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH invoke [1]",
+    "Program log: Instruction: SettlePnl",
+    "Program log: Invalid Perp 3 SafeMM Oracle: Stale (oracle_delay=5), (stale_for_amm_immediate=true, stale_for_amm_low_risk=false, stale_for_margin=false)",
+    "Program data: t7rLuuG7X4J028ppAAAAAAAA/t17C7loYAEAAAAAAAAAAE1Oi8wCAAAAAAAAAAAAAABTgGQpUDulAAAAAAAAAAAAJiGwQQMAAAAAAAAAAAAAAAA1DAAUzQAAoLsNAA==",
+    "Program data: OURpGnfG1Vl028ppAAAAAP/1IlK5WXpGrjCNu92v1CpMyuo/cODwBJMyLt0/2hmMAwDLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA5aYNAAAAAAAA",
+    "Program dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH consumed 97501 of 121201 compute units",
+    "Program dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH success"
+  ],
+  "outputs": {
+    "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3": {
+      "dataSha256": "edceea1f1e0ef731ebb9903d5651c5e1bee47ca219a4b13b306598a729cf8f85",
+      "lamports": 6291851
+    },
+    "7QAtMC3AaAc91W4XuwYXM1Mtffq9h9Z8dTxcJrKRHu1z": {
+      "dataSha256": "bcab16dc365298027a8af69b6df80df30c4d149eac43a35b0b112413e15a561b",
+      "lamports": 9354240
+    },
+    "JE9m89yHHiCGzzL2FAeeZgHKAFwjkW4Qp1GfjegWnojR": {
+      "dataSha256": "7d1df1644b81a18a085a9b7c6bd60d0f61921f00f0aa8884fd1e6521f76e2e67",
+      "lamports": 31347840
+    }
+  },
+  "returnData": {
+    "data": "",
+    "program": "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH"
+  },
+  "runtimeProfileId": "82d133c01dfdffd1d28d4115f969e7ecf73178c41829ccdc3b882910c270e639",
+  "safeOutputComparison": {
+    "7QAtMC3AaAc91W4XuwYXM1Mtffq9h9Z8dTxcJrKRHu1z": {
+      "actualDataSha256": "bcab16dc365298027a8af69b6df80df30c4d149eac43a35b0b112413e15a561b",
+      "expectedDataSha256": "bcab16dc365298027a8af69b6df80df30c4d149eac43a35b0b112413e15a561b",
+      "fullAccountEqual": true
+    },
+    "JE9m89yHHiCGzzL2FAeeZgHKAFwjkW4Qp1GfjegWnojR": {
+      "actualDataSha256": "7d1df1644b81a18a085a9b7c6bd60d0f61921f00f0aa8884fd1e6521f76e2e67",
+      "expectedDataSha256": "7d1df1644b81a18a085a9b7c6bd60d0f61921f00f0aa8884fd1e6521f76e2e67",
+      "fullAccountEqual": true
+    }
+  },
+  "schema": "U13_2BTargetFeasibilityV1",
+  "success": true,
+  "validator": {
+    "computeUnits": 97801,
+    "executedInnerInstructions": 0,
+    "fee": 6216,
+    "innerInstructionRows": 0,
+    "logsEqual": true,
+    "returnDataBytes": 0,
+    "returnDataPresent": false,
+    "success": true
+  }
+}

@@ -1181,6 +1181,7 @@ dependencies = [
 name = "eplyx-engine"
 version = "0.1.0"
 dependencies = [
+ "agave-feature-set",
  "anyhow",
  "base64",
  "borsh",
@@ -1201,10 +1202,12 @@ dependencies = [
  "solana-keypair",
  "solana-message",
  "solana-program-runtime",
+ "solana-pubkey 4.2.1",
  "solana-rent",
  "solana-signer",
  "solana-slot-hashes",
  "solana-system-interface",
+ "solana-sysvar",
  "solana-transaction",
  "solana-transaction-error",
  "tempfile",
