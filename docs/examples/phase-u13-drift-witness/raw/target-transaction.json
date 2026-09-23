@@ -1,0 +1,139 @@
+{
+  "blockTime": 1774902132,
+  "meta": {
+    "computeUnitsConsumed": 97801,
+    "costUnits": 101367,
+    "err": null,
+    "fee": 6216,
+    "innerInstructions": [],
+    "loadedAddresses": {
+      "readonly": [],
+      "writable": []
+    },
+    "logMessages": [
+      "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+      "Program ComputeBudget111111111111111111111111111111 success",
+      "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+      "Program ComputeBudget111111111111111111111111111111 success",
+      "Program dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH invoke [1]",
+      "Program log: Instruction: SettlePnl",
+      "Program log: Invalid Perp 3 SafeMM Oracle: Stale (oracle_delay=5), (stale_for_amm_immediate=true, stale_for_amm_low_risk=false, stale_for_margin=false)",
+      "Program data: t7rLuuG7X4J028ppAAAAAAAA/t17C7loYAEAAAAAAAAAAE1Oi8wCAAAAAAAAAAAAAABTgGQpUDulAAAAAAAAAAAAJiGwQQMAAAAAAAAAAAAAAAA1DAAUzQAAoLsNAA==",
+      "Program data: OURpGnfG1Vl028ppAAAAAP/1IlK5WXpGrjCNu92v1CpMyuo/cODwBJMyLt0/2hmMAwDLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA5aYNAAAAAAAA",
+      "Program dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH consumed 97501 of 121201 compute units",
+      "Program dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH success"
+    ],
+    "postBalances": [
+      2137215276,
+      31347840,
+      6291851,
+      9354240,
+      1,
+      49151453,
+      7795213,
+      12044300,
+      1224971,
+      1224971,
+      1224960,
+      1224960,
+      1224971,
+      6291851,
+      9354240,
+      9354251
+    ],
+    "postTokenBalances": [],
+    "preBalances": [
+      2137221492,
+      31347840,
+      6291851,
+      9354240,
+      1,
+      49151453,
+      7795213,
+      12044300,
+      1224971,
+      1224971,
+      1224960,
+      1224960,
+      1224971,
+      6291851,
+      9354240,
+      9354251
+    ],
+    "preTokenBalances": [],
+    "rewards": [],
+    "status": {
+      "Ok": null
+    }
+  },
+  "slot": 409942000,
+  "transaction": {
+    "message": {
+      "accountKeys": [
+        "maCYbwXrJDnnP5ft3ySoH4ogwv5yFph8fFacgMa51de",
+        "JE9m89yHHiCGzzL2FAeeZgHKAFwjkW4Qp1GfjegWnojR",
+        "6gMq3mRCKf8aP3ttTyYhuijVZ2LGi14oDsBbkgubfLB3",
+        "7QAtMC3AaAc91W4XuwYXM1Mtffq9h9Z8dTxcJrKRHu1z",
+        "ComputeBudget111111111111111111111111111111",
+        "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+        "5zpq7DvB6UdFFvpmBPspGPNfUGoBRRCE2HHg5u3gxcsN",
+        "GXWqPpjQpdz7KZw9p7f5PX2eGxHAhvpNXiviFkAB8zXg",
+        "9VCioxmni2gDLv11qufWzT3RDERhQE4iY5Gf7NTfYyAV",
+        "3m6i4RFWEDw2Ft4tFHPJtYgmpPe21k56M3FHeWYrgGBz",
+        "HN7qfUNM5Q7gQTwyEucmYdCF4CjwUrspj3DbNQ4V8P52",
+        "CXZhzKePYajrZgZyrzgvHYFKK3c5tNgDrRobAgySo8Nb",
+        "93FG52TzNKCnMiasV14Ba34BYcHDb9p4zK4GjZnLwqWR",
+        "3x85u7SWkmmr7YQGYhtjARgxwegTLJgkSLRprfXod6rh",
+        "HpR1bLcW6rsXrBigRhW18WnQNwAVBq7wBPhteRKGBU5z",
+        "25Eax9W8SA3wpCQFhJEGyHhQ2NDHEshZEDzyMNtthR8D"
+      ],
+      "addressTableLookups": [],
+      "header": {
+        "numReadonlySignedAccounts": 0,
+        "numReadonlyUnsignedAccounts": 12,
+        "numRequiredSignatures": 1
+      },
+      "instructions": [
+        {
+          "accounts": [],
+          "data": "J85wb5",
+          "programIdIndex": 4,
+          "stackHeight": 1
+        },
+        {
+          "accounts": [],
+          "data": "3GAG5eogvTjV",
+          "programIdIndex": 4,
+          "stackHeight": 1
+        },
+        {
+          "accounts": [
+            6,
+            1,
+            0,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            2,
+            13,
+            14,
+            3,
+            15
+          ],
+          "data": "3RuXFCANgJosMH",
+          "programIdIndex": 5,
+          "stackHeight": 1
+        }
+      ],
+      "recentBlockhash": "2umozG65oTEjAgaEEt49UoC5AjiSEHj6rZSJz1Nonkh9"
+    },
+    "signatures": [
+      "2BD3UJFPUPJbxoJMAntwyZrzLjzKv3yeuQERTu2rPRZLf4H8Wdjihsh6xChwC4Vxruxy9qyrrknmnvi7UJqCHRSK"
+    ]
+  },
+  "transactionIndex": 73,
+  "version": 0
+}
