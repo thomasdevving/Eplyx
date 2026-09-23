@@ -1,0 +1,49 @@
+{
+  "schema": "U13_1MinimalityChecksV1",
+  "cases": [
+    {
+      "name": "frozen_sequence_valid",
+      "passed": true
+    },
+    {
+      "name": "omit_428_rejected",
+      "passed": true
+    },
+    {
+      "name": "omit_431_rejected",
+      "passed": true
+    },
+    {
+      "name": "omit_438_rejected",
+      "passed": true
+    },
+    {
+      "name": "omit_1245_rejected",
+      "passed": true
+    },
+    {
+      "name": "ignore_successful_spot_writer_rejected",
+      "passed": true
+    },
+    {
+      "name": "earlier_writer_of_readonly_input_required",
+      "passed": true
+    },
+    {
+      "name": "failed_declared_writer_not_committed",
+      "passed": true
+    },
+    {
+      "name": "failed_fee_payer_reuse_required",
+      "passed": true
+    },
+    {
+      "name": "failed_nonce_reuse_required",
+      "passed": true
+    },
+    {
+      "name": "failed_fee_payer_omission_rejected",
+      "passed": true
+    }
+  ]
+}

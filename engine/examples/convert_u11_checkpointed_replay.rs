@@ -704,6 +704,7 @@ fn main() -> Result<()> {
         runtime_profile: &runtime_profile,
         unlimited_logs: true,
         slot_hashes: SlotHashesVariant::BackendDefault,
+        recent_blockhashes: Default::default(),
         require_complete_state: true,
     })?;
     ensure!(

@@ -1057,6 +1057,7 @@ impl ReplayRecord {
             runtime_profile: &runtime_profile,
             unlimited_logs: false,
             slot_hashes: SlotHashesVariant::BackendDefault,
+            recent_blockhashes: Default::default(),
             require_complete_state: false,
         })?;
         let mut accounts = BTreeMap::new();

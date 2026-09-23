@@ -1,0 +1,23 @@
+{
+  "schema": "U13_2CLutAcquisitionV1",
+  "providerHost": "solana-mainnet.g.alchemy.com",
+  "slot": 409942000,
+  "receipts": [
+    {
+      "address": "EiWSskK5HXnBTptiS5DH6gpAJRVNQ3cAhTKBGaiaysAb",
+      "name": "account-409942000-EiWSskK5HXnBTptiS5DH6gpAJRVNQ3cAhTKBGaiaysAb.json",
+      "contextSlot": 409942000,
+      "bytes": 8223,
+      "responseSha256": "0dcb508d415d1c208d660014ebca874a1d2317d0e78d728bbc4537af10f22a39",
+      "accountDataSha256": "e200e95399fdf0f7373360fe426965fbceedb8722b1e2d0fdc024bd9cea5d276"
+    },
+    {
+      "address": "Fpys8GRa5RBWfyeN7AaDUwFGD1zkDCA4z3t4CJLV8dfL",
+      "name": "account-409942000-Fpys8GRa5RBWfyeN7AaDUwFGD1zkDCA4z3t4CJLV8dfL.json",
+      "contextSlot": 409942000,
+      "bytes": 10871,
+      "responseSha256": "98fad1d0e6220eb84b66fb344c88ffb506e458d79006760da046adb0e90b77e0",
+      "accountDataSha256": "d24dfddd2929f676f42d548ca16178e6bf14c670e5e737cd69d19bcd402e04a6"
+    }
+  ]
+}

@@ -305,7 +305,13 @@ impl RuntimeContext {
                 );
             }
         }
-        if self.feature_profile != "LiteSVM 0.16.0 mainnet" {
+        if self.feature_profile != "LiteSVM 0.16.0 mainnet"
+            && !(self.feature_profile == "LiteSVM 0.16.0 historical evidence"
+                && self
+                    .historical_evidence
+                    .as_ref()
+                    .is_some_and(|e| e.historical_feature_set.is_some()))
+        {
             return RuntimeCapability::UnsupportedRuntimeFeature(format!(
                 "feature profile {}",
                 self.feature_profile

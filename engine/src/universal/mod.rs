@@ -8,6 +8,7 @@ pub mod checkpoint;
 pub mod evidence;
 pub mod execution;
 pub mod fidelity;
+pub mod historical_features;
 pub mod model;
 pub mod pipeline;
 pub mod resolver;

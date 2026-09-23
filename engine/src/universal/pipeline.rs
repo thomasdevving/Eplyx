@@ -73,6 +73,7 @@ pub fn execute(
             runtime_profile: &resolved.runtime_profile,
             unlimited_logs: true,
             slot_hashes: variant,
+            recent_blockhashes: Default::default(),
             require_complete_state: true,
         })
     };

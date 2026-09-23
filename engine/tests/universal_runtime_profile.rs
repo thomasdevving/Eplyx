@@ -165,6 +165,7 @@ fn execute_nonce(environment_blockhash: Hash) -> (Hash, String) {
             runtime_profile: &profile,
             unlimited_logs: true,
             slot_hashes: SlotHashesVariant::BackendDefault,
+            recent_blockhashes: Default::default(),
             require_complete_state: false,
         })
         .unwrap();

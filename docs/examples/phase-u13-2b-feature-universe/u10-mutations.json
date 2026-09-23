@@ -1,0 +1,48 @@
+{
+  "schema": "U13_2BU10MutationControlsV1",
+  "results": [
+    {
+      "name": "environment-blockhash",
+      "exit": 1,
+      "expectedFailure": "RuntimeConfigurationMismatch: durable nonce differs",
+      "failClosed": true
+    },
+    {
+      "name": "nonce-account",
+      "exit": 1,
+      "expectedFailure": "frozen seed snapshot identity differs",
+      "failClosed": true
+    },
+    {
+      "name": "recent-blockhashes",
+      "exit": 1,
+      "expectedFailure": "runtime sysvar snapshot differs from resolved profile",
+      "failClosed": true
+    },
+    {
+      "name": "feature-profile",
+      "exit": 1,
+      "expectedFailure": "unsupported historical runtime profile",
+      "failClosed": true
+    },
+    {
+      "name": "historical-bpf",
+      "exit": 1,
+      "expectedFailure": "frozen seed snapshot identity differs",
+      "failClosed": true
+    },
+    {
+      "name": "runtime-profile-identity",
+      "exit": 1,
+      "expectedFailure": "resolved runtime profile identity differs",
+      "failClosed": true
+    },
+    {
+      "name": "s-checkpoint",
+      "exit": 1,
+      "expectedFailure": "checkpoint S snapshot identity differs",
+      "failClosed": true
+    }
+  ],
+  "allFailClosed": true
+}
