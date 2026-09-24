@@ -1,0 +1,45 @@
+{
+  "phase": "U14",
+  "witness": {
+    "slot": 409942000,
+    "transaction_index": 73,
+    "source_observation_id": "588b1abd2d2b06689604a81856d3a90493035509c4638a490dea73416eed407e",
+    "semantic_observation_id": "229293976795dd2ee8eb88a9849004b25fce536d6540f459fc1848efbff63b49",
+    "semantic_bundle_sha256": "c519836bf24a58ec84c6f1511510ada5bca42973abdc57e67c407fdb88df0204"
+  },
+  "baseline_ci": {
+    "replay": "matched",
+    "proof_contract_versions": [3],
+    "semantic_binding": "execution_corroborated_external_interface",
+    "exact_source_to_elf_verified": false,
+    "economic_subjects": ["drift-settle-pnl/settle_pnl/economic/pnl_settled"],
+    "findings": 0,
+    "exit_code": 0,
+    "stdout_sha256": "08cb9ff221228e81e5ac27f7342dae9b60b9902e60924a46f5f78d1a062b4ffc1"
+  },
+  "frozen_none_bundle_ci": {
+    "replay": "matched",
+    "proof_contract_versions": [3],
+    "failure_reasons": ["no_semantic_coverage"],
+    "exit_code": 2,
+    "stdout_sha256": "19d45309e14e529085481a21dba5d47bb03d1b0133105d1811b072960d508b4f",
+    "byte_identical_to_u13_3": true
+  },
+  "orca_u12_1_compatibility_stdout_sha256": "07ce6389c6b2b0105e1886db6c15648eece8a586c2fdba93f054bc1b5762e04a",
+  "tests": {
+    "engine_lib": 424,
+    "causal_sequence": 26,
+    "drift_settle_semantics": 7,
+    "orca_swap_semantics": 6,
+    "semantic_binding_provenance": 4,
+    "universal_no_adapter": 1,
+    "total_passed": 468
+  },
+  "strict_clippy_changed_targets": "passed",
+  "workspace_format": "passed",
+  "git_diff_check": "passed",
+  "offline_semantic_bundle_verify": "passed",
+  "fresh_target_boundary_byte_match": true,
+  "fresh_semantic_corpus_byte_match": true,
+  "fresh_semantic_bundle_byte_match": true
+}

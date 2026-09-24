@@ -1,0 +1,12 @@
+{
+  "schema_version": 2,
+  "program_id": "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+  "protocol": "drift-settle-pnl",
+  "adapter_version": 1,
+  "genesis_hash": "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d",
+  "record_count": 1,
+  "record_ids": [
+    "229293976795dd2ee8eb88a9849004b25fce536d6540f459fc1848efbff63b49"
+  ],
+  "canonical_hash": "809708e7fc3b5d4e8e103f3072797bae7db5dfde26238bd63df0ce59cb32b1a6"
+}

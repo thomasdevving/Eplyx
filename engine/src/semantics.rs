@@ -40,7 +40,7 @@ use anyhow::{bail, Result};
 use serde::{Deserialize, Serialize};
 
 use crate::diff::Severity;
-use crate::protocol::TokenQuantity;
+use crate::protocol::{SignedTokenQuantity, TokenQuantity};
 
 /// The meaning of the vocabulary below, not the code that produces it.
 ///
@@ -308,6 +308,10 @@ pub enum SemanticValue {
         #[serde(with = "quantity_string")]
         quantity: TokenQuantity,
     },
+    /// Signed fixed-point amounts such as a credit or debit of settled PnL.
+    SignedQuantity {
+        quantity: SignedTokenQuantity,
+    },
     Flag {
         value: bool,
     },
@@ -354,6 +358,15 @@ impl SemanticValue {
     pub fn quantity(base_units: u64, decimals: u8) -> Self {
         Self::Quantity {
             quantity: TokenQuantity::new(base_units, decimals),
+        }
+    }
+
+    pub fn signed_quantity(base_units: i128, decimals: u8) -> Self {
+        Self::SignedQuantity {
+            quantity: SignedTokenQuantity {
+                base_units,
+                decimals,
+            },
         }
     }
 

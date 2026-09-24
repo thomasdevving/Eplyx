@@ -1,0 +1,30 @@
+
+PerpMarket, 1216 bytes
+  88 amm.historicalOracleData.lastOracleDelay                          0 -> 5
+ 104 amm.historicalOracleData.lastOraclePriceTwap5min                  893826 -> 893832
+ 112 amm.historicalOracleData.lastOraclePriceTwapTs                    1774902130 -> 1774902132
+ 272 amm.pegMultiplier                                                 892123 -> 892125
+ 384 amm.quoteAssetAmount                                              -555571737 -> -555571940
+ 560 amm.totalFeeMinusDistributions                                    242399534598 -> 242399530863
+ 768 amm.lastUpdateSlot                                                409941995 -> 409942000
+ 776 amm.lastOracleConfPct                                             387 -> 367
+ 784 amm.netRevenueSinceLastFunding                                    -1387887 -> -1391622
+ 880 amm.oracleStd                                                     870 -> 867
+ 976 pnlPool.scaledBalance                                             103914036187085 -> 103914036018223
+1156 numberOfUsers                                                     18 -> 17
+
+SpotMarket, 776 bytes
+ 256 revenuePool.scaledBalance                                         1825867503137 -> 1825884005077
+ 432 depositBalance                                                    99194335756554570 -> 99194335773056510
+ 464 cumulativeDepositInterest                                         12021616178 -> 12021616205
+ 480 cumulativeBorrowInterest                                          13986963686 -> 13986963750
+ 544 depositTokenTwap                                                  119158875253004 -> 119158879361717
+ 552 borrowTokenTwap                                                   66685011219246 -> 66684935588705
+ 568 lastInterestTs                                                    1774902128 -> 1774902132
+ 576 lastTwapTs                                                        1774902128 -> 1774902132
+
+User, 4376 bytes
+ 104 spotPositions[0].scaledBalance                                    5805893709997 -> 5805893878859
+ 536 perpPositions[1].quoteAssetAmount                                 203 -> 0
+ 576 perpPositions[1].settledPnl                                       0 -> 203
+4296 settledPerpPnl                                                    6839113323 -> 6839113526
