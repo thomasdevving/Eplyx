@@ -32,6 +32,7 @@ use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::fmt;
+use std::ops::Range;
 
 /// An integer token amount, interpreted against its mint's decimal count.
 ///
@@ -506,6 +507,124 @@ impl BoundaryDistance {
     }
 }
 
+/// The target transaction and its measured pre/post states. Post states are
+/// the target instruction boundary, never the terminal suffix frontier.
+pub struct SemanticEvaluationContext<'a> {
+    pub transaction: &'a HistoricalTransaction,
+    pub pre: &'a [NamedAccount],
+    pub baseline: &'a ExecutionResult,
+    pub candidate: &'a ExecutionResult,
+}
+
+/// A decoded source and the exact bytes a finding can explain.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ExplainedBytes {
+    pub subject: crate::semantics::SemanticSubject,
+    pub account_label: String,
+    pub field: String,
+    pub range: Range<usize>,
+}
+
+/// One coherent semantic decision for an observation.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum SemanticEvaluation {
+    Unsupported,
+    Unevaluable {
+        reason: String,
+    },
+    Evaluated {
+        subjects: Vec<crate::semantics::EvaluableSubject>,
+        findings: Vec<crate::semantics::NamedFinding>,
+        explained: Vec<ExplainedBytes>,
+    },
+}
+
+impl SemanticEvaluation {
+    /// A broken adapter result is an internal error, never empty coverage.
+    pub fn validate(&self) -> Result<()> {
+        if let Self::Evaluated {
+            subjects,
+            findings,
+            explained,
+        } = self
+        {
+            let known = subjects.iter().collect::<std::collections::BTreeSet<_>>();
+            anyhow::ensure!(known.len() == subjects.len(), "duplicate semantic subject");
+            for finding in findings {
+                anyhow::ensure!(
+                    subjects.iter().any(|subject| {
+                        subject.protocol == finding.fingerprint.protocol
+                            && subject.action == finding.fingerprint.action
+                            && subject.domain == finding.fingerprint.domain
+                            && subject.subject == finding.fingerprint.subject
+                    }),
+                    "finding has no evaluable subject: {}",
+                    finding.fingerprint
+                );
+            }
+            anyhow::ensure!(
+                explained.iter().all(|source| {
+                    !source.account_label.is_empty()
+                        && !source.field.is_empty()
+                        && source.range.start < source.range.end
+                        && findings.iter().any(|finding| {
+                            finding.fingerprint.domain == crate::semantics::FindingDomain::Economic
+                                && finding.fingerprint.subject == source.subject
+                        })
+                }),
+                "unjustified explained byte range"
+            );
+        }
+        Ok(())
+    }
+
+    fn from_legacy<A: ProtocolAdapter + ?Sized>(
+        adapter: &A,
+        context: &SemanticEvaluationContext<'_>,
+    ) -> Self {
+        let subjects = adapter.evaluable_subjects(context.transaction, context.pre);
+        if subjects.is_empty() {
+            return Self::Unsupported;
+        }
+        let findings = adapter.named_findings(
+            context.transaction,
+            context.pre,
+            context.baseline,
+            context.candidate,
+        );
+        let explained = findings
+            .iter()
+            .filter(|finding| {
+                finding.fingerprint.domain == crate::semantics::FindingDomain::Economic
+            })
+            .flat_map(|finding| {
+                adapter
+                    .decoded_sources_of(finding.fingerprint.subject.as_str())
+                    .iter()
+                    .flat_map(|(label, field)| {
+                        adapter
+                            .decoded_byte_ranges(label)
+                            .iter()
+                            .cloned()
+                            .map(|range| ExplainedBytes {
+                                subject: finding.fingerprint.subject.clone(),
+                                account_label: (*label).into(),
+                                field: (*field).into(),
+                                range,
+                            })
+                            .collect::<Vec<_>>()
+                    })
+                    .collect::<Vec<_>>()
+            })
+            .collect();
+        Self::Evaluated {
+            subjects,
+            findings,
+            explained,
+        }
+    }
+}
+
 /// What an adapter knows about one program.
 pub trait ProtocolAdapter: Sync {
     fn name(&self) -> &'static str;
@@ -690,6 +809,16 @@ pub trait ProtocolAdapter: Sync {
         _transaction: &HistoricalTransaction,
     ) -> Option<crate::semantics::ActionId> {
         None
+    }
+
+    /// Evaluate target-boundary semantics in one fallible, transaction-aware
+    /// pass. Existing adapters use the compatibility shim until migrated.
+    /// Err is reserved for an internal evaluator failure and aborts CI.
+    fn evaluate_semantics(
+        &self,
+        context: &SemanticEvaluationContext<'_>,
+    ) -> Result<SemanticEvaluation> {
+        Ok(SemanticEvaluation::from_legacy(self, context))
     }
 
     /// What this observation is *able* to measure, whether or not anything

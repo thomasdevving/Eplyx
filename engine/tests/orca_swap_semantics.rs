@@ -4,7 +4,9 @@ use eplyx_engine::{
     ci::{self, semantic_result},
     corpus_store::CorpusStore,
     executor::ExecutionResult,
-    protocol::{orca::OrcaSwapV2Adapter, ProtocolAdapter},
+    protocol::{
+        orca::OrcaSwapV2Adapter, ProtocolAdapter, SemanticEvaluation, SemanticEvaluationContext,
+    },
     standard_programs::{spl_token, token2022},
     types::{AccountSnapshot, NamedAccount},
     universal::{evidence::EvidenceStore, pipeline},
@@ -135,6 +137,60 @@ fn frozen_direct_swap_has_only_proven_economic_subjects() {
         .accounts
         .get("user-token-a")
         .is_none_or(|account| account.data.is_empty())); // closed WSOL account
+}
+
+#[test]
+fn evaluation_contract_reports_four_subjects_or_typed_failure() {
+    let (tx, pre, baseline) = fixture();
+    let adapter = OrcaSwapV2Adapter;
+    let context = |transaction, candidate| SemanticEvaluationContext {
+        transaction,
+        pre: &pre,
+        baseline: &baseline,
+        candidate,
+    };
+    let SemanticEvaluation::Evaluated {
+        subjects, findings, ..
+    } = adapter
+        .evaluate_semantics(&context(&tx, &baseline))
+        .unwrap()
+    else {
+        panic!("frozen swap must evaluate")
+    };
+    assert_eq!(subjects.len(), 4);
+    assert!(findings.is_empty());
+    let mut wrong = tx.clone();
+    wrong.instructions[4].data[0] ^= 1;
+    assert!(matches!(
+        adapter
+            .evaluate_semantics(&context(&wrong, &baseline))
+            .unwrap(),
+        SemanticEvaluation::Unsupported
+    ));
+    let mut malformed = baseline.clone();
+    malformed
+        .accounts
+        .get_mut("user-token-b")
+        .unwrap()
+        .data
+        .truncate(50);
+    assert!(matches!(
+        adapter
+            .evaluate_semantics(&context(&tx, &malformed))
+            .unwrap(),
+        SemanticEvaluation::Unevaluable { .. }
+    ));
+    let mut changed = baseline.clone();
+    mutate_amount(&mut changed, "user-token-b", -1);
+    let SemanticEvaluation::Evaluated {
+        subjects, findings, ..
+    } = adapter.evaluate_semantics(&context(&tx, &changed)).unwrap()
+    else {
+        panic!("changed swap must evaluate")
+    };
+    assert_eq!(subjects.len(), 4);
+    assert_eq!(findings.len(), 1);
+    assert_eq!(findings[0].fingerprint.subject.as_str(), "user_input_spent");
 }
 
 #[test]

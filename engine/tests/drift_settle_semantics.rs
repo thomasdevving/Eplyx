@@ -4,7 +4,10 @@ use eplyx_engine::{
     ci::semantic_result,
     corpus_store::CorpusStore,
     executor::ExecutionResult,
-    protocol::{drift::DriftSettlePnlAdapter, ProtocolAdapter},
+    protocol::{
+        drift::DriftSettlePnlAdapter, ProtocolAdapter, SemanticEvaluation,
+        SemanticEvaluationContext,
+    },
     semantic_binding::{ObservationSemanticBinding, SemanticBinding, SemanticBindingReport},
     semantics::{ChangeKind, SemanticValue},
     types::NamedAccount,
@@ -85,6 +88,90 @@ fn frozen_target_has_signed_pnl_subject_and_corroborated_binding() {
     binding
         .validate(adapter.program_id(), &elf, &evidence)
         .unwrap();
+}
+
+#[test]
+fn evaluation_contract_distinguishes_shape_state_and_explained_bytes() {
+    let (tx, pre, baseline, evidence, seeds, elf) = fixture();
+    let adapter = DriftSettlePnlAdapter;
+    let evaluate = |tx: &_, candidate: &_| {
+        adapter
+            .evaluate_semantics(&SemanticEvaluationContext {
+                transaction: tx,
+                pre: &pre,
+                baseline: &baseline,
+                candidate,
+            })
+            .unwrap()
+    };
+    let SemanticEvaluation::Evaluated {
+        subjects,
+        findings,
+        explained,
+    } = evaluate(&tx, &baseline)
+    else {
+        panic!("frozen target must evaluate")
+    };
+    assert_eq!(subjects.len(), 2);
+    assert!(findings.is_empty());
+    assert!(explained.is_empty());
+    let mut wrong_shape = tx.clone();
+    wrong_shape.slot += 1;
+    assert!(matches!(
+        evaluate(&wrong_shape, &baseline),
+        SemanticEvaluation::Unsupported
+    ));
+    let mut malformed = baseline.clone();
+    malformed.accounts.get_mut("user").unwrap().owner = "11111111111111111111111111111111".into();
+    assert!(matches!(
+        evaluate(&tx, &malformed),
+        SemanticEvaluation::Unevaluable { .. }
+    ));
+    assert!(matches!(
+        adapter
+            .semantic_binding(&tx, &seeds, &elf, &evidence)
+            .unwrap(),
+        SemanticBinding::ExecutionCorroboratedExternalInterface { .. }
+    ));
+    let mut changed = settlement(&pre, &baseline, 303);
+    changed.accounts.get_mut("user").unwrap().data[4360] ^= 1;
+    let SemanticEvaluation::Evaluated {
+        subjects,
+        findings,
+        explained,
+    } = evaluate(&tx, &changed)
+    else {
+        panic!("controlled settlement must evaluate")
+    };
+    assert_eq!(subjects.len(), 2);
+    assert_eq!(findings.len(), 1);
+    assert_eq!(
+        findings[0].baseline,
+        Some(SemanticValue::signed_quantity(203, 6))
+    );
+    assert!(explained
+        .iter()
+        .any(|source| source.account_label == "user" && source.range.contains(&104)));
+    assert!(!explained.iter().any(|source| source.range.contains(&4360)));
+    let mut unjustified = explained.clone();
+    unjustified[0].subject = eplyx_engine::semantics::SemanticSubject::new("other").unwrap();
+    assert!(SemanticEvaluation::Evaluated {
+        subjects: subjects.clone(),
+        findings: findings.clone(),
+        explained: unjustified,
+    }
+    .validate()
+    .is_err());
+    assert!(
+        SemanticEvaluation::Evaluated {
+            subjects: Vec::new(),
+            findings,
+            explained,
+        }
+        .validate()
+        .is_err(),
+        "an adapter bug cannot silently discard coverage"
+    );
 }
 
 fn set_i64(result: &mut ExecutionResult, label: &str, offset: usize, value: i64) {
