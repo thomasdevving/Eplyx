@@ -31,6 +31,10 @@ use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 
 use crate::bundle::CiBundle;
+use crate::change::{
+    BaselineTarget, CandidateSource, ChangeBinding, ChangeSpec, ExecutableArtifact,
+    ResolvedCandidate, TargetEvidence, TargetLoader,
+};
 use crate::expectations::ExpectationFile;
 use crate::replay::{hash_bytes, ReplayReport};
 use crate::review::{
@@ -143,6 +147,10 @@ pub struct CiReport {
     pub schema_version: u32,
     pub bundle: BundleRef,
     pub candidate: CandidateRef,
+    /// The proposal this verdict is about. Absent only in reports written
+    /// before change specs existed.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub change: Option<ChangeBinding>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub replay_proof: Option<ReplayProofSummary>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -215,14 +223,54 @@ impl std::fmt::Display for CheckError {
     }
 }
 
+/// What proposed change a check evaluates.
+#[derive(Clone, Debug)]
+pub enum ChangeInput<'a> {
+    /// `--candidate <ELF>` alone. Stands for the minimal program upgrade of
+    /// the bundle's program to these bytes; see [`ChangeSpec::program_upgrade`].
+    Candidate(&'a Path),
+    /// An explicit spec. Its candidate bytes come from `source`, and are
+    /// verified against the spec rather than trusted; with no source there is
+    /// nothing to execute and the check refuses.
+    Spec {
+        spec: &'a ChangeSpec,
+        source: Option<CandidateSource<'a>>,
+    },
+}
+
+/// Run the gate over `--candidate <ELF>`.
+///
+/// Kept for every caller that predates change specs. It constructs the
+/// implicit program upgrade and goes through exactly the path an explicit spec
+/// does.
+pub fn check(
+    bundle_dir: &Path,
+    candidate: &Path,
+    expectations: Option<&Path>,
+) -> std::result::Result<CiReport, CheckError> {
+    check_change(bundle_dir, &ChangeInput::Candidate(candidate), expectations)
+}
+
+enum OpenedBundle {
+    V1(CiBundle),
+    V2(crate::universal::bundle::UniversalBundle),
+}
+
 /// Run the gate.
 ///
 /// A completed review, pass or fail, comes back as `Ok`. A [`CheckError`] means
 /// the analysis could not run at all, which is a different thing for a team to
 /// act on and gets its own exit code.
-pub fn check(
+///
+/// ```text
+/// open + verify bundle          baseline world
+/// ChangeSpec → bind to baseline target, program, expectations   exit 4
+///            → resolve candidate bytes by content hash          exit 2
+///            → execute against the proven PRE state
+/// ```
+pub fn check_change(
     bundle_dir: &Path,
-    candidate: &Path,
+    input: &ChangeInput<'_>,
     expectations: Option<&Path>,
 ) -> std::result::Result<CiReport, CheckError> {
     let manifest_bytes = std::fs::read(bundle_dir.join("bundle.json"))
@@ -231,29 +279,169 @@ pub fn check(
     let manifest: serde_json::Value = serde_json::from_slice(&manifest_bytes)
         .context("parsing the CI bundle manifest")
         .map_err(CheckError::Bundle)?;
-    if manifest["schema_version"].as_u64() == Some(2) {
-        return check_v2(bundle_dir, candidate, expectations);
-    }
     // ---- preflight: nothing executes until all of this holds ------------
-    let bundle = CiBundle::open(bundle_dir)
-        .context("opening the CI bundle")
+    let bundle = if manifest["schema_version"].as_u64() == Some(2) {
+        OpenedBundle::V2(
+            crate::universal::bundle::UniversalBundle::open(bundle_dir)
+                .context("opening the schema-2 CI bundle")
+                .map_err(CheckError::Bundle)?,
+        )
+    } else {
+        let bundle = CiBundle::open(bundle_dir)
+            .context("opening the CI bundle")
+            .map_err(CheckError::Bundle)?;
+        preflight(&bundle).map_err(CheckError::Bundle)?;
+        OpenedBundle::V1(bundle)
+    };
+    let target = match &bundle {
+        OpenedBundle::V1(bundle) => baseline_target_v1(bundle),
+        OpenedBundle::V2(bundle) => baseline_target_v2(bundle),
+    }
+    .map_err(CheckError::Bundle)?;
+
+    // ---- the proposal ----------------------------------------------------
+    let read;
+    let (spec, source) = match input {
+        ChangeInput::Candidate(path) => {
+            read = std::fs::read(path)
+                .with_context(|| format!("reading the candidate program {}", path.display()))
+                .map_err(CheckError::Configuration)?;
+            (
+                ChangeSpec::program_upgrade(&target.program_id, &read),
+                CandidateSource::Bytes(&read),
+            )
+        }
+        ChangeInput::Spec { spec, source } => {
+            spec.validate().map_err(CheckError::Configuration)?;
+            let source = source
+                .context(
+                    "the change spec names its candidate by hash; supply the bytes with \
+                     --candidate or --artifacts",
+                )
+                .map_err(CheckError::Configuration)?;
+            ((*spec).clone(), source)
+        }
+    };
+    let binding = spec
+        .bind(&target)
+        .context("the change spec does not describe a change to this bundle's baseline")
         .map_err(CheckError::Bundle)?;
-
-    preflight(&bundle).map_err(CheckError::Bundle)?;
-
-    let candidate_bytes = std::fs::read(candidate)
-        .with_context(|| format!("reading the candidate program {}", candidate.display()))
-        .map_err(CheckError::Configuration)?;
-    let candidate_sha256 = hash_bytes(&candidate_bytes);
-
-    let baseline_bytes = std::fs::read(bundle.baseline())
-        .context("reading the bundled baseline")
-        .map_err(CheckError::Bundle)?;
+    let candidate = spec.resolve(source).map_err(CheckError::Configuration)?;
 
     let declarations = match expectations {
         Some(path) => ExpectationFile::load(path).map_err(CheckError::Configuration)?,
         None => ExpectationFile::empty(),
     };
+    let mut report = match &bundle {
+        OpenedBundle::V1(bundle) => check_v1(bundle, &candidate, &declarations)?,
+        OpenedBundle::V2(bundle) => check_v2(bundle, &candidate, &declarations)?,
+    };
+    report.change = Some(binding);
+    Ok(report)
+}
+
+/// Any observation proving a non-upgradeable loader refuses a program upgrade.
+/// An observation carrying no loader evidence contradicts nothing.
+fn loader_evidence(
+    observed: impl Iterator<Item = Option<TargetLoader>>,
+) -> TargetEvidence<TargetLoader> {
+    let proven = observed.flatten().collect::<BTreeSet<_>>();
+    if proven.contains(&TargetLoader::NotUpgradeable) {
+        TargetEvidence::Proven(TargetLoader::NotUpgradeable)
+    } else if proven.contains(&TargetLoader::Upgradeable) {
+        TargetEvidence::Proven(TargetLoader::Upgradeable)
+    } else {
+        TargetEvidence::Unproven
+    }
+}
+
+/// What a schema-1 bundle proves about its target. It pins the loader where a
+/// record's dependency manifest names one, and carries no ProgramData or
+/// authority evidence at all.
+fn baseline_target_v1(bundle: &CiBundle) -> Result<BaselineTarget> {
+    let manifest = bundle.manifest();
+    let loader = loader_evidence(bundle.records().iter().map(|record| {
+        record
+            .dependencies
+            .programs
+            .iter()
+            .find(|program| program.program_id == record.program_id)
+            .and_then(|program| program.loader)
+            .map(|loader| match loader {
+                crate::versions::ProgramLoader::Upgradeable => TargetLoader::Upgradeable,
+                crate::versions::ProgramLoader::Legacy => TargetLoader::NotUpgradeable,
+            })
+    }));
+    Ok(BaselineTarget {
+        program_id: manifest.program_id.clone(),
+        executable: ExecutableArtifact {
+            sha256: manifest.baseline_program_sha256.clone(),
+            len: manifest.baseline_program_len,
+        },
+        loader,
+        programdata_address: TargetEvidence::Unproven,
+        upgrade_authorities: TargetEvidence::Unproven,
+    })
+}
+
+/// What a schema-2 bundle proves about its target: each observation's own
+/// loader, ProgramData and upgrade authority at its slot.
+fn baseline_target_v2(
+    bundle: &crate::universal::bundle::UniversalBundle,
+) -> Result<BaselineTarget> {
+    let mut loaders = Vec::new();
+    let mut programdata = BTreeSet::new();
+    let mut authorities = BTreeSet::new();
+    for record in &bundle.records {
+        let binary = record
+            .binaries
+            .iter()
+            .find(|binary| binary.program_id == record.program_id)
+            .with_context(|| format!("observation {} lacks its target binary", record.id))?;
+        loaders.push(Some(
+            if binary.loader == crate::versions::UPGRADEABLE_LOADER_ID {
+                TargetLoader::Upgradeable
+            } else {
+                TargetLoader::NotUpgradeable
+            },
+        ));
+        programdata.insert(binary.programdata_address.clone());
+        authorities.insert(binary.upgrade_authority.clone());
+    }
+    let loader = loader_evidence(loaders.into_iter());
+    // Proven only when every observation names the same account. Disagreement
+    // is not evidence for either value, so a stated expectation fails.
+    let programdata_address = match programdata.into_iter().collect::<Vec<_>>().as_slice() {
+        [Some(address)] => TargetEvidence::Proven(address.clone()),
+        _ => TargetEvidence::Unproven,
+    };
+    Ok(BaselineTarget {
+        program_id: bundle.manifest.program_id.clone(),
+        executable: ExecutableArtifact {
+            sha256: bundle.manifest.baseline_program_sha256.clone(),
+            len: bundle.manifest.baseline_program_len,
+        },
+        loader,
+        programdata_address,
+        upgrade_authorities: if authorities.is_empty() {
+            TargetEvidence::Unproven
+        } else {
+            TargetEvidence::Proven(authorities)
+        },
+    })
+}
+
+fn check_v1(
+    bundle: &CiBundle,
+    candidate: &ResolvedCandidate,
+    declarations: &ExpectationFile,
+) -> std::result::Result<CiReport, CheckError> {
+    let candidate_bytes = candidate.bytes();
+    let candidate_sha256 = hash_bytes(candidate_bytes);
+
+    let baseline_bytes = std::fs::read(bundle.baseline())
+        .context("reading the bundled baseline")
+        .map_err(CheckError::Bundle)?;
 
     // ---- replay ----------------------------------------------------------
     let v1 = crate::executor::ProgramVersion {
@@ -262,7 +450,7 @@ pub fn check(
     };
     let v2 = crate::executor::ProgramVersion {
         label: "candidate".to_string(),
-        bytes: candidate_bytes.clone(),
+        bytes: candidate_bytes.to_vec(),
     };
     let dependencies = crate::replay::load_dependencies(bundle.records(), &bundle.dependencies())
         .map_err(CheckError::Bundle)?;
@@ -272,11 +460,11 @@ pub fn check(
             .map_err(CheckError::Configuration)?;
 
     Ok(assemble(
-        &bundle,
+        bundle,
         candidate_sha256,
         candidate_bytes.len() as u64,
         &replay,
-        &declarations,
+        declarations,
     ))
 }
 
@@ -369,22 +557,13 @@ fn checked_evaluation(
 }
 
 fn check_v2(
-    bundle_dir: &Path,
-    candidate: &Path,
-    expectations: Option<&Path>,
+    bundle: &crate::universal::bundle::UniversalBundle,
+    candidate: &ResolvedCandidate,
+    declarations: &ExpectationFile,
 ) -> std::result::Result<CiReport, CheckError> {
-    use crate::universal::{bundle::UniversalBundle, pipeline};
-    let bundle = UniversalBundle::open(bundle_dir)
-        .context("opening the schema-2 CI bundle")
-        .map_err(CheckError::Bundle)?;
-    let candidate_bytes = std::fs::read(candidate)
-        .with_context(|| format!("reading the candidate program {}", candidate.display()))
-        .map_err(CheckError::Configuration)?;
-    let candidate_sha256 = hash_bytes(&candidate_bytes);
-    let declarations = match expectations {
-        Some(path) => ExpectationFile::load(path).map_err(CheckError::Configuration)?,
-        None => ExpectationFile::empty(),
-    };
+    use crate::universal::pipeline;
+    let candidate_bytes = candidate.bytes();
+    let candidate_sha256 = hash_bytes(candidate_bytes);
     // The bundle records the semantic interpreter used at publication. A
     // replay-only bundle remains replay-only after this engine gains an adapter.
     let adapter = if bundle.adapter.name == "none" {
@@ -423,7 +602,7 @@ fn check_v2(
         let (baseline, _) = pipeline::baseline(record, resolved)
             .with_context(|| format!("baseline replay for {}", record.id))
             .map_err(CheckError::Configuration)?;
-        let candidate_run = pipeline::execute(record, resolved, &candidate_bytes)
+        let candidate_run = pipeline::execute(record, resolved, candidate_bytes)
             .with_context(|| format!("candidate replay for {}", record.id))
             .map_err(CheckError::Configuration)?;
         let tx = &resolved.message.transaction;
@@ -576,7 +755,7 @@ fn check_v2(
             .then_with(|| a.observation_id.cmp(&b.observation_id))
     });
     coverage.sort_by(|a, b| a.observation_id.cmp(&b.observation_id));
-    let mut reviewed = review(&observed, &coverage, &declarations);
+    let mut reviewed = review(&observed, &coverage, declarations);
     let undeclarable = structural
         .into_iter()
         .map(|(description, observations)| UndeclarableChange {
@@ -619,6 +798,7 @@ fn check_v2(
     };
     Ok(CiReport {
         schema_version: 2,
+        change: None,
         bundle: BundleRef {
             sha256: bundle.manifest.bundle_sha256.clone(),
             baseline_sha256: bundle.manifest.baseline_program_sha256.clone(),
@@ -1007,6 +1187,7 @@ pub fn assemble(
     let manifest = bundle.manifest();
     CiReport {
         schema_version: CI_REPORT_SCHEMA,
+        change: None,
         bundle: BundleRef {
             sha256: manifest.bundle_sha256.clone(),
             baseline_sha256: manifest.baseline_program_sha256.clone(),

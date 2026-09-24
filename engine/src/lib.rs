@@ -25,6 +25,7 @@
 //! would plug into in a later phase.
 
 pub mod bundle;
+pub mod change;
 pub mod ci;
 pub mod ci_markdown;
 pub mod cluster;

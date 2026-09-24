@@ -76,6 +76,14 @@ eplyx ci check --bundle .eplyx/bundle --candidate target/deploy/program.so \
   [--expectations .eplyx/expected-changes.toml] [--format json]
 ```
 
+`--candidate` alone stands for the minimal program-upgrade ChangeSpec. An
+explicit proposal is written, then checked by content hash:
+
+```bash
+eplyx change program-upgrade --program <ID> --candidate cand.so [--store DIR] --out change.json
+eplyx ci check --bundle .eplyx/bundle --change-spec change.json (--artifacts DIR | --candidate cand.so)
+```
+
 **Invoke the built binary, not `cargo run`, wherever the exit code matters.**
 `cargo run` replaces the child's exit status, which silently turns every gate
 result into the same code. Exit codes: 0 passed, 1 undeclared or out-of-bounds
@@ -209,6 +217,22 @@ screening ──────────────┼→ historical → replay
 - - **Evidence is suppressed only where it is demonstrably accounted for.** A decoded change is dropped from the undeclarable list only when a finding emitted *for that observation* names it — never from a static promoted list, because `pool-mint/supply` is the burn on a withdrawal and a by-product of the mint on a deposit. A raw byte change is dropped only when every differing offset lies inside a range the adapter decodes *and* reported for that account (`ProtocolAdapter::decoded_byte_ranges`). Suppressing all structural evidence because something was named let a candidate rewrite a manager key behind one declared share change.
 - **The CI gate consumes three layers of evidence, not one.** Named semantic findings are the only declarable layer, but a decoded economic change the adapter has not promoted, and a structural change on an observation nothing semantic spoke for, both fail the gate as `undeclarable_change`. Empty semantic coverage is `no_semantic_coverage` and exit 2, never a pass: zero findings from an adapter with no surface means "we did not look". `ProtocolAdapter::promoted_economic_fields` is how an adapter says which decoded fields its named findings already speak for.
 - **Whether a change is *intended* is classified by `expected-changes.toml`,** not by the engine. A legitimate upgrade may change behaviour on purpose; the team declares it narrowly and the review reports expected / unexpected / exceeded / stale / unevaluable.
+
+### ChangeSpec (Phase C1)
+
+`change::ChangeSpec` is what the gate evaluates: `baseline world (bundle) +
+ChangeSpec → candidate world`, never one object holding both. It describes the
+proposal only — no results, findings, proof strategy or protocol fields. The
+target lives *inside* the kind (`program_upgrade` today), so a later kind can
+target an asset instead of a program. `change_spec_id` hashes
+`("eplyx-change-spec-v1", schema_version, change, activation)`; `metadata`
+(label, source) is outside identity, and `a_frozen_spec_keeps_its_identity`
+pins the encoding. Optional identifying fields must be skipped when absent, so
+adding one does not re-identify existing specs. `ChangeSpec::resolve` is the
+only constructor of `ResolvedCandidate`, and execution takes nothing else: bytes
+the spec did not describe cannot run. A stated expectation (ProgramData,
+replaced executable, authority) the bundle cannot prove fails with exit 4 rather
+than passing. Every `CiReport` carries `change`. See `docs/phase-c1-changespec.md`.
 
 ## Conventions and prior decisions
 
