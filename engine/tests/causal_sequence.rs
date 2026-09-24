@@ -720,6 +720,9 @@ fn synthetic() -> (
     .store(&s)
     .unwrap();
     let execution = |raw: &Value| {
+        if raw["version"] == "legacy" {
+            return ExecutionInput::capture_legacy_v2(&s, raw).unwrap();
+        }
         let frozen = FrozenV0::from_rpc(raw, &r.genesis_hash).unwrap();
         let proven = message::reconstruct(&frozen, &[], None).unwrap();
         ExecutionInput::V0 {
@@ -737,7 +740,14 @@ fn synthetic() -> (
     for (i, (destination, amount)) in [(&x, 7u64), (&x, 11), (&y, 3)].iter().enumerate() {
         let mut data = vec![3];
         data.extend(amount.to_le_bytes());
-        let raw = json!({"slot":r.slot,"transactionIndex":i,"blockTime":0,"version":0,"transaction":{"signatures":[bs58::encode([i as u8+1;64]).into_string()],"message":{"header":{"numRequiredSignatures":1,"numReadonlySignedAccounts":0,"numReadonlyUnsignedAccounts":1},"accountKeys":[payer,source,destination,program],"recentBlockhash":solana_hash::Hash::new_from_array([61;32]).to_string(),"addressTableLookups":[],"instructions":[{"programIdIndex":3,"accounts":[1,2,0],"data":bs58::encode(data).into_string()}]}},"meta":{"err":null,"fee":5000,"loadedAddresses":{"writable":[],"readonly":[]},"innerInstructions":[],"logMessages":[],"preBalances":[100000000,10000000,10000000,100000000000u64],"postBalances":[99995000,10000000,10000000,100000000000u64]}});
+        let mut raw = json!({"slot":r.slot,"transactionIndex":i,"blockTime":0,"version":0,"transaction":{"signatures":[bs58::encode([i as u8+1;64]).into_string()],"message":{"header":{"numRequiredSignatures":1,"numReadonlySignedAccounts":0,"numReadonlyUnsignedAccounts":1},"accountKeys":[payer,source,destination,program],"recentBlockhash":solana_hash::Hash::new_from_array([61;32]).to_string(),"addressTableLookups":[],"instructions":[{"programIdIndex":3,"accounts":[1,2,0],"data":bs58::encode(data).into_string()}]}},"meta":{"err":null,"fee":5000,"loadedAddresses":{"writable":[],"readonly":[]},"innerInstructions":[],"logMessages":[],"preBalances":[100000000,10000000,10000000,100000000000u64],"postBalances":[99995000,10000000,10000000,100000000000u64]}});
+        if i == 1 {
+            raw["version"] = json!("legacy");
+            raw["transaction"]["message"]
+                .as_object_mut()
+                .unwrap()
+                .remove("addressTableLookups");
+        }
         messages.push(execution(&raw).resolve(&s, &r.genesis_hash).unwrap());
         raws.push(raw);
     }
@@ -926,6 +936,10 @@ fn synthetic() -> (
 #[test]
 fn synthetic_later_mutation_preserves_target_boundary_and_candidate_comparison() {
     let (r, p, _t, s, x, _y) = synthetic();
+    assert!(matches!(
+        p.entries[1].execution,
+        ExecutionInput::LegacyV2 { .. }
+    ));
     let resolved = r.resolve(&s).unwrap();
     let terminal = ObservedCheckpointV1::resolve(
         &s,
@@ -946,6 +960,27 @@ fn synthetic_later_mutation_preserves_target_boundary_and_candidate_comparison()
     let candidate = pipeline::execute(&r, &resolved, &resolved.baseline_elf).unwrap();
     assert_eq!(candidate, local);
     assert_ne!(candidate.post_accounts[&x], terminal[&x]);
+}
+
+#[test]
+fn synthetic_legacy_sequence_entry_rejects_wrong_block_index() {
+    let (r, mut proof, _temp, store, _x, _y) = synthetic();
+    let entry = &mut proof.entries[1];
+    assert!(matches!(entry.execution, ExecutionInput::LegacyV2 { .. }));
+    let mut raw: Value = serde_json::from_slice(
+        &store
+            .get(entry.execution.validator_transaction_ref().unwrap())
+            .unwrap(),
+    )
+    .unwrap();
+    raw["transactionIndex"] = serde_json::json!(2);
+    entry.execution = ExecutionInput::capture_legacy_v2(&store, &raw).unwrap();
+    reject(
+        r,
+        proof,
+        &store,
+        "sequence transaction differs from retained block",
+    );
 }
 #[test]
 fn synthetic_commuting_transfers_still_require_canonical_dependency_order() {
