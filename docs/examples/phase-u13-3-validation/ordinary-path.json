@@ -1,0 +1,16 @@
+[
+  {
+    "name": "bundle-verify",
+    "exit": 0,
+    "expected_exit": 0,
+    "stdout_sha256": "5ca832f182fd610d1be7bf3c7e0dcc2e348baf2ad88f021bf2b763da018cd1c2",
+    "stderr": ""
+  },
+  {
+    "name": "ci",
+    "exit": 2,
+    "expected_exit": 2,
+    "stdout_sha256": "19d45309e14e529085481a21dba5d47bb03d1b0133105d1811b072960d508b4f",
+    "stderr": ""
+  }
+]

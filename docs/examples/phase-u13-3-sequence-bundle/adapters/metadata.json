@@ -1,0 +1,17 @@
+{
+  "name": "none",
+  "version": 0,
+  "supports_cpi": false,
+  "actions": [
+    {
+      "semantic_action": "unknown",
+      "observations": 1
+    }
+  ],
+  "limitations": [
+    {
+      "code": "bounded_observations",
+      "detail": "This corpus covers only its recorded production interactions; no representativeness is claimed."
+    }
+  ]
+}

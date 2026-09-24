@@ -1609,6 +1609,9 @@ fn render_ci(report: &eplyx_engine::ci::CiReport) -> String {
             "Replay/proof: {} ({:?}, {} observations{})",
             proof.status, proof.profile, proof.observations, contract
         );
+        if let Some(boundary) = &proof.boundary_proof {
+            let _ = writeln!(text, "Boundary proof: {boundary}");
+        }
     }
     if let Some(binding) = &report.semantic_binding {
         let _ = writeln!(

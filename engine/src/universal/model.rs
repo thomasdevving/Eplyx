@@ -386,6 +386,8 @@ pub struct WatchedAccount {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", content = "observation", rename_all = "snake_case")]
 pub enum ExpectedAccountSource {
+    /// Authorized only by reconstructing contract 3; stored content is a commitment.
+    DerivedTargetBoundary,
     Archived(EvidenceRef),
     PreRetained(EvidenceRef),
 }

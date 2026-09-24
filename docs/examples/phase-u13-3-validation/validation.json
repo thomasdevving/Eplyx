@@ -1,0 +1,70 @@
+{
+  "schema": "U13_3ValidationV1",
+  "test_suites": {
+    "engine_library": 424,
+    "checkpointed_replay": 2,
+    "reconstructive_checkpoint": 2,
+    "historical_feature_set": 1,
+    "historical_lut": 28,
+    "kamino": 10,
+    "orca_swap_semantics": 6,
+    "semantic_binding_provenance": 4,
+    "stake_pool": 23,
+    "universal_no_adapter": 1,
+    "universal_mutations": 3,
+    "universal_runtime_profile": 2,
+    "causal_sequence": 26
+  },
+  "total_passed": 532,
+  "sequence_tests": [
+    "generic_sequence_execution_has_no_witness_specific_branches",
+    "candidate_substitution_in_suffix_is_rejected",
+    "omit_tx431",
+    "omit_tx1245",
+    "extra_unproven_transaction_is_rejected",
+    "omit_tx428",
+    "alter_dependency_edge_with_rebuilt_hashes",
+    "omit_tx438",
+    "reorder_428_and_431_despite_commuting_behavior",
+    "synthetic_commuting_transfers_still_require_canonical_dependency_order",
+    "synthetic_independent_terminal_detector",
+    "target_identity_points_to_suffix",
+    "alter_later_lut",
+    "alter_tx428_expected_validator_envelope",
+    "incompatible_suffix_runtime_is_rejected",
+    "substitute_wrong_historical_feature_set_evidence",
+    "substitute_wrong_historical_elf",
+    "synthetic_later_mutation_preserves_target_boundary_and_candidate_comparison",
+    "alter_later_only_parent_account",
+    "alter_tx428_instruction_with_all_message_hashes_rebuilt",
+    "omit_terminal_frontier_account",
+    "alter_one_terminal_account",
+    "alter_stored_target_post_with_all_commitments_rebuilt",
+    "candidate_elf_is_substituted_only_into_target_execution",
+    "reset_spot_market_between_transactions",
+    "ordinary_offline_bundle_reports_matched_contract_three_without_semantics"
+  ],
+  "frozen_research_checksum_counts": {
+    "U13_1": 25,
+    "U13_2A": 319,
+    "U13_2B": 53,
+    "U13_2C": 5
+  },
+  "u13_1_graph_cases_passed": 11,
+  "core_generality_scan": {
+    "files": [
+      "engine/src/universal/sequence.rs",
+      "engine/src/universal/execution.rs",
+      "engine/src/universal/pipeline.rs",
+      "engine/src/universal/resolver.rs"
+    ],
+    "witness_specific_matches": 0
+  },
+  "compatibility_receipt": "compatibility.json",
+  "ordinary_cli_receipt": "ordinary-path.json",
+  "lint": {
+    "changed_targets_strict_clippy": "passed",
+    "workspace_fmt": "passed",
+    "all_targets_clippy_limit": "Existing cloned_ref_to_slice_refs warning in convert_u11_checkpointed_replay.rs:427 under Rust 1.98; frozen converter left unchanged."
+  }
+}

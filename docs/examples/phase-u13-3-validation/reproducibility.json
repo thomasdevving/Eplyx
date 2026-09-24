@@ -1,0 +1,9 @@
+{
+  "schema": "U13_3ReproducibilityV1",
+  "corpus_files": 138,
+  "fresh_conversion_identical": true,
+  "observation_id": "588b1abd2d2b06689604a81856d3a90493035509c4638a490dea73416eed407e",
+  "bundle_files": 141,
+  "fresh_bundle_identical": true,
+  "bundle_sha256": "7bc43449fd33715ffffdb820de4d339803ed263e6c166e8f0cae33eac1bb956d"
+}

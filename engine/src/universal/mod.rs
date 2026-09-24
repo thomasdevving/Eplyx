@@ -12,3 +12,5 @@ pub mod historical_features;
 pub mod model;
 pub mod pipeline;
 pub mod resolver;
+
+pub mod sequence;
