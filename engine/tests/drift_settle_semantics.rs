@@ -121,6 +121,12 @@ fn evaluation_contract_distinguishes_shape_state_and_explained_bytes() {
         evaluate(&wrong_shape, &baseline),
         SemanticEvaluation::Unsupported
     ));
+    let mut wrong_role = tx.clone();
+    wrong_role.instructions[2].accounts[1].address = "11111111111111111111111111111111".into();
+    assert!(matches!(
+        evaluate(&wrong_role, &baseline),
+        SemanticEvaluation::Unevaluable { reason } if reason.contains("role binding")
+    ));
     let mut malformed = baseline.clone();
     malformed.accounts.get_mut("user").unwrap().owner = "11111111111111111111111111111111".into();
     assert!(matches!(

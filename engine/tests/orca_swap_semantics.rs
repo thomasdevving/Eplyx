@@ -167,6 +167,12 @@ fn evaluation_contract_reports_four_subjects_or_typed_failure() {
             .unwrap(),
         SemanticEvaluation::Unsupported
     ));
+    let mut wrong_role = tx.clone();
+    wrong_role.instructions[4].accounts[3].is_signer = false;
+    assert!(matches!(
+        adapter.evaluate_semantics(&context(&wrong_role, &baseline)).unwrap(),
+        SemanticEvaluation::Unevaluable { reason } if reason.contains("role binding")
+    ));
     let mut malformed = baseline.clone();
     malformed
         .accounts

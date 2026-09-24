@@ -9,18 +9,22 @@
 use anyhow::{ensure, Result};
 
 use super::{
+    onboarding::{
+        bind_roles, evaluation_failure, require_shape, BoundInteraction, InteractionDescriptor,
+        OnboardingFailure, ProtocolDescriptor, RoleRule, SourceIdentity,
+    },
     ProtocolAdapter, SemanticAction, SemanticEvaluation, SemanticEvaluationContext, SemanticField,
 };
 use crate::{
     executor::ExecutionResult,
     ingest::transactions::HistoricalTransaction,
-    semantic_binding::{CorroboratedFact, RepositoryInterface, SemanticBinding, SourceBlob},
+    semantic_binding::{CorroboratedFact, SemanticBinding},
     semantics::{
         ActionId, ChangeKind, EvaluableSubject, FindingDomain, FindingFingerprint, NamedFinding,
         SemanticSubject, SemanticValue,
     },
     standard_programs::{spl_token, token2022, Decoded},
-    types::{AccountSnapshot, InstructionSpec, NamedAccount},
+    types::{AccountSnapshot, NamedAccount},
 };
 use std::collections::BTreeMap;
 
@@ -49,78 +53,100 @@ const ROLE_LABELS: [&str; 15] = [
 
 pub struct OrcaSwapV2Adapter;
 
+const INTERACTIONS: &[InteractionDescriptor] = &[InteractionDescriptor {
+    id: "swap_v2",
+    discriminator: &SWAP_V2,
+    outer_index: None,
+}];
+const DESCRIPTOR: ProtocolDescriptor = ProtocolDescriptor {
+    name: "orca-whirlpool",
+    program_id: PROGRAM_ID,
+    version: 1,
+    source: Some(SourceIdentity {
+        repository: "https://github.com/orca-so/whirlpools",
+        commit: "408c945fef4c49ab70def4303377cfaf8f0f3c99",
+        blobs: &[
+            (
+                "programs/whirlpool/src/instructions/v2/swap.rs",
+                "2284b67082c0e1e60bd67b2f96065a627066292a",
+            ),
+            (
+                "programs/whirlpool/src/state/whirlpool.rs",
+                "bc02ce0140434ae3ef0414ae72ad5a33eb451e01",
+            ),
+        ],
+    }),
+    interactions: INTERACTIONS,
+};
+const ROLE_RULES: &[RoleRule] = &[
+    RoleRule::address(0, spl_token::PROGRAM_ID),
+    RoleRule::address(1, token2022::PROGRAM_ID),
+    RoleRule::address(2, MEMO_PROGRAM_ID),
+    RoleRule::signer(3, true),
+    RoleRule::writable(4, true),
+    RoleRule::writable(7, true),
+    RoleRule::writable(8, true),
+    RoleRule::writable(9, true),
+    RoleRule::writable(10, true),
+    RoleRule::writable(11, true),
+    RoleRule::writable(12, true),
+    RoleRule::writable(13, true),
+    RoleRule::writable(14, true),
+];
+
 struct Swap<'a> {
-    instruction: &'a InstructionSpec,
+    roles: BoundInteraction<'a>,
     a_to_b: bool,
 }
 
-fn swap(transaction: &HistoricalTransaction) -> Result<Swap<'_>> {
-    ensure!(
+fn swap(transaction: &HistoricalTransaction) -> std::result::Result<Swap<'_>, OnboardingFailure> {
+    require_shape(
         transaction.version == "v0" && transaction.success,
-        "only successful native-v0 SwapV2 observations are supported"
-    );
-    let mut orca = transaction
-        .instructions
-        .iter()
-        .filter(|instruction| instruction.program == PROGRAM_ID);
-    let instruction = orca
-        .next()
-        .ok_or_else(|| anyhow::anyhow!("no direct Orca instruction"))?;
-    ensure!(orca.next().is_none(), "multiple Orca instructions");
-    ensure!(
-        instruction.accounts.len() == ROLE_LABELS.len(),
-        "SwapV2 requires exactly 15 roles"
-    );
-    let data = &instruction.data;
-    ensure!(
-        data.len() == 43 && data[..8] == SWAP_V2 && data[42] == 0,
-        "unsupported SwapV2 discriminator or remaining accounts"
-    );
-    ensure!(
-        data[40] == 1 && data[41] <= 1,
-        "only exact-input SwapV2 is supported"
-    );
-    let account = |index: usize| &instruction.accounts[index];
-    ensure!(
-        account(0).address == spl_token::PROGRAM_ID && account(1).address == token2022::PROGRAM_ID,
-        "SwapV2 requires the proven SPL Token A / Token-2022 B pair"
-    );
-    ensure!(
-        account(2).address == MEMO_PROGRAM_ID && account(3).is_signer,
-        "SwapV2 memo or authority role differs"
-    );
-    ensure!(
-        [4, 7, 8, 9, 10, 11, 12, 13, 14]
-            .iter()
-            .all(|index| account(*index).is_writable),
-        "SwapV2 writable role differs"
-    );
-    let distinct = instruction
-        .accounts
-        .iter()
-        .map(|account| &account.address)
-        .collect::<std::collections::BTreeSet<_>>();
-    ensure!(distinct.len() == ROLE_LABELS.len(), "SwapV2 roles alias");
-    // A transaction-level boundary can attribute these three net changes to
-    // SwapV2 only when no companion outer instruction can write them.
-    let input = if data[41] == 1 { 7 } else { 9 };
-    let measured = [input, 8, 10].map(|role| &account(role).address);
-    ensure!(
+        "only successful native-v0 SwapV2 observations are supported",
+    )?;
+    let recognized = DESCRIPTOR.recognize(transaction)?;
+    require_shape(
         transaction
             .instructions
             .iter()
-            .filter(|other| !std::ptr::eq(*other, instruction))
-            .all(|other| other
-                .accounts
-                .iter()
-                .all(|meta| !meta.is_writable || !measured.contains(&&meta.address))),
-        "companion instruction can write a measured SwapV2 account"
-    );
+            .filter(|instruction| instruction.program == PROGRAM_ID)
+            .count()
+            == 1,
+        "multiple Orca instructions",
+    )?;
+    let data = &recognized.instruction.data;
+    require_shape(
+        data.len() == 43 && data[..8] == SWAP_V2 && data[42] == 0,
+        "unsupported SwapV2 discriminator or remaining accounts",
+    )?;
+    require_shape(
+        data[40] == 1 && data[41] <= 1,
+        "only exact-input SwapV2 is supported",
+    )?;
+    let roles = bind_roles(recognized, &ROLE_LABELS, None, ROLE_RULES, true)?;
+    // A transaction-level boundary can attribute these three net changes to
+    // SwapV2 only when no companion outer instruction can write them.
+    let input = if data[41] == 1 { 7 } else { 9 };
+    let measured = [input, 8, 10].map(|role| roles.address(role));
+    require_shape(
+        transaction
+            .instructions
+            .iter()
+            .enumerate()
+            .filter(|(index, _)| *index != roles.recognized.outer_index)
+            .all(|(_, other)| {
+                other
+                    .accounts
+                    .iter()
+                    .all(|meta| !meta.is_writable || !measured.contains(&meta.address.as_str()))
+            }),
+        "companion instruction can write a measured SwapV2 account",
+    )?;
     // u64 amount, u64 threshold and u128 price limit occupy bytes 8..40.
     // They bound execution; account-state deltas, not those stated values,
     // measure what the run actually transferred. Byte 40 is exact-in/out.
     Ok(Swap {
-        instruction,
+        roles,
         a_to_b: data[41] == 1,
     })
 }
@@ -180,21 +206,21 @@ fn amount(
     let owner = if role == 7 || role == 9 { 3 } else { 4 };
     token_amount(
         snapshot,
-        &shape.instruction.accounts[side].address,
-        &shape.instruction.accounts[5 + side].address,
-        &shape.instruction.accounts[owner].address,
+        shape.roles.address(side),
+        shape.roles.address(5 + side),
+        shape.roles.address(owner),
     )
 }
 
 fn decimals(transaction: &HistoricalTransaction, shape: &Swap<'_>, role: usize) -> Option<u8> {
     let side = if role == 7 || role == 8 { 0 } else { 1 };
-    let mint = &shape.instruction.accounts[5 + side].address;
-    let program = &shape.instruction.accounts[side].address;
+    let mint = shape.roles.address(5 + side);
+    let program = shape.roles.address(side);
     let mut observed = transaction
         .pre_token_balances
         .as_ref()?
         .iter()
-        .filter(|balance| &balance.mint == mint && &balance.program_id == program)
+        .filter(|balance| balance.mint == mint && balance.program_id == program)
         .map(|balance| balance.decimals);
     let first = observed.next()?;
     observed.all(|value| value == first).then_some(first)
@@ -249,23 +275,6 @@ fn subject_names(a_to_b: bool) -> [&'static str; 3] {
     }
 }
 
-fn source_interface() -> RepositoryInterface {
-    RepositoryInterface {
-        repository: "https://github.com/orca-so/whirlpools".into(),
-        commit: "408c945fef4c49ab70def4303377cfaf8f0f3c99".into(),
-        source_blobs: vec![
-            SourceBlob {
-                path: "programs/whirlpool/src/instructions/v2/swap.rs".into(),
-                git_blob_sha1: "2284b67082c0e1e60bd67b2f96065a627066292a".into(),
-            },
-            SourceBlob {
-                path: "programs/whirlpool/src/state/whirlpool.rs".into(),
-                git_blob_sha1: "bc02ce0140434ae3ef0414ae72ad5a33eb451e01".into(),
-            },
-        ],
-    }
-}
-
 fn pool_address_at(data: &[u8], offset: usize) -> Option<String> {
     let bytes: [u8; 32] = data.get(offset..offset + 32)?.try_into().ok()?;
     Some(solana_address::Address::new_from_array(bytes).to_string())
@@ -273,16 +282,16 @@ fn pool_address_at(data: &[u8], offset: usize) -> Option<String> {
 
 impl ProtocolAdapter for OrcaSwapV2Adapter {
     fn name(&self) -> &'static str {
-        "orca-whirlpool"
+        DESCRIPTOR.name
     }
     fn program_id(&self) -> &'static str {
-        PROGRAM_ID
+        DESCRIPTOR.program_id
     }
     fn supports_cpi(&self) -> bool {
         true
     }
     fn adapter_version(&self) -> u32 {
-        1
+        DESCRIPTOR.version
     }
     fn semantic_binding(
         &self,
@@ -295,23 +304,20 @@ impl ProtocolAdapter for OrcaSwapV2Adapter {
             Ok(shape) => shape,
             Err(_) => return Ok(SemanticBinding::ManualOrUnknown),
         };
-        let source = source_interface();
+        let source = DESCRIPTOR
+            .source
+            .expect("pinned Orca source")
+            .repository_interface();
         // The retained successful transaction is B -> A. An opposite-direction
         // shape may share the repository interface, but this one execution does
         // not independently corroborate its economic role mapping.
         if shape.a_to_b {
             return Ok(SemanticBinding::RepositorySourceClaim { source });
         }
-        let role = |index: usize| &shape.instruction.accounts[index].address;
-        let pool = pre
-            .get(role(4))
-            .ok_or_else(|| anyhow::anyhow!("missing historical Whirlpool state"))?;
-        ensure!(
-            pool.owner == PROGRAM_ID
-                && pool.data.len() == 653
-                && pool.data[..8] == WHIRLPOOL_ACCOUNT,
-            "historical Whirlpool state does not match the claimed account layout"
-        );
+        let role = |index: usize| shape.roles.address(index);
+        let pool = shape
+            .roles
+            .account(pre, 4, PROGRAM_ID, 653, &WHIRLPOOL_ACCOUNT)?;
         // Offsets include the 8-byte Anchor account discriminator. These four
         // fields are from the pinned source layout, not a verified ELF build.
         for (offset, index) in [(101, 5), (133, 8), (181, 6), (213, 10)] {
@@ -375,7 +381,7 @@ impl ProtocolAdapter for OrcaSwapV2Adapter {
         }
     }
     fn accept_instruction_contract(&self, transaction: &HistoricalTransaction) -> Result<()> {
-        swap(transaction).map(|_| ())
+        swap(transaction).map(|_| ()).map_err(Into::into)
     }
     fn label(&self, transaction: &HistoricalTransaction, index: usize) -> String {
         let Some(address) = transaction.account_keys.get(index).map(|key| &key.address) else {
@@ -383,14 +389,8 @@ impl ProtocolAdapter for OrcaSwapV2Adapter {
         };
         swap(transaction)
             .ok()
-            .and_then(|shape| {
-                shape
-                    .instruction
-                    .accounts
-                    .iter()
-                    .position(|role| &role.address == address)
-            })
-            .map(|role| ROLE_LABELS[role].to_string())
+            .and_then(|shape| shape.roles.label_for(address))
+            .map(str::to_string)
             .unwrap_or_else(|| format!("account-{index}"))
     }
     fn decode(&self, _account: &AccountSnapshot) -> Option<super::SemanticAccount> {
@@ -413,8 +413,7 @@ impl ProtocolAdapter for OrcaSwapV2Adapter {
         Vec::new()
     }
     fn action_id(&self, transaction: &HistoricalTransaction) -> Option<ActionId> {
-        swap(transaction).ok()?;
-        ActionId::new("swap_v2").ok()
+        ActionId::new(swap(transaction).ok()?.roles.recognized.id).ok()
     }
     fn evaluate_semantics(
         &self,
@@ -426,8 +425,9 @@ impl ProtocolAdapter for OrcaSwapV2Adapter {
             baseline,
             candidate,
         } = context;
-        let Ok(shape) = swap(transaction) else {
-            return Ok(SemanticEvaluation::Unsupported);
+        let shape = match swap(transaction) {
+            Ok(shape) => shape,
+            Err(error) => return evaluation_failure(error),
         };
         if !baseline.success {
             return Ok(SemanticEvaluation::Unevaluable {
