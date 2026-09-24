@@ -16,8 +16,8 @@ use super::{
     },
     execution::{ExecutionEvidence, InnerGroup, InnerInstruction, ReturnData, RuntimeProfile},
     model::{
-        AccountSeed, ExpectedAccountSource, FidelityProfile, ReplayObservationV2, ResolvedMessage,
-        RuntimeCapability,
+        AccountSeed, ExecutionInput, ExpectedAccountSource, ExpectedHistoricalOutcome,
+        FidelityProfile, ReplayObservationV2, ResolvedMessage, RuntimeCapability,
     },
 };
 use crate::{
@@ -132,20 +132,30 @@ pub(super) fn verify_validator_outcome(
     record: &ReplayObservationV2,
     store: &EvidenceStore,
 ) -> Result<()> {
-    let frozen_transaction = record
-        .execution
+    verify_validator_envelope(&record.execution, &record.expected, store)
+}
+
+/// Compare the retained validator outcome with the declared envelope. Callers
+/// first resolve the execution input, which binds its message and normalized
+/// balance metadata to the same transaction evidence.
+pub fn verify_validator_envelope(
+    execution: &ExecutionInput,
+    expected: &ExpectedHistoricalOutcome,
+    store: &EvidenceStore,
+) -> Result<()> {
+    let frozen_transaction = execution
         .validator_transaction_ref()
         .context("complete-profile observation requires a frozen validator transaction")?;
     let raw: Value = serde_json::from_slice(&store.get(frozen_transaction)?)?;
     let meta = &raw["meta"];
     ensure!(
-        record.expected.success == meta["err"].is_null()
-            && record.expected.fee == meta["fee"].as_u64().context("validator fee")?,
+        expected.success == meta["err"].is_null()
+            && expected.fee == meta["fee"].as_u64().context("validator fee")?,
         "historical outcome or fee differs from frozen validator result"
     );
     let error = (!meta["err"].is_null()).then(|| meta["err"].to_string());
     ensure!(
-        record.expected.error == error,
+        expected.error == error,
         "historical error differs from frozen validator result"
     );
     let logs = meta["logMessages"]
@@ -155,11 +165,11 @@ pub(super) fn verify_validator_outcome(
         .map(|v| v.as_str().context("validator log line").map(str::to_string))
         .collect::<Result<Vec<_>>>()?;
     ensure!(
-        record.expected.logs == logs,
+        expected.logs == logs,
         "historical logs differ from frozen validator result"
     );
     ensure!(
-        record.expected.inner_instructions == validator_inner(meta)?,
+        expected.inner_instructions == validator_inner(meta)?,
         "historical CPI groups differ from frozen validator result"
     );
     let return_data = if meta["returnData"].is_null() {
@@ -178,10 +188,10 @@ pub(super) fn verify_validator_outcome(
         })
     };
     ensure!(
-        record.expected.return_data == return_data,
+        expected.return_data == return_data,
         "historical return data differs from frozen validator result"
     );
-    if let Some(expected) = record.expected.compute_units {
+    if let Some(expected) = expected.compute_units {
         ensure!(
             meta["computeUnitsConsumed"].as_u64() == Some(expected),
             "historical compute units differ from frozen validator result"

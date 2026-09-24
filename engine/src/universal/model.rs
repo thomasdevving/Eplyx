@@ -1,7 +1,11 @@
 //! Protocol-independent observation and execution-message identity.
 use anyhow::{ensure, Context, Result};
 use serde::{Deserialize, Serialize};
-use solana_message::{v0, Message, VersionedMessage};
+use solana_address::Address;
+use solana_hash::Hash;
+use solana_message::{
+    compiled_instruction::CompiledInstruction, v0, Message, MessageHeader, VersionedMessage,
+};
 
 use super::evidence::{
     AccountBoundary, AccountObservation, EvidenceKind, EvidenceRef, EvidenceStore,
@@ -9,7 +13,7 @@ use super::evidence::{
 use super::execution::{HistoricalRuntimeEvidence, InnerGroup, ReturnData};
 use crate::{
     dependencies::DependencyManifest,
-    ingest::transactions::HistoricalTransaction,
+    ingest::transactions::{self, HistoricalTransaction},
     message::{self, FrozenV0, HistoricalAccountEvidence, LutResolutionProof},
     replay::hash_bytes,
 };
@@ -20,6 +24,15 @@ pub enum ExecutionInput {
     Legacy {
         message: Message,
         transaction: HistoricalTransaction,
+    },
+    /// Schema-2 legacy envelope. Existing `Legacy` bytes retain their old
+    /// meaning; this form reconstructs the exact message and transaction from
+    /// retained validator evidence before execution.
+    LegacyV2 {
+        message: Message,
+        transaction: HistoricalTransaction,
+        signatures: Vec<String>,
+        frozen_transaction: EvidenceRef,
     },
     /// V1 records already flattened LUT-free v0 before this model existed.
     /// This compatibility variant cannot be used by a schema-2 observation.
@@ -44,13 +57,130 @@ pub struct ResolvedMessage {
     pub account_keys: Vec<String>,
 }
 
+fn rpc_legacy_message(raw: &serde_json::Value) -> Result<Message> {
+    ensure!(
+        transactions::message_version(raw) == Some("legacy"),
+        "frozen transaction is not legacy"
+    );
+    let rpc = &raw["transaction"]["message"];
+    ensure!(
+        rpc["addressTableLookups"].is_null(),
+        "legacy message carries lookup descriptors"
+    );
+    let loaded = &raw["meta"]["loadedAddresses"];
+    ensure!(
+        loaded.is_null()
+            || (loaded["writable"].as_array().is_some_and(Vec::is_empty)
+                && loaded["readonly"].as_array().is_some_and(Vec::is_empty)),
+        "legacy transaction carries loaded addresses"
+    );
+    let byte = |value: &serde_json::Value| -> Result<u8> {
+        u8::try_from(value.as_u64().context("missing legacy byte")?)
+            .context("legacy field exceeds u8")
+    };
+    let header = &rpc["header"];
+    let message = Message {
+        header: MessageHeader {
+            num_required_signatures: byte(&header["numRequiredSignatures"])?,
+            num_readonly_signed_accounts: byte(&header["numReadonlySignedAccounts"])?,
+            num_readonly_unsigned_accounts: byte(&header["numReadonlyUnsignedAccounts"])?,
+        },
+        account_keys: rpc["accountKeys"]
+            .as_array()
+            .context("legacy account keys missing")?
+            .iter()
+            .map(|value| {
+                value
+                    .as_str()
+                    .context("legacy address missing")?
+                    .parse::<Address>()
+                    .map_err(Into::into)
+            })
+            .collect::<Result<_>>()?,
+        recent_blockhash: rpc["recentBlockhash"]
+            .as_str()
+            .context("legacy blockhash missing")?
+            .parse::<Hash>()?,
+        instructions: rpc["instructions"]
+            .as_array()
+            .context("legacy instructions missing")?
+            .iter()
+            .map(|instruction| {
+                Ok(CompiledInstruction {
+                    program_id_index: byte(&instruction["programIdIndex"])?,
+                    accounts: instruction["accounts"]
+                        .as_array()
+                        .context("legacy instruction accounts missing")?
+                        .iter()
+                        .map(&byte)
+                        .collect::<Result<_>>()?,
+                    data: bs58::decode(
+                        instruction["data"]
+                            .as_str()
+                            .context("legacy instruction data missing")?,
+                    )
+                    .into_vec()?,
+                })
+            })
+            .collect::<Result<_>>()?,
+    };
+    ensure!(
+        !message.account_keys.is_empty()
+            && message.header.num_required_signatures > 0
+            && usize::from(message.header.num_required_signatures) <= message.account_keys.len()
+            && message
+                .instructions
+                .iter()
+                .all(
+                    |ix| usize::from(ix.program_id_index) < message.account_keys.len()
+                        && ix
+                            .accounts
+                            .iter()
+                            .all(|index| usize::from(*index) < message.account_keys.len())
+                ),
+        "invalid legacy message indexes or header"
+    );
+    Ok(message)
+}
+
 impl ExecutionInput {
+    /// Capture a legacy validator result without changing the older inline
+    /// `Legacy` representation. Resolution checks these values again against
+    /// the retained transaction before using the message for execution.
+    pub fn capture_legacy_v2(store: &EvidenceStore, raw: &serde_json::Value) -> Result<Self> {
+        let message = rpc_legacy_message(raw)?;
+        let transaction = transactions::normalize(raw)?;
+        let signatures = raw["transaction"]["signatures"]
+            .as_array()
+            .context("legacy signatures missing")?
+            .iter()
+            .map(|value| {
+                value
+                    .as_str()
+                    .context("legacy signature missing")
+                    .map(str::to_owned)
+            })
+            .collect::<Result<Vec<_>>>()?;
+        let frozen_transaction = store.put(EvidenceKind::Transaction, &serde_json::to_vec(raw)?)?;
+        let input = Self::LegacyV2 {
+            message,
+            transaction,
+            signatures,
+            frozen_transaction,
+        };
+        input.resolve(store, "")?;
+        Ok(input)
+    }
+
     /// The immutable validator envelope used by complete-profile fidelity.
     /// V1 legacy records predate this requirement; new message variants must
     /// provide it before they can be admitted as schema-2 observations.
     pub fn validator_transaction_ref(&self) -> Option<&EvidenceRef> {
         match self {
             Self::V0 {
+                frozen_transaction, ..
+            }
+            | Self::LegacyV2 {
                 frozen_transaction, ..
             } => Some(frozen_transaction),
             Self::Legacy { .. } | Self::LegacyV1Compatibility { .. } => None,
@@ -66,6 +196,59 @@ impl ExecutionInput {
 
     pub fn resolve(&self, store: &EvidenceStore, genesis: &str) -> Result<ResolvedMessage> {
         match self {
+            Self::LegacyV2 {
+                message,
+                transaction,
+                signatures,
+                frozen_transaction,
+            } => {
+                ensure!(
+                    frozen_transaction.kind == EvidenceKind::Transaction,
+                    "frozen transaction reference has wrong kind"
+                );
+                let raw: serde_json::Value =
+                    serde_json::from_slice(&store.get(frozen_transaction)?)?;
+                let reconstructed = rpc_legacy_message(&raw)?;
+                ensure!(
+                    *message == reconstructed,
+                    "legacy message differs from frozen transaction"
+                );
+                let observed_signatures = raw["transaction"]["signatures"]
+                    .as_array()
+                    .context("legacy signatures missing")?
+                    .iter()
+                    .map(|value| {
+                        let text = value.as_str().context("legacy signature missing")?;
+                        ensure!(
+                            bs58::decode(text).into_vec()?.len() == 64,
+                            "invalid legacy signature length"
+                        );
+                        Ok(text.to_owned())
+                    })
+                    .collect::<Result<Vec<_>>>()?;
+                ensure!(
+                    *signatures == observed_signatures
+                        && signatures.len() == usize::from(message.header.num_required_signatures),
+                    "legacy signatures differ from frozen transaction"
+                );
+                let observed = transactions::normalize(&raw)?;
+                ensure!(
+                    *transaction == observed
+                        && transaction.version == "legacy"
+                        && transaction.loaded_address_count == 0
+                        && signatures.first() == Some(&transaction.signature),
+                    "legacy transaction differs from frozen validator envelope"
+                );
+                Ok(ResolvedMessage {
+                    message: VersionedMessage::Legacy(reconstructed),
+                    transaction: observed,
+                    account_keys: message
+                        .account_keys
+                        .iter()
+                        .map(ToString::to_string)
+                        .collect(),
+                })
+            }
             Self::Legacy {
                 message,
                 transaction,
