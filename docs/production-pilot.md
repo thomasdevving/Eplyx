@@ -112,6 +112,11 @@ Hosted, through the real API, and byte-identical to local in every case:
 | stale | 3 | `8d6a4dc867c39655…` |
 | unevaluable | 5 | `0c7a3b5231f84b99…` |
 
+Since Phase C1 every report also names the change it evaluated (`change`), so
+the baseline report is now `cb0e9d12290191ea7fd6a8c5ab02f226fe56ab35b20070a253f4e6e760014bef`.
+With that object removed it is still exactly `7be26a66…`; the U1 guard asserts
+both. See [phase-c1-changespec.md](phase-c1-changespec.md).
+
 Case F was verified locally only. Producing it hosted would mean corrupting
 bundle bytes in content-addressed shared storage, which the pilot project reads
 from too; manufacturing that danger to demonstrate an exit code was not worth

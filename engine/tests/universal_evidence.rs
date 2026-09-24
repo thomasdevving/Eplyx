@@ -29,6 +29,11 @@ fn bundle() -> &'static Path {
 const BASELINE_REPORT_SHA256: &str =
     "7be26a66f3e98f9b96ba6f1270003c158d99968d9ed081c336a97f14782d2099";
 
+/// The same report since Phase C1, which binds it to the change it evaluated.
+/// Only the `change` object differs from the bytes above; the test proves it.
+const CHANGE_BOUND_REPORT_SHA256: &str =
+    "cb0e9d12290191ea7fd6a8c5ab02f226fe56ab35b20070a253f4e6e760014bef";
+
 fn canonical(report: &ci::CiReport) -> String {
     // Byte-for-byte the artefact `eplyx ci check --format json` writes, which
     // is what the hosted service serves and what a team diffs: pretty-printed
@@ -36,6 +41,12 @@ fn canonical(report: &ci::CiReport) -> String {
     // of the file, so it is part of the hash the pilot recorded.
     let json = serde_json::to_string_pretty(report).expect("report serializes");
     format!("{:x}", Sha256::digest(format!("{json}\n").as_bytes()))
+}
+
+fn canonical_without_change(report: &ci::CiReport) -> String {
+    let mut prior = report.clone();
+    prior.change = None;
+    canonical(&prior)
 }
 
 /// §47. The production bundle, the real baseline, and the exact report bytes.
@@ -76,10 +87,14 @@ fn the_production_bundle_still_passes_with_byte_identical_output() {
     );
 
     assert_eq!(
-        canonical(&report),
+        canonical_without_change(&report),
         BASELINE_REPORT_SHA256,
         "the canonical report is no longer byte-identical to the pre-refactor one"
     );
+    let change = report.change.as_ref().expect("the report names its change");
+    assert_eq!(change.target_program_id, report.bundle.program_id);
+    assert_eq!(change.candidate_sha256, report.candidate.sha256);
+    assert_eq!(canonical(&report), CHANGE_BOUND_REPORT_SHA256);
 }
 
 /// §47. The known regression behaves identically: same exit code, same

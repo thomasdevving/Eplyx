@@ -61,6 +61,11 @@ enum Command {
         #[command(subcommand)]
         command: CiCommand,
     },
+    /// Describe a proposed change as a content-addressed change spec.
+    Change {
+        #[command(subcommand)]
+        command: ChangeCommand,
+    },
     /// Assemble and verify the offline CI bundle a gate runs against.
     Bundle {
         #[command(subcommand)]
@@ -371,9 +376,18 @@ struct CiCheckArgs {
     /// Directory holding the pinned, offline CI bundle.
     #[arg(long)]
     bundle: PathBuf,
-    /// The candidate program artefact under test.
+    /// The candidate program artefact under test. Alone, it stands for an
+    /// upgrade of the bundle's program to exactly these bytes. With
+    /// --change-spec, it supplies the bytes the spec names and must be them.
+    #[arg(long, required_unless_present = "change_spec")]
+    candidate: Option<PathBuf>,
+    /// The proposed change, as written by `eplyx change program-upgrade`.
     #[arg(long)]
-    candidate: PathBuf,
+    change_spec: Option<PathBuf>,
+    /// Content-addressed store holding the spec's candidate at
+    /// `programs/<sha256>`, instead of --candidate.
+    #[arg(long, requires = "change_spec", conflicts_with = "candidate")]
+    artifacts: Option<PathBuf>,
     /// Declared intentional changes. Omitted, nothing is declared and every
     /// finding is unexpected, which is the correct default.
     #[arg(long)]
@@ -381,6 +395,44 @@ struct CiCheckArgs {
     #[arg(long, value_enum, default_value_t = Format::Text)]
     format: Format,
     /// Write the report to a file instead of stdout.
+    #[arg(long)]
+    out: Option<PathBuf>,
+}
+
+#[derive(Subcommand)]
+enum ChangeCommand {
+    /// Write the change spec for upgrading one program to one executable.
+    ProgramUpgrade(ChangeProgramUpgradeArgs),
+}
+
+#[derive(Parser)]
+struct ChangeProgramUpgradeArgs {
+    /// The program being upgraded.
+    #[arg(long)]
+    program: String,
+    /// The proposed executable. Named in the spec by content hash only.
+    #[arg(long)]
+    candidate: PathBuf,
+    /// Also require the target to keep its bytes in this ProgramData account.
+    #[arg(long)]
+    programdata: Option<String>,
+    /// Also require the baseline to be exactly this executable.
+    #[arg(long)]
+    replaces: Option<PathBuf>,
+    /// Also require the baseline to prove this upgrade authority.
+    #[arg(long)]
+    upgrade_authority: Option<String>,
+    #[arg(long)]
+    activation_slot: Option<u64>,
+    #[arg(long)]
+    activation_unix_timestamp: Option<i64>,
+    /// Display label. Not part of the spec's identity.
+    #[arg(long)]
+    label: Option<String>,
+    /// Also store the candidate in this content-addressed artifact store.
+    #[arg(long)]
+    store: Option<PathBuf>,
+    /// Write the spec here instead of stdout.
     #[arg(long)]
     out: Option<PathBuf>,
 }
@@ -1076,6 +1128,9 @@ fn run() -> Result<ExitCode> {
         Command::Ci {
             command: CiCommand::Check(check_args),
         } => ci_check(check_args),
+        Command::Change {
+            command: ChangeCommand::ProgramUpgrade(change_args),
+        } => change_program_upgrade(change_args),
         Command::Bundle {
             command: BundleCommand::Build(build_args),
         } => bundle_build(build_args),
@@ -1529,7 +1584,35 @@ fn list(args: ListArgs) -> Result<ExitCode> {
 fn ci_check(args: CiCheckArgs) -> Result<ExitCode> {
     use eplyx_engine::ci;
 
-    let report = match ci::check(&args.bundle, &args.candidate, args.expectations.as_deref()) {
+    let outcome = match &args.change_spec {
+        None => ci::check(
+            &args.bundle,
+            args.candidate
+                .as_deref()
+                .expect("clap requires --candidate without --change-spec"),
+            args.expectations.as_deref(),
+        ),
+        Some(path) => eplyx_engine::change::ChangeSpec::load(path)
+            .map_err(ci::CheckError::Configuration)
+            .and_then(|spec| {
+                let source = match (&args.candidate, &args.artifacts) {
+                    (Some(file), _) => Some(eplyx_engine::change::CandidateSource::File(file)),
+                    (None, Some(store)) => {
+                        Some(eplyx_engine::change::CandidateSource::Store(store))
+                    }
+                    (None, None) => None,
+                };
+                ci::check_change(
+                    &args.bundle,
+                    &ci::ChangeInput::Spec {
+                        spec: &spec,
+                        source,
+                    },
+                    args.expectations.as_deref(),
+                )
+            }),
+    };
+    let report = match outcome {
         Ok(report) => report,
         Err(error) => {
             // A preflight abort produces no analysis, but it must still answer
@@ -1581,6 +1664,49 @@ fn ci_check(args: CiCheckArgs) -> Result<ExitCode> {
     Ok(ExitCode::from(report.exit_code()))
 }
 
+fn change_program_upgrade(args: ChangeProgramUpgradeArgs) -> Result<ExitCode> {
+    use eplyx_engine::change::{Activation, Change, ChangeSpec, ExecutableArtifact};
+
+    let candidate = std::fs::read(&args.candidate)
+        .with_context(|| format!("reading {}", args.candidate.display()))?;
+    let mut spec = ChangeSpec::program_upgrade(&args.program, &candidate);
+    let Change::ProgramUpgrade {
+        target,
+        replaces,
+        expected_upgrade_authority,
+        ..
+    } = &mut spec.change;
+    target.programdata_address = args.programdata;
+    *expected_upgrade_authority = args.upgrade_authority;
+    if let Some(path) = &args.replaces {
+        let bytes = std::fs::read(path).with_context(|| format!("reading {}", path.display()))?;
+        *replaces = Some(ExecutableArtifact::of(&bytes));
+    }
+    if args.activation_slot.is_some() || args.activation_unix_timestamp.is_some() {
+        spec.activation = Some(Activation {
+            slot: args.activation_slot,
+            unix_timestamp: args.activation_unix_timestamp,
+        });
+    }
+    spec.metadata.label = args.label;
+    spec.validate()?;
+    if let Some(store) = &args.store {
+        eplyx_engine::universal::evidence::EvidenceStore::at(store).put(
+            eplyx_engine::universal::evidence::EvidenceKind::ProgramBinary,
+            &candidate,
+        )?;
+    }
+    let document = spec.to_document()?;
+    match &args.out {
+        Some(path) => {
+            std::fs::write(path, format!("{document}\n"))?;
+            eprintln!("wrote {} ({})", path.display(), spec.id()?);
+        }
+        None => println!("{document}"),
+    }
+    Ok(ExitCode::SUCCESS)
+}
+
 fn render_ci(report: &eplyx_engine::ci::CiReport) -> String {
     use eplyx_engine::review::ReviewStatus;
     use std::fmt::Write as _;
@@ -1588,6 +1714,15 @@ fn render_ci(report: &eplyx_engine::ci::CiReport) -> String {
     let mut text = String::from("EPLYX UPGRADE CHECK\n===================\n\n");
     let _ = writeln!(text, "Baseline:   {}", report.bundle.baseline_sha256);
     let _ = writeln!(text, "Candidate:  {}", report.candidate.sha256);
+    if let Some(change) = &report.change {
+        let _ = writeln!(
+            text,
+            "Change:     {} ({} of {})",
+            change.change_spec_id,
+            change.kind.as_str(),
+            change.target_program_id
+        );
+    }
     let _ = writeln!(
         text,
         "Bundle:     {} ({} @{})",
