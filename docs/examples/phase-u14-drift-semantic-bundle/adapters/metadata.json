@@ -1,0 +1,74 @@
+{
+  "name": "drift-settle-pnl",
+  "version": 1,
+  "supports_cpi": false,
+  "actions": [
+    {
+      "semantic_action": "unknown",
+      "observations": 1
+    }
+  ],
+  "limitations": [
+    {
+      "code": "bounded_observations",
+      "detail": "This corpus covers only its recorded production interactions; no representativeness is claimed."
+    }
+  ],
+  "semantic_bindings": [
+    {
+      "observation_id": "229293976795dd2ee8eb88a9849004b25fce536d6540f459fc1848efbff63b49",
+      "binding": {
+        "level": "execution_corroborated_external_interface",
+        "source": {
+          "repository": "https://github.com/velocity-exchange/protocol-v2",
+          "commit": "73d22383e621040cd11b94375b6bd2f728f7537e",
+          "source_blobs": [
+            {
+              "path": "programs/drift/src/lib.rs",
+              "git_blob_sha1": "1862893e79b9e34f7ee2f3df08e5a2ccd641eedd"
+            },
+            {
+              "path": "sdk/src/idl/drift.json",
+              "git_blob_sha1": "7232b2925ffcee1f65ad85a0fddbf830add64f12"
+            },
+            {
+              "path": "programs/drift/src/controller/pnl.rs",
+              "git_blob_sha1": "3aae2e82a40cf274c9f9ac519f3efb6a99c38275"
+            },
+            {
+              "path": "programs/drift/src/controller/amm.rs",
+              "git_blob_sha1": "ea334200c138481f36a77c93058d5831ba2da4a4"
+            },
+            {
+              "path": "programs/drift/src/controller/position.rs",
+              "git_blob_sha1": "6b6ec530d529718ffd3d3726f62596d226133492"
+            },
+            {
+              "path": "programs/drift/src/controller/spot_balance.rs",
+              "git_blob_sha1": "f8e1b625e91629e7ab1842b72a67809c8c70b49b"
+            },
+            {
+              "path": "programs/drift/src/math/spot_balance.rs",
+              "git_blob_sha1": "da5261a48708e1c96c79864c0ec4fa37aea21592"
+            },
+            {
+              "path": "programs/drift/src/math/constants.rs",
+              "git_blob_sha1": "ad91a592a2e0b8deffe2cf85122eaecc73444611"
+            }
+          ]
+        },
+        "facts": [
+          "instruction_shape",
+          "signer_role",
+          "baseline_execution_success",
+          "anchor_account_discriminator",
+          "market_index_linkage",
+          "account_role_relationship",
+          "internal_accounting_direction"
+        ],
+        "historical_elf_sha256": "56bb3c1218ca4cc1158116c008439a48ca942f7e2898227494ce2769a7fdce5d",
+        "execution_evidence_sha256": "cb865316156c2ad1c52bce7eb16033d19563de642b115926c23aae3feda81593"
+      }
+    }
+  ]
+}

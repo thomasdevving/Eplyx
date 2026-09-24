@@ -17,6 +17,7 @@
 //! for the same reason [`crate::money::Usd`] does: a JSON number becomes a
 //! double in most consumers, and a u64 token amount does not survive that.
 
+pub mod drift;
 pub mod kamino;
 pub mod orca;
 pub mod stake_pool;
@@ -801,7 +802,8 @@ pub fn adapters() -> &'static [&'static dyn ProtocolAdapter] {
     const STAKE_POOL: stake_pool::StakePoolAdapter = stake_pool::StakePoolAdapter;
     const KAMINO: kamino::KaminoKlendAdapter = kamino::KaminoKlendAdapter;
     const ORCA: orca::OrcaSwapV2Adapter = orca::OrcaSwapV2Adapter;
-    &[&TOKEN_2022, &STAKE_POOL, &KAMINO, &ORCA]
+    const DRIFT: drift::DriftSettlePnlAdapter = drift::DriftSettlePnlAdapter;
+    &[&TOKEN_2022, &STAKE_POOL, &KAMINO, &ORCA, &DRIFT]
 }
 
 pub fn adapter_for(program_id: &str) -> Option<&'static dyn ProtocolAdapter> {

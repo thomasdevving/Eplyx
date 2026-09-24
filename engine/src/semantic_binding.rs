@@ -61,6 +61,10 @@ pub enum CorroboratedFact {
     PoolMintVaultRelationship,
     ObservedFlowDirection,
     BaselineExecutionSuccess,
+    AnchorAccountDiscriminator,
+    MarketIndexLinkage,
+    AccountRoleRelationship,
+    InternalAccountingDirection,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]

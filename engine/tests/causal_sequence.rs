@@ -545,7 +545,8 @@ fn ordinary_offline_bundle_reports_matched_contract_three_without_semantics() {
     );
     let (_, f) = pipeline::baseline(&bundle.records[0], &bundle.resolved[0]).unwrap();
     assert!(f.matched());
-    assert!(eplyx_engine::protocol::adapter_for(&bundle.records[0].program_id).is_none());
+    assert_eq!(bundle.adapter.name, "none");
+    assert_eq!(bundle.adapter.version, 0);
     let output = std::process::Command::new(env!("CARGO_BIN_EXE_eplyx"))
         .args(["ci", "check", "--bundle"])
         .arg(bundle.root())
