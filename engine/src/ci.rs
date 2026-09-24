@@ -129,6 +129,8 @@ pub struct ReplayProofSummary {
     pub observations: usize,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub proof_contract_versions: Vec<u32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub boundary_proof: Option<String>,
 }
 
 /// The CI result contract.
@@ -605,6 +607,7 @@ fn check_v2(
             profile: crate::universal::model::FidelityProfile::CheckpointedExecutionV1,
             status: "matched".into(),
             observations: checkpointed_observations,
+            boundary_proof: proof_contract_versions.contains(&3).then(|| "reconstructive_causal_sequence; derived_target_boundary; checkpointed_replay_boundary; not_observed_transaction_boundary".into()),
             proof_contract_versions,
         }),
         semantic_binding: bundle

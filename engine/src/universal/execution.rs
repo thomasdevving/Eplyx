@@ -412,6 +412,59 @@ impl LiteSvmBackend {
         request: &ExecutionRequest<'_>,
         diagnostic_feature_set: Option<&FeatureSet>,
     ) -> Result<(ExecutionEvidence, BackendTimings)> {
+        let (mut svm, mut timings) = self.world(request, diagnostic_feature_set)?;
+        let evidence =
+            Self::execute_in_world(&mut svm, request.message, request.watched, &mut timings)?;
+        Ok((evidence, timings))
+    }
+
+    /// One VM, one initial seed operation, ordered transactions. No candidate
+    /// binary is accepted by this historical proof execution API.
+    pub fn execute_sequence(
+        &self,
+        initial: &ExecutionRequest<'_>,
+        messages: &[ResolvedMessage],
+    ) -> Result<Vec<ExecutionEvidence>> {
+        ensure!(!messages.is_empty(), "empty historical sequence");
+        let (mut svm, mut timings) = self.world(initial, None)?;
+        messages
+            .iter()
+            .map(|message| {
+                ensure!(
+                    message.transaction.slot == initial.message.transaction.slot,
+                    "sequence runtime slot differs"
+                );
+                Self::execute_in_world(&mut svm, message, initial.watched, &mut timings)
+            })
+            .collect()
+    }
+
+    pub fn native_accounts(
+        &self,
+        initial: &ExecutionRequest<'_>,
+        keys: &[String],
+    ) -> Result<BTreeMap<String, AccountSnapshot>> {
+        let (svm, _) = self.world(initial, None)?;
+        keys.iter()
+            .map(|key| {
+                let value = svm
+                    .get_account(&key.parse()?)
+                    .ok_or_else(|| anyhow!("native runtime account missing: {key}"))?;
+                ensure!(
+                    value.executable
+                        && value.owner.to_string() == crate::versions::NATIVE_LOADER_ID,
+                    "native runtime account identity differs"
+                );
+                Ok((key.clone(), snapshot(&value)))
+            })
+            .collect()
+    }
+
+    fn world(
+        &self,
+        request: &ExecutionRequest<'_>,
+        diagnostic_feature_set: Option<&FeatureSet>,
+    ) -> Result<(LiteSVM, BackendTimings)> {
         let mut timings = BackendTimings::default();
         let started = Instant::now();
         request.runtime_profile.validate()?;
@@ -512,8 +565,17 @@ impl LiteSvmBackend {
             );
         }
         timings.account_seeding = started.elapsed();
+        Ok((svm, timings))
+    }
+
+    fn execute_in_world(
+        svm: &mut LiteSVM,
+        resolved_message: &ResolvedMessage,
+        watched: &[String],
+        timings: &mut BackendTimings,
+    ) -> Result<ExecutionEvidence> {
         let started = Instant::now();
-        let (success, error, meta) = match &request.message.message {
+        let (success, error, meta) = match &resolved_message.message {
             VersionedMessage::Legacy(message) => {
                 let tx = Transaction::new_unsigned(message.clone());
                 match svm.send_transaction(tx) {
@@ -522,7 +584,7 @@ impl LiteSvmBackend {
                 }
             }
             VersionedMessage::V0(message) => {
-                let signature = request.message.transaction.signature.parse()?;
+                let signature = resolved_message.transaction.signature.parse()?;
                 let tx = VersionedTransaction {
                     signatures: vec![signature],
                     message: VersionedMessage::V0(message.clone()),
@@ -537,7 +599,7 @@ impl LiteSvmBackend {
         timings.transaction_execution = started.elapsed();
         let started = Instant::now();
         let mut post_accounts = BTreeMap::new();
-        for address in request.watched {
+        for address in watched {
             let key: Address = address.parse()?;
             ensure!(
                 post_accounts
@@ -580,7 +642,7 @@ impl LiteSvmBackend {
             post_accounts,
         };
         timings.evidence_collection = started.elapsed();
-        Ok((evidence, timings))
+        Ok(evidence)
     }
 }
 

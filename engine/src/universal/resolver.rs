@@ -38,7 +38,7 @@ pub struct ResolvedReplayInput {
     pub baseline_elf: Vec<u8>,
 }
 
-fn resolve_account(
+pub(super) fn resolve_account(
     store: &EvidenceStore,
     seed: &AccountSeed,
     slot: u64,
@@ -128,7 +128,10 @@ fn validator_inner(meta: &Value) -> Result<Vec<InnerGroup>> {
         .collect()
 }
 
-fn verify_validator_outcome(record: &ReplayObservationV2, store: &EvidenceStore) -> Result<()> {
+pub(super) fn verify_validator_outcome(
+    record: &ReplayObservationV2,
+    store: &EvidenceStore,
+) -> Result<()> {
     let frozen_transaction = record
         .execution
         .validator_transaction_ref()
@@ -236,7 +239,7 @@ fn verify_deterministic_execution(
     Ok(())
 }
 
-fn verify_token_balances(
+pub(super) fn verify_token_balances(
     message: &ResolvedMessage,
     accounts: &BTreeMap<String, AccountSnapshot>,
     pre: bool,
@@ -269,7 +272,7 @@ fn verify_token_balances(
     Ok(())
 }
 
-fn verify_binary(
+pub(super) fn verify_binary(
     record: &ReplayObservationV2,
     store: &EvidenceStore,
     seeds: &BTreeMap<String, AccountSnapshot>,
@@ -374,9 +377,12 @@ impl ReplayObservationV2 {
             .as_ref()
             .map_or(1, |proof| proof.proof_contract_version);
         ensure!(
-            checkpoint_contract == 1 || checkpoint_contract == 2,
+            (1..=3).contains(&checkpoint_contract),
             "unsupported checkpoint proof contract"
         );
+        if checkpoint_contract == 3 {
+            return super::sequence::resolve(self, store);
+        }
         let message = self.execution.resolve(store, &self.genesis_hash)?;
         ensure!(
             message.transaction.signature == self.signature
@@ -601,6 +607,9 @@ impl ReplayObservationV2 {
                 "duplicate watched account"
             );
             let source = match &watched_account.source {
+                ExpectedAccountSource::DerivedTargetBoundary => {
+                    anyhow::bail!("derived target boundary requires sequence contract 3")
+                }
                 ExpectedAccountSource::Archived(reference) => {
                     let seed = AccountSeed {
                         address: address.clone(),

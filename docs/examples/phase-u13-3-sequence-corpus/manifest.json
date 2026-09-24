@@ -1,0 +1,12 @@
+{
+  "schema_version": 2,
+  "program_id": "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+  "protocol": "unknown",
+  "adapter_version": null,
+  "genesis_hash": "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d",
+  "record_count": 1,
+  "record_ids": [
+    "588b1abd2d2b06689604a81856d3a90493035509c4638a490dea73416eed407e"
+  ],
+  "canonical_hash": "12787376a8fbafd1939faa41fc6c06d07841bafb88bdc24d6cd808e1aa160b08"
+}

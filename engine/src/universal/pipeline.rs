@@ -60,9 +60,19 @@ pub fn execute(
     resolved: &ResolvedReplayInput,
     candidate: &[u8],
 ) -> Result<ExecutionEvidence> {
+    execute_with_backend(record, resolved, candidate, &LiteSvmBackend)
+}
+
+/// Backend seam shared by ordinary execution and isolation tests.
+pub fn execute_with_backend(
+    record: &ReplayObservationV2,
+    resolved: &ResolvedReplayInput,
+    candidate: &[u8],
+    backend: &impl ExecutionBackend,
+) -> Result<ExecutionEvidence> {
     let seeds = candidate_seeds(record, resolved, candidate)?;
     let run = |variant| {
-        LiteSvmBackend.execute(&ExecutionRequest {
+        backend.execute(&ExecutionRequest {
             message: &resolved.message,
             seeds: &seeds,
             absent_pre_accounts: &resolved.absent_pre_accounts,
