@@ -1,0 +1,97 @@
+{
+  "endpoint": "https://api.mainnet-beta.solana.com",
+  "requests": {
+    "block-accounts.json.gz": {
+      "method": "getBlock",
+      "params": [
+        450026714,
+        {
+          "commitment": "finalized",
+          "encoding": "json",
+          "maxSupportedTransactionVersion": 1,
+          "rewards": false,
+          "transactionDetails": "accounts"
+        }
+      ]
+    },
+    "deploy-block-time.json": {
+      "method": "getBlockTime",
+      "params": [
+        231433470
+      ]
+    },
+    "market-header-current.json": {
+      "method": "getAccountInfo",
+      "params": [
+        "6BVnCYbEQZXkDZuQyaKTQMPs4HjpKcd7poMxKnRNEX32",
+        {
+          "commitment": "finalized",
+          "dataSlice": {
+            "length": 512,
+            "offset": 0
+          },
+          "encoding": "base64"
+        }
+      ]
+    },
+    "openbook-signatures.json": {
+      "method": "getSignaturesForAddress",
+      "params": [
+        "opnb2LAfJYbRMAHHvqjCwQxanZn7ReEHp1k81EohpZb",
+        {
+          "commitment": "finalized",
+          "limit": 10
+        }
+      ]
+    },
+    "program-current.json": {
+      "method": "getAccountInfo",
+      "params": [
+        "PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY",
+        {
+          "commitment": "finalized",
+          "dataSlice": {
+            "length": 64,
+            "offset": 0
+          },
+          "encoding": "base64"
+        }
+      ]
+    },
+    "programdata-current.json": {
+      "method": "getAccountInfo",
+      "params": [
+        "2myyNegEA6pjAHmmEsJC6JdYhW51gwxQW7ZCTWvwaKTk",
+        {
+          "commitment": "finalized",
+          "encoding": "base64+zstd"
+        }
+      ]
+    },
+    "programdata-header-current.json": {
+      "method": "getAccountInfo",
+      "params": [
+        "2myyNegEA6pjAHmmEsJC6JdYhW51gwxQW7ZCTWvwaKTk",
+        {
+          "commitment": "finalized",
+          "dataSlice": {
+            "length": 64,
+            "offset": 0
+          },
+          "encoding": "base64"
+        }
+      ]
+    },
+    "transaction.json": {
+      "method": "getTransaction",
+      "params": [
+        "rR1tBf4kb4xocTPpLZXRPqFFtvXQHn2GwAEgHbU8d83URqJNWnACGcz6cJfq27kGYhuWaTjrce7ksBNAF5NZVQC",
+        {
+          "commitment": "finalized",
+          "encoding": "json",
+          "maxSupportedTransactionVersion": 0
+        }
+      ]
+    }
+  }
+}
