@@ -338,6 +338,36 @@ pub fn semantic_result(
     })
 }
 
+fn unexplained_target_offset(
+    label: &str,
+    before: &[u8],
+    after: &[u8],
+    explained: &[crate::protocol::ExplainedBytes],
+) -> Option<usize> {
+    if before.len() != after.len() {
+        return Some(before.len().min(after.len()));
+    }
+    before
+        .iter()
+        .zip(after)
+        .enumerate()
+        .find(|(offset, (a, b))| {
+            a != b
+                && !explained
+                    .iter()
+                    .any(|source| source.account_label == label && source.range.contains(offset))
+        })
+        .map(|(offset, _)| offset)
+}
+
+fn checked_evaluation(
+    result: Result<crate::protocol::SemanticEvaluation>,
+) -> std::result::Result<crate::protocol::SemanticEvaluation, CheckError> {
+    let evaluation = result.map_err(CheckError::Configuration)?;
+    evaluation.validate().map_err(CheckError::Configuration)?;
+    Ok(evaluation)
+}
+
 fn check_v2(
     bundle_dir: &Path,
     candidate: &Path,
@@ -387,6 +417,7 @@ fn check_v2(
     };
     let mut observed = Vec::new();
     let mut coverage = Vec::new();
+    let mut unevaluable = false;
     let mut structural: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
     for (record, resolved) in bundle.records.iter().zip(&bundle.resolved) {
         let (baseline, _) = pipeline::baseline(record, resolved)
@@ -426,12 +457,35 @@ fn check_v2(
             .map_err(CheckError::Configuration)?;
         let after = semantic_result(&candidate_run, &labels, &resolved.message.account_keys)
             .map_err(CheckError::Configuration)?;
-        let subjects = adapter
-            .map(|a| a.evaluable_subjects(tx, &pre))
-            .unwrap_or_default();
-        let named = adapter
-            .map(|a| a.named_findings(tx, &pre, &before, &after))
-            .unwrap_or_default();
+        let evaluation = checked_evaluation(match adapter {
+            Some(adapter) => {
+                adapter.evaluate_semantics(&crate::protocol::SemanticEvaluationContext {
+                    transaction: tx,
+                    pre: &pre,
+                    baseline: &before,
+                    candidate: &after,
+                })
+            }
+            None => Ok(crate::protocol::SemanticEvaluation::Unsupported),
+        })?;
+        let (subjects, named, explained) = match evaluation {
+            crate::protocol::SemanticEvaluation::Unsupported => {
+                (Vec::new(), Vec::new(), Vec::new())
+            }
+            crate::protocol::SemanticEvaluation::Unevaluable { reason } => {
+                unevaluable = true;
+                structural
+                    .entry(format!("semantic evaluation unavailable: {reason}"))
+                    .or_default()
+                    .insert(record.id.clone());
+                (Vec::new(), Vec::new(), Vec::new())
+            }
+            crate::protocol::SemanticEvaluation::Evaluated {
+                subjects,
+                findings,
+                explained,
+            } => (subjects, findings, explained),
+        };
         let entity = adapter
             .and_then(|a| a.economic_entity_id(tx, &pre))
             .map(|v| v.to_string());
@@ -484,16 +538,6 @@ fn check_v2(
                 .or_default()
                 .insert(record.id.clone());
         }
-        let explained = named
-            .iter()
-            .flat_map(|finding| {
-                adapter
-                    .map(|a| a.decoded_sources_of(finding.fingerprint.subject.as_str()))
-                    .unwrap_or(&[])
-                    .iter()
-                    .copied()
-            })
-            .collect::<BTreeSet<_>>();
         for (address, prior) in &baseline.post_accounts {
             let next = candidate_run
                 .post_accounts
@@ -511,22 +555,7 @@ fn check_v2(
                         && a.executable == b.executable
                         && a.rent_epoch == b.rent_epoch =>
                 {
-                    let ranges = adapter.map(|a| a.decoded_byte_ranges(label)).unwrap_or(&[]);
-                    let accounted = explained.iter().any(|(source, _)| *source == label);
-                    let unexplained = a
-                        .data
-                        .iter()
-                        .zip(&b.data)
-                        .enumerate()
-                        .find(|(offset, (x, y))| {
-                            x != y && (!accounted || !ranges.iter().any(|r| r.contains(offset)))
-                        })
-                        .map(|(offset, _)| offset);
-                    let first = if a.data.len() != b.data.len() {
-                        Some(a.data.len().min(b.data.len()))
-                    } else {
-                        unexplained
-                    };
+                    let first = unexplained_target_offset(label, &a.data, &b.data, &explained);
                     let Some(first) = first else {
                         continue;
                     };
@@ -558,6 +587,9 @@ fn check_v2(
         .collect::<Vec<_>>();
     if let Some(reason) = semantic_coverage_failure(&coverage) {
         reviewed.failures.push(reason);
+    }
+    if unevaluable {
+        reviewed.failures.push(FailureReason::NoSemanticCoverage);
     }
     if !undeclarable.is_empty() {
         reviewed.failures.push(FailureReason::UndeclarableChange);
@@ -1017,6 +1049,40 @@ mod tests {
     use crate::bundle::{AdapterMetadata, BundleManifest, SlotRange};
     use crate::replay::ReplayRecord;
     use crate::semantics::SEMANTIC_SCHEMA_VERSION;
+
+    #[test]
+    fn target_bytes_only_suppress_explained_ranges() {
+        let explained = vec![crate::protocol::ExplainedBytes {
+            subject: crate::semantics::SemanticSubject::new("settlement").unwrap(),
+            account_label: "user".into(),
+            field: "settlement".into(),
+            range: 1..2,
+        }];
+        assert_eq!(
+            unexplained_target_offset("user", &[0, 0, 0], &[0, 1, 0], &explained),
+            None
+        );
+        assert_eq!(
+            unexplained_target_offset("user", &[0, 0, 0], &[0, 1, 1], &explained),
+            Some(2)
+        );
+        assert_eq!(
+            unexplained_target_offset("other", &[0, 0, 0], &[0, 1, 0], &explained),
+            Some(1)
+        );
+        assert_eq!(
+            unexplained_target_offset("user", &[0, 0], &[0], &explained),
+            Some(1)
+        );
+    }
+
+    #[test]
+    fn evaluator_errors_fail_closed() {
+        let error =
+            checked_evaluation(Err(anyhow::anyhow!("adapter implementation failed"))).unwrap_err();
+        assert_eq!(error.exit_code(), EXIT_ERROR);
+        assert!(error.to_string().contains("adapter implementation failed"));
+    }
 
     fn record() -> ReplayRecord {
         serde_json::from_str(include_str!(

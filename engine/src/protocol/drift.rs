@@ -9,7 +9,10 @@ use std::{collections::BTreeMap, ops::Range};
 
 use anyhow::{ensure, Result};
 
-use super::{EconomicChange, ProtocolAdapter, SemanticAccount};
+use super::{
+    EconomicChange, ExplainedBytes, ProtocolAdapter, SemanticAccount, SemanticEvaluation,
+    SemanticEvaluationContext,
+};
 use crate::{
     executor::ExecutionResult,
     ingest::transactions::HistoricalTransaction,
@@ -376,6 +379,109 @@ impl ProtocolAdapter for DriftSettlePnlAdapter {
         shape(tx).ok()?;
         ActionId::new("settle_pnl").ok()
     }
+    fn evaluate_semantics(
+        &self,
+        context: &SemanticEvaluationContext<'_>,
+    ) -> Result<SemanticEvaluation> {
+        let SemanticEvaluationContext {
+            transaction: tx,
+            pre,
+            baseline,
+            candidate,
+        } = context;
+        if shape(tx).is_err() {
+            return Ok(SemanticEvaluation::Unsupported);
+        }
+        let Some(before) = evaluate(pre, baseline) else {
+            return Ok(SemanticEvaluation::Unevaluable {
+                reason: "invalid Drift baseline target state or settlement accounting".into(),
+            });
+        };
+        let protocol = self
+            .protocol_id()
+            .ok_or_else(|| anyhow::anyhow!("missing Drift protocol id"))?;
+        let action = self
+            .action_id(tx)
+            .ok_or_else(|| anyhow::anyhow!("missing Drift action id"))?;
+        let subject = |domain, name: &str| EvaluableSubject {
+            protocol: protocol.clone(),
+            action: action.clone(),
+            domain,
+            subject: SemanticSubject::new(name).expect("static subject"),
+        };
+        let subjects = vec![
+            subject(FindingDomain::Execution, "transaction"),
+            subject(FindingDomain::Economic, "pnl_settled"),
+        ];
+        let fingerprint = |domain, subject: &str, change| FindingFingerprint {
+            protocol: subjects[0].protocol.clone(),
+            action: subjects[0].action.clone(),
+            domain,
+            subject: SemanticSubject::new(subject).expect("static subject"),
+            change,
+        };
+        if !candidate.success {
+            return Ok(SemanticEvaluation::Evaluated {
+                subjects: vec![subjects[0].clone()],
+                findings: vec![NamedFinding {
+                    fingerprint: fingerprint(
+                        FindingDomain::Execution,
+                        "transaction",
+                        ChangeKind::NowReverts,
+                    ),
+                    baseline: None,
+                    candidate: None,
+                    relative_delta_bps: None,
+                    severity: crate::diff::Severity::Critical,
+                }],
+                explained: Vec::new(),
+            });
+        }
+        let Some(after) = evaluate(pre, candidate) else {
+            return Ok(SemanticEvaluation::Unevaluable {
+                reason: "invalid Drift candidate target state or settlement accounting".into(),
+            });
+        };
+        let findings = if before == after {
+            Vec::new()
+        } else {
+            vec![NamedFinding {
+                fingerprint: fingerprint(
+                    FindingDomain::Economic,
+                    "pnl_settled",
+                    ChangeKind::from_delta(i128::from(after) - i128::from(before)),
+                ),
+                baseline: Some(SemanticValue::signed_quantity(i128::from(before), 6)),
+                candidate: Some(SemanticValue::signed_quantity(i128::from(after), 6)),
+                relative_delta_bps: None,
+                severity: crate::diff::Severity::High,
+            }]
+        };
+        let explained = if findings.is_empty() {
+            Vec::new()
+        } else {
+            self.decoded_sources_of("pnl_settled")
+                .iter()
+                .flat_map(|(label, field)| {
+                    self.decoded_byte_ranges(label)
+                        .iter()
+                        .cloned()
+                        .map(|range| ExplainedBytes {
+                            subject: SemanticSubject::new("pnl_settled").expect("static subject"),
+                            account_label: (*label).into(),
+                            field: (*field).into(),
+                            range,
+                        })
+                        .collect::<Vec<_>>()
+                })
+                .collect()
+        };
+        Ok(SemanticEvaluation::Evaluated {
+            subjects,
+            findings,
+            explained,
+        })
+    }
     fn semantic_binding(
         &self,
         tx: &HistoricalTransaction,
@@ -499,50 +605,14 @@ impl ProtocolAdapter for DriftSettlePnlAdapter {
         baseline: &ExecutionResult,
         candidate: &ExecutionResult,
     ) -> Vec<NamedFinding> {
-        if shape(tx).is_err() {
-            return Vec::new();
+        match self.evaluate_semantics(&SemanticEvaluationContext {
+            transaction: tx,
+            pre: accounts,
+            baseline,
+            candidate,
+        }) {
+            Ok(SemanticEvaluation::Evaluated { findings, .. }) => findings,
+            _ => Vec::new(),
         }
-        let (Some(protocol), Some(action)) = (self.protocol_id(), self.action_id(tx)) else {
-            return Vec::new();
-        };
-        let fingerprint = |domain, subject: &str, change| FindingFingerprint {
-            protocol: protocol.clone(),
-            action: action.clone(),
-            domain,
-            subject: SemanticSubject::new(subject).expect("static subject"),
-            change,
-        };
-        if baseline.success && !candidate.success {
-            return vec![NamedFinding {
-                fingerprint: fingerprint(
-                    FindingDomain::Execution,
-                    "transaction",
-                    ChangeKind::NowReverts,
-                ),
-                baseline: None,
-                candidate: None,
-                relative_delta_bps: None,
-                severity: crate::diff::Severity::Critical,
-            }];
-        }
-        let (Some(before), Some(after)) =
-            (evaluate(accounts, baseline), evaluate(accounts, candidate))
-        else {
-            return Vec::new(); // malformed state remains structural/undeclarable
-        };
-        if before == after {
-            return Vec::new();
-        }
-        vec![NamedFinding {
-            fingerprint: fingerprint(
-                FindingDomain::Economic,
-                "pnl_settled",
-                ChangeKind::from_delta(i128::from(after) - i128::from(before)),
-            ),
-            baseline: Some(SemanticValue::signed_quantity(i128::from(before), 6)),
-            candidate: Some(SemanticValue::signed_quantity(i128::from(after), 6)),
-            relative_delta_bps: None,
-            severity: crate::diff::Severity::High,
-        }]
     }
 }

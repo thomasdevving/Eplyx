@@ -8,7 +8,9 @@
 
 use anyhow::{ensure, Result};
 
-use super::{ProtocolAdapter, SemanticAction, SemanticField};
+use super::{
+    ProtocolAdapter, SemanticAction, SemanticEvaluation, SemanticEvaluationContext, SemanticField,
+};
 use crate::{
     executor::ExecutionResult,
     ingest::transactions::HistoricalTransaction,
@@ -414,6 +416,105 @@ impl ProtocolAdapter for OrcaSwapV2Adapter {
         swap(transaction).ok()?;
         ActionId::new("swap_v2").ok()
     }
+    fn evaluate_semantics(
+        &self,
+        context: &SemanticEvaluationContext<'_>,
+    ) -> Result<SemanticEvaluation> {
+        let SemanticEvaluationContext {
+            transaction,
+            pre,
+            baseline,
+            candidate,
+        } = context;
+        let Ok(shape) = swap(transaction) else {
+            return Ok(SemanticEvaluation::Unsupported);
+        };
+        if !baseline.success {
+            return Ok(SemanticEvaluation::Unevaluable {
+                reason: "invalid Orca baseline execution".into(),
+            });
+        }
+        let roles = [if shape.a_to_b { 7 } else { 9 }, 8, 10];
+        let scales = roles.map(|role| decimals(transaction, &shape, role));
+        let before = flows(pre, baseline, &shape);
+        if before.iter().any(Option::is_none) || scales.iter().any(Option::is_none) {
+            return Ok(SemanticEvaluation::Unevaluable {
+                reason: "invalid Orca baseline token state or flow".into(),
+            });
+        }
+        let protocol = self
+            .protocol_id()
+            .ok_or_else(|| anyhow::anyhow!("missing Orca protocol id"))?;
+        let action = self
+            .action_id(transaction)
+            .ok_or_else(|| anyhow::anyhow!("missing Orca action id"))?;
+        let subject = |domain, name: &str| EvaluableSubject {
+            protocol: protocol.clone(),
+            action: action.clone(),
+            domain,
+            subject: SemanticSubject::new(name).expect("static subject"),
+        };
+        let mut subjects = vec![subject(FindingDomain::Execution, "transaction")];
+        subjects.extend(
+            subject_names(shape.a_to_b)
+                .into_iter()
+                .map(|name| subject(FindingDomain::Economic, name)),
+        );
+        let fingerprint = |domain, name: &str, change| FindingFingerprint {
+            protocol: subjects[0].protocol.clone(),
+            action: subjects[0].action.clone(),
+            domain,
+            subject: SemanticSubject::new(name).expect("static subject"),
+            change,
+        };
+        if !candidate.success {
+            return Ok(SemanticEvaluation::Evaluated {
+                subjects: vec![subjects[0].clone()],
+                findings: vec![NamedFinding {
+                    fingerprint: fingerprint(
+                        FindingDomain::Execution,
+                        "transaction",
+                        ChangeKind::NowReverts,
+                    ),
+                    baseline: None,
+                    candidate: None,
+                    relative_delta_bps: None,
+                    severity: crate::diff::Severity::Critical,
+                }],
+                explained: Vec::new(),
+            });
+        }
+        let after = flows(pre, candidate, &shape);
+        if after.iter().any(Option::is_none) {
+            return Ok(SemanticEvaluation::Unevaluable {
+                reason: "invalid Orca candidate token state or flow".into(),
+            });
+        }
+        let mut findings = Vec::new();
+        for (index, name) in subject_names(shape.a_to_b).into_iter().enumerate() {
+            let prior = before[index].ok_or_else(|| anyhow::anyhow!("Orca baseline flow lost"))?;
+            let next = after[index].ok_or_else(|| anyhow::anyhow!("Orca candidate flow lost"))?;
+            let scale = scales[index].ok_or_else(|| anyhow::anyhow!("Orca decimals lost"))?;
+            if prior != next {
+                findings.push(NamedFinding {
+                    fingerprint: fingerprint(
+                        FindingDomain::Economic,
+                        name,
+                        ChangeKind::from_delta(i128::from(next) - i128::from(prior)),
+                    ),
+                    baseline: Some(SemanticValue::quantity(prior, scale)),
+                    candidate: Some(SemanticValue::quantity(next, scale)),
+                    relative_delta_bps: None,
+                    severity: crate::diff::Severity::High,
+                });
+            }
+        }
+        Ok(SemanticEvaluation::Evaluated {
+            subjects,
+            findings,
+            explained: Vec::new(),
+        })
+    }
     fn evaluable_subjects(
         &self,
         transaction: &HistoricalTransaction,
@@ -456,63 +557,14 @@ impl ProtocolAdapter for OrcaSwapV2Adapter {
         v1: &ExecutionResult,
         v2: &ExecutionResult,
     ) -> Vec<NamedFinding> {
-        let Ok(shape) = swap(transaction) else {
-            return Vec::new();
-        };
-        let (Some(protocol), Some(action)) = (self.protocol_id(), self.action_id(transaction))
-        else {
-            return Vec::new();
-        };
-        let fingerprint = |domain, name: &str, change| FindingFingerprint {
-            protocol: protocol.clone(),
-            action: action.clone(),
-            domain,
-            subject: SemanticSubject::new(name).expect("static subject"),
-            change,
-        };
-        if v1.success != v2.success {
-            return vec![NamedFinding {
-                fingerprint: fingerprint(
-                    FindingDomain::Execution,
-                    "transaction",
-                    if v1.success {
-                        ChangeKind::NowReverts
-                    } else {
-                        ChangeKind::NowSucceeds
-                    },
-                ),
-                baseline: None,
-                candidate: None,
-                relative_delta_bps: None,
-                severity: crate::diff::Severity::Critical,
-            }];
+        match self.evaluate_semantics(&SemanticEvaluationContext {
+            transaction,
+            pre: accounts,
+            baseline: v1,
+            candidate: v2,
+        }) {
+            Ok(SemanticEvaluation::Evaluated { findings, .. }) => findings,
+            _ => Vec::new(),
         }
-        let before = flows(accounts, v1, &shape);
-        let after = flows(accounts, v2, &shape);
-        subject_names(shape.a_to_b)
-            .iter()
-            .enumerate()
-            .filter_map(|(index, name)| {
-                let (Some(prior), Some(next)) = (before[index], after[index]) else {
-                    return None;
-                };
-                let role = [if shape.a_to_b { 7 } else { 9 }, 8, 10][index];
-                let scale = decimals(transaction, &shape, role)?;
-                if prior == next {
-                    return None;
-                }
-                Some(NamedFinding {
-                    fingerprint: fingerprint(
-                        FindingDomain::Economic,
-                        name,
-                        ChangeKind::from_delta(i128::from(next) - i128::from(prior)),
-                    ),
-                    baseline: Some(SemanticValue::quantity(prior, scale)),
-                    candidate: Some(SemanticValue::quantity(next, scale)),
-                    relative_delta_bps: None,
-                    severity: crate::diff::Severity::High,
-                })
-            })
-            .collect()
     }
 }

@@ -2074,6 +2074,37 @@ mod semantic_surface {
     }
 
     #[test]
+    fn legacy_adapter_uses_default_evaluation_shim() {
+        let record = deposit();
+        let baseline = result(&record, true, |_, _| {});
+        let evaluation = ADAPTER
+            .evaluate_semantics(&crate::protocol::SemanticEvaluationContext {
+                transaction: &record.transaction,
+                pre: &record.accounts,
+                baseline: &baseline,
+                candidate: &baseline,
+            })
+            .unwrap();
+        evaluation.validate().unwrap();
+        let crate::protocol::SemanticEvaluation::Evaluated {
+            subjects, findings, ..
+        } = evaluation
+        else {
+            panic!("legacy deposit has subjects")
+        };
+        assert_eq!(
+            subjects.len(),
+            ADAPTER
+                .evaluable_subjects(&record.transaction, &record.accounts)
+                .len()
+        );
+        assert_eq!(
+            findings,
+            ADAPTER.named_findings(&record.transaction, &record.accounts, &baseline, &baseline)
+        );
+    }
+
+    #[test]
     fn a_deposit_can_measure_the_shares_it_produces() {
         let record = deposit();
         let subjects = subjects(&record);
