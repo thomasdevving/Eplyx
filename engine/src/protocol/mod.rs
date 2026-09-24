@@ -19,6 +19,7 @@
 
 pub mod drift;
 pub mod kamino;
+pub mod onboarding;
 pub mod orca;
 pub mod stake_pool;
 pub mod token2022;
@@ -936,10 +937,16 @@ pub fn adapters() -> &'static [&'static dyn ProtocolAdapter] {
 }
 
 pub fn adapter_for(program_id: &str) -> Option<&'static dyn ProtocolAdapter> {
-    adapters()
+    let mut matches = adapters()
         .iter()
         .copied()
-        .find(|adapter| adapter.program_id() == program_id)
+        .filter(|adapter| adapter.program_id() == program_id);
+    let selected = matches.next();
+    assert!(
+        matches.next().is_none(),
+        "ambiguous compiled adapter registration for {program_id}"
+    );
+    selected
 }
 
 #[cfg(test)]
@@ -1112,6 +1119,15 @@ mod tests {
         assert!(adapter_for("11111111111111111111111111111111").is_none());
         assert!(adapter_for(token2022::PROGRAM_ID).is_some());
         assert!(adapter_for(stake_pool::PROGRAM_ID).is_some());
+    }
+
+    #[test]
+    fn compiled_registration_has_one_adapter_per_program() {
+        let ids = adapters()
+            .iter()
+            .map(|adapter| adapter.program_id())
+            .collect::<std::collections::BTreeSet<_>>();
+        assert_eq!(ids.len(), adapters().len());
     }
 
     /// The CPI contract is opt-in per adapter. Token-2022's path was proved

@@ -10,13 +10,17 @@ use std::{collections::BTreeMap, ops::Range};
 use anyhow::{ensure, Result};
 
 use super::{
+    onboarding::{
+        bind_roles, evaluation_failure, require_shape, BoundInteraction, InteractionDescriptor,
+        OnboardingFailure, ProtocolDescriptor, RoleRule, SourceIdentity,
+    },
     EconomicChange, ExplainedBytes, ProtocolAdapter, SemanticAccount, SemanticEvaluation,
     SemanticEvaluationContext,
 };
 use crate::{
     executor::ExecutionResult,
     ingest::transactions::HistoricalTransaction,
-    semantic_binding::{CorroboratedFact, RepositoryInterface, SemanticBinding, SourceBlob},
+    semantic_binding::{CorroboratedFact, SemanticBinding},
     semantics::{
         ActionId, ChangeKind, EvaluableSubject, FindingDomain, FindingFingerprint, NamedFinding,
         SemanticSubject, SemanticValue,
@@ -47,6 +51,79 @@ const ROLES: [&str; 14] = [
     "7QAtMC3AaAc91W4XuwYXM1Mtffq9h9Z8dTxcJrKRHu1z", // PerpMarket 3
     "25Eax9W8SA3wpCQFhJEGyHhQ2NDHEshZEDzyMNtthR8D",
 ];
+const ROLE_LABELS: [&str; 14] = [
+    "state",
+    "user",
+    "signer",
+    "quote-vault",
+    "drift-signer",
+    "market-5",
+    "market-6",
+    "market-7",
+    "market-8",
+    "quote-spot-market",
+    "market-10",
+    "market-11",
+    "perp-market",
+    "market-13",
+];
+const INTERACTIONS: &[InteractionDescriptor] = &[InteractionDescriptor {
+    id: "settle_pnl",
+    discriminator: &INSTRUCTION,
+    outer_index: Some(2),
+}];
+const DESCRIPTOR: ProtocolDescriptor = ProtocolDescriptor {
+    name: "drift-settle-pnl",
+    program_id: PROGRAM_ID,
+    version: 1,
+    source: Some(SourceIdentity {
+        repository: "https://github.com/velocity-exchange/protocol-v2",
+        commit: "73d22383e621040cd11b94375b6bd2f728f7537e",
+        blobs: &[
+            (
+                "programs/drift/src/lib.rs",
+                "1862893e79b9e34f7ee2f3df08e5a2ccd641eedd",
+            ),
+            (
+                "sdk/src/idl/drift.json",
+                "7232b2925ffcee1f65ad85a0fddbf830add64f12",
+            ),
+            (
+                "programs/drift/src/controller/pnl.rs",
+                "3aae2e82a40cf274c9f9ac519f3efb6a99c38275",
+            ),
+            (
+                "programs/drift/src/controller/amm.rs",
+                "ea334200c138481f36a77c93058d5831ba2da4a4",
+            ),
+            (
+                "programs/drift/src/controller/position.rs",
+                "6b6ec530d529718ffd3d3726f62596d226133492",
+            ),
+            (
+                "programs/drift/src/controller/spot_balance.rs",
+                "f8e1b625e91629e7ab1842b72a67809c8c70b49b",
+            ),
+            (
+                "programs/drift/src/math/spot_balance.rs",
+                "da5261a48708e1c96c79864c0ec4fa37aea21592",
+            ),
+            (
+                "programs/drift/src/math/constants.rs",
+                "ad91a592a2e0b8deffe2cf85122eaecc73444611",
+            ),
+        ],
+    }),
+    interactions: INTERACTIONS,
+};
+const ROLE_RULES: &[RoleRule] = &[
+    RoleRule::writable(0, false),
+    RoleRule::writable(1, true),
+    RoleRule::signer(2, true),
+    RoleRule::writable(3, false),
+    RoleRule::writable(9, true),
+    RoleRule::writable(12, true),
+];
 
 // Offsets include the eight-byte Anchor discriminator. The account sizes and
 // fixed array slots are from the retained IDL, not guessed from changed bytes.
@@ -70,49 +147,36 @@ const SPOT_BORROW_SCALED: usize = 448;
 
 pub struct DriftSettlePnlAdapter;
 
-fn shape(tx: &HistoricalTransaction) -> Result<()> {
-    ensure!(
+fn shape(
+    tx: &HistoricalTransaction,
+) -> std::result::Result<BoundInteraction<'_>, OnboardingFailure> {
+    require_shape(
         tx.signature == SIGNATURE && tx.slot == SLOT && tx.version == "v0" && tx.success,
-        "only the frozen successful direct settlePnl witness is supported"
-    );
-    ensure!(
+        "only the frozen successful direct settlePnl witness is supported",
+    )?;
+    require_shape(
         tx.loaded_address_count == 0 && tx.instructions.len() == 3,
-        "settlePnl message shape differs"
-    );
-    ensure!(
+        "settlePnl message shape differs",
+    )?;
+    require_shape(
         tx.instructions[..2]
             .iter()
             .all(|ix| ix.program == COMPUTE_BUDGET),
-        "settlePnl companion instructions differ"
-    );
-    let ix = &tx.instructions[2];
-    ensure!(
-        ix.program == PROGRAM_ID && ix.data == INSTRUCTION && ix.accounts.len() == ROLES.len(),
-        "settlePnl instruction differs"
-    );
-    ensure!(
-        ix.accounts
-            .iter()
-            .zip(ROLES)
-            .all(|(meta, address)| meta.address == address),
-        "settlePnl account roles differ"
-    );
-    ensure!(
-        !ix.accounts[0].is_writable
-            && ix.accounts[1].is_writable
-            && ix.accounts[2].is_signer
-            && !ix.accounts[3].is_writable
-            && ix.accounts[9].is_writable
-            && ix.accounts[12].is_writable,
-        "settlePnl access roles differ"
-    );
-    ensure!(
+        "settlePnl companion instructions differ",
+    )?;
+    let recognized = DESCRIPTOR.recognize(tx)?;
+    require_shape(
+        recognized.instruction.data == INSTRUCTION,
+        "settlePnl instruction differs",
+    )?;
+    let bound = bind_roles(recognized, &ROLE_LABELS, Some(&ROLES), ROLE_RULES, true)?;
+    require_shape(
         tx.inner_instructions.is_empty()
             && tx.pre_token_balances.as_ref().is_some_and(Vec::is_empty)
             && tx.post_token_balances.as_ref().is_some_and(Vec::is_empty),
-        "settlePnl has unsupported CPI or token flow"
-    );
-    Ok(())
+        "settlePnl has unsupported CPI or token flow",
+    )?;
+    Ok(bound)
 }
 
 fn checked(account: &AccountSnapshot, len: usize, disc: [u8; 8]) -> Option<&[u8]> {
@@ -287,65 +351,18 @@ fn evaluate(accounts: &[NamedAccount], result: &ExecutionResult) -> Option<i64> 
     Some(settled_i64)
 }
 
-fn source_interface() -> RepositoryInterface {
-    RepositoryInterface {
-        repository: "https://github.com/velocity-exchange/protocol-v2".into(),
-        commit: "73d22383e621040cd11b94375b6bd2f728f7537e".into(),
-        source_blobs: [
-            (
-                "programs/drift/src/lib.rs",
-                "1862893e79b9e34f7ee2f3df08e5a2ccd641eedd",
-            ),
-            (
-                "sdk/src/idl/drift.json",
-                "7232b2925ffcee1f65ad85a0fddbf830add64f12",
-            ),
-            (
-                "programs/drift/src/controller/pnl.rs",
-                "3aae2e82a40cf274c9f9ac519f3efb6a99c38275",
-            ),
-            (
-                "programs/drift/src/controller/amm.rs",
-                "ea334200c138481f36a77c93058d5831ba2da4a4",
-            ),
-            (
-                "programs/drift/src/controller/position.rs",
-                "6b6ec530d529718ffd3d3726f62596d226133492",
-            ),
-            (
-                "programs/drift/src/controller/spot_balance.rs",
-                "f8e1b625e91629e7ab1842b72a67809c8c70b49b",
-            ),
-            (
-                "programs/drift/src/math/spot_balance.rs",
-                "da5261a48708e1c96c79864c0ec4fa37aea21592",
-            ),
-            (
-                "programs/drift/src/math/constants.rs",
-                "ad91a592a2e0b8deffe2cf85122eaecc73444611",
-            ),
-        ]
-        .into_iter()
-        .map(|(path, git_blob_sha1)| SourceBlob {
-            path: path.into(),
-            git_blob_sha1: git_blob_sha1.into(),
-        })
-        .collect(),
-    }
-}
-
 impl ProtocolAdapter for DriftSettlePnlAdapter {
     fn name(&self) -> &'static str {
-        "drift-settle-pnl"
+        DESCRIPTOR.name
     }
     fn program_id(&self) -> &'static str {
-        PROGRAM_ID
+        DESCRIPTOR.program_id
     }
     fn adapter_version(&self) -> u32 {
-        1
+        DESCRIPTOR.version
     }
     fn accept_instruction_contract(&self, transaction: &HistoricalTransaction) -> Result<()> {
-        shape(transaction)
+        shape(transaction).map(|_| ()).map_err(Into::into)
     }
     fn label(&self, tx: &HistoricalTransaction, index: usize) -> String {
         let address = tx.account_keys.get(index).map(|key| key.address.as_str());
@@ -376,8 +393,7 @@ impl ProtocolAdapter for DriftSettlePnlAdapter {
         Vec::new()
     }
     fn action_id(&self, tx: &HistoricalTransaction) -> Option<ActionId> {
-        shape(tx).ok()?;
-        ActionId::new("settle_pnl").ok()
+        ActionId::new(shape(tx).ok()?.recognized.id).ok()
     }
     fn evaluate_semantics(
         &self,
@@ -389,8 +405,9 @@ impl ProtocolAdapter for DriftSettlePnlAdapter {
             baseline,
             candidate,
         } = context;
-        if shape(tx).is_err() {
-            return Ok(SemanticEvaluation::Unsupported);
+        match shape(tx) {
+            Ok(_) => {}
+            Err(error) => return evaluation_failure(error),
         }
         let Some(before) = evaluate(pre, baseline) else {
             return Ok(SemanticEvaluation::Unevaluable {
@@ -489,14 +506,18 @@ impl ProtocolAdapter for DriftSettlePnlAdapter {
         baseline_elf: &[u8],
         baseline: &ExecutionEvidence,
     ) -> Result<SemanticBinding> {
-        if shape(tx).is_err() {
-            return Ok(SemanticBinding::ManualOrUnknown);
-        }
-        let source = source_interface();
+        let bound = match shape(tx) {
+            Ok(bound) => bound,
+            Err(_) => return Ok(SemanticBinding::ManualOrUnknown),
+        };
+        let source = DESCRIPTOR
+            .source
+            .expect("pinned Drift source")
+            .repository_interface();
         let accounts = [
-            ("user", ROLES[1]),
-            ("perp-market", ROLES[12]),
-            ("quote-spot-market", ROLES[9]),
+            ("user", bound.address(1)),
+            ("perp-market", bound.address(12)),
+            ("quote-spot-market", bound.address(9)),
         ]
         .into_iter()
         .map(|(label, address)| {
