@@ -9,8 +9,9 @@ use std::sync::Mutex;
 
 use anyhow::{bail, ensure, Context, Result};
 use eplyx_engine::bundle::CiBundle;
-use eplyx_engine::change::{ChangeKind, ChangeSpec};
+use eplyx_engine::change::{ChangeKind, ChangeSpec, Delivery};
 use eplyx_engine::ci::CiReport;
+use eplyx_engine::governance::GovernanceBinding;
 use serde::{Deserialize, Serialize};
 
 use crate::artifacts::{ArtifactRef, ArtifactStore};
@@ -173,6 +174,11 @@ pub struct RunChange {
     #[serde(default)]
     pub label: Option<String>,
     pub origin: ChangeOrigin,
+    /// The governance proposal the spec is bound to, when it names one. Part
+    /// of the spec's identity, so already inside `change_spec_id`; indexed
+    /// here so history can say "Squads #42" without reading every spec.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delivery: Option<Delivery>,
 }
 
 impl RunChange {
@@ -185,6 +191,7 @@ impl RunChange {
             candidate_len: spec.candidate().len,
             label: spec.metadata.label.clone(),
             origin,
+            delivery: spec.delivery().cloned(),
         })
     }
 
@@ -208,6 +215,7 @@ impl RunChange {
         );
         ensure!(
             change.kind == self.kind
+                && change.delivery == self.delivery
                 && change.target_program_id == self.target_program_id
                 && change.candidate_sha256 == self.candidate_sha256
                 && report.candidate.sha256 == self.candidate_sha256
@@ -216,6 +224,17 @@ impl RunChange {
         );
         Ok(())
     }
+}
+
+/// One governance check, as the registry lists it. The evidence is the
+/// sealed binding it names; this record adds only when it was taken.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct GovernanceCheck {
+    pub check_id: String,
+    pub project_id: String,
+    pub change_spec_id: String,
+    pub binding_id: String,
+    pub checked_at_unix_seconds: u64,
 }
 
 /// How one execution attempt of a run ended.
@@ -734,6 +753,153 @@ impl Registry {
             "the stored change spec disagrees with the run's indexed change"
         );
         Ok(spec)
+    }
+
+    // ------------------------------------------------------------ governance
+
+    /// Record one governance check: the sealed binding, content-addressed by
+    /// its own id, then a check record naming it.
+    ///
+    /// Indexed under the change it was asked about *and* the governance-bound
+    /// change it derived, when those differ. Either alone leaves a hole: a
+    /// re-check of a bound change that finds a different or unsupported
+    /// message derives another bound id, and filed only there it would leave
+    /// the bound change showing its last match. The record is written last in
+    /// each index, so a listed check always has its evidence.
+    pub fn record_governance_check(
+        &self,
+        project_id: &str,
+        binding: &GovernanceBinding,
+    ) -> Result<Vec<GovernanceCheck>> {
+        let binding_id = binding.id()?;
+        ensure!(
+            binding.binding_id.as_deref() == Some(binding_id.as_str()),
+            "refusing to store a governance binding that is not sealed"
+        );
+        let mut indexes = vec![binding.analysed_change_spec_id.clone()];
+        if let Some(bound) = &binding.bound_change_spec_id {
+            if bound != &binding.analysed_change_spec_id {
+                indexes.push(bound.clone());
+            }
+        }
+        let check_id = crate::ids::governance_check();
+        let checked_at = now_unix_seconds();
+        let mut document = binding.to_document()?.into_bytes();
+        document.push(b'\n');
+        let mut checks = Vec::new();
+        for index in indexes {
+            let directory = self.storage.project_governance_dir(project_id, &index)?;
+            let evidence = directory
+                .join("bindings")
+                .join(format!("{binding_id}.json"));
+            if !self.storage.exists(&evidence) {
+                self.storage.write_bytes(&evidence, &document)?;
+            }
+            let check = GovernanceCheck {
+                check_id: check_id.clone(),
+                project_id: project_id.to_string(),
+                change_spec_id: index,
+                binding_id: binding_id.clone(),
+                checked_at_unix_seconds: checked_at,
+            };
+            self.storage.write_json(
+                &directory.join("checks").join(format!("{check_id}.json")),
+                &check,
+            )?;
+            checks.push(check);
+        }
+        Ok(checks)
+    }
+
+    /// The most recent checks of one change, newest first, each with its
+    /// evidence re-verified. Stored evidence that no longer verifies fails
+    /// the read rather than being shown: a tampered "matched" is never served.
+    pub fn governance_checks(
+        &self,
+        project_id: &str,
+        change_spec_id: &str,
+        limit: usize,
+    ) -> Result<Vec<(GovernanceCheck, GovernanceBinding)>> {
+        let directory = self
+            .storage
+            .project_governance_dir(project_id, change_spec_id)?;
+        let mut ids = self.child_ids(&directory.join("checks"))?;
+        ids.sort_by(|a, b| b.cmp(a));
+        ids.truncate(limit);
+        let mut checks = Vec::new();
+        for id in ids {
+            let check: GovernanceCheck = self
+                .storage
+                .read_json(&directory.join("checks").join(format!("{id}.json")))?;
+            ensure!(
+                check.check_id == id
+                    && check.project_id == project_id
+                    && check.change_spec_id == change_spec_id,
+                "governance check {id} does not describe this change"
+            );
+            let bytes = self.storage.read_bytes(
+                &directory
+                    .join("bindings")
+                    .join(format!("{}.json", check.binding_id)),
+            )?;
+            let binding = GovernanceBinding::parse(&bytes).with_context(|| {
+                format!("governance evidence {} does not verify", check.binding_id)
+            })?;
+            ensure!(
+                binding.binding_id.as_deref() == Some(check.binding_id.as_str()),
+                "governance evidence is stored under another id"
+            );
+            ensure!(
+                binding.analysed_change_spec_id == change_spec_id
+                    || binding.bound_change_spec_id.as_deref() == Some(change_spec_id),
+                "governance evidence {} is not about change {change_spec_id}",
+                check.binding_id
+            );
+            checks.push((check, binding));
+        }
+        Ok(checks)
+    }
+
+    /// Keep a governance-bound spec a check derived, so it can be found by
+    /// its id and analysed without the caller re-sending it.
+    pub fn save_governance_spec(&self, project_id: &str, spec: &ChangeSpec) -> Result<()> {
+        let id = spec.id()?;
+        let path = self
+            .storage
+            .project_governance_dir(project_id, &id)?
+            .join("change_spec.json");
+        if let Some(existing) = self.load_governance_spec(project_id, &id)? {
+            ensure!(
+                existing.id()? == id,
+                "a different spec is stored under {id}"
+            );
+            return Ok(());
+        }
+        let mut document = spec.to_document()?.into_bytes();
+        document.push(b'\n');
+        self.storage.write_bytes(&path, &document)
+    }
+
+    pub fn load_governance_spec(
+        &self,
+        project_id: &str,
+        change_spec_id: &str,
+    ) -> Result<Option<ChangeSpec>> {
+        let path = self
+            .storage
+            .project_governance_dir(project_id, change_spec_id)?
+            .join("change_spec.json");
+        if !self.storage.exists(&path) {
+            return Ok(None);
+        }
+        let spec = ChangeSpec::parse(&self.storage.read_bytes(&path)?)
+            .context("a stored governance-bound spec does not verify")?;
+        ensure!(
+            spec.id()? == change_spec_id,
+            "the spec stored under {change_spec_id} identifies {}",
+            spec.id()?
+        );
+        Ok(Some(spec))
     }
 
     /// Valid identifiers naming entries directly inside a directory.

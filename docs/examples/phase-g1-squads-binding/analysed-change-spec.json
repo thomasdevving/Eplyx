@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "change_spec_id": "b12411e96dde86d1714003ebec6e3cb5da82646bc724305e9da0eea8af70fd10",
+  "change": {
+    "kind": "program_upgrade",
+    "target": {
+      "program_id": "2RJD1KnDRGEkvuFfAGrJ7PD28LRE9LRDjZznDywagzmr"
+    },
+    "candidate": {
+      "sha256": "9123b40861f73234d46a35fc8754a96a38314bc3efd98200857ba5fff3c36cbe",
+      "len": 37
+    }
+  }
+}

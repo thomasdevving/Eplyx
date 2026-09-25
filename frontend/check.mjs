@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 
-const files = ['index.html','src/app.js','src/landing.js','src/session.js','src/projects.js','src/brand.js','src/intro.js','src/core-scene.js','src/sculpture.js','src/analyse.js','src/report.js','src/change.js','src/analysis.js','src/styles.css','public/logo.svg'];
+const files = ['index.html','src/app.js','src/landing.js','src/session.js','src/projects.js','src/brand.js','src/intro.js','src/core-scene.js','src/sculpture.js','src/analyse.js','src/report.js','src/change.js','src/analysis.js','src/governance.js','src/styles.css','public/logo.svg'];
 const root = new URL('.', import.meta.url);
 const contents = await Promise.all(files.map(file => readFile(new URL(file, root), 'utf8')));
 const all = contents.join('\n');

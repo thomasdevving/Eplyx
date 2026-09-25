@@ -27,6 +27,7 @@ make lint             # clippy -D warnings across both workspaces and both featu
 make fmt-check        # rustfmt across both workspaces
 make fixtures         # regenerate fixtures/states/ after changing corpus.rs
 make impact-fixtures  # regenerate the P3 impact-view CI reports
+make governance-fixtures  # regenerate the G1 Squads binding fixtures
 make report           # JSON to report.json
 make demo-token2022-upgrade   # Phase 7: real Token-2022 upgrade over a real PYUSD transfer
 make demo-cpi-mainnet-replay  # Phase 8: real stake-pool upgrade over a real CPI deposit
@@ -49,7 +50,8 @@ cargo run -p eplyx-engine -- compare [--format json] [--no-minimize] [--fail-on-
 cargo run -p eplyx-engine -- reproduce boundary-position-017   # one fixture
 cargo run -p eplyx-engine -- reproduce newly-liquidatable      # a regression group
 pnpm install && pnpm verify:report                             # JSON contract check
-pnpm check:frontend                                            # page render tests (incl. P3)
+pnpm check:frontend                                            # page render tests (incl. P3, G1)
+pnpm verify:governance                                         # G1 identities, reproduced outside Rust
 python3 scripts/measure-adapter-duplication.py \
   engine/src/protocol/stake_pool.rs engine/src/protocol/token2022.rs "overlap"   # Phase U1 control
 ```
@@ -85,6 +87,17 @@ explicit proposal is written, then checked by content hash:
 eplyx change program-upgrade --program <ID> --candidate cand.so [--store DIR] --out change.json
 eplyx ci check --bundle .eplyx/bundle --change-spec change.json (--artifacts DIR | --candidate cand.so)
 ```
+
+Governance binding (G1; read-only, needs `--rpc-url` or `SOLANA_RPC_URL`):
+
+```bash
+eplyx governance squads bind   --multisig M --transaction-index N --change-spec analysed.json --out bound.json
+eplyx governance squads verify --change-spec bound.json        # re-read now; before approving/executing
+eplyx governance squads acquire --multisig M --transaction-index N --store DIR --out analysed.json
+```
+
+Governance exit codes: 0 matched, 1 stale artefact / different proposal /
+authority mismatch, 2 unverifiable, 4 unsupported proposal.
 
 **Invoke the built binary, not `cargo run`, wherever the exit code matters.**
 `cargo run` replaces the child's exit status, which silently turns every gate
@@ -287,6 +300,38 @@ is tested against engine-produced fixtures in
 `docs/examples/phase-p3-impact-view/` (`make impact-fixtures`; the controlled
 Drift ones are counterexamples, not builds). See `docs/phase-p3-impact-view.md`.
 
+### Governance binding (Phase G1)
+
+`governance::verify_squads_upgrade` binds one Squads V4 vault transaction to a
+ChangeSpec, reading the chain fresh every time; it never signs or executes
+anything. The only supported shape is a stored message that is exactly one
+loader-v3 `Upgrade` (legacy or `close_buffer = true` encoding), the vault as the
+only signer, no lookup tables, no ephemeral signers; everything else is
+`unsupported_proposal`. `ChangeSpec` gained an optional identifying
+`program_upgrade.delivery` (`provider: squads_v4`, every address the exact PDA
+derivation, plus `message_sha256` = `sha256("eplyx-squads-v4-vault-message-v1"
+|| 0x00 || borsh(stored message))`); absent, every C1 ID is unchanged. Three
+identities stay separate: the message (immutable, hashed), the candidate (the
+buffer's bytes *after* its 37-byte header, padding included) and freshness (the
+slot they were read at). **A match is a statement at a slot, never "cannot
+diverge"**; it requires buffer *and* upgrade authority to equal the vault,
+because only then can the bytes change only through another vault-signed
+proposal. Outcomes, in precedence: `unverifiable` > `unsupported_proposal` >
+`different_proposal` > `stale_artifact` > `authority_mismatch` > `matched`.
+Proposal status is observed and reported, never identity or outcome. The
+sealed `GovernanceBinding` is content-addressed (`binding_id`); `parse` refuses
+edits and outcomes that contradict their reasons. An unbound analysis is never
+relabelled: binding yields the governance-bound spec (a new ID), which is
+analysed again with no upload. Hosted: `POST
+/v1/projects/{p}/governance/squads/verify` (needs `EPLYX_GOVERNANCE_RPC_URL`;
+no run reads it) and `GET /v1/projects/{p}/governance/changes/{id}`; a check is
+indexed under the change asked about *and* the bound change derived. The
+server never turns chain bytes into a candidate; `governance squads acquire`
+does, locally and explicitly. Decoder pinned to Squads-Protocol/v4 @
+`af94153f`, program `SQDS4ep6…`; source-to-deployed equality is not claimed.
+`governance::simulated::World` is test/fixture support only. See
+`docs/phase-g1-squads-governance-binding.md`.
+
 ## Conventions and prior decisions
 
 - **Anchor is not used.** It would add a CLI version dependency and a large tree to a program whose job is to be small with a hand-checkable byte layout — and that layout is what the diff engine decodes. Anchor's value (IDL-driven decoding) belongs to the phase supporting third-party protocols.
@@ -311,6 +356,8 @@ Done, on a validated production-derived corpus (Phase 9): automated generation o
 Done, as a pilot-ready product surface (Phase 10): an immutable, hash-addressed offline CI bundle; a versioned semantic finding vocabulary (`protocol/action/domain/subject/change`); `expected-changes.toml` and the expected / unexpected / exceeded / stale / unevaluable review; `eplyx ci check` with stable exit codes; and `eplyx-server`, a thin hosted API over the same engine. Two rules hold the design together: **corpus construction is not CI, corpus consumption is CI**, and **candidate code is built outside Eplyx** — the service never clones a repository or runs a build. Severity is descriptive metadata, never expectation identity and never gate policy. The hosted `report.json` is byte-identical to local `eplyx ci check --format json`. A hosted check is asynchronous: `POST /checks` persists the run and answers `202` with a run id before any replay begins, a detached worker runs it behind the concurrency semaphore, and the frontend polls `GET /v1/runs/{id}`. **`failed` means the engine reached a verdict and it was no; `execution_error` means no verdict was obtained at all** — never conflate them. Since Phase P2 the run record *is* the durable queue entry: startup re-enqueues queued runs and retries interrupted ones as further attempts of the same run (see below). Onboarding is a product surface: `POST /v1/projects`, bundle registration and activation, project-scoped API tokens, and run history, with a frontend console over them. **Two credentials, no user model** — a project token is a CI secret that submits checks for its own project; the operator token (`EPLYX_OPERATOR_TOKEN`, configured not issued) creates projects, issues tokens and activates bundles. A token that lives in a pull request must not be able to change what future pull requests are measured against. **A run pins its bundle at creation and the worker never resolves it again**, so activating a new bundle belongs to the next run. Activation moves a pointer and destroys nothing. Project ids are opaque and minted, never names. See `docs/phase-10-hosted-ci.md`; `scripts/hosted-demo.sh`, `scripts/async-demo.sh` and `scripts/product-demo.sh` prove it end to end.
 
 **Bounded, not general.** The CPI path is one protocol (`SPoo1Ku8…`) and two instructions: `DepositSol` into a pool with no SOL deposit authority, reaching the System and SPL Token programs; and `WithdrawSol`, reaching SPL Token and the deployed Stake program, admitting a strictly-shaped top-level `Approve` companion. One level of invocation, into known programs. Do not describe it as CPI support.
+
+Done, as the first governance binding (Phase G1): Squads V4 vault transactions carrying exactly one loader-v3 program upgrade, bound to a governance-bound ChangeSpec at an observed slot, with typed outcomes, sealed evidence, CLI, hosted endpoint and a compact frontend card. Not a generic governance layer: no other provider, no LUT-backed messages, no `GovernanceExecution` kind, no signing.
 
 Explicitly **not** started, and not to be begun without being asked: general CPI execution beyond that contract, address lookup table execution, account creation/closure in replay, failed-original replay, multi-instruction sequence search, protocols beyond Token-2022 and SPL Stake Pool (lending, vaults, AMMs), a GitHub App, frontend UI, AI analysis, and fiat valuation of protocol assets.
 

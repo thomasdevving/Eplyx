@@ -145,6 +145,11 @@ export function ChangeIdentityRows({ change, spec, resolution } = {}) {
   if (upgrade.target?.programdata_address) rows.push(row('ProgramData', upgrade.target.programdata_address));
   if (upgrade.replaces) rows.push(row('Replaces', `${upgrade.replaces.sha256} (${upgrade.replaces.len} bytes)`));
   if (upgrade.expected_upgrade_authority) rows.push(row('Upgrade authority', upgrade.expected_upgrade_authority));
+  if (upgrade.delivery?.provider === 'squads_v4') {
+    const d = upgrade.delivery;
+    rows.push(row('Delivery', `Squads V4 · transaction #${d.transaction_index} of multisig ${d.multisig} · vault ${d.vault_index}`));
+    rows.push(row('Squads message SHA-256', d.message_sha256));
+  }
   if (spec?.activation?.slot != null) rows.push(row('Activation slot', spec.activation.slot));
   if (spec?.activation?.unix_timestamp != null) rows.push(row('Activation time', spec.activation.unix_timestamp));
   if (spec?.schema_version != null) rows.push(row('Spec schema', `v${spec.schema_version}`));
@@ -172,5 +177,6 @@ export function changeLine(run) {
   }
   const kind = kindOf(change);
   const target = kind.target(change);
-  return `<span class="run-change"><b>${escapeHtml(change.label || kind.title)} → <span class="mono">${escapeHtml(middle(target))}</span></b><small class="mono">change ${escapeHtml(fingerprint(change.change_spec_id))}</small></span>`;
+  const via = change.delivery?.provider === 'squads_v4' ? ` · via Squads #${change.delivery.transaction_index}` : '';
+  return `<span class="run-change"><b>${escapeHtml(change.label || kind.title)} → <span class="mono">${escapeHtml(middle(target))}</span></b><small class="mono">change ${escapeHtml(fingerprint(change.change_spec_id))}${escapeHtml(via)}</small></span>`;
 }

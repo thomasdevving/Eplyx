@@ -23,6 +23,7 @@
 pub mod spl_token;
 pub mod system;
 pub mod token2022;
+pub mod upgradeable_loader;
 
 use serde::{Deserialize, Serialize};
 

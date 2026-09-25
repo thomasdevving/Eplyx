@@ -2,6 +2,7 @@ import { Header, Footer } from './shell.js';
 import { API_BASE, operatorToken } from './session.js';
 import { ChangeCard, ChangeIdentityRows, resolveChange } from './change.js';
 import { analysisView, shortId } from './analysis.js';
+import { governanceView, GovernanceSection, GovernanceRows, deliveryOf } from './governance.js';
 
 /** One request in flight at a time, and never sub-second. */
 const POLL_MS = 1500;
@@ -109,6 +110,17 @@ export function attachReport(id, render) {
     // A legacy run has no stored spec; asking would only earn a 404.
     if (run.change) found.spec = await read(`/v1/runs/${encodeURIComponent(id)}/change_spec.json`);
     if (run.project_id) found.projectName = (await read(`/v1/projects/${encodeURIComponent(run.project_id)}`))?.project?.name ?? null;
+    // Only a change bound to a proposal has governance checks. The server
+    // re-verifies each stored binding on read and refuses one that does not.
+    if (deliveryOf(found.spec) && run.project_id) {
+      try {
+        const response = await ask(`/v1/projects/${encodeURIComponent(run.project_id)}/governance/changes/${encodeURIComponent(run.change.change_spec_id)}`);
+        const body = await response.json().catch(() => ({}));
+        found.governance = response.ok ? { check: body.checks?.[0] ?? null } : { error: body.error ?? `HTTP ${response.status}` };
+      } catch {
+        found.governance = { error: 'the governance checks could not be fetched' };
+      }
+    }
     return found;
   }
 
@@ -305,6 +317,12 @@ function renderReport(live, { demo, id, extras = {} }) {
   const resolution = resolveChange(live, report, extras.spec);
   if (resolution.conflicts.length) return renderIdentityConflict(id, live, resolution);
   const view = analysisView({ run: live, report });
+  const governance = governanceView({
+    delivery: deliveryOf(extras.spec),
+    check: extras.governance?.check ?? null,
+    error: extras.governance?.error ?? null,
+    changeSpecId: resolution.change?.change_spec_id ?? null,
+  });
   if (!report) {
     // The run says a report exists, and this page could not fetch it.
     return shell(id, `
@@ -312,6 +330,7 @@ function renderReport(live, { demo, id, extras = {} }) {
       ${dimensions(view)}
       <div class="report-content">
         ${ChangeCard({ change: resolution.change, legacy: resolution.legacy, targetName: extras.projectName, spec: extras.spec, candidateSha: live.candidate_sha256 })}
+        ${GovernanceSection(governance)}
         <div class="empty-result">The canonical report could not be retrieved for this run, so its findings are not shown here. Fetch <span class="mono">report.json</span> with the project token.</div>
       </div>`);
   }
@@ -333,6 +352,7 @@ function renderReport(live, { demo, id, extras = {} }) {
         <div class="report-content">
           <section id="change"><div class="report-section-title"><span>01</span><h2>Proposed change</h2></div>
             ${ChangeCard({ change: resolution.change, legacy: resolution.legacy, targetName: extras.projectName, spec: extras.spec, candidateSha: live.candidate_sha256 })}
+            ${GovernanceSection(governance)}
           </section>
           <section id="result"><div class="report-section-title"><span>02</span><h2>Result</h2></div>
             ${renderPrimary(view)}
@@ -352,7 +372,7 @@ function renderReport(live, { demo, id, extras = {} }) {
             ${renderProof(view)}
           </section>
           <section id="technical" data-technical><div class="report-section-title"><span>06</span><h2>Technical details</h2></div>
-            ${renderTechnical({ live, report, resolution, extras })}
+            ${renderTechnical({ live, report, resolution, extras, governance })}
           </section>
         </div>
       </div>
@@ -491,7 +511,7 @@ function renderProof(view) {
 }
 
 /** Everything, in full, one layer down. Nothing technical was removed. */
-function renderTechnical({ live, report, resolution, extras }) {
+function renderTechnical({ live, report, resolution, extras, governance }) {
   const bundle = report.bundle ?? {};
   const replay = report.replay_proof;
   const binding = report.semantic_binding;
@@ -515,6 +535,7 @@ function renderTechnical({ live, report, resolution, extras }) {
   return `<details class="technical"><summary>Show identities, proof and raw evidence</summary>
       <h3 class="provenance-heading">Proposed change</h3>
       <div class="provenance-table">${ChangeIdentityRows({ change: resolution.change, spec: extras.spec, resolution })}</div>
+      ${governance?.rows?.length ? `<h3 class="provenance-heading">Governance binding</h3><div class="provenance-table">${GovernanceRows(governance)}</div>` : ''}
       <h3 class="provenance-heading">Evidence</h3>
       <div class="provenance-table">
         ${row('Program', bundle.program_id)}

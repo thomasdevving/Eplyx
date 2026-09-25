@@ -5,7 +5,7 @@
 SHELL := /bin/bash
 CARGO := cargo
 
-.PHONY: all build programs compare report fixtures impact-fixtures test test-engine test-programs fmt fmt-check lint clean demo-replay demo-discovery demo-mainnet-replay demo-token2022-upgrade demo-cpi-mainnet-replay memo-candidate token2022-candidate stake-pool-candidate
+.PHONY: all build programs compare report fixtures impact-fixtures governance-fixtures test test-engine test-programs fmt fmt-check lint clean demo-replay demo-discovery demo-mainnet-replay demo-token2022-upgrade demo-cpi-mainnet-replay memo-candidate token2022-candidate stake-pool-candidate
 
 all: compare
 
@@ -29,6 +29,10 @@ fixtures:
 impact-fixtures:
 	EPLYX_WRITE_IMPACT_FIXTURES=1 $(CARGO) test -q -p eplyx-engine --test drift_settle_semantics impact_view
 	EPLYX_WRITE_IMPACT_FIXTURES=1 $(CARGO) test -q -p eplyx-engine --test orca_swap_semantics impact_view
+
+## Regenerate the G1 Squads binding fixtures (simulated accounts, real verifier).
+governance-fixtures:
+	EPLYX_WRITE_GOVERNANCE_FIXTURES=1 $(CARGO) test -q -p eplyx-engine --lib governance_fixtures_are_current
 
 ## Everything: program unit tests plus the differential suite.
 #
