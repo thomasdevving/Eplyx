@@ -11,12 +11,35 @@ use std::path::{Path, PathBuf};
 
 use base64::Engine;
 use eplyx_engine::change::{CandidateSource, ChangeSpec, Delivery};
+use eplyx_engine::governance::attestation::{DeploymentAttestation, DeploymentOutcome};
 use eplyx_engine::governance::squads::{self, ProposalStatusKind};
 use eplyx_engine::governance::{BindingOutcome, GovernanceBinding};
 use solana_address::Address;
 
 fn root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../docs/examples/phase-g1-1-squads-mainnet")
+}
+
+#[test]
+fn real_pre_execution_g2_attestation_is_sealed_and_separate_from_g1() {
+    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../docs/examples/phase-g2-squads-mainnet/active-not-executed.json");
+    let proof = DeploymentAttestation::parse(&std::fs::read(path).unwrap()).unwrap();
+    assert_eq!(proof.outcome, DeploymentOutcome::NotExecuted);
+    assert!(proof.execution.is_none());
+    assert_eq!(
+        proof.binding_id,
+        binding(&root().join("witness-primary/bind.json"))
+            .id()
+            .unwrap()
+    );
+    assert_eq!(
+        proof.change_spec_id,
+        ChangeSpec::load(&root().join("witness-primary/bound-change-spec.json"))
+            .unwrap()
+            .id()
+            .unwrap()
+    );
 }
 
 fn binding(path: &Path) -> GovernanceBinding {

@@ -21,6 +21,7 @@ use axum::routing::{get, post};
 use axum::{Json, Router};
 use eplyx_engine::change::{CandidateSource, ChangeSpec};
 use eplyx_engine::ci;
+use eplyx_engine::governance::attestation::{self, DeploymentAttestation};
 use eplyx_engine::governance::{
     self, BindingOutcome, Commitment, GovernanceBinding, SquadsProposalRef,
 };
@@ -184,6 +185,10 @@ pub fn router(state: Shared) -> Router {
         .route(
             "/v1/projects/{project_id}/governance/squads/verify",
             post(verify_squads_governance),
+        )
+        .route(
+            "/v1/projects/{project_id}/governance/squads/attest",
+            post(attest_squads_governance),
         )
         .route(
             "/v1/projects/{project_id}/governance/changes/{change_spec_id}",
@@ -856,6 +861,76 @@ struct SquadsVerifyRequest {
     commitment: Option<Commitment>,
 }
 
+#[derive(serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+struct SquadsAttestRequest {
+    change_spec_id: String,
+    binding_id: String,
+}
+
+/// Check a previously bound change against the exact successful Squads
+/// execution, then persist a separate immutable post-execution proof.
+async fn attest_squads_governance(
+    State(state): State<Shared>,
+    Path(project_id): Path<String>,
+    headers: HeaderMap,
+    body: Bytes,
+) -> ApiResult<Response> {
+    let project = project_for(&state, &project_id, &headers)?;
+    let request: SquadsAttestRequest = parse_json(&body)?;
+    if !crate::artifacts::canonical_sha256(&request.change_spec_id)
+        || !crate::artifacts::canonical_sha256(&request.binding_id)
+    {
+        return Err(ApiError::bad_request(
+            "change_spec_id and binding_id must be canonical SHA-256 identifiers",
+        ));
+    }
+    let rpc = state.governance.clone().ok_or_else(|| {
+        ApiError::new(
+            StatusCode::SERVICE_UNAVAILABLE,
+            "governance verification is not configured on this server (EPLYX_GOVERNANCE_RPC_URL)",
+        )
+    })?;
+    let spec = state
+        .registry
+        .load_governance_spec(&project.project_id, &request.change_spec_id)
+        .map_err(|e| ApiError::internal(format!("loading governance-bound change: {e:#}")))?
+        .ok_or_else(|| ApiError::not_found("governance-bound change"))?;
+    let binding = state
+        .registry
+        .governance_checks(&project.project_id, &request.change_spec_id, 100)
+        .map_err(|e| ApiError::internal(format!("loading sealed G1 bindings: {e:#}")))?
+        .into_iter()
+        .map(|(_, binding)| binding)
+        .find(|binding| binding.binding_id.as_deref() == Some(request.binding_id.as_str()))
+        .ok_or_else(|| ApiError::not_found("matched G1 binding for this change"))?;
+    if !state
+        .registry
+        .project_holds_artifact(&project.project_id, &spec.candidate().sha256)
+        .map_err(|e| ApiError::internal(format!("checking candidate ownership: {e:#}")))?
+    {
+        return Err(ApiError::not_found("candidate artifact in this project"));
+    }
+    let candidate = state
+        .registry
+        .artifacts()
+        .get_program(&ArtifactRef::from(spec.candidate()))
+        .map_err(|e| ApiError::internal(format!("candidate artifact does not verify: {e:#}")))?;
+    let attestation: DeploymentAttestation = tokio::task::spawn_blocking(move || {
+        attestation::attest_squads_upgrade(rpc.as_ref(), &spec, &binding, &candidate)
+    })
+    .await
+    .map_err(|e| ApiError::internal(format!("deployment attestation stopped: {e}")))?
+    .map_err(|e| {
+        ApiError::bad_request(format!("deployment attestation precondition failed: {e:#}"))
+    })?;
+    state
+        .registry
+        .record_deployment_attestation(&project.project_id, &attestation)
+        .map_err(|e| ApiError::internal(format!("recording deployment attestation: {e:#}")))?;
+    Ok((StatusCode::OK, Json(attestation)).into_response())
+}
+
 /// The analysed spec a request names: a run of this project, or a change this
 /// project has analysed or bound before. Always re-verified on read.
 fn analysed_spec(
@@ -1102,9 +1177,13 @@ async fn list_governance_checks(
         .into_iter()
         .map(|(check, binding)| GovernanceCheckView::of(check, binding, None))
         .collect();
+    let attestations = state
+        .registry
+        .deployment_attestations(&project.project_id, &change_spec_id, 20)
+        .map_err(|error| ApiError::internal(format!("{error:#}")))?;
     Ok((
         StatusCode::OK,
-        Json(json!({ "change_spec_id": change_spec_id, "checks": checks })),
+        Json(json!({ "change_spec_id": change_spec_id, "checks": checks, "attestations": attestations })),
     )
         .into_response())
 }

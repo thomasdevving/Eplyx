@@ -94,6 +94,7 @@ Governance binding (G1; read-only, needs `--rpc-url` or `SOLANA_RPC_URL`):
 eplyx governance squads bind   --multisig M --transaction-index N --change-spec analysed.json --out bound.json
 eplyx governance squads verify --change-spec bound.json        # re-read now; before approving/executing
 eplyx governance squads acquire --multisig M --transaction-index N --store DIR --out analysed.json
+eplyx governance squads attest --change-spec bound.json --binding matched-g1.json --artifacts DIR --rpc-url URL --format json
 ```
 
 Governance exit codes: 0 matched, 1 stale artefact / different proposal /
@@ -343,6 +344,25 @@ indistinguishable from `Executed` (label only). Real buffers are unpadded ELFs.
 The consistency read waits out JSON-RPC `-32016` (a lagging node) and never
 accepts an older view. See `docs/phase-g1-1-squads-mainnet-qualification.md`
 and `scripts/qualify-g1-squads-mainnet.mjs`.
+
+### Deployment attestation (Phase G2)
+
+`governance::attestation::attest_squads_upgrade` is a separate post-execution
+claim. It needs a sealed finalized G1 match, the governance-bound ChangeSpec
+and its hash-checked P2 candidate. It locates the exact successful Squads V4
+execute transaction by Proposal PDA, validates the multisig/Proposal/transaction
+accounts and the loader Upgrade CPI, and compares current ProgramData only
+when its deploy slot is the execution slot and universal
+`screening::screen_later` proves no later same-slot Program/ProgramData writer.
+ProgramData comparison is candidate prefix equality plus all-zero allocation
+padding. A later deployment is `superseded`, never a byte mismatch. The sealed
+G2 record is appended under the bound change; G1 evidence is unchanged. Hosted:
+`POST /v1/projects/{p}/governance/squads/attest` with `change_spec_id` and
+`binding_id`; `GET /governance/changes/{id}` includes G2 history. The primary
+G1.1 witness ran through production G2 on mainnet and returned sealed
+`not_executed` at slot 450,385,784. Mainnet `deployed_match` remains
+unqualified because none of the committed sealed G1 witnesses has executed.
+See `docs/phase-g2-squads-deployment-attestation.md`.
 
 ## Conventions and prior decisions
 

@@ -116,7 +116,7 @@ export function attachReport(id, render) {
       try {
         const response = await ask(`/v1/projects/${encodeURIComponent(run.project_id)}/governance/changes/${encodeURIComponent(run.change.change_spec_id)}`);
         const body = await response.json().catch(() => ({}));
-        found.governance = response.ok ? { check: body.checks?.[0] ?? null } : { error: body.error ?? `HTTP ${response.status}` };
+        found.governance = response.ok ? { check: body.checks?.[0] ?? null, attestation: body.attestations?.[0] ?? null } : { error: body.error ?? `HTTP ${response.status}` };
       } catch {
         found.governance = { error: 'the governance checks could not be fetched' };
       }
@@ -320,6 +320,7 @@ function renderReport(live, { demo, id, extras = {} }) {
   const governance = governanceView({
     delivery: deliveryOf(extras.spec),
     check: extras.governance?.check ?? null,
+    attestation: extras.governance?.attestation ?? null,
     error: extras.governance?.error ?? null,
     changeSpecId: resolution.change?.change_spec_id ?? null,
   });

@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "kind": "eplyx-squads-deployment-attestation-v1",
+  "attestation_id": "92135e769176e02c1c49db66c527957eac675d8ea4871fb6231319208b50666e",
+  "change_spec_id": "cba0af68dc7376c33ab85610f1bbde30c58d6512aaf4a3f8d9c8949d95214536",
+  "binding_id": "8fb53bc240c8149914a8607e30319a17a4612a417642a2d8c606c12f72a8d819",
+  "commitment": "finalized",
+  "multisig": "8fJvcwpRbEaTsRPcxWrrUHDPPstSnWSctQH7s4KYzgSy",
+  "transaction_index": 1,
+  "proposal": "AZrF6aoevkCgMjpLcP5SBLf1ktcmtfb8TJkX66c6Xzrp",
+  "vault_transaction": "EPSAEZxXWmDojSPvaom19d7jN1xgfMBMMyfooe2EhBt8",
+  "message_sha256": "f3760817e9c10c55012ec22c19218e7989a0fb2a14372f96b08bb269fa65ee89",
+  "target_program": "6pppX8DZWkYBTpveVAteaHCzErphchSYMvyTtGhpySfm",
+  "programdata": "GfAzhPuw7kT2mVn8DWdRX4ApD22vFdUFYcckwJ6SXBha",
+  "candidate": {
+    "sha256": "b10c1c9355105987a5d36996aa3abbd94b41f72536a57edd6a91186692a0761d",
+    "len": 38768
+  },
+  "observed_slot": 450385784,
+  "execution": null,
+  "deployed": null,
+  "outcome": "not_executed",
+  "reasons": [
+    "Proposal status is Active"
+  ]
+}

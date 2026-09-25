@@ -369,7 +369,10 @@ fn encode_account(account: &AccountSnapshot) -> Value {
 
 impl RpcProvider for World {
     fn call(&self, method: &str, params: Value) -> Result<Value> {
-        anyhow::ensure!(method == "getMultipleAccounts", "unexpected RPC {method}");
+        anyhow::ensure!(
+            matches!(method, "getMultipleAccounts" | "getAccountInfo"),
+            "unexpected RPC {method}"
+        );
         let mut state = self.state.lock().expect("state");
         anyhow::ensure!(
             !state.fail,
@@ -377,13 +380,18 @@ impl RpcProvider for World {
         );
         state.slot += 1;
         let accounts = state.accounts();
-        let keys: Vec<String> = params[0]
-            .as_array()
-            .expect("key list")
-            .iter()
-            .map(|k| k.as_str().expect("key").to_string())
-            .collect();
-        self.reads.lock().expect("reads").push(keys.clone());
+        let keys: Vec<String> = if method == "getMultipleAccounts" {
+            let keys: Vec<String> = params[0]
+                .as_array()
+                .expect("key list")
+                .iter()
+                .map(|k| k.as_str().expect("key").to_string())
+                .collect();
+            self.reads.lock().expect("reads").push(keys.clone());
+            keys
+        } else {
+            vec![params[0].as_str().expect("account key").to_string()]
+        };
         let values: Vec<Value> = keys
             .iter()
             .map(|k| {
@@ -394,6 +402,10 @@ impl RpcProvider for World {
                 }
             })
             .collect();
-        Ok(json!({"context": {"slot": state.slot}, "value": values}))
+        if method == "getAccountInfo" {
+            Ok(json!({"context": {"slot": state.slot}, "value": values[0]}))
+        } else {
+            Ok(json!({"context": {"slot": state.slot}, "value": values}))
+        }
     }
 }

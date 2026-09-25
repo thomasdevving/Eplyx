@@ -11,6 +11,7 @@ use anyhow::{bail, ensure, Context, Result};
 use eplyx_engine::bundle::CiBundle;
 use eplyx_engine::change::{ChangeKind, ChangeSpec, Delivery};
 use eplyx_engine::ci::CiReport;
+use eplyx_engine::governance::attestation::DeploymentAttestation;
 use eplyx_engine::governance::GovernanceBinding;
 use serde::{Deserialize, Serialize};
 
@@ -858,6 +859,74 @@ impl Registry {
             checks.push((check, binding));
         }
         Ok(checks)
+    }
+
+    /// Append a sealed G2 observation. Older records are immutable historical
+    /// statements; re-attesting after another upgrade writes a new record.
+    pub fn record_deployment_attestation(
+        &self,
+        project_id: &str,
+        attestation: &DeploymentAttestation,
+    ) -> Result<()> {
+        let id = attestation
+            .attestation_id
+            .as_deref()
+            .context("attestation is unsealed")?;
+        ensure!(
+            DeploymentAttestation::parse(attestation.to_document()?.as_bytes())?
+                .attestation_id
+                .as_deref()
+                == Some(id),
+            "refusing an invalid deployment attestation"
+        );
+        let directory = self
+            .storage
+            .project_governance_dir(project_id, &attestation.change_spec_id)?;
+        let path = directory.join("attestations").join(format!("{id}.json"));
+        if self.storage.exists(&path) {
+            let existing = DeploymentAttestation::parse(&self.storage.read_bytes(&path)?)?;
+            ensure!(
+                existing == *attestation,
+                "a different attestation already has id {id}"
+            );
+        } else {
+            self.storage
+                .write_bytes(&path, attestation.to_document()?.as_bytes())?;
+        }
+        Ok(())
+    }
+
+    pub fn deployment_attestations(
+        &self,
+        project_id: &str,
+        change_spec_id: &str,
+        limit: usize,
+    ) -> Result<Vec<DeploymentAttestation>> {
+        let directory = self
+            .storage
+            .project_governance_dir(project_id, change_spec_id)?
+            .join("attestations");
+        let mut ids = self.child_ids(&directory)?;
+        ids.sort_by(|a, b| b.cmp(a));
+        let mut attestations: Vec<DeploymentAttestation> = ids
+            .into_iter()
+            .map(|id| {
+                let attestation = DeploymentAttestation::parse(
+                    &self
+                        .storage
+                        .read_bytes(&directory.join(format!("{id}.json")))?,
+                )?;
+                ensure!(
+                    attestation.attestation_id.as_deref() == Some(id.as_str())
+                        && attestation.change_spec_id == change_spec_id,
+                    "deployment attestation is stored under another identity"
+                );
+                Ok(attestation)
+            })
+            .collect::<Result<_>>()?;
+        attestations.sort_by_key(|a| std::cmp::Reverse(a.observed_slot));
+        attestations.truncate(limit);
+        Ok(attestations)
     }
 
     /// Keep a governance-bound spec a check derived, so it can be found by

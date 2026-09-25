@@ -425,6 +425,26 @@ enum SquadsCommand {
     /// Derive the analysed spec a proposal implies from the chain, storing
     /// the buffer's current bytes as a content-addressed candidate.
     Acquire(SquadsAcquireArgs),
+    /// Verify execution and deployed bytes using a sealed pre-execution G1
+    /// binding and the content-addressed P2 candidate store.
+    Attest(SquadsAttestArgs),
+}
+
+#[derive(Parser)]
+struct SquadsAttestArgs {
+    #[arg(long)]
+    change_spec: PathBuf,
+    #[arg(long)]
+    binding: PathBuf,
+    /// P2 content-addressed store root containing programs/<sha256>.
+    #[arg(long)]
+    artifacts: PathBuf,
+    #[arg(long)]
+    evidence_out: Option<PathBuf>,
+    #[arg(long, value_enum, default_value_t = Format::Text)]
+    format: Format,
+    #[command(flatten)]
+    chain: SquadsChainArgs,
 }
 
 #[derive(Parser)]
@@ -1236,6 +1256,7 @@ fn run() -> Result<ExitCode> {
             SquadsCommand::Bind(args) => squads_bind(args),
             SquadsCommand::Verify(args) => squads_verify(args),
             SquadsCommand::Acquire(args) => squads_acquire(args),
+            SquadsCommand::Attest(args) => squads_attest(args),
         },
         Command::Bundle {
             command: BundleCommand::Build(build_args),
@@ -1827,6 +1848,58 @@ fn squads_commitment(args: &SquadsChainArgs) -> eplyx_engine::governance::Commit
         CommitmentArg::Confirmed => eplyx_engine::governance::Commitment::Confirmed,
         CommitmentArg::Finalized => eplyx_engine::governance::Commitment::Finalized,
     }
+}
+
+fn squads_attest(args: SquadsAttestArgs) -> Result<ExitCode> {
+    use eplyx_engine::change::CandidateSource;
+    use eplyx_engine::governance::attestation::{attest_squads_upgrade, DeploymentOutcome};
+    use eplyx_engine::governance::GovernanceBinding;
+    anyhow::ensure!(
+        matches!(args.chain.commitment, CommitmentArg::Finalized),
+        "deployment attestation requires finalized RPC evidence"
+    );
+    let spec = eplyx_engine::change::ChangeSpec::load(&args.change_spec)?;
+    let binding = GovernanceBinding::parse(&std::fs::read(&args.binding)?)?;
+    let candidate = spec.resolve(CandidateSource::Store(&args.artifacts))?;
+    let rpc = squads_rpc(&args.chain)?;
+    let attestation = attest_squads_upgrade(&rpc, &spec, &binding, candidate.bytes())?;
+    let document = attestation.to_document()?;
+    if let Some(path) = &args.evidence_out {
+        std::fs::write(path, format!("{document}\n"))
+            .with_context(|| format!("writing {}", path.display()))?;
+    }
+    match args.format {
+        Format::Json => println!("{document}"),
+        _ => {
+            println!("EPLYX DEPLOYMENT ATTESTATION\n============================\n");
+            println!("Result:    {:?}", attestation.outcome);
+            println!(
+                "Proposal:  Squads #{} of {}",
+                attestation.transaction_index, attestation.multisig
+            );
+            if let Some(execution) = &attestation.execution {
+                println!(
+                    "Execution: {} at slot {} index {:?}",
+                    execution.signature, execution.slot, execution.transaction_index
+                );
+            }
+            for reason in &attestation.reasons {
+                println!("  - {reason}");
+            }
+            println!(
+                "Evidence:  {}",
+                attestation.attestation_id.as_deref().unwrap_or("unsealed")
+            );
+        }
+    }
+    Ok(ExitCode::from(match attestation.outcome {
+        DeploymentOutcome::DeployedMatch => 0,
+        DeploymentOutcome::DeployedMismatch => 1,
+        DeploymentOutcome::Superseded
+        | DeploymentOutcome::NotExecuted
+        | DeploymentOutcome::Unverifiable => 2,
+        DeploymentOutcome::Unsupported => 4,
+    }))
 }
 
 fn render_binding(binding: &eplyx_engine::governance::GovernanceBinding) -> String {
