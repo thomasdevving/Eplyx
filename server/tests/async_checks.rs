@@ -337,7 +337,13 @@ async fn uploaded_inputs_outlive_the_request_and_are_cleared_at_the_end() {
     // The handler has returned. A request-scoped temporary directory would have
     // taken these with it.
     let work = harness.work_dir(&run_id);
-    assert!(work.join("candidate.so").exists(), "candidate was deleted");
+    // Staged by content, under the hash the run's change spec commits to.
+    let sha = eplyx_engine::replay::hash_bytes(&candidate_bytes());
+    assert_eq!(body["change"]["candidate_sha256"], sha.as_str());
+    assert!(
+        work.join("artifacts/programs").join(&sha).exists(),
+        "candidate was deleted"
+    );
     assert!(
         work.join("expected-changes.toml").exists(),
         "expectations were deleted"

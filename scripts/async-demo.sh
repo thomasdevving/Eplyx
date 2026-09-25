@@ -89,7 +89,9 @@ check "markdown refused" "$(curl -s -o /dev/null -w '%{http_code}' "$URL/v1/runs
 sleep 1
 check "still queued a second later" "$(run_field "$GATED" status)" "queued"
 check "never started" "$(run_field "$GATED" started_at_unix_seconds)" ""
-check "inputs still staged" "$([ -f "$EPLYX_DATA_DIR/runs/$GATED/work/candidate.so" ] && echo yes || echo no)" "yes"
+GATED_SHA=$(run_field "$GATED" candidate_sha256)
+check "inputs still staged" "$([ -f "$EPLYX_DATA_DIR/runs/$GATED/work/artifacts/programs/$GATED_SHA" ] && echo yes || echo no)" "yes"
+check "change spec stored" "$([ -f "$EPLYX_DATA_DIR/runs/$GATED/change_spec.json" ] && echo yes || echo no)" "yes"
 
 echo
 echo "== a restart resolves what it was holding =="

@@ -19,7 +19,9 @@ use axum::http::{header, HeaderMap, Method, StatusCode};
 use axum::response::{IntoResponse, Response};
 use axum::routing::{get, post};
 use axum::{Json, Router};
+use eplyx_engine::change::{CandidateSource, ChangeSpec};
 use eplyx_engine::ci;
+use eplyx_engine::universal::evidence::{EvidenceKind, EvidenceStore};
 use serde::Serialize;
 use serde_json::json;
 use tower_http::cors::CorsLayer;
@@ -28,7 +30,9 @@ use crate::config::Config;
 use crate::project::{
     validate_name, validate_program_id, AdapterId, Chain, Project, ProjectStatus, ProjectToken,
 };
-use crate::registry::{now_unix_seconds, ProjectBundle, Registry, RunMetadata, RunStatus};
+use crate::registry::{
+    now_unix_seconds, ChangeOrigin, ProjectBundle, Registry, RunChange, RunMetadata, RunStatus,
+};
 use crate::worker;
 
 pub struct AppState {
@@ -40,6 +44,12 @@ pub struct AppState {
 }
 
 pub type Shared = Arc<AppState>;
+
+/// A change spec is a few hundred bytes of identity. Anything near this is not
+/// one, and parsing it would only cost memory.
+pub const MAX_CHANGE_SPEC_BYTES: usize = 64 * 1024;
+/// A display label, not a document.
+pub const MAX_LABEL_CHARS: usize = 120;
 
 /// An API-level fault, as opposed to a candidate failing policy.
 pub struct ApiError {
@@ -113,11 +123,11 @@ fn parse_json<T: serde::de::DeserializeOwned>(body: &Bytes) -> ApiResult<T> {
 }
 
 pub fn router(state: Shared) -> Router {
-    let limit = state
-        .config
-        .max_bundle_bytes
-        .max(state.config.max_candidate_bytes + state.config.max_expectation_bytes)
-        + 64 * 1024;
+    let limit = state.config.max_bundle_bytes.max(
+        state.config.max_candidate_bytes
+            + state.config.max_expectation_bytes
+            + MAX_CHANGE_SPEC_BYTES,
+    ) + 64 * 1024;
     // A browser sends a preflight for any request carrying an Authorization
     // header, and without this the router answered it with 405 and no
     // Access-Control-Allow-Origin, so the documented separate-origin frontend
@@ -162,6 +172,7 @@ pub fn router(state: Shared) -> Router {
         .route("/v1/runs/{run_id}", get(get_run))
         .route("/v1/runs/{run_id}/report.json", get(get_report_json))
         .route("/v1/runs/{run_id}/report.md", get(get_report_markdown))
+        .route("/v1/runs/{run_id}/change_spec.json", get(get_change_spec))
         .layer(DefaultBodyLimit::max(limit))
         .layer(cors)
         .with_state(state)
@@ -293,6 +304,11 @@ struct AcceptedResponse {
     project_id: String,
     status: RunStatus,
     status_url: String,
+    /// What was accepted for analysis, already bound to the pinned bundle.
+    /// Identity is known before any replay; a verdict is not.
+    change: RunChange,
+    candidate_sha256: String,
+    bundle_sha256: String,
 }
 
 /// Accept a check and return immediately.
@@ -315,9 +331,7 @@ async fn create_check(
             .load_project(&project_id)
             .map_err(|_| ApiError::not_found("project"))?,
     };
-    let (candidate, expectations) = read_upload(&state, multipart).await?;
-
-    let candidate = candidate.ok_or_else(|| ApiError::bad_request("candidate is required"))?;
+    let upload = read_upload(&state, multipart).await?;
 
     // Readiness is a hosted configuration question, answered before a run
     // exists. It is deliberately not an Eplyx exit code: nothing was measured,
@@ -352,26 +366,94 @@ async fn create_check(
             )
             .with_exit_code(ci::EXIT_INCOMPATIBLE)
         })?;
+    let manifest = bundle.manifest();
+    let bundle_dir = state
+        .registry
+        .storage()
+        .bundle_path(&bundle_sha256)
+        .map_err(|error| ApiError::internal(format!("bundle path: {error}")))?;
+
+    // ---- the proposal, fixed before the run exists ------------------------
+    //
+    // Candidate bytes alone stand for the minimal program upgrade of the pinned
+    // bundle's program, exactly as `eplyx ci check --candidate` does. An
+    // explicit spec is authoritative, and the bytes only satisfy its artefact
+    // reference. Either way the spec is bound to the pinned bundle and the bytes
+    // are verified against it here, so a proposal that does not fit, or bytes
+    // it did not describe, never become a queued run.
+    let candidate = upload.candidate.ok_or_else(|| match upload.change_spec {
+        Some(_) => ApiError::bad_request(
+            "the change spec names its candidate by hash; supply the bytes as the `candidate` part",
+        )
+        .with_exit_code(ci::EXIT_ERROR),
+        None => ApiError::bad_request("candidate is required"),
+    })?;
+    let (spec, origin) = match &upload.change_spec {
+        Some(document) => {
+            if upload.label.is_some() {
+                return Err(ApiError::bad_request(
+                    "`label` cannot accompany an explicit change spec; put it in the spec's metadata",
+                )
+                .with_exit_code(ci::EXIT_ERROR));
+            }
+            let spec = ChangeSpec::parse(document).map_err(|error| {
+                ApiError::bad_request(format!("invalid change spec: {error:#}"))
+                    .with_exit_code(ci::EXIT_ERROR)
+            })?;
+            (spec, ChangeOrigin::Submitted)
+        }
+        None => {
+            let mut spec = ChangeSpec::program_upgrade(&manifest.program_id, &candidate);
+            spec.metadata.label = upload.label.clone();
+            (spec, ChangeOrigin::DerivedFromCandidate)
+        }
+    };
+    let binding = ci::bind_change(&bundle_dir, &spec).map_err(|error| {
+        let status = match error {
+            ci::CheckError::Bundle(_) => StatusCode::CONFLICT,
+            ci::CheckError::Configuration(_) => StatusCode::BAD_REQUEST,
+        };
+        ApiError::new(status, format!("{error}")).with_exit_code(error.exit_code())
+    })?;
+    spec.resolve(CandidateSource::Bytes(&candidate))
+        .map_err(|error| {
+            ApiError::bad_request(format!("{error:#}")).with_exit_code(ci::EXIT_ERROR)
+        })?;
+    let change = RunChange::of(&spec, origin)
+        .map_err(|error| ApiError::internal(format!("identifying the change: {error}")))?;
+    if binding.change_spec_id != change.change_spec_id {
+        return Err(ApiError::internal(
+            "the bound change and the resolved change disagree",
+        ));
+    }
 
     let run_id = new_run_id();
 
     // Staged under the run, not in a request-scoped temporary directory: this
     // handler returns long before the worker reads these, and a TempDir dropped
     // with the response would delete the candidate out from under the run.
+    //
+    // Content-addressed, not named: the worker resolves the candidate by the
+    // hash its stored spec commits to, and the store re-hashes on read. There is
+    // no file whose name means "the candidate".
     let work = state
         .registry
         .run_work_dir(&run_id)
         .map_err(|error| ApiError::internal(format!("run workspace: {error}")))?;
     std::fs::create_dir_all(&work)
         .map_err(|error| ApiError::internal(format!("run workspace: {error}")))?;
-    std::fs::write(work.join("candidate.so"), &candidate)
+    EvidenceStore::at(work.join("artifacts"))
+        .put(EvidenceKind::ProgramBinary, &candidate)
         .map_err(|error| ApiError::internal(format!("staging the candidate: {error}")))?;
-    if let Some(bytes) = &expectations {
+    if let Some(bytes) = &upload.expectations {
         std::fs::write(work.join("expected-changes.toml"), bytes)
             .map_err(|error| ApiError::internal(format!("staging the expectations: {error}")))?;
     }
+    state
+        .registry
+        .save_change_spec(&run_id, &spec)
+        .map_err(|error| ApiError::internal(format!("persisting the change spec: {error}")))?;
 
-    let manifest = bundle.manifest();
     let metadata = RunMetadata {
         run_id: run_id.clone(),
         project_id: project.project_id.clone(),
@@ -380,7 +462,8 @@ async fn create_check(
         bundle_id: Some(active.bundle_id.clone()),
         corpus_sha256: Some(manifest.corpus_sha256.clone()),
         baseline_sha256: Some(manifest.baseline_program_sha256.clone()),
-        candidate_sha256: eplyx_engine::replay::hash_bytes(&candidate),
+        candidate_sha256: change.candidate_sha256.clone(),
+        change: Some(change.clone()),
         adapter: Some(bundle.adapter().name.clone()),
         adapter_version: Some(bundle.adapter().version),
         semantic_schema_version: Some(manifest.semantic_schema_version),
@@ -403,6 +486,10 @@ async fn create_check(
         .registry
         .index_run(&project.project_id, &run_id)
         .map_err(|error| ApiError::internal(format!("indexing the run: {error}")))?;
+    state
+        .registry
+        .index_change(&project.project_id, &change.change_spec_id, &run_id)
+        .map_err(|error| ApiError::internal(format!("indexing the change: {error}")))?;
     worker::spawn(Arc::clone(&state), run_id.clone());
 
     Ok((
@@ -412,21 +499,36 @@ async fn create_check(
             run_id,
             project_id,
             status: RunStatus::Queued,
+            candidate_sha256: change.candidate_sha256.clone(),
+            change,
+            bundle_sha256: manifest.bundle_sha256.clone(),
         }),
     )
         .into_response())
 }
 
-/// Read and bound the two uploaded parts.
+/// What a check request carried. Every part is optional here; which
+/// combinations are meaningful is `create_check`'s decision.
+struct Upload {
+    candidate: Option<Bytes>,
+    expectations: Option<Vec<u8>>,
+    change_spec: Option<Vec<u8>>,
+    label: Option<String>,
+}
+
+/// Read and bound the uploaded parts.
 ///
 /// Sizes are checked as bytes arrive rather than after, and anything the
-/// request names that we do not expect is refused rather than ignored.
-async fn read_upload(
-    state: &AppState,
-    mut multipart: Multipart,
-) -> ApiResult<(Option<Bytes>, Option<Vec<u8>>)> {
-    let mut candidate = None;
-    let mut expectations = None;
+/// request names that we do not expect is refused rather than ignored. The
+/// contract is additive: `candidate` and `expected_changes` mean what they
+/// always meant, and `change_spec` and `label` are new and optional.
+async fn read_upload(state: &AppState, mut multipart: Multipart) -> ApiResult<Upload> {
+    let mut upload = Upload {
+        candidate: None,
+        expectations: None,
+        change_spec: None,
+        label: None,
+    };
     loop {
         // Keep multipart's own status rather than flattening it: a body that
         // overruns the transport limit really is 413, and reporting it as a
@@ -441,7 +543,7 @@ async fn read_upload(
             .bytes()
             .await
             .map_err(|error| ApiError::new(error.status(), format!("upload rejected: {error}")))?;
-        match name.as_str() {
+        let slot_taken = match name.as_str() {
             "candidate" => {
                 if bytes.len() > state.config.max_candidate_bytes {
                     return Err(ApiError::too_large(
@@ -449,7 +551,7 @@ async fn read_upload(
                         state.config.max_candidate_bytes,
                     ));
                 }
-                candidate = Some(bytes);
+                upload.candidate.replace(bytes).is_some()
             }
             "expected_changes" => {
                 if bytes.len() > state.config.max_expectation_bytes {
@@ -458,16 +560,41 @@ async fn read_upload(
                         state.config.max_expectation_bytes,
                     ));
                 }
-                expectations = Some(bytes.to_vec());
+                upload.expectations.replace(bytes.to_vec()).is_some()
+            }
+            "change_spec" => {
+                if bytes.len() > MAX_CHANGE_SPEC_BYTES {
+                    return Err(ApiError::too_large("change_spec", MAX_CHANGE_SPEC_BYTES));
+                }
+                upload.change_spec.replace(bytes.to_vec()).is_some()
+            }
+            "label" => {
+                let label = String::from_utf8(bytes.to_vec())
+                    .map_err(|_| ApiError::bad_request("label must be UTF-8 text"))?;
+                let label = label.trim().to_string();
+                if label.chars().count() > MAX_LABEL_CHARS || label.chars().any(char::is_control) {
+                    return Err(ApiError::bad_request(format!(
+                        "label must be at most {MAX_LABEL_CHARS} characters with no control characters"
+                    )));
+                }
+                // An empty label is no label, not a label that is empty.
+                !label.is_empty() && upload.label.replace(label).is_some()
             }
             other => {
                 return Err(ApiError::bad_request(format!(
                     "unexpected upload field {other:?}"
                 )))
             }
+        };
+        // Two candidates in one request would leave which one was meant to the
+        // order the parts happened to arrive in.
+        if slot_taken {
+            return Err(ApiError::bad_request(format!(
+                "upload field {name:?} was sent more than once"
+            )));
         }
     }
-    Ok((candidate, expectations))
+    Ok(upload)
 }
 
 /// A run belongs to one project. Its own live token may read it, and so may
@@ -557,6 +684,38 @@ async fn get_report_markdown(
         StatusCode::OK,
         [(header::CONTENT_TYPE, "text/markdown; charset=utf-8")],
         bytes,
+    )
+        .into_response())
+}
+
+/// The run's canonical proposal, on request.
+///
+/// Read through the registry, which recomputes the stored document's identity
+/// and requires it to be the one the run was indexed under. A stored spec that
+/// fails that check is never served as though it described the run.
+async fn get_change_spec(
+    State(state): State<Shared>,
+    Path(run_id): Path<String>,
+    headers: HeaderMap,
+) -> ApiResult<Response> {
+    let metadata = authorize_run(&state, &run_id, &headers)?;
+    let change = metadata.change.as_ref().ok_or_else(|| {
+        ApiError::new(
+            StatusCode::NOT_FOUND,
+            "this run was recorded before change identity existed and has no change spec",
+        )
+    })?;
+    let spec = state
+        .registry
+        .load_change_spec(&run_id, change)
+        .map_err(|error| ApiError::internal(format!("{error:#}")))?;
+    let document = spec
+        .to_document()
+        .map_err(|error| ApiError::internal(format!("{error:#}")))?;
+    Ok((
+        StatusCode::OK,
+        [(header::CONTENT_TYPE, "application/json")],
+        document,
     )
         .into_response())
 }
@@ -958,6 +1117,10 @@ struct RunQuery {
     status: Option<RunStatus>,
     #[serde(default)]
     exit_code: Option<u8>,
+    /// Every analysis of one proposal. Served from its own index, so a
+    /// governance binding can find the runs for the change being signed.
+    #[serde(default)]
+    change_spec_id: Option<String>,
 }
 
 #[derive(Serialize)]
@@ -971,6 +1134,8 @@ struct RunSummaryView {
     candidate_sha256: String,
     bundle_sha256: String,
     bundle_id: Option<String>,
+    /// `null` marks a legacy run, recorded before change identity.
+    change: Option<RunChange>,
     report_available: bool,
 }
 
@@ -988,10 +1153,18 @@ async fn list_project_runs(
 ) -> ApiResult<Response> {
     project_for(&state, &project_id, &headers)?;
     let limit = query.limit.unwrap_or(20).clamp(1, 100);
-    let ids = state
-        .registry
-        .project_run_ids(&project_id)
-        .map_err(|error| ApiError::internal(format!("listing runs: {error}")))?;
+    let ids = match &query.change_spec_id {
+        Some(id) => {
+            if id.len() != 64 || !id.bytes().all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f')) {
+                return Err(ApiError::bad_request(
+                    "change_spec_id must be 64 lowercase hex characters",
+                ));
+            }
+            state.registry.change_run_ids(&project_id, id)
+        }
+        None => state.registry.project_run_ids(&project_id),
+    }
+    .map_err(|error| ApiError::internal(format!("listing runs: {error}")))?;
 
     let mut runs = Vec::new();
     let mut next_cursor = None;
@@ -1024,6 +1197,7 @@ async fn list_project_runs(
             candidate_sha256: run.candidate_sha256,
             bundle_sha256: run.bundle_sha256,
             bundle_id: run.bundle_id,
+            change: run.change,
             report_available: run.report_available,
         });
     }

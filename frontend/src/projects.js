@@ -7,6 +7,7 @@
 
 import { Header, Footer } from './shell.js';
 import { api, json, isConnected, setOperatorToken, short, when, ApiError } from './session.js';
+import { changeLine } from './change.js';
 
 const STATUS_LABEL = {
   setup: 'Setup required',
@@ -360,11 +361,11 @@ function detail_view(detail, bundles, runs, issued, verified) {
       ${runs.length ? `<div class="run-list">${runs.map(run => `
         <article class="run-row" data-run="${escapeHtml(run.run_id)}" role="button" tabindex="0">
           <span>${escapeHtml(when(run.created_at_unix_seconds))}</span>
-          <span class="mono">${escapeHtml(short(run.candidate_sha256))}</span>
+          ${changeLine(run)}
           <span class="pill pill--${escapeHtml(run.status)}">${escapeHtml(run.status.replace('_', ' '))}</span>
           <span>${run.exit_code == null ? '—' : `exit ${escapeHtml(run.exit_code)}`}</span>
           <span class="mono">${escapeHtml(short(run.bundle_sha256))}</span>
         </article>`).join('')}</div>`
-        : `<div class="empty-result"><p>No runs yet.</p>${project.status === 'ready' ? '<button type="button" class="button button--primary" id="analyse-link">Analyse a candidate <span>↗</span></button>' : ''}</div>`}
+        : `<div class="empty-result"><p>No runs yet.</p>${project.status === 'ready' ? '<button type="button" class="button button--primary" id="analyse-link">Analyse a program upgrade <span>↗</span></button>' : ''}</div>`}
     </section>`;
 }

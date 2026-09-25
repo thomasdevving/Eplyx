@@ -261,9 +261,10 @@ document is refused as an unknown kind.
 - `compare --corpus` (`ReplayReport`) and the synthetic `compare` still name
   the candidate by label or path. They are developer diff paths with no bundle
   target to bind against. They are the next place to thread a `ChangeBinding`.
-- The hosted API accepts only the multipart `candidate`. Its report carries
-  `change` because it calls `ci::check`, but the run registry does not index
-  runs by `change_spec_id`, and there is no `change_spec` upload.
+- ~~The hosted API accepts only the multipart `candidate`.~~ Closed by
+  [Phase P1](phase-p1-productized-changespec.md): runs carry and are indexed by
+  `change_spec_id`, a `change_spec` part is accepted, and the frontend shows the
+  change.
 - `activation` is identity only. The gate evaluates a candidate
   counterfactually over historical state and does not condition on activation.
 

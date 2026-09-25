@@ -12,7 +12,8 @@
 #   75    the hosted run ended in `execution_error`: no verdict was obtained at
 #         all. Never collapsed into 1, which would claim the candidate failed.
 #   70    this client could not trust its own result - the candidate the server
-#         reports is not the one we uploaded, or the transport broke.
+#         reports is not the one we uploaded, the change it analysed is not the
+#         one we proposed, or the transport broke.
 #
 # The token is read from the environment and never printed, never passed as an
 # argument (argv is world-readable on most systems), and never written to the
@@ -21,11 +22,19 @@
 # Usage:
 #   EPLYX_TOKEN=<project token> scripts/eplyx-submit.sh \
 #     --api <url> --project <id> --candidate <file> [--expectations <file>]
+#     [--change-spec <file> | --label <text>]
 #     [--report-json <out>] [--report-md <out>] [--summary <out>]
 #     [--expect-bundle <sha256>]
+#
+# Without --change-spec the server derives the minimal program upgrade of the
+# project's program to the candidate's bytes, exactly as `eplyx ci check
+# --candidate` does. With it, the spec is authoritative and the candidate only
+# supplies the bytes it names; a spec that commits to a `change_spec_id` is
+# then checked against the change the server analysed and the report names.
 set -uo pipefail
 
 API="" PROJECT="" CANDIDATE="" EXPECTATIONS="" REPORT_JSON="" REPORT_MD="" SUMMARY="" EXPECT_BUNDLE=""
+CHANGE_SPEC="" LABEL=""
 POLL_SECONDS="${EPLYX_POLL_SECONDS:-3}"
 TIMEOUT_SECONDS="${EPLYX_TIMEOUT_SECONDS:-1800}"
 
@@ -39,6 +48,8 @@ while [ $# -gt 0 ]; do
     --report-md) REPORT_MD="$2"; shift 2;;
     --summary) SUMMARY="$2"; shift 2;;
     --expect-bundle) EXPECT_BUNDLE="$2"; shift 2;;
+    --change-spec) CHANGE_SPEC="$2"; shift 2;;
+    --label) LABEL="$2"; shift 2;;
     *) echo "unknown argument: $1" >&2; exit 70;;
   esac
 done
@@ -47,6 +58,8 @@ done
 [ -n "$PROJECT" ] || { echo "--project is required" >&2; exit 70; }
 [ -f "$CANDIDATE" ] || { echo "--candidate must be a file" >&2; exit 70; }
 [ -n "${EPLYX_TOKEN:-}" ] || { echo "EPLYX_TOKEN is not set" >&2; exit 70; }
+[ -z "$CHANGE_SPEC" ] || [ -f "$CHANGE_SPEC" ] || { echo "--change-spec must be a file" >&2; exit 70; }
+[ -z "$CHANGE_SPEC" ] || [ -z "$LABEL" ] || { echo "--label belongs inside --change-spec's metadata" >&2; exit 70; }
 API="${API%/}"
 
 # Hash before submission, and never rebuild between here and the upload. This
@@ -58,6 +71,15 @@ echo "candidate $(basename "$CANDIDATE")  sha256 $LOCAL_SHA"
 
 FORM=(-F "candidate=@$CANDIDATE")
 [ -n "$EXPECTATIONS" ] && FORM+=(-F "expected_changes=@$EXPECTATIONS")
+[ -n "$CHANGE_SPEC" ] && FORM+=(-F "change_spec=@$CHANGE_SPEC")
+[ -n "$LABEL" ] && FORM+=(-F "label=$LABEL")
+# The id a submitted spec commits to, if it commits to one. The server
+# recomputes it and refuses a spec whose stated id disagrees with its fields,
+# so a match here means the analysis is of exactly the proposal in that file.
+PROPOSED_ID=""
+if [ -n "$CHANGE_SPEC" ]; then
+  PROPOSED_ID=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("change_spec_id") or "")' "$CHANGE_SPEC") || exit 70
+fi
 
 CREATED=$(curl -sS -X POST "$API/v1/projects/$PROJECT/checks" \
   -H "Authorization: Bearer $EPLYX_TOKEN" "${FORM[@]}" -w '\n%{http_code}')
@@ -68,7 +90,12 @@ if [ "$HTTP" != "202" ]; then
   exit 70
 fi
 RUN=$(printf '%s' "$BODY" | python3 -c 'import json,sys; print(json.load(sys.stdin)["run_id"])') || exit 70
-echo "run $RUN accepted (HTTP 202)"
+CHANGE_ID=$(printf '%s' "$BODY" | python3 -c 'import json,sys; print((json.load(sys.stdin).get("change") or {}).get("change_spec_id",""))') || exit 70
+echo "run $RUN accepted (HTTP 202)  change ${CHANGE_ID:-<none>}"
+if [ -n "$PROPOSED_ID" ] && [ "$CHANGE_ID" != "$PROPOSED_ID" ]; then
+  echo "change identity mismatch: proposed $PROPOSED_ID, server accepted $CHANGE_ID" >&2
+  exit 70
+fi
 
 # Poll. A closed connection does not cancel a run, so a client that dies here
 # loses its own result and nothing else.
@@ -115,8 +142,25 @@ if [ -n "$EXPECT_BUNDLE" ]; then
   fi
 fi
 
+RUN_CHANGE=$(printf '%s' "$RESPONSE" | python3 -c 'import json,sys; print((json.load(sys.stdin).get("change") or {}).get("change_spec_id",""))')
+if [ "$RUN_CHANGE" != "$CHANGE_ID" ]; then
+  echo "change identity mismatch: accepted $CHANGE_ID, run reports $RUN_CHANGE" >&2
+  exit 70
+fi
+
 EXIT=$(printf '%s' "$RESPONSE" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("exit_code",70))')
-[ -n "$REPORT_JSON" ] && curl -sS "$API/v1/runs/$RUN/report.json" -H "Authorization: Bearer $EPLYX_TOKEN" -o "$REPORT_JSON"
+if [ -n "$REPORT_JSON" ]; then
+  curl -sS "$API/v1/runs/$RUN/report.json" -H "Authorization: Bearer $EPLYX_TOKEN" -o "$REPORT_JSON"
+  # A report exists only for a run that reached one. When it does, it must be
+  # about the change this job proposed.
+  if python3 -c 'import json,sys; json.load(open(sys.argv[1]))["summary"]' "$REPORT_JSON" 2>/dev/null; then
+    REPORT_CHANGE=$(python3 -c 'import json,sys; print((json.load(open(sys.argv[1])).get("change") or {}).get("change_spec_id",""))' "$REPORT_JSON")
+    if [ "$REPORT_CHANGE" != "$CHANGE_ID" ]; then
+      echo "change identity mismatch: accepted $CHANGE_ID, report names $REPORT_CHANGE" >&2
+      exit 70
+    fi
+  fi
+fi
 [ -n "$REPORT_MD" ] && curl -sS "$API/v1/runs/$RUN/report.md" -H "Authorization: Bearer $EPLYX_TOKEN" -o "$REPORT_MD"
 
 echo "run $RUN  status $STATUS  exit $EXIT  ${ELAPSED}s"
@@ -133,6 +177,10 @@ headline = ("Eplyx check passed against the project's active production-derived 
             "Unexpected or over-bound semantic changes detected.")
 out = [f"## Eplyx — {headline}", ""]
 out += ["| | |", "|---|---|"]
+change = run.get("change") or {}
+if change:
+    out.append(f"| Change | `{change.get('change_spec_id')}` |")
+    out.append(f"| Target | `{change.get('target_program_id')}` |")
 for label, key in [("Run", "run_id"), ("Candidate", "candidate_sha256"), ("Bundle", "bundle_sha256"),
                    ("Baseline", "baseline_sha256"), ("Corpus", "corpus_sha256"),
                    ("Adapter", "adapter"), ("Records", "record_count"), ("Exit code", "exit_code")]:

@@ -289,9 +289,17 @@ impl ChangeSpec {
         Ok(serde_json::to_string_pretty(&document)?)
     }
 
-    fn candidate(&self) -> &ExecutableArtifact {
+    /// The artefact this spec proposes to execute, named by content.
+    pub fn candidate(&self) -> &ExecutableArtifact {
         match &self.change {
             Change::ProgramUpgrade { candidate, .. } => candidate,
+        }
+    }
+
+    /// The on-chain program the proposal targets.
+    pub fn target_program_id(&self) -> &str {
+        match &self.change {
+            Change::ProgramUpgrade { target, .. } => &target.program_id,
         }
     }
 

@@ -1,5 +1,6 @@
 import { Header, Footer } from './shell.js';
 import { API_BASE, operatorToken } from './session.js';
+import { ChangeCard, ChangeIdentityRows, resolveChange } from './change.js';
 
 /** One request in flight at a time, and never sub-second. */
 const POLL_MS = 1500;
@@ -20,7 +21,7 @@ const TERMINAL = ['passed', 'failed', 'execution_error'];
  * The demo is a fixture, and it lives behind one explicit route.
  */
 export function ReportPage(id) {
-  if (id === 'demo') return renderReport(DEMO, { demo: true, id });
+  if (id === 'demo') return renderReport(DEMO, { demo: true, id, extras: { spec: DEMO.change_spec, projectName: 'Example Stake Pool' } });
 
   const context = readContext();
   if (!context) return renderUnavailable(id);
@@ -44,6 +45,10 @@ export function attachReport(id, render) {
   let stopped = false;
   let timer;
   let failures = 0;
+  // Asked for once. Both are presentation: the project's display name, and the
+  // run's canonical spec for the technical details. Neither is ever required to
+  // render a run, and neither is ever invented when it cannot be fetched.
+  let extras = null;
   const stop = () => {
     stopped = true;
     clearTimeout(timer);
@@ -69,23 +74,42 @@ export function attachReport(id, render) {
       return;
     }
 
+    if (!extras) extras = await loadExtras(run);
+    if (stopped) return;
+
     if (!TERMINAL.includes(run.status)) {
-      render(renderLifecycle(id, run));
+      render(renderLifecycle(id, run, extras));
       // Chained rather than an interval, so two polls can never overlap.
       timer = setTimeout(tick, POLL_MS);
       return;
     }
 
     stop();
-    if (!run.report_available) return render(renderIncomplete(id, run));
+    if (!run.report_available) return render(renderIncomplete(id, run, extras));
     try {
       const response = await ask(`/v1/runs/${encodeURIComponent(id)}/report.json`);
       run.canonical_report = response.ok ? await response.json() : null;
     } catch {
       run.canonical_report = null;
     }
-    render(renderReport(run, { demo: false, id }));
+    render(renderReport(run, { demo: false, id, extras }));
   };
+
+  async function loadExtras(run) {
+    const found = { spec: null, projectName: null };
+    const read = async path => {
+      try {
+        const response = await ask(path);
+        return response.ok ? await response.json() : null;
+      } catch {
+        return null;
+      }
+    };
+    // A legacy run has no stored spec; asking would only earn a 404.
+    if (run.change) found.spec = await read(`/v1/runs/${encodeURIComponent(id)}/change_spec.json`);
+    if (run.project_id) found.projectName = (await read(`/v1/projects/${encodeURIComponent(run.project_id)}`))?.project?.name ?? null;
+    return found;
+  }
 
   const finish = markup => {
     stop();
@@ -150,8 +174,9 @@ const LIFECYCLE = {
   running: ['Running', 'Replaying the candidate against the active validated corpus…', 'This takes as long as the corpus takes. There is no partial result to show.'],
 };
 
-function renderLifecycle(id, run) {
+function renderLifecycle(id, run, extras = {}) {
   const [label, headline, note] = LIFECYCLE[run.status] ?? LIFECYCLE.loading;
+  const known = run.status !== 'loading';
   return shell(id, `
       <div class="report-top">
         <div>
@@ -162,8 +187,10 @@ function renderLifecycle(id, run) {
         <div class="report-verdict is-pending"><i></i><span>${escapeHtml(label)}</span><em>No result yet</em></div>
       </div>
       <div class="report-content">
+        ${known ? ChangeCard({ change: run.change, legacy: !run.change, targetName: extras.projectName, spec: extras.spec, candidateSha: run.candidate_sha256 }) : ''}
         <section><div class="report-section-title"><span>01</span><h2>Inputs</h2></div>
           <div class="provenance-table">
+            ${known ? ChangeIdentityRows({ change: run.change, spec: extras.spec }) : ''}
             ${row('Bundle SHA', run.bundle_sha256)}
             ${row('Corpus SHA', run.corpus_sha256)}
             ${row('Baseline SHA', run.baseline_sha256)}
@@ -181,7 +208,7 @@ function renderLifecycle(id, run) {
  * design. An execution error is this service failing to answer at all, and
  * blames nothing about the candidate.
  */
-function renderIncomplete(id, run) {
+function renderIncomplete(id, run, extras = {}) {
   const infrastructure = run.status === 'execution_error';
   return shell(id, `
       <div class="report-top">
@@ -195,11 +222,13 @@ function renderIncomplete(id, run) {
         <div class="report-verdict ${infrastructure ? 'is-unknown' : ''}"><i></i><span>${infrastructure ? 'Incomplete' : 'Failed'}</span><em>${run.exit_code == null ? 'No exit code' : `Exit code ${escapeHtml(run.exit_code)}`}</em></div>
       </div>
       <div class="report-content">
+        ${ChangeCard({ change: run.change, legacy: !run.change, targetName: extras.projectName, spec: extras.spec, candidateSha: run.candidate_sha256 })}
         <section><div class="report-section-title"><span>01</span><h2>Reason</h2></div>
           <div class="empty-result"><p>${run.detail ? escapeHtml(run.detail) : 'No further detail was recorded.'}</p></div>
         </section>
         <section><div class="report-section-title"><span>02</span><h2>Inputs</h2></div>
           <div class="provenance-table">
+            ${ChangeIdentityRows({ change: run.change, spec: extras.spec })}
             ${row('Bundle SHA', run.bundle_sha256)}
             ${row('Candidate SHA', run.candidate_sha256)}
           </div>
@@ -226,8 +255,37 @@ function shell(id, inner) {
   </main>${Footer()}`;
 }
 
-function renderReport(live, { demo, id }) {
+/**
+ * The three records of what a run analysed disagree. There is no verdict to
+ * show: a result about some other proposal is not a result about this one.
+ */
+function renderIdentityConflict(id, live, resolution) {
+  return shell(id, `
+      <div class="report-top">
+        <div>
+          <p class="eyebrow"><span></span> Run ${escapeHtml(id)}</p>
+          <h1>This run’s change identity does not agree with itself.</h1>
+          <p>The run record, its stored change spec and its report must name the same proposed change. They do not, so no verdict is shown.</p>
+        </div>
+        <div class="report-verdict is-unknown"><i></i><span>Not shown</span><em>Identity mismatch</em></div>
+      </div>
+      <div class="report-content">
+        <section><div class="report-section-title"><span>01</span><h2>Mismatch</h2></div>
+          <div class="empty-result is-error">${resolution.conflicts.map(c => `<p class="mono">${escapeHtml(c)}</p>`).join('')}</div>
+        </section>
+        <section><div class="report-section-title"><span>02</span><h2>Inputs</h2></div>
+          <div class="provenance-table">
+            ${row('Bundle SHA', live.bundle_sha256)}
+            ${row('Candidate SHA', live.candidate_sha256)}
+          </div>
+        </section>
+      </div>`);
+}
+
+function renderReport(live, { demo, id, extras = {} }) {
   const report = live.canonical_report;
+  const resolution = resolveChange(live, report, extras.spec);
+  if (resolution.conflicts.length) return renderIdentityConflict(id, live, resolution);
   const passed = live.status === 'passed';
   const bundle = report?.bundle;
   const findings = report?.findings ?? [];
@@ -249,17 +307,18 @@ function renderReport(live, { demo, id }) {
         <aside class="report-nav"><span>Report</span>
           <a href="#summary" class="active">Summary</a>
           <a href="#findings">Findings <b>${findings.length}</b></a>
-          <a href="#provenance">Provenance</a>
+          <a href="#provenance">Proof &amp; identity</a>
           <a href="#coverage">Coverage</a>
           ${field('Corpus', bundle?.record_count == null ? null : `${bundle.record_count} observations`, slotLabel(bundle))}
         </aside>
         <div class="report-content">
           <section id="summary"><div class="report-section-title"><span>01</span><h2>Summary</h2></div>
+            ${ChangeCard({ change: resolution.change, legacy: resolution.legacy, targetName: extras.projectName, spec: extras.spec, candidateSha: live.candidate_sha256 })}
             <div class="metric-row">
               ${metric('Observations', bundle?.record_count, 'validated history')}
               ${metric('Unexpected', summary.unexpected, 'finding groups')}
               ${metric('Expected', summary.expected, 'within bounds')}
-              ${metric('Candidate', live.candidate_sha256 ? live.candidate_sha256.slice(0, 8) : null, 'SHA-256', true)}
+              ${metric('Cannot be declared', report ? undeclarable.length : null, 'detected changes')}
             </div>
           </section>
           <section id="findings"><div class="report-section-title"><span>02</span><h2>Findings</h2></div>
@@ -267,7 +326,12 @@ function renderReport(live, { demo, id }) {
             ${renderUndeclarable(undeclarable)}
             ${renderUnmatched(unmatched)}
           </section>
-          <section id="provenance"><div class="report-section-title"><span>03</span><h2>Provenance</h2></div>
+          <section id="provenance"><div class="report-section-title"><span>03</span><h2>Proof &amp; identity</h2></div>
+            <h3 class="provenance-heading">Proposed change</h3>
+            <div class="provenance-table">
+              ${ChangeIdentityRows({ change: resolution.change, spec: extras.spec, resolution })}
+            </div>
+            <h3 class="provenance-heading">Evidence</h3>
             <div class="provenance-table">
               ${row('Program', bundle?.program_id)}
               ${row('Bundle SHA', live.bundle_sha256)}
@@ -382,7 +446,28 @@ const DEMO = {
   corpus_sha256: 'c253aefc08d1…a901',
   baseline_sha256: '9f3a0d4be24e…8c21',
   candidate_sha256: '60b7e1ac3198…bf14',
+  change: {
+    change_spec_id: '5c1f0e9ad27b44c08e1d7fa3b60c2e95d8a41f7c63b09e2d15a8c4f70b3e6d21',
+    kind: 'program_upgrade',
+    target_program_id: 'SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy',
+    candidate_sha256: '60b7e1ac3198…bf14',
+    candidate_len: 32240,
+    label: 'Fee rounding change (fixture)',
+    origin: 'derived_from_candidate'
+  },
+  change_spec: {
+    schema_version: 1,
+    change_spec_id: '5c1f0e9ad27b44c08e1d7fa3b60c2e95d8a41f7c63b09e2d15a8c4f70b3e6d21',
+    change: { kind: 'program_upgrade', target: { program_id: 'SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy' }, candidate: { sha256: '60b7e1ac3198…bf14', len: 32240 } },
+    metadata: { label: 'Fee rounding change (fixture)' }
+  },
   canonical_report: {
+    change: {
+      change_spec_id: '5c1f0e9ad27b44c08e1d7fa3b60c2e95d8a41f7c63b09e2d15a8c4f70b3e6d21',
+      kind: 'program_upgrade',
+      target_program_id: 'SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy',
+      candidate_sha256: '60b7e1ac3198…bf14'
+    },
     summary: { unexpected: 2, expected: 0, passed: false, exit_code: 1 },
     bundle: {
       program_id: 'SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy',

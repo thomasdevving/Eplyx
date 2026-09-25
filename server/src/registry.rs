@@ -7,8 +7,9 @@
 
 use std::sync::Mutex;
 
-use anyhow::{bail, Context, Result};
+use anyhow::{bail, ensure, Context, Result};
 use eplyx_engine::bundle::CiBundle;
+use eplyx_engine::change::{ChangeKind, ChangeSpec};
 use eplyx_engine::ci::CiReport;
 use serde::{Deserialize, Serialize};
 
@@ -127,6 +128,85 @@ pub enum RunOutcome {
     },
 }
 
+/// How a run's change spec came to exist. Provenance, never identity: the same
+/// spec reaches the same `change_spec_id` by either route.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ChangeOrigin {
+    /// Only candidate bytes were uploaded. The server derived the minimal
+    /// program upgrade of the pinned bundle's program to exactly those bytes,
+    /// which is the spec `eplyx ci check --candidate` derives.
+    DerivedFromCandidate,
+    /// The caller submitted an explicit spec; the uploaded bytes only
+    /// satisfied its artefact reference.
+    Submitted,
+}
+
+/// The proposal a run evaluates, as the registry indexes it.
+///
+/// The index fields only. The complete canonical spec is stored once beside
+/// the run (`change_spec.json`) and re-verified against these on every read,
+/// so there is one copy of the proposal and one copy of its identity, and a
+/// disagreement between them is detectable rather than silently resolved.
+///
+/// `change_spec_id` — not `candidate_sha256` — is the proposal's identity: the
+/// same bytes proposed for two programs are two proposals.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct RunChange {
+    pub change_spec_id: String,
+    pub kind: ChangeKind,
+    pub target_program_id: String,
+    pub candidate_sha256: String,
+    pub candidate_len: u64,
+    /// Display only. Outside identity, as in the spec itself.
+    #[serde(default)]
+    pub label: Option<String>,
+    pub origin: ChangeOrigin,
+}
+
+impl RunChange {
+    pub fn of(spec: &ChangeSpec, origin: ChangeOrigin) -> Result<Self> {
+        Ok(Self {
+            change_spec_id: spec.id()?,
+            kind: spec.kind(),
+            target_program_id: spec.target_program_id().to_string(),
+            candidate_sha256: spec.candidate().sha256.clone(),
+            candidate_len: spec.candidate().len,
+            label: spec.metadata.label.clone(),
+            origin,
+        })
+    }
+
+    /// The hard consistency rule between the registry and the engine:
+    ///
+    /// ```text
+    /// registry change_spec_id == stored ChangeSpec id == report.change.change_spec_id
+    /// ```
+    ///
+    /// A report about a different proposal is not a verdict about this one,
+    /// however it came to be written, and is never recorded as if it were.
+    pub fn verify_report(&self, report: &CiReport) -> Result<()> {
+        let change = report.change.as_ref().context(
+            "the report names no change, so it is not a verdict about this run's proposal",
+        )?;
+        ensure!(
+            change.change_spec_id == self.change_spec_id,
+            "the report is about change {} but the run was accepted for change {}",
+            change.change_spec_id,
+            self.change_spec_id
+        );
+        ensure!(
+            change.kind == self.kind
+                && change.target_program_id == self.target_program_id
+                && change.candidate_sha256 == self.candidate_sha256
+                && report.candidate.sha256 == self.candidate_sha256
+                && report.candidate.len == self.candidate_len,
+            "the report's change fields disagree with the change the run was accepted for"
+        );
+        Ok(())
+    }
+}
+
 /// What a run was, without any of what it used to run.
 ///
 /// No token, no endpoint, no candidate bytes. Wall-clock time is allowed here
@@ -153,8 +233,18 @@ pub struct RunMetadata {
     pub corpus_sha256: Option<String>,
     #[serde(default)]
     pub baseline_sha256: Option<String>,
-    /// Hashed from the uploaded bytes before the run is accepted.
+    /// Hashed from the uploaded bytes before the run is accepted. Kept for
+    /// every client written before change identity; `change` is what names
+    /// the proposal.
     pub candidate_sha256: String,
+    /// The proposal this run evaluates, fixed at creation and bound to the
+    /// pinned bundle before the run was accepted.
+    ///
+    /// `None` only on runs recorded before change identity existed. Those are
+    /// legacy runs: their identity is not reconstructed, because the candidate
+    /// length it would need was never recorded.
+    #[serde(default)]
+    pub change: Option<RunChange>,
     #[serde(default)]
     pub adapter: Option<String>,
     #[serde(default)]
@@ -460,6 +550,71 @@ impl Registry {
         Ok(ids)
     }
 
+    /// Note that a run evaluates a given proposal, so every analysis of one
+    /// `change_spec_id` is a listing rather than a scan. This is what a later
+    /// governance binding points at: an existing analysis, by the identity of
+    /// the proposal being signed.
+    pub fn index_change(&self, project_id: &str, change_spec_id: &str, run_id: &str) -> Result<()> {
+        let path = self
+            .storage
+            .project_change_run_marker(project_id, change_spec_id, run_id)?;
+        self.storage.write_bytes(&path, b"")
+    }
+
+    /// Runs of one project that evaluate one proposal, newest first.
+    pub fn change_run_ids(&self, project_id: &str, change_spec_id: &str) -> Result<Vec<String>> {
+        let directory = self
+            .storage
+            .project_change_runs_dir(project_id, change_spec_id)?;
+        let mut ids = self.child_ids(&directory)?;
+        ids.sort_by(|a, b| b.cmp(a));
+        Ok(ids)
+    }
+
+    /// Persist a run's canonical spec: the document form, with its identity
+    /// committed beside the fields. Never the candidate bytes; those are
+    /// content-addressed separately and only for as long as the run needs them.
+    pub fn save_change_spec(&self, run_id: &str, spec: &ChangeSpec) -> Result<()> {
+        let path = self.storage.run_dir(run_id)?.join("change_spec.json");
+        if self.storage.exists(&path) {
+            bail!("run {run_id} already has a change spec");
+        }
+        let mut document = spec.to_document()?.into_bytes();
+        document.push(b'\n');
+        self.storage.write_bytes(&path, &document)
+    }
+
+    /// Read a run's spec back, trusting nothing that was written down.
+    ///
+    /// The stored document's own id is recomputed from its fields (`parse`),
+    /// and the result must be exactly the change the registry indexed the run
+    /// under. Either disagreement means the stored proposal is not the one the
+    /// run was accepted for, and the read fails.
+    pub fn load_change_spec(&self, run_id: &str, expected: &RunChange) -> Result<ChangeSpec> {
+        let path = self.storage.run_dir(run_id)?.join("change_spec.json");
+        if !self.storage.exists(&path) {
+            bail!("run {run_id} has no stored change spec");
+        }
+        let bytes = self.storage.read_bytes(&path)?;
+        let spec = ChangeSpec::parse(&bytes).context("the stored change spec does not verify")?;
+        ensure!(
+            spec.change_spec_id.is_some(),
+            "the stored change spec does not commit to its identity"
+        );
+        let stored = RunChange::of(&spec, expected.origin)?;
+        ensure!(
+            stored.change_spec_id == expected.change_spec_id,
+            "the stored change spec identifies {} but the run was accepted for {}",
+            stored.change_spec_id,
+            expected.change_spec_id
+        );
+        ensure!(
+            &stored == expected,
+            "the stored change spec disagrees with the run's indexed change"
+        );
+        Ok(spec)
+    }
+
     /// Valid identifiers naming entries directly inside a directory.
     fn child_ids(&self, directory: &std::path::Path) -> Result<Vec<String>> {
         let mut ids = Vec::new();
@@ -527,6 +682,26 @@ impl Registry {
         if metadata.status.is_terminal() {
             bail!("run {run_id} is already {:?}", metadata.status);
         }
+        // The one place a run becomes terminal, so the one place the identity
+        // rule is enforced. A report about some other proposal is recorded as
+        // this service failing to obtain a verdict, never as a verdict.
+        let outcome = match outcome {
+            RunOutcome::Reported { report, markdown } => {
+                match metadata
+                    .change
+                    .as_ref()
+                    .map(|change| change.verify_report(&report))
+                {
+                    Some(Err(error)) => RunOutcome::ExecutionError {
+                        detail: format!(
+                            "change identity check failed; no verdict recorded: {error:#}"
+                        ),
+                    },
+                    _ => RunOutcome::Reported { report, markdown },
+                }
+            }
+            other => other,
+        };
         match outcome {
             RunOutcome::Reported { report, markdown } => {
                 self.write_report(run_id, &report, &markdown)?;

@@ -11,8 +11,11 @@
 //!   projects/<project-id>/tokens/<token-id>.json
 //!   projects/<project-id>/bundles/<bundle-id>.json   a project's record of one
 //!   projects/<project-id>/runs/<run-id>              index marker, empty
+//!   projects/<project-id>/changes/<change-spec-id>/<run-id>   index marker, empty
 //!   bundles/<bundle-sha256>/          an installed, verified CI bundle
 //!   runs/<run-id>/metadata.json
+//!   runs/<run-id>/change_spec.json    the canonical proposal, re-verified on read
+//!   runs/<run-id>/work/artifacts/programs/<sha256>   candidate, until terminal
 //!   runs/<run-id>/report.json
 //!   runs/<run-id>/report.md
 //! ```
@@ -122,6 +125,30 @@ impl Storage {
     pub fn project_run_marker(&self, project_id: &str, run_id: &str) -> Result<PathBuf> {
         checked(run_id, "run id")?;
         Ok(self.project_runs_dir(project_id)?.join(run_id))
+    }
+
+    pub fn project_change_runs_dir(
+        &self,
+        project_id: &str,
+        change_spec_id: &str,
+    ) -> Result<PathBuf> {
+        checked(change_spec_id, "change spec id")?;
+        Ok(self
+            .project_dir(project_id)?
+            .join("changes")
+            .join(change_spec_id))
+    }
+
+    pub fn project_change_run_marker(
+        &self,
+        project_id: &str,
+        change_spec_id: &str,
+        run_id: &str,
+    ) -> Result<PathBuf> {
+        checked(run_id, "run id")?;
+        Ok(self
+            .project_change_runs_dir(project_id, change_spec_id)?
+            .join(run_id))
     }
 
     pub fn run_dir(&self, id: &str) -> Result<PathBuf> {

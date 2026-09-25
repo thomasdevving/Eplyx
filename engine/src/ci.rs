@@ -273,31 +273,7 @@ pub fn check_change(
     input: &ChangeInput<'_>,
     expectations: Option<&Path>,
 ) -> std::result::Result<CiReport, CheckError> {
-    let manifest_bytes = std::fs::read(bundle_dir.join("bundle.json"))
-        .context("reading the CI bundle manifest")
-        .map_err(CheckError::Bundle)?;
-    let manifest: serde_json::Value = serde_json::from_slice(&manifest_bytes)
-        .context("parsing the CI bundle manifest")
-        .map_err(CheckError::Bundle)?;
-    // ---- preflight: nothing executes until all of this holds ------------
-    let bundle = if manifest["schema_version"].as_u64() == Some(2) {
-        OpenedBundle::V2(
-            crate::universal::bundle::UniversalBundle::open(bundle_dir)
-                .context("opening the schema-2 CI bundle")
-                .map_err(CheckError::Bundle)?,
-        )
-    } else {
-        let bundle = CiBundle::open(bundle_dir)
-            .context("opening the CI bundle")
-            .map_err(CheckError::Bundle)?;
-        preflight(&bundle).map_err(CheckError::Bundle)?;
-        OpenedBundle::V1(bundle)
-    };
-    let target = match &bundle {
-        OpenedBundle::V1(bundle) => baseline_target_v1(bundle),
-        OpenedBundle::V2(bundle) => baseline_target_v2(bundle),
-    }
-    .map_err(CheckError::Bundle)?;
+    let (bundle, target) = open_baseline(bundle_dir)?;
 
     // ---- the proposal ----------------------------------------------------
     let read;
@@ -338,6 +314,59 @@ pub fn check_change(
     };
     report.change = Some(binding);
     Ok(report)
+}
+
+/// Open and verify a bundle, and say what it proves about its target.
+///
+/// Shared by [`check_change`] and [`bind_change`], so a spec refused before a
+/// hosted run exists is refused by exactly the preflight a local check runs.
+fn open_baseline(
+    bundle_dir: &Path,
+) -> std::result::Result<(OpenedBundle, BaselineTarget), CheckError> {
+    let manifest_bytes = std::fs::read(bundle_dir.join("bundle.json"))
+        .context("reading the CI bundle manifest")
+        .map_err(CheckError::Bundle)?;
+    let manifest: serde_json::Value = serde_json::from_slice(&manifest_bytes)
+        .context("parsing the CI bundle manifest")
+        .map_err(CheckError::Bundle)?;
+    // ---- preflight: nothing executes until all of this holds ------------
+    let bundle = if manifest["schema_version"].as_u64() == Some(2) {
+        OpenedBundle::V2(
+            crate::universal::bundle::UniversalBundle::open(bundle_dir)
+                .context("opening the schema-2 CI bundle")
+                .map_err(CheckError::Bundle)?,
+        )
+    } else {
+        let bundle = CiBundle::open(bundle_dir)
+            .context("opening the CI bundle")
+            .map_err(CheckError::Bundle)?;
+        preflight(&bundle).map_err(CheckError::Bundle)?;
+        OpenedBundle::V1(bundle)
+    };
+    let target = match &bundle {
+        OpenedBundle::V1(bundle) => baseline_target_v1(bundle),
+        OpenedBundle::V2(bundle) => baseline_target_v2(bundle),
+    }
+    .map_err(CheckError::Bundle)?;
+    Ok((bundle, target))
+}
+
+/// Bind a spec to the baseline a bundle proves, without executing anything.
+///
+/// What a caller that accepts a proposal now and evaluates it later uses at
+/// acceptance time: a spec for another program, or one stating an expectation
+/// the bundle cannot prove, is refused (exit 4) before it is ever queued.
+/// [`check_change`] binds again at evaluation, so this is an early answer and
+/// never a substitute for the later one.
+pub fn bind_change(
+    bundle_dir: &Path,
+    spec: &ChangeSpec,
+) -> std::result::Result<ChangeBinding, CheckError> {
+    spec.validate().map_err(CheckError::Configuration)?;
+    let (_, target) = open_baseline(bundle_dir)?;
+    spec.bind(&target)
+        .context("the change spec does not describe a change to this bundle's baseline")
+        .map_err(CheckError::Bundle)
 }
 
 /// Any observation proving a non-upgradeable loader refuses a program upgrade.
