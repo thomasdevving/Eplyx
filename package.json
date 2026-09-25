@@ -13,7 +13,7 @@
     "build": "node frontend/build.mjs",
     "check:frontend": "node frontend/check.mjs && node frontend/report.test.mjs && node frontend/console.test.mjs && node frontend/change.test.mjs && node frontend/analysis.test.mjs && node frontend/governance.test.mjs",
     "verify:report": "node ts/check-report.ts",
-    "verify:governance": "node scripts/verify-squads-binding.mjs",
+    "verify:governance": "node scripts/verify-squads-binding.mjs && node scripts/verify-squads-binding.mjs docs/examples/phase-g1-1-squads-mainnet/witness-primary/bind.json docs/examples/phase-g1-1-squads-mainnet/witness-second/bind.json docs/examples/phase-g1-1-squads-mainnet/witness-large/bind.json",
     "start": "node frontend/serve.mjs"
   },
   "dependencies": {

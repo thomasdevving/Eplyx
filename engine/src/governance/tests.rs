@@ -996,3 +996,69 @@ fn governance_fixtures_are_current() {
         expect(name, binding.to_document().unwrap() + "\n");
     }
 }
+
+/// G1.1: a load-balanced mainnet endpoint answered the consistency read with
+/// -32016 from a node behind the first read. That is waited out, still under
+/// the `minContextSlot` floor; any other error is not retried.
+#[test]
+fn a_lagging_node_is_waited_for_and_never_accepted_older() {
+    struct Lagging<'a> {
+        world: &'a World,
+        calls: std::sync::atomic::AtomicUsize,
+        lag: usize,
+        code: &'static str,
+    }
+    impl crate::ingest::rpc::RpcProvider for Lagging<'_> {
+        fn call(
+            &self,
+            method: &str,
+            params: serde_json::Value,
+        ) -> anyhow::Result<serde_json::Value> {
+            let n = self.calls.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+            if params[1].get("minContextSlot").is_some() && n <= self.lag {
+                anyhow::bail!(
+                    "RPC {method} returned error code {}, transaction error null, program logs null",
+                    self.code
+                );
+            }
+            self.world.call(method, params)
+        }
+    }
+    let world = World::new();
+    let lagging = Lagging {
+        world: &world,
+        calls: 0.into(),
+        lag: 2,
+        code: "-32016",
+    };
+    let binding = verify_squads_upgrade(
+        &lagging,
+        &request(),
+        &World::analysed_spec(),
+        Commitment::Finalized,
+    )
+    .unwrap();
+    assert_eq!(
+        binding.outcome,
+        BindingOutcome::Matched,
+        "{:#?}",
+        binding.reasons
+    );
+    assert!(binding.observation.slot >= binding.observation.message_read_slot);
+
+    let world = World::new();
+    let other = Lagging {
+        world: &world,
+        calls: 0.into(),
+        lag: 2,
+        code: "-32005",
+    };
+    let binding = verify_squads_upgrade(
+        &other,
+        &request(),
+        &World::analysed_spec(),
+        Commitment::Finalized,
+    )
+    .unwrap();
+    assert_outcome(&binding, BindingOutcome::Unverifiable, "rpc_unavailable");
+}

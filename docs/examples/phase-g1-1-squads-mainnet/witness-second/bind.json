@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "binding_id": "b122feae207a7de654c8eeb5e53ebe27a2fba2df312cecf075d3d7a698c669b1",
+  "kind": "squads_v4_program_upgrade",
+  "decoder": {
+    "squads_program_id": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+    "source_repository": "https://github.com/Squads-Protocol/v4",
+    "source_revision": "af94153ff77a28b6effe46b9c94baaa93742b48c",
+    "program_crate_version": "2.1.0",
+    "decoder": "eplyx-squads-v4-decoder-v1",
+    "message_hash_domain": "eplyx-squads-v4-vault-message-v1",
+    "loader_interface": "solana-loader-v3-interface 8.0.1"
+  },
+  "commitment": "finalized",
+  "request": {
+    "multisig": "74VMouGCdAZ7EsekxitF2DbfhoNxrfybfszqduANSXFQ",
+    "transaction_index": 1
+  },
+  "analysed_change_spec_id": "0a0a4a0482451b3491279b450a11d911e372bbfc320c409886a76674beaa1107",
+  "bound_change_spec_id": "80f5cf1a83c65c95ac1845769ecdf7a04e04cbacab9992690935aa6d55535839",
+  "expected": {
+    "target_program_id": "ApwXwqGcQhbHdQiXtu1v4uY1eo4HQPh3ZTiznuwXfUut",
+    "candidate": {
+      "sha256": "fe2bc73d073627467ebb63051170fb9d1bf6a603f5d9c34fb31ef01434143085",
+      "len": 82312
+    }
+  },
+  "observation": {
+    "slot": 450319467,
+    "message_read_slot": 450319467,
+    "delivery": {
+      "squads_program_id": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+      "multisig": "74VMouGCdAZ7EsekxitF2DbfhoNxrfybfszqduANSXFQ",
+      "vault_index": 0,
+      "vault": "Cekxm3iBGP1RP51nDsgjccJxUiRdGUk9pxxg83yDoKw5",
+      "transaction_index": 1,
+      "transaction": "7tUHBDf22HWMHAsh8uzxdguH3vcsPRzz8ULMf7yrSTSG",
+      "proposal": "HbbLdRTysKF4r1QvBo22wm9kqtMoG8SMxxMatb9oVB8G",
+      "message_sha256": "47a88a98b3cd3e182b80c2c2c194c4f115cb25af75a6e0aaf4d89bddc8be545a"
+    },
+    "multisig": {
+      "threshold": 2,
+      "time_lock_seconds": 0,
+      "transaction_index": 1,
+      "stale_transaction_index": 0,
+      "members": 3,
+      "config_authority": null
+    },
+    "proposal": {
+      "status": "active",
+      "status_timestamp": 1699321047,
+      "approvals": 1,
+      "rejections": 0,
+      "cancellations": 0,
+      "stale": false
+    },
+    "message": {
+      "num_signers": 1,
+      "num_writable_signers": 1,
+      "num_writable_non_signers": 4,
+      "account_keys": [
+        "Cekxm3iBGP1RP51nDsgjccJxUiRdGUk9pxxg83yDoKw5",
+        "7w9DXzNo2KsRCdGnftQtUah2tFnLhqBgFM8eRXbkr3rS",
+        "ApwXwqGcQhbHdQiXtu1v4uY1eo4HQPh3ZTiznuwXfUut",
+        "DWDPSMDP1B675zWF8VE5myFyU5XUxRC68HAPDPYLiAop",
+        "ATeFFvxA6Z56yDdLZKVaaZ26MgCYMkqMa72HR32SJRrQ",
+        "BPFLoaderUpgradeab1e11111111111111111111111",
+        "SysvarRent111111111111111111111111111111111",
+        "SysvarC1ock11111111111111111111111111111111"
+      ],
+      "instructions": [
+        {
+          "program_id_index": 5,
+          "account_indexes": [
+            1,
+            2,
+            3,
+            4,
+            6,
+            7,
+            0
+          ],
+          "data": "03000000"
+        }
+      ],
+      "address_table_lookups": []
+    },
+    "upgrade": {
+      "program": "ApwXwqGcQhbHdQiXtu1v4uY1eo4HQPh3ZTiznuwXfUut",
+      "programdata": "7w9DXzNo2KsRCdGnftQtUah2tFnLhqBgFM8eRXbkr3rS",
+      "buffer": "DWDPSMDP1B675zWF8VE5myFyU5XUxRC68HAPDPYLiAop",
+      "spill": "ATeFFvxA6Z56yDdLZKVaaZ26MgCYMkqMa72HR32SJRrQ",
+      "authority": "Cekxm3iBGP1RP51nDsgjccJxUiRdGUk9pxxg83yDoKw5"
+    },
+    "current_program": {
+      "upgrade_authority": "Cekxm3iBGP1RP51nDsgjccJxUiRdGUk9pxxg83yDoKw5",
+      "deploy_slot": 228467856,
+      "executable": {
+        "sha256": "761086bc256f59c7e5e9d7bc554f607d5706359341623c1aaad935451dae4ac8",
+        "len": 164624
+      }
+    },
+    "buffer": {
+      "authority": "Cekxm3iBGP1RP51nDsgjccJxUiRdGUk9pxxg83yDoKw5",
+      "artifact": {
+        "sha256": "fe2bc73d073627467ebb63051170fb9d1bf6a603f5d9c34fb31ef01434143085",
+        "len": 82312
+      }
+    },
+    "accounts": [
+      {
+        "role": "multisig",
+        "address": "74VMouGCdAZ7EsekxitF2DbfhoNxrfybfszqduANSXFQ",
+        "present": true,
+        "owner": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+        "lamports": "2275920",
+        "executable": false,
+        "data_len": 199,
+        "data_sha256": "54f3ea511e82067cdb076bf074a5db3c1f090eca5f782056382f75c66113ea0c"
+      },
+      {
+        "role": "vault_transaction",
+        "address": "7tUHBDf22HWMHAsh8uzxdguH3vcsPRzz8ULMf7yrSTSG",
+        "present": true,
+        "owner": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+        "lamports": "3521760",
+        "executable": false,
+        "data_len": 378,
+        "data_sha256": "ab3a344564797d47826a1d268f28419a088e205177daecaa4b49e87575b8c23d"
+      },
+      {
+        "role": "proposal",
+        "address": "HbbLdRTysKF4r1QvBo22wm9kqtMoG8SMxxMatb9oVB8G",
+        "present": true,
+        "owner": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+        "lamports": "3382560",
+        "executable": false,
+        "data_len": 358,
+        "data_sha256": "ac98eb19c49336deb4f1149a4679994410dabdbd1bb3f73978cdacce4335fa29"
+      },
+      {
+        "role": "program",
+        "address": "ApwXwqGcQhbHdQiXtu1v4uY1eo4HQPh3ZTiznuwXfUut",
+        "present": true,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "lamports": "1141440",
+        "executable": true,
+        "data_len": 36,
+        "data_sha256": "5e5ddf8ef3e6ce419f004c97103ec070ec85310b7d6e110e3dfe246e438fe288"
+      },
+      {
+        "role": "programdata",
+        "address": "7w9DXzNo2KsRCdGnftQtUah2tFnLhqBgFM8eRXbkr3rS",
+        "present": true,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "lamports": "1146987120",
+        "executable": false,
+        "data_len": 164669,
+        "data_sha256": "e5c07786125d59206fac2bda29bd328cc267c5a6be5f7330fdc019a1b8286f56"
+      },
+      {
+        "role": "buffer",
+        "address": "DWDPSMDP1B675zWF8VE5myFyU5XUxRC68HAPDPYLiAop",
+        "present": true,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "lamports": "574095600",
+        "executable": false,
+        "data_len": 82349,
+        "data_sha256": "e7283ff4769f2f3385f8fe6d4018d7d3bccb2d34e00b9c74ff3f3462a82a9dfb"
+      }
+    ]
+  },
+  "outcome": "matched",
+  "reasons": [],
+  "statement": "Squads transaction #1 of multisig 74VMouGCdAZ7EsekxitF2DbfhoNxrfybfszqduANSXFQ matched analysed change 80f5cf1a83c65c95ac1845769ecdf7a04e04cbacab9992690935aa6d55535839 at slot 450319467 (finalized): the same program upgrade, and its buffer held the analysed candidate fe2bc73d073627467ebb63051170fb9d1bf6a603f5d9c34fb31ef01434143085. The buffer's authority is the Squads vault, so its bytes can change again only through another transaction that vault executes. Re-verify immediately before approving or executing. Proposal status: Active."
+}

@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "binding_id": "b6db9970684b01a1da84f829e6e17d879f310dba4a2d394e28eb0c3133739f21",
+  "kind": "squads_v4_program_upgrade",
+  "decoder": {
+    "squads_program_id": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+    "source_repository": "https://github.com/Squads-Protocol/v4",
+    "source_revision": "af94153ff77a28b6effe46b9c94baaa93742b48c",
+    "program_crate_version": "2.1.0",
+    "decoder": "eplyx-squads-v4-decoder-v1",
+    "message_hash_domain": "eplyx-squads-v4-vault-message-v1",
+    "loader_interface": "solana-loader-v3-interface 8.0.1"
+  },
+  "commitment": "finalized",
+  "request": {
+    "multisig": "5UcYkuhhiVBxLGY764pDcw3Xaqx7L6x9Kerr3RbvTzJ5",
+    "transaction_index": 1
+  },
+  "analysed_change_spec_id": "cba0af68dc7376c33ab85610f1bbde30c58d6512aaf4a3f8d9c8949d95214536",
+  "bound_change_spec_id": null,
+  "expected": {
+    "target_program_id": "6pppX8DZWkYBTpveVAteaHCzErphchSYMvyTtGhpySfm",
+    "candidate": {
+      "sha256": "b10c1c9355105987a5d36996aa3abbd94b41f72536a57edd6a91186692a0761d",
+      "len": 38768
+    },
+    "delivery": {
+      "squads_program_id": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+      "multisig": "8fJvcwpRbEaTsRPcxWrrUHDPPstSnWSctQH7s4KYzgSy",
+      "vault_index": 0,
+      "vault": "5UcYkuhhiVBxLGY764pDcw3Xaqx7L6x9Kerr3RbvTzJ5",
+      "transaction_index": 1,
+      "transaction": "EPSAEZxXWmDojSPvaom19d7jN1xgfMBMMyfooe2EhBt8",
+      "proposal": "AZrF6aoevkCgMjpLcP5SBLf1ktcmtfb8TJkX66c6Xzrp",
+      "message_sha256": "f3760817e9c10c55012ec22c19218e7989a0fb2a14372f96b08bb269fa65ee89"
+    }
+  },
+  "observation": {
+    "slot": 450319073,
+    "message_read_slot": 450319072,
+    "accounts": [
+      {
+        "role": "multisig",
+        "address": "5UcYkuhhiVBxLGY764pDcw3Xaqx7L6x9Kerr3RbvTzJ5",
+        "present": false
+      },
+      {
+        "role": "vault_transaction",
+        "address": "FcNNuNrxKP4WiU6vZuDj5ypWpRudEwmbuDDAfeZMiURG",
+        "present": false
+      },
+      {
+        "role": "proposal",
+        "address": "GVB9BuafDQPkfyYvFnwzeYFFAmAFcKHAAPpRemypaNHL",
+        "present": false
+      }
+    ]
+  },
+  "outcome": "unverifiable",
+  "reasons": [
+    {
+      "outcome": "different_proposal",
+      "code": "proposal_reference_differs",
+      "detail": "the analysed change is bound to transaction 1 of multisig 8fJvcwpRbEaTsRPcxWrrUHDPPstSnWSctQH7s4KYzgSy, not transaction 1 of multisig 5UcYkuhhiVBxLGY764pDcw3Xaqx7L6x9Kerr3RbvTzJ5"
+    },
+    {
+      "outcome": "unverifiable",
+      "code": "account_missing",
+      "detail": "no vault transaction exists at FcNNuNrxKP4WiU6vZuDj5ypWpRudEwmbuDDAfeZMiURG (transaction 1 of 5UcYkuhhiVBxLGY764pDcw3Xaqx7L6x9Kerr3RbvTzJ5)"
+    },
+    {
+      "outcome": "unverifiable",
+      "code": "account_missing",
+      "detail": "no multisig exists at 5UcYkuhhiVBxLGY764pDcw3Xaqx7L6x9Kerr3RbvTzJ5"
+    },
+    {
+      "outcome": "unverifiable",
+      "code": "account_missing",
+      "detail": "no proposal exists at GVB9BuafDQPkfyYvFnwzeYFFAmAFcKHAAPpRemypaNHL for transaction 1"
+    }
+  ],
+  "statement": "Eplyx could not verify Squads transaction #1 of multisig 5UcYkuhhiVBxLGY764pDcw3Xaqx7L6x9Kerr3RbvTzJ5 at slot 450319073 (finalized): no vault transaction exists at FcNNuNrxKP4WiU6vZuDj5ypWpRudEwmbuDDAfeZMiURG (transaction 1 of 5UcYkuhhiVBxLGY764pDcw3Xaqx7L6x9Kerr3RbvTzJ5)."
+}

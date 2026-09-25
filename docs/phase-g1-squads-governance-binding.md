@@ -194,6 +194,10 @@ Upgrade.
   normalized account, so they do not depend on the provider.
 - Every statement names its slot. "Proposal matched analysed ChangeSpec at slot
   S" is the claim. "Can never diverge" is never made.
+- A load-balanced endpoint can route the second read to a node behind the
+  first read (`-32016`). That one error is waited out, up to five times with
+  backoff, still under `minContextSlot`. An older view is never accepted, and
+  every other error stays `unverifiable`. G1.1 found this on mainnet.
 - `eplyx governance squads verify` (or the API) re-reads everything. There is
   no cached path: `verify_squads_upgrade` takes no stored binding
   (`m20…`: after a buffer rewrite the re-check returns `stale_artifact` at a
@@ -401,6 +405,14 @@ It does **not** mean:
   multisig's `config_authority` is recorded, not judged;
 - anything about proposals using lookup tables, ephemeral signers, or more than
   one instruction.
+
+## Mainnet qualification
+
+Qualified on real mainnet in [Phase G1.1](phase-g1-1-squads-mainnet-qualification.md):
+three real Squads program-upgrade proposals were `matched` through this path
+and cross-checked by an independent decoder. That phase also documents two real
+shapes this contract refuses or mislabels: spill = vault in 5.9% of upgrade
+proposals, and pre-2023 ProposalStatus numbering.
 
 ## Recommendation for the next governance phase
 

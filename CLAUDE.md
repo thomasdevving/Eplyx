@@ -332,6 +332,18 @@ does, locally and explicitly. Decoder pinned to Squads-Protocol/v4 @
 `governance::simulated::World` is test/fixture support only. See
 `docs/phase-g1-squads-governance-binding.md`.
 
+**Qualified on mainnet (G1.1).** Three real Squads upgrade proposals `matched`
+through the built binary on the public RPC. The committed raw account bytes and
+sealed bindings are re-checked offline by `governance_mainnet_evidence`. Real
+findings, deliberately not admitted: spill = vault (`[1,2,3,0,5,6,0]`, 5.9% of
+upgrade proposals) is `unsupported_proposal`. Proposals not rewritten since
+Squads inserted `Executing` at variant 4 (2023-06-23) use the old status
+numbering: old `Executed` fails closed, and old `Cancelled` is
+indistinguishable from `Executed` (label only). Real buffers are unpadded ELFs.
+The consistency read waits out JSON-RPC `-32016` (a lagging node) and never
+accepts an older view. See `docs/phase-g1-1-squads-mainnet-qualification.md`
+and `scripts/qualify-g1-squads-mainnet.mjs`.
+
 ## Conventions and prior decisions
 
 - **Anchor is not used.** It would add a CLI version dependency and a large tree to a program whose job is to be small with a hand-checkable byte layout — and that layout is what the diff engine decodes. Anchor's value (IDL-driven decoding) belongs to the phase supporting third-party protocols.

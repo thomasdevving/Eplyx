@@ -63,12 +63,6 @@ function sliceMessage(data) {
   return data.subarray(start, at);
 }
 
-const fixture = read('vault-transaction.json');
-const stored = sliceMessage(Buffer.from(fixture.data_base64, 'base64'));
-const storedHash = messageHash(stored);
-check(storedHash === fixture.message_sha256, `stored account message hash ${storedHash.slice(0, 16)}…`);
-check(fixture.delivery.message_sha256 === storedHash, 'fixture delivery names the stored message');
-
 // ---- 2. re-encode a binding's message view --------------------------------
 const B58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
 function base58(text) {
@@ -107,6 +101,29 @@ function encodeMessage(view) {
     ...view.address_table_lookups.map(l => Buffer.concat([base58(l.account_key), vec(l.writable_indexes), vec(l.readonly_indexes)])),
   ]);
 }
+
+// `node scripts/verify-squads-binding.mjs FILE...` checks sealed bindings
+// written anywhere (G1.1 mainnet evidence): id, message view → hash, slot.
+const files = process.argv.slice(2);
+if (files.length) {
+  for (const file of files) {
+    const binding = JSON.parse(readFileSync(file, 'utf8'));
+    const { binding_id: stated, ...body } = binding;
+    check(sha256(JSON.stringify(['eplyx-governance-binding-v1', body])) === stated, `${file} binding_id`);
+    const view = binding.observation.message;
+    if (view) check(messageHash(encodeMessage(view)) === binding.observation.delivery.message_sha256, `${file} message ${binding.observation.delivery.message_sha256.slice(0, 16)}… re-encodes`);
+    check(binding.statement.includes(`slot ${binding.observation.slot}`), `${file} statement names slot ${binding.observation.slot}`);
+  }
+  if (failures) process.exit(1);
+  console.log('\nevery binding reproduces independently');
+  process.exit(0);
+}
+
+const fixture = read('vault-transaction.json');
+const stored = sliceMessage(Buffer.from(fixture.data_base64, 'base64'));
+const storedHash = messageHash(stored);
+check(storedHash === fixture.message_sha256, `stored account message hash ${storedHash.slice(0, 16)}…`);
+check(fixture.delivery.message_sha256 === storedHash, 'fixture delivery names the stored message');
 
 // ---- 3. change spec identities --------------------------------------------
 const changeSpecId = spec =>

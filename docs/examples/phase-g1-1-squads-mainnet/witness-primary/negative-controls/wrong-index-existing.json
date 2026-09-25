@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "binding_id": "b3b8f81507d2654b186361f21d014592e64f380535f5459d013371386be86be4",
+  "kind": "squads_v4_program_upgrade",
+  "decoder": {
+    "squads_program_id": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+    "source_repository": "https://github.com/Squads-Protocol/v4",
+    "source_revision": "af94153ff77a28b6effe46b9c94baaa93742b48c",
+    "program_crate_version": "2.1.0",
+    "decoder": "eplyx-squads-v4-decoder-v1",
+    "message_hash_domain": "eplyx-squads-v4-vault-message-v1",
+    "loader_interface": "solana-loader-v3-interface 8.0.1"
+  },
+  "commitment": "finalized",
+  "request": {
+    "multisig": "8fJvcwpRbEaTsRPcxWrrUHDPPstSnWSctQH7s4KYzgSy",
+    "transaction_index": 2
+  },
+  "analysed_change_spec_id": "cba0af68dc7376c33ab85610f1bbde30c58d6512aaf4a3f8d9c8949d95214536",
+  "bound_change_spec_id": "d367951924d4c3f7f50572649022ba9adbe01308441e463887690b2b540ebd11",
+  "expected": {
+    "target_program_id": "6pppX8DZWkYBTpveVAteaHCzErphchSYMvyTtGhpySfm",
+    "candidate": {
+      "sha256": "b10c1c9355105987a5d36996aa3abbd94b41f72536a57edd6a91186692a0761d",
+      "len": 38768
+    },
+    "delivery": {
+      "squads_program_id": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+      "multisig": "8fJvcwpRbEaTsRPcxWrrUHDPPstSnWSctQH7s4KYzgSy",
+      "vault_index": 0,
+      "vault": "5UcYkuhhiVBxLGY764pDcw3Xaqx7L6x9Kerr3RbvTzJ5",
+      "transaction_index": 1,
+      "transaction": "EPSAEZxXWmDojSPvaom19d7jN1xgfMBMMyfooe2EhBt8",
+      "proposal": "AZrF6aoevkCgMjpLcP5SBLf1ktcmtfb8TJkX66c6Xzrp",
+      "message_sha256": "f3760817e9c10c55012ec22c19218e7989a0fb2a14372f96b08bb269fa65ee89"
+    }
+  },
+  "observation": {
+    "slot": 450319049,
+    "message_read_slot": 450319049,
+    "delivery": {
+      "squads_program_id": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+      "multisig": "8fJvcwpRbEaTsRPcxWrrUHDPPstSnWSctQH7s4KYzgSy",
+      "vault_index": 0,
+      "vault": "5UcYkuhhiVBxLGY764pDcw3Xaqx7L6x9Kerr3RbvTzJ5",
+      "transaction_index": 2,
+      "transaction": "3XY6okX1NSjCUi512yGKUFa1AJwHH3ZTJedmimaJjN1k",
+      "proposal": "FMFg6DsaWr4LUdBnpFY3JMGbfKeYXGrQ4hE9s6Th9RUr",
+      "message_sha256": "82fe8f7fdf66581380f2a6e55fff081610b9720eb4886c463ea01173711c6ae4"
+    },
+    "multisig": {
+      "threshold": 1,
+      "time_lock_seconds": 0,
+      "transaction_index": 2,
+      "stale_transaction_index": 0,
+      "members": 2,
+      "config_authority": "GwCDJgtuKH73rxH3uAxJMMbihESwqqA7N7eBVc7VURvh"
+    },
+    "proposal": {
+      "status": "executed",
+      "status_timestamp": 1789493637,
+      "approvals": 1,
+      "rejections": 0,
+      "cancellations": 0,
+      "stale": false
+    },
+    "message": {
+      "num_signers": 1,
+      "num_writable_signers": 1,
+      "num_writable_non_signers": 4,
+      "account_keys": [
+        "5UcYkuhhiVBxLGY764pDcw3Xaqx7L6x9Kerr3RbvTzJ5",
+        "GfAzhPuw7kT2mVn8DWdRX4ApD22vFdUFYcckwJ6SXBha",
+        "6pppX8DZWkYBTpveVAteaHCzErphchSYMvyTtGhpySfm",
+        "3NnW75mSNkx7UvVhXfPrJNiGzbWrg3u72eAALKoEhZrL",
+        "2Xus29EwLsMmcynBzfomzhb9v5jD7h4X6iE1t7YoGZJC",
+        "BPFLoaderUpgradeab1e11111111111111111111111",
+        "SysvarRent111111111111111111111111111111111",
+        "SysvarC1ock11111111111111111111111111111111"
+      ],
+      "instructions": [
+        {
+          "program_id_index": 5,
+          "account_indexes": [
+            1,
+            2,
+            3,
+            4,
+            6,
+            7,
+            0
+          ],
+          "data": "03000000"
+        }
+      ],
+      "address_table_lookups": []
+    },
+    "upgrade": {
+      "program": "6pppX8DZWkYBTpveVAteaHCzErphchSYMvyTtGhpySfm",
+      "programdata": "GfAzhPuw7kT2mVn8DWdRX4ApD22vFdUFYcckwJ6SXBha",
+      "buffer": "3NnW75mSNkx7UvVhXfPrJNiGzbWrg3u72eAALKoEhZrL",
+      "spill": "2Xus29EwLsMmcynBzfomzhb9v5jD7h4X6iE1t7YoGZJC",
+      "authority": "5UcYkuhhiVBxLGY764pDcw3Xaqx7L6x9Kerr3RbvTzJ5"
+    },
+    "current_program": {
+      "upgrade_authority": "5UcYkuhhiVBxLGY764pDcw3Xaqx7L6x9Kerr3RbvTzJ5",
+      "deploy_slot": 447307986,
+      "executable": {
+        "sha256": "b10c1c9355105987a5d36996aa3abbd94b41f72536a57edd6a91186692a0761d",
+        "len": 38768
+      }
+    },
+    "accounts": [
+      {
+        "role": "multisig",
+        "address": "8fJvcwpRbEaTsRPcxWrrUHDPPstSnWSctQH7s4KYzgSy",
+        "present": true,
+        "owner": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+        "lamports": "2268960",
+        "executable": false,
+        "data_len": 198,
+        "data_sha256": "83d381ae08c5788fda9e971f72632944d66effe48dac2a614fc5d065d42d0740"
+      },
+      {
+        "role": "vault_transaction",
+        "address": "3XY6okX1NSjCUi512yGKUFa1AJwHH3ZTJedmimaJjN1k",
+        "present": true,
+        "owner": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+        "lamports": "3204498",
+        "executable": false,
+        "data_len": 378,
+        "data_sha256": "154b29e417e86357e1615e8a838f14c7283aab168ca60519de77705257df1724"
+      },
+      {
+        "role": "proposal",
+        "address": "FMFg6DsaWr4LUdBnpFY3JMGbfKeYXGrQ4hE9s6Th9RUr",
+        "present": true,
+        "owner": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+        "lamports": "2469870",
+        "executable": false,
+        "data_len": 262,
+        "data_sha256": "501f8979cc08a36a844dad6b0a9538e80703fa79d5419c876afc9152ec0ad035"
+      },
+      {
+        "role": "program",
+        "address": "6pppX8DZWkYBTpveVAteaHCzErphchSYMvyTtGhpySfm",
+        "present": true,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "lamports": "1141440",
+        "executable": true,
+        "data_len": 36,
+        "data_sha256": "63eada46fc7769aad9511aa80ac2acff218a93f5b86e327be03a17295f0a8db2"
+      },
+      {
+        "role": "programdata",
+        "address": "GfAzhPuw7kT2mVn8DWdRX4ApD22vFdUFYcckwJ6SXBha",
+        "present": true,
+        "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "lamports": "197820280",
+        "executable": false,
+        "data_len": 38813,
+        "data_sha256": "cfa36bc56980b1d8ef8375117c5ffeaa65565e9120c592c417abacc884574f4c"
+      },
+      {
+        "role": "buffer",
+        "address": "3NnW75mSNkx7UvVhXfPrJNiGzbWrg3u72eAALKoEhZrL",
+        "present": false
+      }
+    ]
+  },
+  "outcome": "unverifiable",
+  "reasons": [
+    {
+      "outcome": "different_proposal",
+      "code": "proposal_reference_differs",
+      "detail": "the analysed change is bound to transaction 1 of multisig 8fJvcwpRbEaTsRPcxWrrUHDPPstSnWSctQH7s4KYzgSy, not transaction 2 of multisig 8fJvcwpRbEaTsRPcxWrrUHDPPstSnWSctQH7s4KYzgSy"
+    },
+    {
+      "outcome": "unverifiable",
+      "code": "buffer_missing",
+      "detail": "buffer 3NnW75mSNkx7UvVhXfPrJNiGzbWrg3u72eAALKoEhZrL no longer exists: the proposal was executed and Upgrade consumed it, so its bytes cannot be checked here"
+    }
+  ],
+  "statement": "Eplyx could not verify Squads transaction #2 of multisig 8fJvcwpRbEaTsRPcxWrrUHDPPstSnWSctQH7s4KYzgSy at slot 450319049 (finalized): buffer 3NnW75mSNkx7UvVhXfPrJNiGzbWrg3u72eAALKoEhZrL no longer exists: the proposal was executed and Upgrade consumed it, so its bytes cannot be checked here. Proposal status: Executed."
+}

@@ -512,6 +512,17 @@ impl Reasons {
     }
 }
 
+/// How often the consistency read waits for a lagging node. Bounded: a
+/// provider that never catches up is `unverifiable`, as before.
+const MIN_CONTEXT_SLOT_RETRIES: u32 = 5;
+
+/// JSON-RPC -32016, "Minimum context slot has not been reached". The one
+/// error a retry can cure; every other failure stays a failure.
+fn is_min_context_slot_not_reached(error: &anyhow::Error) -> bool {
+    let text = format!("{error:#}");
+    text.contains("-32016") || text.contains("Minimum context slot has not been reached")
+}
+
 /// `getMultipleAccounts`: every account at one context slot.
 fn read_accounts(
     rpc: &dyn RpcProvider,
@@ -524,7 +535,24 @@ fn read_accounts(
         config["minContextSlot"] = json!(slot);
     }
     let keys_text: Vec<String> = keys.iter().map(Address::to_string).collect();
-    let response = rpc.call("getMultipleAccounts", json!([keys_text, config]))?;
+    let params = json!([keys_text, config]);
+    let mut attempt = 0;
+    let response = loop {
+        match rpc.call("getMultipleAccounts", params.clone()) {
+            // A load-balanced endpoint can route the consistency read to a node
+            // that has not reached the first read's slot yet (G1.1 saw this on
+            // mainnet). Wait for it; never accept the older view instead.
+            Err(error)
+                if min_context_slot.is_some()
+                    && attempt < MIN_CONTEXT_SLOT_RETRIES
+                    && is_min_context_slot_not_reached(&error) =>
+            {
+                attempt += 1;
+                std::thread::sleep(std::time::Duration::from_millis(400 * attempt as u64));
+            }
+            other => break other?,
+        }
+    };
     let slot = response["context"]["slot"]
         .as_u64()
         .context("getMultipleAccounts response carries no context slot")?;
