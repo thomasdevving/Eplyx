@@ -202,10 +202,14 @@ await checkAsync('no coverage with detected-but-unnameable changes says both', a
 });
 
 await checkAsync('a real undeclared change is still headlined as one', async () => {
-  const html = await follow('n3', { run_id: 'n3', status: 'failed', exit_code: 1, report_available: true }, gateReport(['undeclared_change']));
+  const html = await follow('n3', { run_id: 'n3', status: 'failed', exit_code: 1, report_available: true }, gateReport(['undeclared_change'], {
+    coverage: [{ subject: 'spl-stake-pool/deposit_sol/economic/pool_tokens_received', observations: 1 }],
+    findings: [{ fingerprint: 'spl-stake-pool/deposit_sol/economic/pool_tokens_received/decreased', severity: 'high', status: 'unexpected', observations: ['o'], entities: [], covered_observations: 1, max_relative_delta_bps: -1 }],
+  }));
   assert.match(html, /Unexpected economic changes detected/);
   assert.doesNotMatch(html, /could not be evaluated/);
-  assert.match(html, /<span>Failed<\/span>/);
+  assert.match(html, /<span>Changes detected<\/span>/);
+  assert.match(html, /CI gate Failed/);
 });
 
 await checkAsync('a run resumed after a restart keeps its id and says it resumed', async () => {

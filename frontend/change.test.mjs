@@ -81,6 +81,8 @@ const report = (id = CHANGE_ID) => ({
 
 /** Visible text: markup, attributes and their values removed. */
 const visible = html => html.replace(/<[^>]*>/g, ' ');
+/** The ordinary view: everything except the technical details layer. */
+const ordinary = html => visible(html.replace(/<section[^>]*data-technical[\s\S]*?<\/section>/g, ''));
 
 /** Follow one run to the stubbed server's answer and return the page. */
 async function follow(run, { report: body = null, spec: stored = null, project = null } = {}) {
@@ -199,7 +201,8 @@ await check('a legacy run is labelled legacy and is given no invented identity',
   assert.match(html, /Legacy run/);
   assert.doesNotMatch(html, /Change ID<\/dt>/, 'a change ID was shown for a run that has none');
   assert.ok(!html.includes(CHANGE_ID), 'an identity was invented');
-  assert.match(html, /economic changes detected/i, 'the legacy report itself was not shown');
+  assert.match(html, /id="technical"/, 'the legacy report itself was not shown');
+  assert.match(html, /Economic impact/);
 
   // One recorded after C1 but before P1 carries the engine's own change in
   // its report; that is shown, and is said to come from the report.
@@ -212,7 +215,8 @@ await check('history lines name the change, and legacy runs as legacy', () => {
   const line = changeLine({ change: change({ label: null }) });
   assert.match(line, /Program upgrade → /);
   assert.match(line, new RegExp(`change ${CHANGE_ID.slice(0, 8)}`));
-  assert.match(line, new RegExp(`candidate ${CANDIDATE.slice(0, 8)}`));
+  // P3: a history row names the change, not the candidate hash database.
+  assert.doesNotMatch(line, new RegExp(CANDIDATE.slice(0, 8)));
   assert.match(changeLine({ change: change({ label: 'Release 2.1' }) }), /Release 2\.1 → /);
   const legacy = changeLine({ change: null, candidate_sha256: CANDIDATE });
   assert.match(legacy, /Legacy run/);
@@ -268,7 +272,7 @@ await check('the ordinary report view does not speak internal type names', async
     { report: report(), spec: spec() },
   );
   for (const internal of ['ReplayObservationV2', 'CheckpointedExecutionV1', 'contract 3', 'SemanticBinding', 'ChangeSpec']) {
-    assert.ok(!visible(html).includes(internal), `the page says ${internal}`);
+    assert.ok(!ordinary(html).includes(internal), `the page says ${internal}`);
   }
 });
 

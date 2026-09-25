@@ -26,6 +26,7 @@ make test             # program tests (both flavours) + engine unit + end-to-end
 make lint             # clippy -D warnings across both workspaces and both features
 make fmt-check        # rustfmt across both workspaces
 make fixtures         # regenerate fixtures/states/ after changing corpus.rs
+make impact-fixtures  # regenerate the P3 impact-view CI reports
 make report           # JSON to report.json
 make demo-token2022-upgrade   # Phase 7: real Token-2022 upgrade over a real PYUSD transfer
 make demo-cpi-mainnet-replay  # Phase 8: real stake-pool upgrade over a real CPI deposit
@@ -48,6 +49,7 @@ cargo run -p eplyx-engine -- compare [--format json] [--no-minimize] [--fail-on-
 cargo run -p eplyx-engine -- reproduce boundary-position-017   # one fixture
 cargo run -p eplyx-engine -- reproduce newly-liquidatable      # a regression group
 pnpm install && pnpm verify:report                             # JSON contract check
+pnpm check:frontend                                            # page render tests (incl. P3)
 python3 scripts/measure-adapter-duplication.py \
   engine/src/protocol/stake_pool.rs engine/src/protocol/token2022.rs "overlap"   # Phase U1 control
 ```
@@ -270,6 +272,20 @@ Artefact visibility and reuse (`GET /v1/projects/{p}/artifacts/{sha}`, and a
 `change_spec` sent without `candidate`) are scoped to the project that supplied
 the bytes. `no_semantic_coverage` is headlined as "could not be evaluated", never
 as unexpected changes. See `docs/phase-p2-durable-hosted-analyses.md`.
+
+### Impact view (Phase P3)
+
+The analysis page is a projection of `CiReport`, never a second analysis:
+`frontend/src/analysis.js` (`analysisView`, `runSummary`) is a pure view model
+that maps report facts to presentation and computes no protocol quantity.
+Execution and economic evaluation are separate dimensions; empty coverage or
+`no_semantic_coverage` is "not evaluated", never safe and never adverse; a
+`now_reverts` finding leads the page; no page says "safe". `ReviewedFinding`
+carries per-observation `values` (the adapter's own baseline/candidate,
+skipped when empty, so reports without findings are byte-identical). The page
+is tested against engine-produced fixtures in
+`docs/examples/phase-p3-impact-view/` (`make impact-fixtures`; the controlled
+Drift ones are counterexamples, not builds). See `docs/phase-p3-impact-view.md`.
 
 ## Conventions and prior decisions
 

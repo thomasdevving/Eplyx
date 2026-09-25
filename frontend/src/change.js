@@ -67,6 +67,14 @@ export function resolveChange(run, report, spec) {
   if (registered && stated && registered.change_spec_id !== stated) {
     conflicts.push(`the run was accepted for ${registered.change_spec_id} but its stored spec is ${stated}`);
   }
+  // P2: the report must be about the bytes the run stored, not merely the
+  // same change ID. The server refuses such a report; a page shown one anyway
+  // says so rather than rendering it.
+  const accepted = run?.candidate_sha256 ?? null;
+  const executed = report?.candidate?.sha256 ?? null;
+  if (accepted && executed && accepted !== executed) {
+    conflicts.push(`the run stored candidate ${accepted} but its report executed ${executed}`);
+  }
   const change = reported ? { ...registered, ...reported } : registered;
   return {
     change,
@@ -164,5 +172,5 @@ export function changeLine(run) {
   }
   const kind = kindOf(change);
   const target = kind.target(change);
-  return `<span class="run-change"><b>${escapeHtml(change.label || kind.title)} → <span class="mono">${escapeHtml(middle(target))}</span></b><small class="mono">change ${escapeHtml(fingerprint(change.change_spec_id))} · candidate ${escapeHtml(fingerprint(change.candidate_sha256))}</small></span>`;
+  return `<span class="run-change"><b>${escapeHtml(change.label || kind.title)} → <span class="mono">${escapeHtml(middle(target))}</span></b><small class="mono">change ${escapeHtml(fingerprint(change.change_spec_id))}</small></span>`;
 }

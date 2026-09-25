@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "bundle": {
+    "sha256": "22c2b97360a5d22e68074a051ab05f7716f918ee0b72f946c1643593d0d2071b",
+    "baseline_sha256": "610b1e394973bd1b86de8afc983524bd21dea177e87bfae75ec289d4c350f9ae",
+    "corpus_sha256": "fda1f235075defd77765b9876f12d67fa1751006b71d010afb771d3cd931e526",
+    "record_count": 1,
+    "program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+    "adapter": "none",
+    "adapter_version": 0,
+    "semantic_schema_version": 2,
+    "source_slot_range": {
+      "first": 448760958,
+      "last": 448760958
+    },
+    "limitations": [
+      {
+        "code": "bounded_observations",
+        "detail": "This corpus covers only its recorded production interactions; no representativeness is claimed."
+      }
+    ]
+  },
+  "candidate": {
+    "sha256": "610b1e394973bd1b86de8afc983524bd21dea177e87bfae75ec289d4c350f9ae",
+    "len": 10485715
+  },
+  "change": {
+    "change_spec_id": "3266096699e426ac75f6c49d5b779653f8f9310e459168bce478bf8af8eacff2",
+    "kind": "program_upgrade",
+    "target_program_id": "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc",
+    "candidate_sha256": "610b1e394973bd1b86de8afc983524bd21dea177e87bfae75ec289d4c350f9ae"
+  },
+  "replay_proof": {
+    "profile": "checkpointed_execution_v1",
+    "status": "matched",
+    "observations": 1,
+    "proof_contract_versions": [
+      2
+    ]
+  },
+  "coverage": [],
+  "findings": [],
+  "unmatched": [],
+  "failures": [
+    "no_semantic_coverage"
+  ],
+  "summary": {
+    "passed": false,
+    "failure_reasons": [
+      "no_semantic_coverage"
+    ],
+    "exit_code": 2,
+    "expected": 0,
+    "unexpected": 0,
+    "expected_but_exceeded": 0,
+    "stale": 0,
+    "unevaluable": 0
+  }
+}

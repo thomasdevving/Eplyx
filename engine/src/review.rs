@@ -38,7 +38,7 @@ use crate::diff::Severity;
 use crate::expectations::{ExpectationFile, ExpectedChange};
 use crate::semantics::{
     relative_delta, EvaluableSubject, FindingFingerprint, NamedFinding, RelativeDelta,
-    UndefinedBound,
+    SemanticValue, UndefinedBound,
 };
 
 /// One finding, as measured on one observation.
@@ -153,6 +153,29 @@ pub struct ReviewedFinding {
     pub breaches: Vec<BoundBreach>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub unevaluable: Option<UnevaluableCause>,
+    /// What the adapter measured on each side, per observation, exactly as it
+    /// emitted them.
+    ///
+    /// Carried so a reader can see *before* and *proposed* without anything
+    /// downstream recomputing protocol economics. Empty — and absent from the
+    /// wire — when the adapter measured no value on either side, so a report
+    /// with no findings serializes exactly as it did before this existed.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub values: Vec<ObservedValues>,
+}
+
+/// One observation's two sides of a finding.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ObservedValues {
+    pub observation_id: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub baseline: Option<SemanticValue>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub candidate: Option<SemanticValue>,
+    /// The relative change on this observation, when one is defined. Absent
+    /// for a signed amount, a zero baseline or differing scales — never zero.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub relative_delta_bps: Option<i64>,
 }
 
 /// A declaration that matched no finding.
@@ -274,6 +297,9 @@ struct Aggregate {
     /// has to say how much of the evidence was unjudgeable: "1 of 10" is a
     /// different situation from "10 of 10".
     undefined: BTreeMap<String, UndefinedBound>,
+    /// Both sides as measured, by observation. Observations with neither side
+    /// are left out rather than recorded as empty.
+    values: BTreeMap<String, ObservedValues>,
 }
 
 /// Review measured findings against declared expectations.
@@ -317,7 +343,22 @@ pub fn review(
             Some(existing) if existing >= entry.finding.severity => existing,
             _ => entry.finding.severity,
         });
-        match measured_delta(&entry.finding) {
+        let delta = measured_delta(&entry.finding);
+        if entry.finding.baseline.is_some() || entry.finding.candidate.is_some() {
+            aggregate.values.insert(
+                entry.observation_id.clone(),
+                ObservedValues {
+                    observation_id: entry.observation_id.clone(),
+                    baseline: entry.finding.baseline.clone(),
+                    candidate: entry.finding.candidate.clone(),
+                    relative_delta_bps: match &delta {
+                        Some(RelativeDelta::Bps(bps)) => Some(*bps),
+                        _ => None,
+                    },
+                },
+            );
+        }
+        match delta {
             Some(RelativeDelta::Bps(bps)) => {
                 let larger = aggregate
                     .max_delta_bps
@@ -365,6 +406,7 @@ pub fn review(
             reason: declaration.map(|c| c.reason.clone()),
             breaches,
             unevaluable,
+            values: aggregate.values.values().cloned().collect(),
         });
     }
 
@@ -1250,5 +1292,68 @@ reason   = "declared for a subject this corpus cannot measure"
         );
         let json = serde_json::to_string(&review).unwrap();
         assert_eq!(serde_json::from_str::<Review>(&json).unwrap(), review);
+    }
+
+    #[test]
+    fn both_measured_sides_travel_per_observation_and_nothing_is_invented() {
+        let review = review(
+            &[
+                observed(
+                    SHARES,
+                    Severity::Warning,
+                    Some((100_000, 99_800)),
+                    "o2",
+                    "e2",
+                ),
+                observed(SHARES, Severity::Warning, Some((0, 5)), "o1", "e1"),
+                observed(REVERTS, Severity::Critical, None, "o3", "e3"),
+            ],
+            &[
+                coverage("o1", &[SHARES]),
+                coverage("o2", &[SHARES]),
+                coverage("o3", &[REVERTS]),
+            ],
+            &ExpectationFile::empty(),
+        );
+        let shares = review
+            .findings
+            .iter()
+            .find(|f| f.fingerprint == SHARES)
+            .unwrap();
+        // Canonical order by observation, each side exactly as measured, and a
+        // relative change only where one is defined: a zero baseline has none.
+        assert_eq!(
+            shares.values,
+            vec![
+                ObservedValues {
+                    observation_id: "o1".into(),
+                    baseline: Some(SemanticValue::quantity(0, 9)),
+                    candidate: Some(SemanticValue::quantity(5, 9)),
+                    relative_delta_bps: None,
+                },
+                ObservedValues {
+                    observation_id: "o2".into(),
+                    baseline: Some(SemanticValue::quantity(100_000, 9)),
+                    candidate: Some(SemanticValue::quantity(99_800, 9)),
+                    relative_delta_bps: Some(-20),
+                },
+            ]
+        );
+        // A finding with no measured value carries none, and says nothing on
+        // the wire, so a report without values serializes as it always did.
+        let reverts = review
+            .findings
+            .iter()
+            .find(|f| f.fingerprint == REVERTS)
+            .unwrap();
+        assert!(reverts.values.is_empty());
+        let json = serde_json::to_value(reverts).unwrap();
+        assert!(json.get("values").is_none());
+        let json = serde_json::to_string(shares).unwrap();
+        assert!(json.contains(r#""baseline":{"kind":"quantity","quantity":"0.000100000"}"#));
+        assert_eq!(
+            serde_json::from_str::<ReviewedFinding>(&json).unwrap(),
+            *shares
+        );
     }
 }

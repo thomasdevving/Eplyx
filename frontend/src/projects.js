@@ -8,6 +8,7 @@
 import { Header, Footer } from './shell.js';
 import { api, json, isConnected, setOperatorToken, short, when, ApiError } from './session.js';
 import { changeLine } from './change.js';
+import { runSummary } from './analysis.js';
 
 const STATUS_LABEL = {
   setup: 'Setup required',
@@ -358,14 +359,23 @@ function detail_view(detail, bundles, runs, issued, verified) {
 
     <section class="console-section">
       <h2>Recent runs</h2>
-      ${runs.length ? `<div class="run-list">${runs.map(run => `
+      ${runs.length ? `<div class="run-list">${runs.map(runRow).join('')}</div>`
+        : `<div class="empty-result"><p>No runs yet.</p>${project.status === 'ready' ? '<button type="button" class="button button--primary" id="analyse-link">Analyse a program upgrade <span>↗</span></button>' : ''}</div>`}
+    </section>`;
+}
+
+/**
+ * One scannable history line: what was changed, whether execution verified,
+ * and what the analysis could say about impact. Hashes stay in the run page.
+ */
+export function runRow(run) {
+  const summary = runSummary(run);
+  return `
         <article class="run-row" data-run="${escapeHtml(run.run_id)}" role="button" tabindex="0">
           <span>${escapeHtml(when(run.created_at_unix_seconds))}</span>
           ${changeLine(run)}
-          <span class="pill pill--${escapeHtml(run.status)}">${escapeHtml(run.status.replace('_', ' '))}</span>
-          <span>${run.exit_code == null ? '—' : `exit ${escapeHtml(run.exit_code)}`}</span>
-          <span class="mono">${escapeHtml(short(run.bundle_sha256))}</span>
-        </article>`).join('')}</div>`
-        : `<div class="empty-result"><p>No runs yet.</p>${project.status === 'ready' ? '<button type="button" class="button button--primary" id="analyse-link">Analyse a program upgrade <span>↗</span></button>' : ''}</div>`}
-    </section>`;
+          <span class="chip chip--${escapeHtml(summary.execution.tone)}"><small>Execution</small>${escapeHtml(summary.execution.label)}</span>
+          <span class="chip chip--${escapeHtml(summary.impact.tone)}"><small>Impact</small>${escapeHtml(summary.impact.label)}</span>
+          <span class="run-row__exit">${run.exit_code == null ? '—' : `exit ${escapeHtml(run.exit_code)}`}</span>
+        </article>`;
 }
