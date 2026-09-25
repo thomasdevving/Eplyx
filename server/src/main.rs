@@ -232,10 +232,18 @@ fn serve(config: Config, registry: Registry, requeued: Vec<String>) -> Result<()
     runtime.block_on(async move {
         let bind = config.bind;
         let concurrency = config.max_concurrent_runs;
+        let governance = match &config.governance_rpc_url {
+            Some(url) => Some(
+                Arc::new(eplyx_engine::ingest::rpc::HttpRpc::new(url.clone())?)
+                    as Arc<dyn eplyx_engine::ingest::rpc::RpcProvider + Send + Sync>,
+            ),
+            None => None,
+        };
         let state = Arc::new(AppState {
             runs: tokio::sync::Semaphore::new(config.max_concurrent_runs),
             config,
             registry,
+            governance,
         });
         // Recovered work goes back behind the same semaphore as new work.
         eplyx_server::worker::resume(&state, &requeued);

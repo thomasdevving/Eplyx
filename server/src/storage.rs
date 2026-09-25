@@ -192,6 +192,20 @@ impl Storage {
             .join(run_id))
     }
 
+    /// Governance checks of one change, kept apart from `changes/`, whose
+    /// entries are run markers.
+    pub fn project_governance_dir(
+        &self,
+        project_id: &str,
+        change_spec_id: &str,
+    ) -> Result<PathBuf> {
+        checked(change_spec_id, "change spec id")?;
+        Ok(self
+            .project_dir(project_id)?
+            .join("governance")
+            .join(change_spec_id))
+    }
+
     pub fn run_dir(&self, id: &str) -> Result<PathBuf> {
         checked(id, "run id")?;
         Ok(self.root.join("runs").join(id))

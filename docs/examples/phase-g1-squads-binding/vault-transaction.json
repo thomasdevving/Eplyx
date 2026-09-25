@@ -1,0 +1,18 @@
+{
+  "address": "Ej6AiG5B6ZymccMQi4GGzH9e9WTdcntW7QfVHJmu9TA2",
+  "data_base64": "qPqiZFEOos+iv93R9m5nvWLC2I1BJ5bofdWyh2rpSM8PqbUuDHaOoBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYKgAAAAAAAAD/APwAAAAAAQEECAAAAH1LCrZUxcfPEFN5tvLvF/GL2tTRfSH8L6Ce3DJjnDYk+1IQVODHH8VMaLtymtJ2nRlS/pvzu4NUjlU8LTbHu4UVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcGp9UXGSxcUSGMyUw9SvF/WNruCJuh/UTj29mKAAAAAAan1RcYx3TJKFZjmGkdXraLXrijm0ttXHNVWyEAAAAAAqj2kU6IobDiEBU+92OuKwDCuT0WwSTSwFN6EASAAAABAAAABwcAAAABAgMEBQYABAAAAAMAAAAAAAAA",
+  "delivery": {
+    "message_sha256": "b8694179bdb02136eda583bd5d999023ca93fb92af4166b456ee0471437dcd86",
+    "multisig": "BxJjcdWSdYQvKUkbkzekkKMkFNLJAUhCRJGimEADcseX",
+    "proposal": "BRTdm4Sob3N4juAijDystSQjVggzcckGcxALzVCpbpf9",
+    "squads_program_id": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+    "transaction": "Ej6AiG5B6ZymccMQi4GGzH9e9WTdcntW7QfVHJmu9TA2",
+    "transaction_index": 42,
+    "vault": "9S6L7oUQxAdrpBXBXgWGvtYD5Z972UHvorQsZ8ECwoMd",
+    "vault_index": 0
+  },
+  "message_hash_domain": "eplyx-squads-v4-vault-message-v1",
+  "message_sha256": "b8694179bdb02136eda583bd5d999023ca93fb92af4166b456ee0471437dcd86",
+  "note": "Simulated Squads V4 VaultTransaction account (one loader Upgrade). Not a mainnet account.",
+  "owner": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf"
+}

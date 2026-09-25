@@ -43,6 +43,25 @@ impl Harness {
                 config: test_config(),
                 registry: Registry::new(storage),
                 runs: tokio::sync::Semaphore::new(permits),
+                governance: None,
+            }),
+            scratch,
+        }
+    }
+
+    /// As [`Harness::new`], with a chain for governance verification.
+    pub fn with_governance(
+        permits: usize,
+        chain: Arc<dyn eplyx_engine::ingest::rpc::RpcProvider + Send + Sync>,
+    ) -> Self {
+        let scratch = tempfile::tempdir().expect("scratch");
+        let storage = Storage::open(scratch.path().join("data")).expect("storage");
+        Self {
+            state: Arc::new(AppState {
+                config: test_config(),
+                registry: Registry::new(storage),
+                runs: tokio::sync::Semaphore::new(permits),
+                governance: Some(chain),
             }),
             scratch,
         }
@@ -56,6 +75,7 @@ impl Harness {
             config: test_config(),
             registry: Registry::new(storage),
             runs: tokio::sync::Semaphore::new(1),
+            governance: None,
         })
     }
 
@@ -284,6 +304,7 @@ pub fn test_config() -> Config {
         max_expectation_bytes: 256 * 1024,
         max_bundle_bytes: 192 * 1024 * 1024,
         max_concurrent_runs: 2,
+        governance_rpc_url: None,
     }
 }
 

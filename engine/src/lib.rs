@@ -38,6 +38,7 @@ pub mod envelope;
 pub mod evidence;
 pub mod executor;
 pub mod expectations;
+pub mod governance;
 pub mod hexfmt;
 pub mod historical;
 pub mod impact;

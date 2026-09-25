@@ -42,6 +42,11 @@ wincode = "0.5.5"
 solana-hash = { workspace = true }
 solana-address-lookup-table-interface = { version = "=3.1.0", features = ["wincode", "bytemuck", "serde"] }
 solana-slot-hashes = { version = "=3.1.0", features = ["wincode"] }
+# The loader-v3 wire format, from the official interface rather than a local
+# copy: a governance binding decodes the Upgrade instruction a proposal would
+# execute. Pinned to the version litesvm already resolves, so no second copy.
+solana-loader-v3-interface = { version = "=8.0.1", features = ["wincode"] }
+solana-sdk-ids = "=3.1.0"
 
 [dev-dependencies]
 tempfile = "3"

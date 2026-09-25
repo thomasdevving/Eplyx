@@ -81,7 +81,44 @@ pub enum Change {
         /// baseline observation must prove this authority.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         expected_upgrade_authority: Option<String>,
+        /// How the upgrade reaches the chain, when it goes through governance.
+        /// Identifying: a proposal is a different change from the same bytes
+        /// deployed some other way, because it is what signers approve. Absent
+        /// on every spec that names no delivery, so those keep their IDs.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        delivery: Option<Delivery>,
     },
+}
+
+/// The governance vehicle that would execute a change.
+///
+/// Immutable facts about *which* proposal only. Proposal status, votes and
+/// timestamps are observations of the proposal, never its identity: an
+/// approval must not turn a proposal into a different change.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "provider", rename_all = "snake_case")]
+pub enum Delivery {
+    SquadsV4(SquadsV4Delivery),
+}
+
+/// One Squads V4 vault transaction. Every address here is derivable from
+/// `multisig`, `vault_index` and `transaction_index`; they are stated so the
+/// spec reads on its own, and refused unless they are exactly the derivation.
+///
+/// `message_sha256` is what makes it *this* proposal and not merely this
+/// slot in the multisig's sequence: the versioned hash of the exact message
+/// Squads stores and would execute (see `governance::squads::message_hash`).
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct SquadsV4Delivery {
+    pub squads_program_id: String,
+    pub multisig: String,
+    pub vault_index: u8,
+    pub vault: String,
+    pub transaction_index: u64,
+    pub transaction: String,
+    pub proposal: String,
+    pub message_sha256: String,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
@@ -204,6 +241,7 @@ impl ChangeSpec {
                 candidate: ExecutableArtifact::of(candidate),
                 replaces: None,
                 expected_upgrade_authority: None,
+                delivery: None,
             },
             activation: None,
             metadata: ChangeMetadata::default(),
@@ -240,6 +278,7 @@ impl ChangeSpec {
                 candidate,
                 replaces,
                 expected_upgrade_authority,
+                delivery,
             } => {
                 canonical_address(&target.program_id, "target program")?;
                 if let Some(address) = &target.programdata_address {
@@ -251,6 +290,9 @@ impl ChangeSpec {
                 }
                 if let Some(authority) = expected_upgrade_authority {
                     canonical_address(authority, "expected upgrade authority")?;
+                }
+                if let Some(Delivery::SquadsV4(squads)) = delivery {
+                    crate::governance::squads::validate_delivery(squads)?;
                 }
             }
         }
@@ -303,6 +345,23 @@ impl ChangeSpec {
         }
     }
 
+    /// The governance vehicle, when the spec names one.
+    pub fn delivery(&self) -> Option<&Delivery> {
+        match &self.change {
+            Change::ProgramUpgrade { delivery, .. } => delivery.as_ref(),
+        }
+    }
+
+    /// The same proposal delivered by `delivery`. A different change, with a
+    /// different ID; everything else it states is kept.
+    pub fn with_delivery(&self, delivery: Option<Delivery>) -> Self {
+        let mut spec = self.clone();
+        spec.change_spec_id = None;
+        let Change::ProgramUpgrade { delivery: slot, .. } = &mut spec.change;
+        *slot = delivery;
+        spec
+    }
+
     /// Check the proposal against the baseline a bundle proves.
     ///
     /// Every expectation the spec states must be proved by the baseline;
@@ -310,11 +369,14 @@ impl ChangeSpec {
     /// than satisfying it. Unstated expectations are not checked.
     pub fn bind(&self, baseline: &BaselineTarget) -> Result<ChangeBinding> {
         self.validate()?;
+        // The delivery is a chain question, answered by `governance`: a bundle
+        // proves the baseline, not which proposal is open today.
         let Change::ProgramUpgrade {
             target,
             candidate,
             replaces,
             expected_upgrade_authority,
+            delivery,
         } = &self.change;
         ensure!(
             target.program_id == baseline.program_id,
@@ -367,6 +429,7 @@ impl ChangeSpec {
             kind: self.kind(),
             target_program_id: target.program_id.clone(),
             candidate_sha256: candidate.sha256.clone(),
+            delivery: delivery.clone(),
         })
     }
 
@@ -465,6 +528,11 @@ pub struct ChangeBinding {
     pub kind: ChangeKind,
     pub target_program_id: String,
     pub candidate_sha256: String,
+    /// The governance vehicle the analysed spec names, so a report about a
+    /// proposal says so. Absent otherwise, which keeps every report of an
+    /// unbound change byte-identical.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delivery: Option<Delivery>,
 }
 
 #[cfg(test)]
@@ -503,6 +571,7 @@ mod tests {
             candidate,
             replaces,
             expected_upgrade_authority,
+            ..
         } = &mut spec.change;
         (target, candidate, replaces, expected_upgrade_authority)
     }

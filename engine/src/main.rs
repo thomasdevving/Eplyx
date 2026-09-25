@@ -66,6 +66,12 @@ enum Command {
         #[command(subcommand)]
         command: ChangeCommand,
     },
+    /// Bind a governance proposal to an analysed change. Read-only: never
+    /// signs, approves, rejects, cancels or executes anything.
+    Governance {
+        #[command(subcommand)]
+        command: GovernanceCommand,
+    },
     /// Assemble and verify the offline CI bundle a gate runs against.
     Bundle {
         #[command(subcommand)]
@@ -397,6 +403,99 @@ struct CiCheckArgs {
     /// Write the report to a file instead of stdout.
     #[arg(long)]
     out: Option<PathBuf>,
+}
+
+#[derive(Subcommand)]
+enum GovernanceCommand {
+    /// Squads V4 vault transactions carrying one loader-v3 program upgrade.
+    Squads {
+        #[command(subcommand)]
+        command: SquadsCommand,
+    },
+}
+
+#[derive(Subcommand)]
+enum SquadsCommand {
+    /// Check a proposal against an analysed change spec and write the
+    /// governance-bound spec an analysis must carry to name the proposal.
+    Bind(SquadsBindArgs),
+    /// Re-read a governance-bound spec's proposal and buffer now. Run it
+    /// immediately before approving or executing.
+    Verify(SquadsVerifyArgs),
+    /// Derive the analysed spec a proposal implies from the chain, storing
+    /// the buffer's current bytes as a content-addressed candidate.
+    Acquire(SquadsAcquireArgs),
+}
+
+#[derive(Parser)]
+struct SquadsChainArgs {
+    /// JSON-RPC endpoint; falls back to SOLANA_RPC_URL. Never persisted.
+    #[arg(long)]
+    rpc_url: Option<String>,
+    #[arg(long, value_enum, default_value_t = CommitmentArg::Finalized)]
+    commitment: CommitmentArg,
+}
+
+#[derive(Clone, Copy, ValueEnum)]
+enum CommitmentArg {
+    Confirmed,
+    Finalized,
+}
+
+#[derive(Parser)]
+struct SquadsBindArgs {
+    #[arg(long)]
+    multisig: String,
+    #[arg(long)]
+    transaction_index: u64,
+    /// The analysed change spec (bound or not).
+    #[arg(long)]
+    change_spec: PathBuf,
+    /// Write the governance-bound spec here. Written only on `matched`.
+    #[arg(long)]
+    out: Option<PathBuf>,
+    /// Write the sealed binding evidence here, whatever the outcome.
+    #[arg(long)]
+    evidence_out: Option<PathBuf>,
+    #[arg(long, value_enum, default_value_t = Format::Text)]
+    format: Format,
+    #[command(flatten)]
+    chain: SquadsChainArgs,
+}
+
+#[derive(Parser)]
+struct SquadsVerifyArgs {
+    /// A governance-bound change spec (one with a Squads `delivery`).
+    #[arg(long)]
+    change_spec: PathBuf,
+    /// Assert the proposal is this multisig's; defaults to the spec's.
+    #[arg(long)]
+    multisig: Option<String>,
+    /// Assert the proposal is this transaction; defaults to the spec's.
+    #[arg(long)]
+    transaction_index: Option<u64>,
+    #[arg(long)]
+    evidence_out: Option<PathBuf>,
+    #[arg(long, value_enum, default_value_t = Format::Text)]
+    format: Format,
+    #[command(flatten)]
+    chain: SquadsChainArgs,
+}
+
+#[derive(Parser)]
+struct SquadsAcquireArgs {
+    #[arg(long)]
+    multisig: String,
+    #[arg(long)]
+    transaction_index: u64,
+    /// Content-addressed artifact store to put the buffer's bytes in.
+    #[arg(long)]
+    store: PathBuf,
+    /// Write the (unbound) analysed spec here.
+    #[arg(long)]
+    out: PathBuf,
+    #[command(flatten)]
+    chain: SquadsChainArgs,
 }
 
 #[derive(Subcommand)]
@@ -1131,6 +1230,13 @@ fn run() -> Result<ExitCode> {
         Command::Change {
             command: ChangeCommand::ProgramUpgrade(change_args),
         } => change_program_upgrade(change_args),
+        Command::Governance {
+            command: GovernanceCommand::Squads { command },
+        } => match command {
+            SquadsCommand::Bind(args) => squads_bind(args),
+            SquadsCommand::Verify(args) => squads_verify(args),
+            SquadsCommand::Acquire(args) => squads_acquire(args),
+        },
         Command::Bundle {
             command: BundleCommand::Build(build_args),
         } => bundle_build(build_args),
@@ -1707,6 +1813,170 @@ fn change_program_upgrade(args: ChangeProgramUpgradeArgs) -> Result<ExitCode> {
     Ok(ExitCode::SUCCESS)
 }
 
+fn squads_rpc(args: &SquadsChainArgs) -> Result<eplyx_engine::ingest::rpc::HttpRpc> {
+    let url = args
+        .rpc_url
+        .clone()
+        .or_else(|| std::env::var("SOLANA_RPC_URL").ok())
+        .context("--rpc-url or SOLANA_RPC_URL is required")?;
+    eplyx_engine::ingest::rpc::HttpRpc::new(url)
+}
+
+fn squads_commitment(args: &SquadsChainArgs) -> eplyx_engine::governance::Commitment {
+    match args.commitment {
+        CommitmentArg::Confirmed => eplyx_engine::governance::Commitment::Confirmed,
+        CommitmentArg::Finalized => eplyx_engine::governance::Commitment::Finalized,
+    }
+}
+
+fn render_binding(binding: &eplyx_engine::governance::GovernanceBinding) -> String {
+    use std::fmt::Write as _;
+    let mut text = String::from("EPLYX GOVERNANCE BINDING\n========================\n\n");
+    let _ = writeln!(text, "Result:     {}", binding.outcome.as_str());
+    let _ = writeln!(
+        text,
+        "Proposal:   Squads #{} of {}",
+        binding.request.transaction_index, binding.request.multisig
+    );
+    let observation = &binding.observation;
+    if let Some(slot) = observation.slot {
+        let _ = writeln!(
+            text,
+            "Observed:   slot {slot} ({})",
+            binding.commitment.as_str()
+        );
+    }
+    if let Some(proposal) = &observation.proposal {
+        let _ = writeln!(
+            text,
+            "Status:     {:?}{}",
+            proposal.status,
+            if proposal.stale { " (stale)" } else { "" }
+        );
+    }
+    let _ = writeln!(text, "Analysed:   {}", binding.analysed_change_spec_id);
+    if let Some(bound) = &binding.bound_change_spec_id {
+        let _ = writeln!(text, "Bound:      {bound}");
+    }
+    if let Some(delivery) = &observation.delivery {
+        let _ = writeln!(text, "Message:    {}", delivery.message_sha256);
+    }
+    if let Some(upgrade) = &observation.upgrade {
+        let _ = writeln!(text, "Program:    {}", upgrade.program);
+        let _ = writeln!(text, "Buffer:     {}", upgrade.buffer);
+    }
+    if let Some(buffer) = &observation.buffer {
+        let _ = writeln!(
+            text,
+            "Buffer ELF: {} ({} bytes)",
+            buffer.artifact.sha256, buffer.artifact.len
+        );
+    }
+    let _ = writeln!(
+        text,
+        "Candidate:  {} ({} bytes)",
+        binding.expected.candidate.sha256, binding.expected.candidate.len
+    );
+    for reason in &binding.reasons {
+        let _ = writeln!(text, "  - [{}] {}", reason.code, reason.detail);
+    }
+    let _ = writeln!(text, "\n{}", binding.statement);
+    if let Some(id) = &binding.binding_id {
+        let _ = writeln!(text, "\nEvidence:   {id}");
+    }
+    text
+}
+
+fn emit_binding(
+    binding: &eplyx_engine::governance::GovernanceBinding,
+    format: Format,
+    evidence_out: Option<&PathBuf>,
+) -> Result<()> {
+    let document = binding.to_document()?;
+    if let Some(path) = evidence_out {
+        std::fs::write(path, format!("{document}\n"))
+            .with_context(|| format!("writing {}", path.display()))?;
+    }
+    match format {
+        Format::Json => println!("{document}"),
+        _ => print!("{}", render_binding(binding)),
+    }
+    Ok(())
+}
+
+fn squads_bind(args: SquadsBindArgs) -> Result<ExitCode> {
+    use eplyx_engine::governance::{self, BindingOutcome, SquadsProposalRef};
+    let spec = eplyx_engine::change::ChangeSpec::load(&args.change_spec)?;
+    let rpc = squads_rpc(&args.chain)?;
+    let request = SquadsProposalRef {
+        multisig: args.multisig,
+        transaction_index: args.transaction_index,
+    };
+    let binding =
+        governance::verify_squads_upgrade(&rpc, &request, &spec, squads_commitment(&args.chain))?;
+    emit_binding(&binding, args.format, args.evidence_out.as_ref())?;
+    if binding.outcome == BindingOutcome::Matched {
+        let bound = binding
+            .bound_spec(&spec)?
+            .context("a matched binding always carries its proposal")?;
+        if let Some(path) = &args.out {
+            std::fs::write(path, format!("{}\n", bound.to_document()?))?;
+            eprintln!(
+                "wrote {} ({}); analyse it so a report names this proposal",
+                path.display(),
+                bound.id()?
+            );
+        }
+    }
+    Ok(ExitCode::from(binding.outcome.exit_code()))
+}
+
+fn squads_verify(args: SquadsVerifyArgs) -> Result<ExitCode> {
+    use eplyx_engine::change::Delivery;
+    use eplyx_engine::governance::{self, SquadsProposalRef};
+    let spec = eplyx_engine::change::ChangeSpec::load(&args.change_spec)?;
+    let Some(Delivery::SquadsV4(delivery)) = spec.delivery() else {
+        anyhow::bail!(
+            "{} names no Squads delivery; bind it first with `eplyx governance squads bind`",
+            args.change_spec.display()
+        );
+    };
+    let request = SquadsProposalRef {
+        multisig: args.multisig.unwrap_or_else(|| delivery.multisig.clone()),
+        transaction_index: args.transaction_index.unwrap_or(delivery.transaction_index),
+    };
+    let rpc = squads_rpc(&args.chain)?;
+    let binding =
+        governance::verify_squads_upgrade(&rpc, &request, &spec, squads_commitment(&args.chain))?;
+    emit_binding(&binding, args.format, args.evidence_out.as_ref())?;
+    Ok(ExitCode::from(binding.outcome.exit_code()))
+}
+
+fn squads_acquire(args: SquadsAcquireArgs) -> Result<ExitCode> {
+    use eplyx_engine::governance::{self, SquadsProposalRef};
+    let rpc = squads_rpc(&args.chain)?;
+    let request = SquadsProposalRef {
+        multisig: args.multisig,
+        transaction_index: args.transaction_index,
+    };
+    let (spec, bytes) =
+        governance::acquire_squads_candidate(&rpc, &request, squads_commitment(&args.chain))?;
+    eplyx_engine::universal::evidence::EvidenceStore::at(&args.store).put(
+        eplyx_engine::universal::evidence::EvidenceKind::ProgramBinary,
+        &bytes,
+    )?;
+    std::fs::write(&args.out, format!("{}\n", spec.to_document()?))?;
+    eprintln!(
+        "stored the buffer's current bytes as candidate {} ({} bytes) and wrote {} ({}). \
+         Analyse it, then `governance squads bind` to name the proposal.",
+        spec.candidate().sha256,
+        spec.candidate().len,
+        args.out.display(),
+        spec.id()?
+    );
+    Ok(ExitCode::SUCCESS)
+}
+
 fn render_ci(report: &eplyx_engine::ci::CiReport) -> String {
     use eplyx_engine::review::ReviewStatus;
     use std::fmt::Write as _;
@@ -1722,6 +1992,14 @@ fn render_ci(report: &eplyx_engine::ci::CiReport) -> String {
             change.kind.as_str(),
             change.target_program_id
         );
+        if let Some(eplyx_engine::change::Delivery::SquadsV4(delivery)) = &change.delivery {
+            let _ = writeln!(
+                text,
+                "Delivery:   Squads #{} of {} (message {}). This report does not verify the \
+                 proposal; run `eplyx governance squads verify`.",
+                delivery.transaction_index, delivery.multisig, delivery.message_sha256
+            );
+        }
     }
     let _ = writeln!(
         text,

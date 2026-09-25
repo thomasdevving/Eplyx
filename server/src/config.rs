@@ -1,9 +1,10 @@
 //! Process configuration, all from the environment.
 //!
-//! No RPC or archive credentials appear here, and none are needed: the serving
-//! path is entirely offline. Corpus construction is a separate workflow that
-//! runs elsewhere, with its own credentials, and never on the path of a pull
-//! request.
+//! The analysis path is entirely offline and needs no RPC or archive
+//! credentials: corpus construction is a separate workflow that runs
+//! elsewhere, never on the path of a pull request. The one chain endpoint here
+//! is optional and serves governance verification alone, which by definition
+//! reads the proposal as it stands now; no run ever touches it.
 
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use std::path::PathBuf;
@@ -43,6 +44,10 @@ pub struct Config {
     pub max_expectation_bytes: usize,
     pub max_bundle_bytes: usize,
     pub max_concurrent_runs: usize,
+    /// JSON-RPC endpoint for governance verification (`EPLYX_GOVERNANCE_RPC_URL`).
+    /// Absent by default, which turns that one endpoint off. Transport
+    /// configuration only: never written to a record, report or response.
+    pub governance_rpc_url: Option<String>,
 }
 
 fn var<T: std::str::FromStr>(name: &str, fallback: T) -> Result<T>
@@ -105,6 +110,10 @@ impl Config {
             )?,
             max_bundle_bytes: var("EPLYX_MAX_BUNDLE_BYTES", DEFAULT_MAX_BUNDLE_BYTES)?,
             max_concurrent_runs: var("EPLYX_MAX_CONCURRENT_RUNS", DEFAULT_MAX_CONCURRENT_RUNS)?,
+            governance_rpc_url: std::env::var("EPLYX_GOVERNANCE_RPC_URL")
+                .ok()
+                .map(|url| url.trim().to_string())
+                .filter(|url| !url.is_empty()),
         })
     }
 }

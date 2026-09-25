@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "change_spec_id": "a2f46e9150d9f6ad84128786d89e652de2361b01942948e81d227af5b245203f",
+  "change": {
+    "kind": "program_upgrade",
+    "target": {
+      "program_id": "2RJD1KnDRGEkvuFfAGrJ7PD28LRE9LRDjZznDywagzmr"
+    },
+    "candidate": {
+      "sha256": "9123b40861f73234d46a35fc8754a96a38314bc3efd98200857ba5fff3c36cbe",
+      "len": 37
+    },
+    "delivery": {
+      "provider": "squads_v4",
+      "squads_program_id": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+      "multisig": "BxJjcdWSdYQvKUkbkzekkKMkFNLJAUhCRJGimEADcseX",
+      "vault_index": 0,
+      "vault": "9S6L7oUQxAdrpBXBXgWGvtYD5Z972UHvorQsZ8ECwoMd",
+      "transaction_index": 42,
+      "transaction": "Ej6AiG5B6ZymccMQi4GGzH9e9WTdcntW7QfVHJmu9TA2",
+      "proposal": "BRTdm4Sob3N4juAijDystSQjVggzcckGcxALzVCpbpf9",
+      "message_sha256": "b8694179bdb02136eda583bd5d999023ca93fb92af4166b456ee0471437dcd86"
+    }
+  }
+}

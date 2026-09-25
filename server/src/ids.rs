@@ -65,6 +65,10 @@ pub fn run() -> String {
     mint("run")
 }
 
+pub fn governance_check() -> String {
+    mint("gchk")
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

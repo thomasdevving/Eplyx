@@ -11,8 +11,9 @@
   "scripts": {
     "dev": "node frontend/dev-server.mjs",
     "build": "node frontend/build.mjs",
-    "check:frontend": "node frontend/check.mjs && node frontend/report.test.mjs && node frontend/console.test.mjs && node frontend/change.test.mjs && node frontend/analysis.test.mjs",
+    "check:frontend": "node frontend/check.mjs && node frontend/report.test.mjs && node frontend/console.test.mjs && node frontend/change.test.mjs && node frontend/analysis.test.mjs && node frontend/governance.test.mjs",
     "verify:report": "node ts/check-report.ts",
+    "verify:governance": "node scripts/verify-squads-binding.mjs",
     "start": "node frontend/serve.mjs"
   },
   "dependencies": {
