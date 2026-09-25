@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "bundle": {
+    "sha256": "7bc43449fd33715ffffdb820de4d339803ed263e6c166e8f0cae33eac1bb956d",
+    "baseline_sha256": "56bb3c1218ca4cc1158116c008439a48ca942f7e2898227494ce2769a7fdce5d",
+    "corpus_sha256": "12787376a8fbafd1939faa41fc6c06d07841bafb88bdc24d6cd808e1aa160b08",
+    "record_count": 1,
+    "program_id": "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+    "adapter": "none",
+    "adapter_version": 0,
+    "semantic_schema_version": 2,
+    "source_slot_range": {
+      "first": 409942000,
+      "last": 409942000
+    },
+    "limitations": [
+      {
+        "code": "bounded_observations",
+        "detail": "This corpus covers only its recorded production interactions; no representativeness is claimed."
+      }
+    ]
+  },
+  "candidate": {
+    "sha256": "56bb3c1218ca4cc1158116c008439a48ca942f7e2898227494ce2769a7fdce5d",
+    "len": 6673069
+  },
+  "change": {
+    "change_spec_id": "c6d4ba09f214bca6c675dd54d33aebac8b63859d32c7feb901395c32a0aebf3d",
+    "kind": "program_upgrade",
+    "target_program_id": "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+    "candidate_sha256": "56bb3c1218ca4cc1158116c008439a48ca942f7e2898227494ce2769a7fdce5d"
+  },
+  "replay_proof": {
+    "profile": "checkpointed_execution_v1",
+    "status": "matched",
+    "observations": 1,
+    "proof_contract_versions": [
+      3
+    ],
+    "boundary_proof": "reconstructive_causal_sequence; derived_target_boundary; checkpointed_replay_boundary; not_observed_transaction_boundary"
+  },
+  "coverage": [],
+  "findings": [],
+  "unmatched": [],
+  "failures": [
+    "no_semantic_coverage"
+  ],
+  "summary": {
+    "passed": false,
+    "failure_reasons": [
+      "no_semantic_coverage"
+    ],
+    "exit_code": 2,
+    "expected": 0,
+    "unexpected": 0,
+    "expected_but_exceeded": 0,
+    "stale": 0,
+    "unevaluable": 0
+  }
+}

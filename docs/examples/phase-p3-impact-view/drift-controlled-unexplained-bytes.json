@@ -1,0 +1,164 @@
+{
+  "schema_version": 2,
+  "bundle": {
+    "sha256": "c519836bf24a58ec84c6f1511510ada5bca42973abdc57e67c407fdb88df0204",
+    "baseline_sha256": "56bb3c1218ca4cc1158116c008439a48ca942f7e2898227494ce2769a7fdce5d",
+    "corpus_sha256": "809708e7fc3b5d4e8e103f3072797bae7db5dfde26238bd63df0ce59cb32b1a6",
+    "record_count": 1,
+    "program_id": "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+    "adapter": "drift-settle-pnl",
+    "adapter_version": 1,
+    "semantic_schema_version": 2,
+    "source_slot_range": {
+      "first": 409942000,
+      "last": 409942000
+    },
+    "limitations": [
+      {
+        "code": "bounded_observations",
+        "detail": "This corpus covers only its recorded production interactions; no representativeness is claimed."
+      }
+    ]
+  },
+  "candidate": {
+    "sha256": "56bb3c1218ca4cc1158116c008439a48ca942f7e2898227494ce2769a7fdce5d",
+    "len": 6673069
+  },
+  "change": {
+    "change_spec_id": "c6d4ba09f214bca6c675dd54d33aebac8b63859d32c7feb901395c32a0aebf3d",
+    "kind": "program_upgrade",
+    "target_program_id": "dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH",
+    "candidate_sha256": "56bb3c1218ca4cc1158116c008439a48ca942f7e2898227494ce2769a7fdce5d"
+  },
+  "replay_proof": {
+    "profile": "checkpointed_execution_v1",
+    "status": "matched",
+    "observations": 1,
+    "proof_contract_versions": [
+      3
+    ],
+    "boundary_proof": "reconstructive_causal_sequence; derived_target_boundary; checkpointed_replay_boundary; not_observed_transaction_boundary"
+  },
+  "semantic_binding": {
+    "observations": [
+      {
+        "observation_id": "229293976795dd2ee8eb88a9849004b25fce536d6540f459fc1848efbff63b49",
+        "binding": {
+          "level": "execution_corroborated_external_interface",
+          "source": {
+            "repository": "https://github.com/velocity-exchange/protocol-v2",
+            "commit": "73d22383e621040cd11b94375b6bd2f728f7537e",
+            "source_blobs": [
+              {
+                "path": "programs/drift/src/lib.rs",
+                "git_blob_sha1": "1862893e79b9e34f7ee2f3df08e5a2ccd641eedd"
+              },
+              {
+                "path": "sdk/src/idl/drift.json",
+                "git_blob_sha1": "7232b2925ffcee1f65ad85a0fddbf830add64f12"
+              },
+              {
+                "path": "programs/drift/src/controller/pnl.rs",
+                "git_blob_sha1": "3aae2e82a40cf274c9f9ac519f3efb6a99c38275"
+              },
+              {
+                "path": "programs/drift/src/controller/amm.rs",
+                "git_blob_sha1": "ea334200c138481f36a77c93058d5831ba2da4a4"
+              },
+              {
+                "path": "programs/drift/src/controller/position.rs",
+                "git_blob_sha1": "6b6ec530d529718ffd3d3726f62596d226133492"
+              },
+              {
+                "path": "programs/drift/src/controller/spot_balance.rs",
+                "git_blob_sha1": "f8e1b625e91629e7ab1842b72a67809c8c70b49b"
+              },
+              {
+                "path": "programs/drift/src/math/spot_balance.rs",
+                "git_blob_sha1": "da5261a48708e1c96c79864c0ec4fa37aea21592"
+              },
+              {
+                "path": "programs/drift/src/math/constants.rs",
+                "git_blob_sha1": "ad91a592a2e0b8deffe2cf85122eaecc73444611"
+              }
+            ]
+          },
+          "facts": [
+            "instruction_shape",
+            "signer_role",
+            "baseline_execution_success",
+            "anchor_account_discriminator",
+            "market_index_linkage",
+            "account_role_relationship",
+            "internal_accounting_direction"
+          ],
+          "historical_elf_sha256": "56bb3c1218ca4cc1158116c008439a48ca942f7e2898227494ce2769a7fdce5d",
+          "execution_evidence_sha256": "cb865316156c2ad1c52bce7eb16033d19563de642b115926c23aae3feda81593"
+        }
+      }
+    ],
+    "exact_source_to_elf_verified": false
+  },
+  "coverage": [
+    {
+      "subject": "drift-settle-pnl/settle_pnl/economic/pnl_settled",
+      "observations": 1
+    },
+    {
+      "subject": "drift-settle-pnl/settle_pnl/execution/transaction",
+      "observations": 1
+    }
+  ],
+  "undeclarable": [
+    {
+      "layer": "structural",
+      "description": "user bytes at offset 4360",
+      "observations": [
+        "229293976795dd2ee8eb88a9849004b25fce536d6540f459fc1848efbff63b49"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "fingerprint": "drift-settle-pnl/settle_pnl/economic/pnl_settled/increased",
+      "severity": "high",
+      "status": "unexpected",
+      "observations": [
+        "229293976795dd2ee8eb88a9849004b25fce536d6540f459fc1848efbff63b49"
+      ],
+      "entities": [],
+      "covered_observations": 1,
+      "values": [
+        {
+          "observation_id": "229293976795dd2ee8eb88a9849004b25fce536d6540f459fc1848efbff63b49",
+          "baseline": {
+            "kind": "signed_quantity",
+            "quantity": "+0.000203"
+          },
+          "candidate": {
+            "kind": "signed_quantity",
+            "quantity": "+0.000303"
+          }
+        }
+      ]
+    }
+  ],
+  "unmatched": [],
+  "failures": [
+    "undeclarable_change",
+    "undeclared_change"
+  ],
+  "summary": {
+    "passed": false,
+    "failure_reasons": [
+      "undeclarable_change",
+      "undeclared_change"
+    ],
+    "exit_code": 1,
+    "expected": 0,
+    "unexpected": 1,
+    "expected_but_exceeded": 0,
+    "stale": 0,
+    "unevaluable": 0
+  }
+}

@@ -446,3 +446,34 @@ fn semantic_bundle_replays_with_bounded_coverage() {
     assert!(report.failures.is_empty());
     assert_eq!(report.exit_code(), 0);
 }
+
+/// Phase P3's Orca impact-view fixtures: the real semantic-binding report and
+/// the real replay-only report over the same contract-2 observation. See
+/// `impact_view_fixtures_are_current` in the Drift tests for the convention.
+#[test]
+fn impact_view_fixtures_are_current() {
+    let docs = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../docs/examples");
+    for (bundle, name) in [
+        (
+            "phase-u12-1-semantic-binding-bundle",
+            "orca-semantic-baseline.json",
+        ),
+        ("phase-u11-2-checkpointed-bundle", "orca-replay-only.json"),
+    ] {
+        let bundle = docs.join(bundle);
+        let report = ci::check(&bundle, &bundle.join("binaries/current.so"), None).unwrap();
+        let path = docs.join("phase-p3-impact-view").join(name);
+        let rendered = serde_json::to_string_pretty(&report).unwrap() + "\n";
+        if std::env::var_os("EPLYX_WRITE_IMPACT_FIXTURES").is_some() {
+            std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+            std::fs::write(&path, rendered).unwrap();
+            continue;
+        }
+        let frozen = std::fs::read_to_string(&path).unwrap_or_default();
+        assert!(
+            frozen == rendered,
+            "{} is not what the engine produces now; run `make impact-fixtures`",
+            path.display()
+        );
+    }
+}

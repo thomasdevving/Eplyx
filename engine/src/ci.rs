@@ -555,6 +555,35 @@ pub fn semantic_result(
     })
 }
 
+/// How one watched account's difference reads in the structural layer.
+///
+/// `None` when the two sides are identical, or when every differing byte lies
+/// inside a range a named finding explained on this observation. Public so a
+/// controlled fixture describes a change in exactly the words the gate uses,
+/// rather than a copy of them.
+pub fn structural_account_change(
+    label: &str,
+    prior: Option<&crate::types::AccountSnapshot>,
+    next: Option<&crate::types::AccountSnapshot>,
+    explained: &[crate::protocol::ExplainedBytes],
+) -> Option<String> {
+    if prior == next {
+        return None;
+    }
+    match (prior, next) {
+        (Some(a), Some(b))
+            if a.owner == b.owner
+                && a.lamports == b.lamports
+                && a.executable == b.executable
+                && a.rent_epoch == b.rent_epoch =>
+        {
+            let first = unexplained_target_offset(label, &a.data, &b.data, explained)?;
+            Some(format!("{label} bytes at offset {first}"))
+        }
+        _ => Some(format!("{label} account state")),
+    }
+}
+
 fn unexplained_target_offset(
     label: &str,
     before: &[u8],
@@ -752,24 +781,11 @@ fn check_v2(
                 .get(address)
                 .context("candidate omitted a watched account")
                 .map_err(CheckError::Configuration)?;
-            if prior == next {
-                continue;
-            }
             let label = labels.get(address).map(String::as_str).unwrap_or(address);
-            let change = match (prior, next) {
-                (Some(a), Some(b))
-                    if a.owner == b.owner
-                        && a.lamports == b.lamports
-                        && a.executable == b.executable
-                        && a.rent_epoch == b.rent_epoch =>
-                {
-                    let first = unexplained_target_offset(label, &a.data, &b.data, &explained);
-                    let Some(first) = first else {
-                        continue;
-                    };
-                    format!("{label} bytes at offset {first}")
-                }
-                _ => format!("{label} account state"),
+            let Some(change) =
+                structural_account_change(label, prior.as_ref(), next.as_ref(), &explained)
+            else {
+                continue;
             };
             structural
                 .entry(change)

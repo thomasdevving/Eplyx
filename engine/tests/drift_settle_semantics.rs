@@ -442,3 +442,191 @@ fn ordinary_ci_keeps_semantic_and_frozen_none_bundles_distinct() {
         }
     }
 }
+
+/// Where Phase P3's impact-view fixtures live, and whether this run rewrites
+/// them. The frontend renders these files; they are asserted here so a change
+/// to the engine's report cannot leave the page tested against a stale shape.
+fn impact_view_fixture(name: &str, report: &eplyx_engine::ci::CiReport) {
+    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../docs/examples/phase-p3-impact-view")
+        .join(name);
+    // Exactly what `eplyx ci check --format json` prints.
+    let rendered = serde_json::to_string_pretty(report).unwrap() + "\n";
+    if std::env::var_os("EPLYX_WRITE_IMPACT_FIXTURES").is_some() {
+        std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+        std::fs::write(&path, rendered).unwrap();
+        return;
+    }
+    let frozen = std::fs::read_to_string(&path).unwrap_or_default();
+    assert!(
+        frozen == rendered,
+        "{} is not what the engine produces now; run `make impact-fixtures`",
+        path.display()
+    );
+}
+
+/// The real Drift reports, and three controlled ones built from them.
+///
+/// The controlled reports are **not** candidate builds. Each takes the real
+/// report of the frozen semantic bundle and replaces only what a changed
+/// target post-state would change: the adapter evaluates a mutated candidate
+/// result, the ordinary review judges it, and the structural layer describes
+/// unexplained bytes with the gate's own helper. Replay, proof, binding and
+/// change identity are the real bundle's.
+#[test]
+fn impact_view_fixtures_are_current() {
+    use eplyx_engine::ci::{
+        semantic_coverage_failure, structural_account_change, EvidenceLayer, ReviewSummary,
+        UndeclarableChange,
+    };
+    use eplyx_engine::expectations::ExpectationFile;
+    use eplyx_engine::review::{
+        review, FailureReason, ObservationCoverage, ObservedFinding, ReviewStatus,
+    };
+
+    let docs = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../docs/examples");
+    let semantic = docs.join("phase-u14-drift-semantic-bundle");
+    let real =
+        eplyx_engine::ci::check(&semantic, &semantic.join("binaries/current.so"), None).unwrap();
+    impact_view_fixture("drift-semantic-baseline.json", &real);
+    let replay_only = docs.join("phase-u13-3-sequence-bundle");
+    impact_view_fixture(
+        "drift-replay-only.json",
+        &eplyx_engine::ci::check(&replay_only, &replay_only.join("binaries/current.so"), None)
+            .unwrap(),
+    );
+
+    let (tx, pre, baseline, ..) = fixture();
+    let adapter = DriftSettlePnlAdapter;
+    let observation = real.semantic_binding.as_ref().unwrap().observations[0]
+        .observation_id
+        .clone();
+    let entity = adapter
+        .economic_entity_id(&tx, &pre)
+        .map(|entity| entity.to_string());
+    let controlled = |candidate: &ExecutionResult| {
+        let SemanticEvaluation::Evaluated {
+            subjects,
+            findings,
+            explained,
+        } = adapter
+            .evaluate_semantics(&SemanticEvaluationContext {
+                transaction: &tx,
+                pre: &pre,
+                baseline: &baseline,
+                candidate,
+            })
+            .unwrap()
+        else {
+            panic!("a controlled candidate must evaluate")
+        };
+        let outcome_named = findings
+            .iter()
+            .any(|f| f.fingerprint.domain == eplyx_engine::semantics::FindingDomain::Execution);
+        let observed = findings
+            .into_iter()
+            .map(|finding| ObservedFinding {
+                observation_id: observation.clone(),
+                entity: entity.clone(),
+                finding,
+            })
+            .collect::<Vec<_>>();
+        let coverage = vec![ObservationCoverage {
+            observation_id: observation.clone(),
+            subjects,
+        }];
+        let mut reviewed = review(&observed, &coverage, &ExpectationFile::empty());
+        let mut structural = Vec::new();
+        if baseline.success != candidate.success && !outcome_named {
+            structural.push("transaction outcome".to_string());
+        }
+        for (label, prior) in &baseline.accounts {
+            structural.extend(structural_account_change(
+                label,
+                Some(prior),
+                candidate.accounts.get(label),
+                &explained,
+            ));
+        }
+        structural.sort();
+        let undeclarable = structural
+            .into_iter()
+            .map(|description| UndeclarableChange {
+                layer: EvidenceLayer::Structural,
+                description,
+                observations: vec![observation.clone()],
+            })
+            .collect::<Vec<_>>();
+        reviewed
+            .failures
+            .extend(semantic_coverage_failure(&coverage));
+        if !undeclarable.is_empty() {
+            reviewed.failures.push(FailureReason::UndeclarableChange);
+        }
+        reviewed.failures.sort();
+        reviewed.failures.dedup();
+        let summary = ReviewSummary {
+            passed: reviewed.passed(),
+            failure_reasons: reviewed.failures.clone(),
+            exit_code: reviewed.exit_code(),
+            expected: reviewed.count(ReviewStatus::Expected),
+            unexpected: reviewed.count(ReviewStatus::Unexpected),
+            expected_but_exceeded: reviewed.count(ReviewStatus::ExpectedButExceeded),
+            stale: reviewed.count(ReviewStatus::Stale),
+            unevaluable: reviewed.count(ReviewStatus::Unevaluable),
+        };
+        eplyx_engine::ci::CiReport {
+            undeclarable,
+            findings: reviewed.findings,
+            unmatched: reviewed.unmatched,
+            failures: reviewed.failures,
+            summary,
+            ..real.clone()
+        }
+    };
+
+    // Settled PnL reverses sign: +0.000203 credited becomes 0.000203 debited.
+    let reversal = controlled(&settlement(&pre, &baseline, -203));
+    assert_eq!(reversal.findings.len(), 1);
+    assert!(reversal.undeclarable.is_empty());
+    impact_view_fixture("drift-controlled-sign-reversal.json", &reversal);
+
+    // A named change, plus one byte of User that nothing decodes.
+    let mut unexplained = settlement(&pre, &baseline, 303);
+    unexplained.accounts.get_mut("user").unwrap().data[4360] ^= 1;
+    let unexplained = controlled(&unexplained);
+    assert_eq!(unexplained.findings.len(), 1);
+    assert_eq!(
+        unexplained
+            .undeclarable
+            .iter()
+            .map(|change| change.description.as_str())
+            .collect::<Vec<_>>(),
+        ["user bytes at offset 4360"]
+    );
+    impact_view_fixture("drift-controlled-unexplained-bytes.json", &unexplained);
+
+    // The target now fails. A reverted transaction leaves the program's
+    // accounts at their pre-state, which differs from the baseline's settled
+    // post-state; that is reported, and no economic value is invented.
+    let mut revert = baseline.clone();
+    revert.success = false;
+    for account in &pre {
+        if let Some(slot) = revert.accounts.get_mut(&account.label) {
+            if ["user", "perp-market", "quote-spot-market"].contains(&account.label.as_str()) {
+                *slot = account.account.clone();
+            }
+        }
+    }
+    let revert = controlled(&revert);
+    assert_eq!(
+        revert
+            .findings
+            .iter()
+            .map(|finding| finding.fingerprint.as_str())
+            .collect::<Vec<_>>(),
+        ["drift-settle-pnl/settle_pnl/execution/transaction/now_reverts"]
+    );
+    assert!(revert.findings[0].values.is_empty());
+    impact_view_fixture("drift-controlled-revert.json", &revert);
+}

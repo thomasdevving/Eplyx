@@ -1,6 +1,7 @@
 import { Header, Footer } from './shell.js';
 import { API_BASE, operatorToken } from './session.js';
 import { ChangeCard, ChangeIdentityRows, resolveChange } from './change.js';
+import { analysisView, shortId } from './analysis.js';
 
 /** One request in flight at a time, and never sub-second. */
 const POLL_MS = 1500;
@@ -208,30 +209,22 @@ function renderLifecycle(id, run, extras = {}) {
 /**
  * A run that ended without a report.
  *
- * Two different things land here and they are not the same. A preflight abort
- * is Eplyx answering — it carries a real exit code and produces no report by
- * design. An execution error is this service failing to answer at all, and
- * blames nothing about the candidate.
+ * Three different things land here and none is a finding. A preflight abort
+ * is Eplyx answering — exit 4 means the change does not fit the pinned bundle,
+ * exit 2 that no verified execution was produced. An execution error is this
+ * service failing to answer at all, and blames nothing about the candidate.
  */
 function renderIncomplete(id, run, extras = {}) {
-  const infrastructure = run.status === 'execution_error';
+  const view = analysisView({ run, report: null });
   return shell(id, `
-      <div class="report-top">
-        <div>
-          <p class="eyebrow"><span></span> Run ${escapeHtml(id)}</p>
-          <h1>${infrastructure ? 'The analysis could not complete.' : 'The check stopped before it could report.'}</h1>
-          <p>${infrastructure
-            ? 'Eplyx reached no verdict about this candidate, so none is shown. Nothing here reflects on the upgrade.'
-            : 'Eplyx reached a verdict before there was a report to put it in. Exit codes 2 and 4 are preflight aborts and produce no report.'}</p>
-        </div>
-        <div class="report-verdict ${infrastructure ? 'is-unknown' : ''}"><i></i><span>${infrastructure ? 'Incomplete' : 'Failed'}</span><em>${run.exit_code == null ? 'No exit code' : `Exit code ${escapeHtml(run.exit_code)}`}</em></div>
-      </div>
+      ${top(id, view, { exit: run.exit_code, gate: null })}
+      ${dimensions(view)}
       <div class="report-content">
         ${ChangeCard({ change: run.change, legacy: !run.change, targetName: extras.projectName, spec: extras.spec, candidateSha: run.candidate_sha256 })}
         <section><div class="report-section-title"><span>01</span><h2>Reason</h2></div>
           <div class="empty-result"><p>${run.detail ? escapeHtml(run.detail) : 'No further detail was recorded.'}</p></div>
         </section>
-        <section><div class="report-section-title"><span>02</span><h2>Inputs</h2></div>
+        <section data-technical><div class="report-section-title"><span>02</span><h2>Inputs</h2></div>
           <div class="provenance-table">
             ${ChangeIdentityRows({ change: run.change, spec: extras.spec })}
             ${row('Bundle SHA', run.bundle_sha256)}
@@ -260,25 +253,45 @@ function shell(id, inner) {
   </main>${Footer()}`;
 }
 
+/** The headline block. The verdict box names the state, then the gate's code. */
+function top(id, view, { exit, gate, demo = false }) {
+  const code = exit == null ? 'No exit code' : `Exit code ${escapeHtml(exit)}`;
+  const gateText = gate == null ? '' : ` · CI gate ${gate ? 'Passed' : 'Failed'}`;
+  return `<div class="report-top">
+        <div>
+          <p class="eyebrow"><span></span> ${demo ? 'Public demo report · fixture' : `Run ${escapeHtml(id)}`}</p>
+          <h1>${escapeHtml(view.headline.title)}</h1>
+          <p>${escapeHtml(view.headline.note)}</p>
+        </div>
+        <div class="report-verdict ${escapeHtml(view.headline.tone)}"><i></i><span>${escapeHtml(view.headline.label)}</span><em>${code}${gateText}</em></div>
+      </div>`;
+}
+
+/** Separate confidence dimensions, never one badge. */
+function dimensions(view) {
+  if (!view.dimensions?.length) return '';
+  return `<div class="analysis-dimensions" aria-label="Analysis dimensions">${view.dimensions.map(item => `
+        <div class="analysis-dimension is-${escapeHtml(item.tone)}">
+          <span>${escapeHtml(item.label)}</span>
+          <strong>${escapeHtml(item.value)}</strong>
+          ${item.note ? `<em>${escapeHtml(item.note)}</em>` : ''}
+        </div>`).join('')}
+      </div>`;
+}
+
 /**
- * The three records of what a run analysed disagree. There is no verdict to
+ * The three records of what a run analysed disagree. There is no result to
  * show: a result about some other proposal is not a result about this one.
  */
 function renderIdentityConflict(id, live, resolution) {
+  const view = analysisView({ run: live, resolution });
   return shell(id, `
-      <div class="report-top">
-        <div>
-          <p class="eyebrow"><span></span> Run ${escapeHtml(id)}</p>
-          <h1>This run’s change identity does not agree with itself.</h1>
-          <p>The run record, its stored change spec and its report must name the same proposed change. They do not, so no verdict is shown.</p>
-        </div>
-        <div class="report-verdict is-unknown"><i></i><span>Not shown</span><em>Identity mismatch</em></div>
-      </div>
+      ${top(id, view, { exit: null, gate: null }).replace('No exit code', 'Identity mismatch')}
       <div class="report-content">
         <section><div class="report-section-title"><span>01</span><h2>Mismatch</h2></div>
-          <div class="empty-result is-error">${resolution.conflicts.map(c => `<p class="mono">${escapeHtml(c)}</p>`).join('')}</div>
+          <div class="empty-result is-error">${view.conflicts.map(c => `<p class="mono">${escapeHtml(c)}</p>`).join('')}</div>
         </section>
-        <section><div class="report-section-title"><span>02</span><h2>Inputs</h2></div>
+        <section data-technical><div class="report-section-title"><span>02</span><h2>Inputs</h2></div>
           <div class="provenance-table">
             ${row('Bundle SHA', live.bundle_sha256)}
             ${row('Candidate SHA', live.candidate_sha256)}
@@ -291,69 +304,55 @@ function renderReport(live, { demo, id, extras = {} }) {
   const report = live.canonical_report;
   const resolution = resolveChange(live, report, extras.spec);
   if (resolution.conflicts.length) return renderIdentityConflict(id, live, resolution);
-  const passed = live.status === 'passed';
-  const bundle = report?.bundle;
-  const findings = report?.findings ?? [];
-  const unmatched = report?.unmatched ?? [];
-  const undeclarable = report?.undeclarable ?? [];
-  const summary = report?.summary ?? {};
-  const reasons = Array.isArray(summary.failure_reasons) ? summary.failure_reasons
-    : Array.isArray(report?.failures) ? report.failures : [];
-  const verdict = headline({ passed, reasons, undeclarable });
+  const view = analysisView({ run: live, report });
+  if (!report) {
+    // The run says a report exists, and this page could not fetch it.
+    return shell(id, `
+      ${top(id, view, { exit: live.exit_code, gate: null, demo })}
+      ${dimensions(view)}
+      <div class="report-content">
+        ${ChangeCard({ change: resolution.change, legacy: resolution.legacy, targetName: extras.projectName, spec: extras.spec, candidateSha: live.candidate_sha256 })}
+        <div class="empty-result">The canonical report could not be retrieved for this run, so its findings are not shown here. Fetch <span class="mono">report.json</span> with the project token.</div>
+      </div>`);
+  }
 
   return `<main id="main" class="inner-page report-page">${Header({ light: true })}
     <section class="report-shell">
-      <div class="report-top">
-        <div>
-          <p class="eyebrow"><span></span> ${demo ? 'Public demo report · fixture' : `Run ${escapeHtml(id)}`}</p>
-          <h1>${escapeHtml(verdict.title)}</h1>
-          <p>${escapeHtml(verdict.note)}</p>
-        </div>
-        <div class="report-verdict ${verdict.tone}"><i></i><span>${escapeHtml(verdict.label)}</span><em>Exit code ${escapeHtml(live.exit_code ?? '—')}${verdict.code ? ` · ${escapeHtml(verdict.code)}` : ''}</em></div>
-      </div>
+      ${top(id, view, { exit: live.exit_code ?? view.gate.exitCode, gate: view.gate.passed, demo })}
+      ${dimensions(view)}
       <div class="report-grid">
-        <aside class="report-nav"><span>Report</span>
-          <a href="#summary" class="active">Summary</a>
-          <a href="#findings">Findings <b>${findings.length}</b></a>
-          <a href="#provenance">Proof &amp; identity</a>
-          <a href="#coverage">Coverage</a>
-          ${field('Corpus', bundle?.record_count == null ? null : `${bundle.record_count} observations`, slotLabel(bundle))}
+        <aside class="report-nav"><span>Analysis</span>
+          <a href="#change" class="active">Proposed change</a>
+          <a href="#result">Result</a>
+          <a href="#impact">Impact</a>
+          <a href="#unresolved">Not explained <b>${view.unexplained.rows.length + view.declarations.length}</b></a>
+          <a href="#verification">Verification</a>
+          <a href="#technical">Technical details</a>
+          ${field('Corpus', view.corpus.total == null ? null : `${view.corpus.total} ${view.corpus.total === 1 ? 'interaction' : 'interactions'}`, slotLabel(view.corpus.slots))}
         </aside>
         <div class="report-content">
-          <section id="summary"><div class="report-section-title"><span>01</span><h2>Summary</h2></div>
+          <section id="change"><div class="report-section-title"><span>01</span><h2>Proposed change</h2></div>
             ${ChangeCard({ change: resolution.change, legacy: resolution.legacy, targetName: extras.projectName, spec: extras.spec, candidateSha: live.candidate_sha256 })}
-            <div class="metric-row">
-              ${metric('Observations', bundle?.record_count, 'validated history')}
-              ${metric('Unexpected', summary.unexpected, 'finding groups')}
-              ${metric('Expected', summary.expected, 'within bounds')}
-              ${metric('Cannot be declared', report ? undeclarable.length : null, 'detected changes')}
-            </div>
           </section>
-          <section id="findings"><div class="report-section-title"><span>02</span><h2>Findings</h2></div>
-            ${renderFindings(findings, passed, Boolean(report), verdict.notEvaluated)}
-            ${renderReasons(reasons)}
-            ${renderUndeclarable(undeclarable)}
-            ${renderUnmatched(unmatched)}
+          <section id="result"><div class="report-section-title"><span>02</span><h2>Result</h2></div>
+            ${renderPrimary(view)}
+            ${renderResult(view)}
           </section>
-          <section id="provenance"><div class="report-section-title"><span>03</span><h2>Proof &amp; identity</h2></div>
-            <h3 class="provenance-heading">Proposed change</h3>
-            <div class="provenance-table">
-              ${ChangeIdentityRows({ change: resolution.change, spec: extras.spec, resolution })}
-            </div>
-            <h3 class="provenance-heading">Evidence</h3>
-            <div class="provenance-table">
-              ${row('Program', bundle?.program_id)}
-              ${row('Bundle SHA', live.bundle_sha256)}
-              ${row('Corpus SHA', live.corpus_sha256)}
-              ${row('Baseline SHA', live.baseline_sha256)}
-              ${row('Candidate SHA', live.candidate_sha256)}
-              ${row('Adapter', bundle ? `${bundle.adapter} v${bundle.adapter_version} · semantic schema v${bundle.semantic_schema_version}` : null)}
-            </div>
+          <section id="impact"><div class="report-section-title"><span>03</span><h2>Impact</h2></div>
+            ${view.notEvaluated ? renderNotEvaluated(view) : renderImpact(view)}
+            ${renderAffected(view)}
           </section>
-          <section id="coverage"><div class="report-section-title"><span>04</span><h2>Coverage</h2></div>
-            <div class="coverage-report">${renderCoverage(report)}
-              <h3>Coverage limitations</h3>${renderLimitations(bundle)}
-            </div>
+          <section id="unresolved"><div class="report-section-title"><span>04</span><h2>Not explained or not evaluated</h2></div>
+            ${renderUnexplained(view)}
+            ${renderDeclarations(view)}
+            <h3 class="analysis-subhead">What this corpus does not cover</h3>
+            ${renderLimitations(view.limitations)}
+          </section>
+          <section id="verification"><div class="report-section-title"><span>05</span><h2>Verification</h2></div>
+            ${renderProof(view)}
+          </section>
+          <section id="technical" data-technical><div class="report-section-title"><span>06</span><h2>Technical details</h2></div>
+            ${renderTechnical({ live, report, resolution, extras })}
           </section>
         </div>
       </div>
@@ -361,14 +360,210 @@ function renderReport(live, { demo, id, extras = {} }) {
   </main>${Footer()}`;
 }
 
-/** A value, or an explicit dash. Never a stand-in that reads as a measurement. */
-function metric(label, value, note, mono = false) {
-  const shown = value == null ? '—' : escapeHtml(value);
-  return `<article><span>${escapeHtml(label)}</span><strong${mono ? ' class="mono"' : ''}>${shown}</strong><em>${escapeHtml(note)}</em></article>`;
+/** An execution failure leads the page, above any economic card. */
+function renderPrimary(view) {
+  if (!view.primary.length) return '';
+  return view.primary.map(item => `<article class="primary-alert" role="alert">
+      <span>${escapeHtml(item.statusLabel)}${item.action ? ` · ${escapeHtml(item.action)}` : ''}</span>
+      <h3>${escapeHtml(item.title)}</h3>
+      <p>${escapeHtml(item.note)}</p>
+    </article>`).join('');
 }
 
-function row(label, value) {
-  return `<div><span>${escapeHtml(label)}</span><b>${value == null ? '<em>not reported</em>' : escapeHtml(value)}</b></div>`;
+function renderResult(view) {
+  const lines = [...view.proof.statements.slice(0, 1)];
+  if (view.notEvaluated) lines.push('Economic impact was not evaluated: Eplyx has no semantic coverage for this interaction.');
+  else if (view.evaluated) {
+    lines.push(`Economic impact was evaluated for ${view.groups.reduce((n, group) => n + group.subjects.length, 0)} named subjects${view.primary.some(item => item.kind === 'now_reverts') ? '; economic values are not compared where the proposed build fails' : ''}.`);
+  }
+  const reasons = view.gate.reasons.length
+    ? `<h3 class="analysis-subhead">Why the CI gate did not pass</h3><ul class="plain-list">${view.gate.reasons.map(reason => `<li>${escapeHtml(reason.text)}</li>`).join('')}</ul>`
+    : '<p class="analysis-note">The CI gate passed. That is a statement about the declarations and the evaluated subjects, not a deployment approval.</p>';
+  return `<ul class="plain-list">${lines.map(line => `<li>${escapeHtml(line)}</li>`).join('')}</ul>${reasons}`;
+}
+
+/** Keep the P2 wording, and say what the reader can still do. */
+function renderNotEvaluated(view) {
+  return `<div class="not-evaluated">
+      <h3>Economic impact could not be evaluated for this interaction.</h3>
+      <ul class="plain-list">
+        <li>Execution ${view.dimensions[0]?.value === 'Verified' ? 'was verified: the historical replay reproduced before the proposed build ran.' : 'was not verified.'}</li>
+        <li>Eplyx has no semantic coverage for this interaction, so it cannot say whether balances, positions or other economic outcomes changed. The absence of findings here is not evidence of no impact.</li>
+        <li>${view.unexplained.rows.length ? `State differences it detected are listed under <a href="#unresolved" class="text-link">Not explained</a>.` : 'No other state difference was detected.'} The raw evidence is under <a href="#technical" class="text-link">Technical details</a>.</li>
+      </ul>
+      <p class="analysis-note">Next step: a protocol adapter with semantic coverage for this program and interaction is needed before its economic impact can be evaluated.</p>
+    </div>`;
+}
+
+function renderImpact(view) {
+  if (!view.groups.length) return '<div class="empty-result">No subjects were evaluated in this report.</div>';
+  return view.groups.map(group => `<article class="impact-group">
+      <header><span>${escapeHtml(group.protocol)}</span><h3>${escapeHtml(group.title)}</h3></header>
+      ${group.subjects.map(subject => subject.cards.length
+        ? subject.cards.map(renderCard).join('')
+        : `<div class="subject-row is-${escapeHtml(subject.state)}"><b>${escapeHtml(subject.title)}</b><span>${escapeHtml(subject.stateLabel)}</span><em>${subject.measured == null ? '' : `measured in ${escapeHtml(subject.measured)} ${subject.measured === 1 ? 'interaction' : 'interactions'}`}</em></div>`).join('')}
+    </article>`).join('');
+}
+
+function renderCard(card) {
+  const values = card.values.length ? `<div class="value-table" role="table">
+        <div role="row" class="value-table__head"><span role="columnheader">Before</span><span role="columnheader">Proposed</span><span role="columnheader">Relative change</span></div>
+        ${card.values.slice(0, 5).map(entry => `<div role="row">
+          <b role="cell" title="${escapeHtml(entry.before?.full ?? '')}">${escapeHtml(entry.before?.text ?? 'not measured')}</b>
+          <b role="cell" title="${escapeHtml(entry.proposed?.full ?? '')}">${escapeHtml(entry.proposed?.text ?? 'not measured')}</b>
+          <b role="cell">${escapeHtml(entry.relative ?? 'not defined')}</b>
+        </div>`).join('')}
+        ${card.values.length > 5 ? `<p class="analysis-note">${card.values.length - 5} more in the technical details.</p>` : ''}
+      </div>` : card.largest ? `<div class="value-table"><div><span>Largest relative change</span><b>${escapeHtml(card.largest)}</b></div></div>` : '';
+  return `<div class="impact-card is-${escapeHtml(card.tone)}">
+      <div class="impact-card__head"><span class="tag">${escapeHtml(card.statusLabel)}</span><em>${escapeHtml(card.reach)}</em></div>
+      <h4>${escapeHtml(card.title)}</h4>
+      <p>${card.reason ? `Declared: ${escapeHtml(card.reason)}` : escapeHtml(card.statusNote)}</p>
+      ${values}
+      ${card.breaches.map(text => `<p class="analysis-note">${escapeHtml(text)}</p>`).join('')}
+    </div>`;
+}
+
+function renderAffected(view) {
+  const a = view.affected;
+  // Without semantic coverage a count of zero would read as "no impact".
+  if (view.notEvaluated && !view.unexplained.rows.length) return '';
+  const items = [
+    `<div><span>${view.notEvaluated ? 'Interactions with a detected state difference' : 'Interactions with a detected change'}</span><b>${a.interactions.total == null ? escapeHtml(a.interactions.affected) : `${escapeHtml(a.interactions.affected)} of ${escapeHtml(a.interactions.total)}`}</b></div>`,
+  ];
+  if (a.changedSubjects.length) items.push(`<div><span>Named subjects that changed</span><b>${a.changedSubjects.map(escapeHtml).join(', ')}</b></div>`);
+  if (a.entities.length) items.push(`<div><span>Economic entities named</span><b>${escapeHtml(a.entities.length)}</b></div>`);
+  if (a.accounts.length) items.push(`<div><span>Accounts with unexplained changes</span><b>${escapeHtml(a.accounts.length)} · ${a.accounts.map(escapeHtml).join(', ')}</b></div>`);
+  return `<h3 class="analysis-subhead">What is affected</h3><div class="affected-list">${items.join('')}</div>`;
+}
+
+function renderUnexplained(view) {
+  const rows = view.unexplained.rows;
+  if (!rows.length) return '<p class="analysis-note">Eplyx reported no state change outside what it named.</p>';
+  const describe = item => item.scope === 'account'
+    ? `<b class="mono">${escapeHtml(item.account)}</b> ${escapeHtml(item.what)}`
+    : item.scope === 'evaluation' ? `Semantic evaluation unavailable: ${escapeHtml(item.what)}` : escapeHtml(item.what);
+  const list = items => items.map(item => `<li>${describe(item)}<em>${escapeHtml(item.observations.length)} ${item.observations.length === 1 ? 'interaction' : 'interactions'}</em></li>`).join('');
+  const structural = view.unexplained.structural;
+  const decoded = view.unexplained.decoded;
+  return `<div class="unexplained">
+      <h3>Additional state changed that Eplyx could not semantically explain.</h3>
+      <p>${escapeHtml(rows.length)} ${rows.length === 1 ? 'change' : 'changes'}${view.unexplained.accounts.length ? ` across ${escapeHtml(view.unexplained.accounts.length)} ${view.unexplained.accounts.length === 1 ? 'account' : 'accounts'}` : ''}. Eplyx does not know what these mean, and does not treat them as harmless. They cannot be declared in expected-changes.toml until the subject is promoted. <a href="#technical" class="text-link">Technical details</a></p>
+      ${structural.length ? `<ul class="unexplained-list">${list(structural)}</ul>` : ''}
+      ${decoded.length ? `<h4>Decoded values no named finding speaks for</h4><ul class="unexplained-list">${list(decoded)}</ul>` : ''}
+    </div>`;
+}
+
+function renderDeclarations(view) {
+  if (!view.declarations.length) return '';
+  return `<h3 class="analysis-subhead">Declarations that matched nothing</h3>${view.declarations.map(item => `<div class="impact-card is-warn">
+      <div class="impact-card__head"><span class="tag">${escapeHtml(item.statusLabel)}</span><em>${escapeHtml(item.covered)} can measure it</em></div>
+      <h4>${escapeHtml(item.title)}</h4>
+      <p>${escapeHtml(item.statusNote)}${item.reason ? ` Declared: ${escapeHtml(item.reason)}` : ''}</p>
+    </div>`).join('')}`;
+}
+
+function renderLimitations(limitations) {
+  if (!limitations.length) return '<p class="analysis-note">This bundle reported no limitations. That is unusual; check the canonical report.</p>';
+  return `<ul class="plain-list">${limitations.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`;
+}
+
+/** The proof statement, then how the interpretation is known. */
+function renderProof(view) {
+  const proof = view.proof;
+  const provenance = proof.provenance;
+  const how = [
+    'Deterministic comparison: the current and proposed builds executed the same historical interactions from identical state, and their results were compared.',
+    proof.adapter ? `Interpretation: ${proof.adapter}.` : 'Interpretation: none. This bundle carries no semantic interpreter.',
+  ];
+  if (provenance) {
+    how.push(`Provenance tier: ${provenance.levels.join(', ')}.`);
+    for (const source of provenance.sources) {
+      how.push(source.repository
+        ? `Protocol interface source: ${source.repository} at ${shortId(source.commit, 12)} (${source.files} pinned ${source.files === 1 ? 'file' : 'files'}).`
+        : `Standard program: ${source.program}.`);
+    }
+    how.push(`Exact build verified: ${provenance.exact === true ? 'yes' : provenance.exact === false ? 'no' : 'not stated'}.`);
+    if (provenance.facts.length) how.push(`Corroborated by the historical execution: ${provenance.facts.join(', ').toLowerCase()}.`);
+  }
+  return `<ul class="plain-list proof-list">${[...proof.statements, ...proof.qualifiers].map(line => `<li>${escapeHtml(line)}</li>`).join('')}</ul>
+    ${view.evaluated || provenance ? `<details class="how-known"><summary>How does Eplyx know this?</summary><ul class="plain-list">${how.map(line => `<li>${escapeHtml(line)}</li>`).join('')}</ul></details>` : ''}`;
+}
+
+/** Everything, in full, one layer down. Nothing technical was removed. */
+function renderTechnical({ live, report, resolution, extras }) {
+  const bundle = report.bundle ?? {};
+  const replay = report.replay_proof;
+  const binding = report.semantic_binding;
+  const findings = report.findings ?? [];
+  const undeclarable = report.undeclarable ?? [];
+  const unmatched = report.unmatched ?? [];
+  const reasons = Array.isArray(report.summary?.failure_reasons) ? report.summary.failure_reasons : report.failures ?? [];
+  const bindingRows = (binding?.observations ?? []).map(entry => {
+    const b = entry.binding ?? {};
+    return [
+      row('Observation', entry.observation_id),
+      row('Level', b.level),
+      b.source ? row('Repository', `${b.source.repository} @ ${b.source.commit}`) : '',
+      ...(b.source?.source_blobs ?? []).map(blob => row('Source blob', `${blob.path} (${blob.git_blob_sha1})`)),
+      b.facts ? row('Corroborated facts', b.facts.join(', ')) : '',
+      b.historical_elf_sha256 ? row('Historical ELF SHA', b.historical_elf_sha256) : '',
+      b.execution_evidence_sha256 ? row('Execution evidence SHA', b.execution_evidence_sha256) : '',
+      b.program_id ? row('Program', b.program_id) : '',
+    ].join('');
+  }).join('');
+  return `<details class="technical"><summary>Show identities, proof and raw evidence</summary>
+      <h3 class="provenance-heading">Proposed change</h3>
+      <div class="provenance-table">${ChangeIdentityRows({ change: resolution.change, spec: extras.spec, resolution })}</div>
+      <h3 class="provenance-heading">Evidence</h3>
+      <div class="provenance-table">
+        ${row('Program', bundle.program_id)}
+        ${row('Bundle SHA', live.bundle_sha256 ?? bundle.sha256)}
+        ${row('Corpus SHA', live.corpus_sha256 ?? bundle.corpus_sha256)}
+        ${row('Baseline SHA', live.baseline_sha256 ?? bundle.baseline_sha256)}
+        ${row('Candidate SHA', live.candidate_sha256 ?? report.candidate?.sha256)}
+        ${row('Adapter', bundle.adapter ? `${bundle.adapter} v${bundle.adapter_version} · semantic schema v${bundle.semantic_schema_version}` : null)}
+        ${row('Source slots', bundle.source_slot_range ? `${bundle.source_slot_range.first} → ${bundle.source_slot_range.last}` : null)}
+      </div>
+      <h3 class="provenance-heading">Replay proof</h3>
+      <div class="provenance-table">${replay ? [
+        row('Fidelity profile', replay.profile),
+        row('Status', replay.status),
+        row('Observations', replay.observations),
+        row('Proof contract', replay.proof_contract_versions?.length ? replay.proof_contract_versions.map(v => `contract ${v}`).join(', ') : 'contract 1 (not listed)'),
+        replay.boundary_proof ? row('Boundary proof', replay.boundary_proof) : '',
+      ].join('') : row('Replay proof', null, 'not reported: historical replay fidelity gate only')}</div>
+      <h3 class="provenance-heading">SemanticBinding</h3>
+      <div class="provenance-table">${binding ? `${row('exact_source_to_elf_verified', String(binding.exact_source_to_elf_verified))}${bindingRows}` : row('SemanticBinding', null, 'not reported')}</div>
+      <h3 class="provenance-heading">CI gate</h3>
+      <div class="provenance-table">
+        ${row('Exit code', report.summary?.exit_code ?? live.exit_code)}
+        ${reasons.length ? reasons.map(reason => `<div><span class="mono">${escapeHtml(reason)}</span><b>${escapeHtml(REASON_TEXT[reason] ?? 'See the canonical report.')}</b></div>`).join('') : row('Failure reasons', 'none')}
+      </div>
+      <h3 class="provenance-heading">Findings</h3>
+      ${findings.length ? findings.map(finding => `<div class="provenance-table raw-finding">
+        ${row('Fingerprint', finding.fingerprint)}
+        ${row('Severity', finding.severity)}
+        ${row('Status', finding.status)}
+        ${row('Observations', `${(finding.observations ?? []).length} of ${finding.covered_observations ?? '—'}: ${(finding.observations ?? []).join(', ')}`)}
+        ${finding.entities?.length ? row('Entities', finding.entities.join(', ')) : ''}
+        ${finding.max_relative_delta_bps != null ? row('max_relative_delta_bps', finding.max_relative_delta_bps) : ''}
+        ${(finding.values ?? []).map(entry => row('Values', `${entry.observation_id}: ${JSON.stringify(entry.baseline ?? null)} → ${JSON.stringify(entry.candidate ?? null)}${entry.relative_delta_bps != null ? ` (${entry.relative_delta_bps} bps)` : ''}`)).join('')}
+        ${finding.reason ? row('Declared reason', finding.reason) : ''}
+        ${finding.breaches?.length ? row('Breaches', JSON.stringify(finding.breaches)) : ''}
+        ${finding.unevaluable ? row('Unevaluable', JSON.stringify(finding.unevaluable)) : ''}
+      </div>`).join('') : '<p class="analysis-note">No findings in the report.</p>'}
+      <h3 class="provenance-heading">Changes that cannot be declared</h3>
+      ${undeclarable.length ? `<div class="provenance-table">${undeclarable.map(change => `<div><span class="mono">${escapeHtml(change.layer)}</span><b>${escapeHtml(change.description)} — ${escapeHtml((change.observations ?? []).join(', '))}</b></div>`).join('')}</div>` : '<p class="analysis-note">None.</p>'}
+      ${unmatched.length ? `<h3 class="provenance-heading">Unmatched declarations</h3><div class="provenance-table">${unmatched.map(item => `<div><span class="mono">${escapeHtml(item.status)}</span><b>${escapeHtml(item.fingerprint)} — ${escapeHtml(item.reason ?? '')}</b></div>`).join('')}</div>` : ''}
+      <h3 class="provenance-heading">Semantic coverage</h3>
+      <div class="provenance-table">${(report.coverage ?? []).length ? report.coverage.map(item => `<div><span class="mono">${escapeHtml(item.subject)}</span><b>${escapeHtml(item.observations)} observations</b></div>`).join('') : row('Semantic coverage', null, 'none reported')}</div>
+    </details>`;
+}
+
+/** A value, or an explicit statement of its absence. Never a stand-in. */
+function row(label, value, absent = 'not reported') {
+  return `<div><span>${escapeHtml(label)}</span><b>${value == null ? `<em>${escapeHtml(absent)}</em>` : escapeHtml(value)}</b></div>`;
 }
 
 function field(label, value, note) {
@@ -376,114 +571,18 @@ function field(label, value, note) {
   return `<div><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong>${note ? `<small>${escapeHtml(note)}</small>` : ''}</div>`;
 }
 
-function slotLabel(bundle) {
-  const slots = bundle?.source_slot_range;
+function slotLabel(slots) {
   return slots ? `Slots ${slots.first} → ${slots.last}` : null;
 }
 
-/**
- * What the verdict says, from what the gate actually decided.
- *
- * `no_semantic_coverage` is Eplyx saying it did not look: the candidate was
- * replayed, but nothing in this program's vocabulary could be evaluated. It is
- * not a pass and it is not an adverse finding, so it is never headlined as
- * "unexpected economic changes". The technical reason stays on the page.
- */
-export function headline({ passed, reasons = [], undeclarable = [] }) {
-  if (passed) {
-    return { title: 'No unexpected economic changes detected.', note: 'Across the tested validated historical corpus. The coverage limitations below still apply.', label: 'Passed', tone: 'is-pass', code: null, notEvaluated: false };
-  }
-  if (reasons.includes('no_semantic_coverage')) {
-    const detected = undeclarable.length
-      ? ' It did detect changes it cannot name; they are listed below.'
-      : '';
-    return {
-      title: 'Economic impact could not be evaluated for this interaction.',
-      note: `The candidate was replayed, but Eplyx has no semantic coverage for this program, so it cannot say whether economic outcomes changed. This is neither a pass nor a finding.${detected}`,
-      label: 'Not evaluated',
-      tone: 'is-unknown',
-      code: 'no_semantic_coverage',
-      notEvaluated: true,
-    };
-  }
-  return { title: 'Unexpected economic changes detected.', note: 'Changes were found that are not declared, exceed what was declared, or cannot be declared at all.', label: 'Failed', tone: '', code: null, notEvaluated: false };
-}
-
-const REASONS = {
+/** The gate's own reasons, by their technical names, for the details. */
+const REASON_TEXT = {
   no_semantic_coverage: 'No semantic coverage: nothing in this corpus could be evaluated economically, so a pass would mean “we did not look”.',
   undeclarable_change: 'A detected change that no expectation can name.',
   undeclared_change: 'A change nothing declared, or one larger than declared.',
   stale_expectation: 'A declaration for behaviour that no longer happens.',
   unevaluable_expectation: 'A declaration this corpus cannot judge.',
 };
-
-/** The gate's own reasons, by their technical names. */
-function renderReasons(reasons) {
-  if (!reasons.length) return '';
-  return `<h3>Why the gate did not pass</h3>
-    <div class="provenance-table">${reasons.map(reason => `<div><span class="mono">${escapeHtml(reason)}</span><b>${escapeHtml(REASONS[reason] ?? 'See the canonical report.')}</b></div>`).join('')}</div>`;
-}
-
-function renderFindings(rows, passed, hasReport, notEvaluated = false) {
-  if (!hasReport) {
-    return '<div class="empty-result">The canonical report could not be retrieved for this run, so its findings are not shown here. Fetch <span class="mono">report.json</span> with the project token.</div>';
-  }
-  if (rows.length === 0) {
-    const text = passed ? 'No findings in the tested corpus.'
-      : notEvaluated ? 'No findings: without semantic coverage there is nothing Eplyx can name as an economic change.'
-        : 'No named findings. This check failed for a reason listed below.';
-    return `<div class="empty-result">${text}</div>`;
-  }
-  return rows.map(finding => {
-    const severity = String(finding.severity ?? 'finding');
-    const status = String(finding.status ?? 'unreviewed');
-    const affected = Array.isArray(finding.observations) ? finding.observations.length : 0;
-    const covered = finding.covered_observations ?? '—';
-    const delta = finding.max_relative_delta_bps != null
-      ? `<div class="outcome-diff"><span><em>Largest change</em><b class="bad">${escapeHtml(finding.max_relative_delta_bps)} bps</b></span></div>`
-      : '';
-    const breaches = Array.isArray(finding.breaches) && finding.breaches.length
-      ? `<p class="mono">Exceeds: ${escapeHtml(JSON.stringify(finding.breaches))}</p>` : '';
-    return `<article class="report-finding ${escapeHtml(severity.toLowerCase())}">
-      <div class="report-finding__head"><span>${escapeHtml(severity)}</span><span>${escapeHtml(status.replace(/_/g, ' '))}</span><b>${affected} / ${escapeHtml(covered)} observations</b></div>
-      <h3 class="mono">${escapeHtml(finding.fingerprint ?? 'Economic change')}</h3>
-      <p>${finding.reason ? `Declared: ${escapeHtml(finding.reason)}` : 'Not declared in expected-changes.toml.'}</p>${delta}${breaches}</article>`;
-  }).join('');
-}
-
-/** Detected, and outside what any expectation can name. Its own section,
- *  because it is frequently the sole reason a check failed. */
-function renderUndeclarable(rows) {
-  if (!rows.length) return '';
-  return `<h3>Changes that cannot be declared</h3>
-    <p class="section-note">Detected, and outside the vocabulary an expectation can name. The subject has to be promoted deliberately before one of these can be approved.</p>
-    ${rows.map(row => `<article class="report-finding warning">
-      <div class="report-finding__head"><span>${escapeHtml(String(row.layer ?? '').replace(/_/g, ' '))}</span><span>undeclarable</span><b>${Array.isArray(row.observations) ? row.observations.length : 0} observations</b></div>
-      <h3 class="mono">${escapeHtml(row.description ?? '')}</h3></article>`).join('')}`;
-}
-
-function renderUnmatched(rows) {
-  if (!rows.length) return '';
-  return `<h3>Declarations that matched nothing</h3>
-    ${rows.map(row => `<article class="report-finding warning">
-      <div class="report-finding__head"><span>${escapeHtml(String(row.status ?? '').replace(/_/g, ' '))}</span><span>declaration</span><b>${escapeHtml(row.covered_observations ?? 0)} can measure it</b></div>
-      <h3 class="mono">${escapeHtml(row.fingerprint ?? '')}</h3>
-      <p>Declared: ${escapeHtml(row.reason ?? '')}</p></article>`).join('')}`;
-}
-
-function renderCoverage(report) {
-  const coverage = report?.coverage;
-  if (!Array.isArray(coverage) || coverage.length === 0) {
-    return '<div><span>Semantic coverage</span><b><em>none reported</em></b></div>';
-  }
-  return coverage.map(row => `<div><span class="mono">${escapeHtml(row.subject)}</span><b>${escapeHtml(row.observations)} observations</b></div>`).join('');
-}
-
-function renderLimitations(bundle) {
-  const limitations = bundle?.limitations ?? [];
-  if (!limitations.length) return '<p>This bundle reported no limitations. That is unusual; check the canonical report.</p>';
-  return `<ul>${limitations.map(item => `<li>${escapeHtml(item.detail ?? item.code)}</li>`).join('')}</ul>`;
-}
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
@@ -543,7 +642,10 @@ const DEMO = {
     ],
     findings: [
       { severity: 'CRITICAL', status: 'unexpected', fingerprint: 'spl-stake-pool/withdraw_sol/execution/transaction/now_reverts', observations: ['a', 'b', 'c', 'd'], covered_observations: 4 },
-      { severity: 'HIGH', status: 'unexpected', fingerprint: 'spl-stake-pool/deposit_sol/economic/pool_tokens_received/decreased', observations: ['e'], covered_observations: 6, max_relative_delta_bps: -21 }
+      {
+        severity: 'HIGH', status: 'unexpected', fingerprint: 'spl-stake-pool/deposit_sol/economic/pool_tokens_received/decreased', observations: ['e'], covered_observations: 6, max_relative_delta_bps: -21,
+        values: [{ observation_id: 'e', baseline: { kind: 'quantity', quantity: '10.412337901' }, candidate: { kind: 'quantity', quantity: '10.390472189' }, relative_delta_bps: -21 }]
+      }
     ],
     undeclarable: [
       { layer: 'decoded_economic', description: 'manager-fee amount', observations: ['a', 'b', 'c', 'd', 'e'] }

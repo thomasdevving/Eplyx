@@ -5,7 +5,7 @@
 SHELL := /bin/bash
 CARGO := cargo
 
-.PHONY: all build programs compare report fixtures test test-engine test-programs fmt fmt-check lint clean demo-replay demo-discovery demo-mainnet-replay demo-token2022-upgrade demo-cpi-mainnet-replay memo-candidate token2022-candidate stake-pool-candidate
+.PHONY: all build programs compare report fixtures impact-fixtures test test-engine test-programs fmt fmt-check lint clean demo-replay demo-discovery demo-mainnet-replay demo-token2022-upgrade demo-cpi-mainnet-replay memo-candidate token2022-candidate stake-pool-candidate
 
 all: compare
 
@@ -24,6 +24,11 @@ report: build
 ## Regenerate the checked-in fixture corpus.
 fixtures:
 	$(CARGO) run -q -p eplyx-engine -- generate
+
+## Phase P3: the CI reports the analysis page is tested against.
+impact-fixtures:
+	EPLYX_WRITE_IMPACT_FIXTURES=1 $(CARGO) test -q -p eplyx-engine --test drift_settle_semantics impact_view
+	EPLYX_WRITE_IMPACT_FIXTURES=1 $(CARGO) test -q -p eplyx-engine --test orca_swap_semantics impact_view
 
 ## Everything: program unit tests plus the differential suite.
 #
