@@ -6,6 +6,7 @@
 //! service serves, not a re-creation of it.
 
 pub mod api;
+pub mod artifacts;
 pub mod config;
 pub mod ids;
 pub mod project;

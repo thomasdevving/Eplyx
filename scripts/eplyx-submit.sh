@@ -172,8 +172,18 @@ run = json.loads(sys.argv[1]); run_id, elapsed, report_path = sys.argv[2], sys.a
 exit_code = run.get("exit_code")
 # Wording is load-bearing. A pass means no disallowed difference was observed
 # in the coverage this bundle represents - not that the candidate is safe.
+reasons = []
+if report_path:
+    try:
+        reasons = json.load(open(report_path)).get("summary", {}).get("failure_reasons") or []
+    except Exception:
+        reasons = []
+# No semantic coverage is Eplyx saying it did not look. It is neither a pass
+# nor an adverse finding, and is never headlined as one.
 headline = ("Eplyx check passed against the project's active production-derived replay bundle."
             if exit_code == 0 else
+            "Economic impact could not be evaluated for this interaction (no_semantic_coverage)."
+            if "no_semantic_coverage" in reasons else
             "Unexpected or over-bound semantic changes detected.")
 out = [f"## Eplyx — {headline}", ""]
 out += ["| | |", "|---|---|"]

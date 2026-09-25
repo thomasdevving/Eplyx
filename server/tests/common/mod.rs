@@ -239,6 +239,26 @@ impl Harness {
         }
     }
 
+    /// Where the service keeps an artefact. Tests reach in to damage it; the
+    /// API never exposes this path.
+    pub fn artifact_path(&self, sha256: &str) -> PathBuf {
+        self.state
+            .registry
+            .artifacts()
+            .root()
+            .join("programs")
+            .join(sha256)
+    }
+
+    pub fn run_file(&self, run_id: &str, name: &str) -> PathBuf {
+        self.state
+            .registry
+            .storage()
+            .run_dir(run_id)
+            .expect("run dir")
+            .join(name)
+    }
+
     pub fn work_dir(&self, run_id: &str) -> PathBuf {
         self.state.registry.run_work_dir(run_id).expect("work dir")
     }

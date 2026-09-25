@@ -149,9 +149,10 @@ to the pinned bundle before the `202`. The run, its stored spec and its report
 must name the same `change_spec_id`. See
 [`phase-p1-productized-changespec.md`](phase-p1-productized-changespec.md).
 
-Uploaded candidates are ephemeral. They are staged in the run's own work
-directory and removed once the run is terminal, whatever the outcome; what
-survives is the SHA-256, the report and the run metadata.
+Since Phase P2, uploaded candidates are **durable**: each is stored once, by
+content hash, in an immutable artefact store before its run is accepted, and it
+is retained after the run ends. See
+[`phase-p2-durable-hosted-analyses.md`](phase-p2-durable-hosted-analyses.md).
 
 ### A check outlives the request that created it
 
@@ -256,19 +257,18 @@ the bundle an old run names is still there to re-read.
 
 ### What a restart costs
 
-The task queue is in-process. A restart drops whatever it was holding, and runs
-left `queued` or `running` have no worker behind them any more. On startup they
-are resolved as `execution_error` with `"Run interrupted by server restart;
-resubmit the check."`, and their inputs are cleared.
-
-This is a real limitation, stated rather than hidden. Resuming interrupted runs
-needs a durable queue, which a pilot does not need and which the single-volume
-deployment cannot honestly provide. What is not acceptable is leaving a run
-`running` forever for a client to poll.
+*Superseded by Phase P2.* The run record is now the durable queue entry, and
+every input is durable before the record exists. On startup the server takes an
+exclusive lock on its volume and re-enqueues queued runs. A run that was
+executing is retried as another attempt of the same run (at most three), or
+finalized from its report if it had already written a complete, verified one.
+Only runs accepted before P2, which have no durable candidate, still become
+`execution_error`. The recovery table is in
+[`phase-p2-durable-hosted-analyses.md`](phase-p2-durable-hosted-analyses.md).
 
 `scripts/async-demo.sh <bundle-dir>` drives a real server over a real socket
 through all of it: acceptance without execution, a queued run that has provably
-not started, refusal of its report, restart recovery, completion, and the
+not started, refusal of its report, a `kill -9` restart that resumes it, completion, and the
 canonical report refetched byte-identical.
 
 ### The hosted report is the local report

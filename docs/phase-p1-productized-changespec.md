@@ -287,9 +287,10 @@ the hosted-equals-local byte identity test.
 
 ## Known gaps, deliberately left
 
-- No persistent server-side artefact store. A spec must arrive with its bytes,
-  and the bytes are still discarded when the run is terminal. What survives is
-  the spec, the hash, the report.
+- ~~No persistent server-side artefact store.~~ Closed by
+  [Phase P2](phase-p2-durable-hosted-analyses.md): candidates are durable,
+  immutable and content-addressed, and a spec can name one the project already
+  supplied.
 - The index is per project. A change ID is global, but a lookup across projects
   would cross the project-token boundary and is not offered.
 - The frontend has no explicit-spec upload. It is an API and CI surface on

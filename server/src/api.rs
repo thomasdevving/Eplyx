@@ -21,11 +21,11 @@ use axum::routing::{get, post};
 use axum::{Json, Router};
 use eplyx_engine::change::{CandidateSource, ChangeSpec};
 use eplyx_engine::ci;
-use eplyx_engine::universal::evidence::{EvidenceKind, EvidenceStore};
 use serde::Serialize;
 use serde_json::json;
 use tower_http::cors::CorsLayer;
 
+use crate::artifacts::ArtifactRef;
 use crate::config::Config;
 use crate::project::{
     validate_name, validate_program_id, AdapterId, Chain, Project, ProjectStatus, ProjectToken,
@@ -169,6 +169,10 @@ pub fn router(state: Shared) -> Router {
         )
         .route("/v1/projects/{project_id}/runs", get(list_project_runs))
         .route("/v1/projects/{project_id}/checks", post(create_check))
+        .route(
+            "/v1/projects/{project_id}/artifacts/{sha256}",
+            get(get_artifact),
+        )
         .route("/v1/runs/{run_id}", get(get_run))
         .route("/v1/runs/{run_id}/report.json", get(get_report_json))
         .route("/v1/runs/{run_id}/report.md", get(get_report_markdown))
@@ -308,6 +312,8 @@ struct AcceptedResponse {
     /// Identity is known before any replay; a verdict is not.
     change: RunChange,
     candidate_sha256: String,
+    /// The durable, content-addressed object the run will execute.
+    candidate_artifact: ArtifactRef,
     bundle_sha256: String,
 }
 
@@ -381,14 +387,7 @@ async fn create_check(
     // reference. Either way the spec is bound to the pinned bundle and the bytes
     // are verified against it here, so a proposal that does not fit, or bytes
     // it did not describe, never become a queued run.
-    let candidate = upload.candidate.ok_or_else(|| match upload.change_spec {
-        Some(_) => ApiError::bad_request(
-            "the change spec names its candidate by hash; supply the bytes as the `candidate` part",
-        )
-        .with_exit_code(ci::EXIT_ERROR),
-        None => ApiError::bad_request("candidate is required"),
-    })?;
-    let (spec, origin) = match &upload.change_spec {
+    let submitted = match &upload.change_spec {
         Some(document) => {
             if upload.label.is_some() {
                 return Err(ApiError::bad_request(
@@ -396,12 +395,23 @@ async fn create_check(
                 )
                 .with_exit_code(ci::EXIT_ERROR));
             }
-            let spec = ChangeSpec::parse(document).map_err(|error| {
+            Some(ChangeSpec::parse(document).map_err(|error| {
                 ApiError::bad_request(format!("invalid change spec: {error:#}"))
                     .with_exit_code(ci::EXIT_ERROR)
-            })?;
-            (spec, ChangeOrigin::Submitted)
+            })?)
         }
+        None => None,
+    };
+    // The bytes: uploaded, or — for an explicit spec only — an artefact this
+    // project already supplied, so a proposal can be analysed again without
+    // re-uploading what the service already holds immutably.
+    let candidate: Vec<u8> = match (upload.candidate, &submitted) {
+        (Some(bytes), _) => bytes.to_vec(),
+        (None, None) => return Err(ApiError::bad_request("candidate is required")),
+        (None, Some(spec)) => retained_candidate(&state, &project.project_id, spec)?,
+    };
+    let (spec, origin) = match submitted {
+        Some(spec) => (spec, ChangeOrigin::Submitted),
         None => {
             let mut spec = ChangeSpec::program_upgrade(&manifest.program_id, &candidate);
             spec.metadata.label = upload.label.clone();
@@ -427,32 +437,40 @@ async fn create_check(
         ));
     }
 
-    let run_id = new_run_id();
-
-    // Staged under the run, not in a request-scoped temporary directory: this
-    // handler returns long before the worker reads these, and a TempDir dropped
-    // with the response would delete the candidate out from under the run.
+    // ---- durable inputs, then durable intent --------------------------------
     //
-    // Content-addressed, not named: the worker resolves the candidate by the
-    // hash its stored spec commits to, and the store re-hashes on read. There is
-    // no file whose name means "the candidate".
-    let work = state
+    // Every input the worker will read is persisted, content-addressed or
+    // hash-pinned, before the run record exists; the run record is the last
+    // thing written, and the 202 follows it. So an accepted run never names an
+    // input the service does not hold, and a restart at any point before the
+    // record leaves no run at all rather than one that cannot execute.
+    let stored = state
         .registry
-        .run_work_dir(&run_id)
-        .map_err(|error| ApiError::internal(format!("run workspace: {error}")))?;
-    std::fs::create_dir_all(&work)
-        .map_err(|error| ApiError::internal(format!("run workspace: {error}")))?;
-    EvidenceStore::at(work.join("artifacts"))
-        .put(EvidenceKind::ProgramBinary, &candidate)
-        .map_err(|error| ApiError::internal(format!("staging the candidate: {error}")))?;
-    if let Some(bytes) = &upload.expectations {
-        std::fs::write(work.join("expected-changes.toml"), bytes)
-            .map_err(|error| ApiError::internal(format!("staging the expectations: {error}")))?;
+        .artifacts()
+        .put_program(&candidate)
+        .map_err(|error| ApiError::internal(format!("storing the candidate: {error:#}")))?;
+    if !stored.reference.matches(spec.candidate()) {
+        return Err(ApiError::internal(
+            "the stored artifact is not the spec's candidate",
+        ));
     }
+    state
+        .registry
+        .index_project_artifact(&project.project_id, &stored.reference.sha256)
+        .map_err(|error| ApiError::internal(format!("indexing the artifact: {error}")))?;
+
+    let run_id = new_run_id();
     state
         .registry
         .save_change_spec(&run_id, &spec)
         .map_err(|error| ApiError::internal(format!("persisting the change spec: {error}")))?;
+    let expectations_sha256 =
+        match &upload.expectations {
+            Some(bytes) => Some(state.registry.save_expectations(&run_id, bytes).map_err(
+                |error| ApiError::internal(format!("persisting the expectations: {error}")),
+            )?),
+            None => None,
+        };
 
     let metadata = RunMetadata {
         run_id: run_id.clone(),
@@ -464,6 +482,9 @@ async fn create_check(
         baseline_sha256: Some(manifest.baseline_program_sha256.clone()),
         candidate_sha256: change.candidate_sha256.clone(),
         change: Some(change.clone()),
+        candidate_artifact: Some(stored.reference.clone()),
+        expectations_sha256,
+        attempts: Vec::new(),
         adapter: Some(bundle.adapter().name.clone()),
         adapter_version: Some(bundle.adapter().version),
         semantic_schema_version: Some(manifest.semantic_schema_version),
@@ -476,12 +497,9 @@ async fn create_check(
         completed_at_unix_seconds: None,
     };
 
-    // Durable before anything expensive begins. Only then is a worker started,
-    // so there is no window in which work exists that nothing can be told about.
-    state
-        .registry
-        .create_run(&metadata)
-        .map_err(|error| ApiError::internal(format!("persisting the run: {error}")))?;
+    // Indexed before the record exists: an index entry whose run never got
+    // written is skipped by every listing, while a run that exists but is in no
+    // index would be invisible in history.
     state
         .registry
         .index_run(&project.project_id, &run_id)
@@ -490,6 +508,13 @@ async fn create_check(
         .registry
         .index_change(&project.project_id, &change.change_spec_id, &run_id)
         .map_err(|error| ApiError::internal(format!("indexing the change: {error}")))?;
+    // The run record is the durable queue entry. Only once it exists is a
+    // worker started, so there is no window in which work exists that nothing
+    // can be told about, and a restart from here re-enqueues it.
+    state
+        .registry
+        .create_run(&metadata)
+        .map_err(|error| ApiError::internal(format!("persisting the run: {error}")))?;
     worker::spawn(Arc::clone(&state), run_id.clone());
 
     Ok((
@@ -501,7 +526,82 @@ async fn create_check(
             status: RunStatus::Queued,
             candidate_sha256: change.candidate_sha256.clone(),
             change,
+            candidate_artifact: stored.reference,
             bundle_sha256: manifest.bundle_sha256.clone(),
+        }),
+    )
+        .into_response())
+}
+
+/// The candidate an explicit spec names, from what this project has already
+/// supplied. Scoped to the project on purpose: the store is shared and
+/// deduplicated, and knowing another project's candidate hash must not be
+/// enough to execute or detect its bytes.
+fn retained_candidate(state: &AppState, project_id: &str, spec: &ChangeSpec) -> ApiResult<Vec<u8>> {
+    let wanted = ArtifactRef::from(spec.candidate());
+    let held = state
+        .registry
+        .project_holds_artifact(project_id, &wanted.sha256)
+        .unwrap_or(false);
+    if !held {
+        return Err(ApiError::bad_request(format!(
+            "the change spec names candidate {}, which this project has not supplied; \
+             upload it as the `candidate` part",
+            wanted.sha256
+        ))
+        .with_exit_code(ci::EXIT_ERROR));
+    }
+    state
+        .registry
+        .artifacts()
+        .get_program(&wanted)
+        .map_err(|error| {
+            ApiError::internal(format!("the retained candidate does not verify: {error:#}"))
+        })
+}
+
+#[derive(Serialize)]
+struct ArtifactView {
+    sha256: String,
+    len: u64,
+    /// Held immutably, verified on this read. Never a path.
+    retained: bool,
+}
+
+/// Whether this project's candidate `sha256` is held, verified now.
+///
+/// Metadata only: no bytes, no storage path, no mutation. A hash the project
+/// never supplied answers exactly like one the service has never seen.
+async fn get_artifact(
+    State(state): State<Shared>,
+    Path((project_id, sha256)): Path<(String, String)>,
+    headers: HeaderMap,
+) -> ApiResult<Response> {
+    project_for(&state, &project_id, &headers)?;
+    if !crate::artifacts::canonical_sha256(&sha256) {
+        return Err(ApiError::bad_request(
+            "an artifact is named by 64 lowercase hex characters",
+        ));
+    }
+    let held = state
+        .registry
+        .project_holds_artifact(&project_id, &sha256)
+        .unwrap_or(false);
+    if !held {
+        return Err(ApiError::not_found("artifact"));
+    }
+    let reference = state
+        .registry
+        .artifacts()
+        .describe(&sha256)
+        .map_err(|error| ApiError::internal(format!("the artifact does not verify: {error:#}")))?
+        .ok_or_else(|| ApiError::not_found("artifact"))?;
+    Ok((
+        StatusCode::OK,
+        Json(ArtifactView {
+            sha256: reference.sha256,
+            len: reference.len,
+            retained: true,
         }),
     )
         .into_response())

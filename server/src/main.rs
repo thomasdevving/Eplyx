@@ -115,21 +115,35 @@ fn main() -> Result<()> {
 
     match cli.command.unwrap_or(Command::Serve) {
         Command::Serve => {
-            // The task queue is in-process, so a restart drops whatever it was
-            // holding. Runs left queued or running have no worker behind them
-            // any more; saying so is the only honest option, and leaving them
-            // to be polled forever is the one that is simply wrong.
-            let interrupted = registry
-                .recover_interrupted_runs()
-                .context("resolving runs interrupted by a restart")?;
-            if !interrupted.is_empty() {
+            // Held for the life of the process. Recovery below re-enqueues every
+            // non-terminal run on this volume, which is only safe if nothing
+            // else can be executing them.
+            let _lock = registry.storage().lock_exclusive()?;
+            let swept = registry.artifacts().sweep_temporary()?;
+            if swept > 0 {
                 eprintln!(
-                    "resolved {} run(s) interrupted by a restart: {}",
-                    interrupted.len(),
-                    interrupted.join(", ")
+                    "removed {swept} incomplete artifact write(s) left by a previous process"
                 );
             }
-            serve(config, registry)
+            let recovery = registry
+                .recover_runs()
+                .context("reconciling runs a previous process left unfinished")?;
+            for (what, ids) in [
+                ("re-enqueued", &recovery.requeued),
+                (
+                    "finalized from an already-written report",
+                    &recovery.finalized,
+                ),
+                (
+                    "could not be recovered and are now execution_error",
+                    &recovery.failed,
+                ),
+            ] {
+                if !ids.is_empty() {
+                    eprintln!("{} run(s) {what}: {}", ids.len(), ids.join(", "));
+                }
+            }
+            serve(config, registry, recovery.requeued)
         }
         Command::Admin { command } => admin(command, &registry),
     }
@@ -211,7 +225,7 @@ fn admin(command: AdminCommand, registry: &Registry) -> Result<()> {
     Ok(())
 }
 
-fn serve(config: Config, registry: Registry) -> Result<()> {
+fn serve(config: Config, registry: Registry, requeued: Vec<String>) -> Result<()> {
     let runtime = tokio::runtime::Builder::new_multi_thread()
         .enable_all()
         .build()?;
@@ -223,6 +237,8 @@ fn serve(config: Config, registry: Registry) -> Result<()> {
             config,
             registry,
         });
+        // Recovered work goes back behind the same semaphore as new work.
+        eplyx_server::worker::resume(&state, &requeued);
         let listener = tokio::net::TcpListener::bind(bind)
             .await
             .with_context(|| format!("binding {bind}"))?;

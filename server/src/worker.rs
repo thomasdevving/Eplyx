@@ -63,38 +63,56 @@ pub fn spawn(state: Arc<AppState>, run_id: String) {
         if let Err(error) = state.registry.finish_run(&run_id, outcome) {
             eprintln!("run {run_id}: could not be recorded: {error}");
         }
-        // The uploaded binary goes away whatever happened. What survives is its
-        // hash, the report and the run metadata.
+        // Only the scratch cache goes. The candidate artefact is shared and
+        // immutable, and stays; so do the spec, the report and the record.
         if let Err(error) = state.registry.clear_run_work(&run_id) {
-            eprintln!("run {run_id}: could not clear inputs: {error}");
+            eprintln!("run {run_id}: could not clear its scratch cache: {error}");
         }
         drop(permit);
     });
 }
 
+/// Start a worker for every run startup recovery put back in the queue.
+///
+/// Oldest first, so recovered work keeps its place; each still waits for a
+/// permit like any new run, and each is claimed by compare-and-set, so a run
+/// that is somehow enqueued twice still executes once.
+pub fn resume(state: &Arc<AppState>, run_ids: &[String]) {
+    for run_id in run_ids {
+        spawn(Arc::clone(state), run_id.clone());
+    }
+}
+
 /// Everything that touches the engine, on a blocking thread.
 ///
+/// Every input is rebuilt from a durable identity; nothing comes from a
+/// filename, from memory, or from the project's current state:
+///
 /// ```text
-/// stored ChangeSpec (re-verified) → pinned bundle → candidate by content hash
-///   → ci::check_change
+/// metadata.change + candidate_artifact           the registry's record
+/// runs/<id>/change_spec.json   re-verified       == metadata.change
+/// artifacts/programs/<sha256>  hash-on-read      == spec candidate == metadata artifact
+/// bundles/<bundle_sha256>      verified open     the bundle pinned at creation
+/// runs/<id>/expected-changes.toml  hash-pinned   the declarations it was accepted with
+///   → ci::check_change(bundle, Spec { spec, Bytes(verified bytes) })
 /// ```
 ///
-/// Nothing here is reconstructed from a filename or from the project's current
-/// state. The proposal is the spec stored at creation, the baseline is the
-/// bundle hash pinned at creation, and the bytes are whatever the run's
-/// content-addressed store holds under the spec's candidate hash.
+/// The bytes handed to the engine are the bytes whose hash was just checked,
+/// not a path the engine opens again later.
 ///
 /// The split between the two failure outcomes is the engine's own: an error
 /// from `ci::check_change` carries a real Eplyx exit code and is a real gate
-/// result — a malformed expectation file is 2, a bundle that no longer proves
-/// the spec's target is 4 — so it is recorded as a failed run with that code and
-/// no report, which is what a preflight abort is. A run whose own stored inputs
-/// cannot be trusted (no spec, a spec that no longer verifies, a candidate that
-/// is gone or altered) is this service failing to keep what it accepted, and
-/// becomes an execution error: that is not a statement about the candidate.
+/// result — a malformed expectation file is 2, a spec that no longer binds to
+/// its bundle is 4 — so it is recorded as a failed run with that code and no
+/// report. A run whose own durable inputs cannot be trusted (no spec, a spec
+/// that no longer verifies, an artefact that is gone or altered, a pinned
+/// bundle that is missing or fails verification) is this service failing to
+/// keep what it accepted, and becomes an execution error: that is never a
+/// statement about the candidate.
 fn execute(state: &AppState, run_id: &str) -> RunOutcome {
     let service_fault = |detail: String| RunOutcome::ExecutionError { detail };
-    let metadata = match state.registry.load_run(run_id) {
+    let registry = &state.registry;
+    let metadata = match registry.load_run(run_id) {
         Ok(metadata) => metadata,
         Err(error) => return service_fault(format!("the run record could not be read: {error}")),
     };
@@ -105,7 +123,12 @@ fn execute(state: &AppState, run_id: &str) -> RunOutcome {
             "the run records no change spec, so there is nothing to evaluate".into(),
         );
     };
-    let spec = match state.registry.load_change_spec(run_id, change) {
+    let Some(artifact) = metadata.candidate_artifact.as_ref() else {
+        return service_fault(
+            "the run records no durable candidate artifact, so there is nothing to execute".into(),
+        );
+    };
+    let spec = match registry.load_change_spec(run_id, change) {
         Ok(spec) => spec,
         Err(error) => {
             return service_fault(format!(
@@ -113,41 +136,64 @@ fn execute(state: &AppState, run_id: &str) -> RunOutcome {
             ))
         }
     };
-    let bundle_dir = match state
-        .registry
-        .storage()
-        .bundle_path(&metadata.bundle_sha256)
-    {
+    if !artifact.matches(spec.candidate()) {
+        return service_fault(format!(
+            "the run's artifact {} is not the candidate its change spec names ({})",
+            artifact.sha256,
+            spec.candidate().sha256
+        ));
+    }
+    let bytes = match registry.artifacts().get_program(artifact) {
+        Ok(bytes) => bytes,
+        Err(error) => {
+            return service_fault(format!(
+                "the accepted candidate is no longer available: {error:#}"
+            ))
+        }
+    };
+    if let Err(error) = registry.open_bundle(&metadata.bundle_sha256) {
+        return service_fault(format!("the pinned bundle is unavailable: {error:#}"));
+    }
+    let bundle_dir = match registry.storage().bundle_path(&metadata.bundle_sha256) {
         Ok(path) => path,
         Err(error) => {
             return service_fault(format!("the bundle path could not be resolved: {error}"))
         }
     };
-    let work = match state.registry.run_work_dir(run_id) {
-        Ok(path) => path,
+
+    // The declarations are hash-verified from their durable copy and written to
+    // the scratch cache, because the engine takes a path. The cache copy is
+    // derived; losing it loses nothing.
+    let expectations = match registry.load_expectations(&metadata) {
+        Ok(None) => None,
+        Ok(Some(bytes)) => {
+            let staged = registry.run_work_dir(run_id).and_then(|work| {
+                std::fs::create_dir_all(&work)?;
+                let path = work.join("expected-changes.toml");
+                std::fs::write(&path, &bytes)?;
+                Ok(path)
+            });
+            match staged {
+                Ok(path) => Some(path),
+                Err(error) => {
+                    return service_fault(format!("staging the expected changes: {error:#}"))
+                }
+            }
+        }
         Err(error) => {
-            return service_fault(format!("the run workspace could not be resolved: {error}"))
+            return service_fault(format!(
+                "the run's expected changes are not trustworthy: {error:#}"
+            ))
         }
     };
-    let artifacts = work.join("artifacts");
-    // Resolved here as well as inside the engine, so a missing or altered
-    // candidate is named as the service's fault before it could be mistaken for
-    // a configuration verdict.
-    if let Err(error) = spec.resolve(CandidateSource::Store(&artifacts)) {
-        return service_fault(format!(
-            "the accepted candidate is no longer available: {error:#}"
-        ));
-    }
-    let expectations = work.join("expected-changes.toml");
-    let expectations = expectations.exists().then_some(expectations);
 
     // The engine, called directly. There is no second implementation of any of
     // this, and nothing is shelled out to. It binds the spec to the pinned
-    // bundle again and resolves the bytes again: the check at acceptance was an
-    // early answer, not a substitute for this one.
+    // bundle again and verifies the bytes against the spec again: the checks at
+    // acceptance were early answers, not substitutes for these.
     let input = ci::ChangeInput::Spec {
         spec: &spec,
-        source: Some(CandidateSource::Store(&artifacts)),
+        source: Some(CandidateSource::Bytes(&bytes)),
     };
     match ci::check_change(&bundle_dir, &input, expectations.as_deref()) {
         Ok(report) => {
