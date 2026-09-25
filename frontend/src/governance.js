@@ -62,7 +62,7 @@ export function deliveryOf(spec) {
  * or null; `changeSpecId` is the run's own change. Returns null when the run
  * names no proposal at all: there is nothing to say, and nothing is invented.
  */
-export function governanceView({ delivery, check = null, changeSpecId = null, now = Date.now() / 1000, error = null } = {}) {
+export function governanceView({ delivery, check = null, attestation = null, changeSpecId = null, now = Date.now() / 1000, error = null } = {}) {
   if (!delivery) return null;
   const proposal = {
     label: `Squads #${delivery.transaction_index}`,
@@ -128,6 +128,9 @@ export function governanceView({ delivery, check = null, changeSpecId = null, no
       detail: binding.observation?.proposal?.stale ? 'stale: no further votes' : null,
     },
   ];
+  if (outcome === 'matched' && ['draft', 'active', 'approved', 'executing'].includes(status)) {
+    facts.push({ label: 'Execution', value: 'Not executed yet', detail: null });
+  }
   if (buffer && outcome !== 'matched') {
     facts.push({ label: 'Buffer holds', value: fingerprint(buffer.sha256), detail: `analysed ${fingerprint(binding.expected?.candidate?.sha256)}` });
   }
@@ -139,7 +142,7 @@ export function governanceView({ delivery, check = null, changeSpecId = null, no
   } else {
     note = reason?.detail ?? binding.statement;
   }
-  return {
+  const view = {
     proposal,
     state,
     tone,
@@ -150,6 +153,32 @@ export function governanceView({ delivery, check = null, changeSpecId = null, no
     reasons: (binding.reasons ?? []).map(r => ({ code: r.code, detail: r.detail })),
     rows: technicalRows(binding),
   };
+  if (attestation && attestation.change_spec_id === changeSpecId) {
+    const execution = attestation.execution;
+    const outcomes = {
+      deployed_match: ['ok', 'Analysed candidate was deployed', `Executed at slot ${execution?.slot ?? '—'}. Transaction ${middle(execution?.signature ?? '')}.`],
+      deployed_mismatch: ['alert', 'The code deployed by this proposal does not match the candidate Eplyx analysed.', `Executed at slot ${execution?.slot ?? '—'}. Transaction ${middle(execution?.signature ?? '')}.`],
+      superseded: ['dated', 'This proposal executed, but the program has since been upgraded again.', `Executed at slot ${execution?.slot ?? '—'}. Transaction ${middle(execution?.signature ?? '')}.`],
+      not_executed: ['neutral', 'Proposal matches analysed change', 'Not executed yet.'],
+      unsupported: ['neutral', 'Deployment attestation is unsupported for this proposal.', attestation.reasons?.join(' ') ?? ''],
+      unverifiable: ['neutral', 'Deployment could not be verified.', attestation.reasons?.join(' ') ?? ''],
+    };
+    const [tone, title, note] = outcomes[attestation.outcome] ?? outcomes.unverifiable;
+    view.tone = tone;
+    view.title = title;
+    view.note = note;
+    view.state = attestation.outcome;
+    view.facts.push({ label: 'Execution', value: execution ? `slot ${execution.slot}` : 'not proved', detail: execution?.signature ? middle(execution.signature) : null });
+    view.rows.push(['Attestation ID', attestation.attestation_id]);
+    view.rows.push(['Deployment outcome', attestation.outcome]);
+    if (execution) view.rows.push(['Execution signature', execution.signature]);
+    if (attestation.deployed) {
+      view.rows.push(['ProgramData deployment slot', attestation.deployed.deploy_slot]);
+      view.rows.push(['ProgramData SHA-256', attestation.deployed.account_sha256]);
+      view.rows.push(['Zero padding bytes', attestation.deployed.zero_padding_len]);
+    }
+  }
+  return view;
 }
 
 function technicalRows(binding) {
@@ -190,7 +219,7 @@ export function GovernanceSection(view) {
   const role = view.tone === 'alert' ? ' role="alert"' : '';
   return `<section class="governance-card is-${escapeHtml(view.tone)}" aria-label="Governance proposal"${role}>
     <header><span>Governance proposal</span><em>${escapeHtml(view.proposal.label)}</em></header>
-    <h3>${view.state === 'matched' ? '<span aria-hidden="true">✓</span> ' : ''}${escapeHtml(view.title)}</h3>
+    <h3>${view.state === 'matched' || view.state === 'deployed_match' ? '<span aria-hidden="true">✓</span> ' : ''}${escapeHtml(view.title)}</h3>
     ${facts ? `<dl>${facts}</dl>` : ''}
     <p class="governance-card__note">${escapeHtml(view.note)}</p>
   </section>`;

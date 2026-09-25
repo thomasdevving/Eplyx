@@ -83,6 +83,22 @@ await check('a fresh match shows the proposal, the slot, the commitment and the 
   assert.doesNotMatch(html, SAFE);
 });
 
+await check('a separate G2 attestation reports deployment, supersession and mismatch', () => {
+  const base = { change_spec_id: bound.change_spec_id, binding_id: B.matched.binding_id,
+    execution: { signature: '3Nvd3MPxvNKDj6h5YVuaUd5xgjfJeByPJw1HdRu8QwdrEpSt7csgYaQ2qrXNifxwbGs7p9gGMt5Vq1JJRywgG2wV', slot: 7000 } };
+  const render = outcome => governanceView({ delivery, check: at(B.matched), attestation: { ...base, outcome }, changeSpecId: bound.change_spec_id, now: NOW });
+  const matched = render('deployed_match');
+  assert.equal(matched.tone, 'ok');
+  assert.match(GovernanceSection(matched), /Analysed candidate was deployed/);
+  assert.match(GovernanceSection(matched), /Executed at slot 7000/);
+  assert.equal(render('superseded').tone, 'dated');
+  assert.match(GovernanceSection(render('superseded')), /since been upgraded again/);
+  const mismatch = render('deployed_mismatch');
+  assert.equal(mismatch.tone, 'alert');
+  assert.match(GovernanceSection(mismatch), /role="alert"/);
+  assert.match(GovernanceSection(mismatch), /does not match the candidate/);
+});
+
 await check('an old match is dated, not green, and still names its slot', () => {
   const model = view(B.matched, FRESH_SECONDS + 3 * 3600);
   assert.equal(model.state, 'matched_dated');

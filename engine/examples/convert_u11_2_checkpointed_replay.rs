@@ -472,7 +472,7 @@ fn main() -> Result<()> {
             address,
             SLOT,
             provider(genesis),
-            &[chunk_receipt.clone()],
+            std::slice::from_ref(&chunk_receipt),
             &slices,
         )?;
         let account =

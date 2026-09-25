@@ -33,6 +33,7 @@
 //! This module reads and verifies. It never signs, approves, rejects,
 //! cancels, executes or creates anything, and holds no key.
 
+pub mod attestation;
 pub mod simulated;
 pub mod squads;
 

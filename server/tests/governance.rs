@@ -58,6 +58,64 @@ fn verify_body(extra: Value) -> Value {
 }
 
 #[tokio::test]
+async fn g2_active_proposal_is_separate_sealed_evidence() {
+    let world = fixture_world();
+    let harness = Harness::with_governance(1, world.clone());
+    let (project, token) = ready(&harness).await;
+    let (_, accepted) = harness.submit_check(&project, &token).await;
+    let run = finished_run(&harness, &accepted).await;
+    let verify = format!("/v1/projects/{project}/governance/squads/verify");
+    let (status, bound) = harness
+        .post_json(&verify, &token, verify_body(json!({"run_id":run})))
+        .await;
+    assert_eq!(status, StatusCode::OK, "{bound}");
+    let bound_id = bound["change_spec_id"].as_str().unwrap();
+    let binding_id = bound["binding_id"].as_str().unwrap();
+    let attest = format!("/v1/projects/{project}/governance/squads/attest");
+    let (status, proof) = harness
+        .post_json(
+            &attest,
+            &token,
+            json!({"change_spec_id":bound_id,"binding_id":binding_id}),
+        )
+        .await;
+    assert_eq!(status, StatusCode::OK, "{proof}");
+    assert_eq!(proof["outcome"], "not_executed");
+    assert!(proof["execution"].is_null());
+    assert_eq!(proof["binding_id"], binding_id);
+    let proof_id = proof["attestation_id"].as_str().unwrap();
+    let (_, listed) = harness
+        .get(
+            &format!("/v1/projects/{project}/governance/changes/{bound_id}"),
+            &token,
+        )
+        .await;
+    assert_eq!(listed["attestations"][0]["attestation_id"], proof_id);
+    // Stored G1 matched means only what it meant before G2.
+    assert_eq!(listed["checks"][0]["status"], "matched");
+
+    let path = harness
+        .scratch
+        .path()
+        .join("data/projects")
+        .join(&project)
+        .join("governance")
+        .join(bound_id)
+        .join("attestations")
+        .join(format!("{proof_id}.json"));
+    let mut edited: Value = serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
+    edited["outcome"] = json!("deployed_match");
+    std::fs::write(&path, edited.to_string()).unwrap();
+    let (status, _) = harness
+        .get(
+            &format!("/v1/projects/{project}/governance/changes/{bound_id}"),
+            &token,
+        )
+        .await;
+    assert_eq!(status, StatusCode::INTERNAL_SERVER_ERROR);
+}
+
+#[tokio::test]
 async fn a_proposal_is_bound_to_an_analysis_by_identity_not_by_label() {
     let world = fixture_world();
     let harness = Harness::with_governance(1, world.clone());

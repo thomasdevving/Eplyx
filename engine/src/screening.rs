@@ -169,6 +169,29 @@ pub fn screen(
     signature: &str,
     required: &BTreeSet<String>,
 ) -> Result<SlotScreening> {
+    screen_with_scope(rpc, slot, signature, required, false)
+}
+
+/// The same complete-block proof, restricted to writers *after* the target.
+/// A writer before the target must not hide a later writer of the same key:
+/// terminal state attribution depends on the latter even when replay's
+/// pre-state boundary was also ambiguous.
+pub fn screen_later(
+    rpc: &dyn RpcProvider,
+    slot: u64,
+    signature: &str,
+    required: &BTreeSet<String>,
+) -> Result<SlotScreening> {
+    screen_with_scope(rpc, slot, signature, required, true)
+}
+
+fn screen_with_scope(
+    rpc: &dyn RpcProvider,
+    slot: u64,
+    signature: &str,
+    required: &BTreeSet<String>,
+    later_only: bool,
+) -> Result<SlotScreening> {
     let block = rpc.call(
         "getBlock",
         json!([
@@ -212,7 +235,7 @@ pub fn screen(
     // actually invalidates the pre-state.
     let mut conflicts: BTreeMap<String, AccountConflict> = BTreeMap::new();
     for (index, entry) in transactions.iter().enumerate() {
-        if index == target_index {
+        if index == target_index || (later_only && index < target_index) {
             continue;
         }
         let writable = writable_keys(entry)?;
@@ -322,6 +345,26 @@ mod tests {
             Some(ConflictPosition::After)
         );
         assert!(screening.ensure_unambiguous().is_err());
+    }
+
+    #[test]
+    fn an_earlier_writer_does_not_hide_a_later_writer_for_terminal_state() {
+        let rpc = StaticRpc(json!({"transactions": [
+            entry("earlier", &["programdata"], &[]),
+            entry("target", &["programdata"], &[]),
+            entry("later", &["programdata"], &[]),
+        ]}));
+        let screening = screen_later(&rpc, 7, "target", &required(&["programdata"])).unwrap();
+        assert_eq!(screening.target_index, 1);
+        assert_eq!(screening.conflicts.len(), 1);
+        assert_eq!(
+            screening.conflicts[0].position,
+            Some(ConflictPosition::After)
+        );
+        assert_eq!(
+            screening.conflicts[0].conflicting_signature.as_deref(),
+            Some("later")
+        );
     }
 
     /// A shared read-only key is not interference: nothing writes it.
