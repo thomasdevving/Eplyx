@@ -175,13 +175,18 @@ const LIFECYCLE = {
 };
 
 function renderLifecycle(id, run, extras = {}) {
-  const [label, headline, note] = LIFECYCLE[run.status] ?? LIFECYCLE.loading;
+  const [label, title, stateNote] = LIFECYCLE[run.status] ?? LIFECYCLE.loading;
+  // A run the server resumed after a restart is the same run: same id, same
+  // change, same inputs. Saying so explains a second attempt without implying a
+  // second run.
+  const interrupted = Array.isArray(run.attempts) && run.attempts.some(attempt => attempt.end === 'interrupted');
+  const note = interrupted ? `${stateNote} Resumed after a server restart; this is the same run.` : stateNote;
   const known = run.status !== 'loading';
   return shell(id, `
       <div class="report-top">
         <div>
           <p class="eyebrow"><span></span> Run ${escapeHtml(id)}</p>
-          <h1>${escapeHtml(headline)}</h1>
+          <h1>${escapeHtml(title)}</h1>
           <p>${escapeHtml(note)}</p>
         </div>
         <div class="report-verdict is-pending"><i></i><span>${escapeHtml(label)}</span><em>No result yet</em></div>
@@ -292,16 +297,19 @@ function renderReport(live, { demo, id, extras = {} }) {
   const unmatched = report?.unmatched ?? [];
   const undeclarable = report?.undeclarable ?? [];
   const summary = report?.summary ?? {};
+  const reasons = Array.isArray(summary.failure_reasons) ? summary.failure_reasons
+    : Array.isArray(report?.failures) ? report.failures : [];
+  const verdict = headline({ passed, reasons, undeclarable });
 
   return `<main id="main" class="inner-page report-page">${Header({ light: true })}
     <section class="report-shell">
       <div class="report-top">
         <div>
           <p class="eyebrow"><span></span> ${demo ? 'Public demo report · fixture' : `Run ${escapeHtml(id)}`}</p>
-          <h1>${passed ? 'No unexpected economic changes detected.' : 'Unexpected economic changes detected.'}</h1>
-          <p>${passed ? 'Across the tested validated historical corpus. The coverage limitations below still apply.' : 'Changes were found that are not declared, exceed what was declared, or cannot be declared at all.'}</p>
+          <h1>${escapeHtml(verdict.title)}</h1>
+          <p>${escapeHtml(verdict.note)}</p>
         </div>
-        <div class="report-verdict ${passed ? 'is-pass' : ''}"><i></i><span>${passed ? 'Passed' : 'Failed'}</span><em>Exit code ${escapeHtml(live.exit_code ?? '—')}</em></div>
+        <div class="report-verdict ${verdict.tone}"><i></i><span>${escapeHtml(verdict.label)}</span><em>Exit code ${escapeHtml(live.exit_code ?? '—')}${verdict.code ? ` · ${escapeHtml(verdict.code)}` : ''}</em></div>
       </div>
       <div class="report-grid">
         <aside class="report-nav"><span>Report</span>
@@ -322,7 +330,8 @@ function renderReport(live, { demo, id, extras = {} }) {
             </div>
           </section>
           <section id="findings"><div class="report-section-title"><span>02</span><h2>Findings</h2></div>
-            ${renderFindings(findings, passed, Boolean(report))}
+            ${renderFindings(findings, passed, Boolean(report), verdict.notEvaluated)}
+            ${renderReasons(reasons)}
             ${renderUndeclarable(undeclarable)}
             ${renderUnmatched(unmatched)}
           </section>
@@ -372,12 +381,58 @@ function slotLabel(bundle) {
   return slots ? `Slots ${slots.first} → ${slots.last}` : null;
 }
 
-function renderFindings(rows, passed, hasReport) {
+/**
+ * What the verdict says, from what the gate actually decided.
+ *
+ * `no_semantic_coverage` is Eplyx saying it did not look: the candidate was
+ * replayed, but nothing in this program's vocabulary could be evaluated. It is
+ * not a pass and it is not an adverse finding, so it is never headlined as
+ * "unexpected economic changes". The technical reason stays on the page.
+ */
+export function headline({ passed, reasons = [], undeclarable = [] }) {
+  if (passed) {
+    return { title: 'No unexpected economic changes detected.', note: 'Across the tested validated historical corpus. The coverage limitations below still apply.', label: 'Passed', tone: 'is-pass', code: null, notEvaluated: false };
+  }
+  if (reasons.includes('no_semantic_coverage')) {
+    const detected = undeclarable.length
+      ? ' It did detect changes it cannot name; they are listed below.'
+      : '';
+    return {
+      title: 'Economic impact could not be evaluated for this interaction.',
+      note: `The candidate was replayed, but Eplyx has no semantic coverage for this program, so it cannot say whether economic outcomes changed. This is neither a pass nor a finding.${detected}`,
+      label: 'Not evaluated',
+      tone: 'is-unknown',
+      code: 'no_semantic_coverage',
+      notEvaluated: true,
+    };
+  }
+  return { title: 'Unexpected economic changes detected.', note: 'Changes were found that are not declared, exceed what was declared, or cannot be declared at all.', label: 'Failed', tone: '', code: null, notEvaluated: false };
+}
+
+const REASONS = {
+  no_semantic_coverage: 'No semantic coverage: nothing in this corpus could be evaluated economically, so a pass would mean “we did not look”.',
+  undeclarable_change: 'A detected change that no expectation can name.',
+  undeclared_change: 'A change nothing declared, or one larger than declared.',
+  stale_expectation: 'A declaration for behaviour that no longer happens.',
+  unevaluable_expectation: 'A declaration this corpus cannot judge.',
+};
+
+/** The gate's own reasons, by their technical names. */
+function renderReasons(reasons) {
+  if (!reasons.length) return '';
+  return `<h3>Why the gate did not pass</h3>
+    <div class="provenance-table">${reasons.map(reason => `<div><span class="mono">${escapeHtml(reason)}</span><b>${escapeHtml(REASONS[reason] ?? 'See the canonical report.')}</b></div>`).join('')}</div>`;
+}
+
+function renderFindings(rows, passed, hasReport, notEvaluated = false) {
   if (!hasReport) {
     return '<div class="empty-result">The canonical report could not be retrieved for this run, so its findings are not shown here. Fetch <span class="mono">report.json</span> with the project token.</div>';
   }
   if (rows.length === 0) {
-    return `<div class="empty-result">${passed ? 'No findings in the tested corpus.' : 'No named findings. This check failed for a reason listed below.'}</div>`;
+    const text = passed ? 'No findings in the tested corpus.'
+      : notEvaluated ? 'No findings: without semantic coverage there is nothing Eplyx can name as an economic change.'
+        : 'No named findings. This check failed for a reason listed below.';
+    return `<div class="empty-result">${text}</div>`;
   }
   return rows.map(finding => {
     const severity = String(finding.severity ?? 'finding');

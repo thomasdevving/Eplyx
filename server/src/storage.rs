@@ -12,12 +12,16 @@
 //!   projects/<project-id>/bundles/<bundle-id>.json   a project's record of one
 //!   projects/<project-id>/runs/<run-id>              index marker, empty
 //!   projects/<project-id>/changes/<change-spec-id>/<run-id>   index marker, empty
+//!   projects/<project-id>/artifacts/<sha256>         index marker, empty
 //!   bundles/<bundle-sha256>/          an installed, verified CI bundle
-//!   runs/<run-id>/metadata.json
+//!   artifacts/programs/<sha256>       immutable candidate executables (artifacts.rs)
+//!   runs/<run-id>/metadata.json       the run, including its durable queue state
 //!   runs/<run-id>/change_spec.json    the canonical proposal, re-verified on read
-//!   runs/<run-id>/work/artifacts/programs/<sha256>   candidate, until terminal
+//!   runs/<run-id>/expected-changes.toml   the run's declarations, hash-pinned
 //!   runs/<run-id>/report.json
 //!   runs/<run-id>/report.md
+//!   runs/<run-id>/work/               a scratch cache, never authoritative
+//!   .lock                             held exclusively by the serving process
 //! ```
 //!
 //! Bundle *content* is addressed by its hash and shared; a project's record of
@@ -59,7 +63,7 @@ fn checked(id: &str, what: &str) -> Result<()> {
 impl Storage {
     pub fn open(root: impl Into<PathBuf>) -> Result<Self> {
         let root = root.into();
-        for directory in ["projects", "bundles", "runs"] {
+        for directory in ["projects", "bundles", "runs", "artifacts"] {
             std::fs::create_dir_all(root.join(directory))
                 .with_context(|| format!("creating {}", root.join(directory).display()))?;
         }
@@ -81,6 +85,43 @@ impl Storage {
     pub fn bundle_path(&self, sha256: &str) -> Result<PathBuf> {
         checked(sha256, "bundle hash")?;
         Ok(self.root.join("bundles").join(sha256))
+    }
+
+    pub fn artifacts_root(&self) -> PathBuf {
+        self.root.join("artifacts")
+    }
+
+    /// Hold the data directory exclusively for the life of the returned file.
+    ///
+    /// The run queue is the set of non-terminal run records on this volume, and
+    /// startup recovery re-enqueues all of them. That is only correct if no
+    /// other process is executing them, so a second server over the same volume
+    /// is refused rather than allowed to double-execute its runs.
+    pub fn lock_exclusive(&self) -> Result<std::fs::File> {
+        let path = self.root.join(".lock");
+        let file = std::fs::OpenOptions::new()
+            .create(true)
+            .truncate(false)
+            .write(true)
+            .open(&path)
+            .with_context(|| format!("opening {}", path.display()))?;
+        match file.try_lock() {
+            Ok(()) => Ok(file),
+            Err(std::fs::TryLockError::WouldBlock) => bail!(
+                "another eplyx-server holds {}; two processes must not share one run queue",
+                self.root.display()
+            ),
+            Err(std::fs::TryLockError::Error(error)) => {
+                Err(error).with_context(|| format!("locking {}", path.display()))
+            }
+        }
+    }
+
+    pub fn project_artifact_marker(&self, project_id: &str, sha256: &str) -> Result<PathBuf> {
+        if !crate::artifacts::canonical_sha256(sha256) {
+            bail!("artifact hash {sha256:?} is not a canonical sha256");
+        }
+        Ok(self.project_dir(project_id)?.join("artifacts").join(sha256))
     }
 
     pub fn runs_root(&self) -> PathBuf {
@@ -169,17 +210,27 @@ impl Storage {
         self.write_bytes(path, &bytes)
     }
 
-    /// Written to a temporary name and renamed, so an interrupted write never
-    /// leaves a half-file that later parses as truth.
+    /// Written to a temporary name, synced, and renamed, so an interrupted
+    /// write never leaves a half-file that later parses as truth, and a
+    /// completed one survives a crash that follows it. Run state is recovered
+    /// from these files after a restart, so "renamed but not yet on disk" is
+    /// not good enough.
     pub fn write_bytes(&self, path: &Path, bytes: &[u8]) -> Result<()> {
-        if let Some(parent) = path.parent() {
-            std::fs::create_dir_all(parent)?;
-        }
+        use std::io::Write;
+        let parent = path.parent().context("a stored file has a directory")?;
+        std::fs::create_dir_all(parent)?;
         let temporary = path.with_extension("tmp");
-        std::fs::write(&temporary, bytes)
-            .with_context(|| format!("writing {}", temporary.display()))?;
+        {
+            let mut file = std::fs::File::create(&temporary)
+                .with_context(|| format!("writing {}", temporary.display()))?;
+            file.write_all(bytes)
+                .with_context(|| format!("writing {}", temporary.display()))?;
+            file.sync_all()
+                .with_context(|| format!("syncing {}", temporary.display()))?;
+        }
         std::fs::rename(&temporary, path)
             .with_context(|| format!("renaming into {}", path.display()))?;
+        crate::artifacts::sync_directory(parent);
         Ok(())
     }
 

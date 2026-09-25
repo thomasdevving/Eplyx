@@ -175,6 +175,50 @@ await checkAsync('demo values never leak into a real run', async () => {
   assert.match(html, /—/, 'missing values should render as an explicit dash');
 });
 
+// --- the verdict says what the gate decided -----------------------------
+const gateReport = (reasons, extra = {}) => ({
+  summary: { passed: false, exit_code: reasons.includes('no_semantic_coverage') ? 2 : 1, failure_reasons: reasons, unexpected: 0, expected: 0 },
+  failures: reasons, findings: [], undeclarable: [], unmatched: [], coverage: [], ...extra,
+});
+
+await checkAsync('no semantic coverage is not headlined as an adverse finding', async () => {
+  const html = await follow('n1', { run_id: 'n1', status: 'failed', exit_code: 2, report_available: true }, gateReport(['no_semantic_coverage']));
+  assert.match(html, /Economic impact could not be evaluated for this interaction/);
+  assert.doesNotMatch(html, /Unexpected economic changes detected/, 'absence of coverage read as a finding');
+  assert.doesNotMatch(html, /No unexpected economic changes/, 'absence of coverage read as a pass');
+  assert.doesNotMatch(html, /Changes were found/);
+  assert.match(html, /Not evaluated/);
+  assert.match(html, /no_semantic_coverage/, 'the technical reason was dropped');
+  assert.match(html, /Exit code 2/);
+});
+
+await checkAsync('no coverage with detected-but-unnameable changes says both', async () => {
+  const html = await follow('n2', { run_id: 'n2', status: 'failed', exit_code: 2, report_available: true },
+    gateReport(['no_semantic_coverage', 'undeclarable_change'], { undeclarable: [{ layer: 'structural', description: 'account bytes', observations: ['o'] }] }));
+  assert.match(html, /could not be evaluated/);
+  assert.match(html, /detect changes it cannot name/);
+  assert.match(html, /undeclarable_change/);
+  assert.match(html, /account bytes/);
+});
+
+await checkAsync('a real undeclared change is still headlined as one', async () => {
+  const html = await follow('n3', { run_id: 'n3', status: 'failed', exit_code: 1, report_available: true }, gateReport(['undeclared_change']));
+  assert.match(html, /Unexpected economic changes detected/);
+  assert.doesNotMatch(html, /could not be evaluated/);
+  assert.match(html, /<span>Failed<\/span>/);
+});
+
+await checkAsync('a run resumed after a restart keeps its id and says it resumed', async () => {
+  const html = await follow('n4', {
+    run_id: 'n4', status: 'queued', exit_code: null, report_available: false,
+    bundle_sha256: 'bbb', candidate_sha256: 'ccc',
+    attempts: [{ attempt: 1, started_at_unix_seconds: 1, ended_at_unix_seconds: 2, end: 'interrupted' }],
+  });
+  assert.match(html, /Run n4/);
+  assert.match(html, /Resumed after a server restart; this is the same run/);
+  assert.doesNotMatch(html, /Exit code/);
+});
+
 // --- the real serialized contract -------------------------------------
 if (realReport) {
   const run = {

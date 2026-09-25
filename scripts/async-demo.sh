@@ -90,16 +90,22 @@ sleep 1
 check "still queued a second later" "$(run_field "$GATED" status)" "queued"
 check "never started" "$(run_field "$GATED" started_at_unix_seconds)" ""
 GATED_SHA=$(run_field "$GATED" candidate_sha256)
-check "inputs still staged" "$([ -f "$EPLYX_DATA_DIR/runs/$GATED/work/artifacts/programs/$GATED_SHA" ] && echo yes || echo no)" "yes"
+check "candidate stored durably" "$([ -f "$EPLYX_DATA_DIR/artifacts/programs/$GATED_SHA" ] && echo yes || echo no)" "yes"
 check "change spec stored" "$([ -f "$EPLYX_DATA_DIR/runs/$GATED/change_spec.json" ] && echo yes || echo no)" "yes"
 
 echo
-echo "== a restart resolves what it was holding =="
+echo "== a restart resumes what it was holding =="
 kill -9 $SERVER_PID 2>/dev/null; wait $SERVER_PID 2>/dev/null
 start_server 1 "$WORK/server2.log"
-check "the queued run was resolved" "$(run_field "$GATED" status)" "execution_error"
-case "$(run_field "$GATED" detail)" in *restart*) note ok "and says why" ;; *) note FAIL "and says why" ;; esac
-check "its inputs were cleared" "$([ -e "$EPLYX_DATA_DIR/runs/$GATED/work" ] && echo yes || echo no)" "no"
+grep -q "re-enqueued: $GATED" "$WORK/server2.log" && note ok "startup re-enqueued the queued run" || note FAIL "startup re-enqueued the queued run"
+for _ in $(seq 1 100); do
+  case "$(run_field "$GATED" status)" in passed|failed|execution_error) break ;; esac
+  sleep .2
+done
+case "$(run_field "$GATED" status)" in passed|failed) note ok "the same run completed" "$(run_field "$GATED" status)" ;; *) note FAIL "the same run completed" "$(run_field "$GATED" status)" ;; esac
+check "with a report" "$(run_field "$GATED" report_available)" "True"
+check "its candidate is still held" "$([ -f "$EPLYX_DATA_DIR/artifacts/programs/$GATED_SHA" ] && echo yes || echo no)" "yes"
+check "no scratch left behind" "$([ -e "$EPLYX_DATA_DIR/runs/$GATED/work" ] && echo yes || echo no)" "no"
 
 echo
 echo "== with capacity, a run completes on its own =="
@@ -116,7 +122,7 @@ note info "states observed" "$(echo "$SEEN" | xargs)"
 case "$STATUS" in passed|failed) note ok "terminal state" "$STATUS" ;; *) note FAIL "terminal state" "$STATUS" ;; esac
 check "report now available" "$(run_field "$RUN" report_available)" "True"
 check "it passed through running" "$([ -n "$(run_field "$RUN" started_at_unix_seconds)" ] && echo yes || echo no)" "yes"
-check "inputs cleared afterwards" "$([ -e "$EPLYX_DATA_DIR/runs/$RUN/work" ] && echo yes || echo no)" "no"
+check "scratch cleared afterwards" "$([ -e "$EPLYX_DATA_DIR/runs/$RUN/work" ] && echo yes || echo no)" "no"
 
 echo
 echo "== the canonical report =="

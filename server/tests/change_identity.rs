@@ -524,7 +524,8 @@ async fn detail_after_running(harness: &Harness, id: &str, token: &str) -> Value
 async fn a_missing_candidate_fails_closed() {
     let harness = Harness::new(0);
     let (id, token) = queued_run(&harness).await;
-    std::fs::remove_dir_all(harness.work_dir(&id).join("artifacts")).expect("remove");
+    let sha = eplyx_engine::replay::hash_bytes(&candidate_bytes());
+    std::fs::remove_file(harness.artifact_path(&sha)).expect("remove");
     let run = detail_after_running(&harness, &id, &token).await;
     assert_eq!(run["status"], "execution_error", "{run}");
     assert_eq!(run["report_available"], false);
@@ -538,7 +539,7 @@ async fn an_altered_candidate_fails_closed() {
     let harness = Harness::new(0);
     let (id, token) = queued_run(&harness).await;
     let sha = eplyx_engine::replay::hash_bytes(&candidate_bytes());
-    let staged = harness.work_dir(&id).join("artifacts/programs").join(&sha);
+    let staged = harness.artifact_path(&sha);
     std::fs::write(&staged, std::fs::read(BASELINE).expect("other bytes")).expect("swap");
     let run = detail_after_running(&harness, &id, &token).await;
     assert_eq!(run["status"], "execution_error", "{run}");

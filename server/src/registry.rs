@@ -13,8 +13,19 @@ use eplyx_engine::change::{ChangeKind, ChangeSpec};
 use eplyx_engine::ci::CiReport;
 use serde::{Deserialize, Serialize};
 
+use crate::artifacts::{ArtifactRef, ArtifactStore};
 use crate::project::{ActiveBundle, AdapterId, Project, ProjectToken};
 use crate::storage::Storage;
+
+/// A hard ceiling for any executable the artefact store will hold, beneath
+/// which the configured upload limit sits. Solana programs are far smaller.
+pub const MAX_STORED_PROGRAM_BYTES: usize = 32 * 1024 * 1024;
+
+/// How many times one run may be interrupted mid-execution before recovery
+/// stops retrying it. A run that has taken the process down three times is
+/// more likely to be the cause than the victim, and re-running it forever would
+/// turn one bad input into an outage.
+pub const MAX_EXECUTION_ATTEMPTS: usize = 3;
 
 /// A project's record of one immutable bundle.
 ///
@@ -207,6 +218,47 @@ impl RunChange {
     }
 }
 
+/// How one execution attempt of a run ended.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum AttemptEnd {
+    /// The attempt reached an outcome and the registry recorded it.
+    Completed,
+    /// The process died while the attempt held the run. Nothing it produced
+    /// was recorded, and the run went back to the queue (or, past the retry
+    /// limit, to `execution_error`).
+    Interrupted,
+    /// The process died after the attempt wrote a complete, verified report
+    /// but before the registry recorded it. Recovery recorded that report
+    /// rather than recomputing it.
+    FinalizedOnRecovery,
+}
+
+/// One execution of a run. A retry after process death is another attempt of
+/// the *same* run — same id, same change, same pinned bundle, same artefact —
+/// never a new run a user has to find.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ExecutionAttempt {
+    pub attempt: u32,
+    pub started_at_unix_seconds: u64,
+    #[serde(default)]
+    pub ended_at_unix_seconds: Option<u64>,
+    #[serde(default)]
+    pub end: Option<AttemptEnd>,
+}
+
+/// What startup reconciliation did, run by run.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct Recovery {
+    /// Durable runs back in (or still in) the queue, oldest first. The caller
+    /// starts a worker for each.
+    pub requeued: Vec<String>,
+    /// Runs whose complete report was already written; recorded, not re-run.
+    pub finalized: Vec<String>,
+    /// Runs that cannot be resumed honestly, now `execution_error`.
+    pub failed: Vec<String>,
+}
+
 /// What a run was, without any of what it used to run.
 ///
 /// No token, no endpoint, no candidate bytes. Wall-clock time is allowed here
@@ -245,6 +297,22 @@ pub struct RunMetadata {
     /// length it would need was never recorded.
     #[serde(default)]
     pub change: Option<RunChange>,
+    /// The candidate by durable identity: an immutable object in the service's
+    /// content-addressed store, persisted before this run was accepted. It must
+    /// equal the spec's `candidate`, and the bytes a worker reads must hash to
+    /// it. `None` on runs accepted before durable artefacts, whose candidate
+    /// lived only in their work directory.
+    #[serde(default)]
+    pub candidate_artifact: Option<ArtifactRef>,
+    /// SHA-256 of the run's `expected-changes.toml`, stored beside it, when one
+    /// was supplied. Pinned so a resumed run reads the declarations it was
+    /// accepted with.
+    #[serde(default)]
+    pub expectations_sha256: Option<String>,
+    /// Every execution of this run. More than one means infrastructure retried
+    /// it; the run id, change and inputs never changed.
+    #[serde(default)]
+    pub attempts: Vec<ExecutionAttempt>,
     #[serde(default)]
     pub adapter: Option<String>,
     #[serde(default)]
@@ -277,6 +345,7 @@ pub fn now_unix_seconds() -> u64 {
 
 pub struct Registry {
     storage: Storage,
+    artifacts: ArtifactStore,
     /// A status change is read-modify-write over one file. Serializing them is
     /// what makes `begin_run` a compare-and-set rather than a race two workers
     /// could both win.
@@ -285,14 +354,66 @@ pub struct Registry {
 
 impl Registry {
     pub fn new(storage: Storage) -> Self {
+        let artifacts = ArtifactStore::open(storage.artifacts_root(), MAX_STORED_PROGRAM_BYTES)
+            .expect("the artifact store lives inside the data directory Storage just opened");
         Self {
             storage,
+            artifacts,
             transitions: Mutex::new(()),
         }
     }
 
     pub fn storage(&self) -> &Storage {
         &self.storage
+    }
+
+    pub fn artifacts(&self) -> &ArtifactStore {
+        &self.artifacts
+    }
+
+    // ----------------------------------------------------------- artifacts
+
+    /// Record that a project has supplied an artefact. Which artefacts a
+    /// project may name without re-uploading is exactly this set: the store is
+    /// global and deduplicated, but knowing a hash must never let one project
+    /// run, or learn about, bytes only another project uploaded.
+    pub fn index_project_artifact(&self, project_id: &str, sha256: &str) -> Result<()> {
+        let path = self.storage.project_artifact_marker(project_id, sha256)?;
+        self.storage.write_bytes(&path, b"")
+    }
+
+    pub fn project_holds_artifact(&self, project_id: &str, sha256: &str) -> Result<bool> {
+        Ok(self
+            .storage
+            .exists(&self.storage.project_artifact_marker(project_id, sha256)?))
+    }
+
+    /// Persist a run's declarations beside it, returning the hash they are
+    /// pinned by.
+    pub fn save_expectations(&self, run_id: &str, bytes: &[u8]) -> Result<String> {
+        let path = self.storage.run_dir(run_id)?.join("expected-changes.toml");
+        self.storage.write_bytes(&path, bytes)?;
+        Ok(eplyx_engine::replay::hash_bytes(bytes))
+    }
+
+    /// A run's declarations, proved to be the ones it was accepted with.
+    pub fn load_expectations(&self, metadata: &RunMetadata) -> Result<Option<Vec<u8>>> {
+        let Some(expected) = &metadata.expectations_sha256 else {
+            return Ok(None);
+        };
+        let path = self
+            .storage
+            .run_dir(&metadata.run_id)?
+            .join("expected-changes.toml");
+        let bytes = self
+            .storage
+            .read_bytes(&path)
+            .context("the run's expected changes are missing")?;
+        ensure!(
+            &eplyx_engine::replay::hash_bytes(&bytes) == expected,
+            "the run's expected changes no longer match the hash they were accepted with"
+        );
+        Ok(Some(bytes))
     }
 
     // ------------------------------------------------------------ projects
@@ -661,8 +782,15 @@ impl Registry {
         if metadata.status != RunStatus::Queued {
             return Ok(false);
         }
+        let now = now_unix_seconds();
         metadata.status = RunStatus::Running;
-        metadata.started_at_unix_seconds = Some(now_unix_seconds());
+        metadata.started_at_unix_seconds.get_or_insert(now);
+        metadata.attempts.push(ExecutionAttempt {
+            attempt: metadata.attempts.len() as u32 + 1,
+            started_at_unix_seconds: now,
+            ended_at_unix_seconds: None,
+            end: None,
+        });
         self.write_run(&metadata)?;
         Ok(true)
     }
@@ -686,20 +814,12 @@ impl Registry {
         // rule is enforced. A report about some other proposal is recorded as
         // this service failing to obtain a verdict, never as a verdict.
         let outcome = match outcome {
-            RunOutcome::Reported { report, markdown } => {
-                match metadata
-                    .change
-                    .as_ref()
-                    .map(|change| change.verify_report(&report))
-                {
-                    Some(Err(error)) => RunOutcome::ExecutionError {
-                        detail: format!(
-                            "change identity check failed; no verdict recorded: {error:#}"
-                        ),
-                    },
-                    _ => RunOutcome::Reported { report, markdown },
-                }
-            }
+            RunOutcome::Reported { report, markdown } => match verify_outcome(&metadata, &report) {
+                Err(error) => RunOutcome::ExecutionError {
+                    detail: format!("change identity check failed; no verdict recorded: {error:#}"),
+                },
+                Ok(()) => RunOutcome::Reported { report, markdown },
+            },
             other => other,
         };
         match outcome {
@@ -734,7 +854,9 @@ impl Registry {
                 metadata.detail = Some(detail);
             }
         }
-        metadata.completed_at_unix_seconds = Some(now_unix_seconds());
+        let now = now_unix_seconds();
+        close_attempt(&mut metadata, AttemptEnd::Completed, now);
+        metadata.completed_at_unix_seconds = Some(now);
         self.write_run(&metadata)
     }
 
@@ -767,32 +889,133 @@ impl Registry {
         self.storage.read_json(&path)
     }
 
-    /// Resolve runs that a restart interrupted.
+    /// Reconcile every run a previous process left unfinished.
     ///
-    /// The task queue is in-process, so a restart loses whatever it was
-    /// holding. The honest thing is to say so: a run left queued or running has
-    /// no worker behind it any more and would otherwise poll forever. Resuming
-    /// them is a larger design than a pilot needs, and pretending they are
-    /// still alive is the one option that is simply wrong.
-    pub fn recover_interrupted_runs(&self) -> Result<Vec<String>> {
-        let mut recovered = Vec::new();
+    /// Runs only at startup, under the data directory's exclusive lock, so no
+    /// worker of this or any other process can hold a run while it happens.
+    ///
+    /// ```text
+    /// terminal                         untouched (its scratch cache is cleared)
+    /// no durable inputs (pre-P2)       execution_error: never invented
+    /// queued                           stays queued            → requeued
+    /// running, complete valid report   recorded as it stands   → finalized
+    /// running, anything less           attempt → interrupted,
+    ///                                  status → queued         → requeued
+    ///                                  (past MAX_EXECUTION_ATTEMPTS: execution_error)
+    /// ```
+    ///
+    /// Re-executing is safe because nothing an execution reads is mutated by
+    /// it: the bundle, the stored spec, the artefact and the declarations are
+    /// all immutable and hash-verified, and the engine is deterministic. The
+    /// only state an execution writes is its report and the run's terminal
+    /// record, and those are written once, by `finish_run`.
+    pub fn recover_runs(&self) -> Result<Recovery> {
+        let mut recovery = Recovery::default();
         for run_id in self.list_run_ids()? {
-            let Ok(metadata) = self.load_run(&run_id) else {
+            let Ok(mut metadata) = self.load_run(&run_id) else {
                 continue;
             };
             if metadata.status.is_terminal() {
+                self.clear_run_work(&run_id).ok();
                 continue;
             }
-            self.finish_run(
-                &run_id,
-                RunOutcome::ExecutionError {
-                    detail: "Run interrupted by server restart; resubmit the check.".to_string(),
-                },
-            )?;
+            if metadata.change.is_none() || metadata.candidate_artifact.is_none() {
+                self.finish_run(
+                    &run_id,
+                    RunOutcome::ExecutionError {
+                        detail: "Run interrupted by server restart. It was accepted before \
+                                 candidates were stored durably, so its inputs cannot be \
+                                 recovered; resubmit the check."
+                            .to_string(),
+                    },
+                )?;
+                self.clear_run_work(&run_id).ok();
+                recovery.failed.push(run_id);
+                continue;
+            }
+            if metadata.status == RunStatus::Running {
+                if let Some(report) = self.completed_report(&metadata) {
+                    // The attempt finished; only its recording was lost.
+                    let markdown = eplyx_engine::ci_markdown::render(&report);
+                    self.finish_run(
+                        &run_id,
+                        RunOutcome::Reported {
+                            report: Box::new(report),
+                            markdown,
+                        },
+                    )?;
+                    let mut recorded = self.load_run(&run_id)?;
+                    if let Some(last) = recorded.attempts.last_mut() {
+                        last.end = Some(AttemptEnd::FinalizedOnRecovery);
+                    }
+                    self.write_run(&recorded)?;
+                    recovery.finalized.push(run_id);
+                    continue;
+                }
+                let now = now_unix_seconds();
+                close_attempt(&mut metadata, AttemptEnd::Interrupted, now);
+                // Never a half-written or unverifiable report left for anyone
+                // to mistake for this run's result.
+                self.discard_report(&run_id);
+                if metadata.attempts.len() >= MAX_EXECUTION_ATTEMPTS {
+                    self.write_run(&metadata)?;
+                    self.finish_run(
+                        &run_id,
+                        RunOutcome::ExecutionError {
+                            detail: format!(
+                                "Run interrupted by a server restart during {} execution \
+                                 attempts; it is not retried again.",
+                                metadata.attempts.len()
+                            ),
+                        },
+                    )?;
+                    // finish_run closed nothing new: the last attempt was
+                    // already recorded as interrupted.
+                    recovery.failed.push(run_id);
+                    continue;
+                }
+                metadata.status = RunStatus::Queued;
+                self.write_run(&metadata)?;
+            }
             self.clear_run_work(&run_id).ok();
-            recovered.push(run_id);
+            recovery.requeued.push(run_id);
         }
-        Ok(recovered)
+        Ok(recovery)
+    }
+
+    /// A report already on disk for a running run, if and only if it is a
+    /// complete, verified result for exactly this run's inputs.
+    ///
+    /// Complete: it parses as the canonical report contract. Verified: it names
+    /// this run's change, candidate artefact and pinned bundle. Anything short
+    /// of that is not trusted and the run is executed again.
+    fn completed_report(&self, metadata: &RunMetadata) -> Option<CiReport> {
+        let path = self
+            .storage
+            .run_dir(&metadata.run_id)
+            .ok()?
+            .join("report.json");
+        let report: CiReport = self.storage.read_json(&path).ok()?;
+        metadata.change.as_ref()?.verify_report(&report).ok()?;
+        let artifact = metadata.candidate_artifact.as_ref()?;
+        (report.bundle.sha256 == metadata.bundle_sha256
+            && report.candidate.sha256 == artifact.sha256
+            && report.candidate.len == artifact.len)
+            .then_some(report)
+    }
+
+    fn discard_report(&self, run_id: &str) {
+        if let Ok(directory) = self.storage.run_dir(run_id) {
+            for name in ["report.json", "report.md"] {
+                std::fs::remove_file(directory.join(name)).ok();
+            }
+        }
+    }
+
+    /// The pre-P2 name, kept for callers that only need the list of run ids
+    /// that were not resumed.
+    pub fn recover_interrupted_runs(&self) -> Result<Vec<String>> {
+        Ok(self.recover_runs()?.failed)
     }
 
     pub fn list_run_ids(&self) -> Result<Vec<String>> {
@@ -815,16 +1038,15 @@ impl Registry {
         Ok(ids)
     }
 
-    /// Where a run's uploaded inputs wait for their worker.
-    ///
-    /// Not a request-scoped temporary directory: the handler returns long
-    /// before the worker reads these, so a `TempDir` dropped with the response
-    /// would delete the candidate out from under the run that was accepted.
+    /// A run's scratch cache. Never authoritative: every input a worker uses is
+    /// read from a durable, hash-verified location, and anything placed here is
+    /// derived from those and may be deleted at any time.
     pub fn run_work_dir(&self, run_id: &str) -> Result<std::path::PathBuf> {
         Ok(self.storage.run_dir(run_id)?.join("work"))
     }
 
-    /// Drop the uploaded inputs. The report and metadata stay.
+    /// Drop the scratch cache. Inputs, report and metadata all stay, and no
+    /// shared artefact is ever touched.
     pub fn clear_run_work(&self, run_id: &str) -> Result<()> {
         let work = self.run_work_dir(run_id)?;
         if work.exists() {
@@ -843,6 +1065,37 @@ impl Registry {
             bail!("no such artifact");
         }
         self.storage.read_bytes(&path)
+    }
+}
+
+/// A report is a verdict about this run only if it names this run's change and
+/// was computed over this run's artefact:
+///
+/// ```text
+/// registry change_spec_id == stored spec id == report.change.change_spec_id
+/// registry candidate_artifact == spec candidate == report.candidate
+/// ```
+fn verify_outcome(metadata: &RunMetadata, report: &CiReport) -> Result<()> {
+    if let Some(change) = &metadata.change {
+        change.verify_report(report)?;
+    }
+    if let Some(artifact) = &metadata.candidate_artifact {
+        ensure!(
+            report.candidate.sha256 == artifact.sha256 && report.candidate.len == artifact.len,
+            "the report's candidate is not the run's artifact {}",
+            artifact.sha256
+        );
+    }
+    Ok(())
+}
+
+/// Close the attempt currently holding a run, if one is open.
+fn close_attempt(metadata: &mut RunMetadata, end: AttemptEnd, now: u64) {
+    if let Some(last) = metadata.attempts.last_mut() {
+        if last.end.is_none() {
+            last.end = Some(end);
+            last.ended_at_unix_seconds = Some(now);
+        }
     }
 }
 

@@ -40,7 +40,16 @@ pub fn render(report: &CiReport) -> String {
     let _ = writeln!(
         out,
         "{}\n",
-        if !report.summary.passed {
+        if report
+            .summary
+            .failure_reasons
+            .contains(&crate::review::FailureReason::NoSemanticCoverage)
+        {
+            // Eplyx did not look. Neither a pass nor an adverse finding, so it
+            // is not worded as "changes were found".
+            "Economic impact could not be evaluated for this interaction: the bundle has \
+             no semantic coverage (`no_semantic_coverage`)."
+        } else if !report.summary.passed {
             "Changes were found that are not declared, or that exceed what was declared."
         } else if report.summary.expected > 0 {
             "All observed changes matched the declared expectations and remained within \
@@ -332,5 +341,38 @@ mod tests {
             "the failure reason is missing:\n{markdown}"
         );
         assert!(markdown.contains("Upgrade check failed"));
+        assert!(!markdown.contains("could not be evaluated"));
+    }
+
+    /// No semantic coverage is Eplyx saying it did not look. The gate still
+    /// fails, but the words must not claim that changes were found.
+    #[test]
+    fn no_semantic_coverage_is_not_worded_as_a_finding() {
+        let json = serde_json::json!({
+            "schema_version": 1,
+            "bundle": {
+                "sha256": "b", "baseline_sha256": "a", "corpus_sha256": "c",
+                "record_count": 1, "program_id": "Hop", "adapter": "none",
+                "adapter_version": 0, "semantic_schema_version": 2,
+                "source_slot_range": { "first": 1, "last": 2 },
+                "limitations": []
+            },
+            "candidate": { "sha256": "d", "len": 1 },
+            "coverage": [], "findings": [], "unmatched": [],
+            "failures": ["no_semantic_coverage"],
+            "summary": {
+                "passed": false, "failure_reasons": ["no_semantic_coverage"], "exit_code": 2,
+                "expected": 0, "unexpected": 0, "expected_but_exceeded": 0,
+                "stale": 0, "unevaluable": 0
+            }
+        });
+        let report: CiReport = serde_json::from_value(json).expect("a report");
+        let markdown = render(&report);
+        assert!(markdown.contains("could not be evaluated"), "{markdown}");
+        assert!(markdown.contains("no_semantic_coverage"), "{markdown}");
+        assert!(
+            !markdown.contains("Changes were found"),
+            "absence of coverage was worded as a finding:\n{markdown}"
+        );
     }
 }

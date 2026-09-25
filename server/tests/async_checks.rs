@@ -280,7 +280,7 @@ async fn a_completed_run_reads_the_same_on_every_later_fetch() {
 }
 
 #[tokio::test]
-async fn runs_interrupted_by_a_restart_are_resolved_rather_than_left_running() {
+async fn runs_interrupted_by_a_restart_are_recovered_rather_than_abandoned() {
     let harness = Harness::new(0);
     let (project_id, token) = ready_project(&harness, "Example").await;
     let mut ids = Vec::new();
@@ -296,29 +296,35 @@ async fn runs_interrupted_by_a_restart_are_resolved_rather_than_left_running() {
         .expect("claim the second");
 
     let restarted = harness.reopen();
-    let recovered = restarted
-        .registry
-        .recover_interrupted_runs()
-        .expect("recover");
-    assert_eq!(recovered.len(), 2, "{recovered:?}");
+    let recovery = restarted.registry.recover_runs().expect("recover");
+    assert_eq!(
+        recovery.requeued, ids,
+        "both runs go back to the queue, oldest first"
+    );
+    assert!(recovery.failed.is_empty() && recovery.finalized.is_empty());
 
     for id in &ids {
         let (_, run) = harness
             .get_on(Arc::clone(&restarted), &format!("/v1/runs/{id}"), &token)
             .await;
-        assert_eq!(run["status"], "execution_error", "{run}");
-        assert!(run["detail"]
-            .as_str()
-            .is_some_and(|d| d.contains("restart")));
-        // Nothing is left for a client to poll forever.
-        assert!(!harness.work_dir(id).exists(), "inputs survived recovery");
+        // Queued again, under the same id: nothing for a client to poll
+        // forever, and no second run to find.
+        assert_eq!(run["status"], "queued", "{run}");
+        assert_eq!(run["exit_code"], Value::Null);
     }
+    // The claimed one says, durably, that an attempt was interrupted.
+    let run = restarted.registry.load_run(&ids[1]).expect("run");
+    assert_eq!(run.attempts.len(), 1);
+    assert_eq!(
+        run.attempts[0].end,
+        Some(eplyx_server::registry::AttemptEnd::Interrupted)
+    );
 }
 
 // ------------------------------------------------------------------ work
 
 #[tokio::test]
-async fn uploaded_inputs_outlive_the_request_and_are_cleared_at_the_end() {
+async fn accepted_inputs_are_durable_and_outlive_the_run() {
     let harness = Harness::new(0);
     let (project_id, token) = ready_project(&harness, "Example").await;
     let expectations = "version = 1\nsemantic_schema_version = 2\n";
@@ -334,24 +340,33 @@ async fn uploaded_inputs_outlive_the_request_and_are_cleared_at_the_end() {
     assert_eq!(status, StatusCode::ACCEPTED, "{body}");
     let run_id = body["run_id"].as_str().expect("run id").to_string();
 
-    // The handler has returned. A request-scoped temporary directory would have
-    // taken these with it.
-    let work = harness.work_dir(&run_id);
-    // Staged by content, under the hash the run's change spec commits to.
+    // Durable, not staged: the candidate is a content-addressed artefact and
+    // the declarations sit beside the run record, pinned by hash.
     let sha = eplyx_engine::replay::hash_bytes(&candidate_bytes());
-    assert_eq!(body["change"]["candidate_sha256"], sha.as_str());
-    assert!(
-        work.join("artifacts/programs").join(&sha).exists(),
-        "candidate was deleted"
+    assert_eq!(body["candidate_artifact"]["sha256"], sha.as_str());
+    assert!(harness.artifact_path(&sha).exists(), "candidate not stored");
+    assert_eq!(
+        std::fs::read_to_string(harness.run_file(&run_id, "expected-changes.toml"))
+            .expect("expectations"),
+        expectations
     );
     assert!(
-        work.join("expected-changes.toml").exists(),
-        "expectations were deleted"
+        !harness.work_dir(&run_id).exists(),
+        "an accepted run depends on a scratch directory"
     );
 
     harness.state.runs.add_permits(1);
     harness.wait_until(&run_id, RunStatus::is_terminal).await;
-    assert!(!work.exists(), "inputs were kept after the run finished");
+    // Finishing a run deletes none of what it was accepted with.
+    assert!(
+        harness.artifact_path(&sha).exists(),
+        "a shared artifact was deleted"
+    );
+    assert!(harness.run_file(&run_id, "expected-changes.toml").exists());
+    assert!(
+        !harness.work_dir(&run_id).exists(),
+        "the scratch cache was kept"
+    );
 }
 
 #[tokio::test]
