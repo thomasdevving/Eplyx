@@ -234,6 +234,22 @@ the spec did not describe cannot run. A stated expectation (ProgramData,
 replaced executable, authority) the bundle cannot prove fails with exit 4 rather
 than passing. Every `CiReport` carries `change`. See `docs/phase-c1-changespec.md`.
 
+**Phase P1 made it the hosted product's identity.** `POST /checks` takes an
+optional `change_spec` part (authoritative; the `candidate` bytes only satisfy
+it) and an optional `label`; candidate bytes alone derive exactly the spec the
+CLI derives. The spec is bound to the *pinned* bundle with `ci::bind_change`
+before the `202` (409 + exit 4 / 400 + exit 2 on refusal, and no run is
+created), stored canonically at `runs/<id>/change_spec.json`, indexed under
+`projects/<p>/changes/<change_spec_id>/`, and the candidate is staged by content
+hash. The worker executes **only** the stored spec, re-verified on read, against
+the pinned bundle — never a filename, never the active bundle.
+`registry change_spec_id == stored spec id == report.change.change_spec_id` is
+enforced in `Registry::finish_run`: a report about another change becomes
+`execution_error`, not a verdict. A run whose own stored inputs cannot be
+trusted is `execution_error`; a spec that no longer binds is exit 4. Pre-P1
+runs have `change: null`, are legacy, and are never given a reconstructed id.
+See `docs/phase-p1-productized-changespec.md`.
+
 ## Conventions and prior decisions
 
 - **Anchor is not used.** It would add a CLI version dependency and a large tree to a program whose job is to be small with a hand-checkable byte layout — and that layout is what the diff engine decodes. Anchor's value (IDL-driven decoding) belongs to the phase supporting third-party protocols.

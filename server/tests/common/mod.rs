@@ -451,3 +451,40 @@ pub async fn ready_project(harness: &Harness, name: &str) -> (String, String) {
 pub fn assert_project(project: &Project, status: ProjectStatus) {
     assert_eq!(project.status, status, "{project:?}");
 }
+
+/// Any set of named parts, for requests the two-part helper cannot express.
+pub fn parts_multipart(parts: &[(&str, &[u8])]) -> (String, Vec<u8>) {
+    let boundary = "eplyxpartsboundary";
+    let mut body = Vec::new();
+    for (name, bytes) in parts {
+        body.extend_from_slice(
+            format!(
+                "--{boundary}\r\nContent-Disposition: form-data; name=\"{name}\"; \
+                 filename=\"{name}\"\r\nContent-Type: application/octet-stream\r\n\r\n"
+            )
+            .as_bytes(),
+        );
+        body.extend_from_slice(bytes);
+        body.extend_from_slice(b"\r\n");
+    }
+    body.extend_from_slice(format!("--{boundary}--\r\n").as_bytes());
+    (format!("multipart/form-data; boundary={boundary}"), body)
+}
+
+impl Harness {
+    pub async fn submit_parts(
+        &self,
+        project_id: &str,
+        token: &str,
+        parts: &[(&str, &[u8])],
+    ) -> (StatusCode, Value) {
+        let (content_type, body) = parts_multipart(parts);
+        self.send(
+            authed("POST", &format!("/v1/projects/{project_id}/checks"), token)
+                .header("content-type", content_type)
+                .body(Body::from(body))
+                .expect("request"),
+        )
+        .await
+    }
+}

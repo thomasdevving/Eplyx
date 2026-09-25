@@ -126,10 +126,12 @@ mapping is coarse, and rates a 1 bp and a 3,000 bp change the same.
 ## The hosted API
 
 ```text
-POST /v1/projects/{project_id}/checks     multipart: candidate, expected_changes
+POST /v1/projects/{project_id}/checks     multipart: candidate, expected_changes,
+                                          change_spec?, label?
 GET  /v1/runs/{run_id}                    lifecycle state, in every state
 GET  /v1/runs/{run_id}/report.json        the canonical report, as stored
 GET  /v1/runs/{run_id}/report.md
+GET  /v1/runs/{run_id}/change_spec.json   the proposal the run evaluates, re-verified
 GET  /health                              process alive
 GET  /ready                               persistent storage usable
 ```
@@ -139,6 +141,13 @@ stored, so a leaked data volume does not hand over the ability to run checks. A
 token authenticates exactly one project; used on another project's URL it fails
 like any other bad token. Reports are served as stored — fetching one never
 re-runs an analysis.
+
+Since Phase P1 every run is an analysis of one named proposal: candidate
+bytes alone stand for the minimal program upgrade of the pinned bundle's
+program, an explicit `change_spec` part is authoritative, and either is bound
+to the pinned bundle before the `202`. The run, its stored spec and its report
+must name the same `change_spec_id`. See
+[`phase-p1-productized-changespec.md`](phase-p1-productized-changespec.md).
 
 Uploaded candidates are ephemeral. They are staged in the run's own work
 directory and removed once the run is terminal, whatever the outcome; what
@@ -197,7 +206,8 @@ DEL  /v1/projects/{id}/tokens/{token_id}             revoke
 POST /v1/projects/{id}/bundles                       register, verified on arrival
 GET  /v1/projects/{id}/bundles                       history, with the active one marked
 POST /v1/projects/{id}/bundles/{bundle_id}/activate  move the pointer
-GET  /v1/projects/{id}/runs                          newest first, cursor paged
+GET  /v1/projects/{id}/runs                          newest first, cursor paged;
+                                                     ?change_spec_id= for one proposal
 GET  /v1/adapters                                    what this build speaks
 ```
 
