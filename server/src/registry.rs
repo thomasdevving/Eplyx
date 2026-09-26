@@ -186,6 +186,13 @@ pub struct RunChange {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum IndexedChange {
+    TokenMigration {
+        source_mint: String,
+        destination_mint: String,
+        candidate_sha256: String,
+        #[serde(with = "eplyx_engine::numfmt::u64_string")]
+        candidate_len: u64,
+    },
     ProgramUpgrade {
         target_program_id: String,
         candidate_sha256: String,
@@ -198,6 +205,12 @@ impl RunChange {
         Ok(Self {
             change_spec_id: spec.id()?,
             change: match &spec.change {
+                Change::TokenMigration(migration) => IndexedChange::TokenMigration {
+                    source_mint: migration.source.mint.clone(),
+                    destination_mint: migration.destination.mint.clone(),
+                    candidate_sha256: migration.mechanism.artifact.sha256.clone(),
+                    candidate_len: migration.mechanism.artifact.len,
+                },
                 Change::ProgramUpgrade {
                     target, candidate, ..
                 } => IndexedChange::ProgramUpgrade {
@@ -215,6 +228,7 @@ impl RunChange {
     pub fn kind(&self) -> ChangeKind {
         match &self.change {
             IndexedChange::ProgramUpgrade { .. } => ChangeKind::ProgramUpgrade,
+            IndexedChange::TokenMigration { .. } => ChangeKind::TokenMigration,
         }
     }
 
@@ -255,6 +269,7 @@ impl RunChange {
                     && report.candidate.sha256 == *candidate_sha256
                     && report.candidate.len == *candidate_len
             }
+            _ => false,
         };
         ensure!(
             fields_match,

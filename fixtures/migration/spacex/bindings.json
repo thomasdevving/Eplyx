@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "transition_package_sha256": "89bf0a28e3a5617f7a1a6c5c085bbc4030d6c1d3c3d4d735d0937a2ab834f55a",
+  "candidate_program_sha256": "ce7b4d55310ca188e652951dd3102eea1af9c2469dd389a12ef11d6319ccf36d",
+  "config_sha256": "ecab42ccfe095838347586d3e66d5150f225bde4d492d373d600b8aa69c18254",
+  "plan_sha256": "87924c95dcf18ef22c07bd4d81c1ec7a803aba2961f1423a3e8d32449be5ed03",
+  "wallet_sha256": "dbf68f720b82e64691b2c6bbcc1cbc0159fcfb49f66e35b201638fa39d1c207b",
+  "conversion_capture_sha256": "ebf594490de698486015fbadb2921778ad5c95a3322da5cc9b1048fca9c71b1e",
+  "population_sha256": "3951fab78b8f876cf05c813162c2b0fc1eb267a6ef63cbeb0cccfb5a54e8848b",
+  "stress_plan_sha256": "2ae005e5f88dfce7276fc2ef38dc262521a40cb8370eb76855bd03354f9a38eb",
+  "cases_sha256": "b4e0e75fc40d55768e19688cd31549c24091f4b84c23fb51169b72ae3677817b",
+  "run_id": "pkg-89bf0a28e3a5-1790060909541",
+  "check_id": "pkg-89bf0a28e3a5-1790060909541-conversion",
+  "stress_id": "pkg-89bf0a28e3a5-1790060909541-stress",
+  "evaluated_at": "2026-09-22T07:10:21.541Z",
+  "budget": {
+    "budget_version": "eplyx-conversion-stress-budget/v1",
+    "max_response_bytes": 134217728,
+    "max_decoded_accounts": 100000,
+    "max_authority_lookups": 40000,
+    "authority_batch_size": 100,
+    "max_selected_cases": 10,
+    "executions_per_case": 1,
+    "rpc_requests_per_case": 5,
+    "max_concurrent_rpc_requests": 1,
+    "max_concurrent_vm_executions": 1,
+    "population_timeout_seconds": 900,
+    "case_timeout_seconds": 120,
+    "max_artifact_bytes": 201326592
+  }
+}

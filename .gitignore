@@ -31,3 +31,11 @@ private-setup.json
 # Written at build time from EPLYX_API_URL
 /frontend/public/runtime-config.js
 __pycache__/
+
+# Exact archived captures contain historical RPC-origin fields. Import locally
+# with scripts/import-migration-fixtures.py; track hashes/provenance, not endpoints.
+/fixtures/migration/pinned-programs/live-market.capture.json
+/fixtures/migration/spacex/population.capture.json
+/fixtures/migration/spacex/conversion.capture.json
+/fixtures/migration/spacex/stress.cases.json
+/programs/eplyx-token-migration/target/

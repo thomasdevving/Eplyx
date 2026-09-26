@@ -183,7 +183,10 @@ fn stated(
         replaces: replaced,
         expected_upgrade_authority,
         ..
-    } = &mut spec.change;
+    } = &mut spec.change
+    else {
+        panic!("upgrade fixture expected")
+    };
     target.programdata_address = programdata.map(Into::into);
     *expected_upgrade_authority = authority.map(Into::into);
     *replaced = replaces.map(ExecutableArtifact::of);
@@ -226,7 +229,9 @@ fn stated_target_expectations_are_proved_from_bundle_evidence() {
     }
 
     let mut unprovable = spec_for(&pilot(), STAKE_POOL);
-    let Change::ProgramUpgrade { target, .. } = &mut unprovable.change;
+    let Change::ProgramUpgrade { target, .. } = &mut unprovable.change else {
+        panic!("upgrade fixture expected")
+    };
     target.programdata_address = Some(WHIRLPOOL_PROGRAMDATA.into());
     let error = with_spec(
         &pilot(),

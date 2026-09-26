@@ -96,7 +96,10 @@ fn stated_target_expectations_are_proved_consistently() {
         expected_upgrade_authority,
         replaces,
         ..
-    } = &mut spec.change;
+    } = &mut spec.change
+    else {
+        panic!("upgrade fixture expected")
+    };
     target.programdata_address =
         Some(loader::programdata_address(&simulated::program()).to_string());
     *expected_upgrade_authority = Some(simulated::vault().to_string());
@@ -107,7 +110,10 @@ fn stated_target_expectations_are_proved_consistently() {
     let Change::ProgramUpgrade {
         expected_upgrade_authority,
         ..
-    } = &mut other_authority.change;
+    } = &mut other_authority.change
+    else {
+        panic!("upgrade fixture expected")
+    };
     *expected_upgrade_authority = Some(simulated::outsider().to_string());
     assert_outcome(
         &check(&world, &other_authority),
@@ -116,7 +122,9 @@ fn stated_target_expectations_are_proved_consistently() {
     );
 
     let mut other_baseline = spec;
-    let Change::ProgramUpgrade { replaces, .. } = &mut other_baseline.change;
+    let Change::ProgramUpgrade { replaces, .. } = &mut other_baseline.change else {
+        panic!("upgrade fixture expected")
+    };
     *replaces = Some(ExecutableArtifact::of(b"\x7fELF some other deployment"));
     assert_outcome(
         &check(&world, &other_baseline),
@@ -284,7 +292,9 @@ fn m06_a_different_target_program_is_a_different_proposal() {
 fn m07_a_different_programdata_is_refused() {
     let world = World::new();
     let mut spec = World::analysed_spec();
-    let Change::ProgramUpgrade { target, .. } = &mut spec.change;
+    let Change::ProgramUpgrade { target, .. } = &mut spec.change else {
+        panic!("upgrade fixture expected")
+    };
     target.programdata_address = Some(simulated::outsider().to_string());
     assert_outcome(
         &check(&world, &spec),

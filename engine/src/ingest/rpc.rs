@@ -59,6 +59,7 @@ pub struct HttpRpc {
     url: String,
     origin: Option<String>,
     response_limit: usize,
+    timeout_seconds: u64,
 }
 
 pub const DEFAULT_RESPONSE_LIMIT: usize = 64 * 1024 * 1024;
@@ -73,6 +74,7 @@ impl HttpRpc {
             url,
             origin: None,
             response_limit: DEFAULT_RESPONSE_LIMIT,
+            timeout_seconds: 30,
         })
     }
 
@@ -81,10 +83,17 @@ impl HttpRpc {
     /// attempt and never follows redirects.
     pub fn with_response_limit(mut self, bytes: usize) -> Result<Self> {
         anyhow::ensure!(
-            bytes > 0 && bytes <= DEFAULT_RESPONSE_LIMIT,
+            bytes > 0 && bytes <= 512 * 1024 * 1024,
             "invalid RPC response budget"
         );
         self.response_limit = bytes;
+        Ok(self)
+    }
+
+    /// Capture controllers select a finite timeout for bounded population scans.
+    pub fn with_timeout(mut self, seconds: u64) -> Result<Self> {
+        anyhow::ensure!((1..=1800).contains(&seconds), "invalid RPC timeout budget");
+        self.timeout_seconds = seconds;
         Ok(self)
     }
 
@@ -124,7 +133,7 @@ impl RpcProvider for HttpRpc {
                 "--silent",
                 "--fail",
                 "--max-time",
-                "30",
+                &self.timeout_seconds.to_string(),
                 "--config",
                 "-",
             ])

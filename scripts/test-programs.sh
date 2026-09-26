@@ -24,3 +24,12 @@ for FLAVOUR in "" "--features reference"; do
   # shellcheck disable=SC2086
   cargo test --manifest-path "$ROOT/programs/fixture-stake-pool-candidate/Cargo.toml" $FLAVOUR
 done
+
+for MIGRATION_FEATURE in reference defect-deadline-inclusive defect-fee-ceiling; do
+  echo "==> testing eplyx-token-migration [$MIGRATION_FEATURE]"
+  if [ "$MIGRATION_FEATURE" = reference ]; then
+    cargo test --manifest-path "$ROOT/programs/eplyx-token-migration/Cargo.toml"
+  else
+    cargo test --manifest-path "$ROOT/programs/eplyx-token-migration/Cargo.toml" --features "$MIGRATION_FEATURE"
+  fi
+done

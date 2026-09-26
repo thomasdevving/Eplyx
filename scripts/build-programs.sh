@@ -25,13 +25,15 @@ fi
 mkdir -p "$OUT"
 for VERSION in v1 v2; do
   echo "==> building fixture-lending [$VERSION]"
-  cargo-build-sbf \
+  cargo-build-sbf --tools-version v1.54 --arch v0 \
     --manifest-path "$MANIFEST" \
     --sbf-out-dir "$OUT/$VERSION" \
     --no-default-features \
     --features "$VERSION"
   cp "$OUT/$VERSION/fixture_lending.so" "$OUT/fixture_lending_$VERSION.so"
 done
+
+"$ROOT/scripts/build-migration-candidate.sh"
 
 echo
 echo "==> artifacts"

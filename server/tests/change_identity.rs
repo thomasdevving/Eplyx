@@ -294,7 +294,9 @@ async fn a_spec_for_another_target_is_refused() {
     // An expectation the bundle cannot prove never satisfies itself: a
     // schema-1 bundle carries no ProgramData evidence.
     let mut stated = derived_spec();
-    let Change::ProgramUpgrade { target, .. } = &mut stated.change;
+    let Change::ProgramUpgrade { target, .. } = &mut stated.change else {
+        panic!("upgrade fixture expected")
+    };
     target.programdata_address = Some(STAKE_POOL_PROGRAM.into());
     let (status, body) = harness
         .submit_parts(
@@ -649,6 +651,7 @@ async fn a_target_that_no_longer_matches_the_pinned_bundle_fails_closed() {
         } => {
             *target_program_id = STAKE_POOL_PROGRAM.into();
         }
+        _ => panic!("upgrade fixture expected"),
     }
     std::fs::write(
         dir.join("metadata.json"),

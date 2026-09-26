@@ -48,6 +48,7 @@ test-programs:
 	./scripts/test-programs.sh
 
 fmt:
+	$(CARGO) fmt --all --manifest-path programs/eplyx-token-migration/Cargo.toml
 	$(CARGO) fmt --all
 	$(CARGO) fmt --all --manifest-path programs/fixture-lending/Cargo.toml
 	$(CARGO) fmt --all --manifest-path programs/fixture-memo-candidate/Cargo.toml
@@ -55,6 +56,7 @@ fmt:
 	$(CARGO) fmt --all --manifest-path programs/fixture-stake-pool-candidate/Cargo.toml
 
 fmt-check:
+	$(CARGO) fmt --all --manifest-path programs/eplyx-token-migration/Cargo.toml -- --check
 	$(CARGO) fmt --all -- --check
 	$(CARGO) fmt --all --manifest-path programs/fixture-lending/Cargo.toml -- --check
 	$(CARGO) fmt --all --manifest-path programs/fixture-memo-candidate/Cargo.toml -- --check
@@ -63,6 +65,9 @@ fmt-check:
 
 lint:
 	$(CARGO) clippy --all-targets -- -D warnings
+	$(CARGO) clippy --manifest-path programs/eplyx-token-migration/Cargo.toml --all-targets -- -D warnings
+	$(CARGO) clippy --manifest-path programs/eplyx-token-migration/Cargo.toml --features defect-deadline-inclusive --all-targets -- -D warnings
+	$(CARGO) clippy --manifest-path programs/eplyx-token-migration/Cargo.toml --features defect-fee-ceiling --all-targets -- -D warnings
 	$(CARGO) clippy --manifest-path programs/fixture-lending/Cargo.toml \
 		--no-default-features --features v1 --all-targets -- -D warnings
 	$(CARGO) clippy --manifest-path programs/fixture-lending/Cargo.toml \

@@ -467,3 +467,32 @@ mod tests {
         );
     }
 }
+
+/// Initialized multisig layout. Knowing its threshold does not supply approvals.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Multisig {
+    pub required_signers: u8,
+    pub signer_count: u8,
+    pub signers: Vec<String>,
+}
+pub fn decode_multisig(data: &[u8]) -> Decoded<Multisig> {
+    if data.len() != MULTISIG_LEN {
+        return Decoded::NotApplicable;
+    }
+    let required_signers = data[0];
+    let signer_count = data[1];
+    if data[2] != 1 || required_signers == 0 || required_signers > signer_count || signer_count > 11
+    {
+        return Decoded::Malformed(MalformedReason::InvalidDiscriminant {
+            at: 0,
+            value: required_signers.into(),
+        });
+    }
+    Decoded::Decoded(Multisig {
+        required_signers,
+        signer_count,
+        signers: (0..usize::from(signer_count))
+            .map(|i| address_at(data, 3 + 32 * i).expect("checked multisig length"))
+            .collect(),
+    })
+}
