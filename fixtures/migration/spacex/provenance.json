@@ -1,0 +1,29 @@
+{
+  "sta_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+  "files": [
+    {
+      "source": "reports/milestone8-healthy-worker/population.capture.json",
+      "file": "population.capture.json",
+      "bytes": 10298485,
+      "sha256": "3951fab78b8f876cf05c813162c2b0fc1eb267a6ef63cbeb0cccfb5a54e8848b"
+    },
+    {
+      "source": "reports/milestone8-healthy-worker/conversion.capture.json",
+      "file": "conversion.capture.json",
+      "bytes": 2282621,
+      "sha256": "ebf594490de698486015fbadb2921778ad5c95a3322da5cc9b1048fca9c71b1e"
+    },
+    {
+      "source": "reports/milestone8-healthy-worker/stress.cases.json",
+      "file": "stress.cases.json",
+      "bytes": 22760976,
+      "sha256": "b4e0e75fc40d55768e19688cd31549c24091f4b84c23fb51169b72ae3677817b"
+    },
+    {
+      "source": "reports/milestone8-healthy-worker/bindings.json",
+      "file": "bindings.json",
+      "bytes": 1554,
+      "sha256": "cc3d638014c9e638fc0cbae75dd5efeadda2dbb92d1c4834b098d51ecd5d61cf"
+    }
+  ]
+}

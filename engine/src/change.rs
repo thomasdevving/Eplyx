@@ -69,7 +69,10 @@ pub struct ChangeSpec {
 /// longer says what its author wrote.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
+// Keep the established public upgrade variant; boxing it would churn its callers.
+#[allow(clippy::large_enum_variant)]
 pub enum Change {
+    TokenMigration(Box<crate::migration::spec::TokenMigration>),
     ProgramUpgrade {
         target: ProgramTarget,
         candidate: ExecutableArtifact,
@@ -94,6 +97,7 @@ pub enum Change {
 /// targets will be added with their evaluators, not represented as programs.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ChangeTarget<'a> {
+    Asset(&'a crate::migration::spec::TokenSide),
     Program(&'a ProgramTarget),
 }
 
@@ -142,6 +146,7 @@ pub struct SquadsV4Delivery {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum ChangeKind {
+    TokenMigration,
     ProgramUpgrade,
 }
 
@@ -149,6 +154,7 @@ impl ChangeKind {
     pub fn as_str(self) -> &'static str {
         match self {
             Self::ProgramUpgrade => "program_upgrade",
+            Self::TokenMigration => "token_migration",
         }
     }
 }
@@ -266,9 +272,65 @@ impl ChangeSpec {
         }
     }
 
+    pub fn token_migration(
+        terms: crate::migration::spec::TokenMigrationV1,
+        program_id: &str,
+        bytes: &[u8],
+    ) -> Result<Self> {
+        use crate::migration::spec::{Mechanism, TokenMigration, WindowBoundary};
+        terms.validate()?;
+        let activation = terms
+            .window
+            .activation
+            .as_ref()
+            .map(|b| -> Result<Activation> {
+                Ok(match b {
+                    WindowBoundary::Slot { .. } => Activation {
+                        slot: Some(b.value()?),
+                        unix_timestamp: None,
+                    },
+                    WindowBoundary::UnixTimestamp { .. } => Activation {
+                        slot: None,
+                        unix_timestamp: Some(i64::try_from(b.value()?)?),
+                    },
+                })
+            })
+            .transpose()?;
+        let spec = Self {
+            schema_version: CHANGE_SPEC_SCHEMA,
+            change_spec_id: None,
+            activation,
+            metadata: ChangeMetadata::default(),
+            change: Change::TokenMigration(Box::new(TokenMigration {
+                source: terms.source,
+                destination: terms.destination,
+                conversion: terms.conversion,
+                eligibility: terms.eligibility,
+                source_disposition: terms.source_disposition,
+                destination_funding: terms.destination_funding,
+                authorities: terms.authorities,
+                deadline: terms.window.deadline,
+                mechanism: Mechanism {
+                    program_id: program_id.into(),
+                    artifact: ExecutableArtifact::of(bytes),
+                },
+            })),
+        };
+        spec.validate()?;
+        Ok(spec)
+    }
+
+    pub fn as_token_migration(&self) -> Option<&crate::migration::spec::TokenMigration> {
+        match &self.change {
+            Change::TokenMigration(migration) => Some(migration),
+            _ => None,
+        }
+    }
+
     pub fn kind(&self) -> ChangeKind {
         match self.change {
             Change::ProgramUpgrade { .. } => ChangeKind::ProgramUpgrade,
+            Change::TokenMigration(_) => ChangeKind::TokenMigration,
         }
     }
 
@@ -291,6 +353,14 @@ impl ChangeSpec {
             self.schema_version
         );
         match &self.change {
+            Change::TokenMigration(migration) => {
+                migration
+                    .mechanism
+                    .artifact
+                    .validate("migration mechanism")?;
+                migration.evaluation_spec(self.activation.as_ref())?;
+            }
+
             Change::ProgramUpgrade {
                 target,
                 candidate,
@@ -353,12 +423,14 @@ impl ChangeSpec {
     pub fn candidate(&self) -> Option<&ExecutableArtifact> {
         match &self.change {
             Change::ProgramUpgrade { candidate, .. } => Some(candidate),
+            Change::TokenMigration(migration) => Some(&migration.mechanism.artifact),
         }
     }
 
     pub fn target(&self) -> ChangeTarget<'_> {
         match &self.change {
             Change::ProgramUpgrade { target, .. } => ChangeTarget::Program(target),
+            Change::TokenMigration(migration) => ChangeTarget::Asset(&migration.source),
         }
     }
 
@@ -367,12 +439,14 @@ impl ChangeSpec {
     pub fn target_program_id(&self) -> Option<&str> {
         match self.target() {
             ChangeTarget::Program(target) => Some(&target.program_id),
+            ChangeTarget::Asset(_) => None,
         }
     }
 
     /// Explicit narrowing for upgrade-only consumers such as governance.
     pub fn as_program_upgrade(&self) -> Option<ProgramUpgradeRef<'_>> {
         match &self.change {
+            Change::TokenMigration(_) => None,
             Change::ProgramUpgrade {
                 target,
                 candidate,
@@ -393,6 +467,7 @@ impl ChangeSpec {
     pub fn delivery(&self) -> Option<&Delivery> {
         match &self.change {
             Change::ProgramUpgrade { delivery, .. } => delivery.as_ref(),
+            Change::TokenMigration(_) => None,
         }
     }
 
@@ -403,6 +478,9 @@ impl ChangeSpec {
         spec.change_spec_id = None;
         match &mut spec.change {
             Change::ProgramUpgrade { delivery: slot, .. } => *slot = delivery,
+            Change::TokenMigration(_) => {
+                anyhow::bail!("migration changes have no upgrade delivery")
+            }
         }
         Ok(spec)
     }
@@ -584,6 +662,11 @@ pub struct ChangeBinding {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum BoundChange {
+    TokenMigration {
+        source_mint: String,
+        destination_mint: String,
+        candidate_sha256: String,
+    },
     ProgramUpgrade {
         target_program_id: String,
         candidate_sha256: String,
@@ -596,6 +679,7 @@ impl ChangeBinding {
     pub fn kind(&self) -> ChangeKind {
         match &self.change {
             BoundChange::ProgramUpgrade { .. } => ChangeKind::ProgramUpgrade,
+            BoundChange::TokenMigration { .. } => ChangeKind::TokenMigration,
         }
     }
 
@@ -604,6 +688,7 @@ impl ChangeBinding {
             BoundChange::ProgramUpgrade {
                 target_program_id, ..
             } => Some(target_program_id),
+            BoundChange::TokenMigration { .. } => None,
         }
     }
 
@@ -612,12 +697,16 @@ impl ChangeBinding {
             BoundChange::ProgramUpgrade {
                 candidate_sha256, ..
             } => Some(candidate_sha256),
+            BoundChange::TokenMigration {
+                candidate_sha256, ..
+            } => Some(candidate_sha256),
         }
     }
 
     pub fn delivery(&self) -> Option<&Delivery> {
         match &self.change {
             BoundChange::ProgramUpgrade { delivery, .. } => delivery.as_ref(),
+            BoundChange::TokenMigration { .. } => None,
         }
     }
 }
@@ -659,7 +748,10 @@ mod tests {
             replaces,
             expected_upgrade_authority,
             ..
-        } = &mut spec.change;
+        } = &mut spec.change
+        else {
+            panic!("upgrade fixture expected")
+        };
         (target, candidate, replaces, expected_upgrade_authority)
     }
 

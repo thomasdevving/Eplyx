@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "source": {
+    "mint": "PreANxuXjsy2pvisWWMNB6YaJNzr7681wJJr2rHsfTh",
+    "token_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+    "decimals": 9
+  },
+  "destination": {
+    "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "decimals": 6
+  },
+  "conversion": {
+    "ratio_basis": "raw",
+    "numerator": "1",
+    "denominator": "2",
+    "rounding": "floor",
+    "fee": {
+      "kind": "none"
+    },
+    "minimum_output_raw": "1"
+  },
+  "window": {
+    "activation": {
+      "kind": "unix_timestamp",
+      "value": "1790812800"
+    }
+  },
+  "eligibility": {
+    "amount_policy": "full_balance",
+    "minimum_source_balance_raw": "1",
+    "holder_authorization": [
+      "owner"
+    ],
+    "owner_authority_classes": [
+      "wallet"
+    ],
+    "excluded_accounts": []
+  },
+  "source_disposition": {
+    "kind": "burn"
+  },
+  "destination_funding": {
+    "kind": "reserve_transfer",
+    "reserve": {
+      "kind": "proposed",
+      "funded_raw": "1000000000000"
+    }
+  },
+  "authorities": {
+    "migration_authority": {
+      "kind": "program_derived"
+    },
+    "expected": {},
+    "fee_payer": {
+      "kind": "relayer"
+    }
+  }
+}

@@ -1812,6 +1812,7 @@ fn change_program_upgrade(args: ChangeProgramUpgradeArgs) -> Result<ExitCode> {
                 *replaces = Some(ExecutableArtifact::of(&bytes));
             }
         }
+        Change::TokenMigration(_) => unreachable!("program-upgrade constructor"),
     }
     if args.activation_slot.is_some() || args.activation_unix_timestamp.is_some() {
         spec.activation = Some(Activation {
@@ -2075,6 +2076,17 @@ fn render_ci(report: &eplyx_engine::ci::CiReport) -> String {
                     change.change_spec_id,
                     change.kind().as_str(),
                     target_program_id
+                );
+            }
+            eplyx_engine::change::BoundChange::TokenMigration {
+                source_mint,
+                destination_mint,
+                ..
+            } => {
+                let _ = writeln!(
+                    text,
+                    "Change:     {} (token migration {} to {})",
+                    change.change_spec_id, source_mint, destination_mint
                 );
             }
         }

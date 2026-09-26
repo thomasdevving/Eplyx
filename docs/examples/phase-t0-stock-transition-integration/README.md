@@ -58,3 +58,9 @@ pnpm 11.24.0. The accepted minimal statement is **20/20 stress cases behaved as
 specified**: 11 migrated and reconciled; nine rejected as expected with rollback
 verified. Its separate population rehearsal migrated four of four attempted
 holders. T1 is authorized; the actual migration port remains to be verified in T3.
+
+T3 now appends the actual MAIN port results in
+[the comparison record](../../phase-t3-migration-reference.json), with
+[verification receipts](../../phase-t3-verification.json). These are separate from
+the frozen T0 reference above; all 14 analytical projections pass with the approved
+identity, provenance and encoding differences.

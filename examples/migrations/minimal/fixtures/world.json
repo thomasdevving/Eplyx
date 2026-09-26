@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "minimal-migration",
+  "description": "A generic synthetic world: an SPL Token asset migrating to a Token-2022 asset. Every account is built locally by executing real token-program instructions; none of it is chain state.",
+  "programs": "liteSvmBundled",
+  "clock": {"slot": "1000", "unixTimestamp": "1760000000", "epoch": "400"},
+  "populationMint": "source",
+  "wallets": [
+    {"label": "alice", "lamports": "1000000000"},
+    {"label": "bob", "lamports": "1000000000"},
+    {"label": "carol", "lamports": "1000000000"},
+    {"label": "dana", "lamports": "1000000000"},
+    {"label": "dave", "lamports": "1000000000"},
+    {"label": "erin", "lamports": "1000000000"},
+    {"label": "issuer", "lamports": "1000000000"},
+    {"label": "signer-1", "lamports": "1000000000"},
+    {"label": "signer-2", "lamports": "1000000000"},
+    {"label": "signer-3", "lamports": "1000000000"}
+  ],
+  "programOwned": [{"label": "pool"}],
+  "multisigs": [{"label": "treasury", "tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA", "threshold": 2, "signers": ["signer-1", "signer-2", "signer-3"]}],
+  "mints": [
+    {"label": "source", "tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA", "decimals": 6, "mintAuthority": {"label": "issuer"}, "freezeAuthority": {"label": "issuer"}},
+    {"label": "destination", "tokenProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb", "decimals": 9, "mintAuthority": {"label": "issuer"}, "freezeAuthority": {"label": "issuer"}}
+  ],
+  "tokenAccounts": [
+    {"label": "alice-source", "mint": "source", "owner": {"label": "alice"}, "layout": "associated", "amount": "250000000"},
+    {"label": "bob-source", "mint": "source", "owner": {"label": "bob"}, "layout": "associated", "amount": "1234567"},
+    {"label": "bob-destination", "mint": "destination", "owner": {"label": "bob"}, "layout": "associated", "amount": "0"},
+    {"label": "carol-source", "mint": "source", "owner": {"label": "carol"}, "layout": "associated", "amount": "40000000", "delegate": {"delegate": {"label": "dana"}, "amount": "40000000"}},
+    {"label": "treasury-source", "mint": "source", "owner": {"label": "treasury"}, "layout": "associated", "amount": "900000000"},
+    {"label": "dave-source", "mint": "source", "owner": {"label": "dave"}, "layout": "associated", "amount": "5000000", "frozen": true},
+    {"label": "pool-source", "mint": "source", "owner": {"label": "pool"}, "layout": "associated", "amount": "77000000"},
+    {"label": "erin-source", "mint": "source", "owner": {"label": "erin"}, "layout": "associated", "amount": "0"}
+  ]
+}

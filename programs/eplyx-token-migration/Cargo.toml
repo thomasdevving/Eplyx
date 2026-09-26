@@ -1,0 +1,33 @@
+[package]
+name = "eplyx-token-migration"
+version = "0.1.0"
+edition = "2021"
+description = "Eplyx Token Migration V1 reference mechanism: a registered candidate migration program implementing the token_migration_v1 ABI (burn or escrow, reserve transfer or mint-to). Not an issuer mechanism and not deployed on any cluster."
+license = "MIT"
+
+# Own workspace root: built for the SBF target by cargo-build-sbf, separately
+# from the host-side engine workspace, like the other repository programs.
+[workspace]
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[features]
+default = []
+custom-heap = []
+custom-panic = []
+no-entrypoint = []
+# Deliberately defective test candidates. They exist only so the engine's search
+# and gate can be shown to catch real candidate bugs from candidate bytes alone.
+defect-deadline-inclusive = []
+defect-fee-ceiling = []
+
+[dependencies]
+solana-program = "4.1"
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_os, values("solana"))'] }
+
+[profile.release]
+overflow-checks = true
+codegen-units = 1

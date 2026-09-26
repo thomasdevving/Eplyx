@@ -100,3 +100,59 @@ mod tests {
         assert!(serde_json::from_str::<Holder>(r#"{"lamports":null,"delta":"0"}"#).is_err());
     }
 }
+
+/// Optional observed slots retain null for absence, never zero.
+pub mod optional_u64_string {
+    use super::*;
+    pub fn serialize<S: Serializer>(value: &Option<u64>, serializer: S) -> Result<S::Ok, S::Error> {
+        match value {
+            Some(v) => serializer.serialize_some(&v.to_string()),
+            None => serializer.serialize_none(),
+        }
+    }
+    pub fn deserialize<'de, D: Deserializer<'de>>(
+        deserializer: D,
+    ) -> Result<Option<u64>, D::Error> {
+        #[derive(Deserialize)]
+        struct Scalar(#[serde(with = "super::u64_string")] u64);
+        Ok(Option::<Scalar>::deserialize(deserializer)?.map(|s| s.0))
+    }
+}
+pub mod u64_strings {
+    use super::*;
+    use serde::Serialize;
+    pub fn serialize<S: Serializer>(value: &[u64], serializer: S) -> Result<S::Ok, S::Error> {
+        value
+            .iter()
+            .map(u64::to_string)
+            .collect::<Vec<_>>()
+            .serialize(serializer)
+    }
+    pub fn deserialize<'de, D: Deserializer<'de>>(deserializer: D) -> Result<Vec<u64>, D::Error> {
+        #[derive(Deserialize)]
+        struct Scalar(#[serde(with = "super::u64_string")] u64);
+        Ok(Vec::<Scalar>::deserialize(deserializer)?
+            .into_iter()
+            .map(|s| s.0)
+            .collect())
+    }
+}
+pub mod optional_slot_range {
+    use super::*;
+    pub fn serialize<S: Serializer>(
+        value: &Option<(u64, u64)>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error> {
+        match value {
+            Some((a, b)) => serializer.serialize_some(&(a.to_string(), b.to_string())),
+            None => serializer.serialize_none(),
+        }
+    }
+    pub fn deserialize<'de, D: Deserializer<'de>>(
+        deserializer: D,
+    ) -> Result<Option<(u64, u64)>, D::Error> {
+        #[derive(Deserialize)]
+        struct Scalar(#[serde(with = "super::u64_string")] u64);
+        Ok(Option::<(Scalar, Scalar)>::deserialize(deserializer)?.map(|(a, b)| (a.0, b.0)))
+    }
+}

@@ -1,0 +1,11 @@
+{
+  "sta_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+  "files": [
+    {
+      "source": "reports/milestone4-validation/live-market.capture.json",
+      "file": "live-market.capture.json",
+      "bytes": 5560223,
+      "sha256": "3d7ba0f24d424bcc0042495f5cdf39555c0b09569d5dfcecc8017097a8604b52"
+    }
+  ]
+}

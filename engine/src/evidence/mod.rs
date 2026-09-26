@@ -33,12 +33,14 @@
 //! makes derivation replay-safe and a report reproducible.
 
 pub mod account;
+pub mod authority;
 pub mod boundary;
 pub mod cpi;
 pub mod field;
 pub mod labels;
 pub mod native;
 pub mod pairing;
+pub mod paths;
 pub mod token;
 
 use crate::{executor::ExecutionResult, types::NamedAccount};

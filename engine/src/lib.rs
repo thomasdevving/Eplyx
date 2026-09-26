@@ -217,3 +217,5 @@ pub fn compare_default_corpus_minimized() -> Result<Report> {
     )?;
     Ok(report)
 }
+
+pub mod migration;

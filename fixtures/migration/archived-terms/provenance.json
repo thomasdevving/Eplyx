@@ -1,0 +1,17 @@
+{
+  "sta_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+  "files": [
+    {
+      "source": "examples/transitions/demo-fixed-ratio/eplyx.json",
+      "file": "eplyx.json",
+      "bytes": 643,
+      "sha256": "7c59d6653a6bcc83c596c25195bb358257b375fd4eabb5ec8443c231a2accde0"
+    },
+    {
+      "source": "examples/transitions/demo-fixed-ratio/config.json",
+      "file": "config.json",
+      "bytes": 216,
+      "sha256": "ecab42ccfe095838347586d3e66d5150f225bde4d492d373d600b8aa69c18254"
+    }
+  ]
+}

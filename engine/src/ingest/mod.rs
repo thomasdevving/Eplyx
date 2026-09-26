@@ -1,6 +1,7 @@
 //! External data discovery/normalization/cache; never executes candidate code.
 pub mod accounts;
 pub mod controlled;
+pub mod observation;
 pub mod rpc;
 pub mod transactions;
 use crate::{

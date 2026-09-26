@@ -249,8 +249,8 @@ screening ──────────────┼→ historical → replay
 `change::ChangeSpec` is what the gate evaluates: `baseline world (bundle) +
 ChangeSpec → candidate world`, never one object holding both. It describes the
 proposal only — no results, findings, proof strategy or protocol fields. The
-target lives *inside* the kind (`program_upgrade` today), so a later kind can
-target an asset instead of a program. `change_spec_id` hashes
+target lives *inside* the kind: `program_upgrade` targets a program and
+`token_migration` targets source/destination assets. `change_spec_id` hashes
 `("eplyx-change-spec-v1", schema_version, change, activation)`; `metadata`
 (label, source) is outside identity, and `a_frozen_spec_keeps_its_identity`
 pins the encoding. Optional identifying fields must be skipped when absent, so
@@ -265,9 +265,22 @@ than passing. Every `CiReport` carries `change`. See `docs/phase-c1-changespec.m
 kind, and governance explicitly narrows with `as_program_upgrade()` before
 reading a provider. `ChangeBinding::change` and the server's
 `RunChange::change` are tagged enums flattened into the existing JSON shape.
-Frozen wire tests pin field order as well as values. Only `program_upgrade`
-exists at this phase; adding a kind must supply its own evaluator and binding.
+Frozen wire tests pin field order as well as values. T3 adds `token_migration`
+with its own evaluator and binding; upgrade behavior remains unchanged.
 See `docs/phase-t1-multi-kind-changespec.md`.
+
+**T3 adds the token migration core.** `migration::input` loads `change.json`, a
+separate `state.json`, and the mechanism in `programs/<sha256>`. The proposal uses
+MAIN’s ChangeSpec identity and resolver. State is a fixture recipe, a captured
+world bound by digest, or a bounded read-only capture intent; final transcripts
+are bound before offline evaluation. Reports omit run IDs and timestamps; those
+remain in bindings. Reference, deadline-defect and fee-defect candidates use
+platform-tools v1.57 / SBF v3, while the lending baseline retains v1.54 / SBF v0.
+Migration uses shared token, loader and Clock decoders. Its four readiness axes
+and declared invariants are a per-kind gate contract: they do not change upgrade
+expectation policy. Known violations exit 1; strict evidence-only gaps exit 5.
+The migration CLI/local store, conversion guarantees, dashboard and hosted
+migration workers follow in T4–T9. See `docs/phase-t3-token-migration-core.md`.
 
 **Phase P1 made it the hosted product's identity.** `POST /checks` takes an
 optional `change_spec` part (authoritative; the `candidate` bytes only satisfy
