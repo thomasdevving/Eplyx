@@ -279,8 +279,8 @@ platform-tools v1.57 / SBF v3, while the lending baseline retains v1.54 / SBF v0
 Migration uses shared token, loader and Clock decoders. Its four readiness axes
 and declared invariants are a per-kind gate contract: they do not change upgrade
 expectation policy. Known violations exit 1; strict evidence-only gaps exit 5.
-The migration CLI/local store, dashboard and hosted migration workers follow
-in T5–T9. See `docs/phase-t3-token-migration-core.md`.
+T5 adds the migration CLI and local store. The dashboard and hosted migration
+workers follow in T8–T9. See `docs/phase-t3-token-migration-core.md`.
 
 **T4 adds current-state migration guarantees.** Mainnet captures freeze exact
 case selection and account sets before bounded coherent recapture. Clock bytes
@@ -292,6 +292,16 @@ Observed search freezes up to 25 additional exact accounts in three waves and
 recomputes all evidence offline. These use the migration VM and shared decoders;
 T3's synthetic/frozen contracts remain unchanged. See
 `docs/phase-t4-current-migration-guarantees.md`.
+
+**T5 adds project configuration and the single migration CLI.** Strict
+`eplyx.toml` separates terms, candidate, state recipe and invariants. Commands
+`migration analyse/search/gate/plan/fixture/reproduce`, `change token-migration`,
+`init --migration`, `doctor`, `runs`, `show` and version identity use MAIN's
+binary. The `.eplyx/` run store contains separate proposal/state/CAS inputs,
+results and append-only history; it does not replace hosted `proj_` identities.
+Capture is read-only in the parent. VM evaluation and replay workers start with
+an empty environment; only cloud commands will read `EPLYX_TOKEN`. See
+`docs/phase-t5-migration-cli-local-store.md` for layout, exit codes and checks.
 
 **Phase P1 made it the hosted product's identity.** `POST /checks` takes an
 optional `change_spec` part (authoritative; the `candidate` bytes only satisfy

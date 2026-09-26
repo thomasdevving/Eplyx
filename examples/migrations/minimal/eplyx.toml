@@ -1,0 +1,60 @@
+# A generic Token Migration V1 example over a synthetic fixture. Nothing here is chain
+# state and nothing is signed or sent. Build the reference candidate first
+# (./scripts/build-programs.sh) and copy artifacts/eplyx_token_migration.so to
+# ./target/deploy/migration.so, or point [program].path at your own build.
+[project]
+name = "minimal-migration"
+
+[transition]
+adapter = "token_migration_v1"
+spec = "migration.json"
+
+[program]
+path = "./target/deploy/migration.so"
+
+[state]
+source = "fixture"
+fixture = "fixtures/world.json"
+
+[rehearsal]
+clock = "activation"
+max_units = 5000
+
+[gate]
+policy = "block-only"
+
+[[invariants]]
+type = "candidate_binary_matches_package"
+severity = "blocking"
+
+[[invariants]]
+type = "migration_arithmetic_matches_spec"
+severity = "blocking"
+
+[[invariants]]
+type = "supply_reconciles"
+severity = "blocking"
+
+[[invariants]]
+type = "reserve_covers_eligible_holders"
+severity = "blocking"
+
+[[invariants]]
+type = "failed_migrations_roll_back"
+severity = "blocking"
+
+[[invariants]]
+type = "no_unsupported_execution_succeeds"
+severity = "blocking"
+
+[[invariants]]
+type = "window_rules_hold"
+severity = "blocking"
+
+[[invariants]]
+type = "required_authorities_match"
+severity = "blocking"
+
+[[invariants]]
+type = "all_positive_holders_migrate"
+severity = "warning"

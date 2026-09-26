@@ -371,10 +371,10 @@ pub fn world_for(package: &ValidatedInput, output: &Path, b: &Bindings) -> Resul
             package.world.clone().context("missing captured world")
         }
         StateSource::SyntheticFixture { recipe_sha256, .. } => {
-            ensure!(
+            super::error::compatible(
                 b.state == "SyntheticFixture" && b.recipe_sha256.as_deref() == Some(recipe_sha256),
-                "fixture binding changed"
-            );
+                "fixture binding changed",
+            )?;
             let overlay = adapter::derive(spec, &package.change_spec_id, package.program_id())?;
             fixture::build(
                 package.recipe.as_ref().context("missing fixture recipe")?,
@@ -387,11 +387,11 @@ pub fn world_for(package: &ValidatedInput, output: &Path, b: &Bindings) -> Resul
             ensure!(b.state == "MainnetCapture", "state binding changed");
             let population_bytes = read(output, capture::POPULATION_ARTIFACT)?;
             let migration_bytes = read(output, capture::MIGRATION_ARTIFACT)?;
-            ensure!(
+            super::error::compatible(
                 Some(sha256(&population_bytes)) == b.population_capture_sha256
                     && Some(sha256(&migration_bytes)) == b.migration_capture_sha256,
-                "captured state changed"
-            );
+                "captured state changed",
+            )?;
             capture::world(
                 spec,
                 &population_bytes,
@@ -424,15 +424,15 @@ pub fn exit_code(report: &Value) -> Result<u8> {
 
 fn evaluate(package: &ValidatedInput, output: &Path, mode: Mode) -> Result<Value> {
     let b = bindings(output)?;
-    ensure!(
+    super::error::compatible(
         b.schema_version == BINDINGS_SCHEMA
             && b.kind == BINDINGS_KIND
             && b.analysis_input_sha256 == package.analysis_input_sha256
             && b.candidate_program_sha256 == package.program_sha256
             && b.state_input_sha256 == package.state_input_sha256
             && b.change_spec_id == package.change_spec_id,
-        "package identity changed since this run was bound"
-    );
+        "package identity changed since this run was bound",
+    )?;
     let world = world_for(package, output, &b)?;
     let current = if let Some(expected) = &b.current_capture_binding_sha256 {
         ensure!(
@@ -452,10 +452,10 @@ fn evaluate(package: &ValidatedInput, output: &Path, mode: Mode) -> Result<Value
             "current population differs from run"
         );
         let discovery: World = serde_json::from_slice(&read(&root, "discovery.world.json")?)?;
-        ensure!(
+        super::error::compatible(
             discovery.sha256()? == world.sha256()?,
-            "current discovery differs from migration world"
-        );
+            "current discovery differs from migration world",
+        )?;
         let budget = b
             .population_budget
             .as_ref()

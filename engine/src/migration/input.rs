@@ -289,10 +289,10 @@ pub fn load(directory: &Path) -> Result<ValidatedInput> {
     } = &config.state
     {
         let bytes = bounded_read(&member(&root, artifact)?, 512 * 1024 * 1024)?;
-        ensure!(
+        super::error::compatible(
             sha256(&bytes) == *expected,
-            "captured world digest mismatch"
-        );
+            "captured world digest mismatch",
+        )?;
         let world: super::world::World = serde_json::from_slice(&bytes)?;
         world.validate()?;
         ensure!(

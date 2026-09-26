@@ -1,0 +1,41 @@
+{
+  "phase": "T5",
+  "source_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+  "source_contracts": [
+    {
+      "source": "engine/tests/migration_cli.rs",
+      "sha256": "c140037fa20788deeed3cdfc434e2d806a95da45f54d1bc2e5cccbfc6aabde13",
+      "test_names": [
+        "migration_project_runs_the_whole_local_flow_offline",
+        "defective_candidate_counterexample_reproduces_offline_and_is_recorded",
+        "init_writes_a_migration_project_that_doctor_can_read"
+      ],
+      "target": "engine/tests/migration_cli.rs",
+      "adaptations": "All three source flows retained. Commands map to migration analyse/search/gate/plan/reproduce; strict known requirement violations use MAIN exit 1. Copy follows the approved MAIN glossary. Separate MAIN proposal/state/CAS inputs replace the source combined package. The tampered-witness test additionally asserts a Failed reproduction record."
+    },
+    {
+      "source": "engine/tests/release_cli.rs",
+      "sha256": "76ea7e9e2eb833dac4ca9350bf6a38f55333960cf955e4c30d7fa111dae8fe99",
+      "test_names": [
+        "version_needs_no_project_config_store_or_network",
+        "doctor_separates_eplyx_requirements_from_the_developer_project",
+        "doctor_never_echoes_the_rpc_url",
+        "existing_milestone_16_store_opens_without_config"
+      ],
+      "target": "engine/tests/migration_cli.rs",
+      "adaptations": "Version/build identity and doctor runtime/project separation retained for token migration, with MAIN schemas only and no network checks. Source default fixed-ratio init maps to explicit init --migration. The historical fixed-ratio dashboard store is an archived product format, not a MAIN migration input; the same no-config history access is checked on real MAIN migration runs. Dashboard projection coverage follows in T8."
+    }
+  ],
+  "additional_checks": [
+    "identical analyses have byte-identical reports",
+    "missing/substituted CAS candidate fails before evaluation",
+    "saved ChangeSpec binding mismatch exits 4",
+    "all JSON aborts, including Clap argument errors, carry code 2 or 4",
+    "parent fake provider/auth sentinels never reach offline workers",
+    "manually invoking a worker with an inherited variable fails",
+    "symlinked store roots and run files cannot redirect reads",
+    "change construction preserves MAIN activation and candidate resolution",
+    "saved search witness blocks the offline gate with exit 1",
+    "existing history remains accessible without project config"
+  ]
+}

@@ -260,10 +260,10 @@ impl World {
         );
         match base {
             WorldKind::ObservedCapture => {
-                ensure!(
+                super::error::compatible(
                     self.cluster == "solana-mainnet" && self.genesis_hash == MAINNET_GENESIS,
-                    "an observed world must come from Solana mainnet"
-                );
+                    "an observed world must come from Solana mainnet",
+                )?;
                 ensure!(
                     self.accounts
                         .values()

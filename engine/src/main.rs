@@ -1,6 +1,10 @@
 //! `eplyx` - command line entry point.
 
+mod cli_local;
+
 use std::path::PathBuf;
+static LONG_VERSION: std::sync::LazyLock<String> =
+    std::sync::LazyLock::new(eplyx_engine::build_info::long_version);
 use std::process::ExitCode;
 
 use anyhow::{anyhow, Context, Result};
@@ -13,18 +17,73 @@ use eplyx_engine::{
 #[derive(Parser)]
 #[command(
     name = "eplyx",
-    about = "Deterministic differential execution for Solana program upgrades",
+    version = eplyx_engine::build_info::VERSION,
+    long_version = LONG_VERSION.as_str(),
+    about = "Local analysis of Solana program upgrades and token migrations",
     long_about = "Executes identical transactions against two builds of the same Solana program \
                   over a corpus of account states, and reports what changed solely because the \
-                  program version changed."
+                  program version changed. Token migration commands rehearse a proposed mechanism \
+                  against separately captured or synthetic state in a local VM."
 )]
 struct Cli {
+    /// Project configuration for migration and local store commands.
+    #[arg(long, global = true, default_value = "eplyx.toml")]
+    config: PathBuf,
     #[command(subcommand)]
     command: Command,
 }
 
 #[derive(Subcommand)]
 enum Command {
+    /// Analyse and replay token migrations.
+    Migration {
+        #[command(subcommand)]
+        command: cli_local::MigrationCommand,
+    },
+    /// Create a token migration project.
+    Init {
+        #[arg(long, required = true)]
+        migration: bool,
+        #[arg(long)]
+        fixture: bool,
+        #[arg(long)]
+        force: bool,
+        #[arg(long, value_enum, default_value_t=Format::Text)]
+        format: Format,
+    },
+    /// Validate project configuration and inputs without contacting a provider.
+    Doctor {
+        #[arg(long, hide = true)]
+        offline: bool,
+        #[arg(long, value_enum, default_value_t=Format::Text)]
+        format: Format,
+    },
+    /// List saved local run history.
+    Runs {
+        #[arg(long)]
+        json: bool,
+        #[arg(long, value_enum, default_value_t=Format::Text)]
+        format: Format,
+    },
+    /// Show saved local run history.
+    Show {
+        id: String,
+        #[arg(long, value_enum, default_value_t=Format::Text)]
+        format: Format,
+    },
+    /// Show binary identity and supported schemas without a project.
+    Version {
+        #[arg(long)]
+        json: bool,
+    },
+    #[command(hide = true)]
+    FinishMigrationPreflight {
+        input: PathBuf,
+        #[arg(long)]
+        result: PathBuf,
+    },
+    #[command(hide = true)]
+    MigrationWorker(cli_local::WorkerArgs),
     /// Run the corpus against both program builds and report the differences.
     Compare(CompareArgs),
     /// Ingest program activity via standard Solana RPC into a local cache.
@@ -520,6 +579,8 @@ struct SquadsAcquireArgs {
 
 #[derive(Subcommand)]
 enum ChangeCommand {
+    /// Describe a token migration with its exact candidate bytes.
+    TokenMigration(cli_local::ChangeArgs),
     /// Write the change spec for upgrading one program to one executable.
     ProgramUpgrade(ChangeProgramUpgradeArgs),
 }
@@ -1179,8 +1240,59 @@ fn main() -> ExitCode {
 }
 
 fn run() -> Result<ExitCode> {
-    let cli = Cli::parse();
+    let cli = match Cli::try_parse() {
+        Ok(cli) => cli,
+        Err(error) => {
+            let args: Vec<String> = std::env::args().collect();
+            let json = args.iter().any(|a| a == "--format=json")
+                || args
+                    .windows(2)
+                    .any(|a| a[0] == "--format" && a[1] == "json");
+            if json && error.exit_code() != 0 {
+                println!(
+                    "{}",
+                    serde_json::json!({"error":{"code":2,"message":error.to_string()}})
+                );
+                return Ok(ExitCode::from(2));
+            }
+            error.print()?;
+            return Ok(ExitCode::from(error.exit_code() as u8));
+        }
+    };
     match cli.command {
+        Command::Migration { command } => Ok(cli_local::execute(&cli.config, command)),
+        Command::Init {
+            migration: _,
+            fixture,
+            force,
+            format,
+        } => Ok(cli_local::init(&cli.config, fixture, force, format)),
+        Command::Doctor { offline: _, format } => Ok(cli_local::doctor(&cli.config, format)),
+        Command::Runs { json, format } => Ok(cli_local::runs(
+            &cli.config,
+            if json { Format::Json } else { format },
+        )),
+        Command::Show { id, format } => Ok(cli_local::show(&cli.config, &id, format)),
+        Command::Version { json } => {
+            if json {
+                println!(
+                    "{}",
+                    serde_json::to_string_pretty(&eplyx_engine::build_info::json())?
+                );
+            } else {
+                println!("eplyx {}", eplyx_engine::build_info::long_version());
+            }
+            Ok(ExitCode::SUCCESS)
+        }
+        Command::FinishMigrationPreflight { input, result } => {
+            eplyx_engine::local_store::verify_offline_environment()?;
+            eplyx_engine::migration::pipeline::finish(&input, &result)?;
+            Ok(ExitCode::SUCCESS)
+        }
+        Command::MigrationWorker(args) => Ok(cli_local::worker_entry(args)),
+        Command::Change {
+            command: ChangeCommand::TokenMigration(args),
+        } => Ok(cli_local::change(args)),
         Command::Compare(args) => compare(args),
         Command::Ingest(args) => ingest_command(args),
         Command::Discover(args) => discover_command(args),

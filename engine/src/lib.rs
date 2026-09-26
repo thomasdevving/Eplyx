@@ -219,3 +219,6 @@ pub fn compare_default_corpus_minimized() -> Result<Report> {
 }
 
 pub mod migration;
+
+pub mod build_info;
+pub mod local_store;

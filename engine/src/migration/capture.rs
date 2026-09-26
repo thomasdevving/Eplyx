@@ -156,10 +156,10 @@ pub fn capture(
         observations: vec![],
     };
     let genesis = record(rpc, &mut c.observations, "getGenesisHash", json!([]))?;
-    ensure!(
+    super::error::compatible(
         genesis.as_str() == Some(MAINNET_GENESIS),
-        "the RPC is not Solana mainnet"
-    );
+        "the RPC is not Solana mainnet",
+    )?;
     let floor = observation.enumeration.enumeration_slot.unwrap_or_default();
     let identities = identity_addresses(spec, overlay);
     let first = record(
@@ -317,22 +317,22 @@ pub fn world(
     );
     let population_capture: population::Capture = serde_json::from_slice(population_bytes)?;
     let migration: Capture = serde_json::from_slice(migration_bytes)?;
-    ensure!(
+    super::error::compatible(
         migration.schema_version == CAPTURE_SCHEMA
             && migration.kind == CAPTURE_KIND
             && migration.source_mint == spec.source.mint
             && migration.destination_mint == spec.destination.mint,
-        "the migration capture does not match the specification"
-    );
-    ensure!(
+        "the migration capture does not match the specification",
+    )?;
+    super::error::compatible(
         migration
             .observations
             .first()
             .and_then(|o| o.result.as_ref())
             .and_then(Value::as_str)
             == Some(MAINNET_GENESIS),
-        "the migration capture is not from Solana mainnet"
-    );
+        "the migration capture is not from Solana mainnet",
+    )?;
     for observation in &migration.observations {
         ensure!(
             observation.result.is_some() != observation.error.is_some(),

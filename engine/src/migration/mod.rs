@@ -42,3 +42,5 @@ pub mod observed_search;
 
 #[cfg(test)]
 mod current_tests;
+
+pub mod error;

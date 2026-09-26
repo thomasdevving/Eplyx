@@ -1,0 +1,433 @@
+{
+  "schema_version": 1,
+  "phase": "T5",
+  "sta_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+  "toolchain": {
+    "pnpm": "11.24.0",
+    "node": "22.23.1",
+    "rust": "stable; offline Cargo dependency cache",
+    "sbf": "unchanged T3 pins: lending v1.54/v0; migration v1.57/v3"
+  },
+  "commands": [
+    {
+      "label": "main-t5-check",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-engine",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 24.2,
+      "log": "main-t5-check.log",
+      "log_sha256": "ca239c1753b5ddd119623a46ed797a3a67be833bc55f048a9590cc1909aa9bce",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t5-cli",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "migration_cli",
+        "--no-fail-fast"
+      ],
+      "exit_code": 101,
+      "seconds": 14.2,
+      "log": "main-t5-cli.log",
+      "log_sha256": "48be666b287d001b49197a60f2a4be6707ddcb4817f65690803d4b763c4050fe",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t5-fmt",
+      "command": [
+        "make",
+        "fmt"
+      ],
+      "exit_code": 0,
+      "seconds": 1.2,
+      "log": "main-t5-fmt.log",
+      "log_sha256": "57b04217ebf1017255a49b7e46f8abe947a5fedcbd4cd525ab5372bb0e72af74",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t5-cli-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "migration_cli",
+        "--no-fail-fast"
+      ],
+      "exit_code": 101,
+      "seconds": 7.4,
+      "log": "main-t5-cli-2.log",
+      "log_sha256": "6ea5cc023657435cf98e9deff0bc4dded0cd5124f29c89de5d9325ba0d3a764b",
+      "rust_test_totals": {
+        "passed": 1,
+        "failed": 2,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t5-env-diagnostic",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "migration_cli",
+        "migration_project_runs_the_whole_local_flow_offline",
+        "--no-fail-fast"
+      ],
+      "exit_code": 101,
+      "seconds": 2.3,
+      "log": "main-t5-env-diagnostic.log",
+      "log_sha256": "f0036aa163ca955d7faf08b89b3181c47d5e1484d8d1898a9f78de789637065c",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 2
+      }
+    },
+    {
+      "label": "main-t5-cli-3",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "migration_cli",
+        "--no-fail-fast"
+      ],
+      "exit_code": 0,
+      "seconds": 24.0,
+      "log": "main-t5-cli-3.log",
+      "log_sha256": "8ed0391a8f8ef6fef84b0914cd9ab4f52498032ad7bf08a43f6201e637ecd4e8",
+      "rust_test_totals": {
+        "passed": 3,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t5-cli-4",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "migration_cli",
+        "--no-fail-fast"
+      ],
+      "exit_code": 101,
+      "seconds": 2.6,
+      "log": "main-t5-cli-4.log",
+      "log_sha256": "1fb64608de208f6f9824a34c034a6055b95c14a8fdab2a40d8ed454e4a314d76",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t5-cli-5",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "migration_cli",
+        "--no-fail-fast"
+      ],
+      "exit_code": 0,
+      "seconds": 25.3,
+      "log": "main-t5-cli-5.log",
+      "log_sha256": "59cdbc299deaa4890a70a7be33dc8611d9181c2a03ecde3ef229c701e7ddfa60",
+      "rust_test_totals": {
+        "passed": 8,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t5-fmt-2",
+      "command": [
+        "make",
+        "fmt"
+      ],
+      "exit_code": 0,
+      "seconds": 1.2,
+      "log": "main-t5-fmt-2.log",
+      "log_sha256": "57b04217ebf1017255a49b7e46f8abe947a5fedcbd4cd525ab5372bb0e72af74",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t5-fmt-check",
+      "command": [
+        "make",
+        "fmt-check"
+      ],
+      "exit_code": 0,
+      "seconds": 1.4,
+      "log": "main-t5-fmt-check.log",
+      "log_sha256": "5fe89ac47bee0b52b9d98e316b135a2ae04aed42641a7f4ab48dc7614d0c8889",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t5-lint",
+      "command": [
+        "make",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 23.3,
+      "log": "main-t5-lint.log",
+      "log_sha256": "6346ef13708558d6aff8b024ea4d725548c40a64c5c65309817ef7d14780a193",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t5-cli-final",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "migration_cli",
+        "--test",
+        "migration_capture",
+        "--no-fail-fast"
+      ],
+      "exit_code": 0,
+      "seconds": 42.4,
+      "log": "main-t5-cli-final.log",
+      "log_sha256": "6f41882099b9b1aa68f4948cfb53826d0dea38f9e959aed119dc24031681a2c0",
+      "rust_test_totals": {
+        "passed": 11,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t5-governance",
+      "command": [
+        "pnpm",
+        "verify:governance"
+      ],
+      "exit_code": 0,
+      "seconds": 0.5,
+      "log": "main-t5-governance.log",
+      "log_sha256": "34f1719225ef942f5b88f563a37758718079e6f9c2b06d14957e1110e0457527",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t5-frontend",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 0,
+      "seconds": 2.8,
+      "log": "main-t5-frontend.log",
+      "log_sha256": "a42a511c898e8602a263f8c27f3781f5372e4a212accf4974c7fe65ee1f797cf",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t5-report",
+      "command": [
+        "pnpm",
+        "verify:report"
+      ],
+      "exit_code": 0,
+      "seconds": 30.5,
+      "log": "main-t5-report.log",
+      "log_sha256": "07837adacee13168f48c66bb32ef6afabdd023dc1c18ccd75156f2302026da5e",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t5-final-fmt",
+      "command": [
+        "make",
+        "fmt"
+      ],
+      "exit_code": 0,
+      "seconds": 1.4,
+      "log": "main-t5-final-fmt.log",
+      "log_sha256": "57b04217ebf1017255a49b7e46f8abe947a5fedcbd4cd525ab5372bb0e72af74",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t5-store-guard",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "migration_cli",
+        "structured_errors_and_immutable_inputs_are_enforced",
+        "--no-fail-fast"
+      ],
+      "exit_code": 0,
+      "seconds": 13.2,
+      "log": "main-t5-store-guard.log",
+      "log_sha256": "92dbde2a9f329261928bdfcb65a3078d67c3f6c0ca5475816fc789b7811222f4",
+      "rust_test_totals": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 7
+      }
+    },
+    {
+      "label": "main-t5-complete-fmt-check",
+      "command": [
+        "make",
+        "fmt-check"
+      ],
+      "exit_code": 0,
+      "seconds": 1.5,
+      "log": "main-t5-complete-fmt-check.log",
+      "log_sha256": "5fe89ac47bee0b52b9d98e316b135a2ae04aed42641a7f4ab48dc7614d0c8889",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t5-complete-lint",
+      "command": [
+        "make",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 3.3,
+      "log": "main-t5-complete-lint.log",
+      "log_sha256": "1e34a6ea7f6fca83f5b19b259492144c4d0f8330181a63f53fb23353943d189a",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t5-full-test",
+      "command": [
+        "make",
+        "test"
+      ],
+      "exit_code": 0,
+      "seconds": 546.6,
+      "log": "main-t5-full-test.log",
+      "log_sha256": "2cbf3e1ce8cf369aa4e4c8a22433b568c546691eef6d331336df74a6ed7fa04d",
+      "rust_test_totals": {
+        "passed": 1020,
+        "failed": 0,
+        "ignored": 2,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t5-no-fail-fast",
+      "command": [
+        "cargo",
+        "test",
+        "--no-fail-fast"
+      ],
+      "exit_code": 0,
+      "seconds": 456.1,
+      "log": "main-t5-no-fail-fast.log",
+      "log_sha256": "f349a24f64e80932fce7ef9c5c4dd64290eee7b2fd7331a9088a0ec73ed45e44",
+      "rust_test_totals": {
+        "passed": 969,
+        "failed": 0,
+        "ignored": 2,
+        "filtered out": 0
+      }
+    }
+  ],
+  "source_files_verified_unchanged": 1633,
+  "source_git_status": "clean",
+  "additional_capture_bytes": 0,
+  "notes": [
+    "All three pinned STA migration CLI scenarios are retained, with the approved MAIN command names, terminology, separate inputs and exit mappings. Additional release-identity/doctor and adversarial store tests bring the CLI suite to eight tests. The non-mainnet mock capture also asserts typed exit 4.",
+    "Every failed attempt and successful retry remains separate. Initial failures were a missing macro import, the macOS-inserted text encoding hint in an env_clear child, and a version-string format argument. The diagnostic printed variable names only; no environment values were read or logged.",
+    "Workers remove only the macOS-inserted __CF_USER_TEXT_ENCODING hint, then reject every other environment variable. Parent fixture flows deliberately carry fake auth/provider sentinels; successful workers establish that those were not inherited.",
+    "Two built-binary analyses produce byte-identical reports. CLI tests also cover unsigned export, the exact deadline-defect witness, successful and failed reproduction history, counterexample-aware gate failure, proposal construction, JSON aborts, missing/tampered candidate bytes, mismatched bindings, and no-config history access.",
+    "make test started before the final recursive store-member guard was added. A focused adversarial check and the separate final no-fail-fast suite cover that final guard; final lint and formatting also pass.",
+    "Rust command counts include repeats, not unique tests. The two ignored tests remain the existing bundle export utility and explicitly ignored STA performance benchmark.",
+    "STA remains clean and all 1633 inventoried source hashes are unchanged. Added text contains no provider endpoints, machine paths or private-key blocks. No binary, build output or additional raw capture is staged.",
+    "Live-provider checks intentionally not run. No live signing, cluster simulation, submission, deployment or push occurred. Local fixture signatures derive from public labels and are confined to the local VM.",
+    "Hosted migration, Postgres and dashboard/browser suites remain pending T8/T9. Existing frontend, report and governance checks pass with exact pnpm 11.24.0.",
+    "Log files are scratch records; hashes do not imply durable storage."
+  ]
+}
