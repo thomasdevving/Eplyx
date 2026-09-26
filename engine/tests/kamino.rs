@@ -336,8 +336,8 @@ fn no_adapter_specification_language_was_introduced() {
     // And the adapter is compiled in with the other current adapters.
     assert_eq!(
         eplyx_engine::protocol::adapters().len(),
-        4,
-        "four adapters, all compiled in"
+        5,
+        "five adapters (Token-2022, Stake Pool, Kamino, Orca and Drift), all compiled in"
     );
 }
 
