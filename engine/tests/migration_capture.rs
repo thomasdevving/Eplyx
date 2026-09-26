@@ -285,6 +285,7 @@ fn a_non_mainnet_provider_is_refused() {
         format!("{error:#}").contains("mainnet"),
         "unexpected error: {error:#}"
     );
+    assert_eq!(eplyx_engine::migration::error::exit_code(&error), 4);
     assert!(!root.join("result/report.json").exists());
     std::fs::remove_dir_all(root).unwrap();
 }
