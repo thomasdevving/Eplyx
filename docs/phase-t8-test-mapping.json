@@ -1,0 +1,245 @@
+{
+  "schema_version": 1,
+  "phase": "T8",
+  "source_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+  "source_suites": [
+    {
+      "source": "engine/src/dashboard/server.rs",
+      "source_sha256": "3c4c62f40d23ef9a6790fc84fd6e1689462148c5a5851b4ab4bb7ae5bbc9bf34",
+      "target": "engine/src/dashboard/server.rs",
+      "mapping": "Source parser/host/path invariants retained. Additional bounds, duplicate Host refusal and exclusive cache writing strengthen the loopback boundary.",
+      "tests": [
+        {
+          "name": "targets_reject_traversal_and_encoding",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_sha256": "7bfd80c65741023ef4351562c457d15ca9220c25595c8da0aedfab0c712ece70"
+        },
+        {
+          "name": "verbatim_windows_paths_become_plain",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_sha256": "a7744231f65ca0e4022e1eb5171f7c34352fac458fec3708733146905c996a0a"
+        },
+        {
+          "name": "home_abbreviation_handles_both_separators",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_sha256": "9faa76750520b34fe70fdf7ba4574b3be594ed280fc29bedfa2e8bb4260c2cd8"
+        }
+      ]
+    },
+    {
+      "source": "engine/tests/local_dashboard.rs",
+      "source_sha256": "2dd4e1c13c7da400839991d5ceb0f1c871731c6cf95e5119895c4bc109e0d1db",
+      "target": "engine/tests/local_dashboard.rs",
+      "mapping": "Generic presentation/security/history assertions use newly generated MAIN migration fixtures: 1 rehearsal + 1 derived per failing run, 4 saved files, two successful reproductions. Archived fixed-ratio counts remain frozen at T0; that product does not migrate. Equivalent-search checks require exact source, dimension, value, case, expected behavior, world and message identities. Source-unavailable observed execution is never inferred from absence.",
+      "tests": [
+        {
+          "name": "binds_loopback_and_lists_runs_newest_first",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_sha256": "54a143515573e3f738ca5325af3c2a8d192299f3f180bb23a367da9482b6bfa1"
+        },
+        {
+          "name": "project_endpoint_reports_local_usage_without_rpc",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_sha256": "c55c645a27d6d87b2e1a7870ea303fc8a2866fd34220d45980e03bca606ee39f"
+        },
+        {
+          "name": "run_detail_copies_engine_results_and_reuses_the_engine_gate",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_sha256": "ca5e879e1de66327b669c726b5aff0e1043930b98db94a4a053e904ab62cfb3d"
+        },
+        {
+          "name": "counterexamples_keep_observed_and_derived_distinct",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_sha256": "6983037ee7b57172be0b2a2149d05e28f73d4976848c372f28f040f971a3a360"
+        },
+        {
+          "name": "comparison_reports_declared_differences_without_claiming_resolution",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_sha256": "0c828f1dc698f9b9bb7472f2819eb8a9bcabdcd1d0004dde6c4ab0029a4ed233"
+        },
+        {
+          "name": "equivalent_search_conditions_can_report_resolution",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_sha256": "52bef59eccc4e19d93a912e339144c1e17b24a74f9dd494b8411bdb1e047a42d"
+        },
+        {
+          "name": "traversal_foreign_hosts_and_writes_are_rejected",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_sha256": "f330ca3244e8e999bae5c88de9704d408af9de5ab8cbc1c4689b8df1a592393f"
+        },
+        {
+          "name": "symlinks_cannot_escape_the_store",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_sha256": "cd10af5f6f7d4b0c192f47147509493768d3b6e43dbc18b3b06f6c9a5d1be584"
+        },
+        {
+          "name": "provider_origins_are_sanitized_and_no_secret_is_served",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_sha256": "f6b903df580acd9df8f55c7fe534041d2028dc086233c644862da2bac3ceab06"
+        },
+        {
+          "name": "serving_never_mutates_analytical_artifacts",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_sha256": "0f005ea2cf3c8f0a33a33585da680e6f053333e662f6d81d5773dfc12cf66e0e"
+        },
+        {
+          "name": "missing_or_corrupt_index_is_rebuilt_from_sources",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_sha256": "ab77b9720fff98f0ce81c61cc94309ac4b993aef10695a5dd38918ea2ada4a62"
+        },
+        {
+          "name": "empty_project_and_unfinished_runs_are_explicit",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_sha256": "fb97f3a7df314d7946956bd9953195950ba42e214118b62ecc2facbd1f843e0a"
+        },
+        {
+          "name": "hundred_runs_and_hundreds_of_counterexamples_stay_responsive",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_sha256": "2cb64a888218c9239695f8a824e774be328ba7ea357e75b7c5ff9a0f448d325d"
+        },
+        {
+          "name": "cli_dashboard_starts_without_config_or_rpc_and_hides_the_secret",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_sha256": "7af3fabbd1ec5e5da93dbf5fecda84306810ccb250def1e76c8a1b1a29764aa0"
+        },
+        {
+          "name": "cli_dashboard_requires_a_local_store",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_sha256": "e2a201ad3b4b3d9f802896a2e92d49d7ca533f95513ea238fdf5153beb49b691"
+        },
+        {
+          "name": "run_source_and_reproduction_records_are_copied_not_inferred",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_sha256": "0b9ca7214273b647a1bdd9f46d36372020a73edd1f55614607c2b0d3e0687661"
+        }
+      ]
+    },
+    {
+      "source": "engine/tests/migration_dashboard.rs",
+      "source_sha256": "34ef151bde6ead78a71ae412213efb03be750f931ca3d8be2e0f46ca821193d7",
+      "target": "engine/tests/migration_dashboard.rs",
+      "mapping": "Local assertions retained; renamed migration_runs_are_displayed_and_compared. Sync assertions assigned to T9 cloud_contract. JSON machine codes and the eight answers retain their meaning.",
+      "tests": [
+        {
+          "name": "migration_runs_are_displayed_compared_and_syncable",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_sha256": "5b5ce5e07c84d775871e443ffa72d72c52364e6328a3baea407a5d8e179c39fb"
+        }
+      ]
+    },
+    {
+      "source": "frontend/tests/dashboard/dashboard.spec.js",
+      "source_sha256": "c9adbd1d42b92bfcc074b225ff56b5806d8bb1f8b69482aeba80306bba830295",
+      "target": "frontend/tests/dashboard/dashboard.spec.js",
+      "mapping": "All eleven interactions retained with MAIN glossary/punctuation/commands, new fixture quantities, deadline boundary instead of archived fixed-ratio reserve boundary, synthetic provenance instead of captured production claims, and recorded Local CLI source.",
+      "tests": [
+        {
+          "name": "overview answers the release question from the latest run",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_segment_sha256": "81814c20b83799d3ae52a72926bd05d0c1988ff5320fb296b332424f146ad8fb",
+          "segment_definition": "Test declaration line through the line before the next named test, or EOF."
+        },
+        {
+          "name": "runs list is ordered, filterable and feeds comparison",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_segment_sha256": "f1ee230eecda6df2e75190e8fc1570e931e5cdb3c4bce8e0f2b74e5014dda956",
+          "segment_definition": "Test declaration line through the line before the next named test, or EOF."
+        },
+        {
+          "name": "blocked run detail renders engine statuses without recalculating them",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_segment_sha256": "21aa918384c14e47c68d6b2983b1d11d6d81db650ff5536869edfad7ccba4f9a",
+          "segment_definition": "Test declaration line through the line before the next named test, or EOF."
+        },
+        {
+          "name": "the UI shows whatever the engine recorded, even an unusual gate",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_segment_sha256": "929cd38617a80de2a268b67455fd965f22f6730cb3027dd15f0e07161500ee16",
+          "segment_definition": "Test declaration line through the line before the next named test, or EOF."
+        },
+        {
+          "name": "counterexample detail tells the derived boundary story",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_segment_sha256": "f15c131e93900d1b6f99380976f52a27f8b4d8533c6c5ba7d47fbf10d2224bc2",
+          "segment_definition": "Test declaration line through the line before the next named test, or EOF."
+        },
+        {
+          "name": "comparison states differences and never claims a fix",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_segment_sha256": "75c681be10705c60ff526cc6c43873d12ad158f94bcbed3116ece8626e1c0ee0",
+          "segment_definition": "Test declaration line through the line before the next named test, or EOF."
+        },
+        {
+          "name": "technical mode reveals exact values and persists",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_segment_sha256": "cb0f3f095e6e985dbab899acc1b59001d9923395e32da7bd2e2069df43ebfbc5",
+          "segment_definition": "Test declaration line through the line before the next named test, or EOF."
+        },
+        {
+          "name": "secondary pages summarize without dumping captures",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_segment_sha256": "45b8e0578060f14012dae5ee5f8b2e8ae800a0eb6d812e517cf7d41a8d4c7106",
+          "segment_definition": "Test declaration line through the line before the next named test, or EOF."
+        },
+        {
+          "name": "responsive layouts keep the workspace inside the viewport",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_segment_sha256": "72f04e155b8ebf84a362f01b835d4e1556c9ac24c0d4b82222d20e967453ec9d",
+          "segment_definition": "Test declaration line through the line before the next named test, or EOF."
+        },
+        {
+          "name": "a second asset uses generic asset display",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_segment_sha256": "1e6c7b0828342e126f8d647b0a89b42069c51f678c9c148161da047e66673810",
+          "segment_definition": "Test declaration line through the line before the next named test, or EOF."
+        },
+        {
+          "name": "empty project explains the next CLI step",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_segment_sha256": "cb362f9bb655fafed2fe985d20ad50e4e14a4d3d06bace398e71d2b1827b298d",
+          "segment_definition": "Test declaration line through the line before the next named test, or EOF."
+        }
+      ]
+    },
+    {
+      "source": "frontend/tests/dashboard/migration.spec.js",
+      "source_sha256": "b3af06281e7ba32663c3d0fed3d5428324cb238bf5ea262dbbc6908096e4f34e",
+      "target": "frontend/tests/dashboard/migration.spec.js",
+      "mapping": "All four source interactions retained. New MAIN identities happen to select equivalent minimal search domains, so an explicit browser view response preserves the original non-equivalence/no-resolution copy assertion. Rust separately enforces exact-state equivalence. Machine findings remain unchanged.",
+      "tests": [
+        {
+          "name": "a migration run answers the eight questions in order",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_segment_sha256": "8eff6710b0ddc3e41bfbe75f34a6fb289a190127c7a99fd7206b9109c6bfd8a1",
+          "segment_definition": "Test declaration line through the line before the next named test, or EOF."
+        },
+        {
+          "name": "migration overview, list and counterexample keep provenance honest",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_segment_sha256": "0563e947edc6e6f898b658a89a7a95cd32144bae449bb3b198673b090ee79d91",
+          "segment_definition": "Test declaration line through the line before the next named test, or EOF."
+        },
+        {
+          "name": "migration comparison never claims a fix",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_segment_sha256": "2e65b4fe9c3afea50554ac7a37788e5aa6e71d94ac101163d52deabcadb38b20",
+          "segment_definition": "Test declaration line through the line before the next named test, or EOF."
+        },
+        {
+          "name": "migration pages fit a phone viewport",
+          "disposition": "ported with MAIN presentation mapping",
+          "source_segment_sha256": "ace3b5aada1b727806051a403c4305c72fefc0c62f4cf6cee37d7caeafbf5b63",
+          "segment_definition": "Test declaration line through the line before the next named test, or EOF."
+        }
+      ]
+    }
+  ],
+  "new_coverage": [
+    "Lifecycle/current-observation descriptors and no invented gate; digest/kind/binding mismatch refusal",
+    "Historical Markdown v1 replay, v2 glossary, substituted Markdown rejection, byte-identical analytical report",
+    "Existing current CLI determinism test additionally records two immutable history entries and checks current_path views",
+    "67 node:assert rendered views plus escaping, exact integers, CSS role-token palette and shared glossary",
+    "Two browser tests for lifecycle/current scope, no outbound dashboard requests, cross-kind comparison refusal, app-wide mode, phone/tablet/desktop layouts"
+  ],
+  "reference_note": "T0 analytical expectations and all archived bytes remain unchanged. Fresh T8 presentation fixtures do not replace economic engine references."
+}

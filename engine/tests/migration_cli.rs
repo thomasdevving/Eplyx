@@ -430,3 +430,45 @@ fn change_token_migration_uses_main_identity_and_activation() {
     );
     fs::remove_dir_all(root).unwrap();
 }
+
+#[test]
+fn historical_markdown_replays_without_changing_analytical_bytes() {
+    use eplyx_engine::migration::report;
+    let root = project("presentation-version", "eplyx_token_migration");
+    let (code, out, err) = eplyx(&root, &["migration", "analyse", "--format", "json"]);
+    assert_eq!(code, 0, "{out}{err}");
+    let id = latest_run(&root);
+    let result = root.join(".eplyx/runs").join(&id).join("result");
+    let bytes = fs::read(result.join("report.json")).unwrap();
+    let value: Value = serde_json::from_slice(&bytes).unwrap();
+    let current = fs::read_to_string(result.join("report.md")).unwrap();
+    assert_eq!(current, report::markdown(&value));
+    assert!(current.contains("**Passed with warnings**"));
+    let legacy = report::markdown_version(&value, 1);
+    assert!(legacy.contains("**PASS WITH WARNINGS**"));
+    assert_ne!(current, legacy);
+    let path = result.join("bindings.json");
+    let mut binding: Value = serde_json::from_slice(&fs::read(&path).unwrap()).unwrap();
+    binding
+        .as_object_mut()
+        .unwrap()
+        .remove("report_presentation_version");
+    fs::write(path, serde_json::to_vec(&binding).unwrap()).unwrap();
+    fs::write(result.join("report.md"), legacy).unwrap();
+    let (code, out, err) = eplyx(
+        &root,
+        &["migration", "gate", "--run", &id, "--format", "json"],
+    );
+    assert_eq!(code, 0, "{out}{err}");
+    assert_eq!(fs::read(result.join("report.json")).unwrap(), bytes);
+    fs::write(result.join("report.md"), current).unwrap();
+    let (code, _, _) = eplyx(
+        &root,
+        &["migration", "gate", "--run", &id, "--format", "json"],
+    );
+    assert_ne!(
+        code, 0,
+        "a substituted presentation cannot pass exact replay"
+    );
+    fs::remove_dir_all(root).unwrap();
+}

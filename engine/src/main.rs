@@ -1,5 +1,6 @@
 //! `eplyx` - command line entry point.
 
+mod cli_dashboard;
 mod cli_lifecycle;
 mod cli_local;
 mod cli_path;
@@ -37,6 +38,13 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
+    /// Browse saved analytical records on loopback. Executes no analysis.
+    Dashboard {
+        #[arg(long)]
+        no_open: bool,
+        #[arg(long)]
+        port: Option<u16>,
+    },
     /// Check one exact current path against captured deployed code.
     Path {
         #[command(subcommand)]
@@ -1282,6 +1290,7 @@ fn run() -> Result<ExitCode> {
         }
     };
     match cli.command {
+        Command::Dashboard { no_open, port } => cli_dashboard::execute(&cli.config, no_open, port),
         Command::Path { command } => cli_path::execute(cli_path::Request::Path(command)),
         Command::Observe { command } => cli_path::execute(cli_path::Request::Observe(command)),
         Command::PathWorker { request } => cli_path::worker(&request),

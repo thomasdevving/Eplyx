@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "config": {
+    "state": {
+      "kind": "synthetic_fixture",
+      "recipe": "fixture.json",
+      "recipe_sha256": "5f47f8efaed31bd8268b62fc112bcf1a8ed942b73bd99ddf5a5d7d6a04bd75cc"
+    },
+    "rehearsal_clock": "activation",
+    "max_rehearsal_units": 5000,
+    "max_captured_holders": 5000
+  },
+  "invariant_schema_version": 2,
+  "invariants": [
+    {
+      "type": "candidate_binary_matches_package",
+      "severity": "blocking"
+    },
+    {
+      "type": "required_authorities_match",
+      "severity": "blocking"
+    },
+    {
+      "type": "migration_arithmetic_matches_spec",
+      "severity": "blocking"
+    },
+    {
+      "type": "failed_migrations_roll_back",
+      "severity": "blocking"
+    },
+    {
+      "type": "supply_reconciles",
+      "severity": "blocking"
+    },
+    {
+      "type": "reserve_covers_eligible_holders",
+      "severity": "blocking"
+    },
+    {
+      "type": "window_rules_hold",
+      "severity": "blocking"
+    },
+    {
+      "type": "no_unsupported_execution_succeeds",
+      "severity": "blocking"
+    },
+    {
+      "type": "all_positive_holders_migrate",
+      "severity": "warning"
+    }
+  ]
+}

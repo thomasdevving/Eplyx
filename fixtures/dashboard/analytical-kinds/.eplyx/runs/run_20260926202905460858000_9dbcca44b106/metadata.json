@@ -1,0 +1,12 @@
+{
+  "schema_version": 3,
+  "run_id": "run_20260926202905460858000_9dbcca44b106",
+  "timestamp": "2026-09-26T20:29:05.460Z",
+  "kind": "lifecycle_change",
+  "eplyx_version": "0.1.0",
+  "engine_binary_sha256": "9c3bf28479657f00f5efba0f5750b7fbdbbd1dc2c63eb434a6b70aed98157c33",
+  "run_source": "local",
+  "report_sha256": "9dbcca44b106fe80b953ea1ab588a28aba8f19674d95264a566bf9d211be9919",
+  "change_spec_sha256": "9973c4e550812d044f847a0656b14609b021cba7486665f31a698a043b4d0e3e",
+  "state_input_sha256": "915a89924f42ac588f861d30a792d064a45ed029e34bf677dff8167722f64a35"
+}

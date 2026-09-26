@@ -1,0 +1,173 @@
+{
+  "change": {
+    "asset_mint": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+    "change_spec_id": "597ae558c9b212774efbe31af285cfc8f27c1279c32db130b09d4fd3d9f531f4",
+    "destination_mint": null,
+    "kind": "lifecycle_change"
+  },
+  "impact": {
+    "after": {
+      "evaluated_at": "2026-09-28T00:00:00Z",
+      "lifecycle_status": "Expired",
+      "snapshot_sha256": "5be110766aeddd8ea48248dd6a5f16bd1213da9449ee29710e0f44866f71806b"
+    },
+    "asset_mint": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+    "before": {
+      "evaluated_at": "2026-09-26T23:59:59.999999999Z",
+      "lifecycle_status": "Active",
+      "snapshot_sha256": "5be110766aeddd8ea48248dd6a5f16bd1213da9449ee29710e0f44866f71806b"
+    },
+    "diff": {
+      "economic_meaning_changed_entities": 1,
+      "economic_meaning_changed_protocol_observations": 0,
+      "lifecycle_status_changed": true,
+      "technical_state": "Unchanged"
+    },
+    "entities": [
+      {
+        "asset_mint": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+        "authority_evidence": {
+          "pointer": "/value/0",
+          "rpc_id": 3,
+          "slot": "100"
+        },
+        "authority_observation": {
+          "account_exists": true,
+          "executable": false,
+          "is_on_curve": true,
+          "multisig": null,
+          "runtime_owner": "11111111111111111111111111111111"
+        },
+        "balance": {
+          "amount_definition": "Public SPL account amount / mint decimals; excludes withheld fees, encrypted balances and scaled display transforms",
+          "basis": "Phase2TokenAccount",
+          "decimal_base_units": "1.234567",
+          "raw": "1234567"
+        },
+        "economic_meaning_changed": true,
+        "entity_id": "solana-token-account:CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+        "entity_type": "WalletCompatible",
+        "execution_status": "NotTested",
+        "impact_classification": "StaleExposure",
+        "lifecycle_evidence": [
+          {
+            "policy_fields": [
+              "/policy/after",
+              "/policy/before",
+              "/policy/deadline",
+              "/policy/effective_at"
+            ],
+            "source_id": "declared-fixture-policy"
+          }
+        ],
+        "onchain_evidence": [
+          {
+            "account": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+            "decoder": "SPL token account / Token-2022 extensions 3.1.1",
+            "layer": "Lifecycle",
+            "raw_data_sha256": "9f08bedbbb230684a476d8b84798b60841a7dedf9c8ac9ee6697baeb801261a7",
+            "reference": {
+              "pointer": "/value/0/account",
+              "rpc_id": 2,
+              "slot": "100"
+            },
+            "runtime_owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+          },
+          {
+            "account": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+            "decoder": "SPL mint / Token-2022 extensions 3.1.1",
+            "layer": "Lifecycle",
+            "raw_data_sha256": "eb0ee480d49f644c44645099d719e1bf1ec723d8483d207864d66dbf78d4978b",
+            "reference": {
+              "pointer": "/value",
+              "rpc_id": 4,
+              "slot": "100"
+            },
+            "runtime_owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+          }
+        ],
+        "post_lifecycle_status": "Expired",
+        "pre_classification": "Unaffected",
+        "pre_lifecycle_status": "Active",
+        "reason": "Public token amount remains, while the policy ends issuer entitlement; recovery, market value and exit or transition are not tested",
+        "role_uncertain": false,
+        "token_account": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+        "verified_role": null
+      }
+    ],
+    "limitations": [
+      "Lifecycle semantics are external assertions and explicit scenario assumptions, not facts decoded from chain bytes",
+      "Evaluation times are hypothetical semantic views of the same frozen observations, not historical or future chain captures",
+      "Phase 2 entity balances and Phase 3 protocol vault balances retain their separate RPC contexts; protocol amounts overlap holder amounts and must not be added",
+      "Only public SPL account amounts are quantified; withheld fees, encrypted amounts, scaled displays and LP entitlements are excluded",
+      "No transferability, swap, withdrawal, conversion, recovery, exitability, market value or stranded-position claim is proved; every execution status is NotTested",
+      "Exactly the captured entities and verified venues are evaluated; roles, owners, successor routes and undiscovered integrations are not inferred"
+    ],
+    "protocol_observations": [],
+    "scenario": {
+      "captured_at": "2026-09-26T00:00:00Z",
+      "change": {
+        "description": "Synthetic declared lifecycle policy for presentation tests."
+      },
+      "id": "synthetic-dashboard-policy",
+      "policy": {
+        "after": "TransitionRequired",
+        "asset_mint": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+        "before": "Active",
+        "deadline": {
+          "after": "Expired",
+          "at": "2026-09-28T00:00:00Z"
+        },
+        "effective_at": "2026-09-27T00:00:00Z",
+        "successor": null
+      },
+      "scenario_type": "lifecycle_change",
+      "scenario_version": "1",
+      "schema_version": 1,
+      "sources": [
+        {
+          "artifact": null,
+          "captured_at": "2026-09-26T00:00:00Z",
+          "content_sha256": null,
+          "description": "No issuer statement or live capture.",
+          "id": "declared-fixture-policy",
+          "kind": "ScenarioAssumption",
+          "reference": "synthetic presentation fixture",
+          "supports": [
+            "/policy/effective_at",
+            "/policy/before",
+            "/policy/after",
+            "/policy/deadline"
+          ]
+        }
+      ]
+    },
+    "scenario_sha256": "e4b8043f800f84023566b691975fd80e10816e2629d88be5a27aad0713b6d942",
+    "schema_version": 1,
+    "summary": {
+      "classifications": {
+        "RequiresTransition": 0,
+        "StaleExposure": 1,
+        "Unaffected": 0,
+        "Unresolved": 0
+      },
+      "economic_meaning_changed_entities": 1,
+      "entities_evaluated": 1,
+      "phase2_affected_public_raw_exposure": "1234567",
+      "phase2_public_raw_exposure": "1234567",
+      "phase3_verified_vault_public_raw_exposure": "0",
+      "positive_balance_entities": 1,
+      "stale_protocol_exposures": 0,
+      "uncertain_role_positive_entities": 0,
+      "unknown_role_positive_entities": 0,
+      "verified_liquidity_venues": 0,
+      "verified_protocol_target_vaults": 0,
+      "zero_public_balance_entities": 0,
+      "zero_public_balance_unresolved": 0
+    }
+  },
+  "limitations": [
+    "Declared lifecycle policy, not proof of issuer eligibility, conversion or redemption."
+  ],
+  "schema_version": 1
+}

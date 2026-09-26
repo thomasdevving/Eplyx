@@ -612,6 +612,7 @@ fn current_cli_is_deterministic_isolated_and_refuses_overwrite() {
                 "--format",
                 "json",
             ]);
+        c.arg("--record").arg(directory.path());
         if save {
             c.arg("--out").arg(&output);
         }
@@ -632,6 +633,21 @@ fn current_cli_is_deterministic_isolated_and_refuses_overwrite() {
     assert!(value["execution"]["compute_units"].is_string());
     assert!(value["clock"]["slot"].is_string());
     assert!(!String::from_utf8_lossy(&first.stdout).contains("sentinel"));
+    let store = eplyx_engine::dashboard::store::Store::open(directory.path()).unwrap();
+    let ids = store.run_ids().unwrap().0;
+    assert_eq!(
+        ids.len(),
+        2,
+        "recording appends even when analytical bytes repeat"
+    );
+    for id in ids {
+        let detail = eplyx_engine::dashboard::view::run_detail(&store, &id, &[]).unwrap();
+        assert_eq!(detail["state"], "Complete");
+        assert_eq!(detail["kind"], "current_path");
+        assert_eq!(detail["status"], "Proven");
+        assert!(detail["gate"]["outcome"].is_null());
+        assert_eq!(detail["analysis"]["report"], value);
+    }
     let repeat = run(true);
     assert_eq!(repeat.status.code(), Some(2));
     assert_eq!(std::fs::read(&output).unwrap(), first.stdout);

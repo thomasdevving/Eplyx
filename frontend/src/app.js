@@ -1,3 +1,6 @@
+import { initializeMode } from './mode.js';
+import { TokenTransitionsPage } from './transitions.js';
+initializeMode();
 import { LandingPage } from './landing.js';
 import { AnalysePage, attachAnalyse } from './analyse.js';
 import { ReportPage, attachReport } from './report.js';
@@ -19,7 +22,8 @@ function route() {
   disposeReport?.();
   disposeReport = undefined;
   const path = location.pathname.replace(/\/+$/, '') || '/';
-  if (path === '/analyse') app.innerHTML = AnalysePage();
+  if (path === '/token-transitions') app.innerHTML = TokenTransitionsPage();
+  else if (path === '/analyse') app.innerHTML = AnalysePage();
   else if (path === '/projects') app.innerHTML = ProjectsPage();
   else if (path.startsWith('/projects/')) app.innerHTML = ProjectPage(decodeURIComponent(path.slice(10)));
   else if (path.startsWith('/runs/')) app.innerHTML = ReportPage(decodeURIComponent(path.slice(6)));

@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "purpose": "Derived presentation-only view models from engine/examples/dashboard_views.rs over the exact artifacts in provenance.json; not canonical engine output or execution proof.",
+  "bytes": 1580662,
+  "sha256": "cb49a34f79641fa9fc22bbe7d62689939bb74dcb9b6572ca3aed54e52abc0589",
+  "source_artifact_manifest_sha256": "135908540698ab1e6061315b4a79e6df634c1a387c3a2dce06fa1e2f4232fc9c"
+}

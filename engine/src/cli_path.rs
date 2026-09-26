@@ -114,6 +114,12 @@ pub enum ObserveCommand {
 }
 #[derive(Parser, Serialize, Deserialize)]
 pub struct Output {
+    /// Append this engine result to a project's local run history.
+    #[arg(long)]
+    record: Option<PathBuf>,
+    #[arg(skip)]
+    #[serde(default)]
+    run_source: Option<eplyx_engine::local_store::RunSource>,
     #[arg(long, value_enum, default_value_t = Format::Text)]
     format: Format,
     #[arg(long)]
@@ -139,6 +145,22 @@ pub enum Request {
     Observe(ObserveCommand),
 }
 impl Request {
+    fn output_mut(&mut self) -> Option<&mut Output> {
+        match self {
+            Self::Path(
+                PathCommand::Probe { output, .. }
+                | PathCommand::Capabilities { output, .. }
+                | PathCommand::Validate { output, .. }
+                | PathCommand::Replay { output, .. },
+            )
+            | Self::Observe(ObserveCommand::Replay { output, .. }) => Some(output),
+            Self::Path(
+                PathCommand::DiscoverPosition(inputs) | PathCommand::ProbeWithdrawal { inputs, .. },
+            ) => Some(&mut inputs.output),
+            _ => None,
+        }
+    }
+
     fn format(&self) -> Format {
         match self {
             Self::Path(PathCommand::Capture { .. } | PathCommand::CaptureProbe { .. })
@@ -164,7 +186,11 @@ fn provider() -> Result<eplyx_engine::ingest::rpc::HttpRpc> {
 fn read_text(input: &std::path::Path) -> Result<String> {
     Ok(String::from_utf8(artifact::read(input)?)?)
 }
-pub fn execute(request: Request) -> Result<ExitCode> {
+pub fn execute(mut request: Request) -> Result<ExitCode> {
+    if let Some(output) = request.output_mut() {
+        output.run_source = Some(eplyx_engine::local_store::RunSource::detect());
+    }
+
     let format = request.format();
     let result = (|| {
         match request {
@@ -275,9 +301,27 @@ fn emit<T: Serialize>(value: &T, text: &str, output: Output) -> Result<ExitCode>
         file.write_all(bytes.as_bytes())?;
         file.sync_all()?;
     }
+    if let Some(project) = &output.record {
+        let value = serde_json::to_value(value)?;
+        let kind = if value["kind"] == "current-inspection" {
+            "current_observation"
+        } else {
+            "current_path"
+        };
+        eplyx_engine::local_store::save_analysis(
+            project,
+            kind,
+            bytes.as_bytes(),
+            None,
+            None,
+            output
+                .run_source
+                .unwrap_or(eplyx_engine::local_store::RunSource::Local),
+        )?;
+    }
     match output.format {
         Format::Json => print!("{bytes}"),
-        Format::Text => println!("{text}"),
+        Format::Text => println!("{}", eplyx_engine::presentation::text(text)),
     }
     Ok(ExitCode::SUCCESS)
 }

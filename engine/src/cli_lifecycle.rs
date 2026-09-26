@@ -84,7 +84,7 @@ pub fn execute(command: LifecycleCommand) -> Result<ExitCode> {
     let format = command.format();
     Ok(execute_inner(command).unwrap_or_else(|error| super::cli_local::emit(format, Err(error))))
 }
-fn execute_inner(command: LifecycleCommand) -> Result<ExitCode> {
+fn execute_inner(mut command: LifecycleCommand) -> Result<ExitCode> {
     if let LifecycleCommand::Snapshot { asset, out } = command {
         use eplyx_engine::{
             ingest::rpc::HttpRpc,
@@ -99,6 +99,9 @@ fn execute_inner(command: LifecycleCommand) -> Result<ExitCode> {
         snapshot.save(&out)?;
         println!("Captured {} token accounts.", snapshot.entities.len());
         return Ok(ExitCode::SUCCESS);
+    }
+    if let LifecycleCommand::Analyse(args) = &mut command {
+        args.run_source = Some(eplyx_engine::local_store::RunSource::detect());
     }
     let temporary_root = std::env::temp_dir().canonicalize()?;
     if let LifecycleCommand::GuardRollout(args) = &command {
@@ -255,6 +258,12 @@ pub struct ResolvePathsArgs {
 }
 #[derive(Parser, Serialize, Deserialize)]
 pub struct ImpactArgs {
+    /// Append this evaluated result to the project's local run history.
+    #[arg(long)]
+    record: Option<PathBuf>,
+    #[arg(skip)]
+    #[serde(default)]
+    run_source: Option<eplyx_engine::local_store::RunSource>,
     #[arg(long)]
     change_spec: Option<PathBuf>,
     #[arg(long)]
@@ -344,7 +353,7 @@ fn notice(args: NoticeArgs, stage: u8) -> Result<ExitCode> {
         }
         match args.format {
             Format::Json => print!("{}", event.to_json()?),
-            Format::Text => print!("{}", event.render_text()),
+            Format::Text => print!("{}", eplyx_engine::presentation::text(&event.render_text())),
         }
         return Ok(ExitCode::SUCCESS);
     }
@@ -367,7 +376,7 @@ fn notice(args: NoticeArgs, stage: u8) -> Result<ExitCode> {
         if let Some(p) = &args.out_binding {
             expansion::save(&binding, p)?;
         }
-        match args.format {Format::Json=>print!("{}",scenario.to_json()?),Format::Text=>println!("Generated lifecycle scenario {}\nOfficialTransition: NotTested; evaluation boundary: DemoConfigured",scenario.id)}
+        match args.format {Format::Json=>print!("{}",scenario.to_json()?),Format::Text=>println!("Generated lifecycle scenario {}\nOfficial transition: Not evaluated; evaluation boundary: DemoConfigured",scenario.id)}
         return Ok(ExitCode::SUCCESS);
     }
     let (report, impact) = workflow.preflight(base, &event, &scenario, &binding)?;
@@ -388,7 +397,10 @@ fn notice(args: NoticeArgs, stage: u8) -> Result<ExitCode> {
     }
     match args.format {
         Format::Json => print!("{}", report.to_json()?),
-        Format::Text => print!("{}", report.render_text()),
+        Format::Text => print!(
+            "{}",
+            eplyx_engine::presentation::text(&report.render_text())
+        ),
     }
     Ok(ExitCode::from(report.readiness.overall_status.exit_code()))
 }
@@ -420,7 +432,10 @@ fn readiness(args: ReadinessArgs) -> Result<ExitCode> {
     }
     match args.format {
         Format::Json => print!("{}", report.to_json()?),
-        Format::Text => print!("{}", report.render_text()),
+        Format::Text => print!(
+            "{}",
+            eplyx_engine::presentation::text(&report.render_text())
+        ),
     }
     Ok(ExitCode::from(report.overall_status.exit_code()))
 }
@@ -444,7 +459,10 @@ fn resolve_paths(args: ResolvePathsArgs) -> Result<ExitCode> {
     }
     match args.format {
         Format::Json => print!("{}", report.to_json()?),
-        Format::Text => print!("{}", report.render_text()),
+        Format::Text => print!(
+            "{}",
+            eplyx_engine::presentation::text(&report.render_text())
+        ),
     }
     Ok(ExitCode::SUCCESS)
 }
@@ -462,7 +480,10 @@ fn compare_scenarios(args: CounterfactualArgs) -> Result<ExitCode> {
     }
     match args.format {
         Format::Json => print!("{}", report.to_json()?),
-        Format::Text => print!("{}", report.render_text()),
+        Format::Text => print!(
+            "{}",
+            eplyx_engine::presentation::text(&report.render_text())
+        ),
     }
     Ok(ExitCode::SUCCESS)
 }
@@ -521,7 +542,7 @@ fn evaluate_rollout(
             Format::Json => print!("{}", expansion::canonical(&result)?),
             Format::Text => println!(
                 "{}Marker created: {}",
-                evaluated.render_text(),
+                eplyx_engine::presentation::text(&evaluated.render_text()),
                 result.observation.marker_created
             ),
         }
@@ -531,7 +552,10 @@ fn evaluate_rollout(
         }
         match args.format {
             Format::Json => print!("{}", evaluated.to_json()?),
-            Format::Text => print!("{}", evaluated.render_text()),
+            Format::Text => print!(
+                "{}",
+                eplyx_engine::presentation::text(&evaluated.render_text())
+            ),
         }
     }
     Ok(ExitCode::from(code))
@@ -602,10 +626,25 @@ fn lifecycle_impact(args: ImpactArgs) -> Result<ExitCode> {
             path,
         )?;
     }
+    if let Some(project) = &args.record {
+        let spec_bytes = eplyx_engine::canonical::document(&spec)?;
+        let descriptor = eplyx_engine::canonical::document(
+            &serde_json::json!({"schema_version":1,"kind":"lifecycle_snapshot","snapshot_sha256":report.before.snapshot_sha256,"before":report.before.evaluated_at,"after":report.after.evaluated_at}),
+        )?;
+        eplyx_engine::local_store::save_analysis(
+            project,
+            "lifecycle_change",
+            document.as_bytes(),
+            Some(spec_bytes.as_bytes()),
+            Some(descriptor.as_bytes()),
+            args.run_source
+                .unwrap_or(eplyx_engine::local_store::RunSource::Local),
+        )?;
+    }
     print!(
         "{}",
         match args.format {
-            Format::Text => report.render_text(),
+            Format::Text => eplyx_engine::presentation::text(&report.render_text()),
             Format::Json => document,
         }
     );

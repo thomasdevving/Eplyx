@@ -1,0 +1,1037 @@
+{
+  "schema_version": 1,
+  "phase": "T8",
+  "sta_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+  "toolchain": {
+    "pnpm": "11.24.0",
+    "node": "22.23.1",
+    "rust": "stable; offline Cargo cache",
+    "sbf": "unchanged T3 pins: lending v1.54/v0; migration v1.57/v3",
+    "browser": "Chromium 1228 via EPLYX_CHROME; no live provider"
+  },
+  "commands": [
+    {
+      "label": "main-t8-compile",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-engine",
+        "--bin",
+        "eplyx"
+      ],
+      "exit_code": 101,
+      "seconds": 8.9,
+      "log": "main-t8-compile.log",
+      "log_sha256": "cd62d0eaefd77d36579618fc2737b1e532a1b884e2f5bf62d450613b886885f1",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-compile-2",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-engine",
+        "--bin",
+        "eplyx"
+      ],
+      "exit_code": 101,
+      "seconds": 9.3,
+      "log": "main-t8-compile-2.log",
+      "log_sha256": "6f487ce11d8e603fb3a58fd8ad79c6dd8e481c6bdd34f536759454e46fcf465a",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-compile-3",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-engine",
+        "--bin",
+        "eplyx"
+      ],
+      "exit_code": 0,
+      "seconds": 10.3,
+      "log": "main-t8-compile-3.log",
+      "log_sha256": "bfb4dd49f4567b80321010dd15add03b55ad333b212cfa6e9e40eda4f5615fbe",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-build",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "eplyx-engine",
+        "--bin",
+        "eplyx"
+      ],
+      "exit_code": 101,
+      "seconds": 11.0,
+      "log": "main-t8-build.log",
+      "log_sha256": "62b43342e3154eea430805f9b3e2aedd48ac4fe09927d7a2d49240ac4308cb7d",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-build-2",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "eplyx-engine",
+        "--bin",
+        "eplyx"
+      ],
+      "exit_code": 0,
+      "seconds": 21.0,
+      "log": "main-t8-build-2.log",
+      "log_sha256": "a1b6463bfdf1bb990af5e83678011cefe4670081a983efe3409a4e51af41a431",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-playwright-dependency",
+      "command": [
+        "pnpm",
+        "add",
+        "--save-dev",
+        "--save-exact",
+        "--ignore-scripts",
+        "@playwright/test@1.58.2"
+      ],
+      "exit_code": 0,
+      "seconds": 4.8,
+      "log": "main-t8-playwright-dependency.log",
+      "log_sha256": "01f068ca17b2d874e42f976f9c52f1bd4c0cf1cd7bb4e27ae8d225697eb74489",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-existing-frontend",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 0,
+      "seconds": 2.7,
+      "log": "main-t8-existing-frontend.log",
+      "log_sha256": "a42a511c898e8602a263f8c27f3781f5372e4a212accf4974c7fe65ee1f797cf",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-fixture-generation",
+      "command": [
+        "node",
+        "scripts/generate-dashboard-fixtures.mjs",
+        "$T8_SCRATCH/generated-dashboard"
+      ],
+      "exit_code": 1,
+      "seconds": 22.4,
+      "log": "main-t8-fixture-generation.log",
+      "log_sha256": "2a2c102f0b28146ba25f53949bb8301855e0527f9ef0d0e27c7567a02accb6de",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-fixture-generation-2",
+      "command": [
+        "node",
+        "scripts/generate-dashboard-fixtures.mjs",
+        "$T8_SCRATCH/generated-dashboard"
+      ],
+      "exit_code": 1,
+      "seconds": 30.4,
+      "log": "main-t8-fixture-generation-2.log",
+      "log_sha256": "2a2c102f0b28146ba25f53949bb8301855e0527f9ef0d0e27c7567a02accb6de",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-fixture-generation-3",
+      "command": [
+        "node",
+        "scripts/generate-dashboard-fixtures.mjs",
+        "$T8_SCRATCH/generated-dashboard"
+      ],
+      "exit_code": 1,
+      "seconds": 30.6,
+      "log": "main-t8-fixture-generation-3.log",
+      "log_sha256": "1f157e55f4974b4361ade7e3158ec30247439b6cd26e116744d77ec59551c843",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-record-example-build",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "eplyx-engine",
+        "--example",
+        "dashboard_records"
+      ],
+      "exit_code": 101,
+      "seconds": 6.6,
+      "log": "main-t8-record-example-build.log",
+      "log_sha256": "db233dcd678c9c4da4c5d205201b2516604783f547e9132d0088b57e001f263f",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-fixture-generation-4",
+      "command": [
+        "node",
+        "scripts/generate-dashboard-fixtures.mjs",
+        "$T8_SCRATCH/generated-dashboard"
+      ],
+      "exit_code": 1,
+      "seconds": 66.2,
+      "log": "main-t8-fixture-generation-4.log",
+      "log_sha256": "5edd34773d6758e2815902d4627729b9d5a237ececac41431659afcdac12dbc1",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-record-example-build-2",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "eplyx-engine",
+        "--example",
+        "dashboard_records"
+      ],
+      "exit_code": 0,
+      "seconds": 1.3,
+      "log": "main-t8-record-example-build-2.log",
+      "log_sha256": "b297bba813d8206454c45e5fca0f8f6bd9632786a0a93e3405942c83dcf185f5",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-record-inputs",
+      "command": [
+        "target/debug/examples/dashboard_records",
+        "$T8_SCRATCH/analytical-inputs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.5,
+      "log": "main-t8-record-inputs.log",
+      "log_sha256": "73ef74015702568000a85a472f54f51a531572ab3abfa22427e9e18abb7b03ef",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-record-lifecycle",
+      "command": [
+        "target/debug/eplyx",
+        "lifecycle",
+        "analyse",
+        "--snapshot",
+        "$T8_SCRATCH/analytical-inputs/snapshot.json",
+        "--scenario",
+        "$T8_SCRATCH/analytical-inputs/scenario.json",
+        "--at",
+        "2026-09-28T00:00:00Z",
+        "--record",
+        "$T8_SCRATCH/analytical-project",
+        "--format",
+        "json"
+      ],
+      "exit_code": 2,
+      "seconds": 0.0,
+      "log": "main-t8-record-lifecycle.log",
+      "log_sha256": "f0b80b2731ab64c1e5c6316fbe9884740c82f7b666c86c59ee52c0231bf708b4",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-record-current",
+      "command": [
+        "target/debug/eplyx",
+        "observe",
+        "replay",
+        "--input",
+        "$T8_SCRATCH/analytical-inputs/current.capture.json",
+        "--record",
+        "$T8_SCRATCH/analytical-project",
+        "--format",
+        "json"
+      ],
+      "exit_code": 2,
+      "seconds": 0.0,
+      "log": "main-t8-record-current.log",
+      "log_sha256": "f0b80b2731ab64c1e5c6316fbe9884740c82f7b666c86c59ee52c0231bf708b4",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-fixture-generation-5",
+      "command": [
+        "node",
+        "scripts/generate-dashboard-fixtures.mjs",
+        "$T8_SCRATCH/generated-dashboard"
+      ],
+      "exit_code": 0,
+      "seconds": 74.1,
+      "log": "main-t8-fixture-generation-5.log",
+      "log_sha256": "2579e231d3dbf33e2f662eb3877fafc028815a3bfed2eb699f59c30334aaee62",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-record-lifecycle-2",
+      "command": [
+        "target/debug/eplyx",
+        "lifecycle",
+        "analyse",
+        "--snapshot",
+        "$T8_SCRATCH/analytical-inputs/snapshot.json",
+        "--scenario",
+        "$T8_SCRATCH/analytical-inputs/scenario.json",
+        "--at",
+        "2026-09-28T00:00:00Z",
+        "--record",
+        "$T8_SCRATCH/analytical-project",
+        "--format",
+        "json"
+      ],
+      "exit_code": 0,
+      "seconds": 3.0,
+      "log": "main-t8-record-lifecycle-2.log",
+      "log_sha256": "9dbcca44b106fe80b953ea1ab588a28aba8f19674d95264a566bf9d211be9919",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-record-current-2",
+      "command": [
+        "target/debug/eplyx",
+        "observe",
+        "replay",
+        "--input",
+        "$T8_SCRATCH/analytical-inputs/current.capture.json",
+        "--record",
+        "$T8_SCRATCH/analytical-project",
+        "--format",
+        "json"
+      ],
+      "exit_code": 0,
+      "seconds": 3.0,
+      "log": "main-t8-record-current-2.log",
+      "log_sha256": "44c93fb9dbbf786498823d0d8fe1e59bd63bd7adf59763cbcaf423f74da39435",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-analytical-projection",
+      "command": [
+        "node",
+        "scripts/dashboard-fixture.mjs",
+        "$T8_SCRATCH/projected-analytical",
+        "$T8_SCRATCH/analytical-project=analytical-kinds"
+      ],
+      "exit_code": 0,
+      "seconds": 0.1,
+      "log": "main-t8-analytical-projection.log",
+      "log_sha256": "8a8ba741444fbdb9b2deaadb0b6fa7a6ea34574efa6b87638734d3fd59b53c8d",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-dashboard-rust-1",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "local_dashboard",
+        "--test",
+        "migration_dashboard",
+        "--",
+        "--test-threads=4"
+      ],
+      "exit_code": 101,
+      "seconds": 24.7,
+      "log": "main-t8-dashboard-rust-1.log",
+      "log_sha256": "131904d60ed3494b58d1283aa095911697c642dad3e0a8ef6f7d3b07f1289bce",
+      "rust_test_totals": {
+        "passed": 16,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-build-3",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "eplyx-engine",
+        "--bin",
+        "eplyx"
+      ],
+      "exit_code": 0,
+      "seconds": 6.3,
+      "log": "main-t8-build-3.log",
+      "log_sha256": "fc83d8da677609e760da9ff4beac97078eafb5893b170acec853ae33f32843e7",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-browser-1",
+      "command": [
+        "env",
+        "EPLYX_CHROME=$CHROMIUM",
+        "pnpm",
+        "exec",
+        "playwright",
+        "test",
+        "--config",
+        "playwright.dashboard.config.js",
+        "--workers",
+        "4"
+      ],
+      "exit_code": 1,
+      "seconds": 17.9,
+      "log": "main-t8-browser-1.log",
+      "log_sha256": "7e3a83d1fa4f313b737d675546ef007fac46db0b69b8f907c455c426d725bc0e",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-targeted-rust-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "local_dashboard",
+        "--test",
+        "migration_dashboard",
+        "--test",
+        "migration_cli",
+        "--",
+        "--test-threads=4"
+      ],
+      "exit_code": 0,
+      "seconds": 50.6,
+      "log": "main-t8-targeted-rust-2.log",
+      "log_sha256": "acf675d7ea8588db432ed101437e7948894efbe27aedd0812ab61382df4266a1",
+      "rust_test_totals": {
+        "passed": 28,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-view-models",
+      "command": [
+        "cargo",
+        "run",
+        "-p",
+        "eplyx-engine",
+        "--example",
+        "dashboard_views",
+        "--",
+        "fixtures/dashboard",
+        "$T8_SCRATCH/view-models.json"
+      ],
+      "exit_code": 0,
+      "seconds": 1.5,
+      "log": "main-t8-view-models.log",
+      "log_sha256": "28abda1320a19192b6a5a80068e3f5f93418a9af95ffcd53452e64b68ff84159",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-frontend-new-1",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 1,
+      "seconds": 2.9,
+      "log": "main-t8-frontend-new-1.log",
+      "log_sha256": "75cb2b00d3f897a9b2e85b771045fe85a1d6865a77ea833d49cbe69059145d36",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.8,
+      "log": "main-t8-fmt.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-browser-2",
+      "command": [
+        "env",
+        "EPLYX_CHROME=$CHROMIUM",
+        "pnpm",
+        "exec",
+        "playwright",
+        "test",
+        "--config",
+        "playwright.dashboard.config.js",
+        "--workers",
+        "4"
+      ],
+      "exit_code": 1,
+      "seconds": 13.7,
+      "log": "main-t8-browser-2.log",
+      "log_sha256": "f45075f49567b3345e1360fccab677fb29245446e90cb1eb2980a27a6a49406b",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-frontend-new-2",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 0,
+      "seconds": 2.7,
+      "log": "main-t8-frontend-new-2.log",
+      "log_sha256": "ab23d2f2dd374a6962c5c5a757b18e6c8f01f24ecf928088e6138662c45720bf",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-lint-1",
+      "command": [
+        "make",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 24.7,
+      "log": "main-t8-lint-1.log",
+      "log_sha256": "d5e09dcb2984fe684732134c734075efee808d7aef6a775313c95b14b9674bd3",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-build-4",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "eplyx-engine",
+        "--bin",
+        "eplyx"
+      ],
+      "exit_code": 0,
+      "seconds": 8.1,
+      "log": "main-t8-build-4.log",
+      "log_sha256": "ce0afcfded0dbb81e69a1889f7e639cac0921f30844c2f33a072def220095a14",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-fmt-2",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.6,
+      "log": "main-t8-fmt-2.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-frontend-new-3",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 0,
+      "seconds": 2.9,
+      "log": "main-t8-frontend-new-3.log",
+      "log_sha256": "ab23d2f2dd374a6962c5c5a757b18e6c8f01f24ecf928088e6138662c45720bf",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-build-5",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "eplyx-engine",
+        "--bin",
+        "eplyx"
+      ],
+      "exit_code": 0,
+      "seconds": 6.2,
+      "log": "main-t8-build-5.log",
+      "log_sha256": "24567cd3ca5940d49b5ba92f3b5ea1f890d6f52ba3f6b636feb9fb0d75f9ab9c",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-browser-3",
+      "command": [
+        "env",
+        "EPLYX_CHROME=$CHROMIUM",
+        "pnpm",
+        "exec",
+        "playwright",
+        "test",
+        "--config",
+        "playwright.dashboard.config.js",
+        "--workers",
+        "4"
+      ],
+      "exit_code": 1,
+      "seconds": 10.2,
+      "log": "main-t8-browser-3.log",
+      "log_sha256": "f99c4816a37096ce40c9f954d7d1c7859fd3f543b3dfb00cdcdcc07b71acf413",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-view-models-final",
+      "command": [
+        "cargo",
+        "run",
+        "-p",
+        "eplyx-engine",
+        "--example",
+        "dashboard_views",
+        "--",
+        "fixtures/dashboard",
+        "$T8_SCRATCH/view-models-final.json"
+      ],
+      "exit_code": 0,
+      "seconds": 2.2,
+      "log": "main-t8-view-models-final.log",
+      "log_sha256": "55e12581a738d34ad2fa105d4cc493053ae17ee3efcedfc814711a6b73c067b8",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-build-6",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "eplyx-engine",
+        "--bin",
+        "eplyx"
+      ],
+      "exit_code": 0,
+      "seconds": 8.3,
+      "log": "main-t8-build-6.log",
+      "log_sha256": "24cb058c9193543a179ac1ff613b9354ddd103ca6e64b5560d3f5d71ca2cdea4",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-final-fmt-check",
+      "command": [
+        "make",
+        "fmt-check"
+      ],
+      "exit_code": 0,
+      "seconds": 1.9,
+      "log": "main-t8-final-fmt-check.log",
+      "log_sha256": "5fe89ac47bee0b52b9d98e316b135a2ae04aed42641a7f4ab48dc7614d0c8889",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-governance",
+      "command": [
+        "pnpm",
+        "verify:governance"
+      ],
+      "exit_code": 0,
+      "seconds": 0.4,
+      "log": "main-t8-governance.log",
+      "log_sha256": "34f1719225ef942f5b88f563a37758718079e6f9c2b06d14957e1110e0457527",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-final-frontend",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 0,
+      "seconds": 3.1,
+      "log": "main-t8-final-frontend.log",
+      "log_sha256": "ab23d2f2dd374a6962c5c5a757b18e6c8f01f24ecf928088e6138662c45720bf",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-browser-4",
+      "command": [
+        "env",
+        "EPLYX_CHROME=$CHROMIUM",
+        "pnpm",
+        "exec",
+        "playwright",
+        "test",
+        "--config",
+        "playwright.dashboard.config.js",
+        "--workers",
+        "4"
+      ],
+      "exit_code": 0,
+      "seconds": 9.5,
+      "log": "main-t8-browser-4.log",
+      "log_sha256": "fd4e7efe02dcc3da8f7acdec61d5ca44e2c2d41e06c0a6b6cb304396b87e515c",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-final-lint",
+      "command": [
+        "make",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 19.1,
+      "log": "main-t8-final-lint.log",
+      "log_sha256": "a7301448aefcfd0e26c8a0ddb5bd2047462b266cb992a7426fcc94d3be5df1d4",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-report",
+      "command": [
+        "pnpm",
+        "verify:report"
+      ],
+      "exit_code": 0,
+      "seconds": 30.0,
+      "log": "main-t8-report.log",
+      "log_sha256": "07837adacee13168f48c66bb32ef6afabdd023dc1c18ccd75156f2302026da5e",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-fmt-3",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.8,
+      "log": "main-t8-fmt-3.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-final-lint-2",
+      "command": [
+        "make",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 19.1,
+      "log": "main-t8-final-lint-2.log",
+      "log_sha256": "777548a56f79520e63cef880dae7e6655f825f80bd765c3038db92239917b314",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-fixture-generation-final",
+      "command": [
+        "node",
+        "scripts/generate-dashboard-fixtures.mjs",
+        "$T8_SCRATCH/fixtures-final"
+      ],
+      "exit_code": 0,
+      "seconds": 90.1,
+      "log": "main-t8-fixture-generation-final.log",
+      "log_sha256": "6bfa7ed75cfeee42ba141ad0908bacd165986f77dd633249a0407711aea72699",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-full-test-1",
+      "command": [
+        "make",
+        "test"
+      ],
+      "exit_code": 0,
+      "seconds": 1066.5,
+      "log": "main-t8-full-test-1.log",
+      "log_sha256": "5572fa7544a6c72ff9dd519c3831bede16557ca4ac73be7946fb22bacba3f22c",
+      "rust_test_totals": {
+        "passed": 1309,
+        "failed": 0,
+        "ignored": 2,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-final-fmt-check-2",
+      "command": [
+        "make",
+        "fmt-check"
+      ],
+      "exit_code": 0,
+      "seconds": 1.7,
+      "log": "main-t8-final-fmt-check-2.log",
+      "log_sha256": "5fe89ac47bee0b52b9d98e316b135a2ae04aed42641a7f4ab48dc7614d0c8889",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t8-no-fail-fast",
+      "command": [
+        "cargo",
+        "test",
+        "--no-fail-fast"
+      ],
+      "exit_code": 0,
+      "seconds": 987.2,
+      "log": "main-t8-no-fail-fast.log",
+      "log_sha256": "6c723f8d4da4bcb616de137e7be08a5523182d3089e2b41775d5ebc84aa93558",
+      "rust_test_totals": {
+        "passed": 1259,
+        "failed": 0,
+        "ignored": 2,
+        "filtered out": 0
+      }
+    }
+  ],
+  "source_audit": {
+    "source_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+    "source_files": 1633,
+    "mismatches": [],
+    "source_git_clean": true
+  },
+  "fixtures": {
+    "analytical_files": 66,
+    "analytical_bytes": 496193,
+    "view_model_bytes": 1580662,
+    "view_model_sha256": "cb49a34f79641fa9fc22bbe7d62689939bb74dcb9b6572ca3aed54e52abc0589",
+    "sbf_and_capture_bytes_committed": 0,
+    "licensed_font_bytes": 61556
+  },
+  "browser_tests": {
+    "passed": 17,
+    "failed": 0
+  },
+  "node_rendered_views": 67,
+  "notes": [
+    "All final required commands passed. Rust execution counts include repeated suites; the two pre-existing ignored tests remain unchanged.",
+    "The full make test started before the final human-CLI glossary helper. The complete no-fail-fast run and final clippy run include that helper and its added unit assertion.",
+    "Compile/build retries corrected the JSON macro recursion limit, relocated hash helper, an over-broad presentation edit and fixture example addresses. Fixture retries corrected expected underfunding behavior and the fixture subcommand syntax. No engine outcome was changed to satisfy a UI fixture.",
+    "The initial dashboard test expected a nonzero exit for a completed search. It now preserves MAIN exit semantics. Frontend checks detected accidental translation of canonical status attributes; only human labels and the exact legacy disclaimer sentence are translated.",
+    "Browser retries corrected stale labels, made the non-equivalent-search presentation assertion explicit, and fixed phone JSON overflow and tablet navigation crowding. All source interactions remain mapped; additional scope and responsive checks pass.",
+    "Historical Markdown v1 and new glossary v2 both replay. Canonical analytical JSON, T0 outcomes and historical bytes remain unchanged.",
+    "The fresh presentation fixture is not a replay package and never replaces T0 economics. Its independent final generator run uses synthetic providers and empty-environment children.",
+    "Loops bind only local interfaces. Browser servers, screenshots and generated run state use scratch directories. No live-provider, live-cluster signing/submission/simulation, deployment or push occurred.",
+    "Cloud and hosted analysis suites remain assigned to T9, including the source combined migration-dashboard sync assertions. Logs are scratch records; their digests do not promise durable storage."
+  ]
+}

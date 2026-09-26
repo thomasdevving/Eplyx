@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "kind": "token_migration",
+  "id": "cx_f5d32e14d253ee16602475ad",
+  "parent_run": "run_20260926202836697983000_c43467360081",
+  "search_sha256": "08e0b64c1d3f093cb2cb31703f2ab729f12d5124e7efdbd20bfd684e938eb49a",
+  "replay_inputs": {
+    "input": "runs/run_20260926202836697983000_c43467360081/input",
+    "result": "runs/run_20260926202836697983000_c43467360081/result",
+    "search": "runs/run_20260926202836697983000_c43467360081/search"
+  },
+  "counterexample": {
+    "kind": "MigrationDerived",
+    "id": "cx_f5d32e14d253ee16602475ad",
+    "parent_run": "mig-7336b0468e05-1790454516725",
+    "analysis_input_sha256": "7336b0468e05d782e93dce7c7e11a03d0958f2cebe1410896dca5e042ad66ecf",
+    "candidate_program_sha256": "c4346736008188befe1d1a41cf167ea6a80c3b61a76cf1d3ba550f916b682275",
+    "world_sha256": "8cd19c7fa4092a4f473d16e9dc863911656e8841589a0c3b01844b55f6a26464",
+    "source_account": "7KhNGHh1sy7nvWj1EAAvnUTbrj2U2VZk6axauFuz2wqe",
+    "dimension": "DeadlineBoundary",
+    "case_kind": "DeadlineBoundary+0",
+    "derived_value_raw": "900000",
+    "mutations": [
+      {
+        "kind": "clockSlot",
+        "to": "900000"
+      }
+    ],
+    "reserve_override_raw": null,
+    "transaction_variant": null,
+    "expected": "Reject",
+    "finding": "UnexpectedSuccess",
+    "signature": {
+      "outcome": "ReconciliationMismatch",
+      "stage": null,
+      "error_name": null,
+      "error": null,
+      "rollback_verified": null,
+      "failed_checks": [
+        "only units the specification plans as migratable may migrate"
+      ]
+    },
+    "derived_world_sha256": "5aeb3207dd4faae0af4a02eaf2867b21ac64e47b95059217a20bb07e44c0fe22",
+    "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+    "minimized": true,
+    "boundary": {
+      "last_behaving_value_raw": null,
+      "first_deviating_value_raw": "900000"
+    },
+    "provenance": "DerivedFromSynthetic",
+    "limitations": "A derived local state built by typed mutation of captured or fixture state; it is not an observed mainnet failure."
+  }
+}

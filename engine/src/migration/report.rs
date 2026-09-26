@@ -660,6 +660,12 @@ fn status_word(status: &str) -> &str {
 
 /// Consumer-first human summary, in the order an operator asks.
 pub fn markdown(report: &Value) -> String {
+    markdown_version(report, 2)
+}
+
+/// Version 1 remains reproducible for historical MAIN records. Version 2 uses
+/// the shared presentation glossary; canonical report.json is unchanged.
+pub fn markdown_version(report: &Value, version: u32) -> String {
     let r = &report["readiness"];
     let rec = &report["reconciliation"];
     let imp = &report["impact"]["population"];
@@ -768,5 +774,33 @@ pub fn markdown(report: &Value) -> String {
         }
     }
     out.push_str("\nNo mainnet transaction was sent and no funds moved.\n");
+    if version == 1 {
+        return out;
+    }
+    out = out
+        .replace(
+            "# Token migration rehearsal\n",
+            "# Token migration rehearsal.\n",
+        )
+        .replace("Package `", "Analytical input `")
+        .replace("(Proposed)", "(Declared only)")
+        .replace("eplyx search", "eplyx migration search")
+        .replace("eplyx reproduce", "eplyx migration reproduce")
+        .replace(
+            "OfficialTransition NotTested",
+            "Official transition: Not evaluated",
+        )
+        .replace("Not established", crate::presentation::label("Unknown"));
+    out = out.replace("A rehearsal that succeeds for tested states does not show that every possible holder or state is safe.", crate::presentation::label("A rehearsal that succeeds for tested states does not show that every possible holder or state is safe."));
+    for (code, old) in [
+        ("Pass", "**PASS**"),
+        ("Warn", "**PASS WITH WARNINGS**"),
+        ("Block", "**BLOCKED**"),
+        ("Proven", "**Proven**"),
+        ("NotTested", "**NotTested**"),
+        ("Indeterminate", "**Indeterminate**"),
+    ] {
+        out = out.replace(old, &format!("**{}**", crate::presentation::label(code)));
+    }
     out
 }

@@ -703,3 +703,14 @@ dependent digest changes. T0 records and the accepted T6 projection remain
 unchanged; no economic value or outcome is re-pinned. See
 [the T7 source mapping](phase-t7-test-mapping.json) and
 [phase document](phase-t7-current-paths.md).
+
+## T8 presentation compatibility addendum
+
+The local dashboard now projects migration, lifecycle and current-state records.
+The approved glossary changes human labels only; machine codes and all frozen
+T0 analytical values remain unchanged. New migration bindings explicitly name
+Markdown presentation version 2. Historical absent/version-1 bindings replay
+with their original Markdown renderer and are never rewritten. Fresh dashboard
+fixtures are separately labelled presentation inputs, not replacements for the
+frozen economic reference. See [T8](phase-t8-dashboard.md), its source-test
+mapping and verification receipts. Hosted sync assertions remain assigned to T9.

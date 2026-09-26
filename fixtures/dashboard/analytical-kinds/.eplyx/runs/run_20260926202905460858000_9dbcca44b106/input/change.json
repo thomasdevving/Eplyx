@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "change": {
+    "kind": "lifecycle_change",
+    "asset": {
+      "mint": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi"
+    },
+    "eligibility": {
+      "kind": "unknown"
+    },
+    "deadline": {
+      "unix_timestamp": "1790553600",
+      "after": "Expired"
+    },
+    "before": "Active",
+    "after": "TransitionRequired",
+    "sources": [
+      {
+        "id": "declared-fixture-policy",
+        "kind": "ScenarioAssumption",
+        "reference": "synthetic presentation fixture",
+        "supports": [
+          "/activation/unix_timestamp",
+          "/change/before",
+          "/change/after",
+          "/change/deadline"
+        ]
+      }
+    ]
+  },
+  "activation": {
+    "unix_timestamp": 1790467200
+  },
+  "metadata": {
+    "label": "synthetic-dashboard-policy",
+    "source": "Synthetic declared lifecycle policy for presentation tests."
+  }
+}

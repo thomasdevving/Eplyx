@@ -1,0 +1,24 @@
+[
+  {
+    "family": "DM Sans",
+    "font_url": "https://fonts.gstatic.com/s/dmsans/v17/rP2Yp2ywxg089UriI5-g4vlH9VoD8Cmcqbu0-K6z9mXg.woff2",
+    "css_url": "https://fonts.googleapis.com/css2?family=DM+Sans:wght@200..800&display=swap",
+    "bytes": 36980,
+    "sha256": "468d56b6b25b05b70190b6c233d773f6f1770e8579827ce022a57f03fa8002fb",
+    "license_url": "https://raw.githubusercontent.com/google/fonts/main/ofl/dmsans/OFL.txt",
+    "license_sha256": "7ec15e79c59bc14b86436a17e5eb7926b46cbcaeb08e1a7e6c110b415e6eb2a2",
+    "downloaded_license_sha256": "9af36190332437f5ecd09974de43c1f7c77a310a996cdd8ceb25628b458840e1",
+    "license_formatting": "LF line endings and trailing whitespace normalized; all license wording preserved."
+  },
+  {
+    "family": "Manrope",
+    "font_url": "https://fonts.gstatic.com/s/manrope/v20/xn7gYHE41ni1AdIRggexSvfedN4.woff2",
+    "css_url": "https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap",
+    "bytes": 24576,
+    "sha256": "e310b55a7fd9677f5e3555e6c6c4d064fa1f1d24393f0ddbe217cea12a8c432f",
+    "license_url": "https://raw.githubusercontent.com/google/fonts/main/ofl/manrope/OFL.txt",
+    "license_sha256": "d6a309fcfb963d329a93baf9df66fa5f3c23a4be2b5f67edf24d6cafecde12ac",
+    "downloaded_license_sha256": "58172e0c0fac2cda8a37b348164bb55e44b0e69051e557e92b1d3f6910141f7b",
+    "license_formatting": "LF line endings and trailing whitespace normalized; all license wording preserved."
+  }
+]

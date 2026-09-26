@@ -1,0 +1,1167 @@
+{
+  "adapter": "token_migration_v1",
+  "adapter_version": 1,
+  "analysis_input_sha256": "7336b0468e05d782e93dce7c7e11a03d0958f2cebe1410896dca5e042ad66ecf",
+  "artifacts": {
+    "migration.plan.json": "eeda302e51bc913cef53599b11e9f931458e39915328a5c5a03d9c806be28d81",
+    "migration.unsigned-plan.json": "148619614421ad0ce3734e6823ac2c947d4b57bcccd32456d259c54812c234b3",
+    "population.rehearsal.json": "906c59e210b08b3631f4df59b81df7671e28eeb44542e1659beb52ac3a998fb2",
+    "stress.plan.json": "b3065bb733b147529b2da7bcd3fc0ef598817d614eb54cf65cf6908c45f615a0",
+    "stress.results.json": "f11c33f152b9d378de6e19b9e6664f42c2b44d9fef70fe863c1ff473cf8aed4b"
+  },
+  "authority": {
+    "captured_mint_authorities": {
+      "destination": {
+        "freeze_authority": "37crBpTaQr6Ymy5Nn8smNyzuPB8Lhs2cdK7JoNZTsFCb",
+        "mint_authority": "37crBpTaQr6Ymy5Nn8smNyzuPB8Lhs2cdK7JoNZTsFCb"
+      },
+      "source": {
+        "freeze_authority": "37crBpTaQr6Ymy5Nn8smNyzuPB8Lhs2cdK7JoNZTsFCb",
+        "mint_authority": "37crBpTaQr6Ymy5Nn8smNyzuPB8Lhs2cdK7JoNZTsFCb"
+      }
+    },
+    "expectations": [
+      {
+        "check": "source mint authority",
+        "code": "REQUIRED_AUTHORITY_MISMATCH",
+        "expected": "37crBpTaQr6Ymy5Nn8smNyzuPB8Lhs2cdK7JoNZTsFCb",
+        "observed": "37crBpTaQr6Ymy5Nn8smNyzuPB8Lhs2cdK7JoNZTsFCb",
+        "satisfied": true
+      }
+    ],
+    "external_capabilities": [],
+    "fee_payer_role": "relayer",
+    "holders_with_alternative_paths": 1,
+    "key_possession": "Unknown for every signer; the VM assumes signatures locally.",
+    "migration_authority": {
+      "address": "FW9t1QpHYkUkRtamKSTKMqQpzUwjQ5BJoD63gtfUsHn4",
+      "kind": "ProgramDerived"
+    },
+    "owner_classes_positive_holders": {
+      "Multisig": 1,
+      "ProgramControlled": 1,
+      "Wallet": 4
+    },
+    "program_controlled_owners": 1,
+    "required_signer_roles_migratable_units": {
+      "HolderOwner": 3,
+      "MultisigMember": 2,
+      "Relayer": 4
+    }
+  },
+  "candidate_program_sha256": "c4346736008188befe1d1a41cf167ea6a80c3b61a76cf1d3ba550f916b682275",
+  "change": {
+    "candidate_sha256": "c4346736008188befe1d1a41cf167ea6a80c3b61a76cf1d3ba550f916b682275",
+    "change_spec_id": "91d85575978c3c0fe0c6a864418bab9c8270cbcb91fad5155eca93a9c2a42fe2",
+    "destination_mint": "9WDiiWiBjvUQe2eWyir6n9N54F39SjeLKBeBDuGsBTQS",
+    "kind": "token_migration",
+    "source_mint": "6u4knmGQzqoVmVaeztpQDiL8mx2u29wjbEjDCyrV2GYq"
+  },
+  "change_spec_id": "91d85575978c3c0fe0c6a864418bab9c8270cbcb91fad5155eca93a9c2a42fe2",
+  "compatibility": {
+    "account_findings": [
+      {
+        "accounts": 1,
+        "code": "ACCOUNT_MARKER",
+        "side": "Destination",
+        "support": "Supported"
+      }
+    ],
+    "destination": {
+      "decimals": 9,
+      "mint": "9WDiiWiBjvUQe2eWyir6n9N54F39SjeLKBeBDuGsBTQS",
+      "token_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "token_program_label": "Token-2022"
+    },
+    "matrix_version": "eplyx-token-2022-migration-matrix/v1",
+    "mint_findings": [],
+    "source": {
+      "decimals": 6,
+      "mint": "6u4knmGQzqoVmVaeztpQDiL8mx2u29wjbEjDCyrV2GYq",
+      "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "token_program_label": "SPL Token"
+    },
+    "support_matrix": [
+      {
+        "classification": "burn/mint-to: Supported; escrow/reserve transfer: SupportedWithSpecialSemantics (recipient credited net, fee withheld)",
+        "extension": "TransferFeeConfig"
+      },
+      {
+        "classification": "Supported; nonzero source withheld fees are not migrated (SupportedWithSpecialSemantics)",
+        "extension": "TransferFeeAmount"
+      },
+      {
+        "classification": "Supported (reported as an authority)",
+        "extension": "MintCloseAuthority"
+      },
+      {
+        "classification": "SupportedWithSpecialSemantics (public balances only)",
+        "extension": "ConfidentialTransferMint / ConfidentialTransferFeeConfig"
+      },
+      {
+        "classification": "Unverifiable",
+        "extension": "ConfidentialTransferAccount / ConfidentialTransferFeeAmount (source)"
+      },
+      {
+        "classification": "SupportedWithSpecialSemantics; Unsupported if non-confidential credits are refused",
+        "extension": "ConfidentialTransferAccount (destination)"
+      },
+      {
+        "classification": "burn/mint-to: Unsupported; reserve transfer: SupportedWithSpecialSemantics",
+        "extension": "ConfidentialMintBurn"
+      },
+      {
+        "classification": "Supported; Frozen on destination: SupportedWithSpecialSemantics (new destinations frozen); Frozen with escrow: RequiresProtocolSpecificHandling",
+        "extension": "DefaultAccountState"
+      },
+      {
+        "classification": "burn: Supported; transfer: Unsupported; mint-to: SupportedWithSpecialSemantics",
+        "extension": "NonTransferable / NonTransferableAccount"
+      },
+      {
+        "classification": "raw-basis ratio: SupportedWithSpecialSemantics; ui-basis ratio: Unsupported",
+        "extension": "InterestBearingConfig / ScaledUiAmount"
+      },
+      {
+        "classification": "SupportedWithSpecialSemantics (authority; optional issuer-authorized path)",
+        "extension": "PermanentDelegate"
+      },
+      {
+        "classification": "burn/mint-to or no hook program: Supported; transfer with hook program: RequiresProtocolSpecificHandling",
+        "extension": "TransferHook"
+      },
+      {
+        "classification": "Supported",
+        "extension": "MetadataPointer / TokenMetadata / Group* "
+      },
+      {
+        "classification": "paused: Unsupported; not paused: SupportedWithSpecialSemantics (pause authority)",
+        "extension": "Pausable"
+      },
+      {
+        "classification": "burn: RequiresProtocolSpecificHandling; otherwise Supported",
+        "extension": "PermissionedBurn"
+      },
+      {
+        "classification": "source: Supported; destination with required memos: reserve transfer RequiresProtocolSpecificHandling, mint-to Supported",
+        "extension": "MemoTransfer"
+      },
+      {
+        "classification": "source with lock and owner authorization: Unsupported; otherwise Supported",
+        "extension": "CpiGuard"
+      },
+      {
+        "classification": "Supported",
+        "extension": "ImmutableOwner / TransferHookAccount / PausableAccount"
+      },
+      {
+        "classification": "Unverifiable",
+        "extension": "any other extension"
+      }
+    ],
+    "token_programs_independent": "Each side is decoded, derived (ATA) and executed with its own token program; they are never treated as interchangeable."
+  },
+  "coverage": {
+    "not_inspected": {
+      "destinations": 0,
+      "owners": 0,
+      "undecoded_rows": 0
+    },
+    "rehearsal": {
+      "attempted": 4,
+      "max_units": 5000,
+      "migrated": 4,
+      "mismatched": 0,
+      "not_attempted_positive_holders_by_class": {
+        "AuthorityPathUnavailable": 1,
+        "Frozen": 1
+      },
+      "rejected": 0,
+      "truncated": false
+    },
+    "search": "Counterexample search is a separate bounded step (eplyx search); preflight does not claim its coverage.",
+    "stress": {
+      "behaving": 19,
+      "by_provenance": {
+        "DerivedFromSynthetic": 17,
+        "Synthetic": 3
+      },
+      "deviating": 1,
+      "executed": 20,
+      "frozen_cases": 20,
+      "not_executable": [],
+      "not_reachable": [
+        {
+          "kind": "RoundingBoundary",
+          "reason": "No exact/dusty pair within 4096 raw of the minimum amount."
+        },
+        {
+          "kind": "CpiGuardSource",
+          "reason": "CPI Guard exists only on Token-2022 source accounts."
+        }
+      ],
+      "rule": "Cases were frozen before execution and never replaced."
+    },
+    "world": {
+      "accounts": 28,
+      "base_kind": "SyntheticFixture",
+      "cluster": "eplyx-synthetic-fixture",
+      "inspected_absent": 0,
+      "kind": "SyntheticFixture",
+      "observed_slots": null,
+      "provenance_rule": "Observed accounts carry an RPC record and pointer; synthetic accounts carry a recipe step; derived accounts carry their parent and mutation.",
+      "world_sha256": "8cd19c7fa4092a4f473d16e9dc863911656e8841589a0c3b01844b55f6a26464"
+    }
+  },
+  "declared_preflight_status": "Blocked",
+  "deployment_gate": {
+    "analytical_readiness": "Blocked",
+    "outcome": "Block",
+    "policy": "block-only",
+    "reason_codes": [
+      "AUTHORITY_PATH_UNAVAILABLE",
+      "MIGRATION_ARITHMETIC_MISMATCH",
+      "MIGRATION_WINDOW_INVALID",
+      "SOURCE_FROZEN",
+      "STRANDED_HOLDERS",
+      "UNEXPECTED_MIGRATION_SUCCESS"
+    ],
+    "reasons": [
+      "mechanism_readiness is Blocked",
+      "Stress stress-12 AtDeadline (DerivedFromSynthetic) expected Reject, candidate ReconciliationMismatch",
+      "population_readiness is Incomplete",
+      "1 positive-balance holder: AUTHORITY_PATH_UNAVAILABLE",
+      "1 positive-balance holder: SOURCE_FROZEN",
+      "invariant minv-f4b81b4d375a12202c09 (migration_arithmetic_matches_spec) is Violated: 1 executed migrations differ from the specification's exact arithmetic or deltas.",
+      "invariant minv-a2d2d17d3f472acaa205 (window_rules_hold) is Violated: Deviating cases: stress-12 AtDeadline (UnexpectedSuccess).",
+      "invariant minv-f6235289b7c6ea5718a0 (no_unsupported_execution_succeeds) is Violated: 1 executions succeeded although the specification requires rejection.",
+      "invariant minv-83a2eda3d3dbb60c33bd (all_positive_holders_migrate) is Violated: 2 of 6 positive-balance holders did not migrate under the current mechanism."
+    ]
+  },
+  "deployment_origin": "Proposed",
+  "execution": {
+    "population_rehearsal": {
+      "compute_units_max": "33719",
+      "compute_units_total": "109409",
+      "executed": 4,
+      "mode": "Sequential transactions in plan order over one bank with a shared reserve",
+      "not_migrated": []
+    },
+    "stress_cases": [
+      {
+        "behaves_as_specified": true,
+        "case_id": "stress-01",
+        "derived_world_sha256": "8cd19c7fa4092a4f473d16e9dc863911656e8841589a0c3b01844b55f6a26464",
+        "error_name": null,
+        "expected": "Migrate",
+        "failure_stage": null,
+        "finding": null,
+        "kind": "SmallestMigratableHolder",
+        "message_sha256": "4624ceb4b9728079039613f2e87355caf59cb4ffbf371835d103fdb9ca52bc6c",
+        "outcome": "Migrated",
+        "planned_class": "Migratable",
+        "planned_reasons": [],
+        "provenance": "Synthetic",
+        "reconciled": true,
+        "rollback_verified": null,
+        "source_account": "ApD6KdpusqgdceQA5h9m4DgEYTPPY8VTuo9RDrrmjRQx"
+      },
+      {
+        "behaves_as_specified": true,
+        "case_id": "stress-02",
+        "derived_world_sha256": "8cd19c7fa4092a4f473d16e9dc863911656e8841589a0c3b01844b55f6a26464",
+        "error_name": null,
+        "expected": "Migrate",
+        "failure_stage": null,
+        "finding": null,
+        "kind": "MedianMigratableHolder",
+        "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+        "outcome": "Migrated",
+        "planned_class": "Migratable",
+        "planned_reasons": [],
+        "provenance": "Synthetic",
+        "reconciled": true,
+        "rollback_verified": null,
+        "source_account": "7KhNGHh1sy7nvWj1EAAvnUTbrj2U2VZk6axauFuz2wqe"
+      },
+      {
+        "behaves_as_specified": true,
+        "case_id": "stress-03",
+        "derived_world_sha256": "8cd19c7fa4092a4f473d16e9dc863911656e8841589a0c3b01844b55f6a26464",
+        "error_name": null,
+        "expected": "Migrate",
+        "failure_stage": null,
+        "finding": null,
+        "kind": "LargestMigratableHolder",
+        "message_sha256": "ac2cc1ef85d51446ec5d5ccff4e908a503992afffa7576e436ee5fac0de01104",
+        "outcome": "Migrated",
+        "planned_class": "Migratable",
+        "planned_reasons": [],
+        "provenance": "Synthetic",
+        "reconciled": true,
+        "rollback_verified": null,
+        "source_account": "3U56j7sgrw2uEoTc2ouPq9X1UePFhMusojKZGnstCknC"
+      },
+      {
+        "behaves_as_specified": true,
+        "case_id": "stress-04",
+        "derived_world_sha256": "001e751eed73a71955d9489fe20f6f4f52e8b15230895447ef188ffcb6ba98ee",
+        "error_name": null,
+        "expected": "Migrate",
+        "failure_stage": null,
+        "finding": null,
+        "kind": "MinimumMigratableAmount",
+        "message_sha256": "fd77a19f26a202c189c3ad102877fa6c34a605576154d98e23924835bbfc1911",
+        "outcome": "Migrated",
+        "planned_class": "Migratable",
+        "planned_reasons": [],
+        "provenance": "DerivedFromSynthetic",
+        "reconciled": true,
+        "rollback_verified": null,
+        "source_account": "7KhNGHh1sy7nvWj1EAAvnUTbrj2U2VZk6axauFuz2wqe"
+      },
+      {
+        "behaves_as_specified": true,
+        "case_id": "stress-05",
+        "derived_world_sha256": "014e09d186f5fc76c1e3aff7dfe88612bc350c86c5b9c62e858fd36158327ca7",
+        "error_name": null,
+        "expected": "Migrate",
+        "failure_stage": null,
+        "finding": null,
+        "kind": "LargestRepresentableAmount",
+        "message_sha256": "13d31f8309ba3ab43c1dd28885da37fe6f0d130b8840ef0a99579952ef8e1f68",
+        "outcome": "Migrated",
+        "planned_class": "Migratable",
+        "planned_reasons": [],
+        "provenance": "DerivedFromSynthetic",
+        "reconciled": true,
+        "rollback_verified": null,
+        "source_account": "7KhNGHh1sy7nvWj1EAAvnUTbrj2U2VZk6axauFuz2wqe"
+      },
+      {
+        "behaves_as_specified": true,
+        "case_id": "stress-06",
+        "derived_world_sha256": "8cd19c7fa4092a4f473d16e9dc863911656e8841589a0c3b01844b55f6a26464",
+        "error_name": null,
+        "expected": "Migrate",
+        "failure_stage": null,
+        "finding": null,
+        "kind": "ReserveExact",
+        "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+        "outcome": "Migrated",
+        "planned_class": "Migratable",
+        "planned_reasons": [],
+        "provenance": "DerivedFromSynthetic",
+        "reconciled": true,
+        "rollback_verified": null,
+        "source_account": "7KhNGHh1sy7nvWj1EAAvnUTbrj2U2VZk6axauFuz2wqe"
+      },
+      {
+        "behaves_as_specified": true,
+        "case_id": "stress-07",
+        "derived_world_sha256": "8cd19c7fa4092a4f473d16e9dc863911656e8841589a0c3b01844b55f6a26464",
+        "error_name": "InsufficientReserve",
+        "expected": "Reject",
+        "failure_stage": "candidate",
+        "finding": null,
+        "kind": "ReserveOneBelow",
+        "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+        "outcome": "Rejected",
+        "planned_class": "InsufficientReserve",
+        "planned_reasons": [
+          "INSUFFICIENT_RESERVE"
+        ],
+        "provenance": "DerivedFromSynthetic",
+        "reconciled": false,
+        "rollback_verified": true,
+        "source_account": "7KhNGHh1sy7nvWj1EAAvnUTbrj2U2VZk6axauFuz2wqe"
+      },
+      {
+        "behaves_as_specified": true,
+        "case_id": "stress-08",
+        "derived_world_sha256": "8cd19c7fa4092a4f473d16e9dc863911656e8841589a0c3b01844b55f6a26464",
+        "error_name": null,
+        "expected": "Migrate",
+        "failure_stage": null,
+        "finding": null,
+        "kind": "ReserveOneAbove",
+        "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+        "outcome": "Migrated",
+        "planned_class": "Migratable",
+        "planned_reasons": [],
+        "provenance": "DerivedFromSynthetic",
+        "reconciled": true,
+        "rollback_verified": null,
+        "source_account": "7KhNGHh1sy7nvWj1EAAvnUTbrj2U2VZk6axauFuz2wqe"
+      },
+      {
+        "behaves_as_specified": true,
+        "case_id": "stress-09",
+        "derived_world_sha256": "e952cfe34f4cc06a60e8a1d2ae99ac599ec55ce75750ec5be51641715b188885",
+        "error_name": "MigrationNotActive",
+        "expected": "Reject",
+        "failure_stage": "candidate",
+        "finding": null,
+        "kind": "BeforeActivation",
+        "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+        "outcome": "Rejected",
+        "planned_class": "WindowConflict",
+        "planned_reasons": [
+          "MIGRATION_WINDOW_INVALID"
+        ],
+        "provenance": "DerivedFromSynthetic",
+        "reconciled": false,
+        "rollback_verified": true,
+        "source_account": "7KhNGHh1sy7nvWj1EAAvnUTbrj2U2VZk6axauFuz2wqe"
+      },
+      {
+        "behaves_as_specified": true,
+        "case_id": "stress-10",
+        "derived_world_sha256": "90b2062af81d6629d2be81c5f71f6f122658af763cbf6658bb7baed9e8b7334e",
+        "error_name": null,
+        "expected": "Migrate",
+        "failure_stage": null,
+        "finding": null,
+        "kind": "AtActivation",
+        "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+        "outcome": "Migrated",
+        "planned_class": "Migratable",
+        "planned_reasons": [],
+        "provenance": "DerivedFromSynthetic",
+        "reconciled": true,
+        "rollback_verified": null,
+        "source_account": "7KhNGHh1sy7nvWj1EAAvnUTbrj2U2VZk6axauFuz2wqe"
+      },
+      {
+        "behaves_as_specified": true,
+        "case_id": "stress-11",
+        "derived_world_sha256": "5ed8694d2faab277c4dfd482d8e4ff3de7bd1f994d488813cd8ddcc4515929cc",
+        "error_name": null,
+        "expected": "Migrate",
+        "failure_stage": null,
+        "finding": null,
+        "kind": "BeforeDeadline",
+        "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+        "outcome": "Migrated",
+        "planned_class": "Migratable",
+        "planned_reasons": [],
+        "provenance": "DerivedFromSynthetic",
+        "reconciled": true,
+        "rollback_verified": null,
+        "source_account": "7KhNGHh1sy7nvWj1EAAvnUTbrj2U2VZk6axauFuz2wqe"
+      },
+      {
+        "behaves_as_specified": false,
+        "case_id": "stress-12",
+        "derived_world_sha256": "5aeb3207dd4faae0af4a02eaf2867b21ac64e47b95059217a20bb07e44c0fe22",
+        "error_name": null,
+        "expected": "Reject",
+        "failure_stage": null,
+        "finding": "UnexpectedSuccess",
+        "kind": "AtDeadline",
+        "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+        "outcome": "ReconciliationMismatch",
+        "planned_class": "WindowConflict",
+        "planned_reasons": [
+          "MIGRATION_WINDOW_INVALID"
+        ],
+        "provenance": "DerivedFromSynthetic",
+        "reconciled": false,
+        "rollback_verified": null,
+        "source_account": "7KhNGHh1sy7nvWj1EAAvnUTbrj2U2VZk6axauFuz2wqe"
+      },
+      {
+        "behaves_as_specified": true,
+        "case_id": "stress-13",
+        "derived_world_sha256": "9e2a63199f1519f963aad76cbd70bd38af23bd931055d22045cfa25af9b04bcb",
+        "error_name": null,
+        "expected": "Migrate",
+        "failure_stage": null,
+        "finding": null,
+        "kind": "ExistingDestination",
+        "message_sha256": "4326761c566e1c534539c62d024d0bd14f2c4ee50390228a2e94c06ba20a7f95",
+        "outcome": "Migrated",
+        "planned_class": "Migratable",
+        "planned_reasons": [],
+        "provenance": "DerivedFromSynthetic",
+        "reconciled": true,
+        "rollback_verified": null,
+        "source_account": "7KhNGHh1sy7nvWj1EAAvnUTbrj2U2VZk6axauFuz2wqe"
+      },
+      {
+        "behaves_as_specified": true,
+        "case_id": "stress-14",
+        "derived_world_sha256": "af1068594d66b3361fc06d5cb1a8ce808c10c3a0a579d2ea106794437a925dee",
+        "error_name": "AccountFrozen",
+        "expected": "Reject",
+        "failure_stage": "token-program",
+        "finding": null,
+        "kind": "FrozenDestination",
+        "message_sha256": "4326761c566e1c534539c62d024d0bd14f2c4ee50390228a2e94c06ba20a7f95",
+        "outcome": "Rejected",
+        "planned_class": "InvalidDestinationState",
+        "planned_reasons": [
+          "DESTINATION_FROZEN"
+        ],
+        "provenance": "DerivedFromSynthetic",
+        "reconciled": false,
+        "rollback_verified": true,
+        "source_account": "7KhNGHh1sy7nvWj1EAAvnUTbrj2U2VZk6axauFuz2wqe"
+      },
+      {
+        "behaves_as_specified": true,
+        "case_id": "stress-15",
+        "derived_world_sha256": "64749320d4de5b98b111f05efb8385105ebcd31c50863e1d7a6416d30d9bd9f9",
+        "error_name": "NoMemo",
+        "expected": "Reject",
+        "failure_stage": "token-program",
+        "finding": null,
+        "kind": "MemoRequiredDestination",
+        "message_sha256": "4326761c566e1c534539c62d024d0bd14f2c4ee50390228a2e94c06ba20a7f95",
+        "outcome": "Rejected",
+        "planned_class": "InvalidDestinationState",
+        "planned_reasons": [
+          "MEMO_REQUIRED"
+        ],
+        "provenance": "DerivedFromSynthetic",
+        "reconciled": false,
+        "rollback_verified": true,
+        "source_account": "7KhNGHh1sy7nvWj1EAAvnUTbrj2U2VZk6axauFuz2wqe"
+      },
+      {
+        "behaves_as_specified": true,
+        "case_id": "stress-16",
+        "derived_world_sha256": "92727ddf93d805ee2482bc028eed8cda608bb246c6ddf4b957a6ef7d880dc8b4",
+        "error_name": "AccountFrozen",
+        "expected": "Reject",
+        "failure_stage": "token-program",
+        "finding": null,
+        "kind": "FrozenSource",
+        "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+        "outcome": "Rejected",
+        "planned_class": "Frozen",
+        "planned_reasons": [
+          "SOURCE_FROZEN"
+        ],
+        "provenance": "DerivedFromSynthetic",
+        "reconciled": false,
+        "rollback_verified": true,
+        "source_account": "7KhNGHh1sy7nvWj1EAAvnUTbrj2U2VZk6axauFuz2wqe"
+      },
+      {
+        "behaves_as_specified": true,
+        "case_id": "stress-17",
+        "derived_world_sha256": "4e2bca26786a3b82c7ef1327264bbe87407d47dadaada31f92757c66a6ac193f",
+        "error_name": null,
+        "expected": "Migrate",
+        "failure_stage": null,
+        "finding": null,
+        "kind": "DelegateExactAllowance",
+        "message_sha256": "49f2f55ec45e796ecb4b06a68c9efec6047c17e4a015f277573a82af0d31081a",
+        "outcome": "Migrated",
+        "planned_class": "Migratable",
+        "planned_reasons": [],
+        "provenance": "DerivedFromSynthetic",
+        "reconciled": true,
+        "rollback_verified": null,
+        "source_account": "7KhNGHh1sy7nvWj1EAAvnUTbrj2U2VZk6axauFuz2wqe"
+      },
+      {
+        "behaves_as_specified": true,
+        "case_id": "stress-18",
+        "derived_world_sha256": "cf6016809bb11e3beccfc9658fc21d7e932d12986cae55f80f23450d515a175c",
+        "error_name": "InsufficientFunds",
+        "expected": "Reject",
+        "failure_stage": "token-program",
+        "finding": null,
+        "kind": "DelegateInsufficientAllowance",
+        "message_sha256": "49f2f55ec45e796ecb4b06a68c9efec6047c17e4a015f277573a82af0d31081a",
+        "outcome": "Rejected",
+        "planned_class": "Migratable",
+        "planned_reasons": [],
+        "provenance": "DerivedFromSynthetic",
+        "reconciled": false,
+        "rollback_verified": true,
+        "source_account": "7KhNGHh1sy7nvWj1EAAvnUTbrj2U2VZk6axauFuz2wqe"
+      },
+      {
+        "behaves_as_specified": true,
+        "case_id": "stress-19",
+        "derived_world_sha256": "8cd19c7fa4092a4f473d16e9dc863911656e8841589a0c3b01844b55f6a26464",
+        "error_name": "UnauthorizedHolderAuthority",
+        "expected": "Reject",
+        "failure_stage": "candidate",
+        "finding": null,
+        "kind": "WrongSigner",
+        "message_sha256": "14771a094362e16f18bb61e4e61094b5144dca8ac494b40dd187a65df1fcdfc6",
+        "outcome": "Rejected",
+        "planned_class": "Migratable",
+        "planned_reasons": [],
+        "provenance": "DerivedFromSynthetic",
+        "reconciled": false,
+        "rollback_verified": true,
+        "source_account": "7KhNGHh1sy7nvWj1EAAvnUTbrj2U2VZk6axauFuz2wqe"
+      },
+      {
+        "behaves_as_specified": true,
+        "case_id": "stress-20",
+        "derived_world_sha256": "8cd19c7fa4092a4f473d16e9dc863911656e8841589a0c3b01844b55f6a26464",
+        "error_name": null,
+        "expected": "Reject",
+        "failure_stage": "token-program",
+        "finding": null,
+        "kind": "MultisigUnderThreshold",
+        "message_sha256": "abdab440b5cd6a90e637ce41dac8d1da29ff13ebe6e21136848e007c6b6cbdec",
+        "outcome": "Rejected",
+        "planned_class": "Migratable",
+        "planned_reasons": [],
+        "provenance": "DerivedFromSynthetic",
+        "reconciled": false,
+        "rollback_verified": true,
+        "source_account": "3U56j7sgrw2uEoTc2ouPq9X1UePFhMusojKZGnstCknC"
+      }
+    ],
+    "vm": {
+      "candidate": {
+        "loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "program_id": "Akajkkga5U8d6xkVQUMXjnbdSuMtGAHBLbsr9dUvQGsj",
+        "sha256": "c4346736008188befe1d1a41cf167ea6a80c3b61a76cf1d3ba550f916b682275"
+      },
+      "clock": {
+        "basis": "DerivedAtActivationSlot",
+        "captured_slot": "1000",
+        "captured_unix_timestamp": "1760000000",
+        "clock": {
+          "epoch": "400",
+          "epoch_start_timestamp": "1760000000",
+          "leader_schedule_epoch": "401",
+          "slot": "2000",
+          "unix_timestamp": "1760000000"
+        }
+      },
+      "programs": [
+        {
+          "elf_sha256": "6804554e69fd3a58caa191dc4a58f4c67223d30ca28ab8987f39fc18d2f7374d",
+          "loader": "BPFLoader2111111111111111111111111111111111",
+          "origin": "SyntheticFixture",
+          "program_id": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "elf_sha256": "53e587eee80c786bcfba1450397d92179a0f01def776d19fb4ddf690d64431cc",
+          "loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+          "origin": "SyntheticFixture",
+          "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "elf_sha256": "495e9d7680dd555cb126a6a8e5464af5be9b01f02f2cd70634352722d22e3cad",
+          "loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+          "origin": "SyntheticFixture",
+          "program_id": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "elf_sha256": "c4346736008188befe1d1a41cf167ea6a80c3b61a76cf1d3ba550f916b682275",
+          "loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+          "origin": "CandidatePackage",
+          "program_id": "Akajkkga5U8d6xkVQUMXjnbdSuMtGAHBLbsr9dUvQGsj"
+        }
+      ],
+      "runtime": "LiteSVM 0.16 (fresh process-local bank; nothing is broadcast)",
+      "signature_verification": "disabled: signer privileges are assumed locally, key possession stays unknown"
+    }
+  },
+  "funds_moved": false,
+  "gate_outcome": "Block",
+  "gate_policy": "block-only",
+  "gate_reason_codes": [
+    "AUTHORITY_PATH_UNAVAILABLE",
+    "MIGRATION_ARITHMETIC_MISMATCH",
+    "MIGRATION_WINDOW_INVALID",
+    "SOURCE_FROZEN",
+    "STRANDED_HOLDERS",
+    "UNEXPECTED_MIGRATION_SUCCESS"
+  ],
+  "gate_reasons": [
+    "mechanism_readiness is Blocked",
+    "Stress stress-12 AtDeadline (DerivedFromSynthetic) expected Reject, candidate ReconciliationMismatch",
+    "population_readiness is Incomplete",
+    "1 positive-balance holder: AUTHORITY_PATH_UNAVAILABLE",
+    "1 positive-balance holder: SOURCE_FROZEN",
+    "invariant minv-f4b81b4d375a12202c09 (migration_arithmetic_matches_spec) is Violated: 1 executed migrations differ from the specification's exact arithmetic or deltas.",
+    "invariant minv-a2d2d17d3f472acaa205 (window_rules_hold) is Violated: Deviating cases: stress-12 AtDeadline (UnexpectedSuccess).",
+    "invariant minv-f6235289b7c6ea5718a0 (no_unsupported_execution_succeeds) is Violated: 1 executions succeeded although the specification requires rejection.",
+    "invariant minv-83a2eda3d3dbb60c33bd (all_positive_holders_migrate) is Violated: 2 of 6 positive-balance holders did not migrate under the current mechanism."
+  ],
+  "impact": {
+    "classes": [
+      {
+        "accounts": 1,
+        "balance_raw": "77000000",
+        "class": "AuthorityPathUnavailable",
+        "code": "AUTHORITY_PATH_UNAVAILABLE",
+        "migratable": false
+      },
+      {
+        "accounts": 1,
+        "balance_raw": "5000000",
+        "class": "Frozen",
+        "code": "SOURCE_FROZEN",
+        "migratable": false
+      },
+      {
+        "accounts": 4,
+        "balance_raw": "1191234567",
+        "class": "Migratable",
+        "code": "MIGRATABLE",
+        "migratable": true
+      },
+      {
+        "accounts": 1,
+        "balance_raw": "0",
+        "class": "ZeroBalance",
+        "code": "ZERO_BALANCE",
+        "migratable": false
+      }
+    ],
+    "not_migratable_examples": [
+      {
+        "balance_raw": "5000000",
+        "class": "Frozen",
+        "code": "SOURCE_FROZEN",
+        "owner": "9xhv4HBPMNj3obkYEbPbjKTvQ7fbDoEkd95UqRzwRPDo",
+        "reasons": [
+          {
+            "code": "SOURCE_FROZEN",
+            "detail": "The source account is frozen; only the freeze authority can thaw it."
+          }
+        ],
+        "required_authority": "HolderSignature",
+        "source_account": "5zeg1KwefqQG7pG4omPL9gtVoqAWogeaZ2A53DyPswwG",
+        "unit_id": "unit-5d84b1df4a03aa59"
+      },
+      {
+        "balance_raw": "77000000",
+        "class": "AuthorityPathUnavailable",
+        "code": "AUTHORITY_PATH_UNAVAILABLE",
+        "owner": "7Yp5ETR9m7HcZ5DipbTBFispMKetjisZ5d1Wub7Fpb1V",
+        "reasons": [
+          {
+            "code": "PROGRAM_CONTROLLED_OWNER",
+            "detail": "The owner is controlled by a program; only that program could authorize this migration and the v1 mechanism has no path through it."
+          }
+        ],
+        "required_authority": "OwningProgramInvocation",
+        "source_account": "iACVFC6cDWG2dhRcDZJUaBVgaJA8ucUYmRhWhC29gzM",
+        "unit_id": "unit-b76369288f426aea"
+      }
+    ],
+    "not_migratable_listed_limit": 50,
+    "note": "Unsupported, unverifiable and ineligible holders are not successful migrations; each keeps its own class and reason.",
+    "population": {
+      "authority_resolution": "Complete",
+      "enumeration": "CompleteSyntheticFixture",
+      "positive_balance_accounts": 6,
+      "token_accounts": 7,
+      "undecoded_rows": 0,
+      "zero_balance_accounts": 1
+    },
+    "required_authority": {
+      "HolderSignature": {
+        "accounts": 4,
+        "balance_raw": "296234567"
+      },
+      "MultisigThreshold": {
+        "accounts": 1,
+        "balance_raw": "900000000"
+      },
+      "OwningProgramInvocation": {
+        "accounts": 1,
+        "balance_raw": "77000000"
+      }
+    }
+  },
+  "invariant_schema_version": 2,
+  "invariants": [
+    {
+      "config": {},
+      "evaluation_version": "eplyx-migration-invariants/v1",
+      "evidence_refs": [
+        "eeda302e51bc913cef53599b11e9f931458e39915328a5c5a03d9c806be28d81",
+        "b3065bb733b147529b2da7bcd3fc0ef598817d614eb54cf65cf6908c45f615a0",
+        "906c59e210b08b3631f4df59b81df7671e28eeb44542e1659beb52ac3a998fb2",
+        "f11c33f152b9d378de6e19b9e6664f42c2b44d9fef70fe863c1ff473cf8aed4b"
+      ],
+      "explanation": "The VM loaded exactly the packaged candidate bytes.",
+      "invariant_id": "minv-5418555650edc637fb01",
+      "invariant_type": "candidate_binary_matches_package",
+      "scope": "VmLoaderInput",
+      "severity": "blocking",
+      "status": "Satisfied"
+    },
+    {
+      "config": {},
+      "evaluation_version": "eplyx-migration-invariants/v1",
+      "evidence_refs": [
+        "eeda302e51bc913cef53599b11e9f931458e39915328a5c5a03d9c806be28d81",
+        "b3065bb733b147529b2da7bcd3fc0ef598817d614eb54cf65cf6908c45f615a0",
+        "906c59e210b08b3631f4df59b81df7671e28eeb44542e1659beb52ac3a998fb2",
+        "f11c33f152b9d378de6e19b9e6664f42c2b44d9fef70fe863c1ff473cf8aed4b"
+      ],
+      "explanation": "All 1 declared authority expectations match captured state.",
+      "invariant_id": "minv-c6a36f2e11746c952f06",
+      "invariant_type": "required_authorities_match",
+      "scope": "CapturedMintState",
+      "severity": "blocking",
+      "status": "Satisfied"
+    },
+    {
+      "config": {},
+      "evaluation_version": "eplyx-migration-invariants/v1",
+      "evidence_refs": [
+        "eeda302e51bc913cef53599b11e9f931458e39915328a5c5a03d9c806be28d81",
+        "b3065bb733b147529b2da7bcd3fc0ef598817d614eb54cf65cf6908c45f615a0",
+        "906c59e210b08b3631f4df59b81df7671e28eeb44542e1659beb52ac3a998fb2",
+        "f11c33f152b9d378de6e19b9e6664f42c2b44d9fef70fe863c1ff473cf8aed4b"
+      ],
+      "explanation": "1 executed migrations differ from the specification's exact arithmetic or deltas.",
+      "invariant_id": "minv-f4b81b4d375a12202c09",
+      "invariant_type": "migration_arithmetic_matches_spec",
+      "scope": "AllExecutedMigrations",
+      "severity": "blocking",
+      "status": "Violated"
+    },
+    {
+      "config": {},
+      "evaluation_version": "eplyx-migration-invariants/v1",
+      "evidence_refs": [
+        "eeda302e51bc913cef53599b11e9f931458e39915328a5c5a03d9c806be28d81",
+        "b3065bb733b147529b2da7bcd3fc0ef598817d614eb54cf65cf6908c45f615a0",
+        "906c59e210b08b3631f4df59b81df7671e28eeb44542e1659beb52ac3a998fb2",
+        "f11c33f152b9d378de6e19b9e6664f42c2b44d9fef70fe863c1ff473cf8aed4b"
+      ],
+      "explanation": "All 8 rejected executions rolled back every referenced account.",
+      "invariant_id": "minv-8d57057ba0a2883b99f6",
+      "invariant_type": "failed_migrations_roll_back",
+      "scope": "AllExecutedMigrations",
+      "severity": "blocking",
+      "status": "Satisfied"
+    },
+    {
+      "config": {},
+      "evaluation_version": "eplyx-migration-invariants/v1",
+      "evidence_refs": [
+        "eeda302e51bc913cef53599b11e9f931458e39915328a5c5a03d9c806be28d81",
+        "b3065bb733b147529b2da7bcd3fc0ef598817d614eb54cf65cf6908c45f615a0",
+        "906c59e210b08b3631f4df59b81df7671e28eeb44542e1659beb52ac3a998fb2",
+        "f11c33f152b9d378de6e19b9e6664f42c2b44d9fef70fe863c1ff473cf8aed4b"
+      ],
+      "explanation": "Every population reconciliation equation holds over the executed units.",
+      "invariant_id": "minv-490a59954973d91517a4",
+      "invariant_type": "supply_reconciles",
+      "scope": "SequentialPopulationRehearsal",
+      "severity": "blocking",
+      "status": "Satisfied"
+    },
+    {
+      "config": {},
+      "evaluation_version": "eplyx-migration-invariants/v1",
+      "evidence_refs": [
+        "eeda302e51bc913cef53599b11e9f931458e39915328a5c5a03d9c806be28d81",
+        "b3065bb733b147529b2da7bcd3fc0ef598817d614eb54cf65cf6908c45f615a0",
+        "906c59e210b08b3631f4df59b81df7671e28eeb44542e1659beb52ac3a998fb2",
+        "f11c33f152b9d378de6e19b9e6664f42c2b44d9fef70fe863c1ff473cf8aed4b"
+      ],
+      "explanation": "The reserve of 2000000000000 raw covers the 1191234567000 raw every eligible holder needs.",
+      "invariant_id": "minv-49ee6272a5e25b997654",
+      "invariant_type": "reserve_covers_eligible_holders",
+      "scope": "SequentialPopulationRehearsal",
+      "severity": "blocking",
+      "status": "Satisfied"
+    },
+    {
+      "config": {},
+      "evaluation_version": "eplyx-migration-invariants/v1",
+      "evidence_refs": [
+        "eeda302e51bc913cef53599b11e9f931458e39915328a5c5a03d9c806be28d81",
+        "b3065bb733b147529b2da7bcd3fc0ef598817d614eb54cf65cf6908c45f615a0",
+        "906c59e210b08b3631f4df59b81df7671e28eeb44542e1659beb52ac3a998fb2",
+        "f11c33f152b9d378de6e19b9e6664f42c2b44d9fef70fe863c1ff473cf8aed4b"
+      ],
+      "explanation": "Deviating cases: stress-12 AtDeadline (UnexpectedSuccess).",
+      "invariant_id": "minv-a2d2d17d3f472acaa205",
+      "invariant_type": "window_rules_hold",
+      "scope": "FrozenStressMatrix",
+      "severity": "blocking",
+      "status": "Violated"
+    },
+    {
+      "config": {},
+      "evaluation_version": "eplyx-migration-invariants/v1",
+      "evidence_refs": [
+        "eeda302e51bc913cef53599b11e9f931458e39915328a5c5a03d9c806be28d81",
+        "b3065bb733b147529b2da7bcd3fc0ef598817d614eb54cf65cf6908c45f615a0",
+        "906c59e210b08b3631f4df59b81df7671e28eeb44542e1659beb52ac3a998fb2",
+        "f11c33f152b9d378de6e19b9e6664f42c2b44d9fef70fe863c1ff473cf8aed4b"
+      ],
+      "explanation": "1 executions succeeded although the specification requires rejection.",
+      "invariant_id": "minv-f6235289b7c6ea5718a0",
+      "invariant_type": "no_unsupported_execution_succeeds",
+      "scope": "FrozenStressMatrix",
+      "severity": "blocking",
+      "status": "Violated"
+    },
+    {
+      "config": {},
+      "evaluation_version": "eplyx-migration-invariants/v1",
+      "evidence_refs": [
+        "eeda302e51bc913cef53599b11e9f931458e39915328a5c5a03d9c806be28d81",
+        "b3065bb733b147529b2da7bcd3fc0ef598817d614eb54cf65cf6908c45f615a0",
+        "906c59e210b08b3631f4df59b81df7671e28eeb44542e1659beb52ac3a998fb2",
+        "f11c33f152b9d378de6e19b9e6664f42c2b44d9fef70fe863c1ff473cf8aed4b"
+      ],
+      "explanation": "2 of 6 positive-balance holders did not migrate under the current mechanism.",
+      "invariant_id": "minv-83a2eda3d3dbb60c33bd",
+      "invariant_type": "all_positive_holders_migrate",
+      "scope": "EnumeratedPositiveBalancePopulation",
+      "severity": "warning",
+      "status": "Violated"
+    }
+  ],
+  "limitations": [
+    "This is a local VM rehearsal of an operator-supplied candidate. No mainnet transaction was built, signed or sent, and no funds moved.",
+    "OfficialTransition is NotTested: a candidate mechanism is not an issuer-defined migration, and issuer authorization is out of scope.",
+    "Signatures are assumed locally; whether anyone holds the required keys is unknown.",
+    "Stress and derived cases are local states. A derived failure is not an observed mainnet failure.",
+    "A rehearsal that succeeds for tested states does not show that every possible holder or state is safe.",
+    "The candidate uses MAIN’s upgradeable-loader execution model."
+  ],
+  "migration": {
+    "conversion": {
+      "declared": {
+        "denominator": "1",
+        "fee": {
+          "kind": "none"
+        },
+        "minimum_output_raw": "1",
+        "numerator": "1",
+        "ratio_basis": "ui",
+        "rounding": "floor"
+      },
+      "effective_raw_terms": {
+        "denominator": "1",
+        "fee_bps": 0,
+        "minimum_output": "1",
+        "numerator": "1000",
+        "rounding": "floor"
+      }
+    },
+    "destination": {
+      "decimals": 9,
+      "mint": "9WDiiWiBjvUQe2eWyir6n9N54F39SjeLKBeBDuGsBTQS",
+      "token_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "token_program_label": "Token-2022"
+    },
+    "destination_funding": {
+      "kind": "reserve_transfer",
+      "reserve": {
+        "funded_raw": "2000000000000",
+        "kind": "proposed"
+      }
+    },
+    "eligibility": {
+      "amount_policy": "full_balance",
+      "excluded_accounts": [],
+      "holder_authorization": [
+        "owner",
+        "delegate"
+      ],
+      "minimum_source_balance_raw": "1",
+      "owner_authority_classes": [
+        "wallet",
+        "multisig"
+      ]
+    },
+    "overlay": {
+      "authority_bump": 254,
+      "authority_kind": "ProgramDerived",
+      "config": "2sJ2h3Wxac6iVzHSU8kKeUzq24Zi4KGZjW87bpiyhadM",
+      "config_bump": 255,
+      "escrow_vault": null,
+      "funding_account": "BxwCsTqKFFGzNw8TqwTgsLB1q6d1Dbky1L7REzPTii1N",
+      "migration_authority": "FW9t1QpHYkUkRtamKSTKMqQpzUwjQ5BJoD63gtfUsHn4",
+      "program_id": "Akajkkga5U8d6xkVQUMXjnbdSuMtGAHBLbsr9dUvQGsj",
+      "reserve_origin": "Proposed",
+      "reserve_vault": "BxwCsTqKFFGzNw8TqwTgsLB1q6d1Dbky1L7REzPTii1N"
+    },
+    "source": {
+      "decimals": 6,
+      "mint": "6u4knmGQzqoVmVaeztpQDiL8mx2u29wjbEjDCyrV2GYq",
+      "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "token_program_label": "SPL Token"
+    },
+    "source_disposition": "burn",
+    "window": {
+      "activation": {
+        "kind": "slot",
+        "value": "2000"
+      },
+      "deadline": {
+        "kind": "slot",
+        "value": "900000"
+      }
+    },
+    "window_state_at_rehearsal": "Open"
+  },
+  "official_transition": "NotTested",
+  "program_id": "Akajkkga5U8d6xkVQUMXjnbdSuMtGAHBLbsr9dUvQGsj",
+  "provenance": "OperatorSupplied",
+  "readiness": {
+    "funding": {
+      "codes": [],
+      "reasons": [],
+      "status": "Ready"
+    },
+    "mechanism": {
+      "codes": [
+        "UNEXPECTED_MIGRATION_SUCCESS"
+      ],
+      "reasons": [
+        "Stress stress-12 AtDeadline (DerivedFromSynthetic) expected Reject, candidate ReconciliationMismatch"
+      ],
+      "status": "Blocked"
+    },
+    "population": {
+      "codes": [
+        "AUTHORITY_PATH_UNAVAILABLE",
+        "SOURCE_FROZEN"
+      ],
+      "reasons": [
+        "1 positive-balance holder: AUTHORITY_PATH_UNAVAILABLE",
+        "1 positive-balance holder: SOURCE_FROZEN"
+      ],
+      "status": "Incomplete"
+    },
+    "reconciliation": {
+      "codes": [],
+      "reasons": [],
+      "status": "Ready"
+    }
+  },
+  "reconciliation": {
+    "attempted_units": 4,
+    "available_reserve_raw": "2000000000000",
+    "captured_eligible_source_raw": "1191234567",
+    "captured_positive_source_raw": "1273234567",
+    "destination_credited_net_raw": "1191234567000",
+    "destination_minted_raw": "0",
+    "destination_released_raw": "1191234567000",
+    "destination_withheld_fee_raw": "0",
+    "equations": [
+      {
+        "holds": true,
+        "left": "1191234567",
+        "name": "source supply burned = Σ source debited",
+        "right": "1191234567"
+      },
+      {
+        "holds": true,
+        "left": "1191234567000",
+        "name": "reserve released = Σ expected outputs",
+        "right": "1191234567000"
+      },
+      {
+        "holds": true,
+        "left": "0",
+        "name": "destination supply unchanged by reserve transfer",
+        "right": "0"
+      },
+      {
+        "holds": true,
+        "left": "1191234567000",
+        "name": "Σ destination net credit + Σ destination withheld fee = delivered",
+        "right": "1191234567000"
+      },
+      {
+        "holds": true,
+        "left": "0",
+        "name": "rejected units debited nothing",
+        "right": "0"
+      },
+      {
+        "holds": true,
+        "left": "1273234567",
+        "name": "Σ eligible + Σ unmigratable = captured positive balance",
+        "right": "1273234567"
+      },
+      {
+        "holds": true,
+        "left": "808765433000",
+        "name": "available reserve − released = remaining reserve",
+        "right": "808765433000"
+      }
+    ],
+    "expected_output_raw": "1191234567000",
+    "failed_attempted_source_raw": "0",
+    "migrated_units": 4,
+    "migration_fee_source_raw": "0",
+    "mismatched_units": 0,
+    "not_fully_reconciled_because": [
+      "2 positive-balance holders cannot be attempted under the current mechanism."
+    ],
+    "rejected_units": 0,
+    "remaining_reserve_raw": "808765433000",
+    "required_reserve_raw": "1191234567000",
+    "reserve_shortfall_raw": "0",
+    "rounding_delta_numerator": "0",
+    "rounding_denominator": "1",
+    "simulated_consumed_raw": "1191234567",
+    "source_burned_raw": "1191234567",
+    "source_escrow_withheld_fee_raw": "0",
+    "source_escrowed_gross_raw": "0",
+    "status": "ReconciledForExecutedUnits",
+    "unmigratable_source_raw": {
+      "AuthorityPathUnavailable": "77000000",
+      "Frozen": "5000000"
+    },
+    "version": "eplyx-migration-population-rehearsal/v1"
+  },
+  "report_kind": "token_migration_rehearsal",
+  "requirement_violations": [
+    "source_frozen",
+    "authority_path_unavailable"
+  ],
+  "schema_version": 1,
+  "state": {
+    "base_kind": "SyntheticFixture",
+    "cluster": "eplyx-synthetic-fixture",
+    "limitations": [
+      "Synthetic fixture minimal-migration (eplyx-migration-fixture/v1): every account was built locally by executing real token-program instructions; none of it is chain state.",
+      "Token, Token-2022 and ATA executables are the official releases bundled with LiteSVM 0.16, not the currently deployed mainnet bytes."
+    ],
+    "rehearsal_clock": {
+      "basis": "DerivedAtActivationSlot",
+      "captured_slot": "1000",
+      "captured_unix_timestamp": "1760000000",
+      "clock": {
+        "epoch": "400",
+        "epoch_start_timestamp": "1760000000",
+        "leader_schedule_epoch": "401",
+        "slot": "2000",
+        "unix_timestamp": "1760000000"
+      }
+    },
+    "world_kind": "SyntheticFixture",
+    "world_sha256": "8cd19c7fa4092a4f473d16e9dc863911656e8841589a0c3b01844b55f6a26464"
+  },
+  "state_input_sha256": "ef18794edb9f7c21bf0e981d91a66363c62e7dac95682c7b349f990dfd23c9c8",
+  "transition_kind": "token_migration",
+  "unsigned_plan": {
+    "artifact": "migration.unsigned-plan.json",
+    "cross_check": {
+      "executed_units": 4,
+      "matching_units": 4,
+      "method": "The serialized descriptors re-executed in plan order in a separate fresh LiteSVM built only from the world and the plan's setup requirements; each unit's message and outcome compared with the rehearsal. Nothing is signed or sent."
+    },
+    "sha256": "148619614421ad0ce3734e6823ac2c947d4b57bcccd32456d259c54812c234b3",
+    "units": 4
+  }
+}

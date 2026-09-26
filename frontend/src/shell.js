@@ -1,3 +1,4 @@
+import { presentationMode, setPresentationMode } from './mode.js';
 import { Logo } from './brand.js';
 
 export function Header({ light = false } = {}) {
@@ -10,8 +11,9 @@ export function Header({ light = false } = {}) {
         <a href="/#evidence" data-link>Evidence</a>
         <a href="/#roles" data-link>Who it’s for</a>
         <a href="/#vision" data-link>Vision</a>
-        <a href="/projects" data-link>Projects</a><a href="/analyse" data-link class="nav-cta">Analyse <span>↗</span></a>
+        <a href="/token-transitions" data-link>Token transitions</a><a href="/projects" data-link>Projects</a><a href="/analyse" data-link class="nav-cta">Analyse <span>↗</span></a>
       </nav>
+      <div class="site-mode" role="group" aria-label="Presentation"><button type="button" data-mode-option="overview" aria-pressed="${presentationMode()==='overview'}">Overview</button><button type="button" data-mode-option="technical" aria-pressed="${presentationMode()==='technical'}">Technical</button></div>
       <button class="menu-button" type="button" aria-label="Open navigation" aria-controls="primary-navigation" aria-expanded="false"><span></span><span></span></button>
     </header>`;
 }
@@ -27,6 +29,10 @@ export function Footer() {
 }
 
 export function attachShell() {
+  document.querySelectorAll('[data-mode-option]').forEach(button => button.addEventListener('click',()=>{
+    setPresentationMode(button.dataset.modeOption);
+    document.querySelectorAll('[data-mode-option]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+  }));
   const button = document.querySelector('.menu-button');
   const nav = document.querySelector('.site-header nav');
   button?.addEventListener('click', () => {

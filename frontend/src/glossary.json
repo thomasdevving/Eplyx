@@ -1,0 +1,18 @@
+{
+  "Pass": "Passed",
+  "Warn": "Passed with warnings",
+  "Block": "Failed",
+  "Proven": "Verified in the local VM",
+  "NotTested": "Not evaluated",
+  "Unknown": "Cannot be judged",
+  "OperatorSupplied": "Declared only",
+  "Declared": "Declared only",
+  "NotEstablished": "Cannot be judged",
+  "NotApplicable": "Not applicable",
+  "Indeterminate": "Cannot be judged",
+  "CompleteSyntheticFixture": "Synthetic fixture",
+  "ObservedCapture": "Captured state",
+  "SyntheticFixture": "Synthetic fixture",
+  "Unsupported": "Unsupported",
+  "A rehearsal that succeeds for tested states does not show that every possible holder or state is safe.": "A successful rehearsal covers only the tested holders and states; other holders and states remain unverified."
+}
