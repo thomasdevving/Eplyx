@@ -70,6 +70,104 @@ pub struct LoadedProgram {
     pub bytes: Vec<u8>,
 }
 
+/// Actual inner instruction payloads for consequence probes (including event CPI).
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize)]
+pub struct ProbeInnerInstruction {
+    pub program: String,
+    pub stack_height: u8,
+    pub accounts: Vec<String>,
+    #[serde(with = "crate::hexfmt")]
+    pub data: Vec<u8>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize)]
+pub struct ProbeTransactionExecution {
+    pub success: bool,
+    pub error: Option<String>,
+    #[serde(with = "crate::numfmt::u64_string")]
+    pub compute_units: u64,
+    #[serde(with = "crate::numfmt::u64_string")]
+    pub transaction_fee_lamports: u64,
+    pub logs: Vec<String>,
+    pub inner_instructions: Vec<ProbeInnerInstruction>,
+    pub post_accounts: BTreeMap<String, AccountSnapshot>,
+}
+
+/// The same fresh LiteSVM backend, for captured multi-instruction probe messages.
+/// Signature possession and blockhash freshness are explicit local assumptions;
+/// message signer privileges, program/account checks and deployed SBF CPIs execute.
+pub fn execute_probe_message(
+    accounts: &[crate::types::NamedAccount],
+    watch: &[String],
+    clock: Clock,
+    programs: &[LoadedProgram],
+    message: Message,
+) -> Result<ProbeTransactionExecution> {
+    let mut svm = LiteSVM::new()
+        .with_sigverify(false)
+        .with_blockhash_check(false);
+    svm.set_sysvar(&clock);
+    for program in programs {
+        svm.add_program_with_loader(program.program_id, &program.bytes, program.loader)
+            .map_err(|e| {
+                anyhow!(
+                    "cannot load captured executable {}: {e:?}",
+                    program.program_id
+                )
+            })?;
+    }
+    for named in accounts {
+        svm.set_account(
+            named.address.parse::<Address>()?,
+            to_account(&named.account)?,
+        )
+        .map_err(|e| anyhow!("cannot seed captured account {}: {e:?}", named.address))?;
+    }
+    let keys = message.account_keys.clone();
+    let (success, error, meta) = match svm.send_transaction(Transaction::new_unsigned(message)) {
+        Ok(meta) => (true, None, meta),
+        Err(failure) => (false, Some(format!("{:?}", failure.err)), failure.meta),
+    };
+    let mut inner_instructions = Vec::new();
+    for outer in &meta.inner_instructions {
+        for inner in outer {
+            let ix = &inner.instruction;
+            inner_instructions.push(ProbeInnerInstruction {
+                program: keys
+                    .get(usize::from(ix.program_id_index))
+                    .context("probe CPI program index out of bounds")?
+                    .to_string(),
+                stack_height: inner.stack_height,
+                accounts: ix
+                    .accounts
+                    .iter()
+                    .map(|i| {
+                        keys.get(usize::from(*i))
+                            .map(ToString::to_string)
+                            .context("probe CPI account index out of bounds")
+                    })
+                    .collect::<Result<Vec<_>>>()?,
+                data: ix.data.clone(),
+            });
+        }
+    }
+    let mut post_accounts = BTreeMap::new();
+    for address in watch {
+        if let Some(account) = svm.get_account(&address.parse::<Address>()?) {
+            post_accounts.insert(address.clone(), from_account(&account));
+        }
+    }
+    Ok(ProbeTransactionExecution {
+        success,
+        error,
+        compute_units: meta.compute_units_consumed,
+        transaction_fee_lamports: meta.fee,
+        logs: meta.logs,
+        inner_instructions,
+        post_accounts,
+    })
+}
+
 /// A single cross-program invocation observed during execution.
 ///
 /// Carries enough of the invoked instruction to compare two graphs without
@@ -326,4 +424,70 @@ pub fn fixture_transaction(fixture: &Fixture, blockhash: solana_hash::Hash) -> R
     let message = Message::new(&[instruction], Some(&payer_pubkey));
     let signer_refs: Vec<&Keypair> = signers.iter().collect();
     Ok(Transaction::new(&signer_refs, message, blockhash))
+}
+
+#[cfg(test)]
+mod probe_tests {
+    use super::*;
+    use crate::types::NamedAccount;
+
+    #[test]
+    fn local_unsigned_probe_is_fresh_deterministic_and_reports_failure_without_state_leakage() {
+        let payer = Address::new_from_array([31; 32]);
+        let recipient = Address::new_from_array([32; 32]);
+        let account = |address: Address, lamports| NamedAccount {
+            label: "public-label fixture".into(),
+            address: address.to_string(),
+            account: AccountSnapshot {
+                lamports,
+                owner: solana_sdk_ids::system_program::ID.to_string(),
+                data: vec![],
+                executable: false,
+                rent_epoch: 0,
+            },
+        };
+        let accounts = vec![account(payer, 10_000_000), account(recipient, 1_000_000)];
+        let watch = vec![payer.to_string(), recipient.to_string()];
+        let execute = |amount| {
+            execute_probe_message(
+                &accounts,
+                &watch,
+                Clock {
+                    slot: 42,
+                    epoch: 3,
+                    unix_timestamp: -7,
+                    ..Clock::default()
+                },
+                &[],
+                Message::new(
+                    &[solana_system_interface::instruction::transfer(
+                        &payer, &recipient, amount,
+                    )],
+                    Some(&payer),
+                ),
+            )
+            .unwrap()
+        };
+        let first = execute(123);
+        assert!(first.success, "{:?}", first.error);
+        assert_eq!(first, execute(123));
+        assert_eq!(
+            first.post_accounts[&recipient.to_string()].lamports,
+            1_000_123
+        );
+        assert_eq!(
+            first.post_accounts[&payer.to_string()].lamports,
+            10_000_000 - 123 - first.transaction_fee_lamports
+        );
+        let rejected = execute(u64::MAX);
+        assert!(!rejected.success);
+        assert!(rejected.error.is_some());
+        assert_eq!(
+            rejected.post_accounts[&recipient.to_string()],
+            accounts[1].account
+        );
+        assert_eq!(first, execute(123));
+        assert!(serde_json::to_value(&first).unwrap()["compute_units"].is_string());
+        assert!(serde_json::to_value(&first).unwrap()["transaction_fee_lamports"].is_string());
+    }
 }

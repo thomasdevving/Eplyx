@@ -94,6 +94,8 @@ impl<T> Decoded<T> {
 /// Why bytes that claimed to be a structure could not be read as one.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum MalformedReason {
+    /// Duplicate, misplaced or internally malformed Token-2022 extension.
+    InvalidExtension { kind: u16 },
     /// The buffer is shorter than the layout requires.
     Truncated { needed: usize, found: usize },
     /// A length no version of this layout produces.
@@ -109,6 +111,7 @@ pub enum MalformedReason {
 impl std::fmt::Display for MalformedReason {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            Self::InvalidExtension { kind } => write!(f, "invalid extension {kind}"),
             Self::Truncated { needed, found } => {
                 write!(f, "truncated: needs {needed} bytes, found {found}")
             }

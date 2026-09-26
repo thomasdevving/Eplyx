@@ -69,51 +69,38 @@ pub fn layout_of(data: &[u8]) -> Option<Layout> {
     }
 }
 
-/// One TLV entry, decoded as far as this build models it.
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum Extension {
-    /// A mint's fee schedule. Two schedules are carried, `older` and `newer`;
-    /// which applies depends on the epoch, which this layer does not resolve —
-    /// that is a runtime question and the replay answers it by executing.
-    TransferFeeConfig {
-        withheld_amount: u64,
-        older: TransferFee,
-        newer: TransferFee,
-    },
-    /// Fees withheld inside one token account. Spendable value parked there.
-    TransferFeeAmount {
-        withheld_amount: u64,
-    },
-    TransferHook {
-        program_id: Option<String>,
-    },
-    PermanentDelegate {
-        delegate: Option<String>,
-    },
-    /// Whether transfers of this mint are currently halted.
-    Pausable {
-        paused: bool,
-    },
-    DefaultAccountState {
-        state: u8,
-    },
-    ScaledUiAmount {
-        multiplier_bytes: Vec<u8>,
-    },
-    /// Present, named, and not modelled by this build. Carries its bytes so a
-    /// reader can see there is something here.
-    Unrecognized {
-        kind: u16,
-        bytes: Vec<u8>,
-    },
-}
+mod details;
+pub use details::{checked_extensions, decode_checked_extension, extension_layout, Extension};
 
 /// A single fee record: `epoch`, `maximum_fee`, `basis_points`.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize)]
 pub struct TransferFee {
+    #[serde(with = "crate::numfmt::u64_string")]
     pub epoch: u64,
+    #[serde(with = "crate::numfmt::u64_string")]
     pub maximum_fee: u64,
     pub basis_points: u16,
+}
+
+impl TransferFee {
+    /// SPL's integer ceiling and cap, without a display-amount conversion.
+    pub fn calculate_fee(self, amount: u64) -> Option<u64> {
+        let rounded = (u128::from(amount) * u128::from(self.basis_points)).div_ceil(10_000);
+        Some(u64::try_from(rounded).ok()?.min(self.maximum_fee))
+    }
+}
+
+impl Extension {
+    /// Choose the fee schedule at the captured epoch, not the newest schedule
+    /// irrespective of its activation. No clock is read from the environment.
+    pub fn transfer_fee(&self, epoch: u64) -> Option<TransferFee> {
+        match self {
+            Self::TransferFeeConfig { older, newer, .. } => {
+                Some(if epoch >= newer.epoch { *newer } else { *older })
+            }
+            _ => None,
+        }
+    }
 }
 
 // TransferFeeConfig field offsets, within the extension's value bytes.
@@ -172,6 +159,7 @@ pub fn extension_name(kind: u16) -> &'static str {
         25 => "scaled-ui-amount",
         26 => "pausable",
         27 => "pausable-account",
+        28 => "permissioned-burn",
         _ => "unrecognized",
     }
 }
@@ -254,56 +242,8 @@ pub fn extensions(data: &[u8]) -> ExtensionList {
 
 /// Decode one TLV entry into the richest form this build models.
 pub fn decode_extension(kind: u16, value: &[u8]) -> Extension {
-    match kind {
-        TRANSFER_FEE_CONFIG => {
-            match (
-                u64_at(value, FEE_CONFIG_WITHHELD),
-                transfer_fee_at(value, FEE_CONFIG_OLDER),
-                transfer_fee_at(value, FEE_CONFIG_NEWER),
-            ) {
-                (Some(withheld_amount), Some(older), Some(newer)) => Extension::TransferFeeConfig {
-                    withheld_amount,
-                    older,
-                    newer,
-                },
-                // Short value bytes: keep it visible rather than reporting a
-                // zero fee, which would read as "this mint charges nothing".
-                _ => Extension::Unrecognized {
-                    kind,
-                    bytes: value.to_vec(),
-                },
-            }
-        }
-        TRANSFER_FEE_AMOUNT => match u64_at(value, 0) {
-            Some(withheld_amount) => Extension::TransferFeeAmount { withheld_amount },
-            None => Extension::Unrecognized {
-                kind,
-                bytes: value.to_vec(),
-            },
-        },
-        TRANSFER_HOOK => Extension::TransferHook {
-            program_id: optional_pubkey(value, 32),
-        },
-        PERMANENT_DELEGATE => Extension::PermanentDelegate {
-            delegate: optional_pubkey(value, 0),
-        },
-        PAUSABLE => match u8_at(value, 32) {
-            Some(byte) => Extension::Pausable { paused: byte == 1 },
-            None => Extension::Unrecognized {
-                kind,
-                bytes: value.to_vec(),
-            },
-        },
-        DEFAULT_ACCOUNT_STATE => match u8_at(value, 0) {
-            Some(state) => Extension::DefaultAccountState { state },
-            None => Extension::Unrecognized {
-                kind,
-                bytes: value.to_vec(),
-            },
-        },
-        SCALED_UI_AMOUNT => Extension::ScaledUiAmount {
-            multiplier_bytes: value.to_vec(),
-        },
+    match decode_checked_extension(kind, value) {
+        Decoded::Decoded(extension) => extension,
         _ => Extension::Unrecognized {
             kind,
             bytes: value.to_vec(),
@@ -506,6 +446,7 @@ mod tests {
                 withheld_amount,
                 older,
                 newer,
+                ..
             } => {
                 assert_eq!(withheld_amount, 9_000);
                 assert_eq!(older.basis_points, 50);
@@ -545,13 +486,17 @@ mod tests {
         assert_eq!(
             decode_extension(TRANSFER_HOOK, &value),
             Extension::TransferHook {
+                authority: None,
                 program_id: Some(bs58::encode([5_u8; 32]).into_string())
             }
         );
         // An all-zero OptionalNonZeroPubkey is absent, not an address of zeros.
         assert_eq!(
             decode_extension(TRANSFER_HOOK, &[0_u8; 64]),
-            Extension::TransferHook { program_id: None }
+            Extension::TransferHook {
+                authority: None,
+                program_id: None
+            }
         );
     }
 
@@ -571,12 +516,18 @@ mod tests {
         let mut value = vec![0_u8; 33];
         assert_eq!(
             decode_extension(PAUSABLE, &value),
-            Extension::Pausable { paused: false }
+            Extension::Pausable {
+                authority: None,
+                paused: false
+            }
         );
         value[32] = 1;
         assert_eq!(
             decode_extension(PAUSABLE, &value),
-            Extension::Pausable { paused: true }
+            Extension::Pausable {
+                authority: None,
+                paused: true
+            }
         );
     }
 
@@ -691,3 +642,6 @@ mod tests {
         assert_eq!(spl_token::account_amount(&account), None);
     }
 }
+
+#[cfg(test)]
+mod details_tests;

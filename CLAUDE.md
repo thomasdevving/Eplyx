@@ -187,6 +187,16 @@ line-identical to the first's, and the most duplicated method —
   an execution every time, and a wire format would invite handing the engine an
   assertion in place of a measurement.
 
+T2 adds complete Token-2022 extension fields and checked TLV validation in
+`standard_programs::token2022`, with official-layout tests. Unknown extensions
+remain visible; execution support remains the consuming policy's decision.
+The existing curl RPC client bounds response bytes before parsing and supplies
+contextual finalized capture helpers. Local probe execution uses a fresh VM and
+returns measured inner instructions; signature possession remains an assumption.
+New artifact documents use `canonical::{document, digest}` (pretty JSON plus one
+newline), without changing ChangeSpec's identity encoding. See
+`docs/phase-t2-shared-primitives.md`.
+
 ### Historical mainnet layer
 
 ```

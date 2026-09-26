@@ -21,6 +21,8 @@ pub const PROGRAM_ID: &str = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
 pub const ACCOUNT_LEN: usize = 165;
 /// `spl_token::state::Mint::LEN`.
 pub const MINT_LEN: usize = 82;
+/// Reserved SPL multisig length; an extended mint/account may not use it.
+pub const MULTISIG_LEN: usize = 355;
 
 // Field offsets, stated once. Each is `spl_token`'s own declaration order.
 pub const ACCOUNT_MINT: usize = 0;
