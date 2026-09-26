@@ -136,11 +136,13 @@ fn execute(state: &AppState, run_id: &str) -> RunOutcome {
             ))
         }
     };
-    if !artifact.matches(spec.candidate()) {
+    let Some(candidate) = spec.candidate() else {
+        return service_fault("this worker requires an executable candidate".into());
+    };
+    if !artifact.matches(candidate) {
         return service_fault(format!(
             "the run's artifact {} is not the candidate its change spec names ({})",
-            artifact.sha256,
-            spec.candidate().sha256
+            artifact.sha256, candidate.sha256
         ));
     }
     let bytes = match registry.artifacts().get_program(artifact) {

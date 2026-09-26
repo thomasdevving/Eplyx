@@ -9,7 +9,7 @@ use std::sync::Mutex;
 
 use anyhow::{bail, ensure, Context, Result};
 use eplyx_engine::bundle::CiBundle;
-use eplyx_engine::change::{ChangeKind, ChangeSpec, Delivery};
+use eplyx_engine::change::{BoundChange, Change, ChangeKind, ChangeSpec, Delivery};
 use eplyx_engine::ci::CiReport;
 use eplyx_engine::governance::attestation::DeploymentAttestation;
 use eplyx_engine::governance::GovernanceBinding;
@@ -167,10 +167,8 @@ pub enum ChangeOrigin {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RunChange {
     pub change_spec_id: String,
-    pub kind: ChangeKind,
-    pub target_program_id: String,
-    pub candidate_sha256: String,
-    pub candidate_len: u64,
+    #[serde(flatten)]
+    pub change: IndexedChange,
     /// Display only. Outside identity, as in the spec itself.
     #[serde(default)]
     pub label: Option<String>,
@@ -182,18 +180,42 @@ pub struct RunChange {
     pub delivery: Option<Delivery>,
 }
 
+/// Kind-specific index data. The flat wire representation keeps existing run
+/// records readable, without making a future non-executable change invent an
+/// executable length, hash or program target.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind", rename_all = "snake_case")]
+pub enum IndexedChange {
+    ProgramUpgrade {
+        target_program_id: String,
+        candidate_sha256: String,
+        candidate_len: u64,
+    },
+}
+
 impl RunChange {
     pub fn of(spec: &ChangeSpec, origin: ChangeOrigin) -> Result<Self> {
         Ok(Self {
             change_spec_id: spec.id()?,
-            kind: spec.kind(),
-            target_program_id: spec.target_program_id().to_string(),
-            candidate_sha256: spec.candidate().sha256.clone(),
-            candidate_len: spec.candidate().len,
+            change: match &spec.change {
+                Change::ProgramUpgrade {
+                    target, candidate, ..
+                } => IndexedChange::ProgramUpgrade {
+                    target_program_id: target.program_id.clone(),
+                    candidate_sha256: candidate.sha256.clone(),
+                    candidate_len: candidate.len,
+                },
+            },
             label: spec.metadata.label.clone(),
             origin,
             delivery: spec.delivery().cloned(),
         })
+    }
+
+    pub fn kind(&self) -> ChangeKind {
+        match &self.change {
+            IndexedChange::ProgramUpgrade { .. } => ChangeKind::ProgramUpgrade,
+        }
     }
 
     /// The hard consistency rule between the registry and the engine:
@@ -214,13 +236,28 @@ impl RunChange {
             change.change_spec_id,
             self.change_spec_id
         );
+        let fields_match = match (&self.change, &change.change) {
+            (
+                IndexedChange::ProgramUpgrade {
+                    target_program_id,
+                    candidate_sha256,
+                    candidate_len,
+                },
+                BoundChange::ProgramUpgrade {
+                    target_program_id: reported_target,
+                    candidate_sha256: reported_candidate,
+                    delivery,
+                },
+            ) => {
+                reported_target == target_program_id
+                    && reported_candidate == candidate_sha256
+                    && delivery == &self.delivery
+                    && report.candidate.sha256 == *candidate_sha256
+                    && report.candidate.len == *candidate_len
+            }
+        };
         ensure!(
-            change.kind == self.kind
-                && change.delivery == self.delivery
-                && change.target_program_id == self.target_program_id
-                && change.candidate_sha256 == self.candidate_sha256
-                && report.candidate.sha256 == self.candidate_sha256
-                && report.candidate.len == self.candidate_len,
+            fields_match,
             "the report's change fields disagree with the change the run was accepted for"
         );
         Ok(())

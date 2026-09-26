@@ -90,6 +90,24 @@ pub enum Change {
     },
 }
 
+/// A borrowed target whose meaning is determined by the change kind. Asset
+/// targets will be added with their evaluators, not represented as programs.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ChangeTarget<'a> {
+    Program(&'a ProgramTarget),
+}
+
+/// The fields that only a program-upgrade consumer may assume exist. This is a
+/// view of the proposal, not another serialized specification or identity.
+#[derive(Clone, Copy, Debug)]
+pub struct ProgramUpgradeRef<'a> {
+    pub target: &'a ProgramTarget,
+    pub candidate: &'a ExecutableArtifact,
+    pub replaces: &'a Option<ExecutableArtifact>,
+    pub expected_upgrade_authority: &'a Option<String>,
+    pub delivery: &'a Option<Delivery>,
+}
+
 /// The governance vehicle that would execute a change.
 ///
 /// Immutable facts about *which* proposal only. Proposal status, votes and
@@ -331,17 +349,43 @@ impl ChangeSpec {
         Ok(serde_json::to_string_pretty(&document)?)
     }
 
-    /// The artefact this spec proposes to execute, named by content.
-    pub fn candidate(&self) -> &ExecutableArtifact {
+    /// The artefact this spec proposes to execute, if its kind has one.
+    pub fn candidate(&self) -> Option<&ExecutableArtifact> {
         match &self.change {
-            Change::ProgramUpgrade { candidate, .. } => candidate,
+            Change::ProgramUpgrade { candidate, .. } => Some(candidate),
         }
     }
 
-    /// The on-chain program the proposal targets.
-    pub fn target_program_id(&self) -> &str {
+    pub fn target(&self) -> ChangeTarget<'_> {
         match &self.change {
-            Change::ProgramUpgrade { target, .. } => &target.program_id,
+            Change::ProgramUpgrade { target, .. } => ChangeTarget::Program(target),
+        }
+    }
+
+    /// Only program-targeted changes have a target program. A future asset
+    /// change must not return its mechanism as if that program were the asset.
+    pub fn target_program_id(&self) -> Option<&str> {
+        match self.target() {
+            ChangeTarget::Program(target) => Some(&target.program_id),
+        }
+    }
+
+    /// Explicit narrowing for upgrade-only consumers such as governance.
+    pub fn as_program_upgrade(&self) -> Option<ProgramUpgradeRef<'_>> {
+        match &self.change {
+            Change::ProgramUpgrade {
+                target,
+                candidate,
+                replaces,
+                expected_upgrade_authority,
+                delivery,
+            } => Some(ProgramUpgradeRef {
+                target,
+                candidate,
+                replaces,
+                expected_upgrade_authority,
+                delivery,
+            }),
         }
     }
 
@@ -354,12 +398,13 @@ impl ChangeSpec {
 
     /// The same proposal delivered by `delivery`. A different change, with a
     /// different ID; everything else it states is kept.
-    pub fn with_delivery(&self, delivery: Option<Delivery>) -> Self {
+    pub fn with_delivery(&self, delivery: Option<Delivery>) -> Result<Self> {
         let mut spec = self.clone();
         spec.change_spec_id = None;
-        let Change::ProgramUpgrade { delivery: slot, .. } = &mut spec.change;
-        *slot = delivery;
-        spec
+        match &mut spec.change {
+            Change::ProgramUpgrade { delivery: slot, .. } => *slot = delivery,
+        }
+        Ok(spec)
     }
 
     /// Check the proposal against the baseline a bundle proves.
@@ -371,13 +416,15 @@ impl ChangeSpec {
         self.validate()?;
         // The delivery is a chain question, answered by `governance`: a bundle
         // proves the baseline, not which proposal is open today.
-        let Change::ProgramUpgrade {
+        let ProgramUpgradeRef {
             target,
             candidate,
             replaces,
             expected_upgrade_authority,
             delivery,
-        } = &self.change;
+        } = self
+            .as_program_upgrade()
+            .context("only a program upgrade can bind to a program baseline")?;
         ensure!(
             target.program_id == baseline.program_id,
             "change spec targets program {} but the bundle proves program {}",
@@ -426,10 +473,11 @@ impl ChangeSpec {
         }
         Ok(ChangeBinding {
             change_spec_id: self.id()?,
-            kind: self.kind(),
-            target_program_id: target.program_id.clone(),
-            candidate_sha256: candidate.sha256.clone(),
-            delivery: delivery.clone(),
+            change: BoundChange::ProgramUpgrade {
+                target_program_id: target.program_id.clone(),
+                candidate_sha256: candidate.sha256.clone(),
+                delivery: delivery.clone(),
+            },
         })
     }
 
@@ -439,7 +487,9 @@ impl ChangeSpec {
     /// run bytes the spec did not describe.
     pub fn resolve(&self, source: CandidateSource<'_>) -> Result<ResolvedCandidate> {
         self.validate()?;
-        let expected = self.candidate();
+        let expected = self
+            .candidate()
+            .context("this change kind names no executable candidate")?;
         let bytes = match source {
             CandidateSource::Bytes(bytes) => bytes.to_vec(),
             CandidateSource::File(path) => std::fs::read(path)
@@ -525,14 +575,51 @@ pub enum TargetLoader {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ChangeBinding {
     pub change_spec_id: String,
-    pub kind: ChangeKind,
-    pub target_program_id: String,
-    pub candidate_sha256: String,
-    /// The governance vehicle the analysed spec names, so a report about a
-    /// proposal says so. Absent otherwise, which keeps every report of an
-    /// unbound change byte-identical.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub delivery: Option<Delivery>,
+    /// Flattening preserves the existing field order and JSON shape while
+    /// preventing an asset-only kind from requiring fabricated program fields.
+    #[serde(flatten)]
+    pub change: BoundChange,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind", rename_all = "snake_case")]
+pub enum BoundChange {
+    ProgramUpgrade {
+        target_program_id: String,
+        candidate_sha256: String,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        delivery: Option<Delivery>,
+    },
+}
+
+impl ChangeBinding {
+    pub fn kind(&self) -> ChangeKind {
+        match &self.change {
+            BoundChange::ProgramUpgrade { .. } => ChangeKind::ProgramUpgrade,
+        }
+    }
+
+    pub fn target_program_id(&self) -> Option<&str> {
+        match &self.change {
+            BoundChange::ProgramUpgrade {
+                target_program_id, ..
+            } => Some(target_program_id),
+        }
+    }
+
+    pub fn candidate_sha256(&self) -> Option<&str> {
+        match &self.change {
+            BoundChange::ProgramUpgrade {
+                candidate_sha256, ..
+            } => Some(candidate_sha256),
+        }
+    }
+
+    pub fn delivery(&self) -> Option<&Delivery> {
+        match &self.change {
+            BoundChange::ProgramUpgrade { delivery, .. } => delivery.as_ref(),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -583,6 +670,29 @@ mod tests {
         assert_eq!(
             spec().id().unwrap(),
             "b5a894cdbec6251f73b4224a294579fe1af9e316232949fa92da852468900bf3"
+        );
+    }
+
+    /// This is the pre-T1 report fragment, including field order. Historical
+    /// reports must round-trip without a schema change or a different digest.
+    #[test]
+    fn the_frozen_upgrade_binding_keeps_its_bytes() {
+        const WIRE: &str = r#"{"change_spec_id":"b5a894cdbec6251f73b4224a294579fe1af9e316232949fa92da852468900bf3","kind":"program_upgrade","target_program_id":"SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy","candidate_sha256":"640e7c6bb5df9c6c312601fc119c0bd9d2a78c295ba367c4b7004d12d8767220"}"#;
+        let bound = spec().bind(&baseline()).unwrap();
+        assert_eq!(serde_json::to_string(&bound).unwrap(), WIRE);
+        assert_eq!(serde_json::from_str::<ChangeBinding>(WIRE).unwrap(), bound);
+        assert_eq!(bound.kind(), ChangeKind::ProgramUpgrade);
+        assert_eq!(bound.target_program_id(), Some(PROGRAM));
+        assert_eq!(
+            bound.candidate_sha256(),
+            Some("640e7c6bb5df9c6c312601fc119c0bd9d2a78c295ba367c4b7004d12d8767220")
+        );
+        assert_eq!(
+            spec().target(),
+            ChangeTarget::Program(&ProgramTarget {
+                program_id: PROGRAM.into(),
+                programdata_address: None,
+            })
         );
     }
 
@@ -721,8 +831,8 @@ mod tests {
     fn binding_checks_every_stated_expectation() {
         let binding = spec().bind(&baseline()).unwrap();
         assert_eq!(binding.change_spec_id, spec().id().unwrap());
-        assert_eq!(binding.kind, ChangeKind::ProgramUpgrade);
-        assert_eq!(binding.target_program_id, PROGRAM);
+        assert_eq!(binding.kind(), ChangeKind::ProgramUpgrade);
+        assert_eq!(binding.target_program_id(), Some(PROGRAM));
 
         let mut wrong_target = spec();
         upgrade(&mut wrong_target).0.program_id = OTHER.into();

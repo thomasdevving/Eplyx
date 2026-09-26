@@ -447,12 +447,15 @@ pub fn attest_squads_upgrade(
                 .is_none_or(|stated| stated == delivery),
         "G1 binding names a different delivery"
     );
+    let candidate_artifact = spec
+        .candidate()
+        .context("deployment attestation requires an executable candidate")?;
     ensure!(
-        binding.expected.candidate == *spec.candidate(),
+        binding.expected.candidate == *candidate_artifact,
         "G1 binding names a different candidate"
     );
     ensure!(
-        ExecutableArtifact::of(candidate_bytes) == *spec.candidate(),
+        ExecutableArtifact::of(candidate_bytes) == *candidate_artifact,
         "content-addressed candidate bytes do not match ChangeSpec"
     );
     let upgrade = binding
@@ -460,7 +463,10 @@ pub fn attest_squads_upgrade(
         .upgrade
         .as_ref()
         .context("G1 binding has no Upgrade")?;
-    let crate::change::Change::ProgramUpgrade { target, .. } = &spec.change;
+    let target = spec
+        .as_program_upgrade()
+        .context("deployment attestation requires a program upgrade")?
+        .target;
     ensure!(
         upgrade.program == target.program_id
             && target
@@ -483,7 +489,7 @@ pub fn attest_squads_upgrade(
         message_sha256: delivery.message_sha256.clone(),
         target_program: upgrade.program.clone(),
         programdata: upgrade.programdata.clone(),
-        candidate: spec.candidate().clone(),
+        candidate: candidate_artifact.clone(),
         observed_slot: None,
         execution: None,
         deployed: None,

@@ -358,6 +358,10 @@ fn open_baseline(
 /// the bundle cannot prove, is refused (exit 4) before it is ever queued.
 /// [`check_change`] binds again at evaluation, so this is an early answer and
 /// never a substitute for the later one.
+///
+/// This is the program-upgrade evaluator's binding entry point. The binding
+/// carries kind-specific fields; a program baseline cannot stand in for an
+/// asset state input when another change kind is introduced.
 pub fn bind_change(
     bundle_dir: &Path,
     spec: &ChangeSpec,

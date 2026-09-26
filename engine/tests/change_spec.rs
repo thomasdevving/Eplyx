@@ -63,9 +63,12 @@ fn the_candidate_flag_is_the_minimal_program_upgrade() {
     let spec = spec_for(&bundle, STAKE_POOL);
     let change = implicit.change.as_ref().unwrap();
     assert_eq!(change.change_spec_id, spec.id().unwrap());
-    assert_eq!(change.kind.as_str(), "program_upgrade");
-    assert_eq!(change.target_program_id, STAKE_POOL);
-    assert_eq!(change.candidate_sha256, implicit.candidate.sha256);
+    assert_eq!(change.kind().as_str(), "program_upgrade");
+    assert_eq!(change.target_program_id(), Some(STAKE_POOL));
+    assert_eq!(
+        change.candidate_sha256(),
+        Some(implicit.candidate.sha256.as_str())
+    );
 
     let by_file = with_spec(
         &bundle,
@@ -286,7 +289,7 @@ fn frozen_schema_two_controls_keep_their_verdicts() {
         assert_eq!(report.exit_code(), exit, "{directory}");
         assert_eq!(report.replay_proof.as_ref().unwrap().status, "matched");
         let change = report.change.unwrap();
-        assert_eq!(change.target_program_id, program);
+        assert_eq!(change.target_program_id(), Some(program));
         assert_eq!(
             change.change_spec_id,
             spec_for(&bundle, program).id().unwrap(),

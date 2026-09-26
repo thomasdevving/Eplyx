@@ -250,6 +250,15 @@ the spec did not describe cannot run. A stated expectation (ProgramData,
 replaced executable, authority) the bundle cannot prove fails with exit 4 rather
 than passing. Every `CiReport` carries `change`. See `docs/phase-c1-changespec.md`.
 
+**T1 prepared the interfaces for additional kinds.** `candidate()` and
+`target_program_id()` return optional references; `target()` carries the target
+kind, and governance explicitly narrows with `as_program_upgrade()` before
+reading a provider. `ChangeBinding::change` and the server's
+`RunChange::change` are tagged enums flattened into the existing JSON shape.
+Frozen wire tests pin field order as well as values. Only `program_upgrade`
+exists at this phase; adding a kind must supply its own evaluator and binding.
+See `docs/phase-t1-multi-kind-changespec.md`.
+
 **Phase P1 made it the hosted product's identity.** `POST /checks` takes an
 optional `change_spec` part (authoritative; the `candidate` bytes only satisfy
 it) and an optional `label`; candidate bytes alone derive exactly the spec the
