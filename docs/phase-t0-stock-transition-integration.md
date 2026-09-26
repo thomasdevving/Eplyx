@@ -1,6 +1,8 @@
 # T0 — Stock Transition integration: reference and decisions
 
-Status: **owner review required; T1 has not started**. Recorded 26 September 2026.
+Status: **T0 architecture approved; pre-T1 corrections verified; T1 authorized**.
+Recorded 26 September 2026. The owner-review addendum below closes the initial
+checkpoint while retaining the original source limitations and test outcomes.
 
 This is the behaviour-preservation contract and proposed integration design for
 migrating Stock Transition Assurance (STA) into MAIN. It does not claim that the
@@ -8,7 +10,7 @@ migration has been implemented. MAIN is based on `5bfd81399eaff23301d14a05d6869a
 on `t-token-migration`. STA is the read-only `Post-Hackathon` reference at
 `ad1897e86ee05ff2255bd5277518a3230ee2340f`.
 
-## 1. Checkpoint and exceptions requiring review
+## 1. Checkpoint and accepted reference corrections
 
 The first commit, `73a1c9d`, corrects MAIN's deliberately pinned adapter count from
 four to five and names Drift in the assertion. No adapter has been added.
@@ -29,12 +31,16 @@ STA's baseline is recorded, including these discrepancies:
    trial applying the same conditional compilation to the constant passes clippy.
    Port that mechanical fix with the program in T3; preserve all assertions.
 
-Consequently T0 is **not declared fully green**. Approval must settle the observed
-minimal value and the three copy discrepancies before accepting the reference
-contract. This is not permission to weaken analytical assertions.
+Those were the initial checkpoint findings. The owner approved the architecture
+and frozen fee-defect limitation; the pre-T1 review in section 13 confirms the
+stress semantics and classifies all three wording mismatches as stale copy in
+their tested scope. Corrected scratch browser assertions pass, and exact pinned
+pnpm checks pass. T0 is accepted with those source limitations, rather than claiming
+the untouched STA suite itself is green. No analytical assertion was weakened.
 
-The owner must also explicitly approve adding Postgres to MAIN for the narrow
-mutable-identity role in section 10. No Postgres dependency, migration, service or
+The owner explicitly approved Postgres for the narrow mutable-identity and
+authorization role in section 10. There must be no second authoritative project,
+run or evidence registry in Postgres. No Postgres dependency, migration, service or
 deployment configuration has been added to MAIN at T0. The disposable local
 database used to test STA is separate from this proposed product change.
 
@@ -164,7 +170,10 @@ archive control, not a second MAIN product kind.
 The minimal example has seven accounts, six positive, four of four attempted
 holders migrated, a warning gate under block-only and a blocked strict gate. Its
 codes are `AUTHORITY_PATH_UNAVAILABLE`, `SOURCE_FROZEN`, `STRANDED_HOLDERS`. The
-observed reference stress count is 20/20, requiring the review in section 1.
+accepted reference statement is **20/20 stress cases behaved as specified**:
+11 expected migrations succeeded and reconciled, and nine expected rejections
+rejected with rollback verified. It does not mean 20 migrations succeeded. The
+four-holder population rehearsal is separate from the stress matrix.
 The deadline defect has one derived `UnexpectedSuccess` witness at the exclusive
 deadline; `eplyx reproduce` returned success offline. No mainnet failure is implied.
 
@@ -189,7 +198,8 @@ authority resolution, rebinding, observed search, lifecycle policy/consequence,
 counterfactual, notice, readiness, rollout, current observations, wallet scope,
 Transfer, market exit, positions, local store, dashboard and cloud. All Rust
 baseline failures caused by missing scratch fixtures/Git context or loopback
-restrictions were rerun successfully. The cloud browser discrepancies remain.
+restrictions were rerun successfully. The initial cloud browser discrepancies are
+resolved as reference copy corrections in section 13; STA remains unchanged.
 The contract also identifies opt-in live browser checks as not run; missing
 artefacts are never treated as successful skips.
 
@@ -475,8 +485,10 @@ for immutable run/report/artefact/ChangeSpec/state-descriptor/search/witness/
 reproduction bytes. P2 durable run records remain the queue. No second report
 database or `eplyx-cloud` service.
 
-**Pending explicit approval:** Postgres stores mutable users (Argon2id), sessions,
+**Explicitly owner-approved at T0:** Postgres stores mutable users (Argon2id), sessions,
 device codes, workspaces, membership, hashed project credentials and project links.
+It must not duplicate MAIN's authoritative project/run/evidence registry.
+Mappings only connect workspace/authorization state to MAIN's `proj_…` IDs.
 Migrations live in `server/migrations/`. Database-backed tests fail loudly when
 `EPLYX_CLOUD_TEST_DATABASE_URL` is absent. The operator credential remains bootstrap
 and admin; existing filesystem projects require explicit operator assignment to a
@@ -576,7 +588,7 @@ passed as part of MAIN's suites. No MAIN production source changed in T0.
 
 Node was 22.23.1. MAIN frontend checks used the available pnpm 11.19.0 fallback
 against existing dependencies; the requested 11.24.0 was unavailable locally.
-That exact-version verification remains pending. Initial wrapper/cache/loopback
+That initial pending check is now satisfied by section 13. Initial wrapper/cache/loopback
 failures are recorded rather than counted as product regressions. Playwright used
 cached Chromium through scratch-only `EPLYX_CHROME` support.
 
@@ -608,8 +620,8 @@ temporary test infrastructure only.
 
 | Phase | State / required result |
 | --- | --- |
-| T0 | Adapter fix committed; reference/ADR awaiting owner decisions above |
-| T1 | Pending approval; multi-kind plumbing, unchanged upgrade bytes and ID |
+| T0 | Architecture approved; reference corrections and exact pnpm checks verified; source limitations accepted |
+| T1 | Authorized; multi-kind plumbing, unchanged upgrade bytes and ID |
 | T2 | Pending; token/RPC/digest/executor primitives and real-layout tests |
 | T3 | Pending checkpoint; migration core, candidates, exact reference comparison |
 | T4 | Pending; coherent recapture, authority, rebinding and observed search |
@@ -620,7 +632,47 @@ temporary test infrastructure only.
 | T9 | Pending checkpoint; approved identity storage, sync and hosted analysis/UI |
 | T10 | Pending; guides/archive pointer; release packaging only after asking |
 
-The next milestone is resolving this T0 review and then T1. After the migration,
+The next milestone is T1; no further architecture checkpoint is required. After the migration,
 consider an explicitly authorized read-only provider analysis, partial/claim-based
 migrations and a local-validator unsigned-plan check. None is inferred authorized
 by this ADR.
+
+## 13. Owner-review addendum: pre-T1 checks
+
+The owner approved the filesystem/CAS authority and mutable-identity-only
+Postgres split, MAIN's upgradeable loader, and the frozen STA fee-defect clippy
+limitation. T3 must rerun the complete frozen migration contract on the actual
+port and apply only the constant's conditional-compilation hygiene fix.
+Live-provider checks remain intentionally not run.
+
+The [review record](examples/phase-t0-stock-transition-integration/owner-review.json)
+contains complete expected/rendered text, source file hashes, test file hashes,
+individual test-body hashes, rationale and command receipts for each correction.
+The [three-line assertion patch](examples/phase-t0-stock-transition-integration/cloud-copy-corrections.patch)
+was applied only in scratch and then restored. The original reference values and
+original failed-test receipts remain intact; this addendum supersedes the three
+accepted assertion strings when porting their tests.
+
+| Assertion | Classification | Semantic assessment |
+| --- | --- | --- |
+| Cloud landing headline, `cloud.spec.js:30` | Stale copy only | “CLI” explicitly names the same local/CI execution described by the surrounding optional-sync workflow. This is not a global assertion that all hosted Eplyx analysis runs on the caller's machine. Optional sync and private-project access assertions remain intact. |
+| Synced banner, `cloud.spec.js:39` | Stale copy only | Both deny RPC, execution and replay when viewing synced results. Rendered copy also names developer-machine/CI provenance. |
+| Search warning, `cloud.spec.js:51` | Stale copy only | Both deny that a missing witness proves resolution across different search domains. The reason text and assertions forbidding “Resolved (equivalent search)” and “fixed” remain intact. |
+
+The minimal stress headline is now explicitly **20/20 stress cases behaved as
+specified**, with 11 reconciled migrations and nine correct, rollback-verified
+rejections. Its separate population rehearsal remains four of four attempted
+holders migrated. No STA behaviour or raw reference outcome changed.
+
+MAIN pins `pnpm@11.24.0`. That exact official package was acquired into scratch,
+integrity checked, and its `--version` returned `11.24.0`. With Node 22.23.1,
+`pnpm check:frontend`, `pnpm verify:report` and `pnpm verify:governance` all passed.
+The report check retained 141 fixtures, 89 identical, 52 changed, 11 critical and
+$6,182,370 collateral represented. No lockfile or installed project dependency
+was changed. All seven cloud browser tests passed under pnpm 11.24.0 with only
+the accepted text assertions corrected. An initial database-port setup failure
+and its successful retry are recorded separately.
+
+These results meet the owner's condition to begin T1. They do not waive T3's
+port verification or turn the untouched STA source's copy/lint failures into
+passing source results.
