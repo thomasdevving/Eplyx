@@ -1,0 +1,1042 @@
+{
+  "schema_version": 1,
+  "phase": "T6",
+  "source_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+  "assertion_contract": "examples/phase-t0-stock-transition-integration/sta-test-contract.json",
+  "source_suites": [
+    {
+      "source": "engine/src/notice/tests.rs",
+      "source_sha256": "186a1977aa8a1c45b4220c94e9b7d7d6dcc62f34ea4d2145c7c73ad730adc893",
+      "target": "engine/src/lifecycle/notice/tests.rs",
+      "tests": [
+        {
+          "name": "source_digest_mismatch_is_rejected",
+          "source_sha256": "a4857d5170f95985a8d350a6698fc38759a3666e95ae0ad0ab31d10b1b55f3ee",
+          "disposition": "retained"
+        },
+        {
+          "name": "successor_mint_keeps_exact_provenance",
+          "source_sha256": "ef2ff71befa37d7a575e83ad715305b6e033b58f405115203d2f16dbdd74f690",
+          "disposition": "retained"
+        },
+        {
+          "name": "deadline_keeps_exact_provenance",
+          "source_sha256": "963b1e1c17dc07aa7f8305b9f77bebbb54e9a9a9467bd24c23bbbe50f2873229",
+          "disposition": "retained"
+        },
+        {
+          "name": "missing_required_deadline_fails",
+          "source_sha256": "c533f40d565b70fef02ce9dceeaeb9e0096eb6e5f452673e7b5e4df7186c7ad0",
+          "disposition": "retained"
+        },
+        {
+          "name": "issuer_mint_never_verifies_itself",
+          "source_sha256": "0e0459749eaacd9ac4058ab96bb21462122ef420f8048fa166a853ae3fc1a376",
+          "disposition": "retained"
+        },
+        {
+          "name": "independent_raw_chain_confirms_both_mints",
+          "source_sha256": "675841da8d9707b3d650b48127603a7b102f6c0d965849d20dd5a02d99d144cb",
+          "disposition": "retained"
+        },
+        {
+          "name": "wrong_successor_chain_identity_is_rejected",
+          "source_sha256": "7687a8deb3fb5899b53c3afeb5b83c991aff8e671802e6b3a7cbecec271429a7",
+          "disposition": "retained"
+        },
+        {
+          "name": "issuer_wording_never_proves_official_transition",
+          "source_sha256": "f17e8378dad77326b9f28a5b9632f47f82a18b3bee0a1b5b8d1999a98dd70ed8",
+          "disposition": "retained"
+        },
+        {
+          "name": "unknown_mechanism_stays_unknown",
+          "source_sha256": "0d0c81971c7135621e19cda286c15bed5e6f71ffbedc623bf8f4012b418eefd9",
+          "disposition": "retained"
+        },
+        {
+          "name": "unrelated_data_never_infers_conversion_ratio",
+          "source_sha256": "8155e4c672c3316390886e8b2de10618902c1fc63fdec691868378bcff3bc3cf",
+          "disposition": "retained"
+        },
+        {
+          "name": "demo_time_never_becomes_issuer_assertion",
+          "source_sha256": "18b03806bb245f81a28500041b3889355cc684410c90744aa5d8b80abc707d87",
+          "disposition": "retained"
+        },
+        {
+          "name": "scenario_generation_is_deterministic",
+          "source_sha256": "5e22502a50dbffce4ef750c434f3a680ffae67ae48dd3655e89961db2ccb1ca3",
+          "disposition": "retained"
+        },
+        {
+          "name": "ordering_and_irrelevant_markup_preserve_semantics",
+          "source_sha256": "2b68e9731ef46a41961af325a58c423fb7e774289a4fc651b2279a9fb981b7c6",
+          "disposition": "retained"
+        },
+        {
+          "name": "altered_deadline_without_regeneration_is_rejected",
+          "source_sha256": "b2baba2040e5de56f2b81e22196faa16a569738dce9aa373c52a3feefc55a5e1",
+          "disposition": "retained"
+        },
+        {
+          "name": "changed_mint_or_provenance_is_rejected",
+          "source_sha256": "77a8703ba47110c7f7f50d1622270bc6977950b5bafe2c092c5a4414b2979400",
+          "disposition": "retained"
+        },
+        {
+          "name": "manual_scenario_or_binding_tampering_fails",
+          "source_sha256": "b5a27a4ac8edf0daf2ac37c3bed81a7c19d70a4cb07f8fceb41b03f9f11b3987",
+          "disposition": "retained"
+        },
+        {
+          "name": "alternate_destination_and_assertion_limits_are_preserved",
+          "source_sha256": "bd8a9ab3e6bb0401025b5d0fad22c0d51cefd0965dc17fc590d7a5c99910ad45",
+          "disposition": "retained"
+        },
+        {
+          "name": "script_strings_cannot_supply_notice_fields",
+          "source_sha256": "f2471a0a37864c081391453f37ea9eb099f0b0b5e42740fec3259571513d828e",
+          "disposition": "retained"
+        },
+        {
+          "name": "strict_event_and_config_parsing_rejects_unknown_fields",
+          "source_sha256": "6d24eea7c3fb1a4809a832d2503ef5fa18dc9f6e18d8e302cbbe839c6f128d71",
+          "disposition": "retained"
+        },
+        {
+          "name": "missing_chain_artifact_cannot_grant_identity",
+          "source_sha256": "66589f151f24856800e6a15d7596225a4be4d847a23b06845165602f8f09a437",
+          "disposition": "retained"
+        },
+        {
+          "name": "changed_economic_semantics_cannot_reuse_frozen_proofs",
+          "source_sha256": "dc553a6aa0461f21cc1b79ac57e26af3c9d7b396d3f03d095bc20f591d503948",
+          "disposition": "retained"
+        }
+      ]
+    },
+    {
+      "source": "engine/src/position/meteora_dlmm.rs",
+      "source_sha256": "0f39524dadc8a0a64f5c4ed7ea9ee56d28158f9ac72172e22fe257b18d7d0f05",
+      "target": "engine/src/protocol/meteora_dlmm/position.rs",
+      "tests": [
+        {
+          "name": "pool_vault_authority_cannot_grant_lp_ownership",
+          "source_sha256": "f95940b21b9de764e581b6233bbee0a2dcc05c580f515986c20b4d8213aec113",
+          "disposition": "retained"
+        },
+        {
+          "name": "position_is_bound_to_exact_pool",
+          "source_sha256": "f8dcb940d922c2fab46811fd040d7e6c32208a8a48f2d8a0fc71821868305a2e",
+          "disposition": "retained"
+        },
+        {
+          "name": "wrong_position_authority_is_rejected",
+          "source_sha256": "bfd2a579d22ee4f9f6d2aab5fc93694692fc16d72cb680fb6aa74af77dfcdce4",
+          "disposition": "retained"
+        },
+        {
+          "name": "successful_token_deltas_require_exact_conservation",
+          "source_sha256": "69f5634ed4048c1cab8d8cfb0f04c4e82d736647d4f4599387864b12cd73f8f5",
+          "disposition": "retained"
+        },
+        {
+          "name": "position_shares_and_bin_supply_reconcile_exactly",
+          "source_sha256": "2e0d64d2ef9a570c7a8c40c62ea67731e938755e6fc14551769da01146713921",
+          "disposition": "retained"
+        },
+        {
+          "name": "failed_withdrawal_never_becomes_proven",
+          "source_sha256": "3adf0c508a79328d50e104b5f9f809ecf7b9d7595d508e3634b7b0121cc1910f",
+          "disposition": "retained"
+        },
+        {
+          "name": "proportional_rounding_and_overflow_are_explicit",
+          "source_sha256": "e8dc1042f43402b20ab95696346444cc3232e2f6ad426c29198eaf82f5b3e204",
+          "disposition": "retained"
+        }
+      ]
+    },
+    {
+      "source": "engine/src/position/tests.rs",
+      "source_sha256": "b76a2495778cce8ed934ebe9c80dea3ca4e506a552e953c463d17e20645eed2f",
+      "target": "engine/src/protocol/meteora_dlmm/position_proof_tests.rs",
+      "tests": [
+        {
+          "name": "direct_holder_evidence_cannot_prove_withdrawal",
+          "source_sha256": "6dc94d0c932e8f171a1654716f6a4b8cb740d09c4aca3d0b1f7f8174ddc64be6",
+          "disposition": "retained"
+        },
+        {
+          "name": "withdrawal_never_proves_official_transition_or_redemption",
+          "source_sha256": "70bb0acb662be78444d8e40d0addefda5a2e18e46a19907ffe44c441b03ffb34",
+          "disposition": "retained"
+        },
+        {
+          "name": "withdrawal_evidence_cannot_inherit_to_another_position",
+          "source_sha256": "393242daf110f9470cc0d478b0835bb93ae9b54bd3541801e221aaafe8dbda73",
+          "disposition": "retained"
+        },
+        {
+          "name": "pool_authority_bank_range_and_fraction_are_independent_scopes",
+          "source_sha256": "30c6902d096427f9d19ee75187480d20b1ee6a2ed44aa4a4d2e60c8b36b3428b",
+          "disposition": "retained"
+        },
+        {
+          "name": "vault_presence_and_discovery_without_execution_remain_not_tested",
+          "source_sha256": "3d20fc653c2712db7a66f712f90d9852cdebdb9f0dbb26334c8e4fc5cfc0cd1a",
+          "disposition": "retained"
+        },
+        {
+          "name": "generic_position_model_contains_no_asset_or_issuer_literals",
+          "source_sha256": "6191f92ee75c569e12f9fffa39908faa38f8888e5db37b380674262f63169cbd",
+          "disposition": "retained"
+        }
+      ]
+    },
+    {
+      "source": "engine/src/probe/token_transfer.rs",
+      "source_sha256": "d21ef357b30902fa045b8a18130ace77303bc0747dff7c809865377ca72c5b01",
+      "target": "engine/src/path/token_transfer.rs",
+      "tests": [
+        {
+          "name": "deployed_token_2022_transfer_executes_and_fees_reconcile",
+          "source_sha256": "492cb5e1b0162e4d2b0fd34e07018d748b161ed4c3a341a77368cd9ce78c8625",
+          "disposition": "retained"
+        },
+        {
+          "name": "token_transfer_replay_is_identical",
+          "source_sha256": "fee26fab88bc81bf3ab928d31321f0cc124b68efaa319a8ef8d1de81cc79a2fc",
+          "disposition": "retained"
+        },
+        {
+          "name": "insufficient_input_is_a_precondition_rejection",
+          "source_sha256": "c387e7d6ea259a4aa6eff41a94ad655ee20ccac17249b0a9414dd09cbf496f35",
+          "disposition": "retained"
+        },
+        {
+          "name": "wrong_mint_authority_and_frozen_source_are_rejected",
+          "source_sha256": "7ef7ecd964639948549521a96ac42b0f1359f16544cacf3bd12d9a8b43864b35",
+          "disposition": "retained"
+        },
+        {
+          "name": "paused_mint_and_active_hook_without_extra_accounts_are_rejected",
+          "source_sha256": "6cc7a60e480137ef9aacdf316cd34d9d2b439971526dd7346dfa44f2904ad32c",
+          "disposition": "retained"
+        },
+        {
+          "name": "real_program_failure_rolls_back_watched_tokens_and_mint",
+          "source_sha256": "cc8b56bd154881d3abaee59d79303af0b1be37445972d5909f8347fa58d6fcbe",
+          "disposition": "retained"
+        },
+        {
+          "name": "destination_must_be_real_distinct_and_same_mint",
+          "source_sha256": "b50a7ddf8d4b2ca6d30df6e210f43d2fc1c1821577dd2decbd29f448587cd4f4",
+          "disposition": "retained"
+        },
+        {
+          "name": "missing_withheld_fee_fails_exact_reconciliation",
+          "source_sha256": "0632e011e9febe2f3de2262b89938c675c5f0a8b1224542208c27e70b1f04f70",
+          "disposition": "retained"
+        }
+      ]
+    },
+    {
+      "source": "engine/src/readiness/tests.rs",
+      "source_sha256": "8a6b60995ab94e80e28f68023efdf0b8fb9d6628c442729fb9586c206a486e6c",
+      "target": "engine/src/lifecycle/readiness/tests.rs",
+      "tests": [
+        {
+          "name": "missing_evidence_is_incomplete_not_ready",
+          "source_sha256": "d126d037d548214a9df38acfa00acc15708cb3bb25353db3a637dbe71cf703fd",
+          "disposition": "retained"
+        },
+        {
+          "name": "not_tested_never_becomes_proven_or_failed",
+          "source_sha256": "f8282b89d6860ca1e3e317fc3ec9992673cef566f5f6143cb6fb84798c9e3549",
+          "disposition": "retained"
+        },
+        {
+          "name": "failed_required_path_blocks_only_when_explicit",
+          "source_sha256": "02165db99190e0a0ab3f2125c488ad5ec34b97a6e286e15a61f3ee8bc9d1c0ea",
+          "disposition": "retained"
+        },
+        {
+          "name": "unsupported_is_a_boundary_until_policy_blocks",
+          "source_sha256": "36b26fb207639ad5ae3ab1654ab557b01a79bdc013a394563722edceac1d7cab",
+          "disposition": "retained"
+        },
+        {
+          "name": "transfer_never_satisfies_official_transition",
+          "source_sha256": "66fb2c4dd570a65fe426565ba4b4c8c251a842f4b070a615438c69072adb2ba5",
+          "disposition": "retained"
+        },
+        {
+          "name": "market_exit_never_satisfies_official_transition",
+          "source_sha256": "8083989643fa8fbf5577e91b3de957ae5724dfdb7105f0f49e5624fb60286956",
+          "disposition": "retained"
+        },
+        {
+          "name": "withdrawal_never_satisfies_official_transition",
+          "source_sha256": "c92634863b28b85515c5d564722b73e0eab7d0f2ff4cdbe3b05b5275ad1e97c0",
+          "disposition": "retained"
+        },
+        {
+          "name": "principal_is_not_complete_position_exit",
+          "source_sha256": "f3cd9fdb643cb86ae4369f01b154e6c59565c0a324ee80fedb266668ee005276",
+          "disposition": "retained"
+        },
+        {
+          "name": "evidence_cannot_inherit_between_entities",
+          "source_sha256": "cc897e4c9c9735f7c46f7424eabbe57aad57cec529bf05ade18bb3cea6a9872a",
+          "disposition": "retained"
+        },
+        {
+          "name": "venue_context_bank_and_fixture_are_exact",
+          "source_sha256": "d0d0446924d920bbb7543cb31633ba2a7a9f0c9b87bd26ad4bf656fa315bc543",
+          "disposition": "retained"
+        },
+        {
+          "name": "sampled_entity_never_proves_population",
+          "source_sha256": "124c5e3ad19d4307730367b270618c2061a3b3f552fc38a31bcb68311bd10e69",
+          "disposition": "retained"
+        },
+        {
+          "name": "unrelated_success_cannot_erase_required_failure",
+          "source_sha256": "20e75e98d6530f35760abde7cb891f0f20a8bd6981e799e51299da193bf48cec",
+          "disposition": "retained"
+        },
+        {
+          "name": "optional_failed_route_is_informational",
+          "source_sha256": "6a0863b8a5e18277d97b4dc1787d67f2f9b95caec2cedd4740e310e55f638a13",
+          "disposition": "retained"
+        },
+        {
+          "name": "signer_assumption_is_explicit_not_key_possession",
+          "source_sha256": "420fff83d969fbd250749f8dfe9849e6b34819b193f814b443231ee60ea5bd36",
+          "disposition": "retained"
+        },
+        {
+          "name": "policy_ordering_and_json_roundtrip_are_canonical",
+          "source_sha256": "e7b7eff477b6457b9a16637108dea49e06833d26999db2d81d4a0a3938072843",
+          "disposition": "retained"
+        },
+        {
+          "name": "invalid_policy_cannot_contradict_accepted_proof",
+          "source_sha256": "cd9310f9974cae794422a238465f442be391cd136b70fa0fe15ea6ca22ace609",
+          "disposition": "retained"
+        },
+        {
+          "name": "generic_asset_and_economic_policy_remain_separate",
+          "source_sha256": "41f48f93a20b28a95e03655c856f00ff745579599961cd6fe2505892a58c39d6",
+          "disposition": "retained"
+        },
+        {
+          "name": "status_exit_codes_are_stable",
+          "source_sha256": "bf2c8b474973e6b15a164bddd1d64e6e029246b033e7f89a155ed5b7f0d65154",
+          "disposition": "retained"
+        },
+        {
+          "name": "missing_vm_or_reconciliation_never_grants_ready",
+          "source_sha256": "92f99c666d10ff53ff41f5fd4a57becc37f2d12bec12a2afbb6b807763fd8bbe",
+          "disposition": "retained"
+        },
+        {
+          "name": "failed_claim_without_actual_rollback_is_not_blocker",
+          "source_sha256": "f38857f83251ab647a3ce1bd04db4e277c188a324f169d2936fbb0af832bdf5f",
+          "disposition": "retained"
+        }
+      ]
+    },
+    {
+      "source": "engine/src/resolution/tests.rs",
+      "source_sha256": "d2997b7fbe41493a39d54039c11781308f5c446553426d6a45c4ff1120f3c8b1",
+      "target": "engine/src/lifecycle/resolution/tests.rs",
+      "tests": [
+        {
+          "name": "transfer_cannot_prove_official_transition",
+          "source_sha256": "b94f786f6a2a3d4e1f63a7c0b3ee73f752fbb83eb52ceb78413da97da0990520",
+          "disposition": "retained"
+        },
+        {
+          "name": "market_exit_cannot_prove_redemption",
+          "source_sha256": "743f2327204d7b97aac8af8d299fe0d252919f5495e85fc1910882f0b49e9f4f",
+          "disposition": "retained"
+        },
+        {
+          "name": "unsupported_is_not_failed_or_nonexistent",
+          "source_sha256": "2f1d9c9b4b3ba54c3a0d97850127ebdbe304981f4f47b60f39ae1040ef218ec4",
+          "disposition": "retained"
+        },
+        {
+          "name": "not_tested_never_becomes_proven",
+          "source_sha256": "1251c6e052dd687c39550eb0ebcc794cd15486e5390f519f47bfc4c7004b8e8b",
+          "disposition": "retained"
+        },
+        {
+          "name": "direct_holder_withdrawal_is_not_applicable",
+          "source_sha256": "0d56667f81fc4162e2ba82865d4216ca3bd94960ea0a57007746bf26f728c0ec",
+          "disposition": "retained"
+        },
+        {
+          "name": "entity_proof_does_not_inherit",
+          "source_sha256": "071da916f84d1b9180007c515b96d4cb681796ea77c3d82116c571c73720907b",
+          "disposition": "retained"
+        },
+        {
+          "name": "venue_proof_does_not_inherit",
+          "source_sha256": "3e9559e7a6975c0340038fc0d96b70cfde42d0049b702a16e2661e249d56612f",
+          "disposition": "retained"
+        },
+        {
+          "name": "local_assumed_signer_never_becomes_possession",
+          "source_sha256": "a61a58fee6aaac0e9d42544493b5c5e74f7eeae341a8cb582e27306a2b94ff9f",
+          "disposition": "retained"
+        },
+        {
+          "name": "exact_scope_fees_banks_and_control_points_are_preserved",
+          "source_sha256": "25b1434327937c64d07b489ceede6bfa33f7cb2318eccd479d37cb82d26caa8c",
+          "disposition": "retained"
+        },
+        {
+          "name": "failed_evidence_never_becomes_proven",
+          "source_sha256": "1ccec3ac9abfb3066fff158c1ee1172b2bd6fd296cb91c9de5c08ce403069ff1",
+          "disposition": "retained"
+        },
+        {
+          "name": "indeterminate_evidence_never_becomes_proven",
+          "source_sha256": "16ce3f2961a93c54dd1891275de4c1606ab848178d3a9441b703bd309bfd5273",
+          "disposition": "retained"
+        },
+        {
+          "name": "evidence_and_discovery_input_order_do_not_change_resolution",
+          "source_sha256": "a1588618c14cd65d82e31371e1b611e1c909213d9905df7579532fae28a85556",
+          "disposition": "retained"
+        },
+        {
+          "name": "matrix_rows_roundtrip_with_strict_status_parsing",
+          "source_sha256": "9f7fbff294bc9f11b33cd315f5d1721c0ce9f2e0f8b7386b8a3bccfbe6ce9720",
+          "disposition": "retained"
+        },
+        {
+          "name": "generic_logic_has_no_asset_issuer_or_target_literals",
+          "source_sha256": "ed584e0f4dcd7f0c06f8844228e4ceda0fc1f07b927a904049f46c7ab17b7536",
+          "disposition": "retained"
+        },
+        {
+          "name": "projection_rejects_claimed_success_without_vm_or_reconciliation",
+          "source_sha256": "c123433187eb10dce1717fe78cd51ceb49a7d09c4242de8f4afb9ab97c7b5c03",
+          "disposition": "retained"
+        },
+        {
+          "name": "malformed_discovery_and_unbound_claims_fail_closed",
+          "source_sha256": "38f0edb32c2ce74c4c2c257af83d2bc9d38e9fa40995255cfba0e14b4a0eb235",
+          "disposition": "retained"
+        }
+      ]
+    },
+    {
+      "source": "engine/tests/lifecycle_consequence.rs",
+      "source_sha256": "2345fbd185b9ed252dec862b81c3d74060c08cb68c267a186bb55857ee3bc939",
+      "target": "engine/tests/lifecycle_consequence.rs",
+      "tests": [
+        {
+          "name": "active_before_effective_time_preserves_meaning",
+          "source_sha256": "0b2a679a3e1e658ff9291e995946b7f4a143653e17b6989ab57423304e2bd653",
+          "disposition": "retained"
+        },
+        {
+          "name": "exact_effective_boundary_changes_same_positive_wallet_without_mutating_bytes",
+          "source_sha256": "cb904a4ae5a4c5450b577476f74211a2bea0f53cb0578c3f6b76dc5fc44617be",
+          "disposition": "retained"
+        },
+        {
+          "name": "inclusive_deadline_ends_entitlement_without_claiming_stranding_or_available_conversion",
+          "source_sha256": "8619591026c39f9eb1ccea6589d6f5d597af41806465cf4d2f0d9f224a39dc9a",
+          "disposition": "retained"
+        },
+        {
+          "name": "zero_public_balance_is_unaffected_but_confidential_zero_is_unresolved",
+          "source_sha256": "e559bb10a1c16b77f94032f3de5579ad07481f587a457a2ea87f462b5e77824b",
+          "disposition": "retained"
+        },
+        {
+          "name": "verified_vault_is_stale_and_old_and_current_amounts_never_merge",
+          "source_sha256": "1162465750701a3e1d8ecf3b57e6c869a4ba0e5943fb44227b05f0b0ad6646f8",
+          "disposition": "retained"
+        },
+        {
+          "name": "positive_unknown_role_is_transition_required_without_inventing_role",
+          "source_sha256": "c615a912d1f2c11059e38faadeaeb6b38db9c93e61d532cd5e50c227064f0d26",
+          "disposition": "retained"
+        },
+        {
+          "name": "rpc_evidence_and_policy_assumptions_are_distinct_and_resolvable",
+          "source_sha256": "5c41cbd18ed5508389e0996f8d5aefd0dd01e5e6cd52da8488b4b78f0862ba94",
+          "disposition": "retained"
+        },
+        {
+          "name": "same_frozen_world_produces_reproducible_before_after_diff_offline",
+          "source_sha256": "e081f9143c826f1e1b236c5361ad341b8107989c73d154c09e324526ad2557b3",
+          "disposition": "retained"
+        },
+        {
+          "name": "deterministic_serialization_roundtrip_and_tamper_detection",
+          "source_sha256": "c83a6aa5cebb4ea5de37ce94397fdc0419572f0191131900e419b5ee3409bbdd",
+          "disposition": "retained"
+        },
+        {
+          "name": "unknown_policy_optional_deadline_and_legacy_snapshot_remain_conservative",
+          "source_sha256": "706884c2e88b0f88a77941853a410c4a2530c6f91e16dd0c67879fcc1e19eb58",
+          "disposition": "retained"
+        },
+        {
+          "name": "malformed_provenance_wrong_asset_reversed_times_and_mismatched_change_fail",
+          "source_sha256": "1b36eed1873beb2255c3d58a39edd384e48deab8f61479d934d897ba9378ae03",
+          "disposition": "retained"
+        },
+        {
+          "name": "local_policy_capture_load_checks_hash_without_network",
+          "source_sha256": "3aaf5d58ddd09bb2204cb6588098146cf6e0213ed6d2b97c225067bb06455623",
+          "disposition": "retained"
+        }
+      ]
+    },
+    {
+      "source": "engine/tests/lifecycle_counterfactual.rs",
+      "source_sha256": "85be87976ceb8448276caa24093d85a12e04f97f58f734289622757d782052a9",
+      "target": "engine/tests/lifecycle_counterfactual.rs",
+      "tests": [
+        {
+          "name": "same_production_digest_before_and_after",
+          "source_sha256": "644eba3fe6ebba5725afa0b8fde412db9c97407852c0fe9d0ff31c3a8014cc04",
+          "disposition": "retained"
+        },
+        {
+          "name": "lifecycle_crosses_transition_boundary",
+          "source_sha256": "a7b366f96e055cda9a62889f94f7c310648b1324019e8ad115c1b77fc04d49b5",
+          "disposition": "retained"
+        },
+        {
+          "name": "balances_never_change",
+          "source_sha256": "0764f33cf643c830a7dfca304a95096a2d43b480fa50b7d862fa63af530b3ae8",
+          "disposition": "retained"
+        },
+        {
+          "name": "holder_requires_transition_after_event",
+          "source_sha256": "a5d838b964179faca06caf35671df29f56e62380f75f503751104e3ed378c5c2",
+          "disposition": "retained"
+        },
+        {
+          "name": "vault_semantics_change_without_byte_changes",
+          "source_sha256": "a67594a36c4264b52c3e81b0c99de112e2cee6ee8863d0d5ba69afda8a91c9a4",
+          "disposition": "retained"
+        },
+        {
+          "name": "zero_balance_never_becomes_public_exposure",
+          "source_sha256": "ba6ac65407c065f391cd5df7231548a9f4a5a491d3329dbcd1d2db2d9eca32c9",
+          "disposition": "retained"
+        },
+        {
+          "name": "deadline_uses_exact_policy_status",
+          "source_sha256": "995215ca673b7c63e3117b9db018ab578b0d32d0b5fff4f78910af260e0b67d5",
+          "disposition": "retained"
+        },
+        {
+          "name": "historical_execution_evidence_is_immutable",
+          "source_sha256": "7d081898ad8a9441d5b1a35d3733638ed0fccd5dd56e1b251403b0b81c907a04",
+          "disposition": "retained"
+        },
+        {
+          "name": "transfer_stays_proven",
+          "source_sha256": "168b0ff1c549363d8a4e0bdb4acfb60955ad02b950bc0752b2288e3ec31e9973",
+          "disposition": "retained"
+        },
+        {
+          "name": "withdrawal_stays_proven",
+          "source_sha256": "77eac57c3cd4fb4baf455fa48dfce584494c83b6096f97e412d683e84928c816",
+          "disposition": "retained"
+        },
+        {
+          "name": "official_transition_never_inherits_proof",
+          "source_sha256": "7b25501bc951f32647f10df16a710d88593338acce14e7b2651c9f3f661220d5",
+          "disposition": "retained"
+        },
+        {
+          "name": "readiness_changes_only_with_policy_and_applicability",
+          "source_sha256": "c57d3c941fcfdca90c5e6a17b80c138335b1fa2ca562fb8848218ea5b210dc6b",
+          "disposition": "retained"
+        },
+        {
+          "name": "different_worlds_are_non_comparable",
+          "source_sha256": "c0e9ab8a70fecaddd0c264c4fc9969b3d842b1d0a5189874e57746ec16e199b2",
+          "disposition": "retained"
+        },
+        {
+          "name": "scenario_order_is_deterministic",
+          "source_sha256": "c89991e36e8f39913eec5115ff6fc0a106e1b4ab21c6c5521ae360654c760dee",
+          "disposition": "retained"
+        },
+        {
+          "name": "canonical_json_roundtrip_is_byte_deterministic",
+          "source_sha256": "218f32b7515c90f5e534a927bd0ace363adca588cac67026bfc31cd049afc7fc",
+          "disposition": "retained"
+        },
+        {
+          "name": "offline_cli_reproduces_canonical_report",
+          "source_sha256": "c3d1ab24c3bfc6a60c36e8f85717d9d4b2bf5e973ff268e37a2d559d384b128d",
+          "disposition": "retained"
+        },
+        {
+          "name": "population_counts_are_derived_and_proof_scope_is_preserved",
+          "source_sha256": "b5581def026754023f66ad5609e8ae44c4f6eefc7a175014e57e0b269c237ec2",
+          "disposition": "retained"
+        },
+        {
+          "name": "altered_inputs_and_semantics_fail_regeneration",
+          "source_sha256": "aa2f111f78d76662ae834f320816cc48f0b793dff2236a766fbfe1412a532fc0",
+          "disposition": "retained"
+        },
+        {
+          "name": "mutated_snapshot_input_is_rejected_by_pinned_identity",
+          "source_sha256": "bf8903bf5b9faccca3cc4007ff4c7b65607a8e6ae339ffaea84d27054e051509",
+          "disposition": "retained"
+        }
+      ]
+    },
+    {
+      "source": "engine/tests/lifecycle_coverage.rs",
+      "source_sha256": "075e69c6b72d04c0f5bc189998196f8a9a7d2a125bb7b6a5b04d03f5ec82b21f",
+      "target": "engine/tests/lifecycle_coverage.rs",
+      "tests": [
+        {
+          "name": "real_amount_matrix_uses_maximum_not_sum_and_retains_exact_witnesses",
+          "source_sha256": "0b64276e1ec952a9c7aeaad2a526b8350c68a124944463b3e55c1a1747f69854",
+          "disposition": "retained"
+        },
+        {
+          "name": "full_amount_is_conditionally_proven_and_insufficient_balance_is_not_execution",
+          "source_sha256": "306ba11ff5e821730cf7eb6942e81274221707aee36b83b55fae5fa69f9d0832",
+          "disposition": "retained"
+        },
+        {
+          "name": "alternate_venue_is_a_separate_untested_cohort_without_copying_evidence",
+          "source_sha256": "fde22a99ee9adc31035c6f1c0fc7e7da11baab1024939d8c8fde3ba98514a534",
+          "disposition": "retained"
+        },
+        {
+          "name": "representative_selection_is_stable_and_never_extrapolates_to_peers_or_vaults",
+          "source_sha256": "70f0a44c841f2ee912d4825ee85ce6e9d279a17754d936d3f0e61a8427fa99d4",
+          "disposition": "retained"
+        },
+        {
+          "name": "empty_matrix_is_untested_and_zero_public_balance_is_never_proven",
+          "source_sha256": "7dae0cec333f153edf2510cf62bc9a84340972c231df3baa8fbc4a3994008016",
+          "disposition": "retained"
+        },
+        {
+          "name": "official_only_request_is_unsupported_capability_with_transition_still_not_tested",
+          "source_sha256": "fba23bd773f477f716b27d9d3f07ca9353fa3ed007f368093e5e8d1345474a0d",
+          "disposition": "retained"
+        },
+        {
+          "name": "actual_slippage_failure_retains_atomic_rollback_and_gives_no_amount_coverage",
+          "source_sha256": "6a96a3f7f8059b6a3a393a981b97c5f3cea76849849568420966f63f5f2b7fc8",
+          "disposition": "retained"
+        },
+        {
+          "name": "case_identity_path_amount_and_population_fingerprints_are_enforced",
+          "source_sha256": "f3c9b094a21ed9f6966cc4ab74d7a617ac8e5aedf0a8a7a0356bb4201eb6a811",
+          "disposition": "retained"
+        },
+        {
+          "name": "missing_fixture_and_duplicate_cases_never_silently_skip",
+          "source_sha256": "060c7b8c05439aa2d5648b11f5c8e8799ce80cde1dfc9f2fd0ce27a054d57c73",
+          "disposition": "retained"
+        },
+        {
+          "name": "prior_phase5_result_requires_matching_fresh_replay_and_tampering_is_rejected",
+          "source_sha256": "b4b55f7983c055abb36f15d72199ad664c36bbbac5251d0673c0b64bba0fd5f7",
+          "disposition": "retained"
+        },
+        {
+          "name": "canonical_report_roundtrip_replay_and_tamper_detection",
+          "source_sha256": "4e17aba05b63415c9e5fc9cc1d36c50c4ff05a7754d141d363d458292a9c0303",
+          "disposition": "retained"
+        },
+        {
+          "name": "cli_output_is_canonical_portable_and_protects_existing_inputs",
+          "source_sha256": "5b1bc8803eafb788565ff0560771da562cc0b06d760f6fbb93b6f2e03d29c810",
+          "disposition": "Archived Phase 6 investigation CLI; immutable/canonical/portable outputs checked through lifecycle_cli and lifecycle_resolution instead"
+        },
+        {
+          "name": "invalid_amount_matrix_and_seed_fingerprints_fail_before_plan_generation",
+          "source_sha256": "6b405bcfcf5ce3e7a40f2748a2896bb9d372643c4562c3111257bd101e0f2647",
+          "disposition": "retained"
+        },
+        {
+          "name": "plan_json_is_strict_and_deterministic",
+          "source_sha256": "82f7e115f6d7a0da0e55369b407046570b152bd3160057520d853df588e8a9e6",
+          "disposition": "retained"
+        },
+        {
+          "name": "differing_population_bank_balance_retains_witness_but_covers_no_historical_amount",
+          "source_sha256": "4c649636561d86257fb8885cf8e425ed261557b190ea24938ecd977d87f94452",
+          "disposition": "retained"
+        },
+        {
+          "name": "population_before_view_can_differ_without_changing_after_view_or_execution_clock",
+          "source_sha256": "0d65c95cf89bd8444de3f695038d0892c9882b8238acf391b8a501865a7a3f68",
+          "disposition": "retained"
+        }
+      ]
+    },
+    {
+      "source": "engine/tests/lifecycle_exposure.rs",
+      "source_sha256": "c092e6a543ba95350d35360f1fcac88a62930c351cf6ee28358b754487202fa1",
+      "target": "engine/tests/lifecycle_exposure.rs",
+      "tests": [
+        {
+          "name": "genuine_dlmm_state_normalizes_pool_both_assets_authority_and_balances",
+          "source_sha256": "0fa404efdfb56e2a92697b5ca7a88e4ce63a4cc3817f36a69d98b480928c624a",
+          "disposition": "retained"
+        },
+        {
+          "name": "candidate_without_target_mint_is_rejected",
+          "source_sha256": "2fb6ca5e1a698c81d67f2b29917486577bb15144bc9d1cf2093c724c6d356394",
+          "disposition": "retained"
+        },
+        {
+          "name": "malformed_pool_wrong_owner_discriminator_pda_reserve_or_version_never_classifies",
+          "source_sha256": "f2ae9ecf7e518d0fcb0f3bdb9c629a1558ea657667cf71b8c63eed9cedc65fae",
+          "disposition": "retained"
+        },
+        {
+          "name": "fake_vault_mint_authority_program_extension_and_missing_accounts_are_rejected",
+          "source_sha256": "9815f2a7000179e257aa5b9cf796d92b3ca2508d19f6dde7581d76c12f449ea0",
+          "disposition": "retained"
+        },
+        {
+          "name": "vault_link_retains_phase2_identity_classification_balance_and_historical_pool_proof",
+          "source_sha256": "7150398e4baf833fc63eeab444de665af051a0720ea644263233a1ff77509d05",
+          "disposition": "retained"
+        },
+        {
+          "name": "absent_phase2_vault_and_unproven_phase2_pool_role_cannot_be_refined",
+          "source_sha256": "768f12945e0fe7eeb1a7341f51553548590f77e96c7eeec2182d80bf66249333",
+          "disposition": "retained"
+        },
+        {
+          "name": "schema1_compatibility_and_schema2_serialization_roundtrip_are_deterministic",
+          "source_sha256": "277ce406916d269eee6a8c606c30345b8bf49313b2e99777b13f7a4f73ce75e8",
+          "disposition": "retained"
+        },
+        {
+          "name": "offline_replay_rebuilds_the_identical_graph_without_rpc",
+          "source_sha256": "f96ebc22684416f1f69a24cfe06592e334b0b6b39c799d578c7f629a48404b80",
+          "disposition": "retained"
+        },
+        {
+          "name": "incomplete_cross_chain_old_context_unknown_adapter_and_tampered_proof_fail",
+          "source_sha256": "7678c8a67ccdf5540133de00f50e55e90a589f4733c9413bf446fd648d46bdb4",
+          "disposition": "retained"
+        },
+        {
+          "name": "source_uses_only_one_candidate_read_and_one_contextual_six_account_batch",
+          "source_sha256": "28f5aaf995ef198360c25a27a383efd14d7e4b7e1e33c822a7a24aff54acb334",
+          "disposition": "retained"
+        },
+        {
+          "name": "decoder_offsets_and_discriminator_match_pinned_official_zero_copy_idl",
+          "source_sha256": "a902e069ca823e4a9118200e98c0766f113230daffff915fe2adb58642f37601",
+          "disposition": "retained"
+        }
+      ]
+    },
+    {
+      "source": "engine/tests/lifecycle_notice.rs",
+      "source_sha256": "1c2580c782365845730efe2c7cc5e04eda5c4fcc1b2ba6ec95cab8a4ebf0ba5c",
+      "target": "engine/tests/lifecycle_notice.rs",
+      "tests": [
+        {
+          "name": "notice_cannot_bypass_existing_readiness_requirements",
+          "source_sha256": "9969b2d228c3ca6bd3973649101fa22a8fad250f2c48357382ff1e9d1d83f024",
+          "disposition": "retained"
+        },
+        {
+          "name": "offline_cli_replays_portably_and_protects_outputs",
+          "source_sha256": "b521883618c1b4ac68326731552725b1e5ab15582af224f55e8e1d0c3080f2d5",
+          "disposition": "retained"
+        }
+      ]
+    },
+    {
+      "source": "engine/tests/lifecycle_readiness.rs",
+      "source_sha256": "371a3b133a1ae997f9381f75121281e78981180406160a88f59ea08993863761",
+      "target": "engine/tests/lifecycle_readiness.rs",
+      "tests": [
+        {
+          "name": "offline_existing_evidence_reproduces_published_report_and_boundaries",
+          "source_sha256": "dec3c95bf925f830bff8779b73b3eb35e82c4fba86614155e4fdb7d1567d0b1a",
+          "disposition": "retained"
+        },
+        {
+          "name": "stale_or_mismatched_policy_scope_is_incomplete_and_signer_is_conditional",
+          "source_sha256": "edea3fb0aa3b721905832ff1057a990db75f5d21a56ae88caf6602191f15606d",
+          "disposition": "retained"
+        },
+        {
+          "name": "cli_gate_codes_portability_canonical_output_and_digest_protection",
+          "source_sha256": "13974fb21166b85e3eb3b839e3caeccc187699bde13c4f9acdd7ab9936812308",
+          "disposition": "retained"
+        }
+      ]
+    },
+    {
+      "source": "engine/tests/lifecycle_resolution.rs",
+      "source_sha256": "ca7946848dd32f41a95f4d7354386994f0a28c3ec7dc57925cfc7ff5f875ccb9",
+      "target": "engine/tests/lifecycle_resolution.rs",
+      "tests": [
+        {
+          "name": "public_offline_replay_reproduces_and_roundtrips_saved_matrix",
+          "source_sha256": "99171e867c7483f215bc262a972a102ba0f35ea6054340c72bf6885ca9bff3dd",
+          "disposition": "retained"
+        },
+        {
+          "name": "replay_rejects_rehashed_fabricated_execution_before_resolution",
+          "source_sha256": "c6a0d852dbc794d4a6e11549b8d2d0ab8394a244eeffa55e4e0790d021181d1d",
+          "disposition": "retained"
+        },
+        {
+          "name": "cli_is_portable_canonical_offline_and_protects_outputs",
+          "source_sha256": "abfb7a86d416460d1060f32c00887d71fef60cd728b7603bc121b108ef2452ad",
+          "disposition": "retained"
+        },
+        {
+          "name": "discovery_artifact_tampering_and_unknown_boundaries_are_rejected",
+          "source_sha256": "0e478d60a69d49231b41db219743f37a8dbc5f48691160a6e25684a36d5628b9",
+          "disposition": "retained"
+        },
+        {
+          "name": "published_successor_and_bounded_chain_sample_are_real_but_not_transition_proof",
+          "source_sha256": "cf2172cf2e45411de20a32b1ea8573f31524fad2c5090bf54acb6cae41d83f73",
+          "disposition": "retained"
+        }
+      ]
+    },
+    {
+      "source": "engine/tests/lifecycle_snapshot.rs",
+      "source_sha256": "fdba125b3db49ea29ef4672b49502f19fb996cfb1b22a055d00c391cdecb45f8",
+      "target": "engine/tests/lifecycle_snapshot.rs",
+      "tests": [
+        {
+          "name": "legacy_mint_and_account_decoding",
+          "source_sha256": "fcec01f2b631c1a9a0178b2e116dfdfb5fd436eda7fc7eb6b4e02631d56b3074",
+          "disposition": "retained"
+        },
+        {
+          "name": "token2022_mint_extensions_are_decoded_not_assumed",
+          "source_sha256": "fd45d7cb341ed8f014697f09d7647353f310632de55862cc8f5ffede4f5a8cf0",
+          "disposition": "retained"
+        },
+        {
+          "name": "delegated_frozen_zero_and_account_extensions_survive_normalization",
+          "source_sha256": "82f1400fb5dbd6a5e5fe0241d889617bef81ef6ab4b1cf9727b677509759c35c",
+          "disposition": "retained"
+        },
+        {
+          "name": "uninitialized_accounts_are_preserved_and_zero_allowance_is_not_active",
+          "source_sha256": "3238ee489724a2983359c15d75338254f29b66e3608c28158ee34c9038d6a171",
+          "disposition": "retained"
+        },
+        {
+          "name": "malformed_unsupported_and_wrong_mint_fail_explicitly",
+          "source_sha256": "1807f0e4f36988213785906e738b3fddbe3ba68406cfb5df6fec78321a6b6dc7",
+          "disposition": "retained"
+        },
+        {
+          "name": "exact_decimal_amounts_do_not_use_floats_or_overflow",
+          "source_sha256": "f0b20daff902123b07b296059629bc6650a5360184fb20b6f747bc58ce500f8e",
+          "disposition": "retained"
+        },
+        {
+          "name": "snapshot_json_roundtrip_and_offline_evidence_replay_are_deterministic",
+          "source_sha256": "38564584281f11ead3063003bba11cf08b2e60b6cc95d1ec27caec65410866d0",
+          "disposition": "retained"
+        },
+        {
+          "name": "entity_classification_uses_authority_evidence_and_does_not_guess_pda_programs",
+          "source_sha256": "10ef721af2d42feca9fe98b33b399b65583bd3e75d88e059008869e69bd7c59e",
+          "disposition": "retained"
+        },
+        {
+          "name": "spl_multisig_authority_preserves_threshold_and_signers",
+          "source_sha256": "c4ce10f5fae427b1a455febeeb7d3435531af9ef10b2e66e3e1bb02809de4d50",
+          "disposition": "retained"
+        },
+        {
+          "name": "duplicate_extensions_and_invalid_marker_lengths_are_rejected",
+          "source_sha256": "06c71742f3cf720b84e7c987c0ae908910268b6db0dc7ad2aa90659a2af7ff4d",
+          "disposition": "retained"
+        },
+        {
+          "name": "offline_replay_rejects_tampering_incomplete_evidence_and_bad_context",
+          "source_sha256": "fd1a3983a2d92e72173fbe3884f2790afd8167c2f9e7bc1b1870ccd1cced2401",
+          "disposition": "retained"
+        },
+        {
+          "name": "rpc_url_credentials_are_not_retained_in_origin",
+          "source_sha256": "2511fba7e50fee3ee5bb39ae2940a480a831c89f320bea1b7a700647ccd9a7ea",
+          "disposition": "retained"
+        },
+        {
+          "name": "real_spacex_mint_fixture_decodes_all_live_extensions_and_embedded_metadata",
+          "source_sha256": "5df6688790dc15c1db817204fc3dbece6f460f1916090a2863a6857d5a3509f6",
+          "disposition": "retained"
+        }
+      ]
+    },
+    {
+      "source": "engine/tests/rollout_assumptions.rs",
+      "source_sha256": "a4742c44ca459c8bbd127b4cca141c77a72e271eb0b8725c98d357540cb405ca",
+      "target": "engine/tests/rollout_assumptions.rs",
+      "tests": [
+        {
+          "name": "principal_removal_never_establishes_complete_exit",
+          "source_sha256": "89175bdce4571ed30bc00bcd7823f29eabb1545d33d0327498e56b2ad28fb29b",
+          "disposition": "retained"
+        },
+        {
+          "name": "accrued_protocol_fees_and_destination_withheld_fees_are_distinct",
+          "source_sha256": "37f18782237670a6eeb0c6ad57ac0b2cf8708b5c547fa20f3e75e6d50c5a7bf0",
+          "disposition": "retained"
+        },
+        {
+          "name": "transfer_never_establishes_official_conversion",
+          "source_sha256": "78fffc1caf76692a5557dcc25a715d6bb813109900c1871698a88bf1fba39cd4",
+          "disposition": "retained"
+        },
+        {
+          "name": "missing_official_execution_never_becomes_failed",
+          "source_sha256": "a510b2d1a900d2883ba1eb7d56f539fbdb8ada1a98d2e67baa28eda37e65571c",
+          "disposition": "retained"
+        },
+        {
+          "name": "exact_required_failed_route_is_blocked",
+          "source_sha256": "b39d1d3fb9712db08f0aa36e38dc630598db22cd06623b31ea211404efae6d38",
+          "disposition": "retained"
+        },
+        {
+          "name": "original_optional_route_policy_and_result_remain_identical",
+          "source_sha256": "7fa112eff89ab8d2ed23d1b21d45c0a4bfb04725e6ffc09dc6206dfbe1483d45",
+          "disposition": "retained"
+        },
+        {
+          "name": "different_entity_amount_venue_bank_range_fraction_and_signer_never_inherit_proof",
+          "source_sha256": "c86c9418b9190c742d35a2dfdf30521cfa73c6f45267258d1c02b8968da5c98a",
+          "disposition": "retained"
+        },
+        {
+          "name": "truthful_principal_removal_is_accepted_and_narrowly_ready",
+          "source_sha256": "22b5299c38376f4504a56460b97abcbdc2753e61ac66633707bba5bb457535ea",
+          "disposition": "retained"
+        },
+        {
+          "name": "pre_event_never_bypasses_future_target_requirements",
+          "source_sha256": "ca95d3ab4b644d39a578958c46d2350e87556480651c7c97b0a1566bfeb674d3",
+          "disposition": "retained"
+        },
+        {
+          "name": "incomplete_assurance_never_runs_the_stub",
+          "source_sha256": "74529493c9f413ba1c8e596f394f4c1ee349adc88330b45e2ed3f0a82628b8d0",
+          "disposition": "retained"
+        },
+        {
+          "name": "blocked_and_unaccepted_candidates_never_run_the_stub",
+          "source_sha256": "a16ab6dce5848a02fcf9bab09b72f28b420964b33dc80ccbf6fe09185307f298",
+          "disposition": "retained"
+        },
+        {
+          "name": "analysis_completion_zero_never_authorizes_the_stub",
+          "source_sha256": "a4e139b4082fee6403761bd204abe39b38259c0b868072dcd43371afc2dd1403",
+          "disposition": "retained"
+        },
+        {
+          "name": "narrowly_ready_positive_control_creates_only_a_temporary_marker",
+          "source_sha256": "cdcd031da514fcadb5551a0de67c656186accb0fad56d319daec0e01d0394436",
+          "disposition": "retained"
+        },
+        {
+          "name": "candidate_and_evidence_ordering_is_canonical",
+          "source_sha256": "dd012e4cd9b202e93ab708c1282282a8343b0839265c72f008e4f1bb3f20107b",
+          "disposition": "retained"
+        },
+        {
+          "name": "tampering_omitted_requirements_and_wrong_target_are_invalid",
+          "source_sha256": "9dfdad5f02627df0c07cf5ecced26c273eec9af4637fffde3a460c3b742d4e15",
+          "disposition": "retained"
+        },
+        {
+          "name": "valid_claim_without_cited_execution_is_not_established",
+          "source_sha256": "bedeeaf0e8dc364d34f103cbd51135d75ad51c6ea35e36cd28f3245685f48002",
+          "disposition": "retained"
+        },
+        {
+          "name": "historical_artifact_bytes_are_preserved",
+          "source_sha256": "ce094e9b63fa867fa7b8ae70885de20e98e0b9a2b4e3699eeb3306552fab3549",
+          "disposition": "retained"
+        },
+        {
+          "name": "demo_order_is_deterministic_and_only_positive_control_runs",
+          "source_sha256": "3124d1fb35d33571faf861a08849e9c8f37d1a6bdd5f4dead63c2a66b1479651",
+          "disposition": "retained"
+        },
+        {
+          "name": "offline_candidate_cli_codes_portability_and_output_protection",
+          "source_sha256": "dbaa751c825ecc4c482ee3e3cd6553653e9c4256b6aa3036f23e51ec3a4a4692",
+          "disposition": "retained"
+        },
+        {
+          "name": "malformed_and_verification_failure_cli_inputs_never_run_stub",
+          "source_sha256": "944ee2af7378d20bfa246296478cab9502479b4d5717f5d6c20e86de87a33f10",
+          "disposition": "retained"
+        },
+        {
+          "name": "actual_analysis_cli_exit_zero_is_not_readiness_authorization",
+          "source_sha256": "44a445bec9fe91637b4fc796927179327a2ef48304250ed743f19f5ce30963a1",
+          "disposition": "retained"
+        },
+        {
+          "name": "narrow_policy_never_authorizes_additional_supported_actions",
+          "source_sha256": "126eaac0e20a8eb1f6da1f132af53a9fbe6c4b60f348f4a6cc926ffc80f40b19",
+          "disposition": "retained"
+        }
+      ]
+    }
+  ],
+  "adaptations": [
+    "Imports use MAIN namespaces, token/Clock/loader/RPC/authority/hash primitives and the single eplyx lifecycle command tree. Explicit inputs replace issuer-specific CLI defaults.",
+    "Wide integers and Scaled UI multiplier bits use MAIN serialization. Original frozen bytes remain untouched; the encoding-projection manifest enumerates file and internal digest changes. Every economic value and result remains unchanged.",
+    "Known Blocked and Incomplete readiness map to MAIN exits 1 and 5. JSON aborts use MAIN error objects instead of empty stdout/stderr-only errors. Output protection and the original error reasons remain asserted.",
+    "The scenario-mismatch negative test changes identifying policy rather than its display description, which MAIN intentionally excludes from identity.",
+    "Tampering tests operate on independent scratch packages with valid bounded relative paths, so they exercise digest and fresh-execution rejection rather than failing early on absolute references.",
+    "Historical artifact preservation is checked for every imported original byte against both its source inventory and the original phase-14 checksum when listed. The archive-wide source preservation assertion is checked by the phase audit of all 1633 inventoried STA files; unrelated archive files are not copied into MAIN.",
+    "The old Phase 6 standalone coverage command remains archived per scope; its 15 reusable coverage assertions are retained. Source expansion capture/discovery products are not exposed by the lifecycle CLI.",
+    "Clock copies use the shared Copy type, with no source behavior change. Source support diagnostics retain their assertions while provider origin uses a fixed non-secret acquisition label.",
+    "The guard transports the parent host temporary root explicitly to the empty-environment worker, preserving the source temporary-marker restriction on macOS. Source negative guard exit values use MAIN mapping.",
+    "Position and token-transfer unit tests run in T6 because lifecycle assurance depends on those executors; T7 adds the complete current-path integration surface and remaining probe/position suites."
+  ],
+  "additional_checks": [
+    "lifecycle kind has no executable, upgrade target or delivery",
+    "all declared semantic terms identify the change; metadata and absent optional fields do not",
+    "complete field provenance and canonical address/hash validation",
+    "bound lifecycle CLI reports are byte-identical over repeated inputs",
+    "parent fake credential sentinels do not reach offline evaluation; direct inherited environment is rejected",
+    "server lifecycle run indexing contains asset identity without candidate fields",
+    "wide scores preserve u128/i128 extremes and reject lossy numeric inputs",
+    "artifact byte bounds, package escape and symlink rejection",
+    "full generated notice impact equals the independently projected pinned impact",
+    "floating-point source guard covers every newly migrated analytical module"
+  ]
+}

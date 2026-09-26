@@ -15,6 +15,42 @@
 
 use serde::{Deserialize, Deserializer, Serializer};
 
+pub mod u128_string {
+    use super::*;
+    pub fn serialize<S: Serializer>(value: &u128, serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.serialize_str(&value.to_string())
+    }
+    pub fn deserialize<'de, D: Deserializer<'de>>(deserializer: D) -> Result<u128, D::Error> {
+        use serde::de::Error;
+        match serde_json::Value::deserialize(deserializer)? {
+            serde_json::Value::String(s) => s.parse().map_err(D::Error::custom),
+            serde_json::Value::Number(n) => n.as_u64().map(u128::from).ok_or_else(|| {
+                D::Error::custom("expected exact unsigned integer or decimal string")
+            }),
+            _ => Err(D::Error::custom("expected integer or decimal string")),
+        }
+    }
+}
+
+pub mod i128_string {
+    use super::*;
+    pub fn serialize<S: Serializer>(value: &i128, serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.serialize_str(&value.to_string())
+    }
+    pub fn deserialize<'de, D: Deserializer<'de>>(deserializer: D) -> Result<i128, D::Error> {
+        use serde::de::Error;
+        match serde_json::Value::deserialize(deserializer)? {
+            serde_json::Value::String(s) => s.parse().map_err(D::Error::custom),
+            serde_json::Value::Number(n) => n
+                .as_i64()
+                .map(i128::from)
+                .or_else(|| n.as_u64().map(i128::from))
+                .ok_or_else(|| D::Error::custom("expected exact signed integer or decimal string")),
+            _ => Err(D::Error::custom("expected integer or decimal string")),
+        }
+    }
+}
+
 pub mod u64_string {
     use super::*;
 
@@ -56,6 +92,43 @@ pub mod i64_string {
 #[cfg(test)]
 mod tests {
     use serde::{Deserialize, Serialize};
+
+    #[derive(Serialize, Deserialize, PartialEq, Debug)]
+    struct Wide {
+        #[serde(with = "super::u128_string")]
+        total: u128,
+        #[serde(with = "super::i128_string")]
+        score: i128,
+    }
+    #[test]
+    fn wide_scores_retain_extremes_and_refuse_lossy_numeric_inputs() {
+        for score in [i128::MIN, i128::MAX] {
+            let value = Wide {
+                total: u128::MAX,
+                score,
+            };
+            let bytes = serde_json::to_vec(&value).unwrap();
+            let json: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
+            assert_eq!(json["total"], u128::MAX.to_string());
+            assert_eq!(json["score"], score.to_string());
+            assert_eq!(serde_json::from_slice::<Wide>(&bytes).unwrap(), value);
+        }
+        for invalid in [
+            r#"{"total":1.5,"score":0}"#,
+            r#"{"total":-1,"score":0}"#,
+            r#"{"total":340282366920938463463374607431768211455,"score":0}"#,
+            r#"{"total":"340282366920938463463374607431768211456","score":"0"}"#,
+        ] {
+            assert!(serde_json::from_str::<Wide>(invalid).is_err());
+        }
+        assert_eq!(
+            serde_json::from_str::<Wide>(r#"{"total":42,"score":-7}"#).unwrap(),
+            Wide {
+                total: 42,
+                score: -7
+            }
+        );
+    }
 
     #[derive(Serialize, Deserialize, PartialEq, Debug)]
     struct Holder {

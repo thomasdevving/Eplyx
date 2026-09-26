@@ -1,5 +1,6 @@
 //! `eplyx` - command line entry point.
 
+mod cli_lifecycle;
 mod cli_local;
 
 use std::path::PathBuf;
@@ -35,6 +36,13 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
+    /// Analyse declared lifecycle changes.
+    Lifecycle {
+        #[command(subcommand)]
+        command: cli_lifecycle::LifecycleCommand,
+    },
+    #[command(hide = true)]
+    LifecycleWorker { request: String },
     /// Analyse and replay token migrations.
     Migration {
         #[command(subcommand)]
@@ -150,7 +158,7 @@ enum Command {
     List(ListArgs),
 }
 
-#[derive(Clone, Copy, ValueEnum)]
+#[derive(Clone, Copy, ValueEnum, serde::Serialize, serde::Deserialize)]
 enum Format {
     Text,
     Json,
@@ -579,6 +587,7 @@ struct SquadsAcquireArgs {
 
 #[derive(Subcommand)]
 enum ChangeCommand {
+    Lifecycle(cli_lifecycle::ChangeArgs),
     /// Describe a token migration with its exact candidate bytes.
     TokenMigration(cli_local::ChangeArgs),
     /// Write the change spec for upgrading one program to one executable.
@@ -1260,6 +1269,11 @@ fn run() -> Result<ExitCode> {
         }
     };
     match cli.command {
+        Command::Lifecycle { command } => cli_lifecycle::execute(command),
+        Command::LifecycleWorker { request } => cli_lifecycle::worker(&request),
+        Command::Change {
+            command: ChangeCommand::Lifecycle(args),
+        } => cli_lifecycle::change(args),
         Command::Migration { command } => Ok(cli_local::execute(&cli.config, command)),
         Command::Init {
             migration: _,
@@ -1924,7 +1938,9 @@ fn change_program_upgrade(args: ChangeProgramUpgradeArgs) -> Result<ExitCode> {
                 *replaces = Some(ExecutableArtifact::of(&bytes));
             }
         }
-        Change::TokenMigration(_) => unreachable!("program-upgrade constructor"),
+        Change::TokenMigration(_) | Change::LifecycleChange(_) => {
+            unreachable!("program-upgrade constructor")
+        }
     }
     if args.activation_slot.is_some() || args.activation_unix_timestamp.is_some() {
         spec.activation = Some(Activation {
@@ -2189,6 +2205,9 @@ fn render_ci(report: &eplyx_engine::ci::CiReport) -> String {
                     change.kind().as_str(),
                     target_program_id
                 );
+            }
+            eplyx_engine::change::BoundChange::LifecycleChange { asset_mint, .. } => {
+                println!("Lifecycle asset: {asset_mint}");
             }
             eplyx_engine::change::BoundChange::TokenMigration {
                 source_mint,
