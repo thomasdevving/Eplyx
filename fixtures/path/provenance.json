@@ -1,0 +1,23 @@
+{
+  "sta_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+  "files": [
+    {
+      "source": "assets/prestocks-spacex.json",
+      "file": "assets/prestocks-spacex.json",
+      "bytes": 591,
+      "sha256": "9087b2e7045167960a0319732518acbb4d6584a72d5806f7d211dc56ffc9dd13"
+    },
+    {
+      "file": "probes/spacex-dlmm-position.json",
+      "source": "probes/spacex-dlmm-position.json",
+      "bytes": 5563,
+      "sha256": "6507259b54a2da2109cb3381d19d522ee43fbe16b98b3519db548b603c656a72"
+    },
+    {
+      "file": "reports/spacex-dlmm-withdrawal.json",
+      "source": "reports/spacex-dlmm-withdrawal.json",
+      "bytes": 7949073,
+      "sha256": "5f74a2b70946efbc937fba9e9bcd028ce6b6586184104424c8f28e7ba39ddff5"
+    }
+  ]
+}

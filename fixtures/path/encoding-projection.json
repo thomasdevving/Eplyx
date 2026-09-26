@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "fields": [
+    "captured_slot",
+    "compute_units",
+    "deployment_slot",
+    "epoch",
+    "epoch_start_timestamp",
+    "last_updated_at",
+    "leader_schedule_epoch",
+    "slot",
+    "transaction_fee_lamports",
+    "unix_timestamp"
+  ],
+  "t6_projection_sha256": "b22b039003289f6a61a4d63c7dd18c8c2b79f12f52b5b6aac9444c686c1da3e8",
+  "files": [
+    {
+      "file": "assets/prestocks-spacex.json",
+      "source_sha256": "9087b2e7045167960a0319732518acbb4d6584a72d5806f7d211dc56ffc9dd13",
+      "main_sha256": "9087b2e7045167960a0319732518acbb4d6584a72d5806f7d211dc56ffc9dd13",
+      "source_bytes": 591,
+      "main_bytes": 591
+    },
+    {
+      "file": "probes/spacex-dlmm-position.json",
+      "source_sha256": "6507259b54a2da2109cb3381d19d522ee43fbe16b98b3519db548b603c656a72",
+      "main_sha256": "1035b1b4871776eb79e4de5cc94cd12740c1628bed3a606956854140405fd724",
+      "source_bytes": 5563,
+      "main_bytes": 5567
+    },
+    {
+      "file": "reports/spacex-dlmm-withdrawal.json",
+      "source_sha256": "5f74a2b70946efbc937fba9e9bcd028ce6b6586184104424c8f28e7ba39ddff5",
+      "main_sha256": "8ad39d1ec6fbbee2044fa568cfc5f2c5e2717d8e0d25782e44b9bd423e827a2a",
+      "source_bytes": 7949073,
+      "main_bytes": 7949143
+    }
+  ]
+}

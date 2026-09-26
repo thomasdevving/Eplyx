@@ -14,7 +14,7 @@ use crate::{
 };
 use crate::{
     lifecycle::{
-        decode::{self, TokenAccountState, LEGACY_PROGRAM, TOKEN_2022_PROGRAM},
+        decode::{self, LEGACY_PROGRAM, TOKEN_2022_PROGRAM},
         exposure::meteora_dlmm::{self as dlmm, DecodedPool},
         EntityType,
     },
@@ -224,19 +224,6 @@ pub(crate) fn account_plan(route: &Route, programdata: &[String]) -> Vec<String>
     set.into_iter().collect()
 }
 
-fn withheld(s: &TokenAccountState) -> Result<u64> {
-    match s
-        .extensions
-        .iter()
-        .find(|e| e.extension_type == "TransferFeeAmount")
-    {
-        None => Ok(0),
-        Some(e) => match &e.config["withheldAmount"] {
-            Value::String(s) => Ok(s.parse()?),
-            v => v.as_u64().context("missing withheld fee amount"),
-        },
-    }
-}
 pub use crate::standard_programs::token::transfer_fee;
 
 impl ExecutionProbe for DexSwapExitProbe {
@@ -713,6 +700,7 @@ pub fn reconcile_current(
         LEGACY_PROGRAM,
         &pre[spec.output_mint.as_str()].data,
     )?;
+    let pairs = crate::evidence::current::pair(&plan.accounts, &plan.watch, ex)?;
     let mut tokens = Vec::new();
     for (address, mint, program, decimals) in [
         (&source, &spec.input_mint, TOKEN_2022_PROGRAM, x.decimals),
@@ -720,37 +708,32 @@ pub fn reconcile_current(
         (&vaults[0], &spec.input_mint, TOKEN_2022_PROGRAM, x.decimals),
         (&vaults[1], &spec.output_mint, LEGACY_PROGRAM, y.decimals),
     ] {
-        let decode_account = |a: &AccountSnapshot| -> Result<TokenAccountState> {
-            use base64::Engine;
-            decode::decode_token_account(
-                &serde_json::json!({"owner":a.owner,"data":[base64::engine::general_purpose::STANDARD.encode(&a.data),"base64"],"space":a.data.len(),"executable":a.executable}),
-                program,
-                mint,
-                decimals,
-            )
-        };
-        let b = pre
-            .get(address.as_str())
-            .map(|a| decode_account(a))
-            .transpose()?;
-        let a = ex
-            .post_accounts
-            .get(address.as_str())
-            .map(decode_account)
-            .transpose()?;
-        let before = b
-            .as_ref()
-            .map(|s| s.raw_balance.parse::<u64>())
-            .transpose()?
-            .unwrap_or(0);
-        let after = a
-            .as_ref()
-            .map(|s| s.raw_balance.parse::<u64>())
-            .transpose()?
-            .unwrap_or(0);
-        let w_before = b.as_ref().map(withheld).transpose()?.unwrap_or(0);
-        let w_after = a.as_ref().map(withheld).transpose()?.unwrap_or(0);
-        let change = i128::from(after) - i128::from(before);
+        let measured = crate::evidence::current::token_amounts(&pairs, address, program, mint)?;
+        // The captured ATA instruction may create this one selected destination.
+        // A missing destination on both sides means the failed transaction rolled
+        // back creation. Every other token account must exist across the boundary.
+        if address != &dest {
+            ensure!(
+                measured.delta.is_some(),
+                "required token account changed existence"
+            );
+        } else {
+            ensure!(
+                measured.after.is_some() || !ex.success,
+                "successful swap lacks destination"
+            );
+            ensure!(
+                measured.before.is_none() || measured.after.is_some(),
+                "destination closed during swap"
+            );
+        }
+        let before = measured.before.unwrap_or(0);
+        let after = measured.after.unwrap_or(0);
+        let w_before = measured.withheld_before.unwrap_or(0);
+        let w_after = measured.withheld_after.unwrap_or(0);
+        let change = measured
+            .delta
+            .unwrap_or(i128::from(after) - i128::from(before));
         tokens.push(TokenAccountDelta {
             address: address.clone(),
             mint: mint.clone(),

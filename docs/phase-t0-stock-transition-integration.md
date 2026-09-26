@@ -692,3 +692,14 @@ T0's recorded source values and inventories are not overwritten.
 `docs/phase-t6-identity-reference.json` records the baseline and notice-derived
 lifecycle ChangeSpec IDs and exact MAIN identifying tuples beside their source
 scenario hashes. Display metadata remains outside those tuples.
+
+### T7 appended path reference
+
+T7 retains all 56 remaining current-observation, wallet, execution-probe and
+position integration assertions. The [path projection](../fixtures/path/encoding-projection.json)
+and [linked lifecycle projection](../fixtures/lifecycle/encoding-projection-t7.json)
+record decimal-string slots and the decoded position timestamp, plus their
+dependent digest changes. T0 records and the accepted T6 projection remain
+unchanged; no economic value or outcome is re-pinned. See
+[the T7 source mapping](phase-t7-test-mapping.json) and
+[phase document](phase-t7-current-paths.md).

@@ -2,6 +2,7 @@
 
 mod cli_lifecycle;
 mod cli_local;
+mod cli_path;
 
 use std::path::PathBuf;
 static LONG_VERSION: std::sync::LazyLock<String> =
@@ -36,6 +37,18 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
+    /// Check one exact current path against captured deployed code.
+    Path {
+        #[command(subcommand)]
+        command: cli_path::PathCommand,
+    },
+    /// Capture or replay bounded read-only current observations.
+    Observe {
+        #[command(subcommand)]
+        command: cli_path::ObserveCommand,
+    },
+    #[command(hide = true)]
+    PathWorker { request: String },
     /// Analyse declared lifecycle changes.
     Lifecycle {
         #[command(subcommand)]
@@ -1269,6 +1282,9 @@ fn run() -> Result<ExitCode> {
         }
     };
     match cli.command {
+        Command::Path { command } => cli_path::execute(cli_path::Request::Path(command)),
+        Command::Observe { command } => cli_path::execute(cli_path::Request::Observe(command)),
+        Command::PathWorker { request } => cli_path::worker(&request),
         Command::Lifecycle { command } => cli_lifecycle::execute(command),
         Command::LifecycleWorker { request } => cli_lifecycle::worker(&request),
         Command::Change {

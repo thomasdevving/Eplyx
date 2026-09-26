@@ -645,6 +645,7 @@ fn owner_boundary(raw: &Value) -> Value {
 struct WalletAccount {
     address: String,
     state: decode::TokenAccountState,
+    #[serde(with = "crate::numfmt::u64_string")]
     slot: u64,
     evidence: String,
 }

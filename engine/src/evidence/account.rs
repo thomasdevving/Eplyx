@@ -167,6 +167,16 @@ impl LifecycleEvent {
 /// different orders produce identical evidence. Determinism here is what lets a
 /// canonical report be compared byte for byte.
 pub fn pair(record: &str, pre: &[NamedAccount], result: &ExecutionResult) -> Vec<AccountDelta> {
+    pair_snapshots(record, pre, &result.accounts)
+}
+
+/// Pair an explicitly supplied post-state, using the same rules as replay evidence.
+/// This measurement alone establishes neither a validator boundary nor execution.
+pub fn pair_snapshots(
+    record: &str,
+    pre: &[NamedAccount],
+    post: &BTreeMap<String, AccountSnapshot>,
+) -> Vec<AccountDelta> {
     // Keyed by label. The label is address-backed — the protocol adapter binds
     // it from the message's account keys — so this is address pairing expressed
     // in the vocabulary the rest of the engine already uses. Pairing by
@@ -181,14 +191,14 @@ pub fn pair(record: &str, pre: &[NamedAccount], result: &ExecutionResult) -> Vec
     let labels: std::collections::BTreeSet<&str> = before
         .keys()
         .copied()
-        .chain(result.accounts.keys().map(String::as_str))
+        .chain(post.keys().map(String::as_str))
         .collect();
 
     labels
         .into_iter()
         .filter_map(|label| {
             let opening = before.get(label).copied().cloned();
-            let closing = result.accounts.get(label).cloned();
+            let closing = post.get(label).cloned();
             let existence = match (&opening, &closing) {
                 (Some(_), Some(_)) => Existence::Throughout,
                 (None, Some(_)) => Existence::Created,

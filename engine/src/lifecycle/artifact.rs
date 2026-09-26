@@ -11,7 +11,7 @@ pub const MAX_BYTES: u64 = 128 * 1024 * 1024;
 
 /// Local pinned reference package used by regression tests; never a hosted input.
 pub fn reference_root() -> PathBuf {
-    crate::repo_root().join("fixtures/lifecycle/main")
+    crate::repo_root().join("fixtures/lifecycle/main-t7")
 }
 
 pub fn read(path: impl AsRef<Path>) -> Result<Vec<u8>> {
