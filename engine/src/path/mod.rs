@@ -1,5 +1,8 @@
 //! Concrete execution evidence, separate from issuer lifecycle transition truth.
+pub mod capture;
 pub(crate) mod captured;
+pub mod current;
+pub mod current_market;
 pub mod position;
 pub mod record;
 pub use crate::protocol::meteora_dlmm::swap as meteora_dlmm;
@@ -259,10 +262,9 @@ pub struct ExitabilityReport {
 pub fn load_probe(path: &Path) -> Result<(ExecutionProbeSpec, CapturedExecutionFixture)> {
     let spec: ExecutionProbeSpec =
         serde_json::from_slice(&crate::lifecycle::artifact::read(path)?)?;
-    let bytes = crate::lifecycle::artifact::read(
-        path.parent()
-            .unwrap_or_else(|| Path::new("."))
-            .join(&spec.fixture),
+    let bytes = crate::lifecycle::artifact::read_relative(
+        path.parent().unwrap_or_else(|| Path::new(".")),
+        &spec.fixture,
     )?;
     ensure!(
         sha256(&bytes) == spec.fixture_sha256,

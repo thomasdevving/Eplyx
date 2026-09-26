@@ -405,9 +405,6 @@ assumptions:vec!["Original owner locally assumed to sign; possession and authori
 "Transfer is movement to a different actual observed recipient token account. No market sale, redemption, withdrawal, entitlement, or official successor transition is implied.".into()]}
 )
 }
-fn amount(b: &[u8]) -> Result<(u64, u64)> {
-    crate::standard_programs::token::account_amounts(TOKEN_2022_PROGRAM, b)
-}
 pub fn reconcile(
     s: &LifecycleSnapshot,
     entity: &str,
@@ -445,6 +442,7 @@ pub fn reconcile_current(
         .iter()
         .map(|a| (a.address.as_str(), &a.account))
         .collect();
+    let pairs = crate::evidence::current::pair(&p.accounts, &p.watch, x)?;
     let mut tokens = Vec::new();
     let mut changes = Vec::new();
     for address in [source, destination, mint] {
@@ -462,9 +460,18 @@ pub fn reconcile_current(
         if address == mint {
             continue;
         }
-        let (n, f) = amount(&a.data)?;
-        let (m, g) = amount(&b.data)?;
-        let delta = i128::from(m) - i128::from(n);
+        let measured = crate::evidence::current::token_amounts(&pairs, address, &a.owner, mint)?;
+        let n = measured.before.context("missing opening token account")?;
+        let m = measured.after.context("missing closing token account")?;
+        let f = measured
+            .withheld_before
+            .context("missing opening token fee")?;
+        let g = measured
+            .withheld_after
+            .context("missing closing token fee")?;
+        let delta = measured
+            .delta
+            .context("token lifecycle changed during transfer")?;
         tokens.push(TokenAccountDelta {
             address: address.into(),
             mint: mint.to_owned(),

@@ -16,7 +16,10 @@ PIN = 'c411ff7226bb515533774ec822829f787fe4bf6910f9816dbbf2e6f2b55baa3e'
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--out', type=Path, default=ROOT / 'fixtures/lifecycle/main')
 parser.add_argument('--record', type=Path, default=ROOT / 'fixtures/lifecycle/encoding-projection.json')
+parser.add_argument('--position-timestamps', action='store_true', help='Append the T7 decimal-string position timestamp projection')
 args = parser.parse_args()
+if args.position_timestamps and (args.out.resolve() == (ROOT / 'fixtures/lifecycle/main').resolve() or args.record.resolve() == (ROOT / 'fixtures/lifecycle/encoding-projection.json').resolve()):
+    raise ValueError('T7 projection requires separate --out and --record paths')
 root = ROOT / 'fixtures/lifecycle'
 source = root / 'sta'
 out = args.out
@@ -28,6 +31,8 @@ if not hashlib.sha256(manifest_bytes).hexdigest() == PIN:
 manifest = json.loads(manifest_bytes)
 selected = lambda p: p.startswith(('snapshots/', 'reports/', 'policies/', 'scenarios/', 'probes/')) and (not p.startswith('probes/phase7-captures/fixtures/')) and (p not in {'probes/spacex-usdc-dlmm-fixture.json', 'reports/phase14-validation/historical-inputs-before.json'})
 fields = set(['active_epoch', 'amount', 'captured_slot', 'class', 'compute_units', 'creation_slot_established', 'deployment_slot', 'discovered_at_slot', 'entity', 'entity_path_context', 'enumeration_slot', 'epoch', 'epoch_start_timestamp', 'feasibility', 'leader_schedule_epoch', 'max_observed_slot', 'min_observed_slot', 'path', 'redundancy_penalty', 'slot', 'state_shape', 'total', 'transaction_fee_lamports', 'unix_timestamp', 'venue'])
+if args.position_timestamps:
+    fields.add('last_updated_at')
 extension_fields = {'withheldAmount', 'maximumFee', 'epoch', 'maximumPendingBalanceCreditCounter', 'pendingBalanceCreditCounter', 'expectedPendingBalanceCreditCounter', 'actualPendingBalanceCreditCounter', 'lastUpdateTimestamp', 'initializationTimestamp', 'newMultiplierEffectiveTimestamp', 'maxSize', 'size', 'memberNumber'}
 documents = {}
 original = {}

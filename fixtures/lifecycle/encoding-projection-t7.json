@@ -1,0 +1,823 @@
+{
+  "schema_version": 1,
+  "hash_rounds": 14,
+  "fields": [
+    "active_epoch",
+    "amount",
+    "captured_slot",
+    "class",
+    "compute_units",
+    "creation_slot_established",
+    "deployment_slot",
+    "discovered_at_slot",
+    "entity",
+    "entity_path_context",
+    "enumeration_slot",
+    "epoch",
+    "epoch_start_timestamp",
+    "feasibility",
+    "last_updated_at",
+    "leader_schedule_epoch",
+    "max_observed_slot",
+    "min_observed_slot",
+    "path",
+    "redundancy_penalty",
+    "slot",
+    "state_shape",
+    "total",
+    "transaction_fee_lamports",
+    "unix_timestamp",
+    "venue"
+  ],
+  "derived_hashes": [
+    {
+      "source_sha256": "398042f47f603df39f60148b9beb1d232a5a0f4313d11f041f5ab41bf97fafaf",
+      "main_sha256": "7d3198595c4e333a108821045a28e29688d8d3e070ca779f233fa2dded943456",
+      "preimages": [
+        "reports/spacex-counterfactual-lifecycle.json#/frozen_readiness/policy",
+        "reports/spacex-lifecycle-readiness.json#/policy",
+        "reports/spacex-notice-preflight.json#/readiness/policy"
+      ]
+    },
+    {
+      "source_sha256": "55f3938da5944b04c65ef0e44912d6dee41861f9a9de7dfbab8481b42da35347",
+      "main_sha256": "3f226a30631bd01f86aec861a65d6e050df31780909ec9b1d7f211eee74be5f8",
+      "preimages": [
+        "counterfactual: tuple(historical direct paths, historical position paths, frozen readiness path_evidence, position_exit_evidence)"
+      ]
+    },
+    {
+      "source_sha256": "70d5c41cfc5deef048b5e13fcc4febe1b572d8f8c8abbacc49f767d9a5c0391f",
+      "main_sha256": "33576ad39c05ae11d2a6267c1afe5a86cc5df94740610ae47305e6adbd4ca0f3",
+      "preimages": [
+        "snapshots/spacex-exposure.json: schema_version=1, omit exposures"
+      ]
+    },
+    {
+      "source_sha256": "7cceb6802566d8bec105ad5314534f2b322d8690581c69a5eb9f8ca155a31556",
+      "main_sha256": "7cceb6802566d8bec105ad5314534f2b322d8690581c69a5eb9f8ca155a31556",
+      "preimages": [
+        "counterfactual lifecycle_scenario/policy"
+      ]
+    },
+    {
+      "source_sha256": "c0cf207b91abd06e70f4a0e8b01a6614e941c4ff6709081e39d6d4880b3ebf78",
+      "main_sha256": "2d7d81e8fdff2d40cf0d320198728cbbf6f5968436f774a5029d5073497a0ec5",
+      "preimages": [
+        "counterfactual production_world: tuple(snapshot, exposure snapshot, position fixture, discovery, raw position)"
+      ]
+    },
+    {
+      "source_sha256": "f3ff991165d23f9ff851b8e7d9c141a92aac4668bf26e2bc83926a12a2e4d920",
+      "main_sha256": "c2daa762e6e587d03453990785391fecc8591a25551f74a8b02a1591ddd34a9d",
+      "preimages": [
+        "reports/spacex-lifecycle-coverage.json: sort entities by entity_id"
+      ]
+    },
+    {
+      "source_sha256": "fb2b093170d5b4c85461c2d83b4d99569b2d80d9f6b62c3783bbfd2a843a4953",
+      "main_sha256": "1ff00ab75163cf3a0f06dcf4ab50bd0f20d1d8fdb97b769d8cafe17053fd6cc7",
+      "preimages": [
+        "reports/spacex-notice-preflight.json#/readiness"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "file": "evidence/lifecycle/phase12/captured-issuer-notice.json",
+      "source_sha256": "7ae96b029e825db09189e94895e07a93bbc5d21fd20423a7d8413cbe2d53193f",
+      "main_sha256": "7ae96b029e825db09189e94895e07a93bbc5d21fd20423a7d8413cbe2d53193f",
+      "source_bytes": 110848,
+      "main_bytes": 110848,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "evidence/lifecycle/prestocks-spacex-2026-09-17.html",
+      "source_sha256": "3987e16a59ee881339038d284d0eebd60c51172670b6e030d6cffb9aa4a0ad82",
+      "main_sha256": "3987e16a59ee881339038d284d0eebd60c51172670b6e030d6cffb9aa4a0ad82",
+      "source_bytes": 102012,
+      "main_bytes": 102012,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "evidence/resolution/phase8/chain-investigation.json",
+      "source_sha256": "bb8709ea24e6677dc63d5fe099cc5f9254f759c176f88bede43a26f0bc646db8",
+      "main_sha256": "bb8709ea24e6677dc63d5fe099cc5f9254f759c176f88bede43a26f0bc646db8",
+      "source_bytes": 30445,
+      "main_bytes": 30445,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "evidence/resolution/phase8/http-capture.json",
+      "source_sha256": "c5af693cdb42619d118292349ace721f2157a1ef77a65a32b2a39ee6c34d68b2",
+      "main_sha256": "c5af693cdb42619d118292349ace721f2157a1ef77a65a32b2a39ee6c34d68b2",
+      "source_bytes": 2353,
+      "main_bytes": 2353,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "evidence/resolution/phase8/issuer-faq-chunk-0.js",
+      "source_sha256": "2e62dd29b1c4c6d55ad1ee6b08bb49c8eac5958b33c98382bf544e7d628ac169",
+      "main_sha256": "2e62dd29b1c4c6d55ad1ee6b08bb49c8eac5958b33c98382bf544e7d628ac169",
+      "source_bytes": 10943,
+      "main_bytes": 10943,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "evidence/resolution/phase8/issuer-faq.html",
+      "source_sha256": "340b6e31c711dfa44ec93757de099dec91f46f1c4474cc87b66e8263132b2892",
+      "main_sha256": "340b6e31c711dfa44ec93757de099dec91f46f1c4474cc87b66e8263132b2892",
+      "source_bytes": 51268,
+      "main_bytes": 51268,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "evidence/resolution/phase8/issuer-launch.html",
+      "source_sha256": "0558e465d80d4a630b0f7b6b7b65fb1211d13d7c14ae8e7299fa3f20034b4f93",
+      "main_sha256": "0558e465d80d4a630b0f7b6b7b65fb1211d13d7c14ae8e7299fa3f20034b4f93",
+      "source_bytes": 111252,
+      "main_bytes": 111252,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "evidence/resolution/phase8/issuer-spacex-post.json",
+      "source_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "main_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "source_bytes": 2,
+      "main_bytes": 2,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "evidence/resolution/phase8/issuer-spacex.html",
+      "source_sha256": "cb7c0c835d4c9aa8824e74ea3e39297323407c4908aa23e5d9256b395bc6ab69",
+      "main_sha256": "cb7c0c835d4c9aa8824e74ea3e39297323407c4908aa23e5d9256b395bc6ab69",
+      "source_bytes": 102012,
+      "main_bytes": 102012,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "evidence/resolution/phase8/source-metadata.json",
+      "source_sha256": "cd6e53ec4ac9e7e73dc3d5dc113cd1dc5b0bc07fd9f3989eb80cae88f6b0ed77",
+      "main_sha256": "cd6e53ec4ac9e7e73dc3d5dc113cd1dc5b0bc07fd9f3989eb80cae88f6b0ed77",
+      "source_bytes": 252,
+      "main_bytes": 252,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "evidence/transition/phase9/rpc-account-reconstruction.json",
+      "source_sha256": "ab4d10bbcd1df05d6461d23031aea507e8bc0eda236e316415c9a92b45d9684b",
+      "main_sha256": "ab4d10bbcd1df05d6461d23031aea507e8bc0eda236e316415c9a92b45d9684b",
+      "source_bytes": 38950700,
+      "main_bytes": 38950700,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "evidence/transition/phase9/rpc-capture.json",
+      "source_sha256": "c6825a7dd387df416a71a9aca5a7b3ad7227b870a9e82535e2ae1cb89302cd61",
+      "main_sha256": "c6825a7dd387df416a71a9aca5a7b3ad7227b870a9e82535e2ae1cb89302cd61",
+      "source_bytes": 15767269,
+      "main_bytes": 15767269,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "evidence/transition/phase9/rpc-retry-capture.json",
+      "source_sha256": "2678ec48a33f4d281bd6d89c18796cc8d65a51a239d7e6c4db04e509092ba9b8",
+      "main_sha256": "2678ec48a33f4d281bd6d89c18796cc8d65a51a239d7e6c4db04e509092ba9b8",
+      "source_bytes": 343415,
+      "main_bytes": 343415,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "evidence/withdrawal/phase10/execution-capture.json",
+      "source_sha256": "3d79ad5dcee2a9b7ecc74575fe9af7e025695e229471b7aab5288d69813c844f",
+      "main_sha256": "3d79ad5dcee2a9b7ecc74575fe9af7e025695e229471b7aab5288d69813c844f",
+      "source_bytes": 5509320,
+      "main_bytes": 5509320,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "evidence/withdrawal/phase10/position-discovery.json",
+      "source_sha256": "9152453761142ba59a56c9a415aed6a3c600f1e7ba5e89b4a6efa708a6bb6ce1",
+      "main_sha256": "9152453761142ba59a56c9a415aed6a3c600f1e7ba5e89b4a6efa708a6bb6ce1",
+      "source_bytes": 12124,
+      "main_bytes": 12124,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "fixtures/meteora-dlmm-layout.json",
+      "source_sha256": "e2802681cd780f26d50a30e793405296f937beeeae57c7293109787c1464561b",
+      "main_sha256": "e2802681cd780f26d50a30e793405296f937beeeae57c7293109787c1464561b",
+      "source_bytes": 16175,
+      "main_bytes": 16175,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "fixtures/meteora-dlmm-spacex.json",
+      "source_sha256": "b671dcce10d9037513e153ed55d0c98c74948858747673df28d323378090685c",
+      "main_sha256": "b671dcce10d9037513e153ed55d0c98c74948858747673df28d323378090685c",
+      "source_bytes": 17352,
+      "main_bytes": 17352,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "fixtures/spacex-dlmm-exit-baseline.json",
+      "source_sha256": "89b7ff6ebad4995a69a87f6f441d1d7d791f5abb49efd11bc5c75692d4577cda",
+      "main_sha256": "89b7ff6ebad4995a69a87f6f441d1d7d791f5abb49efd11bc5c75692d4577cda",
+      "source_bytes": 18286,
+      "main_bytes": 18286,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "fixtures/token-2022-spacex-mint.json",
+      "source_sha256": "9b72fd584524567259cd883da7e21541368512650f63572a9441175e65059d0c",
+      "main_sha256": "9b72fd584524567259cd883da7e21541368512650f63572a9441175e65059d0c",
+      "source_bytes": 1698,
+      "main_bytes": 1698,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "policies/phase14-principal-removal-only.json",
+      "source_sha256": "060cabd7cba03c4e26f759717e83be7b3e43ed71f3c5b183d07f2958e52ba855",
+      "main_sha256": "549efedccabc83da6608db9ad349e957e87f0e3ed2997815b2e9ebfa0a3edadb",
+      "source_bytes": 2910,
+      "main_bytes": 2922,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "policies/phase14-required-exact-route.json",
+      "source_sha256": "d836cdd3f28a7a2a6bde7de5a716f0ebdcdb075d9de3807f23a14d2d39a20b32",
+      "main_sha256": "d3b621329aab2078a10cebe594c627bd38691c096f06bc0f19f9329c80b9deb2",
+      "source_bytes": 15354,
+      "main_bytes": 15414,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "policies/stocklana-spacex-preflight-v1.json",
+      "source_sha256": "162655313c70cba8adc4417d535128f73d0e8de6cc36d8b1d04586e8a1993c4d",
+      "main_sha256": "9ad670880f7b6708091731743aa64cdf4c1aadc25ebe7e87709044034a8371da",
+      "source_bytes": 15312,
+      "main_bytes": 15372,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "probes/phase14-demo-cases.json",
+      "source_sha256": "493e15a43511f8fa44a531a35209d015a2c52cf6a11a884eb1fbb57dbb053928",
+      "main_sha256": "66d1d90b1784edfee82271d48e273ad6b10ad54a392c48b8b34e0a4b71ac2395",
+      "source_bytes": 674,
+      "main_bytes": 674,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "probes/phase14-evidence-binding.json",
+      "source_sha256": "5484546ba390947dad6a5fd7c3c6a0551a11a9765eda31ab7b5db887f40ec3f9",
+      "main_sha256": "f8c1e04a1b8d9ff5223ef8758fe5be90f35825b261d4c3eacaa8215bac2a6186",
+      "source_bytes": 366,
+      "main_bytes": 366,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "probes/phase14-plans/lp-complete-exit.json",
+      "source_sha256": "0753c64e304ccc631c2a36ac9a01face3bb407a35b96f49a51b781d89fb1df06",
+      "main_sha256": "10ebea6f948e91c820a4dd87e9e1202b5508b2bc63efb3e9a2946fd3e3bf2ed6",
+      "source_bytes": 7982,
+      "main_bytes": 7994,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "probes/phase14-plans/principal-removal-positive-control.json",
+      "source_sha256": "9aebaf797d911d6b98bb7c8150b8269eb49b5d7be7447a62f2111ae0bf269515",
+      "main_sha256": "bb0c4e3ecc1b6799799bfa1c664a9e0d29dd42cbc7679ec4e591e7be34613918",
+      "source_bytes": 4886,
+      "main_bytes": 4898,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "probes/phase14-plans/required-failed-route.json",
+      "source_sha256": "50051b3b0c333996515dcb61ab09feaad313cb3e58b8f75034484438886bfd00",
+      "main_sha256": "d9f9c4d7bd8c2e48c14206ad89c8088a6694a899ca3722244f8a37ea96d710f8",
+      "source_bytes": 3756,
+      "main_bytes": 3768,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "probes/phase14-plans/transfer-official-conversion.json",
+      "source_sha256": "d9dd660f9710745ace0ce1c8d5860a6cb9d87a3df10cbb9c149aebb0217c233a",
+      "main_sha256": "d4bd8f6848a5c704c05e9037780a8d88ded5cbb0027ac9c8fe967719b28e126b",
+      "source_bytes": 5064,
+      "main_bytes": 5076,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "probes/phase7-captures/capture-manifest.json",
+      "source_sha256": "5357ef0ff0436649e27c626f81f16be99022a48ce232a640d9114228d0befdc6",
+      "main_sha256": "05343efe0aef7a512e085c19f333db7d215df1057825d81e5cdd684c65f74df8",
+      "source_bytes": 2417,
+      "main_bytes": 2417,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "probes/phase7-captures/fixtures/group-0.json",
+      "source_sha256": "d99ec5e1c0c6aedf4d1a675ddaff9c5cbf7dab11b77c478ef045416c6185c264",
+      "main_sha256": "d99ec5e1c0c6aedf4d1a675ddaff9c5cbf7dab11b77c478ef045416c6185c264",
+      "source_bytes": 1850592,
+      "main_bytes": 1850592,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "probes/phase7-captures/fixtures/group-1.json",
+      "source_sha256": "21870077ff6082cc6c40c1d036b7057d8176ec1b45fcfe1a2387eb7012ae2487",
+      "main_sha256": "21870077ff6082cc6c40c1d036b7057d8176ec1b45fcfe1a2387eb7012ae2487",
+      "source_bytes": 5488101,
+      "main_bytes": 5488101,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "probes/phase7-captures/fixtures/group-2.json",
+      "source_sha256": "51457a1baaf3bfcb8c9e178de88376f60eb53dca9387106af4b5a7f476a18f39",
+      "main_sha256": "51457a1baaf3bfcb8c9e178de88376f60eb53dca9387106af4b5a7f476a18f39",
+      "source_bytes": 5488103,
+      "main_bytes": 5488103,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "probes/phase7-captures/fixtures/group-3.json",
+      "source_sha256": "bc0ee60ac9e0326eabbbf72dba4afd00ff4bed218bcbb02609318720bc11cc50",
+      "main_sha256": "bc0ee60ac9e0326eabbbf72dba4afd00ff4bed218bcbb02609318720bc11cc50",
+      "source_bytes": 5488100,
+      "main_bytes": 5488100,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "probes/phase7-captures/fixtures/group-4.json",
+      "source_sha256": "a83e9a55c1e6fc2cd2d0e363e32ad9f7ec6cb8434ca269f32ce24618be70ef68",
+      "main_sha256": "a83e9a55c1e6fc2cd2d0e363e32ad9f7ec6cb8434ca269f32ce24618be70ef68",
+      "source_bytes": 1850593,
+      "main_bytes": 1850593,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "probes/phase7-captures/fixtures/group-5.json",
+      "source_sha256": "122fd13fb1ffda01d8117d1224497986a676d661e3d06aa5fd6e4e6105dcd727",
+      "main_sha256": "122fd13fb1ffda01d8117d1224497986a676d661e3d06aa5fd6e4e6105dcd727",
+      "source_bytes": 1850595,
+      "main_bytes": 1850595,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "probes/spacex-lifecycle-expansion-plan.json",
+      "source_sha256": "6758fbd4e3d99c44e726c638fe2bcbe514ce702957af6dfd121bc8d23cd4aade",
+      "main_sha256": "cef08cccc2535622ec255c2078dd7ac178b6ff967a7a7b58f65d8bd3747c21c9",
+      "source_bytes": 33678509,
+      "main_bytes": 34105827,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "probes/spacex-lifecycle-path-discovery.json",
+      "source_sha256": "01d9a2a723dcea3969cc9e4db5168d9c99b7a1c6730a7197ffd0b1003fe16a2d",
+      "main_sha256": "c8d0b65ac6257825fe4020dd8d29dd04b1739c3a8bd089b8e0cec526fba117fb",
+      "source_bytes": 9270,
+      "main_bytes": 9270,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "probes/spacex-notice-workflow.json",
+      "source_sha256": "4b0c76e4fc9bd5cf0641ffbba73dcf39d3b6d8c234184939633628cd9e13f7f3",
+      "main_sha256": "23004ec50755492705e445da90b9075bc31da839fd8860ce417ad7af9d68d3f1",
+      "source_bytes": 694,
+      "main_bytes": 694,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "probes/spacex-phase7-venues-verified.json",
+      "source_sha256": "3ab6a481cb2c87b241e3f4671c8cb1ac772dac5bcac39d035f26d90a58879c0d",
+      "main_sha256": "cd5f2e47a0bd17ca2081baa423d1f93abb7e8c244a31fd9fa0738163f1de6121",
+      "source_bytes": 120891,
+      "main_bytes": 120891,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "probes/spacex-phase8-evidence-bundle.json",
+      "source_sha256": "7165811ebb44c8672c6b215c4cd98c9d7a2ae1cac96c3324c0657c7afc4bcdd2",
+      "main_sha256": "7f79c78eb237d03aaecf7bafb8930fd7cab959054bad89387bb264c78c8f07d0",
+      "source_bytes": 1177,
+      "main_bytes": 1177,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "probes/spacex-readiness-evidence.json",
+      "source_sha256": "9154dda0427f70478a16dd144d37987d8f5c94bb2083778353bb8fa2ad3cc892",
+      "main_sha256": "fb3df8b1565b8fc19aa085da0064b042445a44a575a802df4e9828ca38b620c3",
+      "source_bytes": 2062,
+      "main_bytes": 2062,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "probes/spacex-usdc-dlmm-exit.json",
+      "source_sha256": "ab0f466c9c308fd440d3802135755084018ec3a59a7ebda7e3b36228c9321fe2",
+      "main_sha256": "fb38597de2069a4f6b6f645e07edcfdc408ab15369ed7db2605fb87bf16d2972",
+      "source_bytes": 1084,
+      "main_bytes": 1084,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "probes/spacex-usdc-dlmm-fixture.json",
+      "source_sha256": "c523e3aa2d9d5fdbf2e38f890e037c868d1987a2fd3e42cd365ff0005b17f2ad",
+      "main_sha256": "c523e3aa2d9d5fdbf2e38f890e037c868d1987a2fd3e42cd365ff0005b17f2ad",
+      "source_bytes": 5490496,
+      "main_bytes": 5490496,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "reports/phase14-validation/historical-inputs-before.json",
+      "source_sha256": "b483ff85bfcb44e383f14e263cb20120a979c61ddb3ba8ef5335ed1fdf483bb0",
+      "main_sha256": "b483ff85bfcb44e383f14e263cb20120a979c61ddb3ba8ef5335ed1fdf483bb0",
+      "source_bytes": 58240,
+      "main_bytes": 58240,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "reports/phase7-evidence/execution-index.json",
+      "source_sha256": "e14c449199c972b91b5390b325b8ed8285f07efa70c5a41df960e2a142ee3c52",
+      "main_sha256": "f979f62d21d63a413777ed8a591a9e0dd10ca7d9a0ce5655fabd229cdb09c973",
+      "source_bytes": 15847,
+      "main_bytes": 15847,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/19cd07e2310a0707f48a7c0aa70648796066c29dffcfb750cc02f1dc574f0f0f.json",
+      "source_sha256": "19cd07e2310a0707f48a7c0aa70648796066c29dffcfb750cc02f1dc574f0f0f",
+      "main_sha256": "b642f4298f181ffafc0a701304a4049e9335e0c602c63388e438e008be392dd7",
+      "source_bytes": 79304,
+      "main_bytes": 79364,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/1b3ac53efcc86222514244c5e62e2269cc4f190ec06c7311896063c91cf7ff7b.json",
+      "source_sha256": "1b3ac53efcc86222514244c5e62e2269cc4f190ec06c7311896063c91cf7ff7b",
+      "main_sha256": "a60c0f256e16f32ebdc75a3e38f0ccb2b4904ec7fd39af4b9a81d5a2c4cd1f0a",
+      "source_bytes": 12779,
+      "main_bytes": 12807,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/41d81f4d13f8cf3ba5799213dbb5aa2c8d99fd31e550a4a0a3069a8e0f039299.json",
+      "source_sha256": "41d81f4d13f8cf3ba5799213dbb5aa2c8d99fd31e550a4a0a3069a8e0f039299",
+      "main_sha256": "df37f4e372451223463330f9e9217155effe88a39ec936c9b393452cd730ae7f",
+      "source_bytes": 12901,
+      "main_bytes": 12929,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/429614ecbf4d015213b77e2047efe97e41bb5c7ded4e5518b71791d611eab8f0.json",
+      "source_sha256": "429614ecbf4d015213b77e2047efe97e41bb5c7ded4e5518b71791d611eab8f0",
+      "main_sha256": "bb331f66704d3aeed161b26b6c9228876fd7becb7abc477f822d0a462e29cf23",
+      "source_bytes": 79164,
+      "main_bytes": 79224,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/4401be5f6ace5a897a97d3b6c19bc11718e2dd8fa52d4cf3fcd894acd7d8b72c.json",
+      "source_sha256": "4401be5f6ace5a897a97d3b6c19bc11718e2dd8fa52d4cf3fcd894acd7d8b72c",
+      "main_sha256": "9a30f751c4cfeff3587378c74c2df225b3ef24be3edad0282a767424abc5d8b3",
+      "source_bytes": 12782,
+      "main_bytes": 12810,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/46a947ef45c55f478f1b01416c63a8c5c43a87c4f90e120863499612679fbfef.json",
+      "source_sha256": "46a947ef45c55f478f1b01416c63a8c5c43a87c4f90e120863499612679fbfef",
+      "main_sha256": "4a63d3d7027bfcad001006c0e7a8b20c45214e523f3980f3c55b42a999b2fdc4",
+      "source_bytes": 74200,
+      "main_bytes": 74258,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/493edfdecddb83193831108b12fbc3dc6595105a7ac37a7f7e5a0978605f4463.json",
+      "source_sha256": "493edfdecddb83193831108b12fbc3dc6595105a7ac37a7f7e5a0978605f4463",
+      "main_sha256": "5d70973d5874cd10d5c437980a38f5fb51c59a98aa5f2a23c329801804acd866",
+      "source_bytes": 1514,
+      "main_bytes": 1514,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/6056a14b7829e815500a5a70667965964324b4b2511d8c4ea45af49e22091f28.json",
+      "source_sha256": "6056a14b7829e815500a5a70667965964324b4b2511d8c4ea45af49e22091f28",
+      "main_sha256": "6dbe940dfed08b2622de9cd7faaa47e54e6bd586f2217ff057d50d2b3cd4ff62",
+      "source_bytes": 12758,
+      "main_bytes": 12786,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/6105d7609ea6840cec226188199159b02c9089a83ebadc83abe7b2ce82d53530.json",
+      "source_sha256": "6105d7609ea6840cec226188199159b02c9089a83ebadc83abe7b2ce82d53530",
+      "main_sha256": "b9533b8995f13742e3f96a59783c4634fe64278d7a260c7113c598136c37cd5a",
+      "source_bytes": 74196,
+      "main_bytes": 74254,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/616c3a1914d7dd1d0f1aea43ce62fb024dab296422f38e78dd847301d510bedd.json",
+      "source_sha256": "616c3a1914d7dd1d0f1aea43ce62fb024dab296422f38e78dd847301d510bedd",
+      "main_sha256": "f69b8612083e8ddadfffac19c414ab86a76805a60316dc3fb8c9bfd41374c471",
+      "source_bytes": 12785,
+      "main_bytes": 12813,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/674eb93145aa130e7a88aa81b2570709d2817962ea3b767d1ef457ebafdbe984.json",
+      "source_sha256": "674eb93145aa130e7a88aa81b2570709d2817962ea3b767d1ef457ebafdbe984",
+      "main_sha256": "14e3354e9efd0354a4a077f46c4a29627decbc486e8afafe655e731ed6e7e726",
+      "source_bytes": 79395,
+      "main_bytes": 79455,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/697e63336a6468cb340cbbfdc614c5e27c2e1f64b80ccde7c1b7e65a17c822a6.json",
+      "source_sha256": "697e63336a6468cb340cbbfdc614c5e27c2e1f64b80ccde7c1b7e65a17c822a6",
+      "main_sha256": "cb5afbc18e24d3bb6535c3a09c32f01fc9629c450181318d9c94d361878cb4d3",
+      "source_bytes": 79326,
+      "main_bytes": 79386,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/6a39c3d3abc7fd6c38455d99a75b56ea1cc9e827fef190a03c9e8bbaa9fb4cc2.json",
+      "source_sha256": "6a39c3d3abc7fd6c38455d99a75b56ea1cc9e827fef190a03c9e8bbaa9fb4cc2",
+      "main_sha256": "eba250ee60841fcdc924567adeb4aae78a5dc1e6981368d73b75daff89b76ebf",
+      "source_bytes": 79312,
+      "main_bytes": 79372,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/70e901479f612116cfa7ab88e38f845f72a8d659b6d8c4a06e65a11a14a69ddc.json",
+      "source_sha256": "70e901479f612116cfa7ab88e38f845f72a8d659b6d8c4a06e65a11a14a69ddc",
+      "main_sha256": "f62460b0fb6cd7e3707fe8c7bf8bb2a99f8d40819e4619880f11bc0c8edaef3a",
+      "source_bytes": 12896,
+      "main_bytes": 12924,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/7f80ff9d726b076e3abaff78a4a360c88d750fd75200d548cf7a004dc6b54bd7.json",
+      "source_sha256": "7f80ff9d726b076e3abaff78a4a360c88d750fd75200d548cf7a004dc6b54bd7",
+      "main_sha256": "7af41881da1cf358417767683bc9db2f46bfc926f0fc516bd2d21b40a9ce1512",
+      "source_bytes": 1506,
+      "main_bytes": 1506,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/85e1ee3067ce9a33bba222b2d88559d6a9bde91091b0ba10d661c37ac182895a.json",
+      "source_sha256": "85e1ee3067ce9a33bba222b2d88559d6a9bde91091b0ba10d661c37ac182895a",
+      "main_sha256": "4161c1ef0f3b90bf0b3276ba04b3373d32fbf3cfe6ae4e5275e47b36396b5874",
+      "source_bytes": 12761,
+      "main_bytes": 12789,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/87be5f200f4491d658cdc03abfc29937103abc73d0f068ecd152467a3de179dc.json",
+      "source_sha256": "87be5f200f4491d658cdc03abfc29937103abc73d0f068ecd152467a3de179dc",
+      "main_sha256": "5eac49e2daad70df20ae122f118f2430d8931a8fb2fbbab7652ad528021ad3ab",
+      "source_bytes": 74198,
+      "main_bytes": 74256,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/8911247a21051627a2e47e0a20f26b46829f4300f0380db3f85690f39d3a4e54.json",
+      "source_sha256": "8911247a21051627a2e47e0a20f26b46829f4300f0380db3f85690f39d3a4e54",
+      "main_sha256": "7ffb8f649f9585bbe4116379b957775aa4c122e55882862f54107e9d271a6dc1",
+      "source_bytes": 12755,
+      "main_bytes": 12783,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/97aa887081db308ed5538403efbe76640a039100d1d56c08eac12cabc1cb31f2.json",
+      "source_sha256": "97aa887081db308ed5538403efbe76640a039100d1d56c08eac12cabc1cb31f2",
+      "main_sha256": "7570937f480fc884544597f2c4646fb28802bb1e70b5f92522853bd2c88a64ee",
+      "source_bytes": 74198,
+      "main_bytes": 74256,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/a136906766be4d5f8921cfe53f0e05a3aad47410a2f08610c906ddca944679ad.json",
+      "source_sha256": "a136906766be4d5f8921cfe53f0e05a3aad47410a2f08610c906ddca944679ad",
+      "main_sha256": "1b0d085dfa1fd9f2da57ca63c2fc53dbe9e3230fcd458e7c09fe3e81610847c7",
+      "source_bytes": 79379,
+      "main_bytes": 79439,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/ab06340581cda069bc7875e974a7d51dde84ceba4d7ef5f2051960ccb4290cb9.json",
+      "source_sha256": "ab06340581cda069bc7875e974a7d51dde84ceba4d7ef5f2051960ccb4290cb9",
+      "main_sha256": "0083ee97101b3077d7b411370a4564c6208087686f434d0c69508e9b625e65b3",
+      "source_bytes": 12743,
+      "main_bytes": 12771,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/ada3fde1d361ad2475f9d320f1541bbd86c245908c2eac1bc4180cae8903a02a.json",
+      "source_sha256": "ada3fde1d361ad2475f9d320f1541bbd86c245908c2eac1bc4180cae8903a02a",
+      "main_sha256": "ff794cf4d2e5c2c3bd4c16b4b5382ddfef0d537ed429b1c88a6bf8ea7ceac296",
+      "source_bytes": 12893,
+      "main_bytes": 12921,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/b020661764ec104c48b338ecaec6006915153a1490b83e04bf6de2e512911d6f.json",
+      "source_sha256": "b020661764ec104c48b338ecaec6006915153a1490b83e04bf6de2e512911d6f",
+      "main_sha256": "2599842ea0d178e4936ed1de271c09ee0e8f67339b795390529b49c02bb4c9e5",
+      "source_bytes": 1530,
+      "main_bytes": 1530,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/b3105e98c3c84aa5e4ef8879cfcab09a5b42dd4ba469a9b251bf42732605cb6d.json",
+      "source_sha256": "b3105e98c3c84aa5e4ef8879cfcab09a5b42dd4ba469a9b251bf42732605cb6d",
+      "main_sha256": "3d05f502cc82a4efeaef1a2400618cd0ec29ffaabfb230b96f79e0186c1744ff",
+      "source_bytes": 79309,
+      "main_bytes": 79369,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/b5ba6afc5b012909771396761dd7093afe8e524a2d0c98f8e4f1d6059afbebf4.json",
+      "source_sha256": "b5ba6afc5b012909771396761dd7093afe8e524a2d0c98f8e4f1d6059afbebf4",
+      "main_sha256": "0eea652ab036dc15466d7373cf19342618f657a1199689c056605c6e39598534",
+      "source_bytes": 1538,
+      "main_bytes": 1538,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/b95d56dea931d767f0097532f1ad633ee1ed9ce5df6f0720cdbe8cded2c4c449.json",
+      "source_sha256": "b95d56dea931d767f0097532f1ad633ee1ed9ce5df6f0720cdbe8cded2c4c449",
+      "main_sha256": "64570a06b309f7fbf43e63c360e961bf2ad142c66ac8ea3a313cf384a4094526",
+      "source_bytes": 1517,
+      "main_bytes": 1517,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/c1bec2bdaa04a8ce75c7daeb4a8970826f7115c25d6cf33cb7838df2c2a870d2.json",
+      "source_sha256": "c1bec2bdaa04a8ce75c7daeb4a8970826f7115c25d6cf33cb7838df2c2a870d2",
+      "main_sha256": "ed469bc91b995ac0d465de1eba877a4f71b9fc2cff157282ab82947f7f757475",
+      "source_bytes": 12757,
+      "main_bytes": 12785,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/d499f81e0e23c122acaf45fadac6d8be3838dad1ad05ad5925ec9d30784e6a6f.json",
+      "source_sha256": "d499f81e0e23c122acaf45fadac6d8be3838dad1ad05ad5925ec9d30784e6a6f",
+      "main_sha256": "6add8c7330182cf8c7979babcefa412e509d70e789c77f6a016b3fb55c46f90b",
+      "source_bytes": 1509,
+      "main_bytes": 1509,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/e618824624be8baf28c1fd9dc694fe44d5d5d5316fee52f2f2961b4da0b22a84.json",
+      "source_sha256": "e618824624be8baf28c1fd9dc694fe44d5d5d5316fee52f2f2961b4da0b22a84",
+      "main_sha256": "4ebe17c612dd17fa690f59a83b06f53fd6e0180cec100b62860286f5aceaded9",
+      "source_bytes": 79391,
+      "main_bytes": 79451,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/phase7-evidence/results/eefd93e2806f1bcebc625d380579f5f7d242069da482d92ca8db80ce1acf21ac.json",
+      "source_sha256": "eefd93e2806f1bcebc625d380579f5f7d242069da482d92ca8db80ce1acf21ac",
+      "main_sha256": "b64565637237ad8ca9b60f66c17595cc794491013f216baa7d661ff687cf1796",
+      "source_bytes": 12878,
+      "main_bytes": 12906,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/spacex-counterfactual-lifecycle.json",
+      "source_sha256": "268182e18bcce4b6dfba2b4dfcf785619033a13f01923cb01c98a35488926a47",
+      "main_sha256": "0ed4ac86fe5d8e3b885472fe53c5a35e9e31bf24d87b79952d95f137aedc465d",
+      "source_bytes": 2836358,
+      "main_bytes": 2836916,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/spacex-dlmm-withdrawal.json",
+      "source_sha256": "5f74a2b70946efbc937fba9e9bcd028ce6b6586184104424c8f28e7ba39ddff5",
+      "main_sha256": "8ad39d1ec6fbbee2044fa568cfc5f2c5e2717d8e0d25782e44b9bd423e827a2a",
+      "source_bytes": 7949073,
+      "main_bytes": 7949143,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/spacex-lifecycle-coverage-phase7.json",
+      "source_sha256": "79b78e877b63c9fa3fd5ef80755b0759c47ae8ac9771a56cc3046a387217e07f",
+      "main_sha256": "741ceaacfee88db68885d9dd1936166e6f4a15e6854d7b36e4f5f55a96aaafc7",
+      "source_bytes": 57874,
+      "main_bytes": 57874,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/spacex-lifecycle-coverage.json",
+      "source_sha256": "f3ff991165d23f9ff851b8e7d9c141a92aac4668bf26e2bc83926a12a2e4d920",
+      "main_sha256": "c2daa762e6e587d03453990785391fecc8591a25551f74a8b02a1591ddd34a9d",
+      "source_bytes": 61218022,
+      "main_bytes": 61218358,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/spacex-lifecycle-event.json",
+      "source_sha256": "b8f91dd0aba091787d8a1368e3c5b0887778f72732e7e9d977ba8f4d7edf3824",
+      "main_sha256": "7243310197194ee330b848545e11c0865c5ec06c2e24d1b854c5894f3a72ab22",
+      "source_bytes": 22443,
+      "main_bytes": 22447,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/spacex-lifecycle-path-resolution-phase9.json",
+      "source_sha256": "993989bcdad106d7eef79895e258f4ce14bad18ec810503932688e0ebeb8e06d",
+      "main_sha256": "17e316a2cf71c7ee37245bc1978520b98567e354c2b2188b7c4377acd76732b1",
+      "source_bytes": 51114,
+      "main_bytes": 51198,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/spacex-lifecycle-path-resolution.json",
+      "source_sha256": "0e8d353464d6444a6436b5fc1cd3013e203b554bd53c215ecdb494c9119a3dc6",
+      "main_sha256": "854cae342c5f11758899bbd2f7d411674b4811a48a4dc4c8a33def733ff80aaa",
+      "source_bytes": 49076,
+      "main_bytes": 49160,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/spacex-lifecycle-readiness.json",
+      "source_sha256": "fb2b093170d5b4c85461c2d83b4d99569b2d80d9f6b62c3783bbfd2a843a4953",
+      "main_sha256": "1ff00ab75163cf3a0f06dcf4ab50bd0f20d1d8fdb97b769d8cafe17053fd6cc7",
+      "source_bytes": 161334,
+      "main_bytes": 161766,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/spacex-notice-preflight.json",
+      "source_sha256": "053a47d6da73ab3009fa09b09e389908bc2f49e0558a086211aa9e119b91890e",
+      "main_sha256": "09e88765a781494f0ff9fabd72e4051c767c3cd21c4a80d0edbd5ec068787766",
+      "source_bytes": 239403,
+      "main_bytes": 239915,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/spacex-notice-transition-impact.json",
+      "source_sha256": "d4ca7245e30f5a59dada7eae1ce503cdea718a17101befb12a262fe42a894a25",
+      "main_sha256": "11fa3eb50317a15431e8134e903b70f994fa36442f8d9b7fb3f3b5051df7b610",
+      "source_bytes": 50531807,
+      "main_bytes": 50639567,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/spacex-official-transition.json",
+      "source_sha256": "fb7a79bd6f1a56daf09b34f3af49a0c5d11baa0b479b2922be200ff6b68e6d6d",
+      "main_sha256": "3b7e40403f2f9674b178e49d8eb4745a31e2ca2dffabb9dfd2909003f53a2e34",
+      "source_bytes": 870145,
+      "main_bytes": 870597,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/spacex-transition-impact.json",
+      "source_sha256": "0d9770ac8e360f37ae5e7cda7700feb20886af223904e027085d633f1c9e3e15",
+      "main_sha256": "7e2fcab702162c9b889e67e56a9e5d749f3c65b5b5cfb45edc267dfa7a61f94e",
+      "source_bytes": 49993274,
+      "main_bytes": 50101034,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "reports/spacex-usdc-dlmm-exit-result.json",
+      "source_sha256": "62b0c38d09d41071d2bab6857853bd988bbda63c8e2cdf1161f94f7e121f2808",
+      "main_sha256": "cee4927658c6097473df2db2099fcc69d61d184fecc930f2175867726a3f4158",
+      "source_bytes": 83212,
+      "main_bytes": 83278,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    },
+    {
+      "file": "scenarios/spacex-demo-evaluation.json",
+      "source_sha256": "0e2d83207b71741a39563dff64fdebf3d9518f9d18724f0f7d75530fad47330e",
+      "main_sha256": "0e2d83207b71741a39563dff64fdebf3d9518f9d18724f0f7d75530fad47330e",
+      "source_bytes": 475,
+      "main_bytes": 475,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "scenarios/spacex-transition-ingested.json",
+      "source_sha256": "bcf333bff6d3d116aff97003887857a5164a26dd427ab00a6c21b8de0a83a534",
+      "main_sha256": "bcf333bff6d3d116aff97003887857a5164a26dd427ab00a6c21b8de0a83a534",
+      "source_bytes": 2215,
+      "main_bytes": 2215,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "scenarios/spacex-transition.json",
+      "source_sha256": "9d7d0556a55fd97885cca6f62105d3550ae8d0946b2ec473502bcba050035cea",
+      "main_sha256": "9d7d0556a55fd97885cca6f62105d3550ae8d0946b2ec473502bcba050035cea",
+      "source_bytes": 2440,
+      "main_bytes": 2440,
+      "transformation": "exact raw bytes"
+    },
+    {
+      "file": "snapshots/spacex-exposure.json",
+      "source_sha256": "6802afb871035a0883a04196c7c9542d021d97514f43748b8f63747ea3ce016e",
+      "main_sha256": "d5317dab7cd6e5e41f130cb696d2019d1dd2196336db2ec715fa79f75c26348b",
+      "source_bytes": 73665608,
+      "main_bytes": 73809482,
+      "transformation": "MAIN integer encoding, multiplier bits, exit codes and derived hash links"
+    }
+  ]
+}

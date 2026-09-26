@@ -1,0 +1,678 @@
+{
+  "schema_version": 1,
+  "phase": "T7",
+  "sta_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+  "toolchain": {
+    "pnpm": "11.24.0",
+    "node": "22.23.1",
+    "rust": "stable; offline Cargo dependency cache",
+    "sbf": "unchanged T3 pins: lending v1.54/v0; migration v1.57/v3"
+  },
+  "commands": [
+    {
+      "label": "main-t7-compile",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx",
+        "--test",
+        "execution_probe",
+        "--test",
+        "protocol_position",
+        "--test",
+        "current_execution",
+        "--test",
+        "current_observations",
+        "--test",
+        "current_wallet",
+        "--no-run"
+      ],
+      "exit_code": 101,
+      "seconds": 0.4,
+      "log": "main-t7-compile.log",
+      "log_sha256": "05ac50c36150838e8f6b8c09c976adb3df906e4abfcac1068ef4b9ff964354c2",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-compile-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "execution_probe",
+        "--test",
+        "protocol_position",
+        "--test",
+        "current_execution",
+        "--test",
+        "current_observations",
+        "--test",
+        "current_wallet",
+        "--no-run"
+      ],
+      "exit_code": 101,
+      "seconds": 25.5,
+      "log": "main-t7-compile-2.log",
+      "log_sha256": "10685ac65700b3b2220bf9b53d8e8b4f46cc426022e46f2fabe2cd294e69cd7b",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-compile-3",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "execution_probe",
+        "--test",
+        "protocol_position",
+        "--test",
+        "current_execution",
+        "--test",
+        "current_observations",
+        "--test",
+        "current_wallet",
+        "--no-run"
+      ],
+      "exit_code": 0,
+      "seconds": 13.0,
+      "log": "main-t7-compile-3.log",
+      "log_sha256": "872467b54fb140ccbb7d7e15b666205d326dc896cda3fd883e1d4cc029abbbac",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.7,
+      "log": "main-t7-fmt.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-reference-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "execution_probe",
+        "--test",
+        "protocol_position",
+        "--test",
+        "current_execution",
+        "--test",
+        "current_observations",
+        "--test",
+        "current_wallet",
+        "--no-fail-fast"
+      ],
+      "exit_code": 101,
+      "seconds": 33.3,
+      "log": "main-t7-reference-tests.log",
+      "log_sha256": "ce18252c24c3cb3a50ba56e33972dcd940a6f4ec11fe93df8e4fa245728da991",
+      "rust_test_totals": {
+        "passed": 44,
+        "failed": 12,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-projection",
+      "command": [
+        "python3",
+        "scripts/project-path-reference.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.1,
+      "log": "main-t7-projection.log",
+      "log_sha256": "f28c32ae24ded3330f875ccbb280dc92ac6e7c0b9a6185536c65cde03f3404a5",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-reference-tests-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "execution_probe",
+        "--test",
+        "protocol_position",
+        "--test",
+        "current_execution",
+        "--test",
+        "current_observations",
+        "--test",
+        "current_wallet",
+        "--no-fail-fast"
+      ],
+      "exit_code": 101,
+      "seconds": 91.2,
+      "log": "main-t7-reference-tests-2.log",
+      "log_sha256": "e33067001ca784c16d3c350db51d48f0b874ab2fd9a094ded88dba2b14c56ec1",
+      "rust_test_totals": {
+        "passed": 55,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-fmt-2",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.8,
+      "log": "main-t7-fmt-2.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-reference-tests-3",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "execution_probe",
+        "--test",
+        "protocol_position",
+        "--test",
+        "current_execution",
+        "--test",
+        "current_observations",
+        "--test",
+        "current_wallet",
+        "--no-fail-fast"
+      ],
+      "exit_code": 101,
+      "seconds": 5.0,
+      "log": "main-t7-reference-tests-3.log",
+      "log_sha256": "5f77f9c5592e43565fa101e95950720b70945cfc9184b63d6a4d75252e39accb",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-fmt-3",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.8,
+      "log": "main-t7-fmt-3.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-evidence-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--lib",
+        "evidence::current::tests"
+      ],
+      "exit_code": 101,
+      "seconds": 13.5,
+      "log": "main-t7-evidence-tests.log",
+      "log_sha256": "58081d15af2f65f6c74db967be2e4c87960a650bb9d76f641dc8536cca821d09",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-lint",
+      "command": [
+        "make",
+        "lint"
+      ],
+      "exit_code": 2,
+      "seconds": 12.2,
+      "log": "main-t7-lint.log",
+      "log_sha256": "4141c60b00bf8f8cae7be40ffdbb6954ec912fe073ebc834f6df4e4eae5c2df2",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-reference-tests-4",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "execution_probe",
+        "--test",
+        "protocol_position",
+        "--test",
+        "current_execution",
+        "--test",
+        "current_observations",
+        "--test",
+        "current_wallet",
+        "--no-fail-fast"
+      ],
+      "exit_code": 0,
+      "seconds": 52.9,
+      "log": "main-t7-reference-tests-4.log",
+      "log_sha256": "1f878eb189718cd182a928722cdd1f34719f3698d9c380e205d20a4503322b67",
+      "rust_test_totals": {
+        "passed": 58,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-governance",
+      "command": [
+        "pnpm",
+        "verify:governance"
+      ],
+      "exit_code": 0,
+      "seconds": 0.6,
+      "log": "main-t7-governance.log",
+      "log_sha256": "34f1719225ef942f5b88f563a37758718079e6f9c2b06d14957e1110e0457527",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-fmt-check",
+      "command": [
+        "make",
+        "fmt-check"
+      ],
+      "exit_code": 0,
+      "seconds": 2.3,
+      "log": "main-t7-fmt-check.log",
+      "log_sha256": "5fe89ac47bee0b52b9d98e316b135a2ae04aed42641a7f4ab48dc7614d0c8889",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-frontend",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 0,
+      "seconds": 3.0,
+      "log": "main-t7-frontend.log",
+      "log_sha256": "a42a511c898e8602a263f8c27f3781f5372e4a212accf4974c7fe65ee1f797cf",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-lint-2",
+      "command": [
+        "make",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 24.0,
+      "log": "main-t7-lint-2.log",
+      "log_sha256": "96cf5e974f6e0cd6683063136a152422d4a5b10becac1e21064681aca9238d62",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-evidence-tests-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--lib",
+        "evidence::current::tests"
+      ],
+      "exit_code": 0,
+      "seconds": 41.3,
+      "log": "main-t7-evidence-tests-2.log",
+      "log_sha256": "c6bd9d7a982953f4757cb4e8322fda7039356e22d1d5f90b50052b71d905f667",
+      "rust_test_totals": {
+        "passed": 2,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 643
+      }
+    },
+    {
+      "label": "main-t7-report",
+      "command": [
+        "pnpm",
+        "verify:report"
+      ],
+      "exit_code": 0,
+      "seconds": 63.0,
+      "log": "main-t7-report.log",
+      "log_sha256": "07837adacee13168f48c66bb32ef6afabdd023dc1c18ccd75156f2302026da5e",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-fixture-import",
+      "command": [
+        "python3",
+        "scripts/import-path-fixtures.py",
+        "--sta",
+        "$STA_SCRATCH"
+      ],
+      "exit_code": 0,
+      "seconds": 0.1,
+      "log": "main-t7-fixture-import.log",
+      "log_sha256": "a48fdababc132f0ef9b506f3bb17d44d5101319e8537ca69b94fc75cace3e8b1",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-fixture-projection",
+      "command": [
+        "python3",
+        "scripts/project-path-reference.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.1,
+      "log": "main-t7-fixture-projection.log",
+      "log_sha256": "f28c32ae24ded3330f875ccbb280dc92ac6e7c0b9a6185536c65cde03f3404a5",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-no-fail-fast",
+      "command": [
+        "cargo",
+        "test",
+        "--no-fail-fast"
+      ],
+      "exit_code": -2,
+      "seconds": 333.9,
+      "log": "main-t7-no-fail-fast.log",
+      "log_sha256": "890d1c722340f1ffb6703a006b9956d53460e3e7d253625c9d79080a9f11e8c7",
+      "rust_test_totals": {
+        "passed": 826,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      },
+      "interrupted_note": "Stopped after observed counterfactual reference failures to avoid repeated expensive initialization; partial completed suite summaries are not final verification."
+    },
+    {
+      "label": "main-t7-full-test",
+      "command": [
+        "make",
+        "test"
+      ],
+      "exit_code": -2,
+      "seconds": 402.4,
+      "log": "main-t7-full-test.log",
+      "log_sha256": "9d01384de3f0016fa6d255d3c9270088ce8b9a1345c9520f60b061a85cee673e",
+      "rust_test_totals": {
+        "passed": 877,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      },
+      "interrupted_note": "Stopped after observed counterfactual reference failures to avoid repeated expensive initialization; partial completed suite summaries are not final verification."
+    },
+    {
+      "label": "main-t7-counterfactual-diagnostic",
+      "command": [
+        "target/debug/deps/lifecycle_counterfactual-231202d7ea8cd3ac",
+        "--exact",
+        "balances_never_change",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "seconds": 37.3,
+      "log": "main-t7-counterfactual-diagnostic.log",
+      "log_sha256": "81a1cd03a070d1e6fb29af522479082f35ff3e5abd327afd1c89da8c9ad12142",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 18
+      }
+    },
+    {
+      "label": "main-t7-linked-reference-projection",
+      "command": [
+        "python3",
+        "scripts/project-lifecycle-reference.py",
+        "--position-timestamps",
+        "--out",
+        "fixtures/lifecycle/main-t7",
+        "--record",
+        "fixtures/lifecycle/encoding-projection-t7.json"
+      ],
+      "exit_code": 0,
+      "seconds": 51.2,
+      "log": "main-t7-linked-reference-projection.log",
+      "log_sha256": "16f4065e22fb4884d202cb9da00ba240d28f96dad3d2a7ce2de06b613556aaac",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-final-fmt-check",
+      "command": [
+        "make",
+        "fmt-check"
+      ],
+      "exit_code": 0,
+      "seconds": 1.5,
+      "log": "main-t7-final-fmt-check.log",
+      "log_sha256": "5fe89ac47bee0b52b9d98e316b135a2ae04aed42641a7f4ab48dc7614d0c8889",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-linked-reference-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "lifecycle_counterfactual",
+        "--test",
+        "lifecycle_readiness",
+        "--test",
+        "lifecycle_notice",
+        "--test",
+        "protocol_position",
+        "--no-fail-fast"
+      ],
+      "exit_code": 0,
+      "seconds": 202.9,
+      "log": "main-t7-linked-reference-tests.log",
+      "log_sha256": "90f7c7eb45be1819afda8809a97f6cdeb3e1ab76eb0c727b02bb0c74e469c72b",
+      "rust_test_totals": {
+        "passed": 34,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-final-lint",
+      "command": [
+        "make",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 15.6,
+      "log": "main-t7-final-lint.log",
+      "log_sha256": "54519dbf37664f611d38863fcc2d99930cb71c261b378c99732527b0e4ebbb26",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-full-test-final",
+      "command": [
+        "make",
+        "test"
+      ],
+      "exit_code": 0,
+      "seconds": 1004.7,
+      "log": "main-t7-full-test-final.log",
+      "log_sha256": "c4e7e42b3d9f7b687d3fdbbf16fd4083ceb249c6343c5d8ba3197c030dcfdcb7",
+      "rust_test_totals": {
+        "passed": 1286,
+        "failed": 0,
+        "ignored": 2,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t7-no-fail-fast-final",
+      "command": [
+        "cargo",
+        "test",
+        "--no-fail-fast"
+      ],
+      "exit_code": 0,
+      "seconds": 914.0,
+      "log": "main-t7-no-fail-fast-final.log",
+      "log_sha256": "0fabf30867099fc1cdde509d3bc91846c64cf07fe651f23c34a68887b9b1404e",
+      "rust_test_totals": {
+        "passed": 1235,
+        "failed": 0,
+        "ignored": 2,
+        "filtered out": 0
+      }
+    }
+  ],
+  "source_audit": {
+    "source_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+    "source_files": 1633,
+    "mismatches": [],
+    "source_git_clean": true
+  },
+  "fixtures": {
+    "additional_original_files": 3,
+    "additional_original_bytes": 7955227,
+    "additional_projected_bytes": 7955301,
+    "linked_lifecycle_files_differing_from_t6": 15,
+    "payload_bytes_committed": 0,
+    "path_projection": "../fixtures/path/encoding-projection.json",
+    "linked_lifecycle_projection": "../fixtures/lifecycle/encoding-projection-t7.json",
+    "original_t6_projection_unchanged": true
+  },
+  "notes": [
+    "All final required checks passed. Totals include repeated executions, not unique test counts. The two pre-existing ignored tests are unchanged.",
+    "All 56 pinned source integration tests are retained across execution_probe, protocol_position, current_execution, current_observations and current_wallet. Generic evidence pairing and built-binary isolation, determinism, output protection and route selection add four tests.",
+    "Current path checks use shared account pairing, standard token decoding/balance evidence, loader headers, Clock and byte-range measurements. Historical validator-boundary evidence is never fabricated; adapter count remains five.",
+    "Initial compile attempts exposed the package/crate name, relocated namespaces and an unnecessary removal of the runtime Clock clone. The corrected type retains its clone; clippy passes without suppressions.",
+    "Initial reference tests exposed a wallet slot still encoded as a number and one CLI fixture absent from the T6 closure. The original asset/position/report dependencies were independently pinned and imported. Compute assertions now parse MAIN decimal strings without changing quantities.",
+    "The full regression run detected that encoding the decoded position timestamp as a string also changes counterfactual/assurance digest links. A diagnostic confirmed the exact pre-execution position comparison. The original T6 projection is unchanged; a separate 92-file projection converts this one additional field and updates all dependent hashes. Fifteen derived files differ from T6. Generators do not run the engine or derive expected economic findings.",
+    "Every original capture/program byte remains exact. Added fixture payloads are ignored; only scripts, provenance and projection records are committed. Missing artifacts fail tests.",
+    "Parent capture alone can read the provider environment. Offline workers use env_clear, reject inherited variables and refuse capture requests. Live-provider checks remain intentionally not run. No live signing, cluster simulation/submission, deployment or push occurred.",
+    "Current capture acceptance uses mock/reconstructed providers and frozen deployed bytes. It does not qualify a live provider, prove a validator bank, authenticate an owner, or authorize a transaction.",
+    "Dashboard/browser and Postgres hosted suites remain pending T8/T9. Existing MAIN frontend/report/governance checks pass with pnpm 11.24.0. The T8 presentation glossary remains separate from immutable machine codes.",
+    "Logs are scratch records; digests do not promise durable log storage."
+  ]
+}

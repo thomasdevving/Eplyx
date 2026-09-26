@@ -112,7 +112,7 @@ fn position_state(raw: &Value) -> Result<PositionState> {
     let owner = key(&b, 40)?;
     let lock = u64_at(&b, 7992)?;
     let fields = json!({"type":"PositionV2","lower_bin_id":lower,"upper_bin_id":upper,
-        "owner":owner,"pool":pool,"last_updated_at":i64::from_le_bytes(slice(&b,7920,8)?.try_into()?),
+        "owner":owner,"pool":pool,"last_updated_at":i64::from_le_bytes(slice(&b,7920,8)?.try_into()?).to_string(),
         "total_claimed_fee_raw":[u64_at(&b,7928)?.to_string(),u64_at(&b,7936)?.to_string()],
         "total_claimed_rewards_raw":[u64_at(&b,7944)?.to_string(),u64_at(&b,7952)?.to_string()],
         "operator":key(&b,7960)?,"lock_release_point":lock.to_string(),"fee_owner":key(&b,8001)?,
@@ -809,23 +809,7 @@ fn scope(position: &ProtocolPosition, probe: &WithdrawalProbe) -> WithdrawalScop
         bps_to_remove: probe.bps_to_remove,
     }
 }
-fn withheld(token: &decode::TokenAccountState) -> Result<u64> {
-    match token
-        .extensions
-        .iter()
-        .find(|e| e.extension_type == "TransferFeeAmount")
-    {
-        None => Ok(0),
-        Some(e) => match &e.config["withheldAmount"] {
-            Value::String(s) => Ok(s.parse()?),
-            v => v.as_u64().context("missing withheld amount"),
-        },
-    }
-}
-fn raw_balance(raw: &Value, program: &str, mint: &str, decimals: u8) -> Result<(u64, u64)> {
-    let s = decode::decode_token_account(raw, program, mint, decimals)?;
-    Ok((s.raw_balance.parse()?, withheld(&s)?))
-}
+
 fn exact_token_conservation(
     user: u64,
     withheld: u64,
@@ -1133,16 +1117,29 @@ fn reconcile(
         old_pool[216..232] == new_pool[216..232],
         "protocol fee accumulators changed unexpectedly"
     );
+    let pairs = crate::evidence::current::pair(&p.accounts, &p.watch, e)?;
     for (side, total) in totals.iter().enumerate() {
         let mint = &p.pool.mints[side].to_string();
         let pr = &p.pool.token_programs[side];
         let decimals = p.mint_configs[side].decimals;
         let reserve = p.pool.vaults[side].to_string();
         let dest = &p.destinations[side];
-        let (ub, wb) = raw_balance(get(&p.batch.raws, dest)?, pr, mint, decimals)?;
-        let (ua, wa) = raw_balance(get(&post_raws, dest)?, pr, mint, decimals)?;
-        let (rb, rwb) = raw_balance(get(&p.batch.raws, &reserve)?, pr, mint, decimals)?;
-        let (ra, rwa) = raw_balance(get(&post_raws, &reserve)?, pr, mint, decimals)?;
+        let user_amounts = crate::evidence::current::token_amounts(&pairs, dest, pr, mint)?;
+        let reserve_amounts = crate::evidence::current::token_amounts(&pairs, &reserve, pr, mint)?;
+        let complete = |v: crate::evidence::current::TokenAmounts| -> Result<(u64, u64, u64, u64)> {
+            ensure!(
+                v.delta.is_some(),
+                "token account changed existence during principal removal"
+            );
+            Ok((
+                v.before.context("opening amount")?,
+                v.after.context("closing amount")?,
+                v.withheld_before.context("opening fee")?,
+                v.withheld_after.context("closing fee")?,
+            ))
+        };
+        let (ub, ua, wb, wa) = complete(user_amounts)?;
+        let (rb, ra, rwb, rwa) = complete(reserve_amounts)?;
         ensure!(
             rwb == rwa,
             "reserve withheld fees changed on outgoing transfer"
