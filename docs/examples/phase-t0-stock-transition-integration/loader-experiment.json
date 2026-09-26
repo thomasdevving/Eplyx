@@ -1,0 +1,100 @@
+{
+  "scope": "Scratch-only candidate loader substitution, not the MAIN port. Captured dependency loaders unchanged.",
+  "omitted_from_semantic_comparison": [
+    "evidence_refs",
+    "message_sha256",
+    "pre_state_sha256",
+    "logs_sha256",
+    "derived_world_sha256"
+  ],
+  "cases": [
+    {
+      "case": "case-a",
+      "before_loader": "BPFLoader2111111111111111111111111111111111",
+      "after_loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "before_compute_units_total": 74182,
+      "after_compute_units_total": 74182,
+      "differing_semantic_sections": []
+    },
+    {
+      "case": "case-b",
+      "before_loader": "BPFLoader2111111111111111111111111111111111",
+      "after_loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "before_compute_units_total": 84400,
+      "after_compute_units_total": 84400,
+      "differing_semantic_sections": []
+    },
+    {
+      "case": "case-c",
+      "before_loader": "BPFLoader2111111111111111111111111111111111",
+      "after_loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "before_compute_units_total": 133524,
+      "after_compute_units_total": 133524,
+      "differing_semantic_sections": []
+    },
+    {
+      "case": "case-d",
+      "before_loader": "BPFLoader2111111111111111111111111111111111",
+      "after_loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "before_compute_units_total": 58963,
+      "after_compute_units_total": 58963,
+      "differing_semantic_sections": []
+    },
+    {
+      "case": "case-defect",
+      "before_loader": "BPFLoader2111111111111111111111111111111111",
+      "after_loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "before_compute_units_total": 65386,
+      "after_compute_units_total": 65386,
+      "differing_semantic_sections": []
+    },
+    {
+      "case": "case-e",
+      "before_loader": "BPFLoader2111111111111111111111111111111111",
+      "after_loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "before_compute_units_total": 64063,
+      "after_compute_units_total": 64063,
+      "differing_semantic_sections": []
+    },
+    {
+      "case": "case-f",
+      "before_loader": "BPFLoader2111111111111111111111111111111111",
+      "after_loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "before_compute_units_total": 82310,
+      "after_compute_units_total": 82310,
+      "differing_semantic_sections": []
+    },
+    {
+      "case": "case-g",
+      "before_loader": "BPFLoader2111111111111111111111111111111111",
+      "after_loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "before_compute_units_total": 72682,
+      "after_compute_units_total": 72682,
+      "differing_semantic_sections": []
+    },
+    {
+      "case": "case-g-mint",
+      "before_loader": "BPFLoader2111111111111111111111111111111111",
+      "after_loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "before_compute_units_total": 0,
+      "after_compute_units_total": 0,
+      "differing_semantic_sections": []
+    },
+    {
+      "case": "case-h",
+      "before_loader": "BPFLoader2111111111111111111111111111111111",
+      "after_loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "before_compute_units_total": 0,
+      "after_compute_units_total": 0,
+      "differing_semantic_sections": []
+    },
+    {
+      "case": "case-h-paused",
+      "before_loader": "BPFLoader2111111111111111111111111111111111",
+      "after_loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "before_compute_units_total": 0,
+      "after_compute_units_total": 0,
+      "differing_semantic_sections": []
+    }
+  ]
+}
