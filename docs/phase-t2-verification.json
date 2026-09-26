@@ -1,0 +1,359 @@
+{
+  "phase": "T2",
+  "toolchain": {
+    "node": "22.23.1",
+    "pnpm": "11.24.0",
+    "sbf_platform_tools": "v1.54",
+    "sbf_arch": "v0"
+  },
+  "checks": [
+    {
+      "label": "main-t2-check",
+      "command": [
+        "cargo",
+        "check",
+        "--all-targets"
+      ],
+      "exit_code": 101,
+      "seconds": 16.7,
+      "log": "main-t2-check.log",
+      "log_sha256": "f1f37756083b905961e48ad1d9c7731f9cbff2702d733cd6c3fb0f124b1b0f9b",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t2-primitives",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--lib",
+        "standard_programs::token2022"
+      ],
+      "exit_code": 0,
+      "seconds": 25.2,
+      "log": "main-t2-primitives.log",
+      "log_sha256": "380ee859f1f598ed3c706af591363a483dea5b606a555fb8c53ae6f8a40049b8",
+      "rust_test_totals": {
+        "passed": 20,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 471
+      }
+    },
+    {
+      "label": "main-t2-fmt",
+      "command": [
+        "make",
+        "fmt"
+      ],
+      "exit_code": 0,
+      "seconds": 1.1,
+      "log": "main-t2-fmt.log",
+      "log_sha256": "3b070082f5c7beca79503b1771a2fdf87ebbb83ba485d57fd08f0063482406dc",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t2-unit",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--lib"
+      ],
+      "exit_code": 0,
+      "seconds": 7.0,
+      "log": "main-t2-unit.log",
+      "log_sha256": "b034870aa8757af006a2b48bc94b5ed3f0e18fe34a37e29f142ecb800b94632b",
+      "rust_test_totals": {
+        "passed": 492,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t2-fmt-check",
+      "command": [
+        "make",
+        "fmt-check"
+      ],
+      "exit_code": 0,
+      "seconds": 1.1,
+      "log": "main-t2-fmt-check.log",
+      "log_sha256": "13d2e33a097d921af3f4b5e2bd841737c322cf702c7a416cff32e39d23a8fb60",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t2-lint",
+      "command": [
+        "make",
+        "lint"
+      ],
+      "exit_code": 2,
+      "seconds": 15.3,
+      "log": "main-t2-lint.log",
+      "log_sha256": "08206e6ba0217378bb642d0838718b970d7b1e25ad334ee5d772485e5d250dc3",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t2-fmt-final",
+      "command": [
+        "make",
+        "fmt"
+      ],
+      "exit_code": 0,
+      "seconds": 0.9,
+      "log": "main-t2-fmt-final.log",
+      "log_sha256": "3b070082f5c7beca79503b1771a2fdf87ebbb83ba485d57fd08f0063482406dc",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t2-fmt-check-final",
+      "command": [
+        "make",
+        "fmt-check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.9,
+      "log": "main-t2-fmt-check-final.log",
+      "log_sha256": "13d2e33a097d921af3f4b5e2bd841737c322cf702c7a416cff32e39d23a8fb60",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t2-lint-final",
+      "command": [
+        "make",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 8.2,
+      "log": "main-t2-lint-final.log",
+      "log_sha256": "b5757e01d5127eeb48a572d8eb47117725d26fece58e3e298794a3bcc8d67b98",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t2-layout-final",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--lib",
+        "standard_programs::token2022"
+      ],
+      "exit_code": 0,
+      "seconds": 4.8,
+      "log": "main-t2-layout-final.log",
+      "log_sha256": "f5f03a8c277094e9957dd31e1593b2ee7dcda18ba934dfca2ee6dfcdad18b905",
+      "rust_test_totals": {
+        "passed": 20,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 472
+      }
+    },
+    {
+      "label": "main-t2-fmt-complete",
+      "command": [
+        "make",
+        "fmt"
+      ],
+      "exit_code": 0,
+      "seconds": 1.1,
+      "log": "main-t2-fmt-complete.log",
+      "log_sha256": "3b070082f5c7beca79503b1771a2fdf87ebbb83ba485d57fd08f0063482406dc",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t2-fmt-check-complete",
+      "command": [
+        "make",
+        "fmt-check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.9,
+      "log": "main-t2-fmt-check-complete.log",
+      "log_sha256": "13d2e33a097d921af3f4b5e2bd841737c322cf702c7a416cff32e39d23a8fb60",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t2-lint-complete",
+      "command": [
+        "make",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 8.7,
+      "log": "main-t2-lint-complete.log",
+      "log_sha256": "23bd22e09b2bd961767c0c13c38f2295d57335dec503058ede1f0b54cce822e6",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t2-test",
+      "command": [
+        "make",
+        "test"
+      ],
+      "exit_code": 0,
+      "seconds": 309.4,
+      "log": "main-t2-test.log",
+      "log_sha256": "3b85a50b400b5a77b279f72487ec51ef89d4b308543040488ead6b005386e829",
+      "rust_test_totals": {
+        "passed": 903,
+        "failed": 0,
+        "ignored": 1,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t2-all",
+      "command": [
+        "cargo",
+        "test",
+        "--no-fail-fast"
+      ],
+      "exit_code": 0,
+      "seconds": 245.3,
+      "log": "main-t2-all.log",
+      "log_sha256": "200e51872491a83146d52e19814d7655e7dcc370438def78d32496b663957cbe",
+      "rust_test_totals": {
+        "passed": 865,
+        "failed": 0,
+        "ignored": 1,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t2-frontend",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 0,
+      "seconds": 2.9,
+      "log": "main-t2-frontend.log",
+      "log_sha256": "a42a511c898e8602a263f8c27f3781f5372e4a212accf4974c7fe65ee1f797cf",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t2-report",
+      "command": [
+        "pnpm",
+        "verify:report"
+      ],
+      "exit_code": 0,
+      "seconds": 24.2,
+      "log": "main-t2-report.log",
+      "log_sha256": "07837adacee13168f48c66bb32ef6afabdd023dc1c18ccd75156f2302026da5e",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t2-governance",
+      "command": [
+        "pnpm",
+        "verify:governance"
+      ],
+      "exit_code": 0,
+      "seconds": 0.3,
+      "log": "main-t2-governance.log",
+      "log_sha256": "34f1719225ef942f5b88f563a37758718079e6f9c2b06d14957e1110e0457527",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t2-dependencies",
+      "command": [
+        "cargo",
+        "tree",
+        "-d"
+      ],
+      "exit_code": 0,
+      "seconds": 0.3,
+      "log": "main-t2-dependencies.log",
+      "log_sha256": "ce5cca3c6b3fa5005aece7ff9968b7c322cffa593cf4ec11bf511077ffcf79af",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    }
+  ],
+  "notes": [
+    "Initial check required the added malformed-reason display arm; initial lint required two test initializer fixes.",
+    "Review corrected an incomplete genesis constant before full suites and added a decoded-length assertion.",
+    "Final layout check adds the official reserved multisig-length guard. The no-fail-fast full workspace pass includes that guard. Final fmt/lint were repeated after it.",
+    "The make test pass and no-fail-fast pass retain the pre-existing ignored bundle export utility.",
+    "No live provider, Postgres, migrated dashboard or hosted-browser checks; feature suites are pending their implementation phases.",
+    "Rust totals include repeats; logs remain scratch files.",
+    "cargo tree -d: 24 additional locked packages, no existing name/version removed or changed. New SPL interfaces are test-only at T2."
+  ],
+  "fixture_bytes_added": 0,
+  "baseline_sha256": "b307faa27e09fc74fee9e8087263f249bef565a6998f49fd5e562d2932bf1641"
+}

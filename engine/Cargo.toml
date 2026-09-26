@@ -49,4 +49,11 @@ solana-loader-v3-interface = { version = "=8.0.1", features = ["wincode"] }
 solana-sdk-ids = "=3.1.0"
 
 [dev-dependencies]
+# Independent wire-layout witnesses for the shared decoder, pinned to STA's
+# interface versions. These do not replace MAIN's base token decoders.
+bytemuck = "1"
+spl-token-2022-interface = "=3.1.1"
+spl-token-group-interface = "=0.7.2"
+spl-token-metadata-interface = "=1.0.1"
+solana-program-pack = "=3.1.0"
 tempfile = "3"
