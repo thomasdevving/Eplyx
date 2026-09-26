@@ -186,6 +186,10 @@ pub struct RunChange {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum IndexedChange {
+    LifecycleChange {
+        asset_mint: String,
+        destination_mint: Option<String>,
+    },
     TokenMigration {
         source_mint: String,
         destination_mint: String,
@@ -205,6 +209,10 @@ impl RunChange {
         Ok(Self {
             change_spec_id: spec.id()?,
             change: match &spec.change {
+                Change::LifecycleChange(change) => IndexedChange::LifecycleChange {
+                    asset_mint: change.asset.mint.clone(),
+                    destination_mint: change.destination.as_ref().map(|d| d.mint.clone()),
+                },
                 Change::TokenMigration(migration) => IndexedChange::TokenMigration {
                     source_mint: migration.source.mint.clone(),
                     destination_mint: migration.destination.mint.clone(),
@@ -229,6 +237,7 @@ impl RunChange {
         match &self.change {
             IndexedChange::ProgramUpgrade { .. } => ChangeKind::ProgramUpgrade,
             IndexedChange::TokenMigration { .. } => ChangeKind::TokenMigration,
+            IndexedChange::LifecycleChange { .. } => ChangeKind::LifecycleChange,
         }
     }
 

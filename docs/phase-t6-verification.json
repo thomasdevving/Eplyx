@@ -1,0 +1,977 @@
+{
+  "schema_version": 1,
+  "phase": "T6",
+  "sta_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+  "toolchain": {
+    "pnpm": "11.24.0",
+    "node": "22.23.1",
+    "rust": "stable; offline Cargo dependency cache",
+    "sbf": "unchanged T3 pins: lending v1.54/v0; migration v1.57/v3"
+  },
+  "commands": [
+    {
+      "label": "main-t6-base-check",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-engine",
+        "--all-targets"
+      ],
+      "exit_code": 101,
+      "seconds": 9.5,
+      "log": "main-t6-base-check.log",
+      "log_sha256": "63de235e7b06fcb185bc28e4229d9d4355bbb99b124c9850243d7fafc026273f",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-base-check-2",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-engine",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 13.5,
+      "log": "main-t6-base-check-2.log",
+      "log_sha256": "286a885ecdf3bb09b1edce59d7653a2b9feadca54518da331a2329b5631aba6b",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-base-check-3",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-engine",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 9.4,
+      "log": "main-t6-base-check-3.log",
+      "log_sha256": "92f2a00a479b0c31f1932558b2124d74894ea66858f13d664d03ae85cfd3a53e",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-spec-check",
+      "command": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 16.5,
+      "log": "main-t6-spec-check.log",
+      "log_sha256": "571f3457a156887d622fafa10d74cf7f14c127d21447c567c45c56e4f6ffe83d",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-assurance-check",
+      "command": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets"
+      ],
+      "exit_code": 101,
+      "seconds": 11.7,
+      "log": "main-t6-assurance-check.log",
+      "log_sha256": "c4330504e39157e1b5d4677e3f6a453ba25b1254d8fa802f41f061d6833b09af",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-assurance-check-2",
+      "command": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets"
+      ],
+      "exit_code": 101,
+      "seconds": 10.8,
+      "log": "main-t6-assurance-check-2.log",
+      "log_sha256": "d573f43452c7038089a983114ad574e8acec89749e8b7c7784bc6bd4910fc21a",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-assurance-check-3",
+      "command": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets"
+      ],
+      "exit_code": 101,
+      "seconds": 10.3,
+      "log": "main-t6-assurance-check-3.log",
+      "log_sha256": "bacb5506fc4d5d7ac33e3d4fc744955c8295e2f5f06194d9c873003c0a26e0d2",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-assurance-check-4",
+      "command": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets"
+      ],
+      "exit_code": 101,
+      "seconds": 11.0,
+      "log": "main-t6-assurance-check-4.log",
+      "log_sha256": "6a53d5de4b75f7ff85eb2ba0d72b4e8d7f14747e32cf919772280ed6b952b370",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-assurance-check-5",
+      "command": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets"
+      ],
+      "exit_code": 101,
+      "seconds": 11.2,
+      "log": "main-t6-assurance-check-5.log",
+      "log_sha256": "3a07c5f6e54517896bae8542f2e9983fbcd8fe08ad1ffa249d652bec8cbd05c6",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-tests-check",
+      "command": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets"
+      ],
+      "exit_code": 101,
+      "seconds": 11.1,
+      "log": "main-t6-tests-check.log",
+      "log_sha256": "2680f35b232125deca431a4af2ab1a6410134e11ec1489bf172534cd0db86ac0",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-core-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "lifecycle_snapshot",
+        "--test",
+        "lifecycle_exposure",
+        "--test",
+        "lifecycle_consequence",
+        "--no-fail-fast"
+      ],
+      "exit_code": 101,
+      "seconds": 20.9,
+      "log": "main-t6-core-tests.log",
+      "log_sha256": "117393be74c579e2179bc9fc93d4c93ebfd31cce95a4fc43403cf3ccc740450c",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-core-tests-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "lifecycle_snapshot",
+        "--test",
+        "lifecycle_exposure",
+        "--test",
+        "lifecycle_consequence",
+        "--no-fail-fast"
+      ],
+      "exit_code": 101,
+      "seconds": 3.5,
+      "log": "main-t6-core-tests-2.log",
+      "log_sha256": "0a3518dccedf3ab09037c884d095945af8bda2c73aac837f240c986e4dbb01c6",
+      "rust_test_totals": {
+        "passed": 34,
+        "failed": 2,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-core-tests-3",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "lifecycle_snapshot",
+        "--test",
+        "lifecycle_exposure",
+        "--test",
+        "lifecycle_consequence",
+        "--no-fail-fast"
+      ],
+      "exit_code": 101,
+      "seconds": 3.7,
+      "log": "main-t6-core-tests-3.log",
+      "log_sha256": "9d48aa1f2b94c851af575446f870cb6c0b5cb532ae8ce9b92bdf78debeaa6f24",
+      "rust_test_totals": {
+        "passed": 34,
+        "failed": 2,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-encoded-check",
+      "command": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 18.8,
+      "log": "main-t6-encoded-check.log",
+      "log_sha256": "7eb6c4171d1118afec919ebec8ffebc94038a2eb5c8a3aa5a0ac1c88b01c04c5",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-assurance-unit",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--lib",
+        "lifecycle::",
+        "--no-fail-fast"
+      ],
+      "exit_code": 101,
+      "seconds": 27.1,
+      "log": "main-t6-assurance-unit.log",
+      "log_sha256": "d6584cd811515b690ff86836690ad729d78a5376d430e17d4d481111b5f19dbf",
+      "rust_test_totals": {
+        "passed": 26,
+        "failed": 48,
+        "ignored": 0,
+        "filtered out": 567
+      }
+    },
+    {
+      "label": "main-t6-cli-check",
+      "command": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 2.1,
+      "log": "main-t6-cli-check.log",
+      "log_sha256": "3f47d6e7b084c13ed747218c37b4f8babb789ee4e364d1511ae86ac8f7ee756e",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-bounded-check",
+      "command": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets"
+      ],
+      "exit_code": 101,
+      "seconds": 7.9,
+      "log": "main-t6-bounded-check.log",
+      "log_sha256": "52f37c76d0357b64f7eb42b94d3a1d9601e48ff54c547cfba9ccf7bf9ef2f7c4",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-assurance-unit-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--lib",
+        "lifecycle::",
+        "--no-fail-fast"
+      ],
+      "exit_code": 101,
+      "seconds": 26.3,
+      "log": "main-t6-assurance-unit-2.log",
+      "log_sha256": "3472f482cac52706fcfe8ae64339802bb7495c5a3e1f0370c217a7ee0526bc8e",
+      "rust_test_totals": {
+        "passed": 48,
+        "failed": 26,
+        "ignored": 0,
+        "filtered out": 567
+      }
+    },
+    {
+      "label": "main-t6-shared-path-check",
+      "command": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 16.5,
+      "log": "main-t6-shared-path-check.log",
+      "log_sha256": "7128a0bb5209182280e918c00aeba43c62b5633d975e20a2c172a41be34d0566",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-assurance-unit-3",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--lib",
+        "lifecycle::",
+        "--no-fail-fast"
+      ],
+      "exit_code": 0,
+      "seconds": 22.8,
+      "log": "main-t6-assurance-unit-3.log",
+      "log_sha256": "1ef832f14629cd9b8daf5db6eb900a508e358e9c96d4134d7a85550b3bb85641",
+      "rust_test_totals": {
+        "passed": 74,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 567
+      }
+    },
+    {
+      "label": "main-t6-readiness-diagnostic",
+      "command": [
+        "target/debug/eplyx",
+        "lifecycle",
+        "readiness",
+        "--snapshot",
+        "fixtures/lifecycle/main-v3/snapshots/spacex-exposure.json",
+        "--scenario",
+        "fixtures/lifecycle/main-v3/scenarios/spacex-transition.json",
+        "--policy",
+        "fixtures/lifecycle/main-v3/policies/stocklana-spacex-preflight-v1.json",
+        "--direct-resolution",
+        "fixtures/lifecycle/main-v3/reports/spacex-lifecycle-path-resolution-phase9.json",
+        "--position-resolution",
+        "fixtures/lifecycle/main-v3/reports/spacex-dlmm-withdrawal.json",
+        "--coverage",
+        "fixtures/lifecycle/main-v3/reports/spacex-lifecycle-coverage-phase7.json",
+        "--format",
+        "json"
+      ],
+      "exit_code": 2,
+      "seconds": 14.7,
+      "log": "main-t6-readiness-diagnostic.log",
+      "log_sha256": "8adc696728364e16c58aea0b6953162a128a60970185e466c0384cc8a11602b2",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-public-replay",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "lifecycle_resolution",
+        "--test",
+        "lifecycle_readiness",
+        "--test",
+        "lifecycle_counterfactual",
+        "--no-fail-fast"
+      ],
+      "exit_code": 101,
+      "seconds": 167.4,
+      "log": "main-t6-public-replay.log",
+      "log_sha256": "026f76790e513d5210b2ecd3586e2320282a2ee01ab08d6225c1471ae97c775d",
+      "rust_test_totals": {
+        "passed": 1,
+        "failed": 7,
+        "ignored": 0,
+        "filtered out": 0
+      },
+      "interrupted_note": "Stopped a known failing diagnostic binary to avoid repeated expensive initialization failures; completed suite summaries are counted, not an assertion that all requested tests ran."
+    },
+    {
+      "label": "main-t6-replay-diagnostic",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "lifecycle_resolution",
+        "public_offline_replay_reproduces_and_roundtrips_saved_matrix",
+        "--",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "seconds": 45.3,
+      "log": "main-t6-replay-diagnostic.log",
+      "log_sha256": "37b10bbe946ae3d6fee32eb46ecf321320743ee257079210039e7b45be03c3fb",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 4
+      }
+    },
+    {
+      "label": "main-t6-plan-diagnostic",
+      "command": [
+        "cargo",
+        "run",
+        "-p",
+        "eplyx-engine",
+        "--example",
+        "t6_diagnostic"
+      ],
+      "exit_code": 0,
+      "seconds": 16.8,
+      "log": "main-t6-plan-diagnostic.log",
+      "log_sha256": "f298526ff694705a084f8d06f6be3a2835f5fcc2a5f6667cd562cf755b46d3c8",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-replay-diagnostic-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "lifecycle_resolution",
+        "public_offline_replay_reproduces_and_roundtrips_saved_matrix",
+        "--",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "seconds": 44.6,
+      "log": "main-t6-replay-diagnostic-2.log",
+      "log_sha256": "6636fc8ade14cac05c1f220b85a8d745ca66231f96ffa06ef2a2277a22f23c8c",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 4
+      }
+    },
+    {
+      "label": "main-t6-plan-diagnostic-2",
+      "command": [
+        "cargo",
+        "run",
+        "-p",
+        "eplyx-engine",
+        "--example",
+        "t6_diagnostic"
+      ],
+      "exit_code": 0,
+      "seconds": 24.7,
+      "log": "main-t6-plan-diagnostic-2.log",
+      "log_sha256": "4317a42c3a3b1b67f4b4d9b61e93e4ef2beef3fa468bf9c8bdb4656827ff367f",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-replay-diagnostic-3",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "lifecycle_resolution",
+        "public_offline_replay_reproduces_and_roundtrips_saved_matrix",
+        "--",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "seconds": 78.3,
+      "log": "main-t6-replay-diagnostic-3.log",
+      "log_sha256": "db03a26a8866369c518039d849dffda6803d858afb6b0e48220acca7d012d651",
+      "rust_test_totals": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 4
+      }
+    },
+    {
+      "label": "main-t6-lifecycle-suite",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--no-fail-fast",
+        "--lib",
+        "lifecycle",
+        "--",
+        "--test-threads=2"
+      ],
+      "exit_code": 0,
+      "seconds": 45.1,
+      "log": "main-t6-lifecycle-suite.log",
+      "log_sha256": "d0a419cc826a9e9b0d53bc5c842a13fc3f20ad1614c26fbc849f0da09a45988a",
+      "rust_test_totals": {
+        "passed": 77,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 566
+      }
+    },
+    {
+      "label": "main-t6-readiness-diagnostic-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "lifecycle_readiness",
+        "offline_existing_evidence_reproduces_published_report_and_boundaries",
+        "--",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "seconds": 28.6,
+      "log": "main-t6-readiness-diagnostic-2.log",
+      "log_sha256": "43be1d87d38af9041c42d7acacc9f6a5eb5547f5d6c4b12dc9ad4fe21c0e47c1",
+      "rust_test_totals": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 2
+      }
+    },
+    {
+      "label": "main-t6-integration",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--no-fail-fast",
+        "--test",
+        "lifecycle_snapshot",
+        "--test",
+        "lifecycle_exposure",
+        "--test",
+        "lifecycle_consequence",
+        "--test",
+        "lifecycle_counterfactual",
+        "--test",
+        "lifecycle_readiness",
+        "--test",
+        "lifecycle_notice",
+        "--test",
+        "lifecycle_resolution",
+        "--test",
+        "lifecycle_coverage",
+        "--test",
+        "rollout_assumptions",
+        "--test",
+        "lifecycle_kind",
+        "--test",
+        "lifecycle_cli",
+        "--",
+        "--test-threads=2"
+      ],
+      "exit_code": 101,
+      "seconds": 434.2,
+      "log": "main-t6-integration.log",
+      "log_sha256": "d3ca91b4533de0f3dbaa59f3d03ae9fba0636d0b32da5b42396e56b5ed62f8e3",
+      "rust_test_totals": {
+        "passed": 82,
+        "failed": 5,
+        "ignored": 0,
+        "filtered out": 0
+      },
+      "interrupted_note": "Stopped a known failing diagnostic binary to avoid repeated expensive initialization failures; completed suite summaries are counted, not an assertion that all requested tests ran."
+    },
+    {
+      "label": "main-t6-format",
+      "command": [
+        "make",
+        "fmt"
+      ],
+      "exit_code": 0,
+      "seconds": 1.5,
+      "log": "main-t6-format.log",
+      "log_sha256": "57b04217ebf1017255a49b7e46f8abe947a5fedcbd4cd525ab5372bb0e72af74",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-lint",
+      "command": [
+        "make",
+        "lint"
+      ],
+      "exit_code": 2,
+      "seconds": 13.3,
+      "log": "main-t6-lint.log",
+      "log_sha256": "41ccb75553c88524cde75620f2a8c391b4295791c96501ce955ea705810736f8",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-lint-2",
+      "command": [
+        "make",
+        "lint"
+      ],
+      "exit_code": 2,
+      "seconds": 15.6,
+      "log": "main-t6-lint-2.log",
+      "log_sha256": "03671fa7df034eed98cf29289e4aebb9c87d16f582390c48d2cfa2cae48b53fa",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-assurance-retry",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--no-fail-fast",
+        "--test",
+        "lifecycle_counterfactual",
+        "--test",
+        "lifecycle_notice",
+        "--test",
+        "lifecycle_readiness",
+        "--test",
+        "rollout_assumptions",
+        "--",
+        "--test-threads=2"
+      ],
+      "exit_code": 101,
+      "seconds": 362.7,
+      "log": "main-t6-assurance-retry.log",
+      "log_sha256": "2c3a0f1b1df5a3c12eabc760fadc1378330afea0a3342446435ff3bd4b25d74c",
+      "rust_test_totals": {
+        "passed": 42,
+        "failed": 4,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-format-2",
+      "command": [
+        "make",
+        "fmt"
+      ],
+      "exit_code": 0,
+      "seconds": 1.6,
+      "log": "main-t6-format-2.log",
+      "log_sha256": "57b04217ebf1017255a49b7e46f8abe947a5fedcbd4cd525ab5372bb0e72af74",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-governance",
+      "command": [
+        "pnpm",
+        "verify:governance"
+      ],
+      "exit_code": 0,
+      "seconds": 0.6,
+      "log": "main-t6-governance.log",
+      "log_sha256": "34f1719225ef942f5b88f563a37758718079e6f9c2b06d14957e1110e0457527",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-frontend",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 0,
+      "seconds": 3.0,
+      "log": "main-t6-frontend.log",
+      "log_sha256": "a42a511c898e8602a263f8c27f3781f5372e4a212accf4974c7fe65ee1f797cf",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-complete-lint",
+      "command": [
+        "make",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 15.7,
+      "log": "main-t6-complete-lint.log",
+      "log_sha256": "04d70685965a5dec82207c21f857900509182ae48f2f631ebf289e64d574779c",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-report",
+      "command": [
+        "pnpm",
+        "verify:report"
+      ],
+      "exit_code": 0,
+      "seconds": 48.5,
+      "log": "main-t6-report.log",
+      "log_sha256": "07837adacee13168f48c66bb32ef6afabdd023dc1c18ccd75156f2302026da5e",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-fixture-import-verification",
+      "command": [
+        "python3",
+        "scripts/import-lifecycle-fixtures.py",
+        "--sta",
+        "$STA_SCRATCH"
+      ],
+      "exit_code": 0,
+      "seconds": 0.5,
+      "log": "main-t6-fixture-import-verification.log",
+      "log_sha256": "3fa82764fbab2f7319f15b1136e0472359edec63df9d29a4c02e7eb704ba0448",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-fixture-projection-verification",
+      "command": [
+        "python3",
+        "scripts/project-lifecycle-reference.py"
+      ],
+      "exit_code": 0,
+      "seconds": 52.9,
+      "log": "main-t6-fixture-projection-verification.log",
+      "log_sha256": "16f4065e22fb4884d202cb9da00ba240d28f96dad3d2a7ce2de06b613556aaac",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-complete-fmt-check",
+      "command": [
+        "make",
+        "fmt-check"
+      ],
+      "exit_code": 0,
+      "seconds": 1.9,
+      "log": "main-t6-complete-fmt-check.log",
+      "log_sha256": "5fe89ac47bee0b52b9d98e316b135a2ae04aed42641a7f4ab48dc7614d0c8889",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-full-test",
+      "command": [
+        "make",
+        "test"
+      ],
+      "exit_code": 0,
+      "seconds": 1050.8,
+      "log": "main-t6-full-test.log",
+      "log_sha256": "906e41f2eba9347b8f39dfb31e4008d64e63cfea817707de022f3d40ae20159d",
+      "rust_test_totals": {
+        "passed": 1226,
+        "failed": 0,
+        "ignored": 2,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t6-no-fail-fast",
+      "command": [
+        "cargo",
+        "test",
+        "--no-fail-fast"
+      ],
+      "exit_code": 0,
+      "seconds": 917.2,
+      "log": "main-t6-no-fail-fast.log",
+      "log_sha256": "d6dc0eb67a3461c2bcfb27077bf8132e37200404fe4b35910cd2790acaeaf6bc",
+      "rust_test_totals": {
+        "passed": 1175,
+        "failed": 0,
+        "ignored": 2,
+        "filtered out": 0
+      }
+    }
+  ],
+  "source_audit": {
+    "source_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+    "source_files": 1633,
+    "mismatches": [],
+    "source_git_clean": true
+  },
+  "fixtures": {
+    "original_files": 92,
+    "original_bytes": 371438848,
+    "projected_bytes": 372229380,
+    "changed_file_digests": 62,
+    "changed_internal_digests": 6,
+    "payload_bytes_committed": 0,
+    "provenance": "../fixtures/lifecycle/provenance.json",
+    "encoding_projection": "../fixtures/lifecycle/encoding-projection.json"
+  },
+  "notes": [
+    "All final required checks passed. Command totals include repeated executions and must not be read as unique test counts. The two existing/source ignored tests remain unchanged.",
+    "The first successful public resolution diagnostic and final suites re-execute captured DLMM/Transfer paths. Rehashed fabricated results fail comparison with fresh exact execution. Notice, readiness and counterfactual comparisons preserve complete projected reference records.",
+    "The reference generator never executes an evaluator. It transforms only wide integer representation, exact Scaled UI multiplier bit fields, approved exit codes and hash links; every derived internal preimage is checked against the original hash first. Original transcripts, captures and executables remain exact.",
+    "Initial compile attempts exposed namespace rewiring, sealed-proof visibility, shared RPC Sync requirements and source include paths. Initial reference attempts exposed wide score versus count fields, shared Clock fields, normalized-coverage hashes, internal policy/counterfactual hashes and the notice-impact digest preimage. Failures and retries remain distinct.",
+    "The broad initial integration diagnostic used an older reference; a focused diagnostic rebuilt a later binary while that diagnostic was still running. It is not final verification. The final complete make and no-fail-fast commands ran against one unchanged code/reference state.",
+    "The source archive-wide immutability assertion is covered by the 1633-file STA audit. The migrated test additionally pins every one of the 92 imported originals and their original historical checksum where present. The old Phase 6 investigation CLI remains archived by scope; 15 reusable coverage assertions remain.",
+    "MAIN lifecycle ChangeSpec is non-executable and binds declared policy/provenance. Missing ratio/eligibility stay unknown. Optional absent identifying fields are omitted. Server indexing does not invent a target program or candidate.",
+    "Built-binary repeated analyses produce identical report bytes. Parent fake credential/provider sentinels cannot enter offline workers; inherited variables are rejected. The macOS system text-encoding hint retains the existing T5 handling. Host temporary root is explicit non-secret transport metadata, preserving guarded-marker bounds after env_clear.",
+    "Historical readiness trusts the explicitly selected immutable manifest; this is neither a signature nor independent chain inclusion. No serialized status is accepted as a new VM proof. Only exact replay produces the sealed execution/withdrawal objects.",
+    "No raw fixture bytes, SBF binaries, provider endpoints, private keys or machine paths are added to the committed diff. The payloads remain ignored with exact per-directory provenance and offline import instructions. Missing payloads fail tests.",
+    "Live-provider checks intentionally not run. No live signing, submission, cluster simulation, deployment or push occurred. Local VM fixture signatures derive from public labels.",
+    "Dashboard/browser and Postgres hosted suites remain pending T8/T9. Existing MAIN frontend/report/governance checks pass with exact pnpm 11.24.0. T7 completes current-path discovery/capture and integration coverage; T8 supplies the shared presentation glossary.",
+    "Logs are scratch records; their hashes do not promise durable log storage."
+  ]
+}

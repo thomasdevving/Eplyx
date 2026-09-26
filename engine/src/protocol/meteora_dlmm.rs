@@ -1,4 +1,6 @@
 //! Pinned Meteora DLMM LbPair identity and custody decoding; no execution claim.
+pub mod position;
+pub mod swap;
 use crate::standard_programs::token::{self as decode, LEGACY_PROGRAM, TOKEN_2022_PROGRAM};
 use anyhow::{ensure, Context, Result};
 use borsh::BorshDeserialize;

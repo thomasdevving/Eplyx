@@ -227,7 +227,7 @@ fn version_needs_no_project_config_store_or_network() {
     assert_eq!(value["engine"]["run_metadata_schema"], 2);
     assert_eq!(
         value["engine"]["change_specs"].as_object().unwrap().len(),
-        2
+        3
     );
     assert!(value["platform"].as_str().unwrap().contains('-'));
     assert!(!out.contains(dir.path().to_string_lossy().as_ref()));

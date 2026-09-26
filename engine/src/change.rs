@@ -72,6 +72,7 @@ pub struct ChangeSpec {
 // Keep the established public upgrade variant; boxing it would churn its callers.
 #[allow(clippy::large_enum_variant)]
 pub enum Change {
+    LifecycleChange(Box<crate::lifecycle::spec::LifecycleChange>),
     TokenMigration(Box<crate::migration::spec::TokenMigration>),
     ProgramUpgrade {
         target: ProgramTarget,
@@ -97,6 +98,7 @@ pub enum Change {
 /// targets will be added with their evaluators, not represented as programs.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ChangeTarget<'a> {
+    LifecycleAsset(&'a crate::lifecycle::spec::Asset),
     Asset(&'a crate::migration::spec::TokenSide),
     Program(&'a ProgramTarget),
 }
@@ -146,6 +148,7 @@ pub struct SquadsV4Delivery {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum ChangeKind {
+    LifecycleChange,
     TokenMigration,
     ProgramUpgrade,
 }
@@ -155,6 +158,7 @@ impl ChangeKind {
         match self {
             Self::ProgramUpgrade => "program_upgrade",
             Self::TokenMigration => "token_migration",
+            Self::LifecycleChange => "lifecycle_change",
         }
     }
 }
@@ -236,7 +240,7 @@ impl ChangeMetadata {
     }
 }
 
-fn canonical_address(value: &str, what: &str) -> Result<()> {
+pub(crate) fn canonical_address(value: &str, what: &str) -> Result<()> {
     let parsed: solana_address::Address = value
         .parse()
         .map_err(|_| anyhow::anyhow!("{what} {value:?} is not a base58 address"))?;
@@ -331,6 +335,7 @@ impl ChangeSpec {
         match self.change {
             Change::ProgramUpgrade { .. } => ChangeKind::ProgramUpgrade,
             Change::TokenMigration(_) => ChangeKind::TokenMigration,
+            Change::LifecycleChange(_) => ChangeKind::LifecycleChange,
         }
     }
 
@@ -353,6 +358,7 @@ impl ChangeSpec {
             self.schema_version
         );
         match &self.change {
+            Change::LifecycleChange(change) => change.validate(self.activation.as_ref())?,
             Change::TokenMigration(migration) => {
                 migration
                     .mechanism
@@ -424,6 +430,7 @@ impl ChangeSpec {
         match &self.change {
             Change::ProgramUpgrade { candidate, .. } => Some(candidate),
             Change::TokenMigration(migration) => Some(&migration.mechanism.artifact),
+            Change::LifecycleChange(_) => None,
         }
     }
 
@@ -431,6 +438,7 @@ impl ChangeSpec {
         match &self.change {
             Change::ProgramUpgrade { target, .. } => ChangeTarget::Program(target),
             Change::TokenMigration(migration) => ChangeTarget::Asset(&migration.source),
+            Change::LifecycleChange(change) => ChangeTarget::LifecycleAsset(&change.asset),
         }
     }
 
@@ -439,14 +447,14 @@ impl ChangeSpec {
     pub fn target_program_id(&self) -> Option<&str> {
         match self.target() {
             ChangeTarget::Program(target) => Some(&target.program_id),
-            ChangeTarget::Asset(_) => None,
+            ChangeTarget::Asset(_) | ChangeTarget::LifecycleAsset(_) => None,
         }
     }
 
     /// Explicit narrowing for upgrade-only consumers such as governance.
     pub fn as_program_upgrade(&self) -> Option<ProgramUpgradeRef<'_>> {
         match &self.change {
-            Change::TokenMigration(_) => None,
+            Change::TokenMigration(_) | Change::LifecycleChange(_) => None,
             Change::ProgramUpgrade {
                 target,
                 candidate,
@@ -467,7 +475,7 @@ impl ChangeSpec {
     pub fn delivery(&self) -> Option<&Delivery> {
         match &self.change {
             Change::ProgramUpgrade { delivery, .. } => delivery.as_ref(),
-            Change::TokenMigration(_) => None,
+            Change::TokenMigration(_) | Change::LifecycleChange(_) => None,
         }
     }
 
@@ -478,8 +486,8 @@ impl ChangeSpec {
         spec.change_spec_id = None;
         match &mut spec.change {
             Change::ProgramUpgrade { delivery: slot, .. } => *slot = delivery,
-            Change::TokenMigration(_) => {
-                anyhow::bail!("migration changes have no upgrade delivery")
+            Change::TokenMigration(_) | Change::LifecycleChange(_) => {
+                anyhow::bail!("asset changes have no upgrade delivery")
             }
         }
         Ok(spec)
@@ -662,6 +670,10 @@ pub struct ChangeBinding {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum BoundChange {
+    LifecycleChange {
+        asset_mint: String,
+        destination_mint: Option<String>,
+    },
     TokenMigration {
         source_mint: String,
         destination_mint: String,
@@ -680,6 +692,7 @@ impl ChangeBinding {
         match &self.change {
             BoundChange::ProgramUpgrade { .. } => ChangeKind::ProgramUpgrade,
             BoundChange::TokenMigration { .. } => ChangeKind::TokenMigration,
+            BoundChange::LifecycleChange { .. } => ChangeKind::LifecycleChange,
         }
     }
 
@@ -688,12 +701,13 @@ impl ChangeBinding {
             BoundChange::ProgramUpgrade {
                 target_program_id, ..
             } => Some(target_program_id),
-            BoundChange::TokenMigration { .. } => None,
+            BoundChange::TokenMigration { .. } | BoundChange::LifecycleChange { .. } => None,
         }
     }
 
     pub fn candidate_sha256(&self) -> Option<&str> {
         match &self.change {
+            BoundChange::LifecycleChange { .. } => None,
             BoundChange::ProgramUpgrade {
                 candidate_sha256, ..
             } => Some(candidate_sha256),
@@ -706,7 +720,7 @@ impl ChangeBinding {
     pub fn delivery(&self) -> Option<&Delivery> {
         match &self.change {
             BoundChange::ProgramUpgrade { delivery, .. } => delivery.as_ref(),
-            BoundChange::TokenMigration { .. } => None,
+            BoundChange::TokenMigration { .. } | BoundChange::LifecycleChange { .. } => None,
         }
     }
 }

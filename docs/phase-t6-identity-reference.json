@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "sta_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+  "comparisons": [
+    {
+      "source_scenario": "scenarios/spacex-transition.json",
+      "source_scenario_sha256": "9d7d0556a55fd97885cca6f62105d3550ae8d0946b2ec473502bcba050035cea",
+      "main_scenario_sha256": "9d7d0556a55fd97885cca6f62105d3550ae8d0946b2ec473502bcba050035cea",
+      "main_change_spec_id": "41f447249a03bf2ebff28e31d14dcb4fa6daf2e4a0cc0065be9bbe0466a16b0b",
+      "identity_preimage": [
+        "eplyx-change-spec-v1",
+        1,
+        {
+          "kind": "lifecycle_change",
+          "asset": {
+            "mint": "PreANxuXjsy2pvisWWMNB6YaJNzr7681wJJr2rHsfTh"
+          },
+          "eligibility": {
+            "kind": "unknown"
+          },
+          "deadline": {
+            "unix_timestamp": "1804895940",
+            "after": "NoIssuerEntitlement"
+          },
+          "before": "Active",
+          "after": "TransitionRequired",
+          "sources": [
+            {
+              "id": "prestocks-official-notice",
+              "kind": "ExternalPolicy",
+              "reference": "https://prestocks.com/spacex",
+              "content_sha256": "3987e16a59ee881339038d284d0eebd60c51172670b6e030d6cffb9aa4a0ad82",
+              "supports": [
+                "/change/after",
+                "/change/deadline"
+              ]
+            },
+            {
+              "id": "demo-boundary-assumption",
+              "kind": "ScenarioAssumption",
+              "reference": "scenario:prestocks-spacex-transition-v1",
+              "supports": [
+                "/change/before",
+                "/activation/unix_timestamp",
+                "/change/deadline"
+              ]
+            }
+          ]
+        },
+        {
+          "unix_timestamp": 1789675200
+        }
+      ],
+      "metadata_excluded": true,
+      "reason": "MAIN kind-specific declared fields and top-level activation in the unchanged domain-separated ChangeSpec tuple; no executable or invented ratio/eligibility."
+    },
+    {
+      "source_scenario": "scenarios/spacex-transition-ingested.json",
+      "source_scenario_sha256": "bcf333bff6d3d116aff97003887857a5164a26dd427ab00a6c21b8de0a83a534",
+      "main_scenario_sha256": "bcf333bff6d3d116aff97003887857a5164a26dd427ab00a6c21b8de0a83a534",
+      "main_change_spec_id": "3468069ed45f6c2ba3fb63dbb1a6c5a02b368b5b69a993fde5b87cf4148acd08",
+      "identity_preimage": [
+        "eplyx-change-spec-v1",
+        1,
+        {
+          "kind": "lifecycle_change",
+          "asset": {
+            "mint": "PreANxuXjsy2pvisWWMNB6YaJNzr7681wJJr2rHsfTh"
+          },
+          "destination": {
+            "mint": "Xs3oZwbHvqis4NYcf4YKWmEia2eC84wSiVrcYcTqpH8"
+          },
+          "eligibility": {
+            "kind": "unknown"
+          },
+          "deadline": {
+            "unix_timestamp": "1804895940",
+            "after": "NoIssuerEntitlement"
+          },
+          "before": "Active",
+          "after": "TransitionRequired",
+          "sources": [
+            {
+              "id": "captured-issuer-notice",
+              "kind": "ExternalPolicy",
+              "reference": "https://prestocks.com/spacex",
+              "content_sha256": "3987e16a59ee881339038d284d0eebd60c51172670b6e030d6cffb9aa4a0ad82",
+              "supports": [
+                "/change/after",
+                "/change/deadline",
+                "/change/destination"
+              ]
+            },
+            {
+              "id": "explicit-demo-evaluation",
+              "kind": "ScenarioAssumption",
+              "reference": "config:stocklana-spacex-ingested-demo-v1",
+              "content_sha256": "0e2d83207b71741a39563dff64fdebf3d9518f9d18724f0f7d75530fad47330e",
+              "supports": [
+                "/activation/unix_timestamp",
+                "/change/before",
+                "/change/deadline"
+              ]
+            }
+          ]
+        },
+        {
+          "unix_timestamp": 1789675200
+        }
+      ],
+      "metadata_excluded": true,
+      "reason": "MAIN kind-specific declared fields and top-level activation in the unchanged domain-separated ChangeSpec tuple; no executable or invented ratio/eligibility."
+    }
+  ]
+}

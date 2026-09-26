@@ -715,3 +715,27 @@ async fn a_legacy_run_remains_readable() {
     // Its report is served exactly as it was stored.
     report_of(&harness, &id, &token).await;
 }
+
+#[test]
+fn lifecycle_index_has_an_asset_without_an_executable_or_upgrade_target() {
+    use eplyx_engine::lifecycle::{artifact::reference_root, policy::LifecycleScenario};
+    use eplyx_server::registry::{ChangeOrigin, RunChange};
+    let scenario =
+        LifecycleScenario::load(&reference_root().join("scenarios/spacex-transition.json"))
+            .unwrap();
+    let spec = ChangeSpec::lifecycle(&scenario).unwrap();
+    let indexed = RunChange::of(&spec, ChangeOrigin::Submitted).unwrap();
+    assert_eq!(indexed.kind(), spec.kind());
+    let value = serde_json::to_value(&indexed).unwrap();
+    assert_eq!(value["kind"], "lifecycle_change");
+    assert_eq!(value["asset_mint"], scenario.policy.asset_mint);
+    for absent in [
+        "target_program_id",
+        "candidate_sha256",
+        "candidate_len",
+        "delivery",
+    ] {
+        assert!(value.get(absent).is_none());
+    }
+    assert_eq!(serde_json::from_value::<RunChange>(value).unwrap(), indexed);
+}

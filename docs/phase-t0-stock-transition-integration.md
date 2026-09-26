@@ -676,3 +676,19 @@ and its successful retry are recorded separately.
 These results meet the owner's condition to begin T1. They do not waive T3's
 port verification or turn the untouched STA source's copy/lint failures into
 passing source results.
+
+
+### T6 encoding comparison
+
+The lifecycle port retains original frozen bytes separately from MAIN reference
+encodings. `fixtures/lifecycle/encoding-projection.json` lists every original and
+MAIN file hash and byte count, with the preimages for changed internal digests.
+Only decimal-string integers, exact Scaled UI multiplier bit fields, the approved
+MAIN exit mapping and hashes over those representations change. The projector
+cannot execute an evaluator or rewrite an expected outcome. See
+`docs/phase-t6-test-mapping.json` for assertion-level adaptations and archived scope.
+T0's recorded source values and inventories are not overwritten.
+
+`docs/phase-t6-identity-reference.json` records the baseline and notice-derived
+lifecycle ChangeSpec IDs and exact MAIN identifying tuples beside their source
+scenario hashes. Display metadata remains outside those tuples.
