@@ -857,7 +857,9 @@ fn a_bound_spec_round_trips_and_every_delivery_field_moves_its_id() {
         ),
     ];
     for variant in variants {
-        let spec = World::analysed_spec().with_delivery(Some(Delivery::SquadsV4(variant)));
+        let spec = World::analysed_spec()
+            .with_delivery(Some(Delivery::SquadsV4(variant)))
+            .unwrap();
         spec.validate().unwrap();
         assert!(ids.insert(spec.id().unwrap()));
     }
@@ -887,7 +889,7 @@ fn the_bundle_binding_is_untouched_by_a_delivery() {
     };
     let binding = bound.bind(&baseline).unwrap();
     assert_eq!(binding.change_spec_id, bound.id().unwrap());
-    assert_eq!(binding.delivery, bound.delivery().cloned());
+    assert_eq!(binding.delivery(), bound.delivery());
     let unbound = World::analysed_spec().bind(&baseline).unwrap();
     assert!(!serde_json::to_string(&unbound)
         .unwrap()

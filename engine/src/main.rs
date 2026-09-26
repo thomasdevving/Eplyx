@@ -1797,17 +1797,21 @@ fn change_program_upgrade(args: ChangeProgramUpgradeArgs) -> Result<ExitCode> {
     let candidate = std::fs::read(&args.candidate)
         .with_context(|| format!("reading {}", args.candidate.display()))?;
     let mut spec = ChangeSpec::program_upgrade(&args.program, &candidate);
-    let Change::ProgramUpgrade {
-        target,
-        replaces,
-        expected_upgrade_authority,
-        ..
-    } = &mut spec.change;
-    target.programdata_address = args.programdata;
-    *expected_upgrade_authority = args.upgrade_authority;
-    if let Some(path) = &args.replaces {
-        let bytes = std::fs::read(path).with_context(|| format!("reading {}", path.display()))?;
-        *replaces = Some(ExecutableArtifact::of(&bytes));
+    match &mut spec.change {
+        Change::ProgramUpgrade {
+            target,
+            replaces,
+            expected_upgrade_authority,
+            ..
+        } => {
+            target.programdata_address = args.programdata;
+            *expected_upgrade_authority = args.upgrade_authority;
+            if let Some(path) = &args.replaces {
+                let bytes =
+                    std::fs::read(path).with_context(|| format!("reading {}", path.display()))?;
+                *replaces = Some(ExecutableArtifact::of(&bytes));
+            }
+        }
     }
     if args.activation_slot.is_some() || args.activation_unix_timestamp.is_some() {
         spec.activation = Some(Activation {
@@ -2039,11 +2043,14 @@ fn squads_acquire(args: SquadsAcquireArgs) -> Result<ExitCode> {
         &bytes,
     )?;
     std::fs::write(&args.out, format!("{}\n", spec.to_document()?))?;
+    let candidate = spec
+        .candidate()
+        .context("acquired change names no executable candidate")?;
     eprintln!(
         "stored the buffer's current bytes as candidate {} ({} bytes) and wrote {} ({}). \
          Analyse it, then `governance squads bind` to name the proposal.",
-        spec.candidate().sha256,
-        spec.candidate().len,
+        candidate.sha256,
+        candidate.len,
         args.out.display(),
         spec.id()?
     );
@@ -2058,14 +2065,20 @@ fn render_ci(report: &eplyx_engine::ci::CiReport) -> String {
     let _ = writeln!(text, "Baseline:   {}", report.bundle.baseline_sha256);
     let _ = writeln!(text, "Candidate:  {}", report.candidate.sha256);
     if let Some(change) = &report.change {
-        let _ = writeln!(
-            text,
-            "Change:     {} ({} of {})",
-            change.change_spec_id,
-            change.kind.as_str(),
-            change.target_program_id
-        );
-        if let Some(eplyx_engine::change::Delivery::SquadsV4(delivery)) = &change.delivery {
+        match &change.change {
+            eplyx_engine::change::BoundChange::ProgramUpgrade {
+                target_program_id, ..
+            } => {
+                let _ = writeln!(
+                    text,
+                    "Change:     {} ({} of {})",
+                    change.change_spec_id,
+                    change.kind().as_str(),
+                    target_program_id
+                );
+            }
+        }
+        if let Some(eplyx_engine::change::Delivery::SquadsV4(delivery)) = change.delivery() {
             let _ = writeln!(
                 text,
                 "Delivery:   Squads #{} of {} (message {}). This report does not verify the \

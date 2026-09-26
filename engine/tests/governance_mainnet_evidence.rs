@@ -152,7 +152,7 @@ fn the_mainnet_bindings_are_sealed_and_consistent() {
         assert!(acquired.delivery().is_none());
         assert_eq!(acquired.id().unwrap(), bind.analysed_change_spec_id);
         assert_eq!(
-            acquired.candidate(),
+            acquired.candidate().expect("upgrade candidate"),
             &bind.observation.buffer.as_ref().unwrap().artifact
         );
         let bound = bind.bound_spec(&acquired).unwrap().unwrap();

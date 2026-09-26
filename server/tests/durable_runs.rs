@@ -610,7 +610,7 @@ async fn registry_spec_artifact_and_report_all_agree() {
         report["change"]["change_spec_id"],
         change.change_spec_id.as_str()
     );
-    assert!(artifact.matches(spec.candidate()));
+    assert!(artifact.matches(spec.candidate().expect("upgrade candidate")));
     assert_eq!(report["candidate"]["sha256"], artifact.sha256.as_str());
     assert_eq!(report["candidate"]["len"], artifact.len);
     assert_eq!(

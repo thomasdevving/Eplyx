@@ -182,22 +182,24 @@ pub struct ExpectedUpgrade {
 }
 
 impl ExpectedUpgrade {
-    fn of(spec: &ChangeSpec) -> Self {
-        let crate::change::Change::ProgramUpgrade {
+    fn of(spec: &ChangeSpec) -> Result<Self> {
+        let crate::change::ProgramUpgradeRef {
             target,
             candidate,
             replaces,
             expected_upgrade_authority,
             delivery,
-        } = &spec.change;
-        Self {
+        } = spec
+            .as_program_upgrade()
+            .context("Squads upgrade verification requires a program upgrade")?;
+        Ok(Self {
             target_program_id: target.program_id.clone(),
             programdata_address: target.programdata_address.clone(),
             expected_upgrade_authority: expected_upgrade_authority.clone(),
             replaces: replaces.clone(),
             candidate: candidate.clone(),
             delivery: delivery.as_ref().map(|Delivery::SquadsV4(d)| d.clone()),
-        }
+        })
     }
 }
 
@@ -473,7 +475,7 @@ impl GovernanceBinding {
         let Some(delivery) = &self.observation.delivery else {
             return Ok(None);
         };
-        let bound = analysed.with_delivery(Some(Delivery::SquadsV4(delivery.clone())));
+        let bound = analysed.with_delivery(Some(Delivery::SquadsV4(delivery.clone())))?;
         ensure!(
             Some(bound.id()?) == self.bound_change_spec_id,
             "the binding's bound change id is not the analysed spec delivered by its proposal"
@@ -788,7 +790,7 @@ pub fn verify_squads_upgrade(
         request.transaction_index > 0,
         "Squads transaction indexes start at 1"
     );
-    let expected = ExpectedUpgrade::of(spec);
+    let expected = ExpectedUpgrade::of(spec)?;
     let mut reasons = Reasons(Vec::new());
     let mut observation = SquadsObservation::default();
 
@@ -1304,7 +1306,10 @@ pub fn verify_squads_upgrade(
     let bound = observation
         .delivery
         .as_ref()
-        .map(|d| spec.with_delivery(Some(Delivery::SquadsV4(d.clone()))).id())
+        .map(|d| {
+            spec.with_delivery(Some(Delivery::SquadsV4(d.clone())))?
+                .id()
+        })
         .transpose()?;
     finish(
         spec,

@@ -16,6 +16,26 @@ use eplyx_server::project::AdapterId;
 use eplyx_server::registry::{RunOutcome, RunStatus};
 use serde_json::{json, Value};
 
+#[test]
+fn the_frozen_upgrade_index_keeps_its_wire_bytes() {
+    use eplyx_server::registry::{ChangeOrigin, RunChange};
+
+    // The pre-T1 run metadata fragment. Label and origin stay after the
+    // kind-specific fields; old records need no migration or inferred fields.
+    const WIRE: &str = r#"{"change_spec_id":"b5a894cdbec6251f73b4224a294579fe1af9e316232949fa92da852468900bf3","kind":"program_upgrade","target_program_id":"SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy","candidate_sha256":"640e7c6bb5df9c6c312601fc119c0bd9d2a78c295ba367c4b7004d12d8767220","candidate_len":13,"label":null,"origin":"submitted"}"#;
+    let spec = ChangeSpec::program_upgrade(
+        "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+        b"candidate elf",
+    );
+    let indexed = RunChange::of(&spec, ChangeOrigin::Submitted).expect("index");
+    assert_eq!(serde_json::to_string(&indexed).expect("wire"), WIRE);
+    assert_eq!(
+        serde_json::from_str::<RunChange>(WIRE).expect("old index"),
+        indexed
+    );
+    assert_eq!(indexed.kind(), spec.kind());
+}
+
 fn program_id() -> String {
     committed_record().program_id
 }
@@ -623,7 +643,13 @@ async fn a_target_that_no_longer_matches_the_pinned_bundle_fails_closed() {
     let mut run = registry.load_run(&id).expect("run");
     let change = run.change.as_mut().expect("change");
     change.change_spec_id = spec.id().expect("id");
-    change.target_program_id = STAKE_POOL_PROGRAM.into();
+    match &mut change.change {
+        eplyx_server::registry::IndexedChange::ProgramUpgrade {
+            target_program_id, ..
+        } => {
+            *target_program_id = STAKE_POOL_PROGRAM.into();
+        }
+    }
     std::fs::write(
         dir.join("metadata.json"),
         serde_json::to_vec_pretty(&run).expect("json"),

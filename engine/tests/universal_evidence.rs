@@ -92,8 +92,14 @@ fn the_production_bundle_still_passes_with_byte_identical_output() {
         "the canonical report is no longer byte-identical to the pre-refactor one"
     );
     let change = report.change.as_ref().expect("the report names its change");
-    assert_eq!(change.target_program_id, report.bundle.program_id);
-    assert_eq!(change.candidate_sha256, report.candidate.sha256);
+    assert_eq!(
+        change.target_program_id(),
+        Some(report.bundle.program_id.as_str())
+    );
+    assert_eq!(
+        change.candidate_sha256(),
+        Some(report.candidate.sha256.as_str())
+    );
     assert_eq!(canonical(&report), CHANGE_BOUND_REPORT_SHA256);
 }
 

@@ -19,7 +19,7 @@ use axum::http::{header, HeaderMap, Method, StatusCode};
 use axum::response::{IntoResponse, Response};
 use axum::routing::{get, post};
 use axum::{Json, Router};
-use eplyx_engine::change::{CandidateSource, ChangeSpec};
+use eplyx_engine::change::{CandidateSource, ChangeSpec, ExecutableArtifact};
 use eplyx_engine::ci;
 use eplyx_engine::governance::attestation::{self, DeploymentAttestation};
 use eplyx_engine::governance::{
@@ -470,7 +470,7 @@ async fn create_check(
         .artifacts()
         .put_program(&candidate)
         .map_err(|error| ApiError::internal(format!("storing the candidate: {error:#}")))?;
-    if !stored.reference.matches(spec.candidate()) {
+    if !stored.reference.matches(executable_candidate(&spec)?) {
         return Err(ApiError::internal(
             "the stored artifact is not the spec's candidate",
         ));
@@ -501,7 +501,7 @@ async fn create_check(
         bundle_id: Some(active.bundle_id.clone()),
         corpus_sha256: Some(manifest.corpus_sha256.clone()),
         baseline_sha256: Some(manifest.baseline_program_sha256.clone()),
-        candidate_sha256: change.candidate_sha256.clone(),
+        candidate_sha256: stored.reference.sha256.clone(),
         change: Some(change.clone()),
         candidate_artifact: Some(stored.reference.clone()),
         expectations_sha256,
@@ -545,7 +545,7 @@ async fn create_check(
             run_id,
             project_id,
             status: RunStatus::Queued,
-            candidate_sha256: change.candidate_sha256.clone(),
+            candidate_sha256: stored.reference.sha256.clone(),
             change,
             candidate_artifact: stored.reference,
             bundle_sha256: manifest.bundle_sha256.clone(),
@@ -554,12 +554,19 @@ async fn create_check(
         .into_response())
 }
 
+fn executable_candidate(spec: &ChangeSpec) -> ApiResult<&ExecutableArtifact> {
+    spec.candidate().ok_or_else(|| {
+        ApiError::bad_request("this operation requires an executable candidate")
+            .with_exit_code(ci::EXIT_ERROR)
+    })
+}
+
 /// The candidate an explicit spec names, from what this project has already
 /// supplied. Scoped to the project on purpose: the store is shared and
 /// deduplicated, and knowing another project's candidate hash must not be
 /// enough to execute or detect its bytes.
 fn retained_candidate(state: &AppState, project_id: &str, spec: &ChangeSpec) -> ApiResult<Vec<u8>> {
-    let wanted = ArtifactRef::from(spec.candidate());
+    let wanted = ArtifactRef::from(executable_candidate(spec)?);
     let held = state
         .registry
         .project_holds_artifact(project_id, &wanted.sha256)
@@ -906,7 +913,7 @@ async fn attest_squads_governance(
         .ok_or_else(|| ApiError::not_found("matched G1 binding for this change"))?;
     if !state
         .registry
-        .project_holds_artifact(&project.project_id, &spec.candidate().sha256)
+        .project_holds_artifact(&project.project_id, &executable_candidate(&spec)?.sha256)
         .map_err(|e| ApiError::internal(format!("checking candidate ownership: {e:#}")))?
     {
         return Err(ApiError::not_found("candidate artifact in this project"));
@@ -914,7 +921,7 @@ async fn attest_squads_governance(
     let candidate = state
         .registry
         .artifacts()
-        .get_program(&ArtifactRef::from(spec.candidate()))
+        .get_program(&ArtifactRef::from(executable_candidate(&spec)?))
         .map_err(|e| ApiError::internal(format!("candidate artifact does not verify: {e:#}")))?;
     let attestation: DeploymentAttestation = tokio::task::spawn_blocking(move || {
         attestation::attest_squads_upgrade(rpc.as_ref(), &spec, &binding, &candidate)
@@ -1130,7 +1137,7 @@ async fn verify_squads_governance(
     };
     let held = state
         .registry
-        .project_holds_artifact(&project.project_id, &spec.candidate().sha256)
+        .project_holds_artifact(&project.project_id, &executable_candidate(&spec)?.sha256)
         .unwrap_or(false);
     let analysis_runs = state
         .registry

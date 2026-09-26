@@ -353,6 +353,7 @@ impl World {
                 TRANSACTION_INDEX,
                 squads::message_hash(&message).expect("hash"),
             ))))
+            .expect("program upgrade supports delivery")
     }
 }
 
