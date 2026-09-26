@@ -16460,5 +16460,12 @@
     "A first STA build used an older cargo-build-sbf wrapper/default architecture and did not reproduce the required hashes. All final reference artefacts were rebuilt using 4.4.0, v1.57, v3 before tests.",
     "MAIN initially had v1.57 output mismatching its historical pin; fresh v1.54/v0 builds reproduced the pin. No historical pin changed.",
     "The direct platform-tools MAIN cross-check used cargo build --release --locked --target sbpf-solana-solana, RUSTFLAGS -Zremap-cwd-prefix= and llvm-objcopy --strip-all. The final script-wrapper build independently reproduced the same hash."
+  ],
+  "review_addenda": [
+    {
+      "file": "owner-review.json",
+      "supersedes_pending_check": "MAIN frontend verification under exact pnpm 11.24.0",
+      "result": "pnpm --version = 11.24.0; check:frontend, verify:report and verify:governance passed. All seven source cloud browser checks passed with the three accepted copy-only corrections in scratch. Original results retained."
+    }
   ]
 }

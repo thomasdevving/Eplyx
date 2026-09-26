@@ -13,6 +13,8 @@ They freeze the STA reference at `ad1897e86ee05ff2255bd5277518a3230ee2340f`
 | `sta-fixture-inventory.json` | Original path/size/hash inventory for conservative test dependencies; no fixture bytes are copied here |
 | `loader-experiment.json` | Scratch BPFLoader2 → upgradeable-loader comparison, including unchanged compute totals for the recorded cases |
 | `verification.json` | Actual commands, exit codes, execution counts, Rust test results, retries, toolchain context, limitations and checks not run |
+| `owner-review.json` | Approved architecture decisions, explicit stress semantics, per-mismatch source/test hashes and exact pnpm 11.24.0 check results |
+| `cloud-copy-corrections.patch` | The three accepted copy-only assertion replacements, tested in scratch; STA remains untouched |
 
 The migration values come from saved `migration_cases` outputs, built-binary
 minimal analyses/search/reproduction and a diagnostic invocation of STA's
@@ -48,3 +50,11 @@ T0's saved records contain approximately 1.8 MB of documentation/JSON, zero SBF
 binaries and zero copied capture bytes. Historical evidence in both repositories
 is unchanged. Future phases should append reviewable comparisons, never overwrite
 these reference values to make a port pass.
+
+The owner-review addendum preserves the initial records and supersedes only the
+three stale cloud assertion strings. All seven cloud tests pass with that patch
+in scratch. MAIN's frontend/report/governance checks also pass using exact pinned
+pnpm 11.24.0. The accepted minimal statement is **20/20 stress cases behaved as
+specified**: 11 migrated and reconciled; nine rejected as expected with rollback
+verified. Its separate population rehearsal migrated four of four attempted
+holders. T1 is authorized; the actual migration port remains to be verified in T3.

@@ -1,0 +1,11 @@
+--- a/frontend/tests/cloud/cloud.spec.js
++++ b/frontend/tests/cloud/cloud.spec.js
+@@ -30 +30 @@
+- await expect(page.locator('h1')).toHaveText('Cloud sync is optional. Eplyx execution stays local.');
++ await expect(page.locator('h1')).toHaveText('Cloud sync is optional. CLI execution stays local.');
+@@ -39 +39 @@
+- await expect(page.locator('.synced-banner')).toContainText('Viewing them does not run RPC, execution or replay');
++ await expect(page.locator('.synced-banner')).toContainText('Synced results. This page shows engine results from a developer machine or CI. It does not run RPC, execution or replay.');
+@@ -51 +51 @@
+- await expect(page.locator('.equivalence--warn')).toContainText('Search domains differ — counterexample disappearance does not prove resolution.');
++ await expect(page.locator('.equivalence--warn')).toContainText('Search domains differ. A missing counterexample does not prove resolution.');
