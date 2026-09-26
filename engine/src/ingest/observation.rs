@@ -11,3 +11,13 @@ pub struct Observation {
     pub result: Option<Value>,
     pub error: Option<String>,
 }
+
+/// A successful raw read, indexed in its parent transcript. It proves nothing by itself.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct RpcEvidence {
+    pub id: usize,
+    pub method: String,
+    pub params: Value,
+    pub result: Value,
+}

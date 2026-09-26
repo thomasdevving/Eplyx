@@ -1,6 +1,6 @@
 //! A deployment decision over verified analytical findings, never new evidence.
 use super::requirements::{Result as InvariantResult, Severity, Status};
-use anyhow::{ensure, Result};
+use anyhow::{ensure, Context, Result};
 use clap::ValueEnum;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -176,6 +176,32 @@ pub fn evaluate_migration(report: &Value, policy: Policy) -> Result<DeploymentGa
         analytical == expected_analytical,
         "analytical readiness is inconsistent"
     );
+    if let Some(current) = report.get("current_state_guarantees") {
+        ensure!(
+            current["change_spec_id"] == report["change_spec_id"]
+                && current["official_transition"] == "NotTested",
+            "current-state findings are outside migration scope"
+        );
+        let results = current["results"]
+            .as_array()
+            .context("current case results missing")?;
+        if results.iter().any(|r| r["status"] == "Failed") {
+            blocked = true;
+            codes.insert("CURRENT_CASE_FAILED".into());
+            reasons.push(
+                "An exact coherent final-state migration case failed in the local VM.".into(),
+            );
+        }
+        if results.is_empty()
+            || results
+                .iter()
+                .any(|r| r["status"] != "Proven" && r["status"] != "Failed")
+        {
+            incomplete = true;
+            codes.insert("CURRENT_CASE_UNEVALUATED".into());
+            reasons.push("At least one frozen current-state case could not be evaluated; no substitute account or amount was used.".into());
+        }
+    }
     let outcome = if blocked || (policy == Policy::Strict && incomplete) {
         Outcome::Block
     } else if incomplete || invariant_warning {
@@ -240,9 +266,17 @@ pub fn exit_code(report: &Value, gate: &DeploymentGate) -> Result<u8> {
             .any(|axis| report["readiness"][axis]["status"] == "Blocked");
     let violations: Vec<super::report::RequirementViolation> =
         serde_json::from_value(report["requirement_violations"].clone())?;
-    Ok(if known || !violations.is_empty() {
-        1
-    } else {
-        5
-    })
+    Ok(
+        if known
+            || !violations.is_empty()
+            || gate
+                .reason_codes
+                .iter()
+                .any(|c| matches!(c.as_str(), "CURRENT_CASE_FAILED" | "COUNTEREXAMPLE_FOUND"))
+        {
+            1
+        } else {
+            5
+        },
+    )
 }

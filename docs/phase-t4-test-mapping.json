@@ -1,0 +1,90 @@
+{
+  "phase": "T4",
+  "source_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+  "direct_ports": [
+    {
+      "source": "engine/src/conversion/coherence.rs",
+      "source_sha256": "9d352886567e524cf1fed5e64ae9526e41a2b412c225b332784cb07849b6f6ce",
+      "target": "engine/src/migration/coherence.rs",
+      "retained_test_names": [
+        "later_clock_and_earlier_account_context_never_grant_proof",
+        "earlier_clock_and_later_account_context_never_grant_proof",
+        "coherent_final_batch_passes_with_exact_clock_bytes_and_no_atomicity_claim",
+        "retry_lower_bound_is_monotonic_and_exact",
+        "retry_budget_stops_without_approximation_or_peer_replacement",
+        "changed_source_or_program_during_recapture_is_indeterminate",
+        "serialized_success_or_rewritten_min_chain_cannot_bypass_replay"
+      ],
+      "adaptations": "MAIN imports, shared decoders, decimal-string scalar encoding, ChangeSpec references and explicit current-schema selection; assertions retain their meaning. Historical fixed-ratio case plans remain archived."
+    },
+    {
+      "source": "engine/src/stress/authority.rs",
+      "source_sha256": "e0a06866fdf39ab682200b3394d6fc8cce5d6ae5530731949d8e38712ffc6a90",
+      "target": "engine/src/migration/authority_resolution.rs",
+      "retained_test_names": [
+        "frozen_plan_and_offline_resolution_preserve_non_wallet_boundaries",
+        "second_asset_uses_same_selector_and_never_inherits_first_asset_control",
+        "off_curve_is_not_pda_proof",
+        "resolved_pool_never_proves_peer_accounts",
+        "refreshed_population_rejects_prior_resolution_plan",
+        "exact_spl_multisig_resolution_never_fabricates_approvals"
+      ],
+      "adaptations": "MAIN imports, shared decoders, decimal-string scalar encoding, ChangeSpec references and explicit current-schema selection; assertions retain their meaning. Historical fixed-ratio case plans remain archived."
+    },
+    {
+      "source": "engine/src/stress/tests.rs",
+      "source_sha256": "c58e14f2b242c33561d7e057308a40ea9925fcc0cae8ba3760ae0d7890b39c4f",
+      "target": "engine/src/migration/current_tests.rs",
+      "retained_test_names": [
+        "fresh_population_cannot_be_supplied_by_a_historical_snapshot",
+        "complete_enumeration_and_authority_resolution_are_independent_axes",
+        "a_failed_scan_is_unavailable_and_never_a_complete_empty_population",
+        "reaching_the_decode_budget_is_partial_not_complete",
+        "zero_balance_is_observed_but_is_never_exposure",
+        "an_unknown_balance_is_not_treated_as_zero",
+        "rows_for_another_mint_or_program_are_rejected_and_kept_separate",
+        "several_accounts_of_one_authority_remain_separate_entities",
+        "the_shape_key_is_deterministic_and_carries_no_identity_or_amount",
+        "balances_and_buckets_never_enter_the_shape_key",
+        "only_a_resolved_wallet_authority_is_an_executable_candidate",
+        "no_authority_model_but_a_resolved_wallet_receives_an_assumed_signer",
+        "selection_is_deterministic_under_a_reordered_population",
+        "selection_covers_shapes_first_then_uncovered_balance_buckets",
+        "a_program_owned_account_is_never_selected_and_is_reported_as_unsupported",
+        "the_full_observed_balance_is_bound_and_never_silently_capped",
+        "every_case_plan_keeps_the_candidate_terms_and_gets_its_own_digest",
+        "the_plan_binds_its_population_candidate_plan_and_candidate_program",
+        "a_refreshed_population_produces_a_new_world_with_no_inherited_proof",
+        "a_tampered_plan_cannot_survive_revalidation",
+        "balance_buckets_are_derived_from_this_capture_and_labelled_as_ordering_only"
+      ],
+      "adaptations": "MAIN imports, shared decoders, decimal-string scalar encoding, ChangeSpec references and explicit current-schema selection; assertions retain their meaning. Historical fixed-ratio case plans remain archived. The schema-1 fixed-amount test now records the separately required M13 FullAtFinalCapture policy, retaining the exact discovery amount and decimal round-trip assertions. MAIN admits schema 2 for rebinding; schema 1 captures stay archived and cannot inherit the new guarantee."
+    }
+  ],
+  "integration": {
+    "target": "engine/tests/migration_current.rs",
+    "source": "engine/tests/conversion_stress.rs",
+    "source_sha256": "58c5cc84c99bc9692b13cca44954579c7f9fdf20bc5fb667e84e68073bf2110f",
+    "contracts": [
+      "Exact independent full-balance local execution and rollback, without aggregate rollout-capacity inference",
+      "FullAtFinalCapture binds the resolved amount before execution while retaining discovery identity and amount",
+      "Bucket/shape drift qualifies discovery coverage; final-state coverage does not prove peers",
+      "Lamport-only drift uses final bytes; missing/zero/frozen/changed authority/mint or runtime identity does not execute",
+      "Population pointer verifies the original selected row after provider reordering",
+      "Captured source drift during a monotonic retry chain is Indeterminate; no approximate bank",
+      "Selected cases survive unavailable providers and failed coherence; no replacement",
+      "Plan, candidate, capture and result tampering fail offline replay",
+      "A refreshed population inherits neither old selection nor authority proof",
+      "Each observed search wave is frozen before capture and reconstructed from prior outcomes only",
+      "25 observed cases remain selected on failure; healthy runs claim only the bounded no-finding conclusion",
+      "The existing migration worker replays current captures offline and current VM failures block its gate"
+    ]
+  },
+  "search_source": {
+    "source": "engine/src/conversion/search.rs",
+    "sha256": "d5c7ee14beb31a06e580424e8a20d0f47b39731bf4bd4d72a22ed1c9808d5491",
+    "ported": "M14 observed 10/10/5 account waves, ordering, freeze bindings, retained failures and offline recomputation",
+    "derived": "T3 migration search retains the migrated 64-probe/32-minimization dimensions; the archived fixed-ratio search/product is not added."
+  },
+  "later_policy_checks": "The full lifecycle readiness/rollout requirement evaluator and its stress fact consumer are T6, as planned. T4 exposes exact execution, qualified shape coverage and separate population limitations; it does not invent lifecycle-policy evidence."
+}

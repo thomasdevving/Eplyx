@@ -32,3 +32,13 @@ pub mod gate;
 pub mod population;
 pub mod population_types;
 pub mod requirements;
+
+pub mod authority_resolution;
+pub mod coherence;
+pub mod current;
+pub mod current_classify;
+pub mod current_select;
+pub mod observed_search;
+
+#[cfg(test)]
+mod current_tests;

@@ -65,6 +65,8 @@ pub struct Bindings {
     pub population_capture_sha256: Option<String>,
     pub migration_capture_sha256: Option<String>,
     pub population_budget: Option<StressBudget>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub current_capture_binding_sha256: Option<String>,
     pub run_id: String,
     pub evaluated_at: String,
 }
@@ -216,6 +218,7 @@ pub fn run_with<P: SolanaRpc, E: SolanaRpc>(
         population_capture_sha256: None,
         migration_capture_sha256: None,
         population_budget: None,
+        current_capture_binding_sha256: None,
         run_id: run_id.clone(),
         evaluated_at: String::new(),
     };
@@ -267,6 +270,16 @@ pub fn run_with<P: SolanaRpc, E: SolanaRpc>(
             bindings.state = "MainnetCapture".into();
             bindings.population_capture_sha256 = Some(sha256(&population_bytes));
             bindings.migration_capture_sha256 = Some(sha256(migration_bytes.as_bytes()));
+            let discovery =
+                capture::world(spec, &population_bytes, migration_bytes.as_bytes(), &budget)?;
+            bindings.current_capture_binding_sha256 = Some(super::current::capture_with(
+                &package,
+                &population_bytes,
+                &budget,
+                &discovery,
+                &output.join("current"),
+                execution_rpc,
+            )?);
             bindings.population_budget = Some(budget);
         }
     }
@@ -421,7 +434,41 @@ fn evaluate(package: &ValidatedInput, output: &Path, mode: Mode) -> Result<Value
         "package identity changed since this run was bound"
     );
     let world = world_for(package, output, &b)?;
-    let inputs = RehearsalInputs::new(package, b.gate_policy);
+    let current = if let Some(expected) = &b.current_capture_binding_sha256 {
+        ensure!(
+            b.state == "MainnetCapture",
+            "current capture binding on non-observed input"
+        );
+        let root = output.join("current");
+        ensure!(
+            sha256(&read(&root, "current.bindings.json")?) == *expected,
+            "current capture binding changed"
+        );
+        ensure!(
+            sha256(&read(&root, "population.capture.json")?)
+                == b.population_capture_sha256
+                    .as_deref()
+                    .context("missing population digest")?,
+            "current population differs from run"
+        );
+        let discovery: World = serde_json::from_slice(&read(&root, "discovery.world.json")?)?;
+        ensure!(
+            discovery.sha256()? == world.sha256()?,
+            "current discovery differs from migration world"
+        );
+        let budget = b
+            .population_budget
+            .as_ref()
+            .context("current budget missing")?;
+        Some(match mode {
+            Mode::Write => super::current::finish(package, &root, budget)?,
+            Mode::Verify => super::current::replay(package, &root, budget)?,
+        })
+    } else {
+        None
+    };
+    let mut inputs = RehearsalInputs::new(package, b.gate_policy);
+    inputs.current = current.as_ref();
     let mut digests = BTreeMap::new();
     evaluate_world(&inputs, &world, &mut |file, bytes| {
         artifact(output, mode, file, bytes, &mut digests)
@@ -442,6 +489,7 @@ pub struct RehearsalInputs<'a> {
     invariants: &'a [super::invariants::MigrationInvariant],
     policy: Policy,
     change: &'a crate::change::ChangeSpec,
+    current: Option<&'a super::current::CurrentReport>,
 }
 
 impl<'a> RehearsalInputs<'a> {
@@ -459,6 +507,7 @@ impl<'a> RehearsalInputs<'a> {
             invariants: &input.state.invariants,
             policy,
             change: &input.change,
+            current: None,
         }
     }
 }
@@ -587,7 +636,7 @@ pub fn evaluate_world(
         "adapter_version": adapter::ADAPTER_VERSION,
         "program_id": inputs.program_id,
     });
-    let report = report::build(&report::ReportInput {
+    let mut report = report::build(&report::ReportInput {
         spec,
         world,
         plan: &plan,
@@ -601,6 +650,9 @@ pub fn evaluate_world(
         unsigned_cross_check: &unsigned_cross_check,
         loaded_programs,
     })?;
+    if let Some(current) = inputs.current {
+        report["current_state_guarantees"] = serde_json::to_value(current)?;
+    }
     let report = with_gate(report, inputs.policy)?;
     let mut ignored: BTreeMap<String, String> = BTreeMap::new();
     emit(

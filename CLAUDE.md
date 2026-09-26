@@ -279,8 +279,19 @@ platform-tools v1.57 / SBF v3, while the lending baseline retains v1.54 / SBF v0
 Migration uses shared token, loader and Clock decoders. Its four readiness axes
 and declared invariants are a per-kind gate contract: they do not change upgrade
 expectation policy. Known violations exit 1; strict evidence-only gaps exit 5.
-The migration CLI/local store, conversion guarantees, dashboard and hosted
-migration workers follow in T4–T9. See `docs/phase-t3-token-migration-core.md`.
+The migration CLI/local store, dashboard and hosted migration workers follow
+in T5–T9. See `docs/phase-t3-token-migration-core.md`.
+
+**T4 adds current-state migration guarantees.** Mainnet captures freeze exact
+case selection and account sets before bounded coherent recapture. Clock bytes
+must match the final response context; retry drift is Indeterminate. The isolated
+worker executes each same account at its exact final balance, qualifying changed
+discovery shape/bucket coverage. A separate bounded authority plan identifies
+DLMM custody and multisig requirements without granting signing authority.
+Observed search freezes up to 25 additional exact accounts in three waves and
+recomputes all evidence offline. These use the migration VM and shared decoders;
+T3's synthetic/frozen contracts remain unchanged. See
+`docs/phase-t4-current-migration-guarantees.md`.
 
 **Phase P1 made it the hosted product's identity.** `POST /checks` takes an
 optional `change_spec` part (authoritative; the `candidate` bytes only satisfy
