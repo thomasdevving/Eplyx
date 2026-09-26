@@ -1,0 +1,108 @@
+{
+  "account_observation": {
+    "executable": false,
+    "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "slot": "100",
+    "space": "82"
+  },
+  "accounts": [],
+  "acquisition": {
+    "commitment": "finalized",
+    "completed_at": "2026-09-26T20:28:19.492Z",
+    "consistency": "Separate RPC observations, not an atomic validator bank",
+    "context_slots": [
+      "100"
+    ],
+    "decoder": "spl-token-2022-interface/3.1.1; current-observation/v1",
+    "genesis_hash": "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d",
+    "rpc_origin": "configured_read_only_provider",
+    "started_at": "2026-09-26T20:28:19.492Z"
+  },
+  "asset": {
+    "expected_genesis_hash": "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d",
+    "expected_token_program": null,
+    "mint": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+    "name": "Custom token address",
+    "verification": []
+  },
+  "authorization": false,
+  "discovery": {
+    "complete_population": false,
+    "gaps": [],
+    "maximum_sample_accounts": 20,
+    "method": "getTokenLargestAccounts + getMultipleAccounts",
+    "requested": false,
+    "sample_count": null,
+    "status": "NotRequested",
+    "technical_errors": []
+  },
+  "execution_performed": false,
+  "funds_moved": false,
+  "identity_mismatches": [],
+  "identity_provenance": "Stock/issuer association unconfirmed. A token name or symbol is not issuer evidence.",
+  "inspection": {
+    "account_type": "Mint",
+    "message": "Current token information retrieved",
+    "status": "Completed"
+  },
+  "kind": "current-inspection",
+  "lifecycle_event": null,
+  "limitations": [
+    "Largest-account sampling is not a holder population or wallet lookup.",
+    "No protocol position, market route, token transfer, withdrawal or official conversion was tested.",
+    "No lifecycle event or assurance policy was selected; this is not a readiness verdict.",
+    "Mint supply, public account balances and withheld fees are separate quantities; no reconciliation across RPC contexts is claimed.",
+    "Amounts are unscaled token quantities, not company shares or valuations. Confidential balances are not known zero. Extension presence alone is not active behavior."
+  ],
+  "local_execution_performed": false,
+  "mint": {
+    "decimal_supply": "1.234567",
+    "decimals": 6,
+    "extensions": [],
+    "freeze_authority": null,
+    "is_initialized": true,
+    "is_token_2022": false,
+    "mint_authority": null,
+    "raw_supply": "1234567",
+    "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+  },
+  "mint_slot": "100",
+  "onchain_metadata": null,
+  "paths": [
+    {
+      "path": "OfficialTransition",
+      "reason": "Fresh execution is not wired for this observation milestone.",
+      "status": "NotTested"
+    },
+    {
+      "path": "Redemption",
+      "reason": "Fresh execution is not wired for this observation milestone.",
+      "status": "NotTested"
+    },
+    {
+      "path": "SecondaryMarketExit",
+      "reason": "Fresh execution is not wired for this observation milestone.",
+      "status": "NotTested"
+    },
+    {
+      "path": "Transfer",
+      "reason": "Fresh execution is not wired for this observation milestone.",
+      "status": "NotTested"
+    },
+    {
+      "path": "Withdrawal",
+      "reason": "Fresh execution is not wired for this observation milestone.",
+      "status": "NotTested"
+    }
+  ],
+  "readiness": null,
+  "schema_version": 2,
+  "selection": {
+    "cluster": "solana-mainnet",
+    "mint": "4vJ9JU1bJJE96FWSJKvHsmmFADCg4gpZQff4P3bkLKi",
+    "reference": null,
+    "sample_accounts": false
+  },
+  "signer_assumed_locally": false,
+  "signer_possession_known": false
+}

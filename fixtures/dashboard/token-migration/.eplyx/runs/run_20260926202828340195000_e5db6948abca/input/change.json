@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "change": {
+    "kind": "token_migration",
+    "source": {
+      "mint": "6u4knmGQzqoVmVaeztpQDiL8mx2u29wjbEjDCyrV2GYq",
+      "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "decimals": 6
+    },
+    "destination": {
+      "mint": "9WDiiWiBjvUQe2eWyir6n9N54F39SjeLKBeBDuGsBTQS",
+      "token_program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "decimals": 9
+    },
+    "conversion": {
+      "ratio_basis": "ui",
+      "numerator": "1",
+      "denominator": "1",
+      "rounding": "floor",
+      "fee": {
+        "kind": "none"
+      },
+      "minimum_output_raw": "1"
+    },
+    "eligibility": {
+      "amount_policy": "full_balance",
+      "minimum_source_balance_raw": "1",
+      "holder_authorization": [
+        "owner",
+        "delegate"
+      ],
+      "owner_authority_classes": [
+        "wallet",
+        "multisig"
+      ],
+      "excluded_accounts": []
+    },
+    "source_disposition": {
+      "kind": "burn"
+    },
+    "destination_funding": {
+      "kind": "reserve_transfer",
+      "reserve": {
+        "kind": "proposed",
+        "funded_raw": "2000000000000"
+      }
+    },
+    "authorities": {
+      "migration_authority": {
+        "kind": "program_derived"
+      },
+      "expected": {
+        "source_mint_authority": {
+          "kind": "address",
+          "address": "37crBpTaQr6Ymy5Nn8smNyzuPB8Lhs2cdK7JoNZTsFCb"
+        }
+      },
+      "fee_payer": {
+        "kind": "relayer"
+      }
+    },
+    "deadline": {
+      "kind": "slot",
+      "value": "900000"
+    },
+    "mechanism": {
+      "program_id": "Akajkkga5U8d6xkVQUMXjnbdSuMtGAHBLbsr9dUvQGsj",
+      "artifact": {
+        "sha256": "e5db6948abca1317eb12155f73cdaf619d378c22d1bfc992c977063e10e9c1bb",
+        "len": 53488
+      }
+    }
+  },
+  "activation": {
+    "slot": 2000
+  }
+}

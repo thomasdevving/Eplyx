@@ -53,6 +53,9 @@ const MAX_ARTIFACT: u64 = 512 * 1024 * 1024;
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Bindings {
+    /// Missing on historical MAIN runs, whose exact version-1 Markdown remains reproducible.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub report_presentation_version: Option<u32>,
     pub schema_version: u32,
     pub kind: String,
     pub gate_policy: Policy,
@@ -206,6 +209,7 @@ pub fn run_with<P: SolanaRpc, E: SolanaRpc>(
         Utc::now().timestamp_millis()
     );
     let mut bindings = Bindings {
+        report_presentation_version: Some(2),
         schema_version: BINDINGS_SCHEMA,
         kind: BINDINGS_KIND.into(),
         gate_policy: policy,
@@ -469,6 +473,11 @@ fn evaluate(package: &ValidatedInput, output: &Path, mode: Mode) -> Result<Value
     };
     let mut inputs = RehearsalInputs::new(package, b.gate_policy);
     inputs.current = current.as_ref();
+    inputs.report_presentation_version = b.report_presentation_version.unwrap_or(1);
+    ensure!(
+        [1, 2].contains(&inputs.report_presentation_version),
+        "unsupported report presentation version"
+    );
     let mut digests = BTreeMap::new();
     evaluate_world(&inputs, &world, &mut |file, bytes| {
         artifact(output, mode, file, bytes, &mut digests)
@@ -477,6 +486,7 @@ fn evaluate(package: &ValidatedInput, output: &Path, mode: Mode) -> Result<Value
 
 /// Everything an offline rehearsal needs besides the world.
 pub struct RehearsalInputs<'a> {
+    report_presentation_version: u32,
     spec: &'a super::spec::TokenMigrationV1,
     change_spec_id: &'a str,
     program_id: &'a str,
@@ -495,6 +505,7 @@ pub struct RehearsalInputs<'a> {
 impl<'a> RehearsalInputs<'a> {
     pub fn new(input: &'a ValidatedInput, policy: Policy) -> Self {
         Self {
+            report_presentation_version: 2,
             spec: input.spec(),
             change_spec_id: &input.change_spec_id,
             program_id: input.program_id(),
@@ -662,7 +673,7 @@ pub fn evaluate_world(
     )?;
     emit(
         REPORT_MD,
-        report::markdown(&report).as_bytes(),
+        report::markdown_version(&report, inputs.report_presentation_version).as_bytes(),
         &mut ignored,
     )?;
     Ok(report)

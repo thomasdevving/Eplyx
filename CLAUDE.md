@@ -279,8 +279,9 @@ platform-tools v1.57 / SBF v3, while the lending baseline retains v1.54 / SBF v0
 Migration uses shared token, loader and Clock decoders. Its four readiness axes
 and declared invariants are a per-kind gate contract: they do not change upgrade
 expectation policy. Known violations exit 1; strict evidence-only gaps exit 5.
-T5 adds the migration CLI and local store. The dashboard and hosted migration
-workers follow in T8–T9. See `docs/phase-t3-token-migration-core.md`.
+T5 adds the migration CLI and local store. T8 adds the read-only loopback
+dashboard; hosted migration workers follow in T9. See
+`docs/phase-t3-token-migration-core.md`.
 
 **T4 adds current-state migration guarantees.** Mainnet captures freeze exact
 case selection and account sets before bounded coherent recapture. Clock bytes
@@ -444,7 +445,7 @@ Done, as a pilot-ready product surface (Phase 10): an immutable, hash-addressed 
 
 Done, as the first governance binding (Phase G1): Squads V4 vault transactions carrying exactly one loader-v3 program upgrade, bound to a governance-bound ChangeSpec at an observed slot, with typed outcomes, sealed evidence, CLI, hosted endpoint and a compact frontend card. Not a generic governance layer: no other provider, no LUT-backed messages, no `GovernanceExecution` kind, no signing.
 
-Explicitly **not** started, and not to be begun without being asked: general CPI execution beyond that contract, address lookup table execution, account creation/closure in replay, failed-original replay, multi-instruction sequence search, protocols beyond Token-2022 and SPL Stake Pool (lending, vaults, AMMs), a GitHub App, frontend UI, AI analysis, and fiat valuation of protocol assets.
+Explicitly **not** started, and not to be begun without being asked: general CPI execution beyond that contract, address lookup table execution, account creation/closure in replay, failed-original replay, multi-instruction sequence search, a GitHub App, AI analysis, and fiat valuation of protocol assets. The semantic adapters documented below, MAIN's hosted frontend and T8's local dashboard are implemented within their stated boundaries.
 
 Done, as a third semantic adapter on the universal layer (Phase U2): `protocol::kamino`, a narrow KLend vertical slice — `depositReserveLiquidityAndObligationCollateral` and `borrowObligationLiquidity`, both forms of each. It exists to measure whether U1 paid off, and it does: **zero** lines of the adapter reimplement token decoding, pairing, boundary proof or generic deltas, enforced by source-reading tests, and its `prove_boundaries` is 93 lines against Stake Pool's 162 post-U1 and 248 before. What is irreducibly Kamino's is 22 lines of scaled-fraction conversion in one named evaluator, `kamino_fraction_v1`.
 
@@ -454,4 +455,22 @@ Two findings matter beyond the adapter. **Kamino semantics are not contained in 
 
 Done, as a refactor and foundation (Phase U1): the protocol-independent half of the adapters extracted into `evidence/` and `standard_programs/`, with every canonical report byte-identical and every gate exit code unchanged. Adapter shared-method overlap fell from 46% to 31%, and what remains is signatures and call syntax rather than logic. No new protocol, no new semantic action, no adapter DSL, no Adapter Contract v2 — the architecture study's conclusion that **v2 should not be built yet** stands, and `docs/adapter-v2-*.md` record why. See `docs/universal-evidence-layer.md`.
 
-Expected-vs-unexpected classification and CI integration *are* done — see Phase 10 above. What remains unbuilt there is a GitHub App, a dashboard, and a queue.
+Expected-vs-unexpected classification and CI integration are done — see Phase 10 above. P2's durable run registry supplies the queue. T8 adds a loopback dashboard over local migration, lifecycle and current-state records. A GitHub App remains unbuilt.
+
+**T8 local views.** `eplyx dashboard` binds loopback only, accepts GET/HEAD on a
+fixed route and artifact allowlist, and never executes an analysis. The dashboard
+reads immutable `.eplyx/` records; its index is disposable and reconstructed from
+source records on startup. Local and hosted projections share
+`dashboard::view::from_bytes`. Lifecycle and current-state CLI outputs can be
+appended with `--record <project-directory>` using metadata schema 3, without
+inventing a migration candidate or deployment gate. Existing migration metadata
+and canonical analytical JSON are unchanged. Markdown presentation version 2
+uses the shared glossary; historical version-1 Markdown remains replayable.
+
+The dashboard retains the shell, sidebar, eight migration answers, compare and
+counterexample views. It embeds licensed DM Sans and Manrope fonts and MAIN's
+logo and violet palette, with no network font requests. The Overview/Technical
+setting is shared with MAIN's frontend, including `[data-technical]` sections.
+The public `/token-transitions` page describes the bounded capabilities.
+[T8 verification](docs/phase-t8-dashboard.md) passed the full Rust, frontend,
+report, governance and browser checks; retries are retained in the phase record.

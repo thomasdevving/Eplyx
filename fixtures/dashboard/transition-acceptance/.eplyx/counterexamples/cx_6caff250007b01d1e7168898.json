@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "kind": "token_migration",
+  "id": "cx_6caff250007b01d1e7168898",
+  "parent_run": "run_20260926202750498369000_c43467360081",
+  "search_sha256": "c3ca0f6bed81d4d36109f59634726ff8db31d8ae373b7c35b6b843681232da67",
+  "replay_inputs": {
+    "input": "runs/run_20260926202750498369000_c43467360081/input",
+    "result": "runs/run_20260926202750498369000_c43467360081/result",
+    "search": "runs/run_20260926202750498369000_c43467360081/search"
+  },
+  "counterexample": {
+    "kind": "MigrationObserved",
+    "id": "cx_6caff250007b01d1e7168898",
+    "parent_run": "mig-c0ef5d2749a9-1790454470524",
+    "analysis_input_sha256": "c0ef5d2749a9f0cb66b3a8e49b2a8350f737e7c37448f03fbbb54b5c43d1e61c",
+    "candidate_program_sha256": "c4346736008188befe1d1a41cf167ea6a80c3b61a76cf1d3ba550f916b682275",
+    "world_sha256": "af07d7e8df419126910e7180d8e35b4abe9132b8dca66053e762d2b5e7bbeeaa",
+    "unit_id": "unit-b536c625dc27c199",
+    "source_account": "7KhNGHh1sy7nvWj1EAAvnUTbrj2U2VZk6axauFuz2wqe",
+    "observed_balance_raw": "250",
+    "planned_class": "InsufficientReserve",
+    "finding": "EligibleHolderNotMigrated",
+    "signature": {
+      "outcome": "Rejected",
+      "stage": "candidate",
+      "error_name": "InsufficientReserve",
+      "error": "InstructionError(2, Custom(20))",
+      "rollback_verified": true,
+      "failed_checks": []
+    },
+    "message_sha256": "295d01e1ae53ff9e58046ff67fee719b341a3b5e3f41d7d1c971a8d5c8bcb149",
+    "provenance": "SyntheticPopulationRehearsal",
+    "limitations": "Executed in a local VM against the exact captured (or fixture) bank at the rehearsal Clock; no mainnet transaction."
+  }
+}

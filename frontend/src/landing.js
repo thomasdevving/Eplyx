@@ -1,3 +1,4 @@
+import { TokenTransitionsSection } from './transitions.js';
 import { IntroAnimation } from './intro.js';
 import { EplyxCoreScene } from './core-scene.js';
 import { Header, Footer } from './shell.js';
@@ -119,6 +120,8 @@ export function LandingPage() {
         </div>
         <div class="evidence-note"><span>Evidence structure preview · hash values belong to an individual run.</span><a href="/runs/demo" data-link>View demo report ↗</a></div>
       </section>
+
+      ${TokenTransitionsSection()}
 
       <section class="roles section" id="roles">
         <div class="roles-intro reveal"><p class="eyebrow eyebrow--dark"><span></span> Built for protocol teams</p><h2>Who is<br>Eplyx for?</h2><p>One execution truth. Different views for the people responsible for protocol change.</p><div class="role-architecture"><span>CHANGE</span><i>↓</i><span>REPLAY</span><i>↓</i><strong>CONSEQUENCE</strong><i>↓</i><span>EXECUTION PROOF</span></div></div>

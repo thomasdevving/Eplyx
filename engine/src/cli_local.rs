@@ -1,5 +1,5 @@
 //! Local project commands. Capture runs in the parent; VM work runs in empty-env children.
-mod config;
+pub(super) mod config;
 use super::Format;
 use anyhow::{ensure, Context, Result};
 use chrono::{SecondsFormat, Utc};
@@ -308,11 +308,8 @@ fn analyse(
     })
 }
 fn render(id: &str, report: &Value) -> String {
-    let label = match report["gate_outcome"].as_str() {
-        Some("Pass") => "Passed",
-        Some("Warn") => "Passed with warnings",
-        _ => "Gate failed",
-    };
+    let label =
+        eplyx_engine::presentation::label(report["gate_outcome"].as_str().unwrap_or("NotTested"));
     let mut text = format!(
         "Eplyx migration analysis · {id}\nToken Migration V1 rehearsal (local VM)\n{label}\n"
     );
@@ -645,8 +642,12 @@ pub fn show(config_path: &Path, id: &str, format: Format) -> ExitCode {
             Ok(Response::ok(
                 json!({"metadata":read_json(&path.join("metadata.json"))?,"report":report,"history_only":true}),
                 format!(
-                    "Saved history; use migration gate to re-verify.\n{}",
-                    render(id, &report)
+                    "Saved history; viewing it does not re-execute the analysis.\n{}",
+                    if report["transition_kind"] == "token_migration" {
+                        render(id, &report)
+                    } else {
+                        serde_json::to_string_pretty(&report)?
+                    }
                 ),
             ))
         })(),

@@ -1,0 +1,336 @@
+{
+  "schema_version": 1,
+  "purpose": "Presentation fixture; exact small MAIN engine artifacts. Captures and candidate bytes stay outside this fixture, so it cannot be replayed.",
+  "files": [
+    {
+      "path": "transition-acceptance/.eplyx/project.json",
+      "bytes": 104,
+      "sha256": "d3ff963187be5d4c681de6a794166c80564c4639ddaaec1dc80e36ea647981f3"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202745546047000_e5db6948abca/metadata.json",
+      "bytes": 674,
+      "sha256": "4dd5908ea7616a0ab534ae562e18d10e5937f9b88461a10d5bbdf7a81a24d830"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202745546047000_e5db6948abca/result/report.json",
+      "bytes": 43324,
+      "sha256": "373446fd150771dd8aef0954097794be5b3a8574662475bf1f9b2a22910884c9"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202745546047000_e5db6948abca/result/report.md",
+      "bytes": 2799,
+      "sha256": "9a5a24f4e06a870f70d959e4b998dbe3b6603973fb6e13e2e4ab733a8446d7b7"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202745546047000_e5db6948abca/result/bindings.json",
+      "bytes": 807,
+      "sha256": "2d6a00a2264c8657132f9decd527389f228191fa30568995432bc6ab9aacc994"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202745546047000_e5db6948abca/input/change.json",
+      "bytes": 1817,
+      "sha256": "3a09ed0403d88adb41bcbfb04ee2d6d41beb546c0be610f8d9c2369ff9a675ad"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202745546047000_e5db6948abca/input/state.json",
+      "bytes": 1165,
+      "sha256": "1dd00088ab59e8bbf0796bf001b6640deb90fd8e979878b3759f862fcdc231d3"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202750498369000_c43467360081/metadata.json",
+      "bytes": 675,
+      "sha256": "88e60fa99205aad10f9689b398796b3671c15e4cf8ad8cbaa4631736759c38d2"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202750498369000_c43467360081/result/report.json",
+      "bytes": 48033,
+      "sha256": "654fff3f45ab232e800e6ee3ab83af7bcac07334025cfb72129713744c73530e"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202750498369000_c43467360081/result/report.md",
+      "bytes": 4028,
+      "sha256": "45d8d60591866adbf9858cac2a5ee3262a4aad287f17b4674b07c970a2bccedf"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202750498369000_c43467360081/result/bindings.json",
+      "bytes": 807,
+      "sha256": "37d8c61136fd7f84a2edde3aaf6eb35c16398724a4276172511620def79257b3"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202750498369000_c43467360081/input/change.json",
+      "bytes": 1817,
+      "sha256": "24743b7bd03c4f7df30051d70dcdb73d1b584b3dfa4ab0e2b8d72f9ea75a8136"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202750498369000_c43467360081/input/state.json",
+      "bytes": 1165,
+      "sha256": "1dd00088ab59e8bbf0796bf001b6640deb90fd8e979878b3759f862fcdc231d3"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202750498369000_c43467360081/search/migration-search.json",
+      "bytes": 18532,
+      "sha256": "c3ca0f6bed81d4d36109f59634726ff8db31d8ae373b7c35b6b843681232da67"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202758877209000_e5db6948abca/metadata.json",
+      "bytes": 674,
+      "sha256": "49e54703f5c89f253c7684f010035b5efa6e74627dbbf94f3587532b506cf915"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202758877209000_e5db6948abca/result/report.json",
+      "bytes": 43324,
+      "sha256": "373446fd150771dd8aef0954097794be5b3a8574662475bf1f9b2a22910884c9"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202758877209000_e5db6948abca/result/report.md",
+      "bytes": 2799,
+      "sha256": "9a5a24f4e06a870f70d959e4b998dbe3b6603973fb6e13e2e4ab733a8446d7b7"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202758877209000_e5db6948abca/result/bindings.json",
+      "bytes": 807,
+      "sha256": "1a426ce5aa19b87da14f3c574a600e1e83b112d1a9f28de2d28cbcc81e30e0eb"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202758877209000_e5db6948abca/input/change.json",
+      "bytes": 1817,
+      "sha256": "3a09ed0403d88adb41bcbfb04ee2d6d41beb546c0be610f8d9c2369ff9a675ad"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202758877209000_e5db6948abca/input/state.json",
+      "bytes": 1165,
+      "sha256": "1dd00088ab59e8bbf0796bf001b6640deb90fd8e979878b3759f862fcdc231d3"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202758877209000_e5db6948abca/search/migration-search.json",
+      "bytes": 15582,
+      "sha256": "c47986e2c50d86f745569ab8e991c7572099a2543198f28bdd32e07c797e95f0"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202807178818000_c43467360081/metadata.json",
+      "bytes": 675,
+      "sha256": "ed5224717dee4ab7c8b3ae514925bccbcc907ec4bfd37ea35710a54c5e8c880c"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202807178818000_c43467360081/result/report.json",
+      "bytes": 48033,
+      "sha256": "654fff3f45ab232e800e6ee3ab83af7bcac07334025cfb72129713744c73530e"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202807178818000_c43467360081/result/report.md",
+      "bytes": 4028,
+      "sha256": "45d8d60591866adbf9858cac2a5ee3262a4aad287f17b4674b07c970a2bccedf"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202807178818000_c43467360081/result/bindings.json",
+      "bytes": 807,
+      "sha256": "7b3c119b47918f4d958ecc61452f02257b0cc653ece3483ad6afad7436e3037d"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202807178818000_c43467360081/input/change.json",
+      "bytes": 1817,
+      "sha256": "24743b7bd03c4f7df30051d70dcdb73d1b584b3dfa4ab0e2b8d72f9ea75a8136"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202807178818000_c43467360081/input/state.json",
+      "bytes": 1165,
+      "sha256": "1dd00088ab59e8bbf0796bf001b6640deb90fd8e979878b3759f862fcdc231d3"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/runs/run_20260926202807178818000_c43467360081/search/migration-search.json",
+      "bytes": 18532,
+      "sha256": "551c2cd76bf9f66bf567f30ce74ab3ea606f6fffe5b86f81aaba587d31eb79f5"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/counterexamples/cx_44068b83b0774f8be4d959a4.json",
+      "bytes": 2083,
+      "sha256": "c104663f6033b29d86abf99063921e4b3df57bac00837997eb1e1b6d15910f64"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/counterexamples/cx_6caff250007b01d1e7168898.json",
+      "bytes": 1656,
+      "sha256": "442976a85c4a0ec77445601a98129d17c0c244e8db895da765c4aa590afa98f4"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/counterexamples/cx_7749391abe584a4c5a4e31b9.json",
+      "bytes": 2083,
+      "sha256": "9cdd8a4edf9f9bd0610f50e644473d83bafe346859c6a55f67d0079230e72828"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/counterexamples/cx_cb637246805bd2cce9f06115.json",
+      "bytes": 1656,
+      "sha256": "b5a55b06fe5e0d9197cb526fd0b9a723675e9799ca5e109c96c7ecee262255ef"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/reproductions/repro_20260926202819022599000_7749391abe584a4c5a4e31b9.json",
+      "bytes": 1556,
+      "sha256": "d47a7fba5ea8748ba0037097e56e5f530b8c1f719c080472783320dbc8fa9e26"
+    },
+    {
+      "path": "transition-acceptance/.eplyx/reproductions/repro_20260926202825424374000_7749391abe584a4c5a4e31b9.json",
+      "bytes": 1556,
+      "sha256": "f38cbebaaebf0245b743b8c01628aa4bb7951ff9be36bc4eba031dfa00e654a5"
+    },
+    {
+      "path": "token-migration/.eplyx/project.json",
+      "bytes": 98,
+      "sha256": "1897fd4c3e3324e35a5c3a55e57a2eaf2f49c22d74dfc3d4ba68b445414a8086"
+    },
+    {
+      "path": "token-migration/.eplyx/runs/run_20260926202828340195000_e5db6948abca/metadata.json",
+      "bytes": 674,
+      "sha256": "0d1b706d292bebbe2c022c3cc806531d6dfdb9cc17bf8b5438bc3ec21f3d0eec"
+    },
+    {
+      "path": "token-migration/.eplyx/runs/run_20260926202828340195000_e5db6948abca/result/report.json",
+      "bytes": 43520,
+      "sha256": "ad7d25b5bd019bbc4e0e86a307788ed70f9fcbf7813e2f7779387a19ec09809c"
+    },
+    {
+      "path": "token-migration/.eplyx/runs/run_20260926202828340195000_e5db6948abca/result/report.md",
+      "bytes": 2835,
+      "sha256": "40d4513944c4dbd71019df05b28fd7c559d914d1fbe67b257d3b66d6b5b46ed2"
+    },
+    {
+      "path": "token-migration/.eplyx/runs/run_20260926202828340195000_e5db6948abca/result/bindings.json",
+      "bytes": 807,
+      "sha256": "7bd693cce5a096c43177ae31a52bd5c0d861e20c26957f58eed03dc930c9206e"
+    },
+    {
+      "path": "token-migration/.eplyx/runs/run_20260926202828340195000_e5db6948abca/input/change.json",
+      "bytes": 1823,
+      "sha256": "d45a7325c0dbdaa5f8e19c1249af108f9fee8740d3005ee2f36bbe383333d281"
+    },
+    {
+      "path": "token-migration/.eplyx/runs/run_20260926202828340195000_e5db6948abca/input/state.json",
+      "bytes": 1165,
+      "sha256": "ef18794edb9f7c21bf0e981d91a66363c62e7dac95682c7b349f990dfd23c9c8"
+    },
+    {
+      "path": "token-migration/.eplyx/runs/run_20260926202828340195000_e5db6948abca/search/migration-search.json",
+      "bytes": 15630,
+      "sha256": "a6a5ba3e696c8933e1c8881eaaa5cf78540adfcd1ab72b30e099eff33bdad90a"
+    },
+    {
+      "path": "token-migration/.eplyx/runs/run_20260926202836697983000_c43467360081/metadata.json",
+      "bytes": 675,
+      "sha256": "65e09026a7fd3611e5c8dfccad75dba404327e3e7ea5d28f5d5773b61f043830"
+    },
+    {
+      "path": "token-migration/.eplyx/runs/run_20260926202836697983000_c43467360081/result/report.json",
+      "bytes": 45150,
+      "sha256": "d8b55bb0ee65432b21b9abd72ba61c2e8f04be3ca4e5453bbd292ca5873aa0db"
+    },
+    {
+      "path": "token-migration/.eplyx/runs/run_20260926202836697983000_c43467360081/result/report.md",
+      "bytes": 3506,
+      "sha256": "d2d8d221fba97ed22c6e2846dcd6380a7460c7551dc14c052a907c53243d63c9"
+    },
+    {
+      "path": "token-migration/.eplyx/runs/run_20260926202836697983000_c43467360081/result/bindings.json",
+      "bytes": 807,
+      "sha256": "82c0ac05e0f17ccda6e4b880e97818f644b906068a18528c4d8676a73e788980"
+    },
+    {
+      "path": "token-migration/.eplyx/runs/run_20260926202836697983000_c43467360081/input/change.json",
+      "bytes": 1823,
+      "sha256": "a902d3262cc9dcefedca10b12964eb3dc54518d2e8913bf4aba119bc8f57904d"
+    },
+    {
+      "path": "token-migration/.eplyx/runs/run_20260926202836697983000_c43467360081/input/state.json",
+      "bytes": 1165,
+      "sha256": "ef18794edb9f7c21bf0e981d91a66363c62e7dac95682c7b349f990dfd23c9c8"
+    },
+    {
+      "path": "token-migration/.eplyx/runs/run_20260926202836697983000_c43467360081/search/migration-search.json",
+      "bytes": 16106,
+      "sha256": "08e0b64c1d3f093cb2cb31703f2ab729f12d5124e7efdbd20bfd684e938eb49a"
+    },
+    {
+      "path": "token-migration/.eplyx/counterexamples/cx_f5d32e14d253ee16602475ad.json",
+      "bytes": 2083,
+      "sha256": "e131231848c7612bd60720c62f4c65865b8490004add97cfafeda2f82c326d96"
+    },
+    {
+      "path": "token-migration/.eplyx/reproductions/repro_20260926202848205853000_f5d32e14d253ee16602475ad.json",
+      "bytes": 1556,
+      "sha256": "4b5ed35fc848a08bd219e295f141090bcbde416b5b9b1bd728b686db7ae065b3"
+    },
+    {
+      "path": "second-asset/.eplyx/project.json",
+      "bytes": 95,
+      "sha256": "c2511eb776f0a9e156b95efd8229c69e2b09b07975c93de8d836e1c27903e850"
+    },
+    {
+      "path": "second-asset/.eplyx/runs/run_20260926202851157365000_e5db6948abca/metadata.json",
+      "bytes": 674,
+      "sha256": "8a744558f3b324111f9e5be73c4ee810c5405f2ad6bca09d5ba2691854ea8dbc"
+    },
+    {
+      "path": "second-asset/.eplyx/runs/run_20260926202851157365000_e5db6948abca/result/report.json",
+      "bytes": 43527,
+      "sha256": "6e9c54626c6e9c17f56e64a75d9d188b23c64181e4b705bacb891ea125e83efb"
+    },
+    {
+      "path": "second-asset/.eplyx/runs/run_20260926202851157365000_e5db6948abca/result/report.md",
+      "bytes": 2835,
+      "sha256": "dfd7f98e633d2e6c991c64d34f5bff8e69cf22a4b6469af94434f344cd9929ef"
+    },
+    {
+      "path": "second-asset/.eplyx/runs/run_20260926202851157365000_e5db6948abca/result/bindings.json",
+      "bytes": 807,
+      "sha256": "1972a9992a21d8b07bb0e72437e709a8f206660a9c83ddcff4bdec4645e838ad"
+    },
+    {
+      "path": "second-asset/.eplyx/runs/run_20260926202851157365000_e5db6948abca/input/change.json",
+      "bytes": 1823,
+      "sha256": "d29eb394886f3facc119dd8c231203a406b17529d3a940a53586f99419a0e93f"
+    },
+    {
+      "path": "second-asset/.eplyx/runs/run_20260926202851157365000_e5db6948abca/input/state.json",
+      "bytes": 1165,
+      "sha256": "c94ea1e8df42c885e03714f303cacc1742e2a81580eb345d654607ffc4a10cc6"
+    },
+    {
+      "path": "second-asset/.eplyx/runs/run_20260926202851157365000_e5db6948abca/search/migration-search.json",
+      "bytes": 15630,
+      "sha256": "ef143a236b8c4c7526cb8558bdcbdbcc9d549afbdc35e36f3a5d948d22bbcce8"
+    },
+    {
+      "path": "analytical-kinds/.eplyx/project.json",
+      "bytes": 101,
+      "sha256": "eb9d8d5bf5ca05f4eb26d8f4c4b249049d915201e9b1ab89444e359486aba4a0"
+    },
+    {
+      "path": "analytical-kinds/.eplyx/runs/run_20260926202905460858000_9dbcca44b106/metadata.json",
+      "bytes": 572,
+      "sha256": "48be9be1dc57dffca941364c3a13bc9bd1841cbed532d6a8c49e6de3b1349c44"
+    },
+    {
+      "path": "analytical-kinds/.eplyx/runs/run_20260926202905460858000_9dbcca44b106/result/report.json",
+      "bytes": 6848,
+      "sha256": "9dbcca44b106fe80b953ea1ab588a28aba8f19674d95264a566bf9d211be9919"
+    },
+    {
+      "path": "analytical-kinds/.eplyx/runs/run_20260926202905460858000_9dbcca44b106/input/change.json",
+      "bytes": 883,
+      "sha256": "9973c4e550812d044f847a0656b14609b021cba7486665f31a698a043b4d0e3e"
+    },
+    {
+      "path": "analytical-kinds/.eplyx/runs/run_20260926202905460858000_9dbcca44b106/input/state.json",
+      "bytes": 228,
+      "sha256": "915a89924f42ac588f861d30a792d064a45ed029e34bf677dff8167722f64a35"
+    },
+    {
+      "path": "analytical-kinds/.eplyx/runs/run_20260926202906605473000_44c93fb9dbbf/metadata.json",
+      "bytes": 391,
+      "sha256": "9c2eabd9687f7f40214d96013b1bf6ee3e6afa90cd7f5c3f33668c8d3696352f"
+    },
+    {
+      "path": "analytical-kinds/.eplyx/runs/run_20260926202906605473000_44c93fb9dbbf/result/report.json",
+      "bytes": 3629,
+      "sha256": "44c93fb9dbbf786498823d0d8fe1e59bd63bd7adf59763cbcaf423f74da39435"
+    }
+  ]
+}

@@ -182,3 +182,130 @@ pub fn verify_offline_environment() -> Result<()> {
     );
     Ok(())
 }
+
+/// Local bookkeeping for kinds that have no migration candidate or deployment gate.
+/// Report bytes are the immutable source; this record supplies provenance only.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct AnalyticalMetadata {
+    pub schema_version: u32,
+    pub run_id: String,
+    pub timestamp: String,
+    pub kind: String,
+    pub eplyx_version: String,
+    pub engine_binary_sha256: String,
+    pub run_source: RunSource,
+    pub report_sha256: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub change_spec_sha256: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub state_input_sha256: Option<String>,
+}
+pub const ANALYTICAL_METADATA_VERSION: u32 = 3;
+
+/// Append one already evaluated record. Metadata is written last; interrupted
+/// records remain explicitly unfinished. Existing runs and project identity
+/// are never replaced. Paths are local arguments, never serialized into evidence.
+pub fn save_analysis(
+    project: &std::path::Path,
+    kind: &str,
+    report: &[u8],
+    change_spec: Option<&[u8]>,
+    state_input: Option<&[u8]>,
+    source: RunSource,
+) -> Result<AnalyticalMetadata> {
+    use crate::replay::hash_bytes as sha256;
+    use std::{fs, io::Write, path::Path};
+    ensure!(
+        ["lifecycle_change", "current_observation", "current_path"].contains(&kind),
+        "unsupported local analytical kind"
+    );
+    ensure!(
+        report.len() <= 128 * 1024 * 1024,
+        "analytical report exceeds byte bound"
+    );
+    let _: serde_json::Value = serde_json::from_slice(report)?;
+    for bytes in [change_spec, state_input].into_iter().flatten() {
+        ensure!(bytes.len() <= 1024 * 1024, "descriptor exceeds byte bound");
+        let _: serde_json::Value = serde_json::from_slice(bytes)?;
+    }
+    fn directory(path: &Path) -> Result<()> {
+        if !path.try_exists()? {
+            fs::create_dir(path)?;
+        }
+        let metadata = fs::symlink_metadata(path)?;
+        ensure!(
+            metadata.is_dir() && !metadata.file_type().is_symlink(),
+            "local store directory must be real"
+        );
+        Ok(())
+    }
+    fn write(path: &Path, bytes: &[u8]) -> Result<()> {
+        let mut file = fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(path)?;
+        file.write_all(bytes)?;
+        file.sync_all()?;
+        Ok(())
+    }
+    let root = project
+        .canonicalize()
+        .map_err(|_| anyhow::anyhow!("record project directory must already exist"))?;
+    let base = root.join(".eplyx");
+    directory(&base)?;
+    for child in ["runs", "counterexamples", "reproductions", "cache", "sync"] {
+        directory(&base.join(child))?;
+    }
+    let project_file = base.join("project.json");
+    if !project_file.try_exists()? {
+        let local_id = format!("local_{}", &sha256(root.to_string_lossy().as_bytes())[..20]);
+        let name = root.file_name().unwrap_or_default().to_string_lossy();
+        write(
+            &project_file,
+            &serde_json::to_vec_pretty(
+                &serde_json::json!({"schema_version":1,"local_id":local_id,"name":name}),
+            )?,
+        )?;
+    } else {
+        let meta = fs::symlink_metadata(&project_file)?;
+        ensure!(
+            meta.is_file() && !meta.file_type().is_symlink(),
+            "project record must be a regular file"
+        );
+    }
+    let now = chrono::Utc::now();
+    let digest = sha256(report);
+    // create_dir gives append-only collision protection; a nanosecond timestamp
+    // distinguishes repeated executions with byte-identical deterministic results.
+    let run_id = format!("run_{}_{}", now.format("%Y%m%d%H%M%S%9f"), &digest[..12]);
+    safe_id(&run_id, "run_")?;
+    let run = base.join("runs").join(&run_id);
+    fs::create_dir(&run)?;
+    fs::create_dir(run.join("result"))?;
+    fs::create_dir(run.join("input"))?;
+    write(&run.join("result/report.json"), report)?;
+    if let Some(bytes) = change_spec {
+        write(&run.join("input/change.json"), bytes)?;
+    }
+    if let Some(bytes) = state_input {
+        write(&run.join("input/state.json"), bytes)?;
+    }
+    let metadata = AnalyticalMetadata {
+        schema_version: ANALYTICAL_METADATA_VERSION,
+        run_id,
+        timestamp: now.to_rfc3339_opts(chrono::SecondsFormat::Millis, true),
+        kind: kind.into(),
+        eplyx_version: crate::build_info::VERSION.into(),
+        engine_binary_sha256: sha256(&fs::read(std::env::current_exe()?)?),
+        run_source: source,
+        report_sha256: digest,
+        change_spec_sha256: change_spec.map(sha256),
+        state_input_sha256: state_input.map(sha256),
+    };
+    write(
+        &run.join("metadata.json"),
+        &serde_json::to_vec_pretty(&metadata)?,
+    )?;
+    Ok(metadata)
+}

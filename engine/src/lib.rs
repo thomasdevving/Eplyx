@@ -226,3 +226,6 @@ pub mod local_store;
 pub mod lifecycle;
 
 pub mod path;
+
+pub mod dashboard;
+pub mod presentation;

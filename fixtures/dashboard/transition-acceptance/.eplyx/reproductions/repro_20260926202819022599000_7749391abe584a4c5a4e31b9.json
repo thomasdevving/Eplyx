@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "repro_20260926202819022599000_7749391abe584a4c5a4e31b9",
+  "counterexample_id": "cx_7749391abe584a4c5a4e31b9",
+  "parent_run": "run_20260926202807178818000_c43467360081",
+  "search_sha256": "551c2cd76bf9f66bf567f30ce74ab3ea606f6fffe5b86f81aaba587d31eb79f5",
+  "timestamp": "2026-09-26T20:28:19.022Z",
+  "outcome": "Reproduced",
+  "failure_signature_matched": true,
+  "error": null,
+  "eplyx_version": "0.1.0",
+  "engine_binary_sha256": "9c3bf28479657f00f5efba0f5750b7fbdbbd1dc2c63eb434a6b70aed98157c33",
+  "no_rpc": true,
+  "binding": {
+    "analysis_input_sha256": "c0ef5d2749a9f0cb66b3a8e49b2a8350f737e7c37448f03fbbb54b5c43d1e61c",
+    "candidate_program_sha256": "c4346736008188befe1d1a41cf167ea6a80c3b61a76cf1d3ba550f916b682275",
+    "world_sha256": "af07d7e8df419126910e7180d8e35b4abe9132b8dca66053e762d2b5e7bbeeaa",
+    "counterexample_kind": "Derived local state",
+    "finding": "UnexpectedSuccess",
+    "expected_signature": {
+      "error": null,
+      "error_name": null,
+      "failed_checks": [
+        "only units the specification plans as migratable may migrate"
+      ],
+      "outcome": "ReconciliationMismatch",
+      "rollback_verified": null,
+      "stage": null
+    },
+    "reproduced_signature": {
+      "error": null,
+      "error_name": null,
+      "failed_checks": [
+        "only units the specification plans as migratable may migrate"
+      ],
+      "outcome": "ReconciliationMismatch",
+      "rollback_verified": null,
+      "stage": null
+    },
+    "gate_outcome_with_finding": "Block"
+  }
+}

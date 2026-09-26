@@ -1,0 +1,7 @@
+{
+  "after": "2026-09-28T00:00:00Z",
+  "before": "2026-09-26T23:59:59.999999999Z",
+  "kind": "lifecycle_snapshot",
+  "schema_version": 1,
+  "snapshot_sha256": "5be110766aeddd8ea48248dd6a5f16bd1213da9449ee29710e0f44866f71806b"
+}

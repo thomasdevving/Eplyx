@@ -1,0 +1,17 @@
+{
+  "report_presentation_version": 2,
+  "schema_version": 1,
+  "kind": "token-migration",
+  "gate_policy": "block-only",
+  "analysis_input_sha256": "c0ef5d2749a9f0cb66b3a8e49b2a8350f737e7c37448f03fbbb54b5c43d1e61c",
+  "candidate_program_sha256": "c4346736008188befe1d1a41cf167ea6a80c3b61a76cf1d3ba550f916b682275",
+  "state_input_sha256": "1dd00088ab59e8bbf0796bf001b6640deb90fd8e979878b3759f862fcdc231d3",
+  "change_spec_id": "9e8fe4bf8d2e0bea0ec94daf2655a96b793ff406d801fbeaf194d4afa1bd6f5c",
+  "state": "SyntheticFixture",
+  "recipe_sha256": "b92ea974f265d4ef008c692ed43954eb53f3f6b14f881efbd9ed3a362e0d8177",
+  "population_capture_sha256": null,
+  "migration_capture_sha256": null,
+  "population_budget": null,
+  "run_id": "mig-c0ef5d2749a9-1790454470524",
+  "evaluated_at": "2026-09-26T20:27:50.524Z"
+}

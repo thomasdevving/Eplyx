@@ -1,0 +1,459 @@
+{
+  "version": "eplyx-migration-counterexample-search/v1",
+  "parent_run": "mig-7336b0468e05-1790454516725",
+  "analysis_input_sha256": "7336b0468e05d782e93dce7c7e11a03d0958f2cebe1410896dca5e042ad66ecf",
+  "candidate_program_sha256": "c4346736008188befe1d1a41cf167ea6a80c3b61a76cf1d3ba550f916b682275",
+  "world_sha256": "8cd19c7fa4092a4f473d16e9dc863911656e8841589a0c3b01844b55f6a26464",
+  "plan_sha256": "eeda302e51bc913cef53599b11e9f931458e39915328a5c5a03d9c806be28d81",
+  "stress_plan_sha256": "b3065bb733b147529b2da7bcd3fc0ef598817d614eb54cf65cf6908c45f615a0",
+  "parent_source_account": "7KhNGHh1sy7nvWj1EAAvnUTbrj2U2VZk6axauFuz2wqe",
+  "domains": [
+    {
+      "dimension": "SourceAmount",
+      "description": "Structured amounts from one below the smallest migratable amount through the parent balance, at fee steps and rounding boundaries; minimized by ascending probes from the smallest migratable amount.",
+      "low_raw": "1",
+      "high_raw": "250000000"
+    },
+    {
+      "dimension": "ActivationBoundary",
+      "description": "Derived Clock slot from boundary-2 to boundary+2",
+      "low_raw": "1998",
+      "high_raw": "2002"
+    },
+    {
+      "dimension": "DeadlineBoundary",
+      "description": "Derived Clock slot from boundary-2 to boundary+2",
+      "low_raw": "899998",
+      "high_raw": "900002"
+    },
+    {
+      "dimension": "ProposedReserve",
+      "description": "Derived proposed reserve at the parent's exact output and one below",
+      "low_raw": "249999999999",
+      "high_raw": "250000000000"
+    },
+    {
+      "dimension": "DelegateAllowance",
+      "description": "Reachable DelegateAllowance variants of the parent holder",
+      "low_raw": null,
+      "high_raw": null
+    },
+    {
+      "dimension": "SignerAuthority",
+      "description": "Reachable SignerAuthority variants of the parent holder",
+      "low_raw": null,
+      "high_raw": null
+    },
+    {
+      "dimension": "SourceAccountState",
+      "description": "Reachable SourceAccountState variants of the parent holder",
+      "low_raw": null,
+      "high_raw": null
+    },
+    {
+      "dimension": "DestinationAccountState",
+      "description": "Reachable DestinationAccountState variants of the parent holder",
+      "low_raw": null,
+      "high_raw": null
+    },
+    {
+      "dimension": "Token2022Guard",
+      "description": "Reachable Token2022Guard variants of the parent holder",
+      "low_raw": null,
+      "high_raw": null
+    }
+  ],
+  "explored_dimensions": [
+    "PopulationRehearsal",
+    "SourceAmount",
+    "ActivationBoundary",
+    "DeadlineBoundary",
+    "ProposedReserve",
+    "DelegateAllowance",
+    "SignerAuthority",
+    "SourceAccountState",
+    "DestinationAccountState",
+    "Token2022Guard"
+  ],
+  "budget": {
+    "max_probes": 64,
+    "probes": 19,
+    "max_minimization": 32,
+    "minimization": 0,
+    "population_rehearsals": 0
+  },
+  "stopping_condition": "Every declared domain was explored within the budget",
+  "trace": [
+    {
+      "dimension": "SourceAmount",
+      "kind": "SourceAmount",
+      "value_raw": "1",
+      "expected": "Migrate",
+      "behaves_as_specified": true,
+      "signature": {
+        "outcome": "Migrated",
+        "stage": null,
+        "error_name": null,
+        "error": null,
+        "rollback_verified": null,
+        "failed_checks": []
+      },
+      "message_sha256": "fd77a19f26a202c189c3ad102877fa6c34a605576154d98e23924835bbfc1911",
+      "derived_world_sha256": "001e751eed73a71955d9489fe20f6f4f52e8b15230895447ef188ffcb6ba98ee"
+    },
+    {
+      "dimension": "SourceAmount",
+      "kind": "SourceAmount",
+      "value_raw": "2",
+      "expected": "Migrate",
+      "behaves_as_specified": true,
+      "signature": {
+        "outcome": "Migrated",
+        "stage": null,
+        "error_name": null,
+        "error": null,
+        "rollback_verified": null,
+        "failed_checks": []
+      },
+      "message_sha256": "db49b152d677a3246a756185ac3b3b2d103503bf3e32dee5b568e63190f85781",
+      "derived_world_sha256": "cbfa966e01a43c2ace571d310afe84c170fbafde697d2ce8cf83ed273b6d42fd"
+    },
+    {
+      "dimension": "SourceAmount",
+      "kind": "SourceAmount",
+      "value_raw": "250000000",
+      "expected": "Migrate",
+      "behaves_as_specified": true,
+      "signature": {
+        "outcome": "Migrated",
+        "stage": null,
+        "error_name": null,
+        "error": null,
+        "rollback_verified": null,
+        "failed_checks": []
+      },
+      "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+      "derived_world_sha256": "f7d681f1697abc4f8e87f139d0241c7d1a254d174be4e02f83b6b136998406bd"
+    },
+    {
+      "dimension": "ActivationBoundary",
+      "kind": "ActivationBoundary-2",
+      "value_raw": "1998",
+      "expected": "Reject",
+      "behaves_as_specified": true,
+      "signature": {
+        "outcome": "Rejected",
+        "stage": "candidate",
+        "error_name": "MigrationNotActive",
+        "error": "InstructionError(2, Custom(8))",
+        "rollback_verified": true,
+        "failed_checks": []
+      },
+      "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+      "derived_world_sha256": "95caa44c139c878f1811a6505da2706c90eebade052fbfc4c5ba1203c571118f"
+    },
+    {
+      "dimension": "ActivationBoundary",
+      "kind": "ActivationBoundary-1",
+      "value_raw": "1999",
+      "expected": "Reject",
+      "behaves_as_specified": true,
+      "signature": {
+        "outcome": "Rejected",
+        "stage": "candidate",
+        "error_name": "MigrationNotActive",
+        "error": "InstructionError(2, Custom(8))",
+        "rollback_verified": true,
+        "failed_checks": []
+      },
+      "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+      "derived_world_sha256": "e952cfe34f4cc06a60e8a1d2ae99ac599ec55ce75750ec5be51641715b188885"
+    },
+    {
+      "dimension": "ActivationBoundary",
+      "kind": "ActivationBoundary+0",
+      "value_raw": "2000",
+      "expected": "Migrate",
+      "behaves_as_specified": true,
+      "signature": {
+        "outcome": "Migrated",
+        "stage": null,
+        "error_name": null,
+        "error": null,
+        "rollback_verified": null,
+        "failed_checks": []
+      },
+      "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+      "derived_world_sha256": "90b2062af81d6629d2be81c5f71f6f122658af763cbf6658bb7baed9e8b7334e"
+    },
+    {
+      "dimension": "ActivationBoundary",
+      "kind": "ActivationBoundary+1",
+      "value_raw": "2001",
+      "expected": "Migrate",
+      "behaves_as_specified": true,
+      "signature": {
+        "outcome": "Migrated",
+        "stage": null,
+        "error_name": null,
+        "error": null,
+        "rollback_verified": null,
+        "failed_checks": []
+      },
+      "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+      "derived_world_sha256": "bdba2e6cc8cc9bc01add9843a6573a9726802dcdcbad9fce5f0b2b015bd768c4"
+    },
+    {
+      "dimension": "ActivationBoundary",
+      "kind": "ActivationBoundary+2",
+      "value_raw": "2002",
+      "expected": "Migrate",
+      "behaves_as_specified": true,
+      "signature": {
+        "outcome": "Migrated",
+        "stage": null,
+        "error_name": null,
+        "error": null,
+        "rollback_verified": null,
+        "failed_checks": []
+      },
+      "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+      "derived_world_sha256": "fc03c4d1254e5735c40154fc890f3ca680c47f037623089c633ee9ca0be74e38"
+    },
+    {
+      "dimension": "DeadlineBoundary",
+      "kind": "DeadlineBoundary-2",
+      "value_raw": "899998",
+      "expected": "Migrate",
+      "behaves_as_specified": true,
+      "signature": {
+        "outcome": "Migrated",
+        "stage": null,
+        "error_name": null,
+        "error": null,
+        "rollback_verified": null,
+        "failed_checks": []
+      },
+      "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+      "derived_world_sha256": "cfd025840a2afbf7fe1f3cdd410b99a08b0739dc9e394afd90cdb048310e6c72"
+    },
+    {
+      "dimension": "DeadlineBoundary",
+      "kind": "DeadlineBoundary-1",
+      "value_raw": "899999",
+      "expected": "Migrate",
+      "behaves_as_specified": true,
+      "signature": {
+        "outcome": "Migrated",
+        "stage": null,
+        "error_name": null,
+        "error": null,
+        "rollback_verified": null,
+        "failed_checks": []
+      },
+      "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+      "derived_world_sha256": "5ed8694d2faab277c4dfd482d8e4ff3de7bd1f994d488813cd8ddcc4515929cc"
+    },
+    {
+      "dimension": "DeadlineBoundary",
+      "kind": "DeadlineBoundary+0",
+      "value_raw": "900000",
+      "expected": "Reject",
+      "behaves_as_specified": false,
+      "signature": {
+        "outcome": "ReconciliationMismatch",
+        "stage": null,
+        "error_name": null,
+        "error": null,
+        "rollback_verified": null,
+        "failed_checks": [
+          "only units the specification plans as migratable may migrate"
+        ]
+      },
+      "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+      "derived_world_sha256": "5aeb3207dd4faae0af4a02eaf2867b21ac64e47b95059217a20bb07e44c0fe22"
+    },
+    {
+      "dimension": "ProposedReserve",
+      "kind": "ProposedReserve",
+      "value_raw": "249999999999",
+      "expected": "Reject",
+      "behaves_as_specified": true,
+      "signature": {
+        "outcome": "Rejected",
+        "stage": "candidate",
+        "error_name": "InsufficientReserve",
+        "error": "InstructionError(2, Custom(20))",
+        "rollback_verified": true,
+        "failed_checks": []
+      },
+      "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+      "derived_world_sha256": "8cd19c7fa4092a4f473d16e9dc863911656e8841589a0c3b01844b55f6a26464"
+    },
+    {
+      "dimension": "ProposedReserve",
+      "kind": "ProposedReserve",
+      "value_raw": "250000000000",
+      "expected": "Migrate",
+      "behaves_as_specified": true,
+      "signature": {
+        "outcome": "Migrated",
+        "stage": null,
+        "error_name": null,
+        "error": null,
+        "rollback_verified": null,
+        "failed_checks": []
+      },
+      "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+      "derived_world_sha256": "8cd19c7fa4092a4f473d16e9dc863911656e8841589a0c3b01844b55f6a26464"
+    },
+    {
+      "dimension": "DelegateAllowance",
+      "kind": "DelegateAllowanceShort",
+      "value_raw": "249999999",
+      "expected": "Reject",
+      "behaves_as_specified": true,
+      "signature": {
+        "outcome": "Rejected",
+        "stage": "token-program",
+        "error_name": "InsufficientFunds",
+        "error": "InstructionError(2, Custom(1))",
+        "rollback_verified": true,
+        "failed_checks": []
+      },
+      "message_sha256": "1e412b3aa7af230626895d0ddebeb3e229ca09a7225d39bf987815058343f80c",
+      "derived_world_sha256": "1c8b0655a0993e37ae102b035f5cd3f13a816bdebcae1a452182cdd297f204d8"
+    },
+    {
+      "dimension": "DelegateAllowance",
+      "kind": "DelegateAllowanceExact",
+      "value_raw": "250000000",
+      "expected": "Migrate",
+      "behaves_as_specified": true,
+      "signature": {
+        "outcome": "Migrated",
+        "stage": null,
+        "error_name": null,
+        "error": null,
+        "rollback_verified": null,
+        "failed_checks": []
+      },
+      "message_sha256": "1e412b3aa7af230626895d0ddebeb3e229ca09a7225d39bf987815058343f80c",
+      "derived_world_sha256": "091d3362aa18bd1bbf24d2b56be3942fe0a2f65b6cfbb5cb721cadb011ca6e17"
+    },
+    {
+      "dimension": "SignerAuthority",
+      "kind": "WrongSigner",
+      "value_raw": null,
+      "expected": "Reject",
+      "behaves_as_specified": true,
+      "signature": {
+        "outcome": "Rejected",
+        "stage": "candidate",
+        "error_name": "UnauthorizedHolderAuthority",
+        "error": "InstructionError(2, Custom(11))",
+        "rollback_verified": true,
+        "failed_checks": []
+      },
+      "message_sha256": "a492fcf0ef48c122756d9cb88d205dd3bf277afd8a4b2b22d1f4e361b99f6608",
+      "derived_world_sha256": "8cd19c7fa4092a4f473d16e9dc863911656e8841589a0c3b01844b55f6a26464"
+    },
+    {
+      "dimension": "SourceAccountState",
+      "kind": "FrozenSource",
+      "value_raw": null,
+      "expected": "Reject",
+      "behaves_as_specified": true,
+      "signature": {
+        "outcome": "Rejected",
+        "stage": "token-program",
+        "error_name": "AccountFrozen",
+        "error": "InstructionError(2, Custom(17))",
+        "rollback_verified": true,
+        "failed_checks": []
+      },
+      "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+      "derived_world_sha256": "92727ddf93d805ee2482bc028eed8cda608bb246c6ddf4b957a6ef7d880dc8b4"
+    },
+    {
+      "dimension": "DestinationAccountState",
+      "kind": "FrozenDestination",
+      "value_raw": null,
+      "expected": "Reject",
+      "behaves_as_specified": true,
+      "signature": {
+        "outcome": "Rejected",
+        "stage": "token-program",
+        "error_name": "AccountFrozen",
+        "error": "InstructionError(1, Custom(17))",
+        "rollback_verified": true,
+        "failed_checks": []
+      },
+      "message_sha256": "4326761c566e1c534539c62d024d0bd14f2c4ee50390228a2e94c06ba20a7f95",
+      "derived_world_sha256": "af1068594d66b3361fc06d5cb1a8ce808c10c3a0a579d2ea106794437a925dee"
+    },
+    {
+      "dimension": "Token2022Guard",
+      "kind": "MemoRequiredDestination",
+      "value_raw": null,
+      "expected": "Reject",
+      "behaves_as_specified": true,
+      "signature": {
+        "outcome": "Rejected",
+        "stage": "token-program",
+        "error_name": "NoMemo",
+        "error": "InstructionError(1, Custom(36))",
+        "rollback_verified": true,
+        "failed_checks": []
+      },
+      "message_sha256": "4326761c566e1c534539c62d024d0bd14f2c4ee50390228a2e94c06ba20a7f95",
+      "derived_world_sha256": "64749320d4de5b98b111f05efb8385105ebcd31c50863e1d7a6416d30d9bd9f9"
+    }
+  ],
+  "counterexamples": [
+    {
+      "kind": "MigrationDerived",
+      "id": "cx_f5d32e14d253ee16602475ad",
+      "parent_run": "mig-7336b0468e05-1790454516725",
+      "analysis_input_sha256": "7336b0468e05d782e93dce7c7e11a03d0958f2cebe1410896dca5e042ad66ecf",
+      "candidate_program_sha256": "c4346736008188befe1d1a41cf167ea6a80c3b61a76cf1d3ba550f916b682275",
+      "world_sha256": "8cd19c7fa4092a4f473d16e9dc863911656e8841589a0c3b01844b55f6a26464",
+      "source_account": "7KhNGHh1sy7nvWj1EAAvnUTbrj2U2VZk6axauFuz2wqe",
+      "dimension": "DeadlineBoundary",
+      "case_kind": "DeadlineBoundary+0",
+      "derived_value_raw": "900000",
+      "mutations": [
+        {
+          "kind": "clockSlot",
+          "to": "900000"
+        }
+      ],
+      "reserve_override_raw": null,
+      "transaction_variant": null,
+      "expected": "Reject",
+      "finding": "UnexpectedSuccess",
+      "signature": {
+        "outcome": "ReconciliationMismatch",
+        "stage": null,
+        "error_name": null,
+        "error": null,
+        "rollback_verified": null,
+        "failed_checks": [
+          "only units the specification plans as migratable may migrate"
+        ]
+      },
+      "derived_world_sha256": "5aeb3207dd4faae0af4a02eaf2867b21ac64e47b95059217a20bb07e44c0fe22",
+      "message_sha256": "ce9ba1853baadf222625b79121a2174394388fbb00be226715958c62c7f2bc81",
+      "minimized": true,
+      "boundary": {
+        "last_behaving_value_raw": null,
+        "first_deviating_value_raw": "900000"
+      },
+      "provenance": "DerivedFromSynthetic",
+      "limitations": "A derived local state built by typed mutation of captured or fixture state; it is not an observed mainnet failure."
+    }
+  ],
+  "conclusion": "1 counterexamples: 0 from the population rehearsal, 1 derived.",
+  "official_transition": "NotTested",
+  "funds_moved": false
+}

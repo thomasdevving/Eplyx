@@ -1,0 +1,10 @@
+{
+  "schema_version": 3,
+  "run_id": "run_20260926202906605473000_44c93fb9dbbf",
+  "timestamp": "2026-09-26T20:29:06.605Z",
+  "kind": "current_observation",
+  "eplyx_version": "0.1.0",
+  "engine_binary_sha256": "9c3bf28479657f00f5efba0f5750b7fbdbbd1dc2c63eb434a6b70aed98157c33",
+  "run_source": "local",
+  "report_sha256": "44c93fb9dbbf786498823d0d8fe1e59bd63bd7adf59763cbcaf423f74da39435"
+}
