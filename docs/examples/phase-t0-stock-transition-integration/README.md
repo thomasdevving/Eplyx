@@ -22,8 +22,8 @@ minimal analyses/search/reproduction and a diagnostic invocation of STA's
 `migration_demo`. Both gates were evaluated through STA's
 `conversion::package_gate::evaluate_migration`. A search value of `null` means
 that case was not searched by this export. The complete search results for cases
-A–H and the minimal deadline defect are retained. No MAIN “after” result exists
-yet; those are acceptance checks for T3 and later.
+A–H and the minimal deadline defect are retained. At the T0 freeze no MAIN “after” result existed; the appended T3 comparison below
+records the actual port results.
 
 Assertion snippets omit transport literals and machine path prefixes. Their
 original unmodified sources remain authoritative at the recorded hashes.

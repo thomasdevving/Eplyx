@@ -1,0 +1,17 @@
+{
+  "sta_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+  "files": [
+    {
+      "source": "reports/milestone8-underfunded/population.capture.json",
+      "file": "underfunded.population.capture.json",
+      "bytes": 10298494,
+      "sha256": "e2f5a077c58712adcca7a934cf3c84f2cdf737dbc3fa3e343abbe4b11bf9c33a"
+    },
+    {
+      "source": "reports/milestone8-second-asset/population.capture.json",
+      "file": "second-asset.population.capture.json",
+      "bytes": 36249455,
+      "sha256": "156ee77e30295e271e1aad19942a2ec2d68c0d47d79a408751baac85ccca05e0"
+    }
+  ]
+}

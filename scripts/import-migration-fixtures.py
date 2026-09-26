@@ -7,9 +7,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_COMMIT = "ad1897e86ee05ff2255bd5277518a3230ee2340f"
-DIRECTORIES = ("pinned-programs", "spacex")
+DIRECTORIES = ("pinned-programs", "spacex", "current-reference")
 # An explicit allowlist prevents a modified manifest from naming credentials.
 SOURCES = {
+    "reports/milestone8-underfunded/population.capture.json",
+    "reports/milestone8-second-asset/population.capture.json",
     "reports/milestone4-validation/live-market.capture.json",
     "reports/milestone8-healthy-worker/population.capture.json",
     "reports/milestone8-healthy-worker/conversion.capture.json",

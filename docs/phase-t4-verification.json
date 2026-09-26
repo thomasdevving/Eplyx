@@ -1,0 +1,570 @@
+{
+  "schema_version": 1,
+  "phase": "T4",
+  "sta_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+  "toolchain": {
+    "pnpm": "11.24.0",
+    "node": "22.23.1",
+    "rust": "stable; offline Cargo dependency cache",
+    "sbf": "MAIN platform-tools v1.54/v0; migration platform-tools v1.57/v3, unchanged pinned binaries"
+  },
+  "commands": [
+    {
+      "label": "main-t4-check",
+      "command": [
+        "cargo",
+        "check",
+        "--all-targets"
+      ],
+      "exit_code": 101,
+      "seconds": 8.4,
+      "log": "main-t4-check.log",
+      "log_sha256": "03514c1dabef653220a806a8cb7ce90bc5f580c1b0d1b3c84440dcf2f8ee76f4",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-check-2",
+      "command": [
+        "cargo",
+        "check",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 12.8,
+      "log": "main-t4-check-2.log",
+      "log_sha256": "78bf6d318ecac5f7fa428abba78ff4621b85cdd049f8b127cb38abc6226fe537",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-units",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--lib",
+        "migration::",
+        "--no-fail-fast"
+      ],
+      "exit_code": 0,
+      "seconds": 25.2,
+      "log": "main-t4-units.log",
+      "log_sha256": "ae274ba70d7a3e287d763eaac0ebb7288f305cff53852dd96f5a45e4501d3bc9",
+      "rust_test_totals": {
+        "passed": 30,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 495
+      }
+    },
+    {
+      "label": "main-t4-current-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "migration_current",
+        "--no-fail-fast"
+      ],
+      "exit_code": 101,
+      "seconds": 15.8,
+      "log": "main-t4-current-tests.log",
+      "log_sha256": "d729c34a1c8ef83075e0a1d609bc02961392516d6e65375613f06c463555c5e2",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-current-tests-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "migration_current",
+        "--no-fail-fast"
+      ],
+      "exit_code": 101,
+      "seconds": 2.2,
+      "log": "main-t4-current-tests-2.log",
+      "log_sha256": "bb3da3d5e3df036ed80ca6eb6849b3b55e71712c405da2c56195a15fa90fc4a9",
+      "rust_test_totals": {
+        "passed": 1,
+        "failed": 9,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-selection",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--lib",
+        "migration::current_tests",
+        "--no-fail-fast"
+      ],
+      "exit_code": 101,
+      "seconds": 3.1,
+      "log": "main-t4-selection.log",
+      "log_sha256": "c5cf111f6e12325abf02d6c9e8217948544193bf49429b092f8b3f5194f57c7b",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-current-tests-3",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "migration_current",
+        "--no-fail-fast"
+      ],
+      "exit_code": 101,
+      "seconds": 41.4,
+      "log": "main-t4-current-tests-3.log",
+      "log_sha256": "0d8b4d4c3c5dfa4480d5acdfc155dbcc2a52edd593947dc26d3316d1961ede6b",
+      "rust_test_totals": {
+        "passed": 9,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-selection-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--lib",
+        "migration::current_tests",
+        "--no-fail-fast"
+      ],
+      "exit_code": 0,
+      "seconds": 6.6,
+      "log": "main-t4-selection-2.log",
+      "log_sha256": "fc0654491299900adbc9dc747a768fb6ac4f3ea5b1eac7c387b5fe5a832a8ce6",
+      "rust_test_totals": {
+        "passed": 21,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 525
+      }
+    },
+    {
+      "label": "main-t4-fmt",
+      "command": [
+        "make",
+        "fmt"
+      ],
+      "exit_code": 0,
+      "seconds": 1.2,
+      "log": "main-t4-fmt.log",
+      "log_sha256": "57b04217ebf1017255a49b7e46f8abe947a5fedcbd4cd525ab5372bb0e72af74",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-lint",
+      "command": [
+        "make",
+        "lint"
+      ],
+      "exit_code": 2,
+      "seconds": 8.0,
+      "log": "main-t4-lint.log",
+      "log_sha256": "254b4b9f717aef9b677208e804e63368a8766c47c9c1636c9b13314f27b9cef4",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-current-tests-4",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "migration_current",
+        "--no-fail-fast"
+      ],
+      "exit_code": 0,
+      "seconds": 47.9,
+      "log": "main-t4-current-tests-4.log",
+      "log_sha256": "f1073f7c3788be0afec59e3f2cae0ceb04ff24b0534113ddb3aa8deb99228be2",
+      "rust_test_totals": {
+        "passed": 13,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-fmt-2",
+      "command": [
+        "make",
+        "fmt"
+      ],
+      "exit_code": 0,
+      "seconds": 1.2,
+      "log": "main-t4-fmt-2.log",
+      "log_sha256": "57b04217ebf1017255a49b7e46f8abe947a5fedcbd4cd525ab5372bb0e72af74",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-lint-2",
+      "command": [
+        "make",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 13.6,
+      "log": "main-t4-lint-2.log",
+      "log_sha256": "afb3fbcb9f69e642c6da5022c13ee709f0e109ca79ce2a8bf6307c950732b0d7",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-integrated",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "migration_capture",
+        "--test",
+        "migration_current",
+        "--no-fail-fast"
+      ],
+      "exit_code": 0,
+      "seconds": 57.2,
+      "log": "main-t4-integrated.log",
+      "log_sha256": "3c637a3ca22f99efc71d379aae2a2ab3bfa65c5696444fe3c5689f00a04ef860",
+      "rust_test_totals": {
+        "passed": 16,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-gate-integration",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "migration_current",
+        "current_findings_feed_the_main_migration_gate_and_replay_offline"
+      ],
+      "exit_code": 0,
+      "seconds": 13.0,
+      "log": "main-t4-gate-integration.log",
+      "log_sha256": "1658203e176335f05a8b3f4fc2d709fadb43cf4f51ab3c8623b26681571bcdfa",
+      "rust_test_totals": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 13
+      }
+    },
+    {
+      "label": "main-t4-final-fmt",
+      "command": [
+        "make",
+        "fmt"
+      ],
+      "exit_code": 0,
+      "seconds": 1.2,
+      "log": "main-t4-final-fmt.log",
+      "log_sha256": "57b04217ebf1017255a49b7e46f8abe947a5fedcbd4cd525ab5372bb0e72af74",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-governance",
+      "command": [
+        "pnpm",
+        "verify:governance"
+      ],
+      "exit_code": 0,
+      "seconds": 0.5,
+      "log": "main-t4-governance.log",
+      "log_sha256": "34f1719225ef942f5b88f563a37758718079e6f9c2b06d14957e1110e0457527",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-final-fmt-check",
+      "command": [
+        "make",
+        "fmt-check"
+      ],
+      "exit_code": 0,
+      "seconds": 1.4,
+      "log": "main-t4-final-fmt-check.log",
+      "log_sha256": "5fe89ac47bee0b52b9d98e316b135a2ae04aed42641a7f4ab48dc7614d0c8889",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-frontend",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 0,
+      "seconds": 2.8,
+      "log": "main-t4-frontend.log",
+      "log_sha256": "a42a511c898e8602a263f8c27f3781f5372e4a212accf4974c7fe65ee1f797cf",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-final-lint",
+      "command": [
+        "make",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 10.7,
+      "log": "main-t4-final-lint.log",
+      "log_sha256": "8b77c7b42fa70e99cc8cdef561cc7a0e6f87ed5be199823b5d7848e76e277914",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-report",
+      "command": [
+        "pnpm",
+        "verify:report"
+      ],
+      "exit_code": 0,
+      "seconds": 28.8,
+      "log": "main-t4-report.log",
+      "log_sha256": "07837adacee13168f48c66bb32ef6afabdd023dc1c18ccd75156f2302026da5e",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-independence",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "migration_current",
+        "every_selected_case_executes_at_its_full_final_balance_and_replays"
+      ],
+      "exit_code": 0,
+      "seconds": 12.5,
+      "log": "main-t4-independence.log",
+      "log_sha256": "b9fdb08ad5a23ab52e4be886e1c103010e96a02313ee1e86ffcaacc6591f9013",
+      "rust_test_totals": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 13
+      }
+    },
+    {
+      "label": "main-t4-genesis",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "migration_current",
+        "--test",
+        "migration_capture",
+        "--no-fail-fast"
+      ],
+      "exit_code": 0,
+      "seconds": 57.1,
+      "log": "main-t4-genesis.log",
+      "log_sha256": "fc6ef7c5fc7de950b8818ac8947931257598ea29335d2150b21fd72a169088cd",
+      "rust_test_totals": {
+        "passed": 17,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-complete-fmt",
+      "command": [
+        "make",
+        "fmt"
+      ],
+      "exit_code": 0,
+      "seconds": 1.3,
+      "log": "main-t4-complete-fmt.log",
+      "log_sha256": "57b04217ebf1017255a49b7e46f8abe947a5fedcbd4cd525ab5372bb0e72af74",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-complete-fmt-check",
+      "command": [
+        "make",
+        "fmt-check"
+      ],
+      "exit_code": 0,
+      "seconds": 1.3,
+      "log": "main-t4-complete-fmt-check.log",
+      "log_sha256": "5fe89ac47bee0b52b9d98e316b135a2ae04aed42641a7f4ab48dc7614d0c8889",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-complete-lint",
+      "command": [
+        "make",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 11.0,
+      "log": "main-t4-complete-lint.log",
+      "log_sha256": "89bd49d05b472341fdf1a3f32fff17965bc0a49422fd49654aa2773dd0f9531a",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-full-test",
+      "command": [
+        "make",
+        "test"
+      ],
+      "exit_code": 0,
+      "seconds": 520.8,
+      "log": "main-t4-full-test.log",
+      "log_sha256": "ce33cc31495ee99f29ec1e7893202f0aef71ffb33c5d9ed07ce1b365aea5e3ed",
+      "rust_test_totals": {
+        "passed": 1012,
+        "failed": 0,
+        "ignored": 2,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t4-no-fail-fast",
+      "command": [
+        "cargo",
+        "test",
+        "--no-fail-fast"
+      ],
+      "exit_code": 0,
+      "seconds": 488.2,
+      "log": "main-t4-no-fail-fast.log",
+      "log_sha256": "041b83ab3a9298082b1032ae0cd90cdd86512b6bb44be1eb8b312997cffc3f24",
+      "rust_test_totals": {
+        "passed": 961,
+        "failed": 0,
+        "ignored": 2,
+        "filtered out": 0
+      }
+    }
+  ],
+  "source_files_verified_unchanged": 1633,
+  "source_git_status": "clean",
+  "additional_raw_fixtures": {
+    "files": 2,
+    "bytes": 46547949,
+    "storage": "ignored exact raw bytes; hash/size-verified importer and provenance tracked"
+  },
+  "notes": [
+    "Final cargo test --no-fail-fast: 961 passed, 0 failed, 2 ignored. make test: 1012 passed, 0 failed, 2 ignored. Counts include repeated executions across commands, not unique tests.",
+    "make test preceded the final per-case genesis guard, independent-reserve assertion and counterexample exit-code correction. Focused regression tests and the final no-fail-fast suite cover those changes; fmt-check and lint also pass on the final source.",
+    "The two ignores remain the pre-existing bundle export utility and STA performance benchmark. No missing fixture is skipped.",
+    "All attempted commands are retained. Early failures were compile adaptations, captured legacy-loader dependency support, rollback fee-payer expectations and lint hygiene. Successful retries are separate records.",
+    "The original seven coherence tests, six authority tests and 21 population/classification/selection tests retain their source semantics, with mappings in phase-t4-test-mapping.json. Fourteen new integration tests exercise actual final-state VM execution, failure and replay.",
+    "All 1633 inventoried STA source files retain their hashes. Both raw additional population captures match recorded source sizes and hashes; they contain historical provider-origin fields and therefore remain ignored under the absolute no-URL rule.",
+    "All added text and new files scanned: zero provider URLs, real machine paths or private-key blocks. No SBF binaries or build products staged.",
+    "Live-provider checks intentionally not run. All capture checks use mocks; no transaction signing, cluster simulation, submission or deployment occurred.",
+    "Hosted migration, dashboard browser and Postgres checks remain pending their implementation in T8/T9. Frontend, report and governance reference checks pass with exact pnpm 11.24.0.",
+    "Logs are scratch records; recorded hashes do not imply durable storage."
+  ]
+}
