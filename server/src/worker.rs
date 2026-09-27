@@ -9,9 +9,6 @@
 
 use std::sync::Arc;
 
-use eplyx_engine::change::CandidateSource;
-use eplyx_engine::ci;
-
 use crate::api::AppState;
 use crate::registry::RunOutcome;
 
@@ -116,6 +113,20 @@ fn execute(state: &AppState, run_id: &str) -> RunOutcome {
         Ok(metadata) => metadata,
         Err(error) => return service_fault(format!("the run record could not be read: {error}")),
     };
+    if metadata.hosted_analysis.is_some() {
+        return match crate::hosted::worker::run_isolated(
+            registry,
+            &metadata,
+            &state.config.worker_binary,
+        ) {
+            Ok(projection) => RunOutcome::Analytical {
+                projection: Box::new(projection),
+            },
+            Err(_) => {
+                service_fault("offline analysis could not complete; no verdict recorded".into())
+            }
+        };
+    }
     // No fallback to "the uploaded bytes against whatever bundle is active":
     // a run without a proposal has nothing it was accepted to evaluate.
     let Some(change) = metadata.change.as_ref() else {
@@ -189,26 +200,20 @@ fn execute(state: &AppState, run_id: &str) -> RunOutcome {
         }
     };
 
-    // The engine, called directly. There is no second implementation of any of
-    // this, and nothing is shelled out to. It binds the spec to the pinned
-    // bundle again and verifies the bytes against the spec again: the checks at
-    // acceptance were early answers, not substitutes for these.
-    let input = ci::ChangeInput::Spec {
-        spec: &spec,
-        source: Some(CandidateSource::Bytes(&bytes)),
-    };
-    match ci::check_change(&bundle_dir, &input, expectations.as_deref()) {
-        Ok(report) => {
-            let markdown = eplyx_engine::ci_markdown::render(&report);
-            RunOutcome::Reported {
-                report: Box::new(report),
-                markdown,
-            }
+    match registry.run_work_dir(run_id).and_then(|work| {
+        crate::hosted::upgrade::run(
+            &state.config.worker_binary,
+            &work,
+            &bundle_dir,
+            &spec,
+            &bytes,
+            expectations.as_deref(),
+        )
+    }) {
+        Ok(outcome) => outcome,
+        Err(_) => {
+            service_fault("offline upgrade worker could not complete; no verdict recorded".into())
         }
-        Err(error) => RunOutcome::PreflightAbort {
-            exit_code: error.exit_code(),
-            detail: format!("{error:#}"),
-        },
     }
 }
 

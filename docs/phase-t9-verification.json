@@ -1,0 +1,3202 @@
+{
+  "schema_version": 1,
+  "phase": "T9",
+  "source_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+  "toolchain": {
+    "pnpm": "11.24.0",
+    "node": "22.23.1",
+    "rust": "stable with offline Cargo cache",
+    "sbf": "T3 pins retained: lending v1.54/v0; migration v1.57/v3",
+    "browser": "Chromium 1228 via EPLYX_CHROME",
+    "postgres": "Postgres 17, loopback scratch databases, explicit required configuration"
+  },
+  "required_final_checks": [
+    "main-t9-full-cloud-test-2",
+    "main-t9-no-fail-fast-cloud",
+    "main-t9-end-lint",
+    "main-t9-portable-lint",
+    "main-t9-final-format-check",
+    "main-t9-end-fmt-check",
+    "main-t9-focus-frontend",
+    "main-t9-final-report",
+    "main-t9-final-governance",
+    "main-t9-focus-cloud-browser",
+    "main-t9-end-dashboard-browser",
+    "main-t9-determinism",
+    "main-t9-portable-tests-2",
+    "main-t9-end-cloud-projections",
+    "main-t9-end-privacy",
+    "main-t9-image-source-context",
+    "main-t9-catalogue-byte-frontend",
+    "main-t9-catalogue-operator",
+    "main-t9-current-fixture-audit",
+    "main-t9-catalogue-fixture-audit",
+    "main-t9-upgrade-overview-frontend",
+    "main-t9-upgrade-overview-cloud-browser"
+  ],
+  "commands": [
+    {
+      "label": "main-t9-engine-check",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-engine",
+        "--all-targets"
+      ],
+      "exit_code": 101,
+      "seconds": 17.4,
+      "log": "main-t9-engine-check.log",
+      "log_sha256": "fd2a59dc34cad688a34f2541d870e72a12437a310e3bd1bf8a4fa7f7cb068561",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-engine-check-2",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-engine",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 13.9,
+      "log": "main-t9-engine-check-2.log",
+      "log_sha256": "f70ff87efe65937ba592e7d101d68d5843a9a6d288b2aaccb52eb160f7183a83",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-contract-compile",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "cloud_contract",
+        "--test",
+        "migration_dashboard",
+        "--no-run"
+      ],
+      "exit_code": 0,
+      "seconds": 20.8,
+      "log": "main-t9-contract-compile.log",
+      "log_sha256": "a6b0c7b551095d889b9aca31fc638f85c58150c6aae3529945b023ad1c047e0c",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-identity-check",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-server",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 43.3,
+      "log": "main-t9-cloud-identity-check.log",
+      "log_sha256": "8f48e785178b3ff8aaada90d9d0a820f08d8f04b56b89a58ff8eedba2284f7b0",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-contract-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "cloud_contract",
+        "--test",
+        "migration_dashboard",
+        "--no-fail-fast"
+      ],
+      "exit_code": 0,
+      "seconds": 48.2,
+      "log": "main-t9-contract-tests.log",
+      "log_sha256": "1fe2ed4532d355538f4d9cc5cf37500849b4c5d29cc7f5167cfd6c81eb600154",
+      "rust_test_totals": {
+        "passed": 8,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-workspaces-check",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-server",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 2.9,
+      "log": "main-t9-cloud-workspaces-check.log",
+      "log_sha256": "998642b44b72d0043c88f12db528b3273f1f050d1e0c97738edb03545365299e",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-access-check",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-server",
+        "--all-targets"
+      ],
+      "exit_code": 101,
+      "seconds": 1.0,
+      "log": "main-t9-cloud-access-check.log",
+      "log_sha256": "c21f8b18babd398b56205c8f445c1dbc4fa24edd3a3871d79e8790c53b481896",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-access-check-2",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-server",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 2.3,
+      "log": "main-t9-cloud-access-check-2.log",
+      "log_sha256": "84b50f7559ccca62aceeb69ae5865ff339aeea68605dc5adf54ef07bf6cdc2be",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-sync-check",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-server",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 3.7,
+      "log": "main-t9-cloud-sync-check.log",
+      "log_sha256": "7f2ed2566b5399adfec14ab5f0086b4bbe09425c1ba4836d6d039716388d2975",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-views-check",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-server",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 2.6,
+      "log": "main-t9-cloud-views-check.log",
+      "log_sha256": "ea98b422d8554456ea5c0a6ca82e3cf832f815a0ad498dbe6d881793bdc2a5d5",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-device-test",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "cloud_api"
+      ],
+      "exit_code": 101,
+      "seconds": 66.6,
+      "log": "main-t9-cloud-device-test.log",
+      "log_sha256": "43fbed012dc93e4a86732b3854f1a00d9137fcfd2da71d695c1a460d9879336c",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-device-test-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "cloud_api"
+      ],
+      "exit_code": 101,
+      "seconds": 0.5,
+      "log": "main-t9-cloud-device-test-2.log",
+      "log_sha256": "d9cd4bd2b20b88fb01fb23bc70531cae4766fcc1198e1a6be99464480601cb37",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-device-test-3",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "cloud_api"
+      ],
+      "exit_code": 0,
+      "seconds": 2.6,
+      "log": "main-t9-cloud-device-test-3.log",
+      "log_sha256": "eed2145811058b6bd2889bb06e6b2bf500482c5442f2962086c1993f8eb320fa",
+      "rust_test_totals": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-api-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "cloud_api"
+      ],
+      "exit_code": 101,
+      "seconds": 7.6,
+      "log": "main-t9-cloud-api-tests.log",
+      "log_sha256": "42b7d7e2d645e5c7cae4a7796cc6bdd3c9d784007a56313f1022b2ed18c4e3c8",
+      "rust_test_totals": {
+        "passed": 9,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-api-tests-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "cloud_api"
+      ],
+      "exit_code": 0,
+      "seconds": 17.4,
+      "log": "main-t9-cloud-api-tests-2.log",
+      "log_sha256": "033044ca78c46f7393111724853c739cbca2d3be002b4232f82e3a04b6f06e5d",
+      "rust_test_totals": {
+        "passed": 10,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-registry-check",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-server",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 38.6,
+      "log": "main-t9-cloud-registry-check.log",
+      "log_sha256": "0ec5e9390574b0edc5b1d2cc48748b8dbad7d33daa3b792260d9fe9162027182",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-storage-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "cloud_api",
+        "--test",
+        "cloud_recovery"
+      ],
+      "exit_code": 101,
+      "seconds": 11.1,
+      "log": "main-t9-cloud-storage-tests.log",
+      "log_sha256": "9fdf888edabd9260b396a3360c5a1c8f5cc848aae8b493bebecdba162ca9946d",
+      "rust_test_totals": {
+        "passed": 11,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-cli-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "cloud_cli"
+      ],
+      "exit_code": 101,
+      "seconds": 31.5,
+      "log": "main-t9-cloud-cli-tests.log",
+      "log_sha256": "b038940fe474916495be7c55c3f98378f03e95f4041da80732725481bfe74c9e",
+      "rust_test_totals": {
+        "passed": 1,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-browser-build",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "eplyx-server",
+        "--bin",
+        "eplyx-server",
+        "-p",
+        "eplyx-engine",
+        "--bin",
+        "eplyx"
+      ],
+      "exit_code": 0,
+      "seconds": 43.8,
+      "log": "main-t9-cloud-browser-build.log",
+      "log_sha256": "2ec9e93fe574806fe72725e5713c0d9953de6c3307bb96f1df76ad6e05ba3c07",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-browser",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/browser.py"
+      ],
+      "exit_code": 1,
+      "seconds": 2.0,
+      "log": "main-t9-cloud-browser.log",
+      "log_sha256": "4033a53f0027471e03b52bd33745ac4de109be7035488e0d949a5a716f93bf94",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-browser-2",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/browser.py"
+      ],
+      "exit_code": 1,
+      "seconds": 22.3,
+      "log": "main-t9-cloud-browser-2.log",
+      "log_sha256": "341341025858bc854aafaae30c5421e921ef93bfb14c10acee0d972009c31cb7",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-browser-3",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/browser.py"
+      ],
+      "exit_code": 0,
+      "seconds": 10.5,
+      "log": "main-t9-cloud-browser-3.log",
+      "log_sha256": "bc4ca01883258763ea170866162eb5973017a3f2ba1ff9bfee32f1e2ded115a0",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-cli-storage-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "cloud_cli",
+        "--test",
+        "cloud_recovery"
+      ],
+      "exit_code": 0,
+      "seconds": 27.0,
+      "log": "main-t9-cloud-cli-storage-tests.log",
+      "log_sha256": "d1f5862cb3fb4bc8e1bdb246f801f9f853c15486b9f2751078e02ea51d0dd959",
+      "rust_test_totals": {
+        "passed": 4,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-format",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.7,
+      "log": "main-t9-cloud-format.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "eplyx-engine",
+        "-p",
+        "eplyx-server",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 101,
+      "seconds": 14.0,
+      "log": "main-t9-cloud-clippy.log",
+      "log_sha256": "76fc74001888ff9236ec5190226478b8023df343924280ada66a3d49c4371b08",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-clippy-2",
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "eplyx-engine",
+        "-p",
+        "eplyx-server",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 101,
+      "seconds": 15.2,
+      "log": "main-t9-cloud-clippy-2.log",
+      "log_sha256": "f6c0680aedc323fe1958b00dbe3e23c627f8747526c7e6b2f94b275b3b423689",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-contract-final",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "cloud_contract",
+        "--test",
+        "migration_dashboard"
+      ],
+      "exit_code": 0,
+      "seconds": 27.3,
+      "log": "main-t9-cloud-contract-final.log",
+      "log_sha256": "2f15bdf60a464b2e8b5d4ebfb412728e23b52e9a0ec8c07182288e024671491a",
+      "rust_test_totals": {
+        "passed": 8,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-format-2",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.7,
+      "log": "main-t9-cloud-format-2.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-clippy-3",
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "eplyx-engine",
+        "-p",
+        "eplyx-server",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 17.1,
+      "log": "main-t9-cloud-clippy-3.log",
+      "log_sha256": "ac0da417916b7f7bcfe39490d63f78728b19487287d25168d14fd5c09cd53c0d",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-unit-checks",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--lib",
+        "cloud::"
+      ],
+      "exit_code": 0,
+      "seconds": 18.3,
+      "log": "main-t9-cloud-unit-checks.log",
+      "log_sha256": "5a6c884c8e60e0963ac61207519dce04f5e58d607a877f1c73effc2cbb67b1e7",
+      "rust_test_totals": {
+        "passed": 7,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 649
+      }
+    },
+    {
+      "label": "main-t9-cloud-strict-sync",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "cloud_contract",
+        "reproduction_errors_with_local_paths_are_refused_without_rewriting"
+      ],
+      "exit_code": 101,
+      "seconds": 8.7,
+      "log": "main-t9-cloud-strict-sync.log",
+      "log_sha256": "8a2b791316c5a99650c01bb0897a8768b7ada11ff98c16531bd9b38a9f65bc08",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-strict-sync-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "cloud_contract",
+        "reproduction_errors_with_local_paths_are_refused_without_rewriting"
+      ],
+      "exit_code": 0,
+      "seconds": 3.8,
+      "log": "main-t9-cloud-strict-sync-2.log",
+      "log_sha256": "38fe51b85982ed56d40f525c2b8e8d65f0d96f98ebda6377b8cf5234ad48ad51",
+      "rust_test_totals": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 6
+      }
+    },
+    {
+      "label": "main-t9-cloud-projection-check",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-server",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 7.5,
+      "log": "main-t9-cloud-projection-check.log",
+      "log_sha256": "b256a19055200e228fe22e49ce091e117d9d2c3448636d5a815b15dc6417aa9c",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-frontend",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 0,
+      "seconds": 2.9,
+      "log": "main-t9-cloud-frontend.log",
+      "log_sha256": "ab23d2f2dd374a6962c5c5a757b18e6c8f01f24ecf928088e6138662c45720bf",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-hosted-worker-check",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-server",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 8.0,
+      "log": "main-t9-hosted-worker-check.log",
+      "log_sha256": "1a97e6dbf44c7600b4056c973d529cf67ce5fa8d23ef35f27e88138f44c62cb9",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-hosted-integration-check",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-server",
+        "--all-targets"
+      ],
+      "exit_code": 101,
+      "seconds": 3.5,
+      "log": "main-t9-hosted-integration-check.log",
+      "log_sha256": "8211dda35d095e2ad1bf917b4a09f0a467ecd7d677ba2a2c15fdbc42da945040",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-hosted-integration-check-2",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-server",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 4.4,
+      "log": "main-t9-hosted-integration-check-2.log",
+      "log_sha256": "9a5949fd132fccd3c57e15211ea1623e2182c81b2e89f185b697b1020af4e453",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-hosted-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "hosted_analysis",
+        "--",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "seconds": 20.3,
+      "log": "main-t9-hosted-tests.log",
+      "log_sha256": "8409fd123cd726300b009a810deb99ac794d697f94305cdb9fe08cda6fcbd825",
+      "rust_test_totals": {
+        "passed": 2,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-hosted-current-check",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-server",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 3.9,
+      "log": "main-t9-hosted-current-check.log",
+      "log_sha256": "dc82ca73ecd719bc2f57317e46166a72953ce555a0b036fbe408e50257dd4770",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-observation-check",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-server",
+        "--all-targets"
+      ],
+      "exit_code": 101,
+      "seconds": 1.7,
+      "log": "main-t9-observation-check.log",
+      "log_sha256": "1598877e37d98f29ba4243d88608da10f43cf746edc77c99e73a8e79555b82f9",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-hosted-tests-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "hosted_analysis",
+        "--",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "seconds": 19.2,
+      "log": "main-t9-hosted-tests-2.log",
+      "log_sha256": "5fb9da0665508e3928d4049368590fe62daf8025de768c66d22e3af631a15f10",
+      "rust_test_totals": {
+        "passed": 3,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-hosted-observation-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "hosted_observation",
+        "--",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "seconds": 7.1,
+      "log": "main-t9-hosted-observation-tests.log",
+      "log_sha256": "5f3fd76a40b1866c50634b04632c38f5714b6dd3b858f134de6e4ff9143b6f85",
+      "rust_test_totals": {
+        "passed": 3,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-offline-upgrade-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "async_checks",
+        "--test",
+        "change_identity",
+        "--test",
+        "durable_runs"
+      ],
+      "exit_code": 101,
+      "seconds": 12.5,
+      "log": "main-t9-offline-upgrade-tests.log",
+      "log_sha256": "16d06c9a1f95e095a831531b8daca213cbf7e867a563c6230e251c96ce0099c3",
+      "rust_test_totals": {
+        "passed": 35,
+        "failed": 1,
+        "ignored": 1,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-offline-upgrade-tests-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "change_identity",
+        "--test",
+        "durable_runs"
+      ],
+      "exit_code": 0,
+      "seconds": 15.9,
+      "log": "main-t9-offline-upgrade-tests-2.log",
+      "log_sha256": "6137f9f755073eae38e96ded160ee9ceea1ec078ce7861f7990274e8fd043385",
+      "rust_test_totals": {
+        "passed": 36,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-catalogue-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "hosted_catalogue"
+      ],
+      "exit_code": 0,
+      "seconds": 2.4,
+      "log": "main-t9-catalogue-tests.log",
+      "log_sha256": "7fe0661c0b580a24d3dbbae7f0a20a8a8b629c99974e36acd297f626a023f04a",
+      "rust_test_totals": {
+        "passed": 3,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-analysis-browser-build",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "eplyx-server",
+        "--bin",
+        "eplyx-server"
+      ],
+      "exit_code": 0,
+      "seconds": 12.3,
+      "log": "main-t9-cloud-analysis-browser-build.log",
+      "log_sha256": "204c1a3fe9db83ab52add74744446bf7fb2a2a3eab46ff05f02bfa2028856e98",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-lifecycle-hosted-test",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "hosted_analysis",
+        "lifecycle_completes"
+      ],
+      "exit_code": 101,
+      "seconds": 21.7,
+      "log": "main-t9-lifecycle-hosted-test.log",
+      "log_sha256": "814aed98b744caf1f83ebe691684a2e9030a132e8df7bf73b03170b46f65deea",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 3
+      }
+    },
+    {
+      "label": "main-t9-cloud-analysis-browser",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/browser.py"
+      ],
+      "exit_code": 1,
+      "seconds": 49.5,
+      "log": "main-t9-cloud-analysis-browser.log",
+      "log_sha256": "fea59b078acedc5c3068fd00ac12c34d3e0d2a5575ee2184b0486c5ffcbb40ea",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-lifecycle-hosted-test-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "hosted_analysis",
+        "lifecycle_completes",
+        "--",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "seconds": 21.9,
+      "log": "main-t9-lifecycle-hosted-test-2.log",
+      "log_sha256": "14ffe8be85921ed9dab07f645c5e92030b6553f71f65f63f68efcd852a25b0dd",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 3
+      }
+    },
+    {
+      "label": "main-t9-cloud-analysis-browser-build-2",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "eplyx-server",
+        "--bin",
+        "eplyx-server"
+      ],
+      "exit_code": 0,
+      "seconds": 7.3,
+      "log": "main-t9-cloud-analysis-browser-build-2.log",
+      "log_sha256": "072054654b553f30acd839aab60d02fa20011cf205a33f3db015276bbf8ae99b",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-hosted-format",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.8,
+      "log": "main-t9-hosted-format.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-analysis-frontend",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 0,
+      "seconds": 2.9,
+      "log": "main-t9-analysis-frontend.log",
+      "log_sha256": "ab23d2f2dd374a6962c5c5a757b18e6c8f01f24ecf928088e6138662c45720bf",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-hosted-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "eplyx-server",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 101,
+      "seconds": 8.2,
+      "log": "main-t9-hosted-clippy.log",
+      "log_sha256": "d5ecf9516b78c2cfd12a931c6419a87a39ad9dc70e125a4462edf501f3ae71f2",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-lifecycle-hosted-test-3",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "hosted_analysis",
+        "lifecycle_completes",
+        "--",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "seconds": 65.2,
+      "log": "main-t9-lifecycle-hosted-test-3.log",
+      "log_sha256": "b2fa5209a898a3237fa9c58a70098e41a89af88de29712572d8bfaa96c15c3e6",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 3
+      }
+    },
+    {
+      "label": "main-t9-hosted-clippy-2",
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "eplyx-server",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 4.7,
+      "log": "main-t9-hosted-clippy-2.log",
+      "log_sha256": "22ebef96543ad8527ceb422ded4c67fd424e4e8e48c2cb2e81d0eb98e46c140e",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-lifecycle-hosted-test-4",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "hosted_analysis",
+        "lifecycle_completes"
+      ],
+      "exit_code": 101,
+      "seconds": 67.2,
+      "log": "main-t9-lifecycle-hosted-test-4.log",
+      "log_sha256": "2ea38704d1886cd994f760c43ace6e01753a2a4fba9761fd94b9ec42550a3def",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 3
+      }
+    },
+    {
+      "label": "main-t9-cloud-analysis-browser-2",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/browser.py"
+      ],
+      "exit_code": 1,
+      "seconds": 25.2,
+      "log": "main-t9-cloud-analysis-browser-2.log",
+      "log_sha256": "727c4b994a7135d49354a3e1f45f5a690c42a58e6eed40629ce261e632834ed7",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-lifecycle-hosted-test-5",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "hosted_analysis",
+        "lifecycle_completes",
+        "--",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "seconds": 49.0,
+      "log": "main-t9-lifecycle-hosted-test-5.log",
+      "log_sha256": "0a034c68ba4263ca46284a1b6a421479899d7a51e4cd4ae8b70911e6c191bb5a",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 3
+      }
+    },
+    {
+      "label": "main-t9-lifecycle-hosted-test-6",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "hosted_analysis",
+        "lifecycle_completes"
+      ],
+      "exit_code": 101,
+      "seconds": 1.8,
+      "log": "main-t9-lifecycle-hosted-test-6.log",
+      "log_sha256": "27211caa39af563ca3330b2dc8f3fafb35d8a2555c23486936cb302977046e9b",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-analysis-browser-3",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/browser.py"
+      ],
+      "exit_code": 0,
+      "seconds": 20.4,
+      "log": "main-t9-cloud-analysis-browser-3.log",
+      "log_sha256": "afcfdad5413a9639bea89131ee712834ef5ae49a2912a8a60d1164a010974c1f",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-hosted-clippy-3",
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "eplyx-server",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 4.5,
+      "log": "main-t9-hosted-clippy-3.log",
+      "log_sha256": "3ec416f6054f64a4817a80ecf16f00d9aa5f9e986859266adcb6447790bd03d4",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-lifecycle-hosted-test-7",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "hosted_analysis",
+        "lifecycle_completes"
+      ],
+      "exit_code": 0,
+      "seconds": 143.8,
+      "log": "main-t9-lifecycle-hosted-test-7.log",
+      "log_sha256": "f35761e98fc7a2246e5874266dd2ec48b21049103dfabd6e8e87707b9f2a0576",
+      "rust_test_totals": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 3
+      }
+    },
+    {
+      "label": "main-t9-hosted-clippy-4",
+      "command": [
+        "cargo",
+        "clippy",
+        "-p",
+        "eplyx-server",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 3.3,
+      "log": "main-t9-hosted-clippy-4.log",
+      "log_sha256": "c76cb93fc400a8942751afb1a5604f0e43e8312db915737f7adc63d5ea11acbc",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-exact-amount-test",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "migration_exact_amount",
+        "--",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "seconds": 10.1,
+      "log": "main-t9-exact-amount-test.log",
+      "log_sha256": "6ebedeb17310ff5768556f4fb7db8db03034c1ace625a6ca891cef4401e2adf2",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-exact-amount-test-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "migration_exact_amount",
+        "--",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "seconds": 19.0,
+      "log": "main-t9-exact-amount-test-2.log",
+      "log_sha256": "d7ce5d4202becac640bd2f095429a63afa143dfcb662e189dad8e3b4515c3775",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-exact-amount-test-3",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "migration_exact_amount",
+        "--",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "seconds": 2.0,
+      "log": "main-t9-exact-amount-test-3.log",
+      "log_sha256": "eda958b58f35efdab7b1598c2bbec3cc2376ce59f277fcc2b64e932923895239",
+      "rust_test_totals": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-migration-reference",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "migration_cases",
+        "--test",
+        "migration_demo",
+        "--test",
+        "migration_capture"
+      ],
+      "exit_code": 0,
+      "seconds": 80.1,
+      "log": "main-t9-migration-reference.log",
+      "log_sha256": "0c21b3da6ad465978713dd0fd678fb9479a47dc491ceb38f903252c186c9c40b",
+      "rust_test_totals": {
+        "passed": 13,
+        "failed": 0,
+        "ignored": 1,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-candidate-check",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-engine",
+        "--all-targets"
+      ],
+      "exit_code": 101,
+      "seconds": 12.5,
+      "log": "main-t9-candidate-check.log",
+      "log_sha256": "ec8e1296089978e82f3ca982140cb87097c800d605f64ccb05d848ff5d5b315d",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-candidate-check-2",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-engine",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 21.8,
+      "log": "main-t9-candidate-check-2.log",
+      "log_sha256": "0dc081ae41c13fbba0f540fa95f2e3c67af3d2ec712086a4700c8fc71ddc5907",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-account-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "migration_account",
+        "--test",
+        "migration_exact_amount"
+      ],
+      "exit_code": 101,
+      "seconds": 19.9,
+      "log": "main-t9-account-tests.log",
+      "log_sha256": "3ed7777ed0d7a4437d85e114556f832b7205a150a928ff358f82602f2a7af0b5",
+      "rust_test_totals": {
+        "passed": 2,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-preflight-check",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-engine",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 22.4,
+      "log": "main-t9-preflight-check.log",
+      "log_sha256": "bab3c0a884f17537490a6b75c589fab47269023164aa8874fc45651da8071803",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-account-tests-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "migration_account",
+        "--test",
+        "migration_exact_amount"
+      ],
+      "exit_code": 0,
+      "seconds": 22.9,
+      "log": "main-t9-account-tests-2.log",
+      "log_sha256": "b64826a0fbaa439eda8ea51d99ece68f069b91cf5e6f02e9fa5c4d75f14958d7",
+      "rust_test_totals": {
+        "passed": 4,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-candidate-hosted-check",
+      "command": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets"
+      ],
+      "exit_code": 101,
+      "seconds": 13.1,
+      "log": "main-t9-candidate-hosted-check.log",
+      "log_sha256": "d61215ebf5b6a5d2efb79ff7cdd0d4f3f3e7a74ad7744bba872a5c55dc6808f0",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-candidate-hosted-check-2",
+      "command": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 14.0,
+      "log": "main-t9-candidate-hosted-check-2.log",
+      "log_sha256": "4c27d08ee7313c69301d8fd79619031fa16bb9c6338ffe4feb34dc4fb665fe2c",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-preflight-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "current_preflight"
+      ],
+      "exit_code": 101,
+      "seconds": 9.0,
+      "log": "main-t9-preflight-tests.log",
+      "log_sha256": "93fcddc87728b2b885cb6e795c0d44b0f571612bc613cf2963627968ebda96f6",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-preflight-tests-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "current_preflight"
+      ],
+      "exit_code": 0,
+      "seconds": 6.3,
+      "log": "main-t9-preflight-tests-2.log",
+      "log_sha256": "fc7480fc558543f493f4a0b551d067ef80ebd48f6d5b624068474cd37f5d6a56",
+      "rust_test_totals": {
+        "passed": 12,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-proposal-hosted-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "hosted_observation"
+      ],
+      "exit_code": 101,
+      "seconds": 29.6,
+      "log": "main-t9-proposal-hosted-tests.log",
+      "log_sha256": "e808425f9e35a6e745920983007c7fa4f789d02fb942c6e30e15570338a5af23",
+      "rust_test_totals": {
+        "passed": 3,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-proposal-frontend",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 0,
+      "seconds": 2.9,
+      "log": "main-t9-proposal-frontend.log",
+      "log_sha256": "ab23d2f2dd374a6962c5c5a757b18e6c8f01f24ecf928088e6138662c45720bf",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-proposal-hosted-tests-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "hosted_observation",
+        "candidate_and"
+      ],
+      "exit_code": 101,
+      "seconds": 17.3,
+      "log": "main-t9-proposal-hosted-tests-2.log",
+      "log_sha256": "e90c9468f0db157144893a21a06f30463ab2572ee3ade9f2d5743373081f66b3",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 3
+      }
+    },
+    {
+      "label": "main-t9-proposal-hosted-tests-3",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "hosted_observation",
+        "candidate_and"
+      ],
+      "exit_code": 101,
+      "seconds": 11.5,
+      "log": "main-t9-proposal-hosted-tests-3.log",
+      "log_sha256": "3173b0f800b26440865e5e7f91d54852dcb011a8f47be4a9191e92de8ef4b3b5",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 3
+      }
+    },
+    {
+      "label": "main-t9-proposal-hosted-tests-4",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "hosted_observation",
+        "candidate_and"
+      ],
+      "exit_code": 101,
+      "seconds": 11.2,
+      "log": "main-t9-proposal-hosted-tests-4.log",
+      "log_sha256": "4be4e1308d010bbb9ae473da37bad8b1ed7a80f11b0d6ba9f9310f21252d1630",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 3
+      }
+    },
+    {
+      "label": "main-t9-proposal-hosted-tests-5",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "hosted_observation"
+      ],
+      "exit_code": 0,
+      "seconds": 21.4,
+      "log": "main-t9-proposal-hosted-tests-5.log",
+      "log_sha256": "347b2d551c4ee45a25d497ec0c6492c3f752ac3cc76af0bd9462e9cc2565defd",
+      "rust_test_totals": {
+        "passed": 4,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-preflight-tests-3",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "--test",
+        "current_preflight"
+      ],
+      "exit_code": 0,
+      "seconds": 14.7,
+      "log": "main-t9-preflight-tests-3.log",
+      "log_sha256": "b1e41541e34e9e2e853b2c8ff40d7c3dc4484c095bbd83e6c16d46648fd8866d",
+      "rust_test_totals": {
+        "passed": 17,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-proposal-browser-build",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "eplyx-server",
+        "-p",
+        "eplyx-engine"
+      ],
+      "exit_code": 0,
+      "seconds": 23.9,
+      "log": "main-t9-proposal-browser-build.log",
+      "log_sha256": "ea7a8a3ae64500e000a7d5ef27712a1ade81b1a63989a418b462c159e486594a",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-proposal-browser",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/browser.py"
+      ],
+      "exit_code": 1,
+      "seconds": 53.1,
+      "log": "main-t9-cloud-proposal-browser.log",
+      "log_sha256": "a65080ae869ee269114f5d2202e28becf599f9213c428c1615a9e1fb23007a2d",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-stress-hosted-check",
+      "command": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 20.2,
+      "log": "main-t9-stress-hosted-check.log",
+      "log_sha256": "209fc3d1568d9bdcb6bb11e0b0c128bea94ed5b2346228d2634b547a0e7e6b01",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-stress-hosted-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "hosted_observation",
+        "candidate_and"
+      ],
+      "exit_code": 101,
+      "seconds": 21.1,
+      "log": "main-t9-stress-hosted-tests.log",
+      "log_sha256": "bf700b5a987df4fbe5d4fecaf171e0eca8d8b74d535549b88c89318f40813c70",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 3
+      }
+    },
+    {
+      "label": "main-t9-proposal-format",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.8,
+      "log": "main-t9-proposal-format.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-stress-hosted-tests-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "hosted_observation",
+        "candidate_and"
+      ],
+      "exit_code": 101,
+      "seconds": 18.1,
+      "log": "main-t9-stress-hosted-tests-2.log",
+      "log_sha256": "f8d50af8eee657e0cb9b1fbdb319e72ba6ca7102eabe48c4d7ddf2db884cc812",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 3
+      }
+    },
+    {
+      "label": "main-t9-proposal-clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 101,
+      "seconds": 28.5,
+      "log": "main-t9-proposal-clippy.log",
+      "log_sha256": "5c5663801bb098f57438504182052962b693964a2c78f61b9e394ed7de544caa",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-stress-hosted-tests-3",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "hosted_observation"
+      ],
+      "exit_code": 0,
+      "seconds": 38.8,
+      "log": "main-t9-stress-hosted-tests-3.log",
+      "log_sha256": "baffc28a739e4351ea5ec2fd7cd3d37d42ce7ad7540d756ed6d2fba1749581c7",
+      "rust_test_totals": {
+        "passed": 4,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-catalogue-import-tests",
+      "command": [
+        "node",
+        "--test",
+        "frontend/tests/catalogue-import.test.mjs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.2,
+      "log": "main-t9-catalogue-import-tests.log",
+      "log_sha256": "f647671d8dcc03675696a0598c331e54343800cfcd0a3318453382ee1678f232",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-proposal-clippy-2",
+      "command": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 101,
+      "seconds": 13.1,
+      "log": "main-t9-proposal-clippy-2.log",
+      "log_sha256": "ef954c9fb00c3916923af6aa0051dc2290838dd27a47e1ec21786e2e1a73b0fe",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-proposal-frontend-2",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 0,
+      "seconds": 2.8,
+      "log": "main-t9-proposal-frontend-2.log",
+      "log_sha256": "ab23d2f2dd374a6962c5c5a757b18e6c8f01f24ecf928088e6138662c45720bf",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-proposal-browser-build-2",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "eplyx-server",
+        "-p",
+        "eplyx-engine"
+      ],
+      "exit_code": 0,
+      "seconds": 17.8,
+      "log": "main-t9-proposal-browser-build-2.log",
+      "log_sha256": "a14a6da6057be2546fe3f5a519886dcd61aefb999f39f1f30842237ca189cf5f",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-proposal-clippy-3",
+      "command": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 21.1,
+      "log": "main-t9-proposal-clippy-3.log",
+      "log_sha256": "c604b0dc1e89d766a349bd28dce82bef7eca75eed801168cbaa9dd3c9027e62c",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-proposal-browser-build-3",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "eplyx-server",
+        "-p",
+        "eplyx-engine"
+      ],
+      "exit_code": 0,
+      "seconds": 8.6,
+      "log": "main-t9-proposal-browser-build-3.log",
+      "log_sha256": "32bf9dc5b2d27d7e5d82d083e0f58bd9722ad2949199604e920cee947d02f86b",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-hosted-report-frontend",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 0,
+      "seconds": 2.8,
+      "log": "main-t9-hosted-report-frontend.log",
+      "log_sha256": "01f716690322b51de127d9c848c0ebd0195a6cf7f69ddeaebb5456b3da32c1f4",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-proposal-format-2",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.9,
+      "log": "main-t9-proposal-format-2.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-proposal-browser-2",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/browser.py"
+      ],
+      "exit_code": 1,
+      "seconds": 60.4,
+      "log": "main-t9-cloud-proposal-browser-2.log",
+      "log_sha256": "17576104fff213c7107479fb4efd7c5081f017f3bf63ef2b649b779002b28855",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-proposal-browser-build-4",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "eplyx-server",
+        "-p",
+        "eplyx-engine"
+      ],
+      "exit_code": 101,
+      "seconds": 3.3,
+      "log": "main-t9-proposal-browser-build-4.log",
+      "log_sha256": "74a1d3ddb09e0d709b7837f389fbc13ad36207bc6c6cbc98d236a2baf10e3531",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-proposal-browser-build-5",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "eplyx-server",
+        "-p",
+        "eplyx-engine"
+      ],
+      "exit_code": 0,
+      "seconds": 9.7,
+      "log": "main-t9-proposal-browser-build-5.log",
+      "log_sha256": "eab4d7c3adf10869e8aa61adf8d7754745061954c0b00f66a3767425c38815d7",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-proposal-browser-3",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/browser.py"
+      ],
+      "exit_code": 1,
+      "seconds": 85.8,
+      "log": "main-t9-cloud-proposal-browser-3.log",
+      "log_sha256": "ad41caadd045d7ede3443785a8a3b4ead76cc118e344d97543fefceec7fc0d70",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-views-tests",
+      "command": [
+        "node",
+        "frontend/cloud.test.mjs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.0,
+      "log": "main-t9-cloud-views-tests.log",
+      "log_sha256": "a661ed7e23814efd747779b7256cddf9cfb5545afa140befb7f2faf5b37985b6",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-cloud-proposal-browser-4",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/browser.py"
+      ],
+      "exit_code": 0,
+      "seconds": 52.3,
+      "log": "main-t9-cloud-proposal-browser-4.log",
+      "log_sha256": "7b3bcc08ab8a6648637e26066cbc89e34fe33c07f3c452c02b91af1bc07cf647",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-proposal-negative-tests",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "hosted_observation",
+        "candidate_scenario_and_stress_reject"
+      ],
+      "exit_code": 0,
+      "seconds": 18.1,
+      "log": "main-t9-proposal-negative-tests.log",
+      "log_sha256": "57e96c352d189bdbdf5ff40425d43a9b30ac41ea9bc52fe6fc7fdc7154e439d2",
+      "rust_test_totals": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 4
+      }
+    },
+    {
+      "label": "main-t9-portable-format",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.9,
+      "log": "main-t9-portable-format.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-portable-check",
+      "command": [
+        "cargo",
+        "check",
+        "-p",
+        "eplyx-server",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "seconds": 13.9,
+      "log": "main-t9-portable-check.log",
+      "log_sha256": "5de1acfb2371fd19eb6b98d590bafae0736c7f1379d3de1f261e3c67c65e902f",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-final-format",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.7,
+      "log": "main-t9-final-format.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-final-frontend",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 1,
+      "seconds": 2.8,
+      "log": "main-t9-final-frontend.log",
+      "log_sha256": "7b3e13beb83fe5a1fead084d64fa6def4dfdb91ba22f212d4ae2108b32d566c5",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-final-frontend-2",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 0,
+      "seconds": 2.9,
+      "log": "main-t9-final-frontend-2.log",
+      "log_sha256": "ef9a4eb7f2352bbd3db1ea65aff7d1ec0408e40d05246ccd657499acdc1f688e",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-final-fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.9,
+      "log": "main-t9-final-fmt.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-final-build",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "eplyx-server",
+        "-p",
+        "eplyx-engine"
+      ],
+      "exit_code": 0,
+      "seconds": 13.9,
+      "log": "main-t9-final-build.log",
+      "log_sha256": "8d02f1ee96d3083fbe93d32afcdf9e8a05cb0528cf8fd31d1c2c55baff69ca24",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-final-cloud-browser",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/browser.py"
+      ],
+      "exit_code": 1,
+      "seconds": 1.1,
+      "log": "main-t9-final-cloud-browser.log",
+      "log_sha256": "dc31b6d8a0f9e41830ab7cc21bef7ca9e1fbdfc5be81a456ab9023b86b6c14d8",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-final-lint",
+      "command": [
+        "make",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 30.0,
+      "log": "main-t9-final-lint.log",
+      "log_sha256": "fcd069bcef955eca710bda265b9e02aab2fa32569372858e4d2fa92d3422da0b",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-final-report",
+      "command": [
+        "pnpm",
+        "verify:report"
+      ],
+      "exit_code": 0,
+      "seconds": 62.1,
+      "log": "main-t9-final-report.log",
+      "log_sha256": "07837adacee13168f48c66bb32ef6afabdd023dc1c18ccd75156f2302026da5e",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-final-governance",
+      "command": [
+        "pnpm",
+        "verify:governance"
+      ],
+      "exit_code": 0,
+      "seconds": 0.3,
+      "log": "main-t9-final-governance.log",
+      "log_sha256": "34f1719225ef942f5b88f563a37758718079e6f9c2b06d14957e1110e0457527",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-final-cloud-browser-2",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/browser.py"
+      ],
+      "exit_code": 0,
+      "seconds": 62.5,
+      "log": "main-t9-final-cloud-browser-2.log",
+      "log_sha256": "0f772cee905bff6c7783c3b83c78c2a7c8a328b5190af80965d01e0587f38254",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-end-fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.9,
+      "log": "main-t9-end-fmt.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-end-frontend",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 0,
+      "seconds": 3.1,
+      "log": "main-t9-end-frontend.log",
+      "log_sha256": "c205923659ce0b77fee6b72981e2956f5e5fb9cc4c79a32a28340ce1c9b5b165",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-end-format",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all"
+      ],
+      "exit_code": 0,
+      "seconds": 1.0,
+      "log": "main-t9-end-format.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-determinism",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/determinism.py"
+      ],
+      "exit_code": 0,
+      "seconds": 44.3,
+      "log": "main-t9-determinism.log",
+      "log_sha256": "5581e29de3ab914c7eac6aa9d3b16d3e972cf52b7d39a98c1c6f14266c76120f",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-last-format",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.9,
+      "log": "main-t9-last-format.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-final-build-2",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "eplyx-server",
+        "-p",
+        "eplyx-engine"
+      ],
+      "exit_code": 0,
+      "seconds": 12.1,
+      "log": "main-t9-final-build-2.log",
+      "log_sha256": "299f6be9b6a98f1a5f6d02d0e4f80fa507bbdc84d79b2571b564169d2cddee75",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-end-lint",
+      "command": [
+        "make",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 24.9,
+      "log": "main-t9-end-lint.log",
+      "log_sha256": "248e68167d98e9e02a4f01c85501a22dfb97422989ddc4bac0a11905a1602f08",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-end-fmt-check",
+      "command": [
+        "make",
+        "fmt-check"
+      ],
+      "exit_code": 0,
+      "seconds": 1.8,
+      "log": "main-t9-end-fmt-check.log",
+      "log_sha256": "5fe89ac47bee0b52b9d98e316b135a2ae04aed42641a7f4ab48dc7614d0c8889",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-end-cloud-projections",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "cloud_api",
+        "--test",
+        "hosted_observation"
+      ],
+      "exit_code": 0,
+      "seconds": 38.6,
+      "log": "main-t9-end-cloud-projections.log",
+      "log_sha256": "ccd38e3bdbfc50cf55e4c76f6cbca1d56aab260c7fefcb49454856090c5b75c7",
+      "rust_test_totals": {
+        "passed": 15,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-end-cloud-browser",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/browser-suite.py",
+        "playwright.cloud.config.js"
+      ],
+      "exit_code": 0,
+      "seconds": 65.5,
+      "log": "main-t9-end-cloud-browser.log",
+      "log_sha256": "276be35641cda545c732f22dd8e13e9d050ef998467a2a164ff707c648f3f19f",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-end-dashboard-browser",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/browser-suite.py",
+        "playwright.dashboard.config.js"
+      ],
+      "exit_code": 0,
+      "seconds": 10.6,
+      "log": "main-t9-end-dashboard-browser.log",
+      "log_sha256": "d2c10b1000de994ef5a09a1738368282fa6d946c31f828942911788b5f5eaf7c",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-view-edge-frontend",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 0,
+      "seconds": 3.1,
+      "log": "main-t9-view-edge-frontend.log",
+      "log_sha256": "363717028d6a77e54f67fa88cda70a399a797af4f0fa434858b7e6f5df8889fb",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-end-privacy",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-engine",
+        "cloud::privacy"
+      ],
+      "exit_code": 0,
+      "seconds": 121.7,
+      "log": "main-t9-end-privacy.log",
+      "log_sha256": "705c016a1ae4d3b45883f5caedae5de8a3c01aaa1dc6cde75ec3ff9dd93cb964",
+      "rust_test_totals": {
+        "passed": 4,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 1181
+      }
+    },
+    {
+      "label": "main-t9-image-source-context",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/source-context.py"
+      ],
+      "exit_code": 0,
+      "seconds": 17.4,
+      "log": "main-t9-image-source-context.log",
+      "log_sha256": "e43d1ca4a6a18b92221f33f2c250b2e55ef3b8d8657d1203c2ea51615f35f8d0",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-focus-frontend",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 0,
+      "seconds": 3.1,
+      "log": "main-t9-focus-frontend.log",
+      "log_sha256": "b82cb15b179c9f08b17919984620c99954aff4c72112273d26593ef35cdbd55c",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-focus-build",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "eplyx-server",
+        "-p",
+        "eplyx-engine"
+      ],
+      "exit_code": 0,
+      "seconds": 9.0,
+      "log": "main-t9-focus-build.log",
+      "log_sha256": "b2654fd50c214571c5c8d6dd4e113e8c2c17c8d1e40d9767e7746f1bfcfbb65b",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-portable-diagnostic",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "hosted_analysis",
+        "migration_queues_without_active_bundle_and_runs_reference_under_both_policies",
+        "--",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "seconds": 10.3,
+      "log": "main-t9-portable-diagnostic.log",
+      "log_sha256": "378237dc7a546a2a81d6e10588563535220e5a095e73ee56539bcd4f4a803537",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered out": 3
+      }
+    },
+    {
+      "label": "main-t9-full-cloud-test",
+      "command": [
+        "make",
+        "test"
+      ],
+      "exit_code": 2,
+      "seconds": 1262.8,
+      "log": "main-t9-full-cloud-test.log",
+      "log_sha256": "32070f678a71ab16a59f66c083da63ee5386b66754f51e72fab71ace75b2e533",
+      "rust_test_totals": {
+        "passed": 1336,
+        "failed": 3,
+        "ignored": 2,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-portable-test-format",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all"
+      ],
+      "exit_code": 0,
+      "seconds": 0.9,
+      "log": "main-t9-portable-test-format.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-final-assets-build",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "eplyx-server",
+        "-p",
+        "eplyx-engine"
+      ],
+      "exit_code": 0,
+      "seconds": 4.3,
+      "log": "main-t9-final-assets-build.log",
+      "log_sha256": "330e7f12bd0566b500ad394af37820896a41c8f52de753570c59d80d715fff24",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-portable-tests-2",
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "eplyx-server",
+        "--test",
+        "hosted_analysis",
+        "--",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "seconds": 137.5,
+      "log": "main-t9-portable-tests-2.log",
+      "log_sha256": "610441fb014b59a97ff7fa24fa73897ed54b290bb907c81db45497742ec5c186",
+      "rust_test_totals": {
+        "passed": 5,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-focus-cloud-browser",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/browser-suite.py",
+        "playwright.cloud.config.js"
+      ],
+      "exit_code": 0,
+      "seconds": 71.3,
+      "log": "main-t9-focus-cloud-browser.log",
+      "log_sha256": "e40317dfc23895e84a72d9a0003cc1226d637facdbb7bd7867b52a4d960939e3",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-portable-lint",
+      "command": [
+        "cargo",
+        "clippy",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 27.5,
+      "log": "main-t9-portable-lint.log",
+      "log_sha256": "ab0043b1c26c251fc35883ba8cf23bbd31fcad266084c23f30ef494cf08b31d2",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-pnpm-version",
+      "command": [
+        "pnpm",
+        "--version"
+      ],
+      "exit_code": 0,
+      "seconds": 0.3,
+      "log": "main-t9-pnpm-version.log",
+      "log_sha256": "03bf5462a26a62e7e428e1a09abe73a34acffb44888a89cf32733b59b2ac02f8",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-final-format-check",
+      "command": [
+        "make",
+        "fmt-check"
+      ],
+      "exit_code": 0,
+      "seconds": 1.9,
+      "log": "main-t9-final-format-check.log",
+      "log_sha256": "5fe89ac47bee0b52b9d98e316b135a2ae04aed42641a7f4ab48dc7614d0c8889",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-no-fail-fast-cloud",
+      "command": [
+        "cargo",
+        "test",
+        "--no-fail-fast"
+      ],
+      "exit_code": 0,
+      "seconds": 1241.3,
+      "log": "main-t9-no-fail-fast-cloud.log",
+      "log_sha256": "e8f51e0ffb25824ae105d658b7ea0827598fe0bd36aa55d1781da97162d50e0d",
+      "rust_test_totals": {
+        "passed": 1325,
+        "failed": 0,
+        "ignored": 2,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-catalogue-byte-frontend",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 0,
+      "seconds": 3.0,
+      "log": "main-t9-catalogue-byte-frontend.log",
+      "log_sha256": "97e46bccdb7c4bd2ae240942cf5c8fa59563b4f9651a324c07f120057cd8f3de",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-catalogue-operator",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/catalogue-operator.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.2,
+      "log": "main-t9-catalogue-operator.log",
+      "log_sha256": "f620f231b90fd0211e63a8cebd340490cc1f63363e5bf1ebc161e1b65692b041",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-current-fixture-audit",
+      "command": [
+        "python3",
+        "scripts/import-current-fixtures.py",
+        "--sta",
+        "$STA_SCRATCH"
+      ],
+      "exit_code": 0,
+      "seconds": 0.0,
+      "log": "main-t9-current-fixture-audit.log",
+      "log_sha256": "7dfc1792bc8ae3070f621fa759723f100a9f60fd8d62c38f6d7a86a2826f7b86",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-catalogue-fixture-audit",
+      "command": [
+        "python3",
+        "scripts/import-catalogue-fixtures.py",
+        "--sta",
+        "$STA_SCRATCH"
+      ],
+      "exit_code": 0,
+      "seconds": 0.0,
+      "log": "main-t9-catalogue-fixture-audit.log",
+      "log_sha256": "1e6ccff2d96097821d20684c5f5c58ef058a62a38a4a94a860f9e01758d12b1b",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-upgrade-overview-frontend",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 0,
+      "seconds": 2.9,
+      "log": "main-t9-upgrade-overview-frontend.log",
+      "log_sha256": "92bba1779ac5c4fbeb9b42eb74921b69daa3ee6f33954c250b35aa851f308581",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-upgrade-overview-build",
+      "command": [
+        "cargo",
+        "build",
+        "-p",
+        "eplyx-server",
+        "-p",
+        "eplyx-engine"
+      ],
+      "exit_code": 0,
+      "seconds": 8.5,
+      "log": "main-t9-upgrade-overview-build.log",
+      "log_sha256": "9db39d540b10da7b88b93d295a4238cae9180e714d61921fbcb0ee5b5bf0f169",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-upgrade-overview-cloud-browser",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/browser-suite.py",
+        "playwright.cloud.config.js"
+      ],
+      "exit_code": 0,
+      "seconds": 62.6,
+      "log": "main-t9-upgrade-overview-cloud-browser.log",
+      "log_sha256": "629e3fecf6fba7e99e3e35a665470264e1ef79b8d0b589fe44c775c6de457270",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "filtered out": 0
+      }
+    },
+    {
+      "label": "main-t9-full-cloud-test-2",
+      "command": [
+        "make",
+        "test"
+      ],
+      "exit_code": 0,
+      "seconds": 1222.0,
+      "log": "main-t9-full-cloud-test-2.log",
+      "log_sha256": "3e2f126ee25c0acf2b5455fabdfdb7864a9d3276d7d00652afd7246adcfcdf1a",
+      "rust_test_totals": {
+        "passed": 1376,
+        "failed": 0,
+        "ignored": 2,
+        "filtered out": 0
+      }
+    }
+  ],
+  "source_audit": {
+    "source_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+    "source_files": 1633,
+    "mismatches": [],
+    "source_git_clean": true
+  },
+  "delta_audit": {
+    "new_files": 69,
+    "modified_files": 37,
+    "new_bytes": 703093,
+    "new_fixture_files": [
+      {
+        "path": "fixtures/catalogue/.gitignore",
+        "bytes": 24
+      },
+      {
+        "path": "fixtures/catalogue/README.md",
+        "bytes": 437
+      },
+      {
+        "path": "fixtures/catalogue/provenance.json",
+        "bytes": 797
+      },
+      {
+        "path": "fixtures/current/.gitignore",
+        "bytes": 6
+      },
+      {
+        "path": "fixtures/current/README.md",
+        "bytes": 439
+      },
+      {
+        "path": "fixtures/current/provenance.json",
+        "bytes": 1147
+      }
+    ],
+    "new_fixture_bytes": 2850,
+    "new_sbf_files": [],
+    "scan_matches": [
+      {
+        "path": "engine/src/cloud/privacy.rs",
+        "line": 9,
+        "classification": "privacy detection marker or deliberately fabricated rejection-test input; no actual machine path or credential"
+      },
+      {
+        "path": "engine/src/cloud/privacy.rs",
+        "line": 12,
+        "classification": "privacy detection marker or deliberately fabricated rejection-test input; no actual machine path or credential"
+      },
+      {
+        "path": "engine/src/cloud/privacy.rs",
+        "line": 13,
+        "classification": "privacy detection marker or deliberately fabricated rejection-test input; no actual machine path or credential"
+      },
+      {
+        "path": "engine/src/cloud/privacy.rs",
+        "line": 122,
+        "classification": "privacy detection marker or deliberately fabricated rejection-test input; no actual machine path or credential"
+      },
+      {
+        "path": "engine/tests/cloud_contract.rs",
+        "line": 132,
+        "classification": "privacy detection marker or deliberately fabricated rejection-test input; no actual machine path or credential"
+      },
+      {
+        "path": "engine/tests/migration_dashboard.rs",
+        "line": 185,
+        "classification": "privacy detection marker or deliberately fabricated rejection-test input; no actual machine path or credential"
+      },
+      {
+        "path": "engine/tests/migration_dashboard.rs",
+        "line": 186,
+        "classification": "privacy detection marker or deliberately fabricated rejection-test input; no actual machine path or credential"
+      }
+    ]
+  },
+  "browser_tests": {
+    "cloud_and_current": 15,
+    "local_dashboard": 17
+  },
+  "not_run": [
+    {
+      "check": "seven source live-provider browser cases",
+      "reason": "owner explicitly prohibited live-provider checks"
+    },
+    {
+      "check": "Docker image build",
+      "reason": "Docker executable unavailable; reduced source-context compilation and portable staged-worker execution passed"
+    },
+    {
+      "check": "release packaging",
+      "reason": "optional phase requires separate owner decision; not requested"
+    },
+    {
+      "check": "live-cluster signing, submission, simulation; deployment; push",
+      "reason": "outside authorized scope"
+    }
+  ],
+  "notes": [
+    "All required final checks passed. Commands and scratch log hashes retain failed attempts separately from successful retries; execution totals include repeats and are not unique test counts.",
+    "Full make test initially failed because its new portable-input test supplied a captured-program artifact to the unchanged bundled-program minimal recipe. The server correctly refused it. The corrected test restores that reference and separately tests exact pinned-capture execution, missing/tampered captures and rejection of extra captures on bundled recipes.",
+    "The complete Rust passes and final targeted checks together cover the final source. Later frontend-only corrections were verified by rendered-view tests, rebuilt browser assets and the full hosted browser suite. Final privacy and hosted projection tests run after those specific corrections.",
+    "Build/check retries corrected module wiring, JSON macro expansion, projection-kind selection and staged limits. Browser retries corrected stale selectors/labels and mock exact-integer copying. No T0 analytical expectation was weakened.",
+    "MAIN durable recovery replaces STA Node restart-as-error; one-account Token Migration V1 replaces the archived fixed-ratio candidate. Exact-byte privacy rejects leaky errors instead of sanitizing evidence. These are explicit architecture/rule adaptations in the test map.",
+    "Synthetic program dependencies are retained in CAS for captured-program recipes. The reduced image source context contains no raw captures or SBF files and compiles the server; this is not a Linux Docker image execution test.",
+    "New fixture commits contain only six provenance/readme/ignore files (2850 bytes); raw current and catalogue captures stay exact and ignored. No new SBF or capture bytes enter Git.",
+    "The source audit verifies 1633 allowlisted pinned files without opening provider configuration. Seven scan hits are scanner signatures or fabricated privacy tests, not leaked personal paths or endpoints.",
+    "The saved-catalogue operator script preserves the original capture envelope bytes. A real-server direct import followed by the script is idempotent over every stored file; no live source was fetched.",
+    "Local and hosted browser state, passwords, tokens, screenshots and test databases are scratch data. Test logs are scratch records; their hashes do not promise durable storage. No live-provider access, real keys, live-cluster transaction, infrastructure provisioning, deployment or push occurred."
+  ]
+}

@@ -187,7 +187,7 @@ const LIFECYCLE = {
   running: ['Running', 'Replaying the candidate against the active validated corpus…', 'This takes as long as the corpus takes. There is no partial result to show.'],
 };
 
-function renderLifecycle(id, run, extras = {}) {
+function renderLifecycle(id, run, extras = {}, embedded = false) {
   const [label, title, stateNote] = LIFECYCLE[run.status] ?? LIFECYCLE.loading;
   // A run the server resumed after a restart is the same run: same id, same
   // change, same inputs. Saying so explains a second attempt without implying a
@@ -215,7 +215,7 @@ function renderLifecycle(id, run, extras = {}) {
             ${row('Candidate SHA', run.candidate_sha256)}
           </div>
         </section>
-      </div>`);
+      </div>`, embedded);
 }
 
 /**
@@ -226,7 +226,7 @@ function renderLifecycle(id, run, extras = {}) {
  * exit 2 that no verified execution was produced. An execution error is this
  * service failing to answer at all, and blames nothing about the candidate.
  */
-function renderIncomplete(id, run, extras = {}) {
+function renderIncomplete(id, run, extras = {}, embedded = false) {
   const view = analysisView({ run, report: null });
   return shell(id, `
       ${top(id, view, { exit: run.exit_code, gate: null })}
@@ -243,7 +243,7 @@ function renderIncomplete(id, run, extras = {}) {
             ${row('Candidate SHA', run.candidate_sha256)}
           </div>
         </section>
-      </div>`);
+      </div>`, embedded);
 }
 
 /** Polling stopped for a reason that is about this browser, not the run. */
@@ -259,7 +259,8 @@ function renderStalled(id, headline, note) {
       </div>`);
 }
 
-function shell(id, inner) {
+function shell(id, inner, embedded = false) {
+  if(embedded)return `<div class="inner-page report-page hosted-upgrade-report"><section class="report-shell">${inner}</section></div>`;
   return `<main id="main" class="inner-page report-page">${Header({ light: true })}
     <section class="report-shell">${inner}</section>
   </main>${Footer()}`;
@@ -295,7 +296,7 @@ function dimensions(view) {
  * The three records of what a run analysed disagree. There is no result to
  * show: a result about some other proposal is not a result about this one.
  */
-function renderIdentityConflict(id, live, resolution) {
+function renderIdentityConflict(id, live, resolution, embedded = false) {
   const view = analysisView({ run: live, resolution });
   return shell(id, `
       ${top(id, view, { exit: null, gate: null }).replace('No exit code', 'Identity mismatch')}
@@ -309,13 +310,13 @@ function renderIdentityConflict(id, live, resolution) {
             ${row('Candidate SHA', live.candidate_sha256)}
           </div>
         </section>
-      </div>`);
+      </div>`, embedded);
 }
 
-function renderReport(live, { demo, id, extras = {} }) {
+function renderReport(live, { demo, id, extras = {}, embedded = false }) {
   const report = live.canonical_report;
   const resolution = resolveChange(live, report, extras.spec);
-  if (resolution.conflicts.length) return renderIdentityConflict(id, live, resolution);
+  if (resolution.conflicts.length) return renderIdentityConflict(id, live, resolution, embedded);
   const view = analysisView({ run: live, report });
   const governance = governanceView({
     delivery: deliveryOf(extras.spec),
@@ -333,10 +334,10 @@ function renderReport(live, { demo, id, extras = {} }) {
         ${ChangeCard({ change: resolution.change, legacy: resolution.legacy, targetName: extras.projectName, spec: extras.spec, candidateSha: live.candidate_sha256 })}
         ${GovernanceSection(governance)}
         <div class="empty-result">The canonical report could not be retrieved for this run, so its findings are not shown here. Fetch <span class="mono">report.json</span> with the project token.</div>
-      </div>`);
+      </div>`, embedded);
   }
 
-  return `<main id="main" class="inner-page report-page">${Header({ light: true })}
+  return `${embedded?'<div class="inner-page report-page hosted-upgrade-report">':`<main id="main" class="inner-page report-page">${Header({ light: true })}`}
     <section class="report-shell">
       ${top(id, view, { exit: live.exit_code ?? view.gate.exitCode, gate: view.gate.passed, demo })}
       ${dimensions(view)}
@@ -378,7 +379,7 @@ function renderReport(live, { demo, id, extras = {} }) {
         </div>
       </div>
     </section>
-  </main>${Footer()}`;
+  ${embedded?'</div>':`</main>${Footer()}`}`;
 }
 
 /** An execution failure leads the page, above any economic card. */
@@ -675,3 +676,10 @@ const DEMO = {
     unmatched: []
   }
 };
+
+/** Shared P3/G1 report construction for the authenticated hosted dashboard. */
+export function HostedReport(live, extras = {}) {
+ if(!TERMINAL.includes(live.status))return renderLifecycle(live.run_id,live,extras,true);
+ if(!live.report_available)return renderIncomplete(live.run_id,live,extras,true);
+ return renderReport(live,{demo:false,id:live.run_id,extras,embedded:true});
+}

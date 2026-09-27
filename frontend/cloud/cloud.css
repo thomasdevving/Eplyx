@@ -1,0 +1,50 @@
+/* Hosted Eplyx workspace: additions to the local dashboard's stylesheet. */
+.synced-banner { margin: 0 28px 4px; padding: 9px 14px; border: 1px solid color-mix(in srgb, var(--violet-2) 35%, transparent); border-left-width: 4px; border-radius: 8px; background: color-mix(in srgb, var(--violet) 9%, transparent); color: var(--text-2); font-size: 12.5px; }
+.synced-banner strong { color: var(--ice); font-family: var(--display); }
+.synced-line { margin: 6px 0 0; color: var(--text-2); font-size: 12.5px; }
+.tag--synced { border-color: color-mix(in srgb, var(--violet-2) 50%, transparent); color: var(--blue-2); }
+.switcher select { width: 100%; min-height: 32px; margin: 4px 0; padding: 4px 8px; border: 1px solid var(--line-2); border-radius: 6px; background: var(--panel-2); color: var(--text); font: 600 13px var(--display); }
+.sidebar__signout { align-self: flex-start; }
+.release-health { margin-bottom: 16px; }
+.release-health .subhead { margin: 0 0 10px; }
+
+/* Cloud home, sign-in and device approval */
+.cloud { max-width: 1040px; margin: 0 auto; padding: 28px 20px 60px; }
+.cloud__top { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 28px; }
+.cloud__top .spacer { flex: 1; }
+.cloud__user { color: var(--muted); font-size: 12.5px; }
+.cloud h1 { font-size: 28px; margin-bottom: 8px; }
+.cloud .lead { max-width: 680px; color: var(--text-2); font-size: 15px; }
+.auth-card { max-width: 420px; margin: 40px auto; padding: 24px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+.auth-card h1 { font-size: 22px; }
+.form { display: grid; gap: 12px; margin-top: 16px; }
+.field { display: grid; gap: 4px; color: var(--muted); font-size: 12.5px; }
+.field input { min-height: 36px; padding: 6px 10px; border: 1px solid var(--line-2); border-radius: 6px; background: var(--bg-2); color: var(--text); font-size: 14px; }
+.field input:focus-visible { outline: 2px solid var(--blue-2); }
+.form-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; }
+.form-row .field { flex: 1; min-width: 180px; }
+.form-error { min-height: 1.4em; margin: 0; color: var(--crit); font-size: 12.5px; }
+.device-code { display: inline-block; margin: 8px 0; padding: 8px 14px; border: 1px dashed var(--line-2); border-radius: 8px; font: 600 26px/1 var(--mono); letter-spacing: .12em; color: var(--ice); }
+.device-outcome--approved { animation: deviceApprovalReveal 160ms var(--ease-out) both; }
+@keyframes deviceApprovalReveal { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .device-outcome--approved { animation-duration: 120ms; }
+}
+.workspace { margin-bottom: 20px; }
+.project-list { display: grid; gap: 8px; }
+.project-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px; background: rgba(0, 0, 0, .18); color: var(--text); }
+.project-row:hover { text-decoration: none; border-color: var(--line-2); }
+.project-row strong { flex: 1; font-family: var(--display); }
+.secret { display: block; margin: 10px 0; padding: 10px 12px; border: 1px solid rgba(240, 180, 60, .45); border-radius: 6px; background: rgba(240, 180, 60, .08); overflow-wrap: anywhere; }
+.limits--tight li { margin-bottom: 4px; }
+@media (max-width: 720px) {
+  .synced-banner { margin: 0 16px 4px; }
+  .cloud { padding: 20px 16px 48px; }
+}
+.workspace .form-row { margin-top: 12px; }
+.analysis-form { display:grid; gap:1rem; max-width:50rem; }
+.analysis-field { display:grid; gap:.45rem; min-width:0; }
+.analysis-field input,.analysis-field select { width:100%; min-width:0; padding:.75rem; border:1px solid var(--border,#40334f); border-radius:.5rem; color:inherit; background:#171020; font:inherit; }
+.analysis-form .button { justify-self:start; }
+.analysis-form [hidden] { display:none; }
+[data-analysis-status],[data-path-result] { margin-top:1rem; overflow-wrap:anywhere; }

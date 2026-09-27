@@ -38,6 +38,46 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
+    /// Sign in through a browser-approved device code.
+    Login {
+        #[arg(long)]
+        server: Option<String>,
+        #[arg(long)]
+        no_open: bool,
+    },
+    /// Revoke the CLI access token and remove its local credential entry.
+    Logout {
+        #[arg(long)]
+        server: Option<String>,
+    },
+    /// Link a local store to a private hosted project.
+    Link {
+        #[arg(long)]
+        server: Option<String>,
+        #[arg(long)]
+        project: Option<String>,
+        #[arg(long)]
+        workspace: Option<String>,
+        #[arg(long)]
+        create: Option<String>,
+        #[arg(long)]
+        unlink: bool,
+        #[arg(long)]
+        force: bool,
+    },
+    /// Upload exact, privacy-checked analytical artifacts. Never executes.
+    Sync {
+        #[arg(long, conflicts_with_all=["latest","run_id"])]
+        run: Option<String>,
+        #[arg(value_name = "RUN", conflicts_with = "latest")]
+        run_id: Option<String>,
+        #[arg(long)]
+        latest: bool,
+        #[arg(long)]
+        dry_run: bool,
+        #[arg(long)]
+        json: bool,
+    },
     /// Browse saved analytical records on loopback. Executes no analysis.
     Dashboard {
         #[arg(long)]
@@ -1290,6 +1330,52 @@ fn run() -> Result<ExitCode> {
         }
     };
     match cli.command {
+        Command::Login { server, no_open } => Ok(ExitCode::from(
+            eplyx_engine::cloud::commands::login(server.as_deref(), !no_open)?,
+        )),
+        Command::Logout { server } => Ok(ExitCode::from(eplyx_engine::cloud::commands::logout(
+            server.as_deref(),
+        )?)),
+        Command::Link {
+            server,
+            project,
+            workspace,
+            create,
+            unlink,
+            force,
+        } => {
+            let root = cloud_project_root(&cli.config)?;
+            Ok(ExitCode::from(eplyx_engine::cloud::commands::link(
+                &root.join(".eplyx"),
+                eplyx_engine::cloud::commands::LinkArgs {
+                    server: server.as_deref(),
+                    project: project.as_deref(),
+                    workspace: workspace.as_deref(),
+                    create: create.as_deref(),
+                    unlink,
+                    force,
+                },
+            )?))
+        }
+        Command::Sync {
+            run,
+            run_id,
+            latest,
+            dry_run,
+            json,
+        } => {
+            let root = cloud_project_root(&cli.config)?;
+            Ok(ExitCode::from(eplyx_engine::cloud::commands::sync(
+                &root,
+                &root.join(".eplyx"),
+                eplyx_engine::cloud::commands::SyncArgs {
+                    run: run.as_deref().or(run_id.as_deref()),
+                    latest,
+                    dry_run,
+                    json,
+                },
+            )?))
+        }
         Command::Dashboard { no_open, port } => cli_dashboard::execute(&cli.config, no_open, port),
         Command::Path { command } => cli_path::execute(cli_path::Request::Path(command)),
         Command::Observe { command } => cli_path::execute(cli_path::Request::Observe(command)),
@@ -2602,4 +2688,16 @@ fn corpus_select(args: CorpusSelectArgs) -> Result<ExitCode> {
         None => println!("{rendered}"),
     }
     Ok(ExitCode::SUCCESS)
+}
+
+fn cloud_project_root(config: &std::path::Path) -> Result<PathBuf> {
+    let absolute = if config.is_absolute() {
+        config.to_owned()
+    } else {
+        std::env::current_dir()?.join(config)
+    };
+    Ok(absolute
+        .parent()
+        .context("configuration has no project root")?
+        .canonicalize()?)
 }

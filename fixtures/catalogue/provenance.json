@@ -1,0 +1,18 @@
+{
+  "sta_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+  "current_version": "273ba7bc15259e60f4fc94070c2adc4dc41d35673aea0a28ac5c957fda944493",
+  "files": [
+    {
+      "source": "evidence/catalogue/273ba7bc15259e60f4fc94070c2adc4dc41d35673aea0a28ac5c957fda944493.json",
+      "file": "273ba7bc15259e60f4fc94070c2adc4dc41d35673aea0a28ac5c957fda944493.json",
+      "bytes": 156901,
+      "sha256": "7630417367b57f6e5247d52833e5473a0117996e1d1f3354bf550c946a09aa71"
+    },
+    {
+      "source": "evidence/catalogue/322f404988ee43a983148215286cd269ea59664a4ad6607388b265198f0bda1e.json",
+      "file": "322f404988ee43a983148215286cd269ea59664a4ad6607388b265198f0bda1e.json",
+      "bytes": 156901,
+      "sha256": "c2e942eacb885d51e7d7de95b17e8b2d2dd39127e4782119342a5c598f6b5767"
+    }
+  ]
+}

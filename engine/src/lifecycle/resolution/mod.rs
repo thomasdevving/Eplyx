@@ -1,6 +1,7 @@
 //! Generic path resolution: external mechanism discovery never grants execution proof.
 pub mod phase7;
 
+pub(crate) mod current;
 use crate::{
     lifecycle::frozen::selection::{canonical, digest, load},
     lifecycle::{

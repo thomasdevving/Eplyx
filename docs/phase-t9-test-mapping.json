@@ -1,0 +1,1880 @@
+{
+  "schema_version": 1,
+  "phase": "T9",
+  "source_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+  "reference": "examples/phase-t0-stock-transition-integration/sta-test-contract.json",
+  "notes": [
+    "Source assertions are frozen at T0. This is a migration map, not a pass report; actual commands and failures are in phase-t9-verification.json.",
+    "Node HTTP/queue implementations are retired. Typed rejection, immutable input binding, offline execution and current evidence rules are exercised at engine and Rust service boundaries; browser interactions use a real MAIN service, scratch Postgres and a loopback mock.",
+    "T8 maps dashboard suites; T9 additionally enables the combined migration-dashboard sync assertions in engine/tests/migration_dashboard.rs.",
+    "T4 maps coherence, authority, rebinding and observed-wave guarantees; those suites run again in the complete T9 verification."
+  ],
+  "tests": [
+    {
+      "source_path": "cloud/tests/api.rs",
+      "source_file_sha256": "e773af1f2495c2727981bdd09b23a186b4c0149038612548bd7aaa7a23cbe52d",
+      "source_test": "unauthenticated_and_forged_credentials_are_rejected",
+      "source_line": 18,
+      "source_test_sha256": "8e9bc029645e834f4474a72d4121baeedceabc40587c3f3c2c293e4f95402eb9",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/cloud_api.rs",
+        "server/tests/cloud_recovery.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "cloud/tests/api.rs",
+      "source_file_sha256": "e773af1f2495c2727981bdd09b23a186b4c0149038612548bd7aaa7a23cbe52d",
+      "source_test": "projects_are_private_to_their_workspace",
+      "source_line": 90,
+      "source_test_sha256": "acd60291059f2ba3baa0def03c373921f036f9557559edf87abcfb18e2596732",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/cloud_api.rs",
+        "server/tests/cloud_recovery.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "cloud/tests/api.rs",
+      "source_file_sha256": "e773af1f2495c2727981bdd09b23a186b4c0149038612548bd7aaa7a23cbe52d",
+      "source_test": "sync_is_idempotent_immutable_and_rejects_conflicts",
+      "source_line": 198,
+      "source_test_sha256": "0a1a978cf2e5749fa4172e111910e1f377f052ff73e119a82334d4a476af760e",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/cloud_api.rs",
+        "server/tests/cloud_recovery.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "cloud/tests/api.rs",
+      "source_file_sha256": "e773af1f2495c2727981bdd09b23a186b4c0149038612548bd7aaa7a23cbe52d",
+      "source_test": "invalid_leaky_and_oversized_documents_are_rejected",
+      "source_line": 275,
+      "source_test_sha256": "d341a4554579867ea43dcc1eec632e0b01d17f78725b85e5ccedf673e036cf9d",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/cloud_api.rs",
+        "server/tests/cloud_recovery.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "cloud/tests/api.rs",
+      "source_file_sha256": "e773af1f2495c2727981bdd09b23a186b4c0149038612548bd7aaa7a23cbe52d",
+      "source_test": "counterexamples_and_reproductions_require_their_synced_parents",
+      "source_line": 359,
+      "source_test_sha256": "b0d93157cdaad24de94c054b8aa9c56d096c315f45124a28382cffefde526a16",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/cloud_api.rs",
+        "server/tests/cloud_recovery.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "cloud/tests/api.rs",
+      "source_file_sha256": "e773af1f2495c2727981bdd09b23a186b4c0149038612548bd7aaa7a23cbe52d",
+      "source_test": "ci_tokens_can_only_sync_their_project",
+      "source_line": 491,
+      "source_test_sha256": "91c28086238b02efd7fa6a7fa8749096171a5b0ad992b9b63c99808fe242e39b",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/cloud_api.rs",
+        "server/tests/cloud_recovery.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "cloud/tests/api.rs",
+      "source_file_sha256": "e773af1f2495c2727981bdd09b23a186b4c0149038612548bd7aaa7a23cbe52d",
+      "source_test": "browser_sessions_are_same_origin_and_cannot_relink",
+      "source_line": 603,
+      "source_test_sha256": "807ca4e4adc9d5ac815eca9e8bea244f79c029caeda64e3203cb9cf0c68d687c",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/cloud_api.rs",
+        "server/tests/cloud_recovery.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "cloud/tests/api.rs",
+      "source_file_sha256": "e773af1f2495c2727981bdd09b23a186b4c0149038612548bd7aaa7a23cbe52d",
+      "source_test": "device_flow_is_approved_in_the_browser_and_single_use",
+      "source_line": 686,
+      "source_test_sha256": "4a008fc7db46a16c9b2e497b7bb63afe9302a3bb955ffd68f1375b74ff75385c",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/cloud_api.rs",
+        "server/tests/cloud_recovery.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "cloud/tests/api.rs",
+      "source_file_sha256": "e773af1f2495c2727981bdd09b23a186b4c0149038612548bd7aaa7a23cbe52d",
+      "source_test": "hosted_views_equal_the_local_dashboard_engine_views",
+      "source_line": 801,
+      "source_test_sha256": "54b92945c1ae03fe674fcf2ed0d59ee2a170d370ac56e0318ab81afe4fdb1237",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/cloud_api.rs",
+        "server/tests/cloud_recovery.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "cloud/tests/api.rs",
+      "source_file_sha256": "e773af1f2495c2727981bdd09b23a186b4c0149038612548bd7aaa7a23cbe52d",
+      "source_test": "a_single_demo_project_is_read_only_and_others_stay_private",
+      "source_line": 884,
+      "source_test_sha256": "3c2286a6d36ffb0a932dcaa0a1757d869621756abc0bf40ca6484f4bb96bc9e7",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/cloud_api.rs",
+        "server/tests/cloud_recovery.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "cloud/tests/cli.rs",
+      "source_file_sha256": "78f9161e32179b32d867bb2597c0e2e5ef766d2672f1a4a92c9d34b940d303f4",
+      "source_test": "login_link_sync_retry_and_logout_keep_local_workflows_intact",
+      "source_line": 131,
+      "source_test_sha256": "3a7f72938084acff41421dc1a91ec3d3700fc39a7d063e884e50a0faf3ea0813",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/cloud_cli.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "cloud/tests/cli.rs",
+      "source_file_sha256": "78f9161e32179b32d867bb2597c0e2e5ef766d2672f1a4a92c9d34b940d303f4",
+      "source_test": "ci_environment_sync_joins_local_history_and_conflicts_are_refused",
+      "source_line": 322,
+      "source_test_sha256": "00beb20081874c0382a71f42fb8f54064b78cb20a3b1c527363c4e8738da532e",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/cloud_cli.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/src/cloud/credentials.rs",
+      "source_file_sha256": "3d4b3dfdfe3948bfb25272081f5d9edbda14ad319f9060e0cc1422ce6cc45403",
+      "source_test": "server_urls_are_origins_and_https_only_off_loopback",
+      "source_line": 173,
+      "source_test_sha256": "d0860672851a410d7c9ed090a7ed0d9a95739c906e6a81aed7b72e8432b3cd62",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/src/cloud/credentials.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/src/cloud/credentials.rs",
+      "source_file_sha256": "3d4b3dfdfe3948bfb25272081f5d9edbda14ad319f9060e0cc1422ce6cc45403",
+      "source_test": "credentials_are_owner_only",
+      "source_line": 196,
+      "source_test_sha256": "fec42f233d585e882b0e09cc5d15f11f48b60d25a3592b680e592db003ee5099",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/src/cloud/credentials.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/src/cloud/local.rs",
+      "source_file_sha256": "dbf68f43c277c595bae3b200e241a4a14f480b7eef3b749ab69ed4e74ad1e066",
+      "source_test": "link_preserves_local_identity_and_round_trips",
+      "source_line": 215,
+      "source_test_sha256": "4961f5a2c0f70c019edfb22134335ad646daa9bcb80aec4181a3ee91a10a57bb",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/src/cloud/local.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/src/cloud/privacy.rs",
+      "source_file_sha256": "14f4bc414437b7d85f1c1061e8811180625f176ece2faa4b5c1a65908b418a72",
+      "source_test": "urls_paths_and_credentials_are_refused",
+      "source_line": 111,
+      "source_test_sha256": "2dc5690693738258e87ccf9b245b1ea095f2df42f141f72a2df7c48839eb4f15",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/src/cloud/privacy.rs",
+        "engine/tests/cloud_contract.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/src/cloud/privacy.rs",
+      "source_file_sha256": "14f4bc414437b7d85f1c1061e8811180625f176ece2faa4b5c1a65908b418a72",
+      "source_test": "known_secret_values_are_refused",
+      "source_line": 137,
+      "source_test_sha256": "6b3b8b05e2b68713f74acd7250187eefa6edd9e6151366004a0ffb90d9024e4a",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/src/cloud/privacy.rs",
+        "engine/tests/cloud_contract.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/src/cloud/privacy.rs",
+      "source_file_sha256": "14f4bc414437b7d85f1c1061e8811180625f176ece2faa4b5c1a65908b418a72",
+      "source_test": "free_text_loses_roots_and_urls",
+      "source_line": 144,
+      "source_test_sha256": "d72c1e64fb501360abed8177306c876d75ae8f17408213cb7944142d79c1ff3a",
+      "disposition": "architecture_adaptation",
+      "targets": [
+        "engine/src/cloud/privacy.rs",
+        "engine/tests/cloud_contract.rs"
+      ],
+      "notes": "User exact-byte rule takes precedence: leaky text is refused before upload, never sanitized into different evidence. MAIN privacy/contract tests assert refusal."
+    },
+    {
+      "source_path": "engine/tests/cloud_contract.rs",
+      "source_file_sha256": "5cb5c52306d9fe99b174076c676f5cd5fa89d34d8a3787b579410906ae97941f",
+      "source_test": "every_fixture_run_builds_a_verified_document_with_stable_identity",
+      "source_line": 66,
+      "source_test_sha256": "6b7541b19c0c40e487f89d8fff80dd6db33800e573ea3d1bdd1cb7f6e8d58db0",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/cloud_contract.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/tests/cloud_contract.rs",
+      "source_file_sha256": "5cb5c52306d9fe99b174076c676f5cd5fa89d34d8a3787b579410906ae97941f",
+      "source_test": "candidate_binary_and_captures_contribute_sizes_only",
+      "source_line": 85,
+      "source_test_sha256": "8f17093cc991a5867188020082593f83e67e3f5833bcbaebe95d3e49f8e9374f",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/cloud_contract.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/tests/cloud_contract.rs",
+      "source_file_sha256": "5cb5c52306d9fe99b174076c676f5cd5fa89d34d8a3787b579410906ae97941f",
+      "source_test": "tampered_or_leaky_run_documents_are_refused",
+      "source_line": 115,
+      "source_test_sha256": "25f7a090d0ae8e3f28725b1a674aa13744a87d61b2840b109bf8c84a58fc3c6d",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/cloud_contract.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/tests/cloud_contract.rs",
+      "source_file_sha256": "5cb5c52306d9fe99b174076c676f5cd5fa89d34d8a3787b579410906ae97941f",
+      "source_test": "counterexamples_and_reproductions_bind_to_their_exact_parents",
+      "source_line": 177,
+      "source_test_sha256": "b74da184e4d1ec03bdc1adf2f9e7a2c8c453a6a02e2b71db07fc7cfa4e0a90e7",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/cloud_contract.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/tests/cloud_contract.rs",
+      "source_file_sha256": "5cb5c52306d9fe99b174076c676f5cd5fa89d34d8a3787b579410906ae97941f",
+      "source_test": "reproduction_errors_lose_local_paths_before_upload",
+      "source_line": 224,
+      "source_test_sha256": "f2f04ea7b4269fc01f5178e67087c552b7903a51222d6301b4d5c6eff1c6e862",
+      "disposition": "architecture_adaptation",
+      "targets": [
+        "engine/tests/cloud_contract.rs"
+      ],
+      "notes": "User exact-byte rule takes precedence: leaky text is refused before upload, never sanitized into different evidence. MAIN privacy/contract tests assert refusal."
+    },
+    {
+      "source_path": "engine/tests/cloud_contract.rs",
+      "source_file_sha256": "5cb5c52306d9fe99b174076c676f5cd5fa89d34d8a3787b579410906ae97941f",
+      "source_test": "local_dashboard_shows_link_and_sync_state_read_only",
+      "source_line": 269,
+      "source_test_sha256": "7a79a37e5fb8835049fba359d066b62aae43162efcc02f4a714afb881a97cc72",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/cloud_contract.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/tests/cloud_contract.rs",
+      "source_file_sha256": "5cb5c52306d9fe99b174076c676f5cd5fa89d34d8a3787b579410906ae97941f",
+      "source_test": "cli_sync_fails_clearly_without_link_or_login_and_dry_run_sends_nothing",
+      "source_line": 358,
+      "source_test_sha256": "e440a9b3d12feb2a2913b17341351acec101b7a02626ea7acf76e999164e8bc8",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/cloud_contract.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/tests/current_preflight.rs",
+      "source_file_sha256": "7ff5c6fa493f1fe678d7754b143bac16162ec61b992d3a896f72a95896951a35",
+      "source_test": "proposed_provenance_never_becomes_issuer_assertion",
+      "source_line": 105,
+      "source_test_sha256": "07eb6a22b1471c0a937344647926932449a6bc2d2bc0f09d7004a4a107668e38",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/tests/current_preflight.rs",
+      "source_file_sha256": "7ff5c6fa493f1fe678d7754b143bac16162ec61b992d3a896f72a95896951a35",
+      "source_test": "unchanged_current_bytes_at_all_proposed_times",
+      "source_line": 116,
+      "source_test_sha256": "6fec627f21c53d7182c0a7f56b35b11eff4dc069b6db9a05b7a4f23fa79555a9",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/tests/current_preflight.rs",
+      "source_file_sha256": "7ff5c6fa493f1fe678d7754b143bac16162ec61b992d3a896f72a95896951a35",
+      "source_test": "saved_phase7_proof_cannot_enter_missing_current_checks",
+      "source_line": 148,
+      "source_test_sha256": "3037f343b458acf2268dc3a241bdb5f8099d82c4007c98a55c40b3662f20bd6d",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/tests/current_preflight.rs",
+      "source_file_sha256": "7ff5c6fa493f1fe678d7754b143bac16162ec61b992d3a896f72a95896951a35",
+      "source_test": "current_mobility_never_proves_official_conversion",
+      "source_line": 165,
+      "source_test_sha256": "9aeff2432c73cb42a5a7d666a0b4c42c204dfefb17b85567facd00f5ddc04cde",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/tests/current_preflight.rs",
+      "source_file_sha256": "7ff5c6fa493f1fe678d7754b143bac16162ec61b992d3a896f72a95896951a35",
+      "source_test": "refreshed_run_and_other_entity_reject_existing_proof",
+      "source_line": 187,
+      "source_test_sha256": "7d2c5e31629bd9c6a44436ede67d73620e05990c642506c5854b5c7e7738cb99",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/tests/current_preflight.rs",
+      "source_file_sha256": "7ff5c6fa493f1fe678d7754b143bac16162ec61b992d3a896f72a95896951a35",
+      "source_test": "scenario_digest_cannot_reuse_readiness",
+      "source_line": 216,
+      "source_test_sha256": "6573163db02640873d799d5f824199bfde59e88e0f393acc6bc68e6e39fb72af",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/tests/current_preflight.rs",
+      "source_file_sha256": "7ff5c6fa493f1fe678d7754b143bac16162ec61b992d3a896f72a95896951a35",
+      "source_test": "entity_ready_never_becomes_population_ready",
+      "source_line": 237,
+      "source_test_sha256": "8215f8d4eb87c62a2688b09571bb6ea42da303eaade04166ca9ab42c06c34fe4",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/tests/current_preflight.rs",
+      "source_file_sha256": "7ff5c6fa493f1fe678d7754b143bac16162ec61b992d3a896f72a95896951a35",
+      "source_test": "successor_is_independently_inspected_and_never_issuer_verified",
+      "source_line": 251,
+      "source_test_sha256": "11575a660e3ba29fd5316b6e1b0f99cbcbcde4b24afff6fbc037ff4fd94a37f9",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/tests/current_preflight.rs",
+      "source_file_sha256": "7ff5c6fa493f1fe678d7754b143bac16162ec61b992d3a896f72a95896951a35",
+      "source_test": "request_boundaries_and_offline_canonical_replay",
+      "source_line": 288,
+      "source_test_sha256": "4e04e25dcf9d585b3d2754cf6630027548145784622cc980b8cec89fcff573fd",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/tests/current_preflight.rs",
+      "source_file_sha256": "7ff5c6fa493f1fe678d7754b143bac16162ec61b992d3a896f72a95896951a35",
+      "source_test": "unavailable_current_check_is_indeterminate_not_failure_or_readiness",
+      "source_line": 304,
+      "source_test_sha256": "28ff79af8a4f986427ebfdcccb5c1c5dd8a39d440fc5e3371ed43e7b20d4395b",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/tests/current_preflight.rs",
+      "source_file_sha256": "7ff5c6fa493f1fe678d7754b143bac16162ec61b992d3a896f72a95896951a35",
+      "source_test": "another_decoded_account_in_same_wallet_does_not_inherit_proof",
+      "source_line": 331,
+      "source_test_sha256": "962a2fb11525b4d63fb50ab8ee8dfae88d3c691a7ae90ae2f2cb31f34e0e32f3",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/tests/current_preflight.rs",
+      "source_file_sha256": "7ff5c6fa493f1fe678d7754b143bac16162ec61b992d3a896f72a95896951a35",
+      "source_test": "exact_failed_market_is_not_globally_blocked_by_entity_preset",
+      "source_line": 371,
+      "source_test_sha256": "6539a02e726f93431f9034e1d38ee1c2b9164c0468481d623fef9b2ddd1adbdb",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/tests/current_preflight.rs",
+      "source_file_sha256": "7ff5c6fa493f1fe678d7754b143bac16162ec61b992d3a896f72a95896951a35",
+      "source_test": "no_supplied_plan_leaves_conversion_untested_and_full_transition_incomplete",
+      "source_line": 471,
+      "source_test_sha256": "81fb3be0bea6d22a4b222d8d00a8729ca949e6aeb94967407808bfbb07603ec0",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/tests/current_preflight.rs",
+      "source_file_sha256": "7ff5c6fa493f1fe678d7754b143bac16162ec61b992d3a896f72a95896951a35",
+      "source_test": "a_proven_candidate_plan_makes_candidate_readiness_ready_and_nothing_else",
+      "source_line": 491,
+      "source_test_sha256": "18ea4abbf7b1b261f8e95abbadd33a89a071ad5742fc0450bf94a00c038c241c",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/tests/current_preflight.rs",
+      "source_file_sha256": "7ff5c6fa493f1fe678d7754b143bac16162ec61b992d3a896f72a95896951a35",
+      "source_test": "candidate_evidence_is_exact_to_its_run_plan_program_and_result",
+      "source_line": 526,
+      "source_test_sha256": "316032b979865f417c18765dad39daab6a022169ca2fc960395c7534dc98d417",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/tests/current_preflight.rs",
+      "source_file_sha256": "7ff5c6fa493f1fe678d7754b143bac16162ec61b992d3a896f72a95896951a35",
+      "source_test": "a_refreshed_run_cannot_inherit_candidate_conversion_proof",
+      "source_line": 580,
+      "source_test_sha256": "6951ff150a583a9bbea5f8343e0c326ab2a68f2f266ca7ed32f5e55dcde90988",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "engine/tests/current_preflight.rs",
+      "source_file_sha256": "7ff5c6fa493f1fe678d7754b143bac16162ec61b992d3a896f72a95896951a35",
+      "source_test": "mobility_evidence_can_never_stand_in_for_a_candidate_conversion",
+      "source_line": 595,
+      "source_test_sha256": "4462ad8471403b88cd0e0dc82263f936959f35fcdab83aa0e99b4e1836db83a4",
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "frontend/tests/access.test.mjs",
+      "source_file_sha256": "118361a7166f6d9cd5612a0ae96c545ec667a8b7f9a1605d914e790ac6232e7c",
+      "source_test": "without a configured code every analysis route behaves as before",
+      "source_line": 34,
+      "source_test_sha256": null,
+      "disposition": "architecture_adaptation",
+      "targets": [
+        "server/tests/cloud_api.rs",
+        "server/src/cloud/auth.rs"
+      ],
+      "notes": "The shared plaintext Node access-code gate is replaced by private workspace identity, same-origin browser sessions, authorization and authentication throttling. Anonymous access to private analyses is intentionally not preserved."
+    },
+    {
+      "source_path": "frontend/tests/access.test.mjs",
+      "source_file_sha256": "118361a7166f6d9cd5612a0ae96c545ec667a8b7f9a1605d914e790ac6232e7c",
+      "source_test": "a configured code gates analyses until this session unlocks it",
+      "source_line": 44,
+      "source_test_sha256": null,
+      "disposition": "architecture_adaptation",
+      "targets": [
+        "server/tests/cloud_api.rs",
+        "server/src/cloud/auth.rs"
+      ],
+      "notes": "The shared plaintext Node access-code gate is replaced by private workspace identity, same-origin browser sessions, authorization and authentication throttling. Anonymous access to private analyses is intentionally not preserved."
+    },
+    {
+      "source_path": "frontend/tests/access.test.mjs",
+      "source_file_sha256": "118361a7166f6d9cd5612a0ae96c545ec667a8b7f9a1605d914e790ac6232e7c",
+      "source_test": "repeated wrong codes are rate limited per client",
+      "source_line": 73,
+      "source_test_sha256": null,
+      "disposition": "architecture_adaptation",
+      "targets": [
+        "server/tests/cloud_api.rs",
+        "server/src/cloud/auth.rs"
+      ],
+      "notes": "The shared plaintext Node access-code gate is replaced by private workspace identity, same-origin browser sessions, authorization and authentication throttling. Anonymous access to private analyses is intentionally not preserved."
+    },
+    {
+      "source_path": "frontend/tests/access.test.mjs",
+      "source_file_sha256": "118361a7166f6d9cd5612a0ae96c545ec667a8b7f9a1605d914e790ac6232e7c",
+      "source_test": "cross-origin requests are refused before any access check",
+      "source_line": 84,
+      "source_test_sha256": null,
+      "disposition": "architecture_adaptation",
+      "targets": [
+        "server/tests/cloud_api.rs",
+        "server/src/cloud/auth.rs"
+      ],
+      "notes": "The shared plaintext Node access-code gate is replaced by private workspace identity, same-origin browser sessions, authorization and authentication throttling. Anonymous access to private analyses is intentionally not preserved."
+    },
+    {
+      "source_path": "frontend/tests/analysis.spec.js",
+      "source_file_sha256": "61f9960c722ebe2f23ea3487629efd2197c28a66514826d4b89f45d417c1eaba",
+      "source_test": "new visitor uses overview, existing hero toggle preserves selections without requests, CTA focuses real form",
+      "source_line": 8,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "frontend/tests/cloud/analysis.spec.js",
+        "server/tests/hosted_analysis.rs",
+        "server/tests/hosted_observation.rs",
+        "engine/tests/lifecycle_consequence.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/analysis.spec.js",
+      "source_file_sha256": "61f9960c722ebe2f23ea3487629efd2197c28a66514826d4b89f45d417c1eaba",
+      "source_test": "real frontend runs four engine cases with typed outcomes, reload and mode changes never authorize rollout",
+      "source_line": 24,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "frontend/tests/cloud/analysis.spec.js",
+        "server/tests/hosted_analysis.rs",
+        "server/tests/hosted_observation.rs",
+        "engine/tests/lifecycle_consequence.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/analysis.spec.js",
+      "source_file_sha256": "61f9960c722ebe2f23ea3487629efd2197c28a66514826d4b89f45d417c1eaba",
+      "source_test": "unavailable backend and saved reports are labeled honestly",
+      "source_line": 59,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "frontend/tests/cloud/analysis.spec.js",
+        "server/tests/hosted_analysis.rs",
+        "server/tests/hosted_observation.rs",
+        "engine/tests/lifecycle_consequence.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/analysis.spec.js",
+      "source_file_sha256": "61f9960c722ebe2f23ea3487629efd2197c28a66514826d4b89f45d417c1eaba",
+      "source_test": "API rejects unsupported caller commands, evidence and oversized bodies",
+      "source_line": 64,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "frontend/tests/cloud/analysis.spec.js",
+        "server/tests/hosted_analysis.rs",
+        "server/tests/hosted_observation.rs",
+        "engine/tests/lifecycle_consequence.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/browser.spec.js",
+      "source_file_sha256": "45ca934cad9ed2685adc2a9dfe0971321286fbf605f7f07e927fa6f036104735",
+      "source_test": "desktop renders the sculpture, scoped stones, navigation and exact evidence",
+      "source_line": 6,
+      "source_test_sha256": null,
+      "disposition": "archived_public_site",
+      "targets": [
+        "frontend/tests/dashboard/analytical.spec.js",
+        "frontend/src/transitions.js"
+      ],
+      "notes": "The owner explicitly retained MAIN public pages and excluded STA landing/showcase/presentation. MAIN route, detail mode, evidence and report tests cover the retained product surfaces; STA public copy is archived."
+    },
+    {
+      "source_path": "frontend/tests/browser.spec.js",
+      "source_file_sha256": "45ca934cad9ed2685adc2a9dfe0971321286fbf605f7f07e927fa6f036104735",
+      "source_test": "mobile navigation, page width and keyboard path details work",
+      "source_line": 65,
+      "source_test_sha256": null,
+      "disposition": "archived_public_site",
+      "targets": [
+        "frontend/tests/dashboard/analytical.spec.js",
+        "frontend/src/transitions.js"
+      ],
+      "notes": "The owner explicitly retained MAIN public pages and excluded STA landing/showcase/presentation. MAIN route, detail mode, evidence and report tests cover the retained product surfaces; STA public copy is archived."
+    },
+    {
+      "source_path": "frontend/tests/browser.spec.js",
+      "source_file_sha256": "45ca934cad9ed2685adc2a9dfe0971321286fbf605f7f07e927fa6f036104735",
+      "source_test": "headline and controls respect visibility and motion preference",
+      "source_line": 90,
+      "source_test_sha256": null,
+      "disposition": "archived_public_site",
+      "targets": [
+        "frontend/tests/dashboard/analytical.spec.js",
+        "frontend/src/transitions.js"
+      ],
+      "notes": "The owner explicitly retained MAIN public pages and excluded STA landing/showcase/presentation. MAIN route, detail mode, evidence and report tests cover the retained product surfaces; STA public copy is archived."
+    },
+    {
+      "source_path": "frontend/tests/browser.spec.js",
+      "source_file_sha256": "45ca934cad9ed2685adc2a9dfe0971321286fbf605f7f07e927fa6f036104735",
+      "source_test": "a fresh completed analysis fades once while restored results stay still",
+      "source_line": 123,
+      "source_test_sha256": null,
+      "disposition": "archived_public_site",
+      "targets": [
+        "frontend/tests/dashboard/analytical.spec.js",
+        "frontend/src/transitions.js"
+      ],
+      "notes": "The owner explicitly retained MAIN public pages and excluded STA landing/showcase/presentation. MAIN route, detail mode, evidence and report tests cover the retained product surfaces; STA public copy is archived."
+    },
+    {
+      "source_path": "frontend/tests/browser.spec.js",
+      "source_file_sha256": "45ca934cad9ed2685adc2a9dfe0971321286fbf605f7f07e927fa6f036104735",
+      "source_test": "CLI approval fades only after an approval action",
+      "source_line": 158,
+      "source_test_sha256": null,
+      "disposition": "archived_public_site",
+      "targets": [
+        "frontend/tests/dashboard/analytical.spec.js",
+        "frontend/src/transitions.js"
+      ],
+      "notes": "The owner explicitly retained MAIN public pages and excluded STA landing/showcase/presentation. MAIN route, detail mode, evidence and report tests cover the retained product surfaces; STA public copy is archived."
+    },
+    {
+      "source_path": "frontend/tests/browser.spec.js",
+      "source_file_sha256": "45ca934cad9ed2685adc2a9dfe0971321286fbf605f7f07e927fa6f036104735",
+      "source_test": "downloads are the exact pinned source bytes and missing assets fail clearly",
+      "source_line": 192,
+      "source_test_sha256": null,
+      "disposition": "archived_public_site",
+      "targets": [
+        "frontend/tests/dashboard/analytical.spec.js",
+        "frontend/src/transitions.js"
+      ],
+      "notes": "The owner explicitly retained MAIN public pages and excluded STA landing/showcase/presentation. MAIN route, detail mode, evidence and report tests cover the retained product surfaces; STA public copy is archived."
+    },
+    {
+      "source_path": "frontend/tests/browser.spec.js",
+      "source_file_sha256": "45ca934cad9ed2685adc2a9dfe0971321286fbf605f7f07e927fa6f036104735",
+      "source_test": "WebGL failure retains the original vector mark",
+      "source_line": 205,
+      "source_test_sha256": null,
+      "disposition": "archived_public_site",
+      "targets": [
+        "frontend/tests/dashboard/analytical.spec.js",
+        "frontend/src/transitions.js"
+      ],
+      "notes": "The owner explicitly retained MAIN public pages and excluded STA landing/showcase/presentation. MAIN route, detail mode, evidence and report tests cover the retained product surfaces; STA public copy is archived."
+    },
+    {
+      "source_path": "frontend/tests/browser.spec.js",
+      "source_file_sha256": "45ca934cad9ed2685adc2a9dfe0971321286fbf605f7f07e927fa6f036104735",
+      "source_test": "tablet layout keeps navigation and content within the viewport",
+      "source_line": 223,
+      "source_test_sha256": null,
+      "disposition": "archived_public_site",
+      "targets": [
+        "frontend/tests/dashboard/analytical.spec.js",
+        "frontend/src/transitions.js"
+      ],
+      "notes": "The owner explicitly retained MAIN public pages and excluded STA landing/showcase/presentation. MAIN route, detail mode, evidence and report tests cover the retained product surfaces; STA public copy is archived."
+    },
+    {
+      "source_path": "frontend/tests/browser.spec.js",
+      "source_file_sha256": "45ca934cad9ed2685adc2a9dfe0971321286fbf605f7f07e927fa6f036104735",
+      "source_test": "published rollout cases keep assertions, policy and local guard observations separate",
+      "source_line": 237,
+      "source_test_sha256": null,
+      "disposition": "archived_public_site",
+      "targets": [
+        "frontend/tests/dashboard/analytical.spec.js",
+        "frontend/src/transitions.js"
+      ],
+      "notes": "The owner explicitly retained MAIN public pages and excluded STA landing/showcase/presentation. MAIN route, detail mode, evidence and report tests cover the retained product surfaces; STA public copy is archived."
+    },
+    {
+      "source_path": "frontend/tests/catalogue.test.mjs",
+      "source_file_sha256": "615b095024c2be1d7e76805c612bdd7e2502f36061e868df3e7ea36abdd5b468",
+      "source_test": "retained first-party flight JSON provides nine real canonical mint identities, no script execution",
+      "source_line": 17,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_catalogue.rs",
+        "server/tests/hosted_observation.rs",
+        "frontend/tests/catalogue-import.test.mjs",
+        "frontend/cloud.test.mjs",
+        "frontend/tests/cloud/analysis.spec.js"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/catalogue.test.mjs",
+      "source_file_sha256": "615b095024c2be1d7e76805c612bdd7e2502f36061e868df3e7ea36abdd5b468",
+      "source_test": "parser rejects missing and malformed fields; duplicate names remain distinct; conflicting assertions retained",
+      "source_line": 23,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_catalogue.rs",
+        "server/tests/hosted_observation.rs",
+        "frontend/tests/catalogue-import.test.mjs",
+        "frontend/cloud.test.mjs",
+        "frontend/tests/cloud/analysis.spec.js"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/catalogue.test.mjs",
+      "source_file_sha256": "615b095024c2be1d7e76805c612bdd7e2502f36061e868df3e7ea36abdd5b468",
+      "source_test": "catalogue binding rejects a reviewed version combined with another mint",
+      "source_line": 29,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_catalogue.rs",
+        "server/tests/hosted_observation.rs",
+        "frontend/tests/catalogue-import.test.mjs",
+        "frontend/cloud.test.mjs",
+        "frontend/tests/cloud/analysis.spec.js"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/catalogue.test.mjs",
+      "source_file_sha256": "615b095024c2be1d7e76805c612bdd7e2502f36061e868df3e7ea36abdd5b468",
+      "source_test": "real Solana parser accepts custom and off-curve addresses and rejects malformed addresses",
+      "source_line": 34,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_catalogue.rs",
+        "server/tests/hosted_observation.rs",
+        "frontend/tests/catalogue-import.test.mjs",
+        "frontend/cloud.test.mjs",
+        "frontend/tests/cloud/analysis.spec.js"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/catalogue.test.mjs",
+      "source_file_sha256": "615b095024c2be1d7e76805c612bdd7e2502f36061e868df3e7ea36abdd5b468",
+      "source_test": "same mint and immutable source reference flow into structured arguments, captures, result, refresh and restart",
+      "source_line": 38,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_catalogue.rs",
+        "server/tests/hosted_observation.rs",
+        "frontend/tests/catalogue-import.test.mjs",
+        "frontend/cloud.test.mjs",
+        "frontend/tests/cloud/analysis.spec.js"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/catalogue.test.mjs",
+      "source_file_sha256": "615b095024c2be1d7e76805c612bdd7e2502f36061e868df3e7ea36abdd5b468",
+      "source_test": "changed catalogue versions cannot rewrite earlier pinned references",
+      "source_line": 44,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_catalogue.rs",
+        "server/tests/hosted_observation.rs",
+        "frontend/tests/catalogue-import.test.mjs",
+        "frontend/cloud.test.mjs",
+        "frontend/tests/cloud/analysis.spec.js"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/catalogue.test.mjs",
+      "source_file_sha256": "615b095024c2be1d7e76805c612bdd7e2502f36061e868df3e7ea36abdd5b468",
+      "source_test": "cross-asset results, source mismatches, proof and lifecycle inheritance are rejected",
+      "source_line": 49,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_catalogue.rs",
+        "server/tests/hosted_observation.rs",
+        "frontend/tests/catalogue-import.test.mjs",
+        "frontend/cloud.test.mjs",
+        "frontend/tests/cloud/analysis.spec.js"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/catalogue.test.mjs",
+      "source_file_sha256": "615b095024c2be1d7e76805c612bdd7e2502f36061e868df3e7ea36abdd5b468",
+      "source_test": "consumer rendering escapes names and metadata and retains exact amounts without external fetch markup",
+      "source_line": 53,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_catalogue.rs",
+        "server/tests/hosted_observation.rs",
+        "frontend/tests/catalogue-import.test.mjs",
+        "frontend/cloud.test.mjs",
+        "frontend/tests/cloud/analysis.spec.js"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/catalogue.test.mjs",
+      "source_file_sha256": "615b095024c2be1d7e76805c612bdd7e2502f36061e868df3e7ea36abdd5b468",
+      "source_test": "failed catalogue import is retained and a dated saved catalogue remains usable",
+      "source_line": 57,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_catalogue.rs",
+        "server/tests/hosted_observation.rs",
+        "frontend/tests/catalogue-import.test.mjs",
+        "frontend/cloud.test.mjs",
+        "frontend/tests/cloud/analysis.spec.js"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/cloud/cloud.spec.js",
+      "source_file_sha256": "8abb2db3780187ed6b1b14d2c357394aacfe52431b213c2c0733f162cea6a2bf",
+      "source_test": "signed-out visitors see that sync is optional and cannot read projects",
+      "source_line": 28,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "frontend/tests/cloud/cloud.spec.js"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "frontend/tests/cloud/cloud.spec.js",
+      "source_file_sha256": "8abb2db3780187ed6b1b14d2c357394aacfe52431b213c2c0733f162cea6a2bf",
+      "source_test": "workspace lists the synced project and the overview says it shows synced results",
+      "source_line": 36,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "frontend/tests/cloud/cloud.spec.js"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "frontend/tests/cloud/cloud.spec.js",
+      "source_file_sha256": "8abb2db3780187ed6b1b14d2c357394aacfe52431b213c2c0733f162cea6a2bf",
+      "source_test": "hosted comparison keeps the search-equivalence warning",
+      "source_line": 48,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "frontend/tests/cloud/cloud.spec.js"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "frontend/tests/cloud/cloud.spec.js",
+      "source_file_sha256": "8abb2db3780187ed6b1b14d2c357394aacfe52431b213c2c0733f162cea6a2bf",
+      "source_test": "counterexample detail offers a local reproduce command and synced history",
+      "source_line": 56,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "frontend/tests/cloud/cloud.spec.js"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "frontend/tests/cloud/cloud.spec.js",
+      "source_file_sha256": "8abb2db3780187ed6b1b14d2c357394aacfe52431b213c2c0733f162cea6a2bf",
+      "source_test": "run evidence stays local and settings mint a CI token once",
+      "source_line": 65,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "frontend/tests/cloud/cloud.spec.js"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "frontend/tests/cloud/cloud.spec.js",
+      "source_file_sha256": "8abb2db3780187ed6b1b14d2c357394aacfe52431b213c2c0733f162cea6a2bf",
+      "source_test": "device approval requires the browser session and the matching code",
+      "source_line": 79,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "frontend/tests/cloud/cloud.spec.js"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "frontend/tests/cloud/cloud.spec.js",
+      "source_file_sha256": "8abb2db3780187ed6b1b14d2c357394aacfe52431b213c2c0733f162cea6a2bf",
+      "source_test": "narrow screens keep the hosted workspace inside the viewport",
+      "source_line": 92,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "frontend/tests/cloud/cloud.spec.js"
+      ],
+      "notes": "Source test contract ported onto MAIN identities, routes, glossary and exact-byte representation. The approved T0 exit/identity adaptations apply."
+    },
+    {
+      "source_path": "frontend/tests/conversion.spec.js",
+      "source_file_sha256": "4970efada8536b12afe2fc703bf8aad2514f9dd0e9e24f844fe7ef93058b069e",
+      "source_test": "operator-supplied candidate conversion through browser, service and VM",
+      "source_line": 71,
+      "source_test_sha256": null,
+      "disposition": "architecture_adaptation",
+      "targets": [
+        "frontend/tests/cloud/analysis.spec.js"
+      ],
+      "notes": "The fixed-ratio product stays archived. The same typed-input, bound-parent, actual-execution and non-official-proof requirements are tested against MAIN one-account Token Migration V1, including exact selected amounts and source drift."
+    },
+    {
+      "source_path": "frontend/tests/conversion.test.mjs",
+      "source_file_sha256": "1fc1a71244a712991a2fefee8e06ad92b65b9b2782b166e179d14fa3f90614e6",
+      "source_test": "the browser can choose bounded terms only, never code, accounts, paths, endpoints or a status",
+      "source_line": 16,
+      "source_test_sha256": null,
+      "disposition": "architecture_adaptation",
+      "targets": [
+        "engine/tests/migration_account.rs",
+        "engine/tests/current_preflight.rs",
+        "server/tests/hosted_observation.rs"
+      ],
+      "notes": "The fixed-ratio product stays archived. The same typed-input, bound-parent, actual-execution and non-official-proof requirements are tested against MAIN one-account Token Migration V1, including exact selected amounts and source drift."
+    },
+    {
+      "source_path": "frontend/tests/conversion.test.mjs",
+      "source_file_sha256": "1fc1a71244a712991a2fefee8e06ad92b65b9b2782b166e179d14fa3f90614e6",
+      "source_test": "the server fixes the mechanism, provenance and design of every plan",
+      "source_line": 26,
+      "source_test_sha256": null,
+      "disposition": "architecture_adaptation",
+      "targets": [
+        "engine/tests/migration_account.rs",
+        "engine/tests/current_preflight.rs",
+        "server/tests/hosted_observation.rs"
+      ],
+      "notes": "The fixed-ratio product stays archived. The same typed-input, bound-parent, actual-execution and non-official-proof requirements are tested against MAIN one-account Token Migration V1, including exact selected amounts and source drift."
+    },
+    {
+      "source_path": "frontend/tests/conversion.test.mjs",
+      "source_file_sha256": "1fc1a71244a712991a2fefee8e06ad92b65b9b2782b166e179d14fa3f90614e6",
+      "source_test": "a candidate conversion plan really executes, reconciles and stays separate from an official transition",
+      "source_line": 77,
+      "source_test_sha256": null,
+      "disposition": "architecture_adaptation",
+      "targets": [
+        "engine/tests/migration_account.rs",
+        "engine/tests/current_preflight.rs",
+        "server/tests/hosted_observation.rs"
+      ],
+      "notes": "The fixed-ratio product stays archived. The same typed-input, bound-parent, actual-execution and non-official-proof requirements are tested against MAIN one-account Token Migration V1, including exact selected amounts and source drift."
+    },
+    {
+      "source_path": "frontend/tests/conversion.test.mjs",
+      "source_file_sha256": "1fc1a71244a712991a2fefee8e06ad92b65b9b2782b166e179d14fa3f90614e6",
+      "source_test": "a candidate plan is rejected across sessions, parents and identities before any acquisition",
+      "source_line": 128,
+      "source_test_sha256": null,
+      "disposition": "architecture_adaptation",
+      "targets": [
+        "engine/tests/migration_account.rs",
+        "engine/tests/current_preflight.rs",
+        "server/tests/hosted_observation.rs"
+      ],
+      "notes": "The fixed-ratio product stays archived. The same typed-input, bound-parent, actual-execution and non-official-proof requirements are tested against MAIN one-account Token Migration V1, including exact selected amounts and source drift."
+    },
+    {
+      "source_path": "frontend/tests/current.spec.js",
+      "source_file_sha256": "44a89dc5782ff8dbb5a92ab22dca952170fd266939455482b546ab6b1f7883d1",
+      "source_test": "failed new submission cannot display a prior result as its outcome",
+      "source_line": 6,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "frontend/tests/cloud/analysis.spec.js",
+        "server/tests/hosted_observation.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/execution.spec.js",
+      "source_file_sha256": "8e40e00d5d37bae13b25ac8eef4d3a7446ff2407b1532b5a89b63a69ab598564",
+      "source_test": "current transfer browser/service/engine and offline VM replay using deterministic reconstructed RPC",
+      "source_line": 31,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "frontend/tests/cloud/analysis.spec.js",
+        "engine/tests/current_execution.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/execution.spec.js",
+      "source_file_sha256": "8e40e00d5d37bae13b25ac8eef4d3a7446ff2407b1532b5a89b63a69ab598564",
+      "source_test": "live current transfer and refreshed transfer with exact offline VM replay",
+      "source_line": 36,
+      "source_test_sha256": null,
+      "disposition": "intentionally_not_run",
+      "targets": [
+        "frontend/tests/cloud/analysis.spec.js",
+        "engine/tests/current_execution.rs"
+      ],
+      "notes": "Requires a live provider. The owner prohibited live-provider checks; reconstructed/mock coverage remains separate."
+    },
+    {
+      "source_path": "frontend/tests/execution.spec.js",
+      "source_file_sha256": "8e40e00d5d37bae13b25ac8eef4d3a7446ff2407b1532b5a89b63a69ab598564",
+      "source_test": "live bounded current market discovery and exact offline replay",
+      "source_line": 40,
+      "source_test_sha256": null,
+      "disposition": "intentionally_not_run",
+      "targets": [
+        "frontend/tests/cloud/analysis.spec.js",
+        "engine/tests/current_execution.rs"
+      ],
+      "notes": "Requires a live provider. The owner prohibited live-provider checks; reconstructed/mock coverage remains separate."
+    },
+    {
+      "source_path": "frontend/tests/execution.spec.js",
+      "source_file_sha256": "8e40e00d5d37bae13b25ac8eef4d3a7446ff2407b1532b5a89b63a69ab598564",
+      "source_test": "live second catalogue asset transfers freshly captured OPENAI holdings",
+      "source_line": 49,
+      "source_test_sha256": null,
+      "disposition": "intentionally_not_run",
+      "targets": [
+        "frontend/tests/cloud/analysis.spec.js",
+        "engine/tests/current_execution.rs"
+      ],
+      "notes": "Requires a live provider. The owner prohibited live-provider checks; reconstructed/mock coverage remains separate."
+    },
+    {
+      "source_path": "frontend/tests/multiasset.spec.js",
+      "source_file_sha256": "8e82ad5d2852558abc9e071c41f8dc7c0372955e3dbf36c45329b942b17a092e",
+      "source_test": "catalogue search, custom draft, unavailable source and original toggle preserve selection without submission",
+      "source_line": 9,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "frontend/tests/cloud/analysis.spec.js",
+        "server/tests/hosted_catalogue.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/multiasset.spec.js",
+      "source_file_sha256": "8e82ad5d2852558abc9e071c41f8dc7c0372955e3dbf36c45329b942b17a092e",
+      "source_test": "live generic browser-to-engine inspection: two catalogue stocks, custom mint, nonmint, invalid input, refresh and offline replay",
+      "source_line": 22,
+      "source_test_sha256": null,
+      "disposition": "intentionally_not_run",
+      "targets": [
+        "frontend/tests/cloud/analysis.spec.js",
+        "server/tests/hosted_catalogue.rs"
+      ],
+      "notes": "Requires a live provider. The owner prohibited live-provider checks; reconstructed/mock coverage remains separate."
+    },
+    {
+      "source_path": "frontend/tests/preflight.spec.js",
+      "source_file_sha256": "472a57b0c963a2f215cf6b45a127858579a84296084d3801cb14f0ae2bfeca89",
+      "source_test": "prospective current SPACEX pre-flight reconstructed browser/service/VM",
+      "source_line": 47,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "frontend/tests/cloud/analysis.spec.js",
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/preflight.spec.js",
+      "source_file_sha256": "472a57b0c963a2f215cf6b45a127858579a84296084d3801cb14f0ae2bfeca89",
+      "source_test": "live prospective current SPACEX pre-flight with new checks and refresh isolation",
+      "source_line": 53,
+      "source_test_sha256": null,
+      "disposition": "intentionally_not_run",
+      "targets": [
+        "frontend/tests/cloud/analysis.spec.js",
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Requires a live provider. The owner prohibited live-provider checks; reconstructed/mock coverage remains separate."
+    },
+    {
+      "source_path": "frontend/tests/preflight.spec.js",
+      "source_file_sha256": "472a57b0c963a2f215cf6b45a127858579a84296084d3801cb14f0ae2bfeca89",
+      "source_test": "live prospective OPENAI uses distinct hypothetical successor and fresh Transfer",
+      "source_line": 55,
+      "source_test_sha256": null,
+      "disposition": "intentionally_not_run",
+      "targets": [
+        "frontend/tests/cloud/analysis.spec.js",
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Requires a live provider. The owner prohibited live-provider checks; reconstructed/mock coverage remains separate."
+    },
+    {
+      "source_path": "frontend/tests/preflight.test.mjs",
+      "source_file_sha256": "920980112e7d25eee53ca929b21b668ba0b4ce52a8aaf02c56f6704a281f4b9a",
+      "source_test": "prospective structured fields reject proof, programs, paths and unsupported semantics",
+      "source_line": 13,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/current_preflight.rs",
+        "server/tests/hosted_observation.rs",
+        "server/tests/hosted_analysis.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/preflight.test.mjs",
+      "source_file_sha256": "920980112e7d25eee53ca929b21b668ba0b4ce52a8aaf02c56f6704a281f4b9a",
+      "source_test": "real offline preflight persists bound scenario and survives restart with zero acquisition",
+      "source_line": 18,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/current_preflight.rs",
+        "server/tests/hosted_observation.rs",
+        "server/tests/hosted_analysis.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/preflight.test.mjs",
+      "source_file_sha256": "920980112e7d25eee53ca929b21b668ba0b4ce52a8aaf02c56f6704a281f4b9a",
+      "source_test": "preflight rejects cross-session, refresh, focus and invalid time before acquisition",
+      "source_line": 21,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/current_preflight.rs",
+        "server/tests/hosted_observation.rs",
+        "server/tests/hosted_analysis.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/service.test.mjs",
+      "source_file_sha256": "3512ed468214c3bd644893b34650cb6d34481b1f082ab61395396bd94df98dd0",
+      "source_test": "allowlist rejects commands paths addresses endpoints unknown assets and decorative selections",
+      "source_line": 15,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_analysis.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/process.rs",
+        "engine/tests/current_observations.rs",
+        "engine/tests/current_wallet.rs",
+        "engine/tests/current_execution.rs",
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/service.test.mjs",
+      "source_file_sha256": "3512ed468214c3bd644893b34650cb6d34481b1f082ab61395396bd94df98dd0",
+      "source_test": "completed policy outcomes 0 3 4 5 stay separate from processing errors",
+      "source_line": 21,
+      "source_test_sha256": null,
+      "disposition": "architecture_adaptation",
+      "targets": [
+        "server/tests/hosted_analysis.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/process.rs",
+        "engine/tests/current_observations.rs",
+        "engine/tests/current_wallet.rs",
+        "engine/tests/current_execution.rs",
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "MAIN T0 mapping uses known violations 1, strict evidence gaps 5, invalid input 2; completion is not policy authorization. Hosted lifecycle/current completion does not invent a deployment gate."
+    },
+    {
+      "source_path": "frontend/tests/service.test.mjs",
+      "source_file_sha256": "3512ed468214c3bd644893b34650cb6d34481b1f082ab61395396bd94df98dd0",
+      "source_test": "duplicate concurrent requests invoke one job and serialized jobs stay bounded",
+      "source_line": 27,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_analysis.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/process.rs",
+        "engine/tests/current_observations.rs",
+        "engine/tests/current_wallet.rs",
+        "engine/tests/current_execution.rs",
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/service.test.mjs",
+      "source_file_sha256": "3512ed468214c3bd644893b34650cb6d34481b1f082ab61395396bd94df98dd0",
+      "source_test": "timeout verification failure and missing executable yield honest errors without result",
+      "source_line": 32,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_analysis.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/process.rs",
+        "engine/tests/current_observations.rs",
+        "engine/tests/current_wallet.rs",
+        "engine/tests/current_execution.rs",
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/service.test.mjs",
+      "source_file_sha256": "3512ed468214c3bd644893b34650cb6d34481b1f082ab61395396bd94df98dd0",
+      "source_test": "actual child timeout and nonzero verification exit are errors",
+      "source_line": 36,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_analysis.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/process.rs",
+        "engine/tests/current_observations.rs",
+        "engine/tests/current_wallet.rs",
+        "engine/tests/current_execution.rs",
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/service.test.mjs",
+      "source_file_sha256": "3512ed468214c3bd644893b34650cb6d34481b1f082ab61395396bd94df98dd0",
+      "source_test": "restart makes interrupted job an error rather than silently restarting it",
+      "source_line": 40,
+      "source_test_sha256": null,
+      "disposition": "architecture_adaptation",
+      "targets": [
+        "server/tests/hosted_analysis.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/process.rs",
+        "engine/tests/current_observations.rs",
+        "engine/tests/current_wallet.rs",
+        "engine/tests/current_execution.rs",
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "MAIN P2 durable runs requeue bounded attempts over identical retained inputs; completed projections finalize without re-execution. Recovery is explicitly tested. STA Node restart-as-error is not retained."
+    },
+    {
+      "source_path": "frontend/tests/service.test.mjs",
+      "source_file_sha256": "3512ed468214c3bd644893b34650cb6d34481b1f082ab61395396bd94df98dd0",
+      "source_test": "integer formatting never loses large values or rounds small positives to zero",
+      "source_line": 43,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_analysis.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/process.rs",
+        "engine/tests/current_observations.rs",
+        "engine/tests/current_wallet.rs",
+        "engine/tests/current_execution.rs",
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/service.test.mjs",
+      "source_file_sha256": "3512ed468214c3bd644893b34650cb6d34481b1f082ab61395396bd94df98dd0",
+      "source_test": "real engine rejects a tampered isolated trust binding server-side",
+      "source_line": 46,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_analysis.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/process.rs",
+        "engine/tests/current_observations.rs",
+        "engine/tests/current_wallet.rs",
+        "engine/tests/current_execution.rs",
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/service.test.mjs",
+      "source_file_sha256": "3512ed468214c3bd644893b34650cb6d34481b1f082ab61395396bd94df98dd0",
+      "source_test": "all scenario dates and example scopes select the actual engine view without changing proof",
+      "source_line": 55,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_analysis.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/process.rs",
+        "engine/tests/current_observations.rs",
+        "engine/tests/current_wallet.rs",
+        "engine/tests/current_execution.rs",
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/service.test.mjs",
+      "source_file_sha256": "3512ed468214c3bd644893b34650cb6d34481b1f082ab61395396bd94df98dd0",
+      "source_test": "current requests accept no saved scenario, endpoint, evidence, or filesystem scope",
+      "source_line": 66,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_analysis.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/process.rs",
+        "engine/tests/current_observations.rs",
+        "engine/tests/current_wallet.rs",
+        "engine/tests/current_execution.rs",
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/service.test.mjs",
+      "source_file_sha256": "3512ed468214c3bd644893b34650cb6d34481b1f082ab61395396bd94df98dd0",
+      "source_test": "new captures never accept historical statuses or readiness grants",
+      "source_line": 71,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_analysis.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/process.rs",
+        "engine/tests/current_observations.rs",
+        "engine/tests/current_wallet.rs",
+        "engine/tests/current_execution.rs",
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/service.test.mjs",
+      "source_file_sha256": "3512ed468214c3bd644893b34650cb6d34481b1f082ab61395396bd94df98dd0",
+      "source_test": "refresh invokes acquisition again and keeps scoped capture digests, sessions and prior run",
+      "source_line": 77,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_analysis.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/process.rs",
+        "engine/tests/current_observations.rs",
+        "engine/tests/current_wallet.rs",
+        "engine/tests/current_execution.rs",
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/service.test.mjs",
+      "source_file_sha256": "3512ed468214c3bd644893b34650cb6d34481b1f082ab61395396bd94df98dd0",
+      "source_test": "fresh acquisition failure never runs the historical engine or substitutes a saved result",
+      "source_line": 96,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_analysis.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/process.rs",
+        "engine/tests/current_observations.rs",
+        "engine/tests/current_wallet.rs",
+        "engine/tests/current_execution.rs",
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/service.test.mjs",
+      "source_file_sha256": "3512ed468214c3bd644893b34650cb6d34481b1f082ab61395396bd94df98dd0",
+      "source_test": "wallet scope requires exact public owner and rejects injected settings and historical proof",
+      "source_line": 101,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_analysis.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/process.rs",
+        "engine/tests/current_observations.rs",
+        "engine/tests/current_wallet.rs",
+        "engine/tests/current_execution.rs",
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/service.test.mjs",
+      "source_file_sha256": "3512ed468214c3bd644893b34650cb6d34481b1f082ab61395396bd94df98dd0",
+      "source_test": "decimal formatting preserves u8 mint precision without floating point",
+      "source_line": 111,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_analysis.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/process.rs",
+        "engine/tests/current_observations.rs",
+        "engine/tests/current_wallet.rs",
+        "engine/tests/current_execution.rs",
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/service.test.mjs",
+      "source_file_sha256": "3512ed468214c3bd644893b34650cb6d34481b1f082ab61395396bd94df98dd0",
+      "source_test": "current execution API rejects caller-supplied proof programs instructions and cross-session parent",
+      "source_line": 116,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_analysis.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/process.rs",
+        "engine/tests/current_observations.rs",
+        "engine/tests/current_wallet.rs",
+        "engine/tests/current_execution.rs",
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/service.test.mjs",
+      "source_file_sha256": "3512ed468214c3bd644893b34650cb6d34481b1f082ab61395396bd94df98dd0",
+      "source_test": "offline execution child receives no provider or unrelated secret environment",
+      "source_line": 126,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "server/tests/hosted_analysis.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/process.rs",
+        "engine/tests/current_observations.rs",
+        "engine/tests/current_wallet.rs",
+        "engine/tests/current_execution.rs",
+        "engine/tests/current_preflight.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/stress.test.mjs",
+      "source_file_sha256": "5ccd5fc6be4f7dc6c161373713e5e8c010ea448e9ec75b8a84362cdcbda63cdb",
+      "source_test": "a structurally sound bounded stress result is accepted",
+      "source_line": 66,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/migration_current.rs",
+        "engine/tests/migration_stress.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/stress.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/stress.test.mjs",
+      "source_file_sha256": "5ccd5fc6be4f7dc6c161373713e5e8c010ea448e9ec75b8a84362cdcbda63cdb",
+      "source_test": "resolved non-wallet control never grants a signer or conversion proof",
+      "source_line": 70,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/migration_current.rs",
+        "engine/tests/migration_stress.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/stress.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/stress.test.mjs",
+      "source_file_sha256": "5ccd5fc6be4f7dc6c161373713e5e8c010ea448e9ec75b8a84362cdcbda63cdb",
+      "source_test": "a bounded sample can never be reported as population readiness",
+      "source_line": 94,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/migration_current.rs",
+        "engine/tests/migration_stress.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/stress.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/stress.test.mjs",
+      "source_file_sha256": "5ccd5fc6be4f7dc6c161373713e5e8c010ea448e9ec75b8a84362cdcbda63cdb",
+      "source_test": "proven counts can never exceed what was actually executed or observed",
+      "source_line": 108,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/migration_current.rs",
+        "engine/tests/migration_stress.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/stress.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/stress.test.mjs",
+      "source_file_sha256": "5ccd5fc6be4f7dc6c161373713e5e8c010ea448e9ec75b8a84362cdcbda63cdb",
+      "source_test": "state-shape coverage is never reported as entity coverage",
+      "source_line": 117,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/migration_current.rs",
+        "engine/tests/migration_stress.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/stress.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/stress.test.mjs",
+      "source_file_sha256": "5ccd5fc6be4f7dc6c161373713e5e8c010ea448e9ec75b8a84362cdcbda63cdb",
+      "source_test": "every result stays bound to its exact frozen case",
+      "source_line": 125,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/migration_current.rs",
+        "engine/tests/migration_stress.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/stress.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/stress.test.mjs",
+      "source_file_sha256": "5ccd5fc6be4f7dc6c161373713e5e8c010ea448e9ec75b8a84362cdcbda63cdb",
+      "source_test": "no stress case may claim issuer binding, key possession, movement or an official transition",
+      "source_line": 134,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/migration_current.rs",
+        "engine/tests/migration_stress.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/stress.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/stress.test.mjs",
+      "source_file_sha256": "5ccd5fc6be4f7dc6c161373713e5e8c010ea448e9ec75b8a84362cdcbda63cdb",
+      "source_test": "a result must be bound to its population, frozen plan and candidate program",
+      "source_line": 146,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/migration_current.rs",
+        "engine/tests/migration_stress.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/stress.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/stress.test.mjs",
+      "source_file_sha256": "5ccd5fc6be4f7dc6c161373713e5e8c010ea448e9ec75b8a84362cdcbda63cdb",
+      "source_test": "a historical population can never back a current stress result",
+      "source_line": 158,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/migration_current.rs",
+        "engine/tests/migration_stress.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/stress.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/stress.test.mjs",
+      "source_file_sha256": "5ccd5fc6be4f7dc6c161373713e5e8c010ea448e9ec75b8a84362cdcbda63cdb",
+      "source_test": "unsupported and indeterminate stay distinct statuses and are never failure",
+      "source_line": 163,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/migration_current.rs",
+        "engine/tests/migration_stress.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/stress.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/stress.test.mjs",
+      "source_file_sha256": "5ccd5fc6be4f7dc6c161373713e5e8c010ea448e9ec75b8a84362cdcbda63cdb",
+      "source_test": "a nonzero engine exit code is never accepted as evidence",
+      "source_line": 184,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/migration_current.rs",
+        "engine/tests/migration_stress.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/stress.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/stress.test.mjs",
+      "source_file_sha256": "5ccd5fc6be4f7dc6c161373713e5e8c010ea448e9ec75b8a84362cdcbda63cdb",
+      "source_test": "stress-testing requires a completed candidate conversion owned by this session",
+      "source_line": 195,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/migration_current.rs",
+        "engine/tests/migration_stress.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/stress.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/stress.test.mjs",
+      "source_file_sha256": "5ccd5fc6be4f7dc6c161373713e5e8c010ea448e9ec75b8a84362cdcbda63cdb",
+      "source_test": "the browser may request a stress test and nothing else",
+      "source_line": 214,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/migration_current.rs",
+        "engine/tests/migration_stress.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/stress.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/stress.test.mjs",
+      "source_file_sha256": "5ccd5fc6be4f7dc6c161373713e5e8c010ea448e9ec75b8a84362cdcbda63cdb",
+      "source_test": "a stress run writes its own artifacts and never overwrites the conversion it came from",
+      "source_line": 251,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "engine/tests/migration_current.rs",
+        "engine/tests/migration_stress.rs",
+        "server/tests/hosted_observation.rs",
+        "server/src/hosted/stress.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/wallet.spec.js",
+      "source_file_sha256": "04835ce9c6e00ea2c31599624bcdd964cff8fd899779792d77cdc9867b9e8b04",
+      "source_test": "deterministic wallet browser/service/engine: multiple accounts, precision, focus, zero, errors, refresh and isolation",
+      "source_line": 19,
+      "source_test_sha256": null,
+      "disposition": "ported_or_rebuilt",
+      "targets": [
+        "frontend/tests/cloud/analysis.spec.js",
+        "engine/tests/current_wallet.rs"
+      ],
+      "notes": "Assertions move to MAIN engine/server/browser boundaries; the original source/test hashes remain authoritative. Target coverage is listed at suite level, not a claim of identical source code."
+    },
+    {
+      "source_path": "frontend/tests/wallet.spec.js",
+      "source_file_sha256": "04835ce9c6e00ea2c31599624bcdd964cff8fd899779792d77cdc9867b9e8b04",
+      "source_test": "live wallet browser acquisition with refresh, second asset, custom mint, zero target and offline replay",
+      "source_line": 60,
+      "source_test_sha256": null,
+      "disposition": "intentionally_not_run",
+      "targets": [
+        "frontend/tests/cloud/analysis.spec.js",
+        "engine/tests/current_wallet.rs"
+      ],
+      "notes": "Requires a live provider. The owner prohibited live-provider checks; reconstructed/mock coverage remains separate."
+    }
+  ],
+  "target_files": [
+    {
+      "path": "engine/src/cloud/credentials.rs",
+      "sha256": "7c87cc87ed136bb935ee173e85f5ffd6df83a2da1b7a535a7e64fa78792cb8de"
+    },
+    {
+      "path": "engine/src/cloud/local.rs",
+      "sha256": "5d63420c461ab6179c9040fb5661db3f2bb75e7f1f2122d9014d303992b654bc"
+    },
+    {
+      "path": "engine/src/cloud/privacy.rs",
+      "sha256": "f8ed57cc13ceedc1407de0ce9addc1d812b4b52bb2ac0a9049306fb614c54b24"
+    },
+    {
+      "path": "engine/tests/cloud_contract.rs",
+      "sha256": "3fc5388090e642b872d08c9bd3f5132f38180c8ef5ac8e66b520dda289e51f15"
+    },
+    {
+      "path": "engine/tests/current_execution.rs",
+      "sha256": "a5b84f013885a4353477a8289ef42034dcba1230de6d459ef2b942fb4c26a495"
+    },
+    {
+      "path": "engine/tests/current_observations.rs",
+      "sha256": "1f08e3fe9a800a0671e29866511648991790a14f1d085e0085d7ce5cd2358202"
+    },
+    {
+      "path": "engine/tests/current_preflight.rs",
+      "sha256": "69633e91f69e0337b72e2001f25d6b0960920187819ebdd3da6a4d68f57f9774"
+    },
+    {
+      "path": "engine/tests/current_wallet.rs",
+      "sha256": "425b5fad151daea260cfe3e7506b18b89c96f7f571e74a997bff543d91fcdb5c"
+    },
+    {
+      "path": "engine/tests/lifecycle_consequence.rs",
+      "sha256": "c3647c86a41661710c5e5b45ebe6972e078e73a5f24de920ea5c5e44cee3831e"
+    },
+    {
+      "path": "engine/tests/migration_account.rs",
+      "sha256": "f7cbb592ed0661f50e092c08a2e0c02322ee7501a71df92029f3ada5e26eed21"
+    },
+    {
+      "path": "engine/tests/migration_current.rs",
+      "sha256": "5498b48235a9735703d60c9e5a26fb3b5a791e440b3eb71ce2f5ff6619adc79b"
+    },
+    {
+      "path": "engine/tests/migration_stress.rs",
+      "sha256": "9a31edbd61d8f937393e1f0d8269ce25facd707f964d295b0f285ce44e7acc52"
+    },
+    {
+      "path": "frontend/cloud.test.mjs",
+      "sha256": "6b67236b13420d742c0b22539d4f0fb6993bff90099d1f20c0cf59c736fecd66"
+    },
+    {
+      "path": "frontend/src/transitions.js",
+      "sha256": "7866b4a003f3d571672081b43aa8c4c41412c8dfb23ef9124aa20080d9653452"
+    },
+    {
+      "path": "frontend/tests/catalogue-import.test.mjs",
+      "sha256": "ddad202b5e88afcd5fc53235ee9bdecb81f3660717130e8d0351fd5e7f3beb76"
+    },
+    {
+      "path": "frontend/tests/cloud/analysis.spec.js",
+      "sha256": "6c441bc9d7508d3cd0b227ccab25002c93465a42322449d2b8f0675a5a732562"
+    },
+    {
+      "path": "frontend/tests/cloud/cloud.spec.js",
+      "sha256": "431e9cea992ca280d1f95ce426ec80964fefa2061f21fc11be9438103d1ecfd5"
+    },
+    {
+      "path": "frontend/tests/dashboard/analytical.spec.js",
+      "sha256": "8ef9cdb1463fa68f169521b9e76583327da5c8bd6517cb88f902473223b61adb"
+    },
+    {
+      "path": "server/src/cloud/auth.rs",
+      "sha256": "f2c541489aa6262999a949546f968e218a7c67426b7d86e89b1aa6380545450b"
+    },
+    {
+      "path": "server/src/hosted/process.rs",
+      "sha256": "7ec92544b61285f9bb0e085c68d84d2a22ff3805123a5b147bac3507a90be22c"
+    },
+    {
+      "path": "server/src/hosted/stress.rs",
+      "sha256": "264439b595930fdd2174c494738a5c67fc74ed4bc5e6fe27f024bf65f9c1a63c"
+    },
+    {
+      "path": "server/tests/cloud_api.rs",
+      "sha256": "c8645ffef2855da56f559ae497bcfaeebed45adb0d71c3494d965d76d8be9a11"
+    },
+    {
+      "path": "server/tests/cloud_cli.rs",
+      "sha256": "f99670ed11028af376bee5d23b7b06522723dec8d1b969d9daf9a6c62125a512"
+    },
+    {
+      "path": "server/tests/cloud_recovery.rs",
+      "sha256": "aab60fa6c588c8c7e309d8bce31b2d4eda5068432cb2b300b1fbce6e9010ad34"
+    },
+    {
+      "path": "server/tests/hosted_analysis.rs",
+      "sha256": "0bb84fa5e7929a7b14131780446c2b54aa8c9265a15c8c5596c096b277cd422e"
+    },
+    {
+      "path": "server/tests/hosted_catalogue.rs",
+      "sha256": "e11639814cb66917d032edde510355595aea2670e8753ae23714f8b302a59472"
+    },
+    {
+      "path": "server/tests/hosted_observation.rs",
+      "sha256": "5c3d6c244348a15455dd7fb2a552b8743361fb6cbb03fa25f7b3c7228dc8b226"
+    }
+  ]
+}

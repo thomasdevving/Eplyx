@@ -1,0 +1,45 @@
+{
+  "migration": [
+    {
+      "artifact": "population.rehearsal.json",
+      "bytes": 32869,
+      "sha256": "ccab284ab897eae84b0ad879c7e2da31a62b15186aecd4674b8c275e08b0108c"
+    },
+    {
+      "artifact": "migration.plan.json",
+      "bytes": 17441,
+      "sha256": "242e1d2698c65a9093f59ef04716f1d5cbafe3d33d0903933739cc66b5209299"
+    },
+    {
+      "artifact": "report.json",
+      "bytes": 43520,
+      "sha256": "ad7d25b5bd019bbc4e0e86a307788ed70f9fcbf7813e2f7779387a19ec09809c"
+    },
+    {
+      "artifact": "report.md",
+      "bytes": 2835,
+      "sha256": "40d4513944c4dbd71019df05b28fd7c559d914d1fbe67b257d3b66d6b5b46ed2"
+    },
+    {
+      "artifact": "migration.unsigned-plan.json",
+      "bytes": 27087,
+      "sha256": "b270e6f7be1aa068b1a85373d9a29fb1183f42e60c544d8c5e967802c872fb69"
+    },
+    {
+      "artifact": "stress.plan.json",
+      "bytes": 10937,
+      "sha256": "893296f12bab9991e146fa052f95b73bfbe4a7b4231e2f075c2ffcc84b7d090e"
+    },
+    {
+      "artifact": "stress.results.json",
+      "bytes": 153281,
+      "sha256": "c228c90c9524c33934e672aac784ca582cf05dd004d2d79f128ba503914e114e"
+    }
+  ],
+  "lifecycle": {
+    "bytes": 52727577,
+    "sha256": "8d18990798928883866f15d45cfa9b0539df4ec598cee5d08f9d9bc716e55b9a"
+  },
+  "metadata_excluded": true,
+  "provider_calls": 0
+}

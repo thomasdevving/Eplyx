@@ -1,13 +1,4 @@
-# What the server build does not read.
-#
-# `programs/` is over a gigabyte of SBF build output, and `frontend/` changes far
-# more often than the server does — excluding it means a frontend commit leaves
-# the build context byte-identical and the cached image is reused whole.
-#
-# `fixtures/` stays: engine/src/lib.rs embeds fixtures/program-id.txt at compile
-# time. `docs/examples/` is embedded only by tests, which `cargo build` does not
-# compile, so it is excluded.
-
+# Only public compile-time assets enter the image. Raw captures stay outside it.
 .git
 .github
 target/
@@ -16,7 +7,6 @@ dist/
 artifacts/
 data/
 programs/
-frontend/
 docs/
 examples/
 scripts/
@@ -26,3 +16,17 @@ test-ledger/
 .env.*
 report.json
 .DS_Store
+
+fixtures/**
+!fixtures/program-id.txt
+!fixtures/migration/
+fixtures/migration/**
+!fixtures/migration/economics-golden-vectors.csv
+frontend/tests/
+frontend/*.test.mjs
+**/.eplyx/
+.codex/
+.agents/
+**/.rpc-url
+**/eplyx.toml
+**/*.log

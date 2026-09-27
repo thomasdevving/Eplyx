@@ -87,6 +87,30 @@ pub struct Stored {
     pub created: bool,
 }
 
+/// Separate byte namespaces share one write-once store and verification path.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ArtifactClass {
+    Program,
+    Document,
+    Capture,
+}
+impl ArtifactClass {
+    fn directory(self) -> &'static str {
+        match self {
+            Self::Program => "programs",
+            Self::Document => "documents",
+            Self::Capture => "captures",
+        }
+    }
+    fn limit(self, program_limit: usize) -> usize {
+        match self {
+            Self::Program => program_limit,
+            Self::Document => crate::projection::MAX_PROJECTION_BYTES,
+            Self::Capture => 512 * 1024 * 1024,
+        }
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct ArtifactStore {
     root: PathBuf,
@@ -96,7 +120,7 @@ pub struct ArtifactStore {
 impl ArtifactStore {
     pub fn open(root: impl Into<PathBuf>, max_program_bytes: usize) -> Result<Self> {
         let root = root.into();
-        for directory in ["programs", "tmp", "quarantine"] {
+        for directory in ["programs", "documents", "captures", "tmp", "quarantine"] {
             fs::create_dir_all(root.join(directory))
                 .with_context(|| format!("creating {}", root.join(directory).display()))?;
         }
@@ -112,11 +136,15 @@ impl ArtifactStore {
     }
 
     fn program_path(&self, sha256: &str) -> Result<PathBuf> {
+        self.object_path(ArtifactClass::Program, sha256)
+    }
+
+    fn object_path(&self, class: ArtifactClass, sha256: &str) -> Result<PathBuf> {
         ensure!(
             canonical_sha256(sha256),
             "artifact hash {sha256:?} is not a canonical sha256"
         );
-        Ok(self.root.join("programs").join(sha256))
+        Ok(self.root.join(class.directory()).join(sha256))
     }
 
     /// Store an executable, or verify the identical one already held.
@@ -132,16 +160,20 @@ impl ArtifactStore {
     /// creates it, the other finds it and verifies it. Neither can observe a
     /// partial object, because none is ever addressable.
     pub fn put_program(&self, bytes: &[u8]) -> Result<Stored> {
-        ensure!(!bytes.is_empty(), "an empty program is not an executable");
+        self.put(ArtifactClass::Program, bytes)
+    }
+
+    pub fn put(&self, class: ArtifactClass, bytes: &[u8]) -> Result<Stored> {
+        ensure!(!bytes.is_empty(), "empty artifacts are refused");
         ensure!(
-            bytes.len() <= self.max_program_bytes,
-            "program exceeds the {} byte artifact limit",
-            self.max_program_bytes
+            bytes.len() <= class.limit(self.max_program_bytes),
+            "artifact exceeds the {} byte limit",
+            class.limit(self.max_program_bytes)
         );
         let reference = ArtifactRef::of(bytes);
-        let destination = self.program_path(&reference.sha256)?;
+        let destination = self.object_path(class, &reference.sha256)?;
         if destination.exists() {
-            match self.get_program(&reference) {
+            match self.get(class, &reference) {
                 Ok(_) => {
                     return Ok(Stored {
                         reference,
@@ -160,13 +192,14 @@ impl ArtifactStore {
             &reference.sha256[..16],
             rand::random::<u64>()
         ));
-        let result = self.promote(&temporary, &destination, bytes, &reference);
+        let result = self.promote(class, &temporary, &destination, bytes, &reference);
         fs::remove_file(&temporary).ok();
         result
     }
 
     fn promote(
         &self,
+        class: ArtifactClass,
         temporary: &Path,
         destination: &Path,
         bytes: &[u8],
@@ -198,7 +231,7 @@ impl ArtifactStore {
             }
             Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => {
                 // Another upload of the same bytes won the race.
-                self.get_program(reference)
+                self.get(class, reference)
                     .context("an identical artifact appeared concurrently but does not verify")?;
                 Ok(Stored {
                     reference: reference.clone(),
@@ -225,7 +258,15 @@ impl ArtifactStore {
     /// Existence, then length from metadata (so a truncated or bloated object is
     /// refused before it is read), then the SHA-256 of the bytes actually read.
     pub fn get_program(&self, reference: &ArtifactRef) -> Result<Vec<u8>> {
-        let path = self.program_path(&reference.sha256)?;
+        self.get(ArtifactClass::Program, reference)
+    }
+
+    pub fn get(&self, class: ArtifactClass, reference: &ArtifactRef) -> Result<Vec<u8>> {
+        ensure!(
+            reference.len <= class.limit(self.max_program_bytes) as u64,
+            "artifact exceeds storage bound"
+        );
+        let path = self.object_path(class, &reference.sha256)?;
         let metadata = match fs::metadata(&path) {
             Ok(metadata) => metadata,
             Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
@@ -298,6 +339,39 @@ mod tests {
         let scratch = tempfile::tempdir().unwrap();
         let store = ArtifactStore::open(scratch.path().join("artifacts"), 1024).unwrap();
         (scratch, store)
+    }
+
+    #[test]
+    fn document_and_capture_bytes_use_the_same_verified_store_without_becoming_programs() {
+        let (_scratch, store) = store();
+        let doc = store.put(ArtifactClass::Document, b"exact bytes").unwrap();
+        let capture = store.put(ArtifactClass::Capture, b"exact bytes").unwrap();
+        assert_eq!(doc.reference, capture.reference);
+        assert!(
+            !store
+                .put(ArtifactClass::Document, b"exact bytes")
+                .unwrap()
+                .created
+        );
+        assert!(store.get_program(&doc.reference).is_err());
+        assert_eq!(
+            store.get(ArtifactClass::Document, &doc.reference).unwrap(),
+            b"exact bytes"
+        );
+        fs::write(
+            store
+                .object_path(ArtifactClass::Capture, &capture.reference.sha256)
+                .unwrap(),
+            b"wrong bytes",
+        )
+        .unwrap();
+        assert!(store
+            .get(ArtifactClass::Capture, &capture.reference)
+            .is_err());
+        assert_eq!(
+            store.get(ArtifactClass::Document, &doc.reference).unwrap(),
+            b"exact bytes"
+        );
     }
 
     #[test]

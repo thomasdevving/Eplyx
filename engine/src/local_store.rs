@@ -33,6 +33,8 @@ pub const METADATA_VERSION: u32 = 2;
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum RunSource {
+    /// Executed by MAIN’s credential-free hosted worker.
+    Hosted,
     /// `eplyx migration analyse` on a developer machine.
     Local,
     /// `eplyx migration analyse` with a non-empty `CI` environment variable.
@@ -217,7 +219,15 @@ pub fn save_analysis(
     use crate::replay::hash_bytes as sha256;
     use std::{fs, io::Write, path::Path};
     ensure!(
-        ["lifecycle_change", "current_observation", "current_path"].contains(&kind),
+        [
+            "lifecycle_change",
+            "current_observation",
+            "current_path",
+            "current_candidate",
+            "current_preflight",
+            "current_stress"
+        ]
+        .contains(&kind),
         "unsupported local analytical kind"
     );
     ensure!(

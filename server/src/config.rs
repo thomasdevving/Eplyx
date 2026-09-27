@@ -2,9 +2,9 @@
 //!
 //! The analysis path is entirely offline and needs no RPC or archive
 //! credentials: corpus construction is a separate workflow that runs
-//! elsewhere, never on the path of a pull request. The one chain endpoint here
-//! is optional and serves governance verification alone, which by definition
-//! reads the proposal as it stands now; no run ever touches it.
+//! elsewhere, never on the path of a pull request. Governance and current-state observation use separate optional read-only
+//! providers in the parent service. Every analysis worker receives a cleared
+//! environment and retained bytes; no run reads either provider.
 
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use std::path::PathBuf;
@@ -17,12 +17,14 @@ const DEFAULT_MAX_EXPECTATION_BYTES: usize = 256 * 1024;
 /// A bundle is a corpus, a baseline and every dependency binary, so it is the
 /// largest thing this service accepts by some distance.
 const DEFAULT_MAX_BUNDLE_BYTES: usize = 192 * 1024 * 1024;
-/// Replay is CPU-bound and synchronous. A small cap keeps a pilot host
-/// responsive without a queue, which is deliberately not built yet.
+/// Replay is CPU-bound and synchronous. A small cap bounds execution of MAIN
+/// durable queued runs.
 const DEFAULT_MAX_CONCURRENT_RUNS: usize = 2;
 
 #[derive(Clone, Debug)]
 pub struct Config {
+    /// Trusted executable, never configurable by an HTTP request.
+    pub worker_binary: PathBuf,
     /// Browser origins allowed to call this API.
     ///
     /// Empty by default, which means no cross-origin browser access at all: a
@@ -88,6 +90,7 @@ fn bind_address() -> Result<SocketAddr> {
 impl Config {
     pub fn from_env() -> Result<Self> {
         Ok(Self {
+            worker_binary: std::env::current_exe()?,
             operator_token: std::env::var("EPLYX_OPERATOR_TOKEN")
                 .ok()
                 .map(|token| token.trim().to_string())

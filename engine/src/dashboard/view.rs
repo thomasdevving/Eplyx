@@ -147,7 +147,10 @@ impl Run {
         self.migration_search.is_some()
     }
     pub fn is_migration(&self) -> bool {
-        super::migration::is_migration(self.report.as_ref(), self.change_spec.as_ref())
+        // A current candidate check can carry a token-migration proposal while
+        // reporting one exact account, not a population migration report.
+        self.analytical_metadata.is_none()
+            && super::migration::is_migration(self.report.as_ref(), self.change_spec.as_ref())
     }
     pub fn kind(&self) -> &str {
         if self.is_migration() {
@@ -298,7 +301,16 @@ fn parse(id: &str, bytes: RunBytes, mut problems: Vec<String>) -> Run {
         if m.run_id != id {
             problems.push("metadata run ID does not match its directory".into());
         }
-        if !["lifecycle_change", "current_observation", "current_path"].contains(&m.kind.as_str()) {
+        if ![
+            "lifecycle_change",
+            "current_observation",
+            "current_path",
+            "current_candidate",
+            "current_preflight",
+            "current_stress",
+        ]
+        .contains(&m.kind.as_str())
+        {
             problems.push("unsupported analytical record kind".into());
         }
         if bytes.report.map(sha256).as_deref() != Some(m.report_sha256.as_str()) {
@@ -390,6 +402,13 @@ fn parse(id: &str, bytes: RunBytes, mut problems: Vec<String>) -> Run {
             "current_observation" => {
                 r["kind"] == "current-inspection" && r["execution_performed"] == false
             }
+            "current_candidate" => {
+                r["kind"] == "current-candidate" && r["official_transition"] == "NotTested"
+            }
+            "current_preflight" => {
+                r["kind"] == "current-preflight" && r["population_readiness"].is_null()
+            }
+            "current_stress" => r["kind"] == "current-stress",
             "current_path" => {
                 r["transition_kind"].is_null()
                     && r["change"]["kind"].is_null()
@@ -695,6 +714,7 @@ pub fn stats(
             "local": runs.iter().filter(|r| r["run_source"] == "local").count(),
             "ci": runs.iter().filter(|r| r["run_source"] == "ci").count(),
             "imported": runs.iter().filter(|r| r["run_source"] == "imported").count(),
+            "hosted": runs.iter().filter(|r| r["run_source"] == "hosted").count(),
             "not_recorded": runs.iter().filter(|r| r["run_source"].is_null()).count(),
         },
         "first_run": timestamps.iter().min(),

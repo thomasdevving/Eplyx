@@ -19,13 +19,13 @@ const NAV = [
  ['/invariants', 'Invariants', p => Boolean(p.latest?.invariants?.total)],
  ['/gate', 'CI / gate', p => Boolean(p.latest)],
  ['/project', 'Project', () => true],
- ...(CLOUD && !DEMO ? [['/settings', 'Settings', () => true]] : []),
+ ...(CLOUD && !DEMO ? [['/analyse', 'Analyse', () => true], ['/settings', 'Settings', () => true]] : []),
 ];
 
 const ROUTES = [
  [/^\/$/, pages.overview],
  [/^\/runs$/, pages.runs],
- [/^\/runs\/(run_[a-z0-9_]+)$/, pages.runDetail],
+ [/^\/runs\/(run_[A-Za-z0-9_-]+)$/, pages.runDetail],
  [/^\/counterexamples$/, pages.counterexamples],
  [/^\/counterexamples\/(cx_[a-z0-9_]+)$/, pages.counterexampleDetail],
  [/^\/compare$/, pages.compare],
@@ -33,7 +33,8 @@ const ROUTES = [
  [/^\/invariants$/, pages.invariants],
  [/^\/gate$/, pages.gate],
  [/^\/project$/, CLOUD ? (args => cloudPages().then(m => m.projectPage(args))) : pages.projectPage],
- [/^\/settings$/, args => cloudPages().then(m => m.settingsPage(args))],
+ [/^\/analyse$/, args => import('./analysis.js').then(m => m.analysisPage(args))],
+ [/^\/settings$/,  args => cloudPages().then(m => m.settingsPage(args))],
 ];
 
 // Cloud-only pages load on demand and are served only by the hosted workspace.
@@ -48,6 +49,7 @@ function cloudSidebar(project) {
 }
 
 function shell(project) {
+ if(!/^\/runs\/run_/.test(localPath()))document.querySelector('link[data-upgrade-style]')?.remove();
  const path = localPath();
  const section = path === '/' ? '/' : `/${path.split('/')[1]}`;
  const mode = presentationMode();
@@ -57,7 +59,7 @@ function shell(project) {
    <a class="brand" ${CLOUD ? `href="${MAIN_SITE_URL}/" aria-label="Eplyx home"` : `href="${home}" data-link aria-label="Eplyx local dashboard"`}>${Mark({ className:'brand__mark' })}<span class="brand__lockup"><span class="brand__word">Eplyx</span><span class="brand__sub">${CLOUD ? 'Cloud workspace' : 'Local analysis'}</span></span></a>
    ${CLOUD ? cloudSidebar(project) : `<div class="sidebar__project"><span class="eyebrow">Project</span><strong>${esc(project.project?.name ?? 'Unnamed project')}</strong></div>`}
    <nav class="nav" aria-label="Dashboard">${NAV.filter(([, , show]) => show(project)).map(([href, label]) => `<a href="${BASE}${href}" data-link ${section === href ? 'aria-current="page"' : ''}>${label}</a>`).join('')}</nav>
-   <p class="sidebar__foot">${CLOUD ? 'Synced results from local and CI Eplyx CLI runs. This workspace never reruns RPC, execution or replay. Projects are private to their workspace.' : 'Read-only view of <code>.eplyx/</code> on this machine. Nothing is uploaded or sent.'}</p>
+   <p class="sidebar__foot">${CLOUD ? 'Hosted analyses and synced local and CI results. Viewing results performs no observation or execution. Projects are private to their workspace.' : 'Read-only view of <code>.eplyx/</code> on this machine. Nothing is uploaded or sent.'}</p>
    ${CLOUD && !DEMO ? '<button type="button" class="button button--ghost sidebar__signout" data-sign-out>Sign out</button>' : ''}
   </aside>
   <div class="main-col">
@@ -69,7 +71,7 @@ function shell(project) {
      <button type="button" data-mode-option="technical" aria-pressed="${mode === 'technical'}">Technical</button>
     </div>
    </header>
-   ${CLOUD ? '<div class="synced-banner" role="note"><strong>Synced results.</strong> This page shows engine results from a developer machine or CI. It does not run RPC, execution or replay.</div>' : ''}
+   ${CLOUD ? '<div class="synced-banner" role="note"><strong>Private workspace.</strong> Hosted analyses and synced CLI results retain their recorded scope. Viewing results does not run RPC, execution or replay. Use Analyse to request a new current-state check.</div>' : ''}
    <main id="main" tabindex="-1"><div class="loading" role="status">Loading ${CLOUD ? 'synced' : 'local'} runs…</div></main>
   </div>
  </div>`;

@@ -28,7 +28,7 @@ globalThis.sessionStorage = {
 // The run page follows a run with the console's credential, not with anything
 // kept from a submission. That is what makes a run openable from history.
 globalThis.EPLYX_API_URL = 'http://api.test';
-const { ReportPage, attachReport } = await import('./src/report.js');
+const { ReportPage, attachReport, HostedReport } = await import('./src/report.js');
 const CONSOLE_KEY = 'eplyx-operator-token';
 
 const reportPath = process.argv[2];
@@ -259,6 +259,11 @@ if (realReport) {
 } else {
   console.log('  ..   real-report checks skipped (no report path given)');
 }
+
+check('hosted upgrade reports reuse the same queued and failure views without a second page shell', () => {
+ const queued=HostedReport({run_id:'run_hosted',status:'queued',report_available:false});assert.match(queued,/Waiting for an execution slot/);assert.doesNotMatch(queued,/<main|site-header|site-footer|canonical report could not/);
+ const failed=HostedReport({run_id:'run_hosted',status:'execution_error',report_available:false,detail:'Recorded worker failure'});assert.match(failed,/Recorded worker failure/);assert.doesNotMatch(failed,/<main|site-header|site-footer/);
+});
 
 console.log(failures === 0 ? '\nfrontend report rendering verified' : `\n${failures} rendering failures`);
 process.exit(failures === 0 ? 0 : 1);

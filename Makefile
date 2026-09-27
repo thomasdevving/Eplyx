@@ -117,3 +117,8 @@ token2022-candidate:
 
 stake-pool-candidate:
 	./scripts/build-stake-pool-candidate.sh
+
+# Required Postgres-backed identity/sync checks. Missing configuration fails.
+.PHONY: test-cloud
+test-cloud:
+	$(CARGO) test -p eplyx-server --test cloud_api --test cloud_cli --test cloud_recovery

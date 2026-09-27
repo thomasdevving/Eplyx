@@ -48,6 +48,11 @@ const stored=models['analytical-kinds']['/api/runs'].runs.find(r=>r.kind==='curr
 const malformed=structuredClone(models['analytical-kinds'][`/api/runs/${stored.id}`]);
 malformed.state='Unreadable';malformed.problems=['<img src=x>'];
 const hidden=analyticalDetail(malformed).html;assert.doesNotMatch(hidden,/<img/);assert.doesNotMatch(hidden,/Paths remain separate/);
+const walletDetail=structuredClone(models['analytical-kinds'][`/api/runs/${stored.id}`]);
+walletDetail.analysis.report.wallet_observation={public_owner:'public-owner',token_accounts:[{address:'source-account',state:{raw_balance:'9007199254740993',account_state:'Initialized'}}]};
+const walletHTML=analyticalDetail(walletDetail).html;assert.match(walletHTML,/9,007,199,254,740,993/);assert.match(walletHTML,/Initialized/);assert.doesNotMatch(walletHTML,/\[object Object\]/);
+const failedDetail=analyticalDetail({kind:'current_path',state:'ExecutionError',hosted:{detail:'Worker stopped; no result'}}).html;assert.match(failedDetail,/Worker stopped; no result/);assert.doesNotMatch(failedDetail,/has not finished/);
+const upgradeOverview=analyticalDetail({id:'run_upgrade',kind:'program_upgrade',state:'Complete',status:'failed'}).html;assert.match(upgradeOverview,/Open program-upgrade report/);assert.doesNotMatch(upgradeOverview,/Paths remain separate|Public owner/);
 const css=readFileSync(new URL('./dashboard/dashboard.css',import.meta.url),'utf8');
 const outside=css.replace(/:root\s*\{[^}]*\}/g,'');
 assert.doesNotMatch(outside,/#(?:[a-f\d]{3,8})\b|\brgba?\(|\bhsla?\(/i);

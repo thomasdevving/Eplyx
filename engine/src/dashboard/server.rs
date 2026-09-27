@@ -252,7 +252,7 @@ impl State {
             .rev()
             .map(|e| e.summary.clone())
             .collect();
-        let (runs, files) = view::assemble(
+        let (mut runs, files) = view::assemble(
             index.runs.values().map(|e| e.summary.clone()).collect(),
             index
                 .counterexamples
@@ -261,6 +261,14 @@ impl State {
                 .collect(),
             &history,
         );
+        for run in &mut runs {
+            let id = run["id"].as_str().unwrap_or("");
+            run["sync"] = crate::cloud::local::read_state(self.store.base(), id)
+                .ok()
+                .flatten()
+                .and_then(|state| serde_json::to_value(state).ok())
+                .unwrap_or(Value::Null);
+        }
         Ok((runs, files, ignored_runs + ignored_cx + ignored_repro))
     }
 
@@ -304,7 +312,18 @@ impl State {
             &self.reproductions(),
             ignored,
         );
-        payload["cloud"] = json!({"linked": false});
+        let link = crate::cloud::local::project(self.store.base())
+            .ok()
+            .and_then(|p| p.link);
+        payload["cloud"] = match link {
+            Some(link) => {
+                json!({"linked":true,"server":link.server,"workspace_id":link.workspace_id,
+                "project_id":link.project_id,"linked_at":link.linked_at,
+                "url":format!("{}/p/{}",link.server,link.project_id),
+                "synced_runs":runs.iter().filter(|r|r["sync"]["status"]=="synced").count()})
+            }
+            None => json!({"linked":false}),
+        };
         Ok(payload)
     }
 

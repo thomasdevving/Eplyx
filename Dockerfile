@@ -2,10 +2,12 @@
 #
 # Hosted Eplyx CI API.
 #
-# The serving path is offline: no RPC endpoint, no archive credentials, and no
-# outbound request of any kind. The runtime image therefore carries the binary
-# and nothing else — not even a CA bundle, which would imply a network client
-# that does not exist.
+# Offline checks execute in a separate process with an empty environment.
+# The API can use an explicitly configured read-only observation provider and
+# private Postgres identity store; neither capability enters a worker. The
+# read-only HTTP transport uses curl and the system CA store. No service or
+# provider is provisioned by this image. The optional registered migration candidate is an operator-
+# supplied, digest-verified file; it is never built from browser input.
 #
 # Candidate code is never built here. This image compiles the server; the `.so`
 # under test arrives as bytes over HTTP and executes only inside the replay VM
@@ -49,6 +51,9 @@ RUN touch interface/src/lib.rs engine/src/lib.rs engine/src/main.rs \
  && cargo build --release -p eplyx-server
 
 FROM debian:bookworm-slim AS runtime
+
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
 
 # A bundle baked in from deploy/bundle, if one was placed there. It is present,
 # not installed and not active: `admin install-bundle` and `admin
