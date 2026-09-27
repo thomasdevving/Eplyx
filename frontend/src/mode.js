@@ -1,4 +1,6 @@
 export function presentationMode() {
+ const active = globalThis.document?.documentElement?.dataset.mode;
+ if (active === 'overview' || active === 'technical') return active;
  try { return localStorage.getItem('eplyx-detail') === 'technical' ? 'technical' : 'overview'; } catch { return 'overview'; }
 }
 export function setPresentationMode(mode) {

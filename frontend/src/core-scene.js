@@ -7,41 +7,43 @@ import { Mark } from './brand.js';
 const rings = {
   changes: {
     label: 'Changes',
-    caption: 'Implemented change analysis · scope varies by kind',
+    caption: 'Current tools and the broader product direction',
     tilt: -17,
     direction: -1,
     duration: 38,
     bodies: [
-      ['Program upgrade', 'live', 'Baseline and candidate execution over identical retained state, within supported replay paths.'],
-      ['Token migration', 'live', 'A proposed mechanism rehearsed in a local VM, with holder coverage and exact reconciliation.'],
-      ['Lifecycle policy', 'live', 'Declared terms evaluated over one snapshot, with unknown eligibility and evidence gaps retained.'],
-      ['Squads binding', 'live', 'Read-only binding for one supported Squads V4 loader-v3 program upgrade. No signing or submission.'],
+      ['Program upgrades', 'live', 'Current scope: baseline and candidate replay over validated retained state, for supported protocols and instruction paths.'],
+      ['Governance', 'early', 'A narrow Squads V4 upgrade binding exists. General proposal and governance-action analysis still needs development.'],
+      ['Authority changes', 'planned', 'Broader analysis of changes to authority and privilege is planned. Existing custody and binding checks cover specific questions only.'],
+      ['Parameter changes', 'planned', 'General analysis of fee, rate and limit changes without a new program binary is a future layer.'],
     ],
   },
   consequences: {
     label: 'Consequences',
-    caption: 'Findings stay bound to tested inputs and supported paths',
+    caption: 'Scoped evidence today · wider coverage in development',
     tilt: 19,
     direction: 1,
     duration: 34,
     bodies: [
-      ['Economic effects', 'live', 'Measured balances, fees and protocol quantities for the supported actions. Coverage is explicit.'],
-      ['Gate findings', 'live', 'Upgrade expectations and migration policies produce scoped findings with evidence gaps visible.'],
-      ['Reconciliation', 'live', 'Account for source, destination, reserves and fees in migration execution.'],
-      ['Current paths', 'live', 'Separate Transfer, bounded Meteora market-exit and liquidity-withdrawal checks over captured state.'],
+      ['Economic effects', 'live', 'Measured balances, fees and protocol quantities for supported actions. General asset valuation is outside current scope.'],
+      ['CI checks', 'live', 'Declared upgrade expectations and scoped migration policies can be checked against retained evidence.'],
+      ['Transition outcomes', 'early', 'Migration rehearsals, lifecycle policies and selected current paths are integrated. Wider coverage and fresh mainnet validation remain work ahead.'],
+      ['Monitoring', 'planned', 'Continuous change monitoring and economic exposure alerts are product direction, not current features.'],
     ],
   },
 };
 
+const stageLabels = { live: 'Current scope', early: 'Early scope', planned: 'Planned' };
+
 const orbitBody = (ring, [name, status, detail, metric, value], index) =>
-  `<button type="button" class="orbit-body orbit-body--${status}" data-ring="${ring}" data-index="${index}" data-name="${name}" data-status="${status === 'live' ? 'Implemented' : 'Planned'}" data-detail="${detail}"${metric ? ` data-metric="${metric}" data-value="${value}"` : ''}>
+  `<button type="button" class="orbit-body orbit-body--${status}" data-ring="${ring}" data-index="${index}" data-name="${name}" data-status="${stageLabels[status]}" data-detail="${detail}"${metric ? ` data-metric="${metric}" data-value="${value}"` : ''}>
     <span class="orbit-body__rock orbit-body__rock--${index}" aria-hidden="true"></span>
-    <span class="visually-hidden">${name}. ${status === 'live' ? 'Implemented' : 'Planned layer'}. ${detail}</span>
+    <span class="visually-hidden">${name}. ${stageLabels[status]}. ${detail}</span>
   </button>
   <div class="orbit-label orbit-label--${status}" data-ring="${ring}" data-index="${index}" aria-hidden="true">
     <svg class="orbit-label__leader"><path/><circle r="2"/></svg>
     <span class="orbit-body__name">${name}</span>
-    <small class="orbit-body__status">${status === 'live' ? 'Implemented' : 'Planned'}</small>
+    <small class="orbit-body__status">${stageLabels[status]}</small>
   </div>`;
 
 const orbitPlane = side => `<svg class="orbit-plane orbit-plane--${side}" aria-hidden="true">
@@ -57,7 +59,7 @@ const orbitPlane = side => `<svg class="orbit-plane orbit-plane--${side}" aria-h
 
 export function EplyxCoreScene() {
   const planes = Object.entries(rings);
-  return `<div class="core-scene" data-ring="changes" role="group" aria-label="The changes Eplyx tracks and the consequences it measures, orbiting the Eplyx mark. Switch between both sets and explore each layer for its current status.">
+  return `<div class="core-scene" data-ring="changes" role="group" aria-label="Eplyx’s current scope and product direction, orbiting the Eplyx mark. Switch between changes and consequences to explore current, early and planned capabilities.">
     <div class="core-stage">
       ${orbitPlane('back')}
       <div class="core-glow" aria-hidden="true"></div>

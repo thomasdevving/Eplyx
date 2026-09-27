@@ -114,8 +114,10 @@ the toolchain is installed, no database, no container.
 
 ### Public frontend
 
-The public site separates implemented upgrade, migration, lifecycle, current-path
-and Squads capabilities from the next validation work and future scope. `/cli`
+The public site presents Eplyx as a product in development. It separates current,
+bounded upgrade, migration, lifecycle, current-path and Squads capabilities from
+early work and planned product layers. Overview gives a short explanation;
+Technical shows execution, input and evidence details. `/cli`
 provides source-build instructions, copyable commands and explicit input
 requirements. There is no advertised prebuilt download or installer.
 
