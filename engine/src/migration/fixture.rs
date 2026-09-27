@@ -413,11 +413,16 @@ impl PinnedPrograms {
         let bytes = std::fs::read(&path).with_context(|| {
             format!("pinned program capture {PROGRAM_CAPTURE} is unavailable; run scripts/import-migration-fixtures.py --sta <pinned-archive>")
         })?;
+        Self::from_capture(&bytes)
+    }
+
+    /// A portable, exact copy of the pinned capture; never a replacement program.
+    pub fn from_capture(bytes: &[u8]) -> Result<Self> {
         ensure!(
-            sha256(&bytes) == PROGRAM_CAPTURE_SHA256,
+            sha256(bytes) == PROGRAM_CAPTURE_SHA256,
             "pinned program capture digest mismatch"
         );
-        let capture: Value = serde_json::from_slice(&bytes)?;
+        let capture: Value = serde_json::from_slice(bytes)?;
         let record = &capture["observations"][PROGRAM_CAPTURE_RECORD];
         ensure!(
             record["method"] == "getMultipleAccounts",
@@ -697,9 +702,17 @@ fn mint_extension_type(extension: &MintExtension) -> ExtensionType {
 
 /// Build the synthetic world. Deterministic for a recipe and context.
 pub fn build(recipe: &Recipe, context: &FixtureContext) -> Result<World> {
+    build_with_programs(recipe, context, PinnedPrograms::load(recipe.programs)?)
+}
+
+/// Build using an explicitly retained dependency (for isolated hosted workers).
+pub fn build_with_programs(
+    recipe: &Recipe,
+    context: &FixtureContext,
+    programs: PinnedPrograms,
+) -> Result<World> {
     recipe.validate()?;
     let recipe_sha256 = recipe.sha256()?;
-    let programs = PinnedPrograms::load(recipe.programs)?;
     let clock = WorldClock {
         slot: crate::migration::spec::canonical_u64(&recipe.clock.slot)?,
         epoch_start_timestamp: i64::try_from(crate::migration::spec::canonical_u64(

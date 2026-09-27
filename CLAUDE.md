@@ -280,7 +280,7 @@ Migration uses shared token, loader and Clock decoders. Its four readiness axes
 and declared invariants are a per-kind gate contract: they do not change upgrade
 expectation policy. Known violations exit 1; strict evidence-only gaps exit 5.
 T5 adds the migration CLI and local store. T8 adds the read-only loopback
-dashboard; hosted migration workers follow in T9. See
+dashboard; T9 adds hosted migration workers. See
 `docs/phase-t3-token-migration-core.md`.
 
 **T4 adds current-state migration guarantees.** Mainnet captures freeze exact
@@ -301,7 +301,7 @@ T3's synthetic/frozen contracts remain unchanged. See
 binary. The `.eplyx/` run store contains separate proposal/state/CAS inputs,
 results and append-only history; it does not replace hosted `proj_` identities.
 Capture is read-only in the parent. VM evaluation and replay workers start with
-an empty environment; only cloud commands will read `EPLYX_TOKEN`. See
+an empty environment; only cloud commands read `EPLYX_TOKEN`. See
 `docs/phase-t5-migration-cli-local-store.md` for layout, exit codes and checks.
 
 **Phase P1 made it the hosted product's identity.** `POST /checks` takes an
@@ -439,7 +439,7 @@ Done, on real mainnet (Phases 5-8): bounded activity discovery and representativ
 
 Done, on a validated production-derived corpus (Phase 9): automated generation of a regression corpus from real mainnet activity, and a deterministic selector (`corpus select`) that turns validated replay records into a corpus a gate can afford. Three populations — observed, replay-eligible, selected — are reported side by side and never collapsed; observed-to-replayable yield is a first-class coverage limitation; an unmeasured population is reported as absent, never as zero. A record is never duplicated to reach a target. The structural shape key includes the original CPI invocation signature, because a referral deposit mints twice where an ordinary one mints once while naming the same accounts. See `docs/phase-9-production-corpus.md`.
 
-Done, as a pilot-ready product surface (Phase 10): an immutable, hash-addressed offline CI bundle; a versioned semantic finding vocabulary (`protocol/action/domain/subject/change`); `expected-changes.toml` and the expected / unexpected / exceeded / stale / unevaluable review; `eplyx ci check` with stable exit codes; and `eplyx-server`, a thin hosted API over the same engine. Two rules hold the design together: **corpus construction is not CI, corpus consumption is CI**, and **candidate code is built outside Eplyx** — the service never clones a repository or runs a build. Severity is descriptive metadata, never expectation identity and never gate policy. The hosted `report.json` is byte-identical to local `eplyx ci check --format json`. A hosted check is asynchronous: `POST /checks` persists the run and answers `202` with a run id before any replay begins, a detached worker runs it behind the concurrency semaphore, and the frontend polls `GET /v1/runs/{id}`. **`failed` means the engine reached a verdict and it was no; `execution_error` means no verdict was obtained at all** — never conflate them. Since Phase P2 the run record *is* the durable queue entry: startup re-enqueues queued runs and retries interrupted ones as further attempts of the same run (see below). Onboarding is a product surface: `POST /v1/projects`, bundle registration and activation, project-scoped API tokens, and run history, with a frontend console over them. **Two credentials, no user model** — a project token is a CI secret that submits checks for its own project; the operator token (`EPLYX_OPERATOR_TOKEN`, configured not issued) creates projects, issues tokens and activates bundles. A token that lives in a pull request must not be able to change what future pull requests are measured against. **A run pins its bundle at creation and the worker never resolves it again**, so activating a new bundle belongs to the next run. Activation moves a pointer and destroys nothing. Project ids are opaque and minted, never names. See `docs/phase-10-hosted-ci.md`; `scripts/hosted-demo.sh`, `scripts/async-demo.sh` and `scripts/product-demo.sh` prove it end to end.
+Done, as a pilot-ready product surface (Phase 10): an immutable, hash-addressed offline CI bundle; a versioned semantic finding vocabulary (`protocol/action/domain/subject/change`); `expected-changes.toml` and the expected / unexpected / exceeded / stale / unevaluable review; `eplyx ci check` with stable exit codes; and `eplyx-server`, a thin hosted API over the same engine. Two rules hold the design together: **corpus construction is not CI, corpus consumption is CI**, and **candidate code is built outside Eplyx** — the service never clones a repository or runs a build. Severity is descriptive metadata, never expectation identity and never gate policy. The hosted `report.json` is byte-identical to local `eplyx ci check --format json`. A hosted check is asynchronous: `POST /checks` persists the run and answers `202` with a run id before any replay begins, a detached worker runs it behind the concurrency semaphore, and the frontend polls `GET /v1/runs/{id}`. **`failed` means the engine reached a verdict and it was no; `execution_error` means no verdict was obtained at all** — never conflate them. Since Phase P2 the run record *is* the durable queue entry: startup re-enqueues queued runs and retries interrupted ones as further attempts of the same run (see below). Onboarding is a product surface: `POST /v1/projects`, bundle registration and activation, project-scoped API tokens, and run history, with a frontend console over them. **Operator and project credential compatibility** — a project token is a CI secret that submits checks for its own project; the operator token (`EPLYX_OPERATOR_TOKEN`, configured not issued) keeps bootstrap and baseline administration. T9 adds optional workspace users, sessions and membership without widening project-token permissions. A token that lives in a pull request must not be able to change what future pull requests are measured against. **A run pins its bundle at creation and the worker never resolves it again**, so activating a new bundle belongs to the next run. Activation moves a pointer and destroys nothing. Project ids are opaque and minted, never names. See `docs/phase-10-hosted-ci.md`; `scripts/hosted-demo.sh`, `scripts/async-demo.sh` and `scripts/product-demo.sh` prove it end to end.
 
 **Bounded, not general.** The CPI path is one protocol (`SPoo1Ku8…`) and two instructions: `DepositSol` into a pool with no SOL deposit authority, reaching the System and SPL Token programs; and `WithdrawSol`, reaching SPL Token and the deployed Stake program, admitting a strictly-shaped top-level `Approve` companion. One level of invocation, into known programs. Do not describe it as CPI support.
 
@@ -474,3 +474,25 @@ setting is shared with MAIN's frontend, including `[data-technical]` sections.
 The public `/token-transitions` page describes the bounded capabilities.
 [T8 verification](docs/phase-t8-dashboard.md) passed the full Rust, frontend,
 report, governance and browser checks; retries are retained in the phase record.
+
+**T9 hosted identity and analysis.** `eplyx-server` now has optional Postgres
+identity, workspace membership, device approval and unified project credentials.
+Postgres is not an analytical registry. The filesystem registry/CAS owns every
+project, durable run, report, input and synced artifact. Creation intents recover
+the filesystem/auth mapping without restoring revoked membership. Legacy projects
+need explicit operator assignment. `login`, `link`, `sync`, `logout` use one CLI;
+sync verifies exact bytes and refuses leaky text rather than rewriting it.
+
+Hosted upgrade, migration, lifecycle, observation, path, candidate, scenario and
+stress jobs use durable MAIN runs and empty-environment child workers. Parent
+acquisition alone may use `EPLYX_OBSERVATION_RPC_URL`; no worker receives it.
+Browser input is typed terms only. Candidate code is an operator-registered digest;
+`ExactRaw` binds one-account amounts without changing existing full-balance IDs.
+Current scenarios replay exact selected evidence and preserve independent mobility,
+candidate and full-transition questions. Stress freezes a bounded sample before
+execution, with fresh population/final captures and no population-readiness claim.
+Captured-program fixture recipes retain their pinned program capture in the input
+CAS so hosted execution needs no checkout. Public catalogue imports are explicit
+operator actions, never inferred identity. All current validation used mock
+providers; no live-provider permission is implied. See
+[the T9 architecture and verification](docs/phase-t9-cloud-hosted-analysis.md).

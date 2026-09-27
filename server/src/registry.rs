@@ -64,12 +64,12 @@ pub struct ProjectBundle {
 /// wrong.
 fn check_bundle_matches_project(project: &Project, bundle: &CiBundle) -> Result<()> {
     let manifest = bundle.manifest();
-    if manifest.program_id != project.program_id {
+    if project.program_id.as_deref() != Some(manifest.program_id.as_str()) {
         bail!(
             "bundle is for program {}, project {} protects {}",
             manifest.program_id,
             project.project_id,
-            project.program_id
+            project.program_id.as_deref().unwrap_or("no upgrade target")
         );
     }
     let declared = AdapterId {
@@ -82,7 +82,12 @@ fn check_bundle_matches_project(project: &Project, bundle: &CiBundle) -> Result<
             project.adapter_id
         );
     }
-    let engine = AdapterId::for_program(&project.program_id);
+    let engine = AdapterId::for_program(
+        project
+            .program_id
+            .as_deref()
+            .context("project has no upgrade target")?,
+    );
     if declared != engine {
         bail!("bundle was built under adapter {declared}, this build speaks {engine}");
     }
@@ -114,11 +119,16 @@ pub enum RunStatus {
     Passed,
     Failed,
     ExecutionError,
+    /// Analysis completed; this status conveys no deployment authorization.
+    Completed,
 }
 
 impl RunStatus {
     pub fn is_terminal(self) -> bool {
-        matches!(self, Self::Passed | Self::Failed | Self::ExecutionError)
+        matches!(
+            self,
+            Self::Passed | Self::Failed | Self::ExecutionError | Self::Completed
+        )
     }
 }
 
@@ -128,6 +138,9 @@ impl RunStatus {
 /// malformed expectation file or an incompatible bundle is a genuine Eplyx
 /// result carrying a genuine exit code, and it produces no report by design.
 pub enum RunOutcome {
+    Analytical {
+        projection: Box<crate::projection::Projection>,
+    },
     Reported {
         report: Box<CiReport>,
         markdown: String,
@@ -351,6 +364,10 @@ pub struct Recovery {
 /// same shape it will see later, with the answers still empty.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct RunMetadata {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hosted_analysis: Option<crate::hosted::Job>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub analysis: Option<crate::analytical::AnalyticalRun>,
     pub run_id: String,
     pub project_id: String,
     pub status: RunStatus,
@@ -359,6 +376,7 @@ pub struct RunMetadata {
     /// Pinned here, and never resolved again. A bundle activated after this run
     /// was accepted belongs to the next run, not to this one — otherwise a
     /// result would silently describe a comparison nobody asked for.
+    #[serde(default, skip_serializing_if = "String::is_empty")]
     pub bundle_sha256: String,
     #[serde(default)]
     pub bundle_id: Option<String>,
@@ -369,6 +387,7 @@ pub struct RunMetadata {
     /// Hashed from the uploaded bytes before the run is accepted. Kept for
     /// every client written before change identity; `change` is what names
     /// the proposal.
+    #[serde(default, skip_serializing_if = "String::is_empty")]
     pub candidate_sha256: String,
     /// The proposal this run evaluates, fixed at creation and bound to the
     /// pinned bundle before the run was accepted.
@@ -430,7 +449,7 @@ pub struct Registry {
     /// A status change is read-modify-write over one file. Serializing them is
     /// what makes `begin_run` a compare-and-set rather than a race two workers
     /// could both win.
-    transitions: Mutex<()>,
+    pub(crate) transitions: Mutex<()>,
 }
 
 impl Registry {
@@ -793,11 +812,17 @@ impl Registry {
     /// under. Either disagreement means the stored proposal is not the one the
     /// run was accepted for, and the read fails.
     pub fn load_change_spec(&self, run_id: &str, expected: &RunChange) -> Result<ChangeSpec> {
-        let path = self.storage.run_dir(run_id)?.join("change_spec.json");
-        if !self.storage.exists(&path) {
-            bail!("run {run_id} has no stored change spec");
-        }
-        let bytes = self.storage.read_bytes(&path)?;
+        let metadata = self.load_run(run_id)?;
+        let bytes = if metadata.analysis.is_some() {
+            self.analytical_document(&metadata)?
+                .change_spec
+                .context("run has no change spec")?
+                .text
+                .into_bytes()
+        } else {
+            let path = self.storage.run_dir(run_id)?.join("change_spec.json");
+            self.storage.read_bytes(&path)?
+        };
         let spec = ChangeSpec::parse(&bytes).context("the stored change spec does not verify")?;
         ensure!(
             spec.change_spec_id.is_some(),
@@ -1116,9 +1141,50 @@ impl Registry {
                 },
                 Ok(()) => RunOutcome::Reported { report, markdown },
             },
+            RunOutcome::Analytical { projection } => {
+                match self.verify_hosted_projection(&metadata, &projection) {
+                    Ok(()) => RunOutcome::Analytical { projection },
+                    Err(_) => RunOutcome::ExecutionError {
+                        detail: "offline result did not match the accepted inputs".into(),
+                    },
+                }
+            }
             other => other,
         };
         match outcome {
+            RunOutcome::Analytical { projection } => {
+                let reference = self.document_ref(&serde_json::to_vec(&projection)?)?;
+                // Recovery can finalize this immutable result if metadata's
+                // atomic replace is interrupted. Never trusts work files.
+                self.storage.write_json(
+                    &self
+                        .storage
+                        .run_dir(run_id)?
+                        .join("completed-projection.json"),
+                    &reference,
+                )?;
+                let code = crate::hosted::worker::exit_code(&projection)?;
+                metadata.status = if metadata
+                    .hosted_analysis
+                    .as_ref()
+                    .is_some_and(|j| j.kind == "token_migration")
+                {
+                    if code == 0 {
+                        RunStatus::Passed
+                    } else {
+                        RunStatus::Failed
+                    }
+                } else {
+                    RunStatus::Completed
+                };
+                metadata.exit_code = Some(code);
+                metadata.report_available = true;
+                metadata
+                    .hosted_analysis
+                    .as_mut()
+                    .context("missing hosted job")?
+                    .projection = Some(reference);
+            }
             RunOutcome::Reported { report, markdown } => {
                 self.write_report(run_id, &report, &markdown)?;
                 metadata.status = if report.summary.passed {
@@ -1169,7 +1235,7 @@ impl Registry {
             .write_bytes(&directory.join("report.md"), markdown.as_bytes())
     }
 
-    fn write_run(&self, metadata: &RunMetadata) -> Result<()> {
+    pub(crate) fn write_run(&self, metadata: &RunMetadata) -> Result<()> {
         let path = self
             .storage
             .run_dir(&metadata.run_id)?
@@ -1211,11 +1277,35 @@ impl Registry {
             let Ok(mut metadata) = self.load_run(&run_id) else {
                 continue;
             };
+            self.index_run(&metadata.project_id, &run_id)?;
+            if let Some(change) = &metadata.change {
+                self.index_change(&metadata.project_id, &change.change_spec_id, &run_id)?;
+            }
             if metadata.status.is_terminal() {
                 self.clear_run_work(&run_id).ok();
                 continue;
             }
-            if metadata.change.is_none() || metadata.candidate_artifact.is_none() {
+            if metadata.hosted_analysis.is_some() {
+                if let Some(projection) = self.completed_hosted_projection(&metadata) {
+                    self.finish_run(
+                        &run_id,
+                        RunOutcome::Analytical {
+                            projection: Box::new(projection),
+                        },
+                    )?;
+                    let mut recorded = self.load_run(&run_id)?;
+                    if let Some(last) = recorded.attempts.last_mut() {
+                        last.end = Some(AttemptEnd::FinalizedOnRecovery);
+                    }
+                    self.write_run(&recorded)?;
+                    self.clear_run_work(&run_id).ok();
+                    recovery.finalized.push(run_id);
+                    continue;
+                }
+            }
+            if metadata.hosted_analysis.is_none()
+                && (metadata.change.is_none() || metadata.candidate_artifact.is_none())
+            {
                 self.finish_run(
                     &run_id,
                     RunOutcome::ExecutionError {
@@ -1230,7 +1320,10 @@ impl Registry {
                 continue;
             }
             if metadata.status == RunStatus::Running {
-                if let Some(report) = self.completed_report(&metadata) {
+                if let Some(report) = self
+                    .completed_report(&metadata)
+                    .filter(|_| metadata.hosted_analysis.is_none())
+                {
                     // The attempt finished; only its recording was lost.
                     let markdown = eplyx_engine::ci_markdown::render(&report);
                     self.finish_run(
@@ -1355,6 +1448,16 @@ impl Registry {
     pub fn load_run_artifact(&self, run_id: &str, name: &str) -> Result<Vec<u8>> {
         if !matches!(name, "report.json" | "report.md") {
             bail!("no such artifact");
+        }
+        let metadata = self.load_run(run_id)?;
+        if (metadata.analysis.is_some() || metadata.hosted_analysis.is_some())
+            && name == "report.json"
+        {
+            return Ok(self
+                .analytical_projection(&metadata)?
+                .report
+                .text
+                .into_bytes());
         }
         let path = self.storage.run_dir(run_id)?.join(name);
         if !self.storage.exists(&path) {

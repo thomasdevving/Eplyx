@@ -169,11 +169,23 @@ pub enum OwnerAuthorityClass {
     Multisig,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum AmountPolicy {
     /// The holder's entire source balance at the pinned state is migrated.
     FullBalance,
+    /// An explicit proposed amount per eligible source account. The original
+    /// full-balance encoding is unchanged. Amounts above the observed balance
+    /// are outside eligibility, never clamped or manufactured from a mutation.
+    ExactRaw { amount_raw: String },
+}
+impl AmountPolicy {
+    pub fn amount(&self, balance: u64) -> Result<u64> {
+        match self {
+            Self::FullBalance => Ok(balance),
+            Self::ExactRaw { amount_raw } => canonical_u64(amount_raw),
+        }
+    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -407,6 +419,12 @@ impl TokenMigrationV1 {
         )
         .map_err(|error| anyhow::anyhow!("invalid conversion terms: {error}"))?;
         let minimum_balance = canonical_u64(&self.eligibility.minimum_source_balance_raw)?;
+        if let AmountPolicy::ExactRaw { amount_raw } = &self.eligibility.amount_policy {
+            ensure!(
+                canonical_u64(amount_raw)? > 0,
+                "exact migration amount must be positive"
+            );
+        }
         ensure!(
             minimum_balance >= 1,
             "minimumSourceBalanceRaw must be at least 1"

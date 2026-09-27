@@ -157,5 +157,41 @@ fn migration_runs_are_displayed_and_compared() {
     assert_eq!(comparison["kind"], "token_migration");
 
     // The pinned source sync assertions are retained in T9's contract suite.
+    // Sync contract: the same run and counterexample verify and bind; nothing leaks.
+    let store = eplyx_engine::dashboard::store::Store::open(&root).unwrap();
+    let local = fs::read(root.join(".eplyx/project.json")).unwrap();
+    let local_id = serde_json::from_slice::<Value>(&local).unwrap()["local_id"]
+        .as_str()
+        .unwrap()
+        .to_string();
+    let document = eplyx_engine::cloud::contract::run_document(&store, &local_id, defect).unwrap();
+    let verified = document.verify().unwrap();
+    assert_eq!(verified.summary["kind"], "token_migration");
+    let cx_document =
+        eplyx_engine::cloud::contract::counterexample_document(&store, &local_id, cx).unwrap();
+    let cx_verified = cx_document.verify().unwrap();
+    assert_eq!(cx_verified.saved.kind, "token_migration");
+    eplyx_engine::cloud::contract::bind_counterexample(&cx_verified.saved, &verified.run).unwrap();
+    let secret = "unused-provider-sentinel";
+    let (code, out, err) = eplyx(
+        &root,
+        &["sync", "--dry-run", "--json"],
+        &[("SOLANA_RPC_URL", secret)],
+    );
+    assert_eq!(code, 0, "{err}");
+    assert!(
+        !out.contains(secret)
+            && !out.contains("/tmp")
+            && !out.contains("/private/")
+            && !out.contains("/var/folders")
+    );
+    let documents: Value = serde_json::from_str(&out).unwrap();
+    let plans = documents.as_array().unwrap();
+    assert_eq!(plans.len(), 2, "one plan per complete run");
+    let nested: usize = plans
+        .iter()
+        .map(|p| p["counterexamples"].as_array().map_or(0, Vec::len))
+        .sum();
+    assert_eq!(nested, 1, "{documents:#}");
     fs::remove_dir_all(root).unwrap();
 }

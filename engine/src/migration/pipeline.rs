@@ -380,12 +380,25 @@ pub fn world_for(package: &ValidatedInput, output: &Path, b: &Bindings) -> Resul
                 "fixture binding changed",
             )?;
             let overlay = adapter::derive(spec, &package.change_spec_id, package.program_id())?;
-            fixture::build(
-                package.recipe.as_ref().context("missing fixture recipe")?,
-                &FixtureContext {
-                    migration_authority: Some(overlay.migration_authority),
-                },
-            )
+            let recipe = package.recipe.as_ref().context("missing fixture recipe")?;
+            let context = FixtureContext {
+                migration_authority: Some(overlay.migration_authority),
+            };
+            let portable = package.root().join("pinned-programs.capture.json");
+            if matches!(
+                recipe.programs,
+                fixture::ProgramSource::PinnedMainnetCapture
+            ) && portable.exists()
+            {
+                let bytes = std::fs::read(portable)?;
+                fixture::build_with_programs(
+                    recipe,
+                    &context,
+                    fixture::PinnedPrograms::from_capture(&bytes)?,
+                )
+            } else {
+                fixture::build(recipe, &context)
+            }
         }
         StateSource::MainnetCapture => {
             ensure!(b.state == "MainnetCapture", "state binding changed");

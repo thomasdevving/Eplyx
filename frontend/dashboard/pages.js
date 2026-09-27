@@ -21,7 +21,7 @@ export async function api(path) {
  return body;
 }
 
-const SOURCES = { local:'Local CLI', ci:'CI', imported:'Imported' };
+const SOURCES = { local:'Local CLI', ci:'CI', imported:'Imported', hosted:'Hosted' };
 const sourceTag = source => source ? `<span class="tag">${esc(SOURCES[source] ?? source)}</span>` : '<span class="tag tag--soft" title="Recorded before run_source existed">Not recorded</span>';
 const runLabel = run => run ? `Run #${run.number ?? '?'}` : 'Run';
 const runLink = run => `<a href="${BASE}/runs/${esc(run.id)}" data-link class="runref"><strong>#${esc(run.number ?? '?')}</strong><code class="tech-only">${esc(run.id)}</code></a>`;
@@ -294,18 +294,32 @@ function policyTable(g) {
 
 function evidenceBlock(detail) {
  const e = detail.evidence ?? {};
+ const hosted = CLOUD && detail.run_source === 'hosted';
  const size = n => n == null ? 'absent' : n > 1048576 ? `${(n / 1048576).toFixed(1)} MB` : n > 1024 ? `${(n / 1024).toFixed(1)} KB` : `${n} B`;
  const primary = ['report.md', 'report.json', 'search.json', 'manifest.json', 'migration-search.json', 'migration.unsigned-plan.json'];
- return `<div class="commands">${(e.commands ?? []).map(c => commandLine(c.command, c.label)).join('')}</div>
- ${CLOUD ? '<p class="note">Artifacts stay on the machine that ran Eplyx. This workspace holds only the synced metadata, report, bindings, ChangeSpec and state descriptor, and search result, each with its SHA-256. Candidate bytes, captures and the RPC provider never leave that machine.</p>' : ''}
- <p class="note">Commands run from the project root. The dashboard never runs them.</p>
- <div class="table-wrap"><table class="table"><thead><tr><th>Artifact</th><th class="tech-only">Path</th><th>Size</th><th></th></tr></thead><tbody>${(e.artifacts ?? []).map(a => `<tr class="${primary.includes(a.name) ? '' : 'tech-only'}"><td>${esc(a.label)}</td><td class="tech-only"><code>${esc(a.path)}</code></td><td class="num">${size(a.size)}</td><td>${CLOUD ? (a.size == null ? '' : '<span class="muted">stays local</span>') : a.size == null ? '' : `<a href="${API}/runs/${esc(detail.id)}/artifacts/${esc(a.name)}" target="_blank" rel="noopener">Open</a> · <a href="${API}/runs/${esc(detail.id)}/artifacts/${esc(a.name)}?download=1">Download</a>`}</td></tr>`).join('')}</tbody></table></div>
+ return `<div class="commands">${(hosted ? [] : e.commands ?? []).map(c => commandLine(c.command, c.label)).join('')}</div>
+ ${hosted ? '<p class="note">Hosted inputs and results are retained in MAIN’s immutable store. Viewing them performs no new execution. Provider configuration is not an analytical artifact.</p>' : CLOUD ? '<p class="note">Artifacts stay on the machine that ran Eplyx. This workspace holds only the synced metadata, report, bindings, ChangeSpec and state descriptor, and search result, each with its SHA-256. Candidate bytes, captures and the RPC provider never leave that machine.</p>' : ''}
+ ${hosted ? '' : '<p class="note">Commands run from the project root. The dashboard never runs them.</p>'}
+ <div class="table-wrap"><table class="table"><thead><tr><th>Artifact</th><th class="tech-only">Path</th><th>Size</th><th></th></tr></thead><tbody>${(e.artifacts ?? []).map(a => `<tr class="${primary.includes(a.name) ? '' : 'tech-only'}"><td>${esc(a.label)}</td><td class="tech-only"><code>${esc(hosted ? a.name : a.path)}</code></td><td class="num">${size(a.size)}</td><td>${hosted ? (['report.json','report.md','change_spec.json'].includes(a.name) && a.size != null ? `<a href="/v1/runs/${esc(detail.id)}/${esc(a.name)}" target="_blank" rel="noopener">Open</a>` : `<span class="muted">${a.size == null ? 'not retained for this run' : 'retained by service'}</span>`) : CLOUD ? (a.size == null ? '' : '<span class="muted">stays local</span>') : a.size == null ? '' : `<a href="${API}/runs/${esc(detail.id)}/artifacts/${esc(a.name)}" target="_blank" rel="noopener">Open</a> · <a href="${API}/runs/${esc(detail.id)}/artifacts/${esc(a.name)}?download=1">Download</a>`}</td></tr>`).join('')}</tbody></table></div>
  <div class="tech-only"><h3 class="subhead">Hashes.</h3>${kv(Object.entries(e.hashes ?? {}).map(([k, v]) => [sentence(k.replace(/_sha256$/, '')), v ? `<code>${esc(v)}</code>` : '<span class="muted">not recorded</span>']))}</div>`;
 }
 
 export async function runDetail({ params }) {
  const detail = await api(`/api/runs/${params[0]}`);
+ if(CLOUD)document.querySelector('link[data-upgrade-style]')?.remove();
  if (isMigration(detail)) return migrationRunDetail(detail, { GATE, gateSentence, copy, syncedLine, invariantList, gateBlock, evidenceBlock });
+ if(detail.kind==='program_upgrade' && detail.hosted){
+  const {HostedReport}=await import('/assets/main/report.js');
+  if(!document.querySelector('link[data-upgrade-style]')){const style=document.createElement('link');style.rel='stylesheet';style.href='/assets/main/styles.css';style.dataset.upgradeStyle='1';document.head.append(style);}
+  const run=detail.hosted;const report=run.report_available?await fetch(detail.report_url,{credentials:'same-origin'}).then(r=>{if(!r.ok)throw new Error('Report unavailable');return r.json();}):null;
+  const spec=run.change?await fetch(`/v1/runs/${encodeURIComponent(run.run_id)}/change_spec.json`,{credentials:'same-origin'}).then(r=>r.ok?r.json():null):null;
+  const extras={spec};
+  if(spec?.change?.delivery?.provider==='squads_v4' && run.project_id){
+   try { const response=await fetch(`/v1/projects/${encodeURIComponent(run.project_id)}/governance/changes/${encodeURIComponent(run.change.change_spec_id)}`,{credentials:'same-origin'});const body=await response.json();extras.governance=response.ok?{check:body.checks?.[0]??null,attestation:body.attestations?.[0]??null}:{error:body.error??`HTTP ${response.status}`}; }
+   catch {extras.governance={error:'the governance checks could not be fetched'};}
+  }
+  return {title:'Program upgrade',crumbs:[['Runs','/runs'],[run.run_id]],html:HostedReport({...run,canonical_report:report},extras)};
+ }
  return analyticalDetail(detail, { evidenceBlock });
 }
 

@@ -229,3 +229,6 @@ pub mod path;
 
 pub mod dashboard;
 pub mod presentation;
+
+/// Optional hosted identity and exact-byte sync.
+pub mod cloud;

@@ -57,6 +57,11 @@ struct Cli {
 enum Command {
     /// Serve the API. The default when no subcommand is given.
     Serve,
+    /// Internal offline worker. Reads only a server-staged immutable request.
+    #[command(hide = true)]
+    OfflineAnalysis { directory: std::path::PathBuf },
+    #[command(hide = true)]
+    OfflineUpgrade { directory: std::path::PathBuf },
     /// Operator-only administration. Never reachable over HTTP: a project's CI
     /// token can run checks, and nothing else. Replacing the bundle a project
     /// is measured against is not something a CI credential may do.
@@ -68,6 +73,11 @@ enum Command {
 
 #[derive(Subcommand)]
 enum AdminCommand {
+    /// Validate and import a saved first-party catalogue capture; performs no network requests.
+    ImportCatalogue {
+        #[arg(long)]
+        capture: std::path::PathBuf,
+    },
     /// Create a project. Its id is minted here, never chosen.
     CreateProject {
         #[arg(long)]
@@ -108,6 +118,12 @@ enum AdminCommand {
 
 fn main() -> Result<()> {
     let cli = Cli::parse();
+    if let Some(Command::OfflineAnalysis { directory }) = &cli.command {
+        return eplyx_server::hosted::worker::execute(directory);
+    }
+    if let Some(Command::OfflineUpgrade { directory }) = &cli.command {
+        return eplyx_server::hosted::upgrade::execute(directory);
+    }
     let config = Config::from_env()?;
     let storage = Storage::open(&config.data_dir)
         .with_context(|| format!("opening data directory {}", config.data_dir.display()))?;
@@ -146,11 +162,27 @@ fn main() -> Result<()> {
             serve(config, registry, recovery.requeued)
         }
         Command::Admin { command } => admin(command, &registry),
+        Command::OfflineAnalysis { .. } | Command::OfflineUpgrade { .. } => {
+            unreachable!("handled before service configuration")
+        }
     }
 }
 
 fn admin(command: AdminCommand, registry: &Registry) -> Result<()> {
     match command {
+        AdminCommand::ImportCatalogue { capture } => {
+            use std::io::Read;
+            let mut bytes = Vec::new();
+            std::fs::File::open(capture)?
+                .take(3 * 1024 * 1024 + 1)
+                .read_to_end(&mut bytes)?;
+            let catalogue = eplyx_server::hosted::catalogue::import_capture(registry, &bytes)?;
+            println!(
+                "Imported saved catalogue {} with {} mint identities",
+                catalogue.version,
+                catalogue.entries.len()
+            );
+        }
         AdminCommand::CreateProject {
             name,
             program_id,
@@ -239,12 +271,44 @@ fn serve(config: Config, registry: Registry, requeued: Vec<String>) -> Result<()
             ),
             None => None,
         };
+        let mut observation = match std::env::var("EPLYX_OBSERVATION_RPC_URL")
+            .ok()
+            .filter(|v| !v.trim().is_empty())
+        {
+            Some(url) => Some(eplyx_server::hosted::observation::Service::new(Arc::new(
+                eplyx_engine::ingest::rpc::HttpRpc::new(url)?
+                    .with_response_limit(32 * 1024 * 1024)?
+                    .with_timeout(15)?,
+            ))),
+            None => None,
+        };
+        if let Some(path) = std::env::var_os("EPLYX_MIGRATION_CANDIDATE") {
+            use std::io::Read;
+            let mut bytes = Vec::new();
+            std::fs::File::open(path)
+                .context("registered candidate unavailable")?
+                .take(2 * 1024 * 1024 + 1)
+                .read_to_end(&mut bytes)?;
+            let service = observation
+                .take()
+                .context("candidate registration requires observation service")?;
+            observation = Some(service.with_candidate(bytes)?);
+        }
+        let identity = match eplyx_server::cloud::IdentityConfig::from_env()? {
+            Some(config) => Some(eplyx_server::cloud::Identity::connect(config).await?),
+            None => None,
+        };
         let state = Arc::new(AppState {
+            observation,
+            identity,
             runs: tokio::sync::Semaphore::new(config.max_concurrent_runs),
             config,
             registry,
             governance,
         });
+        eplyx_server::cloud::workspaces::recover_project_intents(&state)
+            .await
+            .map_err(|_| anyhow::anyhow!("project creation recovery failed"))?;
         // Recovered work goes back behind the same semaphore as new work.
         eplyx_server::worker::resume(&state, &requeued);
         let listener = tokio::net::TcpListener::bind(bind)

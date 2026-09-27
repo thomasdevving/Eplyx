@@ -7,6 +7,7 @@
 //! why. Observed, synthetic and derived state never mix; a rehearsal never becomes a
 //! mainnet transaction, and a candidate mechanism never becomes an official issuer
 //! migration.
+pub mod account;
 pub mod adapter;
 pub mod authority;
 pub mod capture;

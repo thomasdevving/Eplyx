@@ -33,7 +33,11 @@ pub fn json() -> Value {
             "token_migration":{"adapter":m::adapter::ADAPTER,"adapter_version":m::adapter::ADAPTER_VERSION,"state_input_schema":m::input::SCHEMA_VERSION,"report_schema":m::report::REPORT_SCHEMA,"invariant_schema":m::invariants::INVARIANT_SCHEMA_VERSION,"fixture_recipe_schema":m::fixture::RECIPE_SCHEMA,"unsigned_plan_schema":m::unsigned::UNSIGNED_SCHEMA,"counterexample_search":m::search::SEARCH_VERSION,"token_2022_matrix":m::extensions::MATRIX_VERSION,"capture_schema":m::capture::CAPTURE_SCHEMA,"bindings_schema":m::pipeline::BINDINGS_SCHEMA,"plan_schema":m::planner::PLAN_SCHEMA,"planner":m::planner::PLANNER_VERSION,"executor":m::execute::EXECUTOR_VERSION,"rehearsal":m::rehearsal::REHEARSAL_VERSION,"stress":m::stress::STRESS_VERSION,"current":m::current::VERSION,"current_selector":m::current_select::SELECTOR_VERSION_V2,"observed_search":m::observed_search::VERSION,"authority_selector":m::authority_resolution::SELECTOR_VERSION,"authority_resolver":m::authority_resolution::RESOLVER_VERSION}
         }
     });
+    value["engine"]["lifecycle"]["current_preflight_schema"] = json!(1);
+    value["engine"]["token_migration"]["account_check_capture_schema"] = json!(1);
+    value["engine"]["token_migration"]["account_check_report_schema"] = json!(1);
     value["engine"]["analytical_metadata_schema"] = json!(local_store::ANALYTICAL_METADATA_VERSION);
     value["engine"]["dashboard_index_schema"] = json!(crate::dashboard::store::INDEX_VERSION);
+    value["engine"]["sync"] = json!({"run":crate::cloud::contract::RUN_SCHEMA,"counterexample":crate::cloud::contract::COUNTEREXAMPLE_SCHEMA,"reproduction":crate::cloud::contract::REPRODUCTION_SCHEMA});
     value
 }

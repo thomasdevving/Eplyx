@@ -13,3 +13,11 @@ pub mod project;
 pub mod registry;
 pub mod storage;
 pub mod worker;
+
+pub mod cloud;
+
+pub mod analytical;
+
+pub mod projection;
+
+pub mod hosted;

@@ -40,6 +40,8 @@ impl Harness {
         let storage = Storage::open(scratch.path().join("data")).expect("storage");
         Self {
             state: Arc::new(AppState {
+                observation: None,
+                identity: None,
                 config: test_config(),
                 registry: Registry::new(storage),
                 runs: tokio::sync::Semaphore::new(permits),
@@ -58,6 +60,8 @@ impl Harness {
         let storage = Storage::open(scratch.path().join("data")).expect("storage");
         Self {
             state: Arc::new(AppState {
+                observation: None,
+                identity: None,
                 config: test_config(),
                 registry: Registry::new(storage),
                 runs: tokio::sync::Semaphore::new(permits),
@@ -72,6 +76,8 @@ impl Harness {
     pub fn reopen(&self) -> Shared {
         let storage = Storage::open(self.scratch.path().join("data")).expect("storage");
         Arc::new(AppState {
+            observation: None,
+            identity: None,
             config: test_config(),
             registry: Registry::new(storage),
             runs: tokio::sync::Semaphore::new(1),
@@ -296,6 +302,7 @@ impl Harness {
 
 pub fn test_config() -> Config {
     Config {
+        worker_binary: std::path::PathBuf::from(env!("CARGO_BIN_EXE_eplyx-server")),
         allowed_origins: Vec::new(),
         operator_token: Some(OPERATOR.to_string()),
         data_dir: PathBuf::from("unused"),

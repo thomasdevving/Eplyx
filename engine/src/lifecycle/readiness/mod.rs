@@ -2,6 +2,7 @@
 //! This is separate from economic lifecycle policy and never performs execution or RPC.
 pub mod evidence;
 
+pub(crate) mod current;
 use crate::{
     lifecycle::frozen::selection::{canonical, digest},
     lifecycle::resolution::{ArtifactRef, PathStatus, SignerAssumption},

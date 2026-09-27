@@ -690,6 +690,7 @@ fn plan_unit(
     funding_reasons: &[Reason],
 ) -> Result<MigrationUnit> {
     let balance: u64 = state.raw_balance.parse()?;
+    let amount = spec.eligibility.amount_policy.amount(balance)?;
     let owner_value = world.rpc_value(&state.owner);
     let owner_raw = if owner_value.is_null() && !world.absence_known(&state.owner) {
         None
@@ -702,7 +703,7 @@ fn plan_unit(
         source_mint,
         state,
         owner_raw,
-        balance,
+        amount,
     )?;
     let holder_is_owner = matches!(
         &authority,
@@ -799,7 +800,7 @@ fn plan_unit(
         }
     };
 
-    let quote = economics::quote(balance, terms);
+    let quote = economics::quote(amount, terms);
     let mut reasons = vec![];
     let excluded = spec
         .eligibility
@@ -814,6 +815,12 @@ fn plan_unit(
         reasons.push(reason(
             "EXCLUDED_ACCOUNT",
             "The specification explicitly excludes this account.",
+        ));
+        ImpactClass::OutsideEligibility
+    } else if amount > balance {
+        reasons.push(reason(
+            "AMOUNT_EXCEEDS_BALANCE",
+            "The proposed exact amount exceeds this account's observed source balance.",
         ));
         ImpactClass::OutsideEligibility
     } else if balance < minimum_balance {
@@ -944,7 +951,7 @@ fn plan_unit(
         destination,
         class,
         reasons,
-        amount_raw: balance.to_string(),
+        amount_raw: amount.to_string(),
         quote: quote_record,
         expected,
         funding_order: None,

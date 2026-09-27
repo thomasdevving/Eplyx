@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "sta_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+  "files": [
+    {
+      "file": "reports/milestone4-validation/live-transfer.capture.json",
+      "source": "reports/milestone4-validation/live-transfer.capture.json",
+      "sha256": "e1a524e447a9a909cd170d391226960ea1abcca4d7839a344549d7058be7a30d",
+      "bytes": 1855324
+    },
+    {
+      "file": "reports/milestone4-validation/live-market.capture.json",
+      "source": "reports/milestone4-validation/live-market.capture.json",
+      "sha256": "3d7ba0f24d424bcc0042495f5cdf39555c0b09569d5dfcecc8017097a8604b52",
+      "bytes": 5560223
+    },
+    {
+      "file": "reports/milestone2-validation/custom.capture.json",
+      "source": "reports/milestone2-validation/custom.capture.json",
+      "sha256": "5355e0a6140066ccb24dc7c5c61be83dd9975534f44c1b7ea22eb1b42b332b97",
+      "bytes": 1801
+    },
+    {
+      "file": "reports/milestone2-validation/nonmint.capture.json",
+      "source": "reports/milestone2-validation/nonmint.capture.json",
+      "sha256": "23f9341c07e18de2ba21fc82be59fd5f76824d04f1a7b235153d5312e05ed6a7",
+      "bytes": 1671
+    }
+  ]
+}

@@ -1,8 +1,7 @@
-//! One Eplyx-protected Solana program, its tokens and its bundle pointer.
+//! One MAIN project: an optional upgrade target, scoped tokens and analytical history.
 //!
-//! Deliberately not a user model. There are no organizations, teams, roles,
-//! invitations or billing here: a project is one program, one adapter, one
-//! active bundle and the tokens that may check it.
+//! Identity and workspace membership live in the identity module. This filesystem
+//! record remains authoritative for the project and its active bundle.
 //!
 //! Types rather than strings wherever the set of values is closed. `chain` is
 //! an enum with one variant because Eplyx supports one chain, and a `String`
@@ -175,7 +174,8 @@ pub struct Project {
     pub project_id: String,
     pub name: String,
     pub chain: Chain,
-    pub program_id: String,
+    #[serde(default)]
+    pub program_id: Option<String>,
     pub adapter_id: AdapterId,
     pub status: ProjectStatus,
     /// `None` until an operator activates a bundle. A project cannot check
@@ -212,8 +212,27 @@ impl Project {
             project_id: project_id.to_string(),
             name: name.trim().to_string(),
             chain: Chain::Solana,
-            program_id: program_id.to_string(),
+            program_id: Some(program_id.to_string()),
             adapter_id,
+            status: ProjectStatus::Setup,
+            active_bundle: None,
+            created_at_unix_seconds: now,
+            updated_at_unix_seconds: now,
+        })
+    }
+
+    /// A workspace may collect migration, lifecycle and current-state runs
+    /// without inventing an upgrade target or requiring an active bundle.
+    pub fn analytical(project_id: &str, name: &str) -> Result<Self> {
+        anyhow::ensure!(crate::storage::valid_id(project_id), "invalid project ID");
+        validate_name(name)?;
+        let now = now_unix_seconds();
+        Ok(Self {
+            project_id: project_id.into(),
+            name: name.trim().into(),
+            chain: Chain::Solana,
+            program_id: None,
+            adapter_id: AdapterId::none(),
             status: ProjectStatus::Setup,
             active_bundle: None,
             created_at_unix_seconds: now,

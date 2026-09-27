@@ -42,6 +42,8 @@ use crate::registry::{
 use crate::worker;
 
 pub struct AppState {
+    pub observation: Option<crate::hosted::observation::Service>,
+    pub identity: Option<crate::cloud::Identity>,
     pub config: Config,
     pub registry: Registry,
     /// Replay is CPU-bound and synchronous. The permit count bounds how many
@@ -74,7 +76,7 @@ pub struct ApiError {
 }
 
 impl ApiError {
-    fn new(status: StatusCode, message: impl Into<String>) -> Self {
+    pub(crate) fn new(status: StatusCode, message: impl Into<String>) -> Self {
         Self {
             status,
             message: message.into(),
@@ -86,7 +88,7 @@ impl ApiError {
         self.exit_code = Some(code);
         self
     }
-    fn bad_request(message: impl Into<String>) -> Self {
+    pub(crate) fn bad_request(message: impl Into<String>) -> Self {
         Self::new(StatusCode::BAD_REQUEST, message)
     }
     fn unauthorized() -> Self {
@@ -95,7 +97,7 @@ impl ApiError {
         // from outside.
         Self::new(StatusCode::UNAUTHORIZED, "unauthorized")
     }
-    fn not_found(what: &str) -> Self {
+    pub(crate) fn not_found(what: &str) -> Self {
         Self::new(StatusCode::NOT_FOUND, format!("no such {what}"))
     }
     fn too_large(what: &str, limit: usize) -> Self {
@@ -104,7 +106,7 @@ impl ApiError {
             format!("{what} exceeds the {limit} byte limit"),
         )
     }
-    fn internal(message: impl Into<String>) -> Self {
+    pub(crate) fn internal(message: impl Into<String>) -> Self {
         Self::new(StatusCode::INTERNAL_SERVER_ERROR, message)
     }
 }
@@ -119,7 +121,7 @@ impl IntoResponse for ApiError {
     }
 }
 
-type ApiResult<T> = std::result::Result<T, ApiError>;
+pub(crate) type ApiResult<T> = std::result::Result<T, ApiError>;
 
 /// One answer for a request body this API cannot use.
 ///
@@ -155,11 +157,17 @@ pub fn router(state: Shared) -> Router {
         .allow_headers([header::AUTHORIZATION, header::CONTENT_TYPE])
         .max_age(std::time::Duration::from_secs(600));
     Router::new()
+        .merge(crate::cloud::router())
+        .merge(crate::hosted::observation::router())
         .route("/health", get(health))
         .route("/ready", get(ready))
         .route("/v1/adapters", get(list_adapters))
         .route("/v1/projects", post(create_project).get(list_projects))
         .route("/v1/projects/{project_id}", get(get_project))
+        .route(
+            "/v1/projects/{project_id}/workspace-binding",
+            post(assign_workspace),
+        )
         .route(
             "/v1/projects/{project_id}/tokens",
             post(create_token).get(list_tokens),
@@ -200,6 +208,10 @@ pub fn router(state: Shared) -> Router {
         .route("/v1/runs/{run_id}/change_spec.json", get(get_change_spec))
         .layer(DefaultBodyLimit::max(limit))
         .layer(cors)
+        .layer(axum::middleware::from_fn_with_state(
+            state.clone(),
+            crate::cloud::cookie_write_guard,
+        ))
         .with_state(state)
 }
 
@@ -210,6 +222,18 @@ async fn health() -> impl IntoResponse {
 /// Ready means the persistent volume is actually usable. Nothing about the
 /// configuration itself is exposed.
 async fn ready(State(state): State<Shared>) -> impl IntoResponse {
+    if let Some(identity) = &state.identity {
+        let reachable = match identity.db.get().await {
+            Ok(db) => db.query_one("SELECT 1", &[]).await.is_ok(),
+            Err(_) => false,
+        };
+        if !reachable {
+            return (
+                StatusCode::SERVICE_UNAVAILABLE,
+                Json(json!({"status":"identity storage unavailable"})),
+            );
+        }
+    }
     match state.registry.storage().writable() {
         Ok(()) => (StatusCode::OK, Json(json!({ "status": "ready" }))),
         Err(_) => (
@@ -234,6 +258,9 @@ async fn ready(State(state): State<Shared>) -> impl IntoResponse {
 /// listing projects without a credential would hand an unauthenticated caller
 /// every program this service watches.
 pub enum Principal {
+    Member {
+        project: Box<Project>,
+    },
     Operator,
     Project {
         project: Box<Project>,
@@ -276,26 +303,50 @@ fn operator(state: &AppState, headers: &HeaderMap) -> ApiResult<Principal> {
 ///
 /// A token for another project fails exactly like a token for none. Which of
 /// the two it was is not distinguishable from outside, and should not be.
-fn authenticate(state: &AppState, project_id: &str, headers: &HeaderMap) -> ApiResult<Principal> {
-    let secret = bearer(headers)?;
-    if let Some(configured) = state.config.operator_token.as_deref() {
-        if constant_time_eq(configured, secret) {
+async fn authenticate(
+    state: &AppState,
+    project_id: &str,
+    headers: &HeaderMap,
+) -> ApiResult<Principal> {
+    if let Ok(secret) = bearer(headers) {
+        if state
+            .config
+            .operator_token
+            .as_deref()
+            .is_some_and(|c| constant_time_eq(c, secret))
+        {
             return Ok(Principal::Operator);
         }
+        if let (Ok(project), Ok(token)) = (
+            state.registry.load_project(project_id),
+            state.registry.authenticate_token(project_id, secret),
+        ) {
+            state.registry.note_token_use(&token);
+            return Ok(Principal::Project {
+                project: Box::new(project),
+                token: Box::new(token),
+            });
+        }
     }
+    if state.identity.is_none() {
+        return Err(ApiError::unauthorized());
+    }
+    let principal = crate::cloud::auth::require_for(state, headers, project_id)
+        .await
+        .map_err(cloud_error)?;
+    crate::cloud::workspaces::project_access(state, &principal, project_id)
+        .await
+        .map_err(cloud_error)?;
     let project = state
         .registry
         .load_project(project_id)
-        .map_err(|_| ApiError::unauthorized())?;
-    let token = state
-        .registry
-        .authenticate_token(project_id, secret)
-        .map_err(|_| ApiError::unauthorized())?;
-    state.registry.note_token_use(&token);
-    Ok(Principal::Project {
+        .map_err(|_| ApiError::not_found("project"))?;
+    Ok(Principal::Member {
         project: Box::new(project),
-        token: Box::new(token),
     })
+}
+fn cloud_error(error: crate::cloud::error::ApiError) -> ApiError {
+    ApiError::new(error.status, error.message)
 }
 
 fn constant_time_eq(a: &str, b: &str) -> bool {
@@ -350,15 +401,31 @@ async fn create_check(
     headers: HeaderMap,
     multipart: Multipart,
 ) -> ApiResult<Response> {
-    let principal = authenticate(&state, &project_id, &headers)?;
+    let principal = authenticate(&state, &project_id, &headers).await?;
     let project = match &principal {
-        Principal::Project { project, .. } => (**project).clone(),
+        Principal::Project { project, .. } | Principal::Member { project } => (**project).clone(),
         Principal::Operator => state
             .registry
             .load_project(&project_id)
             .map_err(|_| ApiError::not_found("project"))?,
     };
     let upload = read_upload(&state, multipart).await?;
+    if let Some(bytes) = &upload.change_spec {
+        let spec = ChangeSpec::parse(bytes).map_err(|_| {
+            ApiError::bad_request("invalid change spec").with_exit_code(ci::EXIT_ERROR)
+        })?;
+        if !matches!(
+            spec.change,
+            eplyx_engine::change::Change::ProgramUpgrade { .. }
+        ) {
+            return create_analytical_check(state, &project.project_id, spec, upload).await;
+        }
+    }
+    if !upload.analysis.is_empty() {
+        return Err(ApiError::bad_request(
+            "analytical inputs require an explicit analytical change spec",
+        ));
+    }
 
     // Readiness is a hosted configuration question, answered before a run
     // exists. It is deliberately not an Eplyx exit code: nothing was measured,
@@ -494,6 +561,8 @@ async fn create_check(
         };
 
     let metadata = RunMetadata {
+        hosted_analysis: None,
+        analysis: None,
         run_id: run_id.clone(),
         project_id: project.project_id.clone(),
         status: RunStatus::Queued,
@@ -605,7 +674,7 @@ async fn get_artifact(
     Path((project_id, sha256)): Path<(String, String)>,
     headers: HeaderMap,
 ) -> ApiResult<Response> {
-    project_for(&state, &project_id, &headers)?;
+    project_for(&state, &project_id, &headers).await?;
     if !crate::artifacts::canonical_sha256(&sha256) {
         return Err(ApiError::bad_request(
             "an artifact is named by 64 lowercase hex characters",
@@ -638,6 +707,7 @@ async fn get_artifact(
 /// What a check request carried. Every part is optional here; which
 /// combinations are meaningful is `create_check`'s decision.
 struct Upload {
+    analysis: std::collections::BTreeMap<String, Vec<u8>>,
     candidate: Option<Bytes>,
     expectations: Option<Vec<u8>>,
     change_spec: Option<Vec<u8>>,
@@ -652,6 +722,7 @@ struct Upload {
 /// always meant, and `change_spec` and `label` are new and optional.
 async fn read_upload(state: &AppState, mut multipart: Multipart) -> ApiResult<Upload> {
     let mut upload = Upload {
+        analysis: std::collections::BTreeMap::new(),
         candidate: None,
         expectations: None,
         change_spec: None,
@@ -672,6 +743,29 @@ async fn read_upload(state: &AppState, mut multipart: Multipart) -> ApiResult<Up
             .await
             .map_err(|error| ApiError::new(error.status(), format!("upload rejected: {error}")))?;
         let slot_taken = match name.as_str() {
+            "state_input"
+            | "state_artifact"
+            | "snapshot"
+            | "scenario"
+            | "analysis_options"
+            | "lifecycle_evidence"
+            | "pinned_program_capture" => {
+                let limit = if matches!(
+                    name.as_str(),
+                    "state_artifact" | "snapshot" | "lifecycle_evidence" | "pinned_program_capture"
+                ) {
+                    state.config.max_bundle_bytes
+                } else {
+                    MAX_CHANGE_SPEC_BYTES
+                };
+                if bytes.len() > limit {
+                    return Err(ApiError::too_large(&name, limit));
+                }
+                upload
+                    .analysis
+                    .insert(name.clone(), bytes.to_vec())
+                    .is_some()
+            }
             "candidate" => {
                 if bytes.len() > state.config.max_candidate_bytes {
                     return Err(ApiError::too_large(
@@ -733,12 +827,16 @@ async fn read_upload(state: &AppState, mut multipart: Multipart) -> ApiResult<Up
 /// whether the run exists, belongs to someone else, or never existed. Searching
 /// every project's tokens to answer `404` instead would cost a verification per
 /// project and reveal nothing that this does not already withhold.
-fn authorize_run(state: &AppState, run_id: &str, headers: &HeaderMap) -> ApiResult<RunMetadata> {
+async fn authorize_run(
+    state: &AppState,
+    run_id: &str,
+    headers: &HeaderMap,
+) -> ApiResult<RunMetadata> {
     let metadata = state
         .registry
         .load_run(run_id)
         .map_err(|_| ApiError::not_found("run"))?;
-    authenticate(state, &metadata.project_id, headers)?;
+    authenticate(state, &metadata.project_id, headers).await?;
     Ok(metadata)
 }
 
@@ -747,7 +845,7 @@ async fn get_run(
     Path(run_id): Path<String>,
     headers: HeaderMap,
 ) -> ApiResult<Response> {
-    let metadata = authorize_run(&state, &run_id, &headers)?;
+    let metadata = authorize_run(&state, &run_id, &headers).await?;
     Ok((StatusCode::OK, Json(metadata)).into_response())
 }
 
@@ -779,7 +877,7 @@ async fn get_report_json(
     Path(run_id): Path<String>,
     headers: HeaderMap,
 ) -> ApiResult<Response> {
-    let metadata = authorize_run(&state, &run_id, &headers)?;
+    let metadata = authorize_run(&state, &run_id, &headers).await?;
     if !metadata.report_available {
         return Err(report_unavailable(&metadata));
     }
@@ -800,7 +898,7 @@ async fn get_report_markdown(
     Path(run_id): Path<String>,
     headers: HeaderMap,
 ) -> ApiResult<Response> {
-    let metadata = authorize_run(&state, &run_id, &headers)?;
+    let metadata = authorize_run(&state, &run_id, &headers).await?;
     if !metadata.report_available {
         return Err(report_unavailable(&metadata));
     }
@@ -826,7 +924,7 @@ async fn get_change_spec(
     Path(run_id): Path<String>,
     headers: HeaderMap,
 ) -> ApiResult<Response> {
-    let metadata = authorize_run(&state, &run_id, &headers)?;
+    let metadata = authorize_run(&state, &run_id, &headers).await?;
     let change = metadata.change.as_ref().ok_or_else(|| {
         ApiError::new(
             StatusCode::NOT_FOUND,
@@ -883,7 +981,7 @@ async fn attest_squads_governance(
     headers: HeaderMap,
     body: Bytes,
 ) -> ApiResult<Response> {
-    let project = project_for(&state, &project_id, &headers)?;
+    let project = project_for(&state, &project_id, &headers).await?;
     let request: SquadsAttestRequest = parse_json(&body)?;
     if !crate::artifacts::canonical_sha256(&request.change_spec_id)
         || !crate::artifacts::canonical_sha256(&request.binding_id)
@@ -1091,7 +1189,7 @@ async fn verify_squads_governance(
     headers: HeaderMap,
     body: Bytes,
 ) -> ApiResult<Response> {
-    let project = project_for(&state, &project_id, &headers)?;
+    let project = project_for(&state, &project_id, &headers).await?;
     let request: SquadsVerifyRequest = parse_json(&body)?;
     let rpc = state.governance.clone().ok_or_else(|| {
         ApiError::new(
@@ -1170,7 +1268,7 @@ async fn list_governance_checks(
     Path((project_id, change_spec_id)): Path<(String, String)>,
     headers: HeaderMap,
 ) -> ApiResult<Response> {
-    let project = project_for(&state, &project_id, &headers)?;
+    let project = project_for(&state, &project_id, &headers).await?;
     if !crate::artifacts::canonical_sha256(&change_spec_id) {
         return Err(ApiError::bad_request(
             "a change_spec_id is 64 lowercase hex characters",
@@ -1267,7 +1365,7 @@ struct ProjectView {
     project_id: String,
     name: String,
     chain: Chain,
-    program_id: String,
+    program_id: Option<String>,
     adapter_id: String,
     status: ProjectStatus,
     speaks_semantics: bool,
@@ -1336,13 +1434,32 @@ async fn create_project(
 }
 
 async fn list_projects(State(state): State<Shared>, headers: HeaderMap) -> ApiResult<Response> {
-    operator(&state, &headers)?;
     let projects = state
         .registry
         .list_projects()
-        .map_err(|error| ApiError::internal(format!("listing projects: {error}")))?;
-    let views: Vec<ProjectView> = projects.iter().map(ProjectView::from).collect();
-    Ok((StatusCode::OK, Json(json!({ "projects": views }))).into_response())
+        .map_err(|_| ApiError::internal("project registry unavailable"))?;
+    let selected = if operator(&state, &headers).is_ok() {
+        projects
+    } else {
+        if state.identity.is_none() {
+            return Err(ApiError::unauthorized());
+        }
+        let principal = crate::cloud::auth::require_user(&state, &headers)
+            .await
+            .map_err(cloud_error)?;
+        let mut selected = Vec::new();
+        for project in projects {
+            if crate::cloud::workspaces::project_access(&state, &principal, &project.project_id)
+                .await
+                .is_ok()
+            {
+                selected.push(project);
+            }
+        }
+        selected
+    };
+    let views: Vec<ProjectView> = selected.iter().map(ProjectView::from).collect();
+    Ok(Json(json!({"projects":views})).into_response())
 }
 
 /// One project, with cheap run statistics.
@@ -1354,7 +1471,7 @@ async fn get_project(
     Path(project_id): Path<String>,
     headers: HeaderMap,
 ) -> ApiResult<Response> {
-    let project = project_for(&state, &project_id, &headers)?;
+    let project = project_for(&state, &project_id, &headers).await?;
     let run_ids = state
         .registry
         .project_run_ids(&project_id)
@@ -1378,13 +1495,17 @@ async fn get_project(
 ///
 /// The operator sees any; a project token sees only its own, because it is only
 /// ever matched against that project's tokens.
-fn project_for(state: &AppState, project_id: &str, headers: &HeaderMap) -> ApiResult<Project> {
-    match authenticate(state, project_id, headers)? {
+pub(crate) async fn project_for(
+    state: &AppState,
+    project_id: &str,
+    headers: &HeaderMap,
+) -> ApiResult<Project> {
+    match authenticate(state, project_id, headers).await? {
         Principal::Operator => state
             .registry
             .load_project(project_id)
             .map_err(|_| ApiError::not_found("project")),
-        Principal::Project { project, .. } => Ok(*project),
+        Principal::Project { project, .. } | Principal::Member { project } => Ok(*project),
     }
 }
 
@@ -1424,7 +1545,17 @@ async fn create_token(
     headers: HeaderMap,
     body: Bytes,
 ) -> ApiResult<Response> {
-    let principal = authenticate(&state, &project_id, &headers)?;
+    let principal = authenticate(&state, &project_id, &headers).await?;
+    if matches!(principal, Principal::Member { .. }) {
+        return crate::cloud::workspaces::create_project_token(
+            State(state),
+            headers,
+            Path(project_id),
+            Ok(body),
+        )
+        .await
+        .map_err(cloud_error);
+    }
     require_operator(&principal)?;
     let request: CreateTokenRequest = parse_json(&body)?;
     state
@@ -1450,8 +1581,25 @@ async fn list_tokens(
     Path(project_id): Path<String>,
     headers: HeaderMap,
 ) -> ApiResult<Response> {
-    let principal = authenticate(&state, &project_id, &headers)?;
+    let principal = authenticate(&state, &project_id, &headers).await?;
+    if matches!(principal, Principal::Member { .. }) {
+        return crate::cloud::workspaces::list_project_tokens(
+            State(state),
+            headers,
+            Path(project_id),
+        )
+        .await
+        .map(|v| v.into_response())
+        .map_err(cloud_error);
+    }
     require_operator(&principal)?;
+    if state.identity.is_some() {
+        let tokens = crate::cloud::workspaces::project_token_views(&state, &project_id)
+            .await
+            .map_err(cloud_error)?;
+        return Ok(Json(json!({"tokens":tokens})).into_response());
+    }
+
     let tokens = state
         .registry
         .list_tokens(&project_id)
@@ -1465,8 +1613,25 @@ async fn revoke_token(
     Path((project_id, token_id)): Path<(String, String)>,
     headers: HeaderMap,
 ) -> ApiResult<Response> {
-    let principal = authenticate(&state, &project_id, &headers)?;
+    let principal = authenticate(&state, &project_id, &headers).await?;
+    if matches!(principal, Principal::Member { .. }) {
+        return crate::cloud::workspaces::revoke_project_token(
+            State(state),
+            headers,
+            Path((project_id, token_id)),
+        )
+        .await
+        .map(|v| v.into_response())
+        .map_err(cloud_error);
+    }
     require_operator(&principal)?;
+    if state.identity.is_some() {
+        return crate::cloud::workspaces::revoke_any_project_token(&state, &project_id, &token_id)
+            .await
+            .map(|v| Json(v).into_response())
+            .map_err(cloud_error);
+    }
+
     let token = state
         .registry
         .revoke_token(&project_id, &token_id)
@@ -1523,7 +1688,7 @@ async fn create_bundle(
     headers: HeaderMap,
     multipart: Multipart,
 ) -> ApiResult<Response> {
-    let principal = authenticate(&state, &project_id, &headers)?;
+    let principal = authenticate(&state, &project_id, &headers).await?;
     require_operator(&principal)?;
     let project = state
         .registry
@@ -1552,7 +1717,7 @@ async fn list_bundles(
     Path(project_id): Path<String>,
     headers: HeaderMap,
 ) -> ApiResult<Response> {
-    let project = project_for(&state, &project_id, &headers)?;
+    let project = project_for(&state, &project_id, &headers).await?;
     let bundles = state
         .registry
         .list_bundles(&project_id)
@@ -1570,7 +1735,7 @@ async fn activate_bundle(
     Path((project_id, bundle_id)): Path<(String, String)>,
     headers: HeaderMap,
 ) -> ApiResult<Response> {
-    let principal = authenticate(&state, &project_id, &headers)?;
+    let principal = authenticate(&state, &project_id, &headers).await?;
     require_operator(&principal)?;
     let project = state
         .registry
@@ -1600,13 +1765,19 @@ struct RunQuery {
 
 #[derive(Serialize)]
 struct RunSummaryView {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    source: Option<crate::analytical::RunSource>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    source_run_id: Option<String>,
     run_id: String,
     status: RunStatus,
     exit_code: Option<u8>,
     created_at_unix_seconds: u64,
     started_at_unix_seconds: Option<u64>,
     completed_at_unix_seconds: Option<u64>,
+    #[serde(skip_serializing_if = "String::is_empty")]
     candidate_sha256: String,
+    #[serde(skip_serializing_if = "String::is_empty")]
     bundle_sha256: String,
     bundle_id: Option<String>,
     /// `null` marks a legacy run, recorded before change identity.
@@ -1626,7 +1797,7 @@ async fn list_project_runs(
     axum::extract::Query(query): axum::extract::Query<RunQuery>,
     headers: HeaderMap,
 ) -> ApiResult<Response> {
-    project_for(&state, &project_id, &headers)?;
+    project_for(&state, &project_id, &headers).await?;
     let limit = query.limit.unwrap_or(20).clamp(1, 100);
     let ids = match &query.change_spec_id {
         Some(id) => {
@@ -1663,6 +1834,8 @@ async fn list_project_runs(
             break;
         }
         runs.push(RunSummaryView {
+            source: run.analysis.as_ref().map(|a| a.source.clone()),
+            source_run_id: run.analysis.as_ref().map(|a| a.source_run_id.clone()),
             run_id: run.run_id,
             status: run.status,
             exit_code: run.exit_code,
@@ -1760,4 +1933,237 @@ fn bundle_member_path(name: &str) -> Option<std::path::PathBuf> {
         path.push(segment);
     }
     Some(path)
+}
+
+/// Explicit operator assignment for legacy registry projects. Never inferred
+/// from names or tokens. Assignment creates authorization, not a second project.
+async fn assign_workspace(
+    State(state): State<Shared>,
+    Path(project): Path<String>,
+    headers: HeaderMap,
+    body: Bytes,
+) -> ApiResult<Response> {
+    let principal = operator(&state, &headers)?;
+    require_operator(&principal)?;
+    #[derive(serde::Deserialize)]
+    #[serde(deny_unknown_fields)]
+    struct Request {
+        workspace_id: String,
+        owner_user_id: String,
+    }
+    let request: Request = parse_json(&body)?;
+    state
+        .registry
+        .load_project(&project)
+        .map_err(|_| ApiError::not_found("project"))?;
+    if !eplyx_engine::cloud::contract::is_project_id(&project) {
+        return Err(ApiError::bad_request(
+            "project ID is not a minted MAIN identity",
+        ));
+    }
+    let identity = state.identity().map_err(cloud_error)?;
+    let _guard = identity.project_creation.lock().await;
+    let db = identity
+        .db
+        .get()
+        .await
+        .map_err(|_| ApiError::internal("identity storage unavailable"))?;
+    let changed=db.execute("INSERT INTO project_workspaces(project_id,workspace_id,linked_by,linked_via) SELECT $1,$2,$3,'operator' WHERE EXISTS (SELECT 1 FROM workspace_members WHERE workspace_id=$2 AND user_id=$3 AND role='owner') ON CONFLICT(project_id) DO NOTHING",&[&project,&request.workspace_id,&request.owner_user_id]).await.map_err(|_|ApiError::internal("project assignment failed"))?;
+    if changed == 0 {
+        let old = db
+            .query_opt(
+                "SELECT workspace_id,linked_by FROM project_workspaces WHERE project_id=$1",
+                &[&project],
+            )
+            .await
+            .map_err(|_| ApiError::internal("project assignment failed"))?;
+        if !old.is_some_and(|r| {
+            r.get::<_, String>(0) == request.workspace_id
+                && r.get::<_, String>(1) == request.owner_user_id
+        }) {
+            return Err(ApiError::new(
+                StatusCode::CONFLICT,
+                "project already assigned differently or named user is not a workspace owner",
+            ));
+        }
+    }
+    let path = state
+        .registry
+        .storage()
+        .project_dir(&project)
+        .map_err(|_| ApiError::not_found("project"))?
+        .join("creation-intent.json");
+    if path.exists() {
+        let mut intent: crate::cloud::workspaces::ProjectIntent = state
+            .registry
+            .storage()
+            .read_json(&path)
+            .map_err(|_| ApiError::internal("creation intent is invalid"))?;
+        intent.completed = true;
+        state
+            .registry
+            .storage()
+            .write_json(&path, &intent)
+            .map_err(|_| ApiError::internal("creation recovery update failed"))?;
+    }
+    Ok(
+        Json(json!({"project_id":project,"workspace_id":request.workspace_id,"assigned":true}))
+            .into_response(),
+    )
+}
+
+/// Additive multi-kind check contract. Every part is data, never executable
+/// source or a client-selected command. Captures are frozen before queuing.
+async fn create_analytical_check(
+    state: Shared,
+    project: &str,
+    spec: ChangeSpec,
+    mut upload: Upload,
+) -> ApiResult<Response> {
+    use crate::{artifacts::ArtifactClass, hosted::Input};
+    #[derive(serde::Deserialize, Default)]
+    #[serde(deny_unknown_fields)]
+    struct Options {
+        policy: Option<eplyx_engine::migration::gate::Policy>,
+        before: Option<chrono::DateTime<chrono::Utc>>,
+        at: Option<chrono::DateTime<chrono::Utc>>,
+    }
+    if upload.expectations.is_some() || upload.label.is_some() {
+        return Err(ApiError::bad_request(
+            "analytical checks take declared ChangeSpec and kind-specific inputs",
+        ));
+    }
+    let options: Options = upload
+        .analysis
+        .remove("analysis_options")
+        .map(|b| serde_json::from_slice(&b))
+        .transpose()
+        .map_err(|_| ApiError::bad_request("invalid analysis options"))?
+        .unwrap_or_default();
+    let canonical = spec
+        .to_document()
+        .map_err(|_| ApiError::bad_request("invalid change spec"))?;
+    let change = state
+        .registry
+        .document_ref(canonical.as_bytes())
+        .map_err(|_| ApiError::internal("input storage failed"))?;
+    let mut evidence = std::collections::BTreeMap::new();
+    if let Some(bytes) = upload.analysis.remove("lifecycle_evidence") {
+        if !matches!(
+            spec.change,
+            eplyx_engine::change::Change::LifecycleChange(_)
+        ) {
+            return Err(ApiError::bad_request(
+                "source evidence requires a lifecycle change",
+            ));
+        }
+        let documents: std::collections::BTreeMap<String, eplyx_engine::cloud::contract::Artifact> =
+            serde_json::from_slice(&bytes)
+                .map_err(|_| ApiError::bad_request("invalid lifecycle evidence"))?;
+        if documents.len() > 32 {
+            return Err(ApiError::bad_request("too many source artifacts"));
+        }
+        for (id, artifact) in documents {
+            if artifact.sha256 != eplyx_engine::replay::hash_bytes(artifact.text.as_bytes()) {
+                return Err(ApiError::bad_request("source artifact digest mismatch"));
+            }
+            evidence.insert(
+                id,
+                state
+                    .registry
+                    .artifacts()
+                    .put(ArtifactClass::Capture, artifact.text.as_bytes())
+                    .map_err(|_| ApiError::internal("source storage failed"))?
+                    .reference,
+            );
+        }
+    }
+    let program_capture = upload
+        .analysis
+        .remove("pinned_program_capture")
+        .map(|bytes| {
+            state
+                .registry
+                .artifacts()
+                .put(ArtifactClass::Capture, &bytes)
+                .map(|v| v.reference)
+                .map_err(|_| ApiError::internal("input storage failed"))
+        })
+        .transpose()?;
+    let mut take = |name: &str, class: ArtifactClass| -> ApiResult<ArtifactRef> {
+        let bytes = upload
+            .analysis
+            .remove(name)
+            .ok_or_else(|| ApiError::bad_request(format!("{name} is required")))?;
+        state
+            .registry
+            .artifacts()
+            .put(class, &bytes)
+            .map(|v| v.reference)
+            .map_err(|_| ApiError::internal("input storage failed"))
+    };
+    let input = match &spec.change {
+        eplyx_engine::change::Change::TokenMigration(_) => {
+            if options.before.is_some() || options.at.is_some() {
+                return Err(ApiError::bad_request(
+                    "migration clock comes from the frozen state input",
+                ));
+            }
+            let candidate = match upload.candidate.take() {
+                Some(b) => b.to_vec(),
+                None => retained_candidate(&state, project, &spec)?,
+            };
+            spec.resolve(CandidateSource::Bytes(&candidate))
+                .map_err(|_| ApiError::bad_request("candidate does not resolve the change spec"))?;
+            let candidate = state
+                .registry
+                .artifacts()
+                .put_program(&candidate)
+                .map_err(|_| ApiError::internal("candidate storage failed"))?
+                .reference;
+            Input::TokenMigration {
+                change,
+                candidate,
+                state_input: take("state_input", ArtifactClass::Document)?,
+                state_artifact: take("state_artifact", ArtifactClass::Capture)?,
+                program_capture,
+                policy: options.policy.unwrap_or_default(),
+            }
+        }
+        eplyx_engine::change::Change::LifecycleChange(_) => {
+            if upload.candidate.is_some() || options.policy.is_some() || program_capture.is_some() {
+                return Err(ApiError::bad_request("lifecycle evaluation does not take executable bytes or a deployment gate policy"));
+            }
+            Input::LifecycleChange {
+                change,
+                evidence,
+                snapshot: take("snapshot", ArtifactClass::Capture)?,
+                scenario: take("scenario", ArtifactClass::Document)?,
+                before: options
+                    .before
+                    .ok_or_else(|| ApiError::bad_request("before is required"))?,
+                at: options
+                    .at
+                    .ok_or_else(|| ApiError::bad_request("at is required"))?,
+            }
+        }
+        _ => return Err(ApiError::bad_request("unsupported analytical kind")),
+    };
+    if !upload.analysis.is_empty() {
+        return Err(ApiError::bad_request(
+            "unexpected inputs for this analytical kind",
+        ));
+    }
+    let registry_state = Arc::clone(&state);
+    let project = project.to_owned();
+    let record = tokio::task::spawn_blocking(move || {
+        registry_state
+            .registry
+            .create_hosted_analysis(&project, input)
+    })
+    .await
+    .map_err(|_| ApiError::internal("input validation stopped"))?
+    .map_err(|_| ApiError::bad_request("analytical inputs do not validate together"))?;
+    worker::spawn(Arc::clone(&state), record.run_id.clone());
+    Ok((StatusCode::ACCEPTED,Json(json!({"run_id":record.run_id,"project_id":record.project_id,"status":record.status,"change":record.change,"status_url":format!("/v1/runs/{}",record.run_id)}))).into_response())
 }
