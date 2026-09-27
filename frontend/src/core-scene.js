@@ -7,41 +7,41 @@ import { Mark } from './brand.js';
 const rings = {
   changes: {
     label: 'Changes',
-    caption: 'What Eplyx tracks · one live layer, three planned',
+    caption: 'Implemented change analysis · scope varies by kind',
     tilt: -17,
     direction: -1,
     duration: 38,
     bodies: [
-      ['Program Upgrade', 'live', 'A proposed program binary, replayed against validated historical production state.'],
-      ['Governance Change', 'planned', 'Proposals that change the rules, evaluated before they execute.'],
-      ['Privilege / Authority', 'planned', 'Who holds upgrade, freeze and withdrawal authority over the program.'],
-      ['Parameter Change', 'planned', 'Fees, rates and limits the program can move without a new binary.'],
+      ['Program upgrade', 'live', 'Baseline and candidate execution over identical retained state, within supported replay paths.'],
+      ['Token migration', 'live', 'A proposed mechanism rehearsed in a local VM, with holder coverage and exact reconciliation.'],
+      ['Lifecycle policy', 'live', 'Declared terms evaluated over one snapshot, with unknown eligibility and evidence gaps retained.'],
+      ['Squads binding', 'live', 'Read-only binding for one supported Squads V4 loader-v3 program upgrade. No signing or submission.'],
     ],
   },
   consequences: {
     label: 'Consequences',
-    caption: 'What Eplyx measures · two live layers, two planned',
+    caption: 'Findings stay bound to tested inputs and supported paths',
     tilt: 19,
     direction: 1,
     duration: 34,
     bodies: [
-      ['Economic Impact', 'live', 'Measured user output, fees and protocol balances across the tested corpus.', 'pool_tokens_received', '↓ 21 bps'],
-      ['CI Decision', 'live', 'An undeclared or out-of-bounds change fails the gate.', 'Unexpected', 'FAIL'],
-      ['Authority Surface', 'planned', 'Which authorities a change exposes, widens or removes.'],
-      ['Exitability', 'planned', 'Whether users can still withdraw once the change is live.'],
+      ['Economic effects', 'live', 'Measured balances, fees and protocol quantities for the supported actions. Coverage is explicit.'],
+      ['Gate findings', 'live', 'Upgrade expectations and migration policies produce scoped findings with evidence gaps visible.'],
+      ['Reconciliation', 'live', 'Account for source, destination, reserves and fees in migration execution.'],
+      ['Current paths', 'live', 'Separate Transfer, bounded Meteora market-exit and liquidity-withdrawal checks over captured state.'],
     ],
   },
 };
 
 const orbitBody = (ring, [name, status, detail, metric, value], index) =>
-  `<button type="button" class="orbit-body orbit-body--${status}" data-ring="${ring}" data-index="${index}" data-name="${name}" data-status="${status === 'live' ? 'Live' : 'Planned'}" data-detail="${detail}"${metric ? ` data-metric="${metric}" data-value="${value}"` : ''}>
+  `<button type="button" class="orbit-body orbit-body--${status}" data-ring="${ring}" data-index="${index}" data-name="${name}" data-status="${status === 'live' ? 'Implemented' : 'Planned'}" data-detail="${detail}"${metric ? ` data-metric="${metric}" data-value="${value}"` : ''}>
     <span class="orbit-body__rock orbit-body__rock--${index}" aria-hidden="true"></span>
-    <span class="visually-hidden">${name}. ${status === 'live' ? 'Live layer' : 'Planned layer'}. ${detail}</span>
+    <span class="visually-hidden">${name}. ${status === 'live' ? 'Implemented' : 'Planned layer'}. ${detail}</span>
   </button>
   <div class="orbit-label orbit-label--${status}" data-ring="${ring}" data-index="${index}" aria-hidden="true">
     <svg class="orbit-label__leader"><path/><circle r="2"/></svg>
     <span class="orbit-body__name">${name}</span>
-    <small class="orbit-body__status">${status === 'live' ? 'Live' : 'Planned'}</small>
+    <small class="orbit-body__status">${status === 'live' ? 'Implemented' : 'Planned'}</small>
   </div>`;
 
 const orbitPlane = side => `<svg class="orbit-plane orbit-plane--${side}" aria-hidden="true">
