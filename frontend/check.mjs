@@ -1,10 +1,10 @@
 import { readFile } from 'node:fs/promises';
 
-const files = ['index.html','src/app.js','src/landing.js','src/session.js','src/projects.js','src/brand.js','src/intro.js','src/core-scene.js','src/sculpture.js','src/analyse.js','src/report.js','src/change.js','src/analysis.js','src/governance.js','src/styles.css','public/logo.svg'];
+const files = ['index.html','src/app.js','src/landing.js','src/cli.js','src/transitions.js','src/session.js','src/projects.js','src/brand.js','src/intro.js','src/core-scene.js','src/sculpture.js','src/analyse.js','src/report.js','src/change.js','src/analysis.js','src/governance.js','src/styles.css','src/fonts.css','public/logo.svg'];
 const root = new URL('.', import.meta.url);
 const contents = await Promise.all(files.map(file => readFile(new URL(file, root), 'utf8')));
 const all = contents.join('\n');
-const required = ['Know what changes', 'validated historical production', 'Unexpected economic changes detected', 'Evidence, not', '/analyse', '/runs/', 'prefers-reduced-motion'];
+const required = ['Know what changes', 'validated historical production', 'Token migrations', 'Lifecycle changes', 'Build the CLI from source.', 'Future scope', '/analyse', '/runs/', 'prefers-reduced-motion'];
 for (const text of required) if (!all.includes(text)) throw new Error(`Missing required frontend content: ${text}`);
 // The mark is inlined for WebKit, so the two copies must stay identical.
 const logo = contents[files.indexOf('public/logo.svg')];

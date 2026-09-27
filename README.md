@@ -114,19 +114,26 @@ the toolchain is installed, no database, no container.
 
 ### Public frontend
 
-The public product site explains the replay and gate model, includes a real
-Stake Pool demo report, and provides an `/analyse` form for an existing hosted
-project. The form calls the Phase 10 API directly; it does not create projects
-or invent an unauthenticated workflow.
+The public site separates implemented upgrade, migration, lifecycle, current-path
+and Squads capabilities from the next validation work and future scope. `/cli`
+provides source-build instructions, copyable commands and explicit input
+requirements. There is no advertised prebuilt download or installer.
+
+`/analyse` remains the operator's upgrade form for an existing hosted project.
+Workspace links use the configured `EPLYX_API_URL` origin; hosted identity and
+observation features require their own operator configuration.
 
 ```bash
 pnpm dev              # http://localhost:4173
-pnpm check:frontend   # structure and product-copy checks
+pnpm check:frontend   # presentation and analytical view contracts
 pnpm build            # static output in dist/
+pnpm test:public      # built-site browser checks; accepts EPLYX_CHROME
 ```
 
-The prepared routes are `/`, `/analyse`, and `/runs/:id`. A static host must
-rewrite those application routes to `index.html`.
+The public routes are `/`, `/cli`, `/token-transitions`, `/analyse`, `/projects`,
+`/projects/:id` and `/runs/:id`. A static host must rewrite those application routes
+to `index.html`. `/workspaces` belongs to the API service. Public and dashboard
+fonts are bundled locally. See [the public frontend verification](docs/public-frontend-refresh.md).
 
 ---
 

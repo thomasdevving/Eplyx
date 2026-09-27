@@ -1,3 +1,4 @@
+import { CliPage, attachCommandCopy } from './cli.js';
 import { initializeMode } from './mode.js';
 import { TokenTransitionsPage } from './transitions.js';
 initializeMode();
@@ -5,7 +6,6 @@ import { LandingPage } from './landing.js';
 import { AnalysePage, attachAnalyse } from './analyse.js';
 import { ReportPage, attachReport } from './report.js';
 import { ProjectsPage, ProjectPage, attachProjects, attachProject } from './projects.js';
-import { finishIntro } from './intro.js';
 import { attachCoreParallax } from './core-scene.js';
 import { attachShell } from './shell.js';
 
@@ -22,7 +22,8 @@ function route() {
   disposeReport?.();
   disposeReport = undefined;
   const path = location.pathname.replace(/\/+$/, '') || '/';
-  if (path === '/token-transitions') app.innerHTML = TokenTransitionsPage();
+  if (path === '/cli') app.innerHTML = CliPage();
+  else if (path === '/token-transitions') app.innerHTML = TokenTransitionsPage();
   else if (path === '/analyse') app.innerHTML = AnalysePage();
   else if (path === '/projects') app.innerHTML = ProjectsPage();
   else if (path.startsWith('/projects/')) app.innerHTML = ProjectPage(decodeURIComponent(path.slice(10)));
@@ -48,6 +49,7 @@ function decorate() {
     navigate(url.pathname + url.hash);
   }));
   attachShell();
+  attachCommandCopy();
   revealObserver?.disconnect();
   revealObserver = new IntersectionObserver(entries => entries.forEach(entry => {
     if (entry.isIntersecting) { entry.target.classList.add('is-visible'); revealObserver.unobserve(entry.target); }
@@ -68,7 +70,6 @@ function attachPage(path) {
   }
   if (path === '/') {
     disposeCoreScene = attachCoreParallax();
-    finishIntro();
   }
   if (path === '/analyse') attachAnalyse(navigate);
   if (path === '/projects') disposeReport = attachProjects(navigate);
