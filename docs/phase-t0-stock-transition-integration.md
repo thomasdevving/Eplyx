@@ -714,3 +714,15 @@ with their original Markdown renderer and are never rewritten. Fresh dashboard
 fixtures are separately labelled presentation inputs, not replacements for the
 frozen economic reference. See [T8](phase-t8-dashboard.md), its source-test
 mapping and verification receipts. Hosted sync assertions remain assigned to T9.
+
+
+## Integration completion (T10)
+
+The status at the top records the original T0 checkpoint. Subsequent owner
+instructions authorized continuing through the remaining phases and fixing routine
+failures without another architecture pause. T1–T9 are implemented on
+`t-token-migration`; T9 is `351ccae`. [The final integration report](stock-transition-integration-report.md)
+records the phase commits, applied decisions, complete before/after references and
+final verification. This addendum does not change the frozen T0 values, source
+assertions or historical evidence. Live-provider checks remain intentionally not
+run, and optional release packaging remains outside this work.

@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-**Eplyx — Upgrade Impact CI**: a pre-deployment safety system for Solana programs. It executes identical transactions against two builds of the same program over a corpus of account states, and reports what changed *solely because the program version changed* — with an emphasis on economic consequences, not byte diffs.
+**Eplyx** analyses declared Solana changes: program upgrades, token migrations and lifecycle policies. Its program-upgrade evaluator compares two builds over retained state. It executes identical transactions against two builds of the same program over a corpus of account states, and reports what changed *solely because the program version changed* — with an emphasis on economic consequences, not byte diffs.
 
-`Eplyx` is a working name. It appears only in the CLI binary and the engine package name; it is deliberately kept out of the program ID, wire format, fixture schema, report schema and every core type, so renaming stays a rename rather than a migration.
+Public identifiers and serialized schemas are versioned contracts. Do not rename them as a branding cleanup; ChangeSpec identities and historical artifact bytes must remain stable.
 
 ## Toolchain
 
@@ -16,15 +16,15 @@ Both must be on `PATH`, and `cargo-build-sbf` shells out to `cargo`, so the Rust
 export PATH="$HOME/.cargo/bin:$HOME/.local/share/solana/install/active_release/bin:$PATH"
 ```
 
-Install: `rustup` (stable) and `sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"`. Node ≥ 22.6 and pnpm for the JSON contract check only.
+Install: `rustup` (stable) and `sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"`. Node ≥ 22.6 and pinned pnpm 11.24.0 run frontend and reference checks. Browser suites accept `EPLYX_CHROME`; cloud suites require a loopback scratch Postgres database and fail when it is absent.
 
 ## Commands
 
 ```bash
 make                  # build V1+V2 to SBF, then run the full comparison
 make test             # program tests (both flavours) + engine unit + end-to-end
-make lint             # clippy -D warnings across both workspaces and both features
-make fmt-check        # rustfmt across both workspaces
+make lint             # clippy -D warnings across the host and every program/feature
+make fmt-check        # rustfmt across the host and every program
 make fixtures         # regenerate fixtures/states/ after changing corpus.rs
 make impact-fixtures  # regenerate the P3 impact-view CI reports
 make governance-fixtures  # regenerate the G1 Squads binding fixtures
@@ -112,7 +112,7 @@ carrying the same exit code.
 
 ## Architecture
 
-### Two cargo workspaces, deliberately
+### Host and SBF workspaces
 
 `programs/fixture-lending/` is **not** a workspace member, and neither is any candidate program under `programs/`. They compile to SBF via `cargo-build-sbf` with the platform-tools toolchain, and their `solana-program` tree does not co-resolve with litesvm's pinned `solana-*` crates. Separate lockfiles keep both graphs free. `make fmt`, `make lint` and `scripts/test-programs.sh` cover each one explicitly — add a new candidate to all three.
 
@@ -496,3 +496,16 @@ CAS so hosted execution needs no checkout. Public catalogue imports are explicit
 operator actions, never inferred identity. All current validation used mock
 providers; no live-provider permission is implied. See
 [the T9 architecture and verification](docs/phase-t9-cloud-hosted-analysis.md).
+
+
+**T10 scope and documentation.** The integration is recorded in
+[the final report](docs/stock-transition-integration-report.md), with phase commits,
+all T0 before/after references, actual verification commands, retries and limitations.
+Product guides cover [migration](docs/token-migration.md),
+[lifecycle](docs/lifecycle.md), [current state](docs/current-state-analysis.md),
+[dashboard](docs/dashboard.md) and [cloud](docs/cloud.md).
+[ARCHIVE.md](ARCHIVE.md) names the untouched STA commit and historical evidence.
+This completion does not authorize live-provider access, new infrastructure,
+deployment, release packaging, signing or submission. Those were not performed.
+The next separate milestone is an owner-authorized read-only mainnet analysis;
+partial/claim-based migration and a local-validator plan check remain future work.

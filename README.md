@@ -6,11 +6,6 @@ Eplyx deterministically executes the same transactions and account states
 against the current and proposed versions of a Solana program to detect
 state-dependent behavioral and economic regressions before deployment.
 
-> **Working name.** *Eplyx* appears only in the CLI binary and the engine's
-> package name. It is kept out of the program ID, the wire format, the fixture
-> format, the report schema and every core type, so that renaming later stays a
-> rename rather than a migration.
-
 It answers one question:
 
 > **What will actually change for users, positions and capital if this new
@@ -21,7 +16,7 @@ keeps its interface. A program can satisfy all of that and still change what
 specific existing accounts are worth. This tool executes identical transactions
 against identical state under both program versions and reports the difference.
 
-Eplyx reports in two layers, and keeps them distinct:
+Eplyx keeps three parts of the upgrade report distinct:
 
 | Layer | Question | Unit |
 | --- | --- | --- |
@@ -44,7 +39,7 @@ corpora are separate, provenance and replay eligibility are explicit, and
 current account samples remain approximate; and one exact CPI-aware path for a
 real stateful protocol interaction, with every dependency binary pinned to the
 deployment live at the transaction's slot. No arbitrary mainnet pre-state
-reconstruction, universal CPI replay, arbitrary DeFi support, dashboard, GitHub
+reconstruction, universal CPI replay, arbitrary DeFi support, GitHub
 App, AI, third-party decoding or sequence search. A CI gate *is* implemented —
 locally as `eplyx ci check` and as a small hosted API — over exactly the bounded
 replay contract described here. See
@@ -70,6 +65,35 @@ reconstruction; [U3C](docs/phase-u3c-transaction-envelope.md) adds narrow struct
 envelope admission, with historical dependencies and production replay still incomplete.
 
 ---
+
+## Token transitions and analytical workspaces
+
+MAIN also evaluates declared token migrations, lifecycle changes and bounded
+current-state paths. These are separate analytical kinds, with their own inputs
+and evidence boundaries. Program-upgrade replay keeps its existing report and
+identity contracts.
+
+- [Token migration](docs/token-migration.md): proposal, retained state, actual
+  candidate execution, stress, search and reproduction.
+- [Lifecycle analysis](docs/lifecycle.md): declared policy, consequences and
+  independent readiness questions over immutable snapshots.
+- [Current-state analysis](docs/current-state-analysis.md): catalogue/custom mint,
+  public owner scope, focused Transfer/exit checks, candidate scenarios and bounded
+  stress. Refresh begins untested.
+- [Dashboard](docs/dashboard.md): local read-only history and shared hosted views,
+  with Overview/Technical mode and embedded fonts.
+- [Cloud](docs/cloud.md): optional identity, workspaces, exact-byte sync and durable
+  offline hosted execution in the existing API service.
+
+The filesystem registry and content-addressed store remain authoritative for
+analytical bytes. Optional Postgres stores mutable identity and authorization.
+Read-only acquisition is separate from empty-environment workers. No analytical
+result establishes issuer entitlement, keys or permission to move funds.
+
+The [integration report](docs/stock-transition-integration-report.md) records all
+phase commits, the frozen before/after contract and verification. Historical
+SPACEX hackathon evidence remains in the [pinned STA archive](ARCHIVE.md).
+Live-provider checks and deployment were intentionally not performed.
 
 ## Quick start
 

@@ -1,0 +1,295 @@
+{
+  "schema_version": 1,
+  "phase": "T10",
+  "implementation_commit": "351ccae50b209e1fc4a91de173bc29290b64a153",
+  "documentation_files": [
+    "ARCHIVE.md",
+    "CLAUDE.md",
+    "README.md",
+    "docs/cloud.md",
+    "docs/current-state-analysis.md",
+    "docs/dashboard.md",
+    "docs/lifecycle.md",
+    "docs/phase-t0-stock-transition-integration.md",
+    "docs/phase-t10-verification.json",
+    "docs/stock-transition-integration-report.md",
+    "docs/token-migration.md"
+  ],
+  "source_code_changes": false,
+  "ignored_rust_tests": [
+    "performance_breakdown_on_the_frozen_population",
+    "writes_a_demo_bundle (tooling: writes a bundle to EPLYX_DEMO_BUNDLE)"
+  ],
+  "branch": "t-token-migration",
+  "required_final_checks": [
+    "main-t10-full-cloud-test",
+    "main-t10-no-fail-fast-cloud",
+    "main-t10-fmt",
+    "main-t10-lint",
+    "main-t10-frontend",
+    "main-t10-report",
+    "main-t10-governance",
+    "main-t10-cloud-browser",
+    "main-t10-dashboard-browser",
+    "main-t10-docs",
+    "main-t10-integrity"
+  ],
+  "commands": [
+    {
+      "label": "main-t10-fmt",
+      "command": [
+        "make",
+        "fmt-check"
+      ],
+      "exit_code": 0,
+      "seconds": 2.0,
+      "log": "main-t10-fmt.log",
+      "log_sha256": "5fe89ac47bee0b52b9d98e316b135a2ae04aed42641a7f4ab48dc7614d0c8889",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    },
+    {
+      "label": "main-t10-lint",
+      "command": [
+        "make",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 26.1,
+      "log": "main-t10-lint.log",
+      "log_sha256": "a298d3e6c4a18d1362601d95d809525313e11ba00c7e84b2ce8004c133e3bf20",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    },
+    {
+      "label": "main-t10-frontend",
+      "command": [
+        "pnpm",
+        "check:frontend"
+      ],
+      "exit_code": 0,
+      "seconds": 3.1,
+      "log": "main-t10-frontend.log",
+      "log_sha256": "7523d542d3c263cba476121bbe5826b0fd17b2800d7e1d131e7c82da16c9381e",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    },
+    {
+      "label": "main-t10-report",
+      "command": [
+        "pnpm",
+        "verify:report"
+      ],
+      "exit_code": 0,
+      "seconds": 51.3,
+      "log": "main-t10-report.log",
+      "log_sha256": "07837adacee13168f48c66bb32ef6afabdd023dc1c18ccd75156f2302026da5e",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    },
+    {
+      "label": "main-t10-governance",
+      "command": [
+        "pnpm",
+        "verify:governance"
+      ],
+      "exit_code": 0,
+      "seconds": 0.4,
+      "log": "main-t10-governance.log",
+      "log_sha256": "34f1719225ef942f5b88f563a37758718079e6f9c2b06d14957e1110e0457527",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    },
+    {
+      "label": "main-t10-docs",
+      "command": [
+        "python3",
+        "$T10_SCRATCH/check-docs.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.0,
+      "log": "main-t10-docs.log",
+      "log_sha256": "eb182bd527b024d2d915aaf0de0220b51549d3d72b029ac7293a3a51127c1106",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    },
+    {
+      "label": "main-t10-cloud-browser",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/browser-suite.py",
+        "playwright.cloud.config.js"
+      ],
+      "exit_code": 0,
+      "seconds": 74.1,
+      "log": "main-t10-cloud-browser.log",
+      "log_sha256": "42f0b8f17e28ed2bc05c96994e3cbca9dd469d5cdbefe3be8cfd8103b0014357",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    },
+    {
+      "label": "main-t10-dashboard-browser",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/browser-suite.py",
+        "playwright.dashboard.config.js"
+      ],
+      "exit_code": 0,
+      "seconds": 10.0,
+      "log": "main-t10-dashboard-browser.log",
+      "log_sha256": "41558e286a14eea90cb1e72cf5d08a677f3f0aab24e024562a174dd5558ed84d",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    },
+    {
+      "label": "main-t10-integrity",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/audit.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.9,
+      "log": "main-t10-integrity.log",
+      "log_sha256": "77831b611b8b02a8fdead917050541872392c5903f0c64bfc88f9f92ba4f1a7b",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    },
+    {
+      "label": "main-t10-final-integrity",
+      "command": [
+        "python3",
+        "$T9_SCRATCH/audit.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.0,
+      "log": "main-t10-final-integrity.log",
+      "log_sha256": "77831b611b8b02a8fdead917050541872392c5903f0c64bfc88f9f92ba4f1a7b",
+      "rust_test_totals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      }
+    },
+    {
+      "label": "main-t10-no-fail-fast-cloud",
+      "command": [
+        "cargo",
+        "test",
+        "--no-fail-fast"
+      ],
+      "exit_code": 0,
+      "seconds": 1381.0,
+      "log": "main-t10-no-fail-fast-cloud.log",
+      "log_sha256": "f0bb5a5c2ad598ef6d2fbb757a8d31bc25d7efceb5a87b69e229f546e39ec892",
+      "rust_test_totals": {
+        "passed": 1325,
+        "failed": 0,
+        "ignored": 2
+      }
+    },
+    {
+      "label": "main-t10-full-cloud-test",
+      "command": [
+        "make",
+        "test"
+      ],
+      "exit_code": 0,
+      "seconds": 1378.8,
+      "log": "main-t10-full-cloud-test.log",
+      "log_sha256": "466f3849c7813ee4ec3e4b824745ad49ffa72fb19ed37c3c1f4bc28bf6180a0a",
+      "rust_test_totals": {
+        "passed": 1376,
+        "failed": 0,
+        "ignored": 2
+      }
+    }
+  ],
+  "phase_records": [
+    {
+      "path": "docs/phase-t1-verification.json",
+      "sha256": "a617a1ddab2c67ad253d273c09b458d35dea7420201e691cc20aeb035577391b"
+    },
+    {
+      "path": "docs/phase-t2-verification.json",
+      "sha256": "abcd4b69217ae6f314fef6da250fe73160ab63203315a6d5554fcfb54ade727b"
+    },
+    {
+      "path": "docs/phase-t3-verification.json",
+      "sha256": "6f3010fadad563f90177812f6fc3821c69f0fb9942e140ca1cc8db1df52df291"
+    },
+    {
+      "path": "docs/phase-t4-verification.json",
+      "sha256": "8fd37c7335e0de08156b86fdfa1aadf813f02cc2bdeb1b1c281d7d6a0c85714d"
+    },
+    {
+      "path": "docs/phase-t5-verification.json",
+      "sha256": "032710343cfd0303f54d138a28579e10776601f83fc2b9db13b75976dd0a7b98"
+    },
+    {
+      "path": "docs/phase-t6-verification.json",
+      "sha256": "74e6a0668237e62214afbc8cabe2a51298ba98a0c63f79f9d0d0688d446541c8"
+    },
+    {
+      "path": "docs/phase-t7-verification.json",
+      "sha256": "aa68e90c36a4886d816a1693a1bc4d8bbcb26e7617a982f03a1c586ee6a53727"
+    },
+    {
+      "path": "docs/phase-t8-verification.json",
+      "sha256": "983a92eae8e9769ccb073e57af60d11eac983083a983078672f80ca34e271cae"
+    },
+    {
+      "path": "docs/phase-t9-verification.json",
+      "sha256": "af36ea0b4fb0909d2c72dbc348f340ee693c36a282289f16f5b371033590911f"
+    }
+  ],
+  "t0_reference": "docs/examples/phase-t0-stock-transition-integration/verification.json",
+  "t0_owner_decisions": "docs/examples/phase-t0-stock-transition-integration/owner-review.json",
+  "t0_main_comparison": "docs/phase-t3-migration-reference.json",
+  "determinism": "docs/phase-t9-determinism.json",
+  "source_audit": {
+    "source_commit": "ad1897e86ee05ff2255bd5277518a3230ee2340f",
+    "source_files": 1633,
+    "mismatches": [],
+    "source_git_clean": true
+  },
+  "not_run": [
+    "Live-provider checks (explicitly prohibited), including seven source browser cases.",
+    "Two pre-existing ignored Rust tests (see test output).",
+    "Docker image build: Docker unavailable; reduced source-context compilation passed.",
+    "Optional release packaging: separate owner decision not requested.",
+    "Deployment, infrastructure provisioning, push, live-cluster signing/submission/simulation."
+  ],
+  "notes": [
+    "T10 changes only documentation and scope statements. The complete required checks were rerun on the final implementation with these documents present.",
+    "Counts are test executions, not unique tests. Historical failed attempts and successful retries are retained in the per-phase records.",
+    "No real keys, live providers or live-cluster transaction path was used. Synthetic signatures belong only to local VM fixtures.",
+    "MAIN remains on t-token-migration; STA remains at its pinned commit. Final post-commit git status is checked separately in the delivery transcript to avoid a self-referential commit record."
+  ]
+}
