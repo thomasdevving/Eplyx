@@ -32,6 +32,27 @@ export function LandingPage() {
         <div class="scroll-cue"><span></span> Scroll to inspect the system</div>
       </section>
 
+      <section class="overview section" aria-labelledby="overview-title">
+        <div class="overview__intro reveal">
+          <div>
+            <p class="eyebrow eyebrow--dark"><span></span> Eplyx, in brief</p>
+            <h2 id="overview-title">Understand an onchain change before it reaches users.</h2>
+          </div>
+          <p>Eplyx is a developing set of tools for examining how proposed Solana changes affect recorded state. Today, it offers scoped program upgrade checks, token migration rehearsals and lifecycle analyses.</p>
+        </div>
+        <div class="overview__details reveal">
+          <article>
+            <span>01 / What it's used for</span>
+            <h3>See the consequences of a proposed change.</h3>
+            <p>Compare supported changes with recorded inputs, inspect affected interactions or holders, and trace findings to the evidence behind them.</p>
+          </article>
+          <article>
+            <span>02 / Who it's for</span>
+            <h3>Teams building and reviewing Solana protocols.</h3>
+            <p>Protocol developers, security engineers, token teams, risk reviewers and governance operators can use the results to inform review before a change is approved or deployed.</p>
+          </article>
+        </div>
+      </section>
 
       <section class="section product-section" id="product">
         <div class="section-heading reveal"><p class="eyebrow eyebrow--dark"><span></span> Current scope</p><h2>Tools you can try.<br>Coverage still growing.</h2><p>Eplyx is in development. These workflows cover selected protocols and scenarios; they are building blocks for the broader product.</p></div>
