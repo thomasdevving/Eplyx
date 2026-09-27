@@ -27,8 +27,8 @@ hosted infrastructure was edited.
 
 The repeated role, proof, expectation and coverage marketing sections were
 consolidated into the current capabilities, method, one labelled recorded demo,
-CLI setup and roadmap. The blocking intro and content-fade dependency were
-removed. The hero keeps MAIN's artwork with corrected capability labels; fonts
+CLI setup and roadmap. The initial refresh removed the intro and scroll reveals;
+the correction below restores them. The hero keeps MAIN's artwork; fonts
 are the existing licensed local assets. Workspace links use the configured API
 origin, so they do not accidentally enter the static site's route fallback.
 
@@ -74,3 +74,52 @@ the new public routes do not claim a production database, observation provider o
 migration candidate is configured. No new release packaging, infrastructure or
 provider access was performed. A successful Git push is recorded separately from
 any downstream deployment result.
+
+
+## Animation, scope and presentation correction
+
+Following owner review, the shorter section structure remains, while the original
+intro and scroll reveals are restored with their existing timing. Orbit motion,
+sculpture, glow and twinkles remain. Reduced-motion preferences still suppress
+motion and show content immediately. The primary action reads **Try Eplyx** and
+opens the CLI guide.
+
+The hero and product introduction now explicitly say Eplyx is in development.
+The orbit distinguishes **Current scope**, **Early scope** and **Planned**. Narrow
+Squads binding is not presented as completed general governance support; authority
+changes, general parameter analysis and continuous monitoring remain planned.
+The roadmap describes the integrated workflows as a foundation with further
+coverage and validation ahead, rather than a finished product.
+
+The Overview/Technical control previously persisted a preference without changing
+landing-page content. It now switches the hero, product and workflow explanations
+and reveals the example's measured details. The CLI and transition pages expose
+additional input and execution context in Technical. Product limits, installation
+prerequisites and commands remain available in both modes. Pages with no alternate
+content omit the switch. The active choice and button state remain consistent
+across client-side navigation when browser storage is blocked.
+
+The public browser harness now passes reduced motion through Playwright's
+`contextOptions`; the earlier top-level `use.reducedMotion` did not configure the
+browser context. Initial follow-up runs exposed that test configuration error and
+an overly exact button-name assertion that omitted its arrow. These were corrected
+without removing motion from the application. A separate normal-motion case checks
+the intro, actual orbit movement and a scroll reveal.
+
+
+Follow-up verification with pnpm 11.24.0 and Node 22.23.1:
+
+- `pnpm check:frontend`: passed the existing frontend render and contract checks.
+- `pnpm test:public`: production build and all **13 browser tests passed**.
+  Five widths from 320 to 1440 pixels cover layout, content and navigation.
+  Normal motion verifies intro completion, session-only replay, moving orbits,
+  scroll reveals and keyboard access to the planned-monitoring explanation.
+  Overview/Technical checks at desktop and phone widths assert actual visible
+  content, product limits, persistence, report details and pages without a switch.
+  A blocked-storage case verifies consistent content and selection after navigation.
+- Desktop and mobile screenshots were inspected in both presentation modes,
+  including the normal-motion product section.
+- `git diff --check`: passed. No engine, provider or analytical record changes.
+
+The earlier full Rust and Postgres results remain unchanged; those suites and live
+provider checks were not rerun for this presentation correction.

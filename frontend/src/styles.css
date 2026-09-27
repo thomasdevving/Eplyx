@@ -67,7 +67,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .button--text span { opacity: .6; }
 .button--light { background: #e7dcff; color: #1c0b33; }
 .hero__visual { position: absolute; z-index: 2; top: 50%; right: max(12px, calc((100vw - 1450px)/2)); width: min(54vw, 820px); height: min(52vw, 760px); transform: translateY(-48%); }
-.hero__visual.reveal { transform: translateY(-48%); }
+.hero__visual.reveal { transform: translateY(calc(-48% + 18px)); }
 .hero__visual.reveal.is-visible { transform: translateY(-48%); }
 .scroll-cue { position: absolute; z-index: 3; left: 48px; bottom: 30px; display: flex; align-items: center; gap: 13px; color: rgba(255,255,255,.35); font-size: 9px; text-transform: uppercase; letter-spacing: .16em; }
 .scroll-cue span { height: 30px; width: 16px; border: 1px solid rgba(255,255,255,.25); border-radius: 10px; position: relative; }
@@ -115,7 +115,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .orbit-detail__head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 9px; }
 .orbit-detail__name { font: 600 13px 'Manrope', sans-serif; letter-spacing: -.025em; }
 .orbit-detail__status { flex-shrink: 0; padding: 4px 7px; border-radius: 3px; background: #2b104912; color: #6b3ab8; font: 7.5px ui-monospace, monospace; font-style: normal; text-transform: uppercase; letter-spacing: .13em; }
-.orbit-detail[data-status="Implemented"] .orbit-detail__status { background: #7c3aed1f; color: #5b23b5; }
+.orbit-detail[data-status="Current scope"] .orbit-detail__status { background: #7c3aed1f; color: #5b23b5; }
 .orbit-detail__text { margin: 0; color: #5b4a76; font-size: 11px; line-height: 1.6; }
 .orbit-detail__metric { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; padding-top: 11px; border-top: 1px solid #2b10491f; }
 .orbit-detail__metric span { color: #7a6a94; font: 9px ui-monospace, monospace; overflow-wrap: anywhere; }
@@ -201,7 +201,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .hero.hero--intro .site-header, .hero.hero--intro .hero__copy, .hero.hero--intro .hero__visual, .hero.hero--intro .scroll-cue { opacity: 0; }
 
 
-.reveal { opacity: 1; transform: none; }.reveal.is-visible { opacity: 1; transform: none; }
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }.reveal.is-visible { opacity: 1; transform: none; }
 
 /* Analyse and report routes */
 .inner-page { min-height: 100vh; color: white; background: radial-gradient(circle at 75% 18%, #48208b 0, #160a28 34%, #0b0712 66%); }
@@ -714,3 +714,8 @@ a:focus-visible, button:focus-visible, pre:focus-visible { outline:2px solid var
  .hero__actions .button { font-size:12px; gap:16px; }
  .footer__links { flex-wrap:wrap; }
 }
+
+.orbit-detail[data-status="Early scope"] .orbit-detail__status { background:#e58b3c1f; color:#895014; }
+.hero__copy > .eyebrow { line-height:1.5; }
+
+.site-mode[hidden] { display: none; }

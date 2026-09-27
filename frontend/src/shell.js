@@ -23,7 +23,7 @@ export function Header({ light = false } = {}) {
         <a href="/projects" data-link>Projects</a>
         <a href="${workspaceHref()}" class="nav-cta">Workspace <span>↗</span></a>
       </nav>
-      <div class="site-mode" role="group" aria-label="Presentation"><button type="button" data-mode-option="overview" aria-pressed="${presentationMode()==='overview'}">Overview</button><button type="button" data-mode-option="technical" aria-pressed="${presentationMode()==='technical'}">Technical</button></div>
+      <div class="site-mode" role="group" aria-label="Presentation" hidden><button type="button" data-mode-option="overview" aria-pressed="${presentationMode()==='overview'}">Overview</button><button type="button" data-mode-option="technical" aria-pressed="${presentationMode()==='technical'}">Technical</button></div>
       <button class="menu-button" type="button" aria-label="Open navigation" aria-controls="primary-navigation" aria-expanded="false"><span></span><span></span></button>
     </header>`;
 }
@@ -39,6 +39,9 @@ export function Footer() {
 }
 
 export function attachShell() {
+  const modeControl = document.querySelector('.site-mode');
+  // Only offer a mode switch when this page has content for it to change.
+  if (modeControl) modeControl.hidden = !document.querySelector('[data-technical], .tech-only, .ov-only');
   document.querySelectorAll('[data-mode-option]').forEach(button => button.addEventListener('click',()=>{
     setPresentationMode(button.dataset.modeOption);
     document.querySelectorAll('[data-mode-option]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));

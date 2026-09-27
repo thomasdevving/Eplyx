@@ -6,6 +6,7 @@ import { LandingPage } from './landing.js';
 import { AnalysePage, attachAnalyse } from './analyse.js';
 import { ReportPage, attachReport } from './report.js';
 import { ProjectsPage, ProjectPage, attachProjects, attachProject } from './projects.js';
+import { finishIntro } from './intro.js';
 import { attachCoreParallax } from './core-scene.js';
 import { attachShell } from './shell.js';
 
@@ -70,6 +71,7 @@ function attachPage(path) {
   }
   if (path === '/') {
     disposeCoreScene = attachCoreParallax();
+    finishIntro();
   }
   if (path === '/analyse') attachAnalyse(navigate);
   if (path === '/projects') disposeReport = attachProjects(navigate);

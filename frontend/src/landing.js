@@ -1,3 +1,4 @@
+import { IntroAnimation } from './intro.js';
 import { EplyxCoreScene } from './core-scene.js';
 import { Header, Footer, workspaceHref } from './shell.js';
 import { CommandBlock, CLI_COMMANDS } from './cli.js';
@@ -10,18 +11,19 @@ const twinkles = [
 ];
 
 export function LandingPage() {
-  return `
+  return `${IntroAnimation()}
     <main id="main">
       <section class="hero">
         ${Header()}
         <div class="hero__atmosphere" aria-hidden="true"><div class="hero__stars"></div><div class="hero__twinkle">${twinkles.map(([left, top, size, period, offset]) => `<i style="left:${left}%;top:${top}%;--s:${size}px;--t:${period}s;--d:${offset}s"></i>`).join('')}</div><div class="hero__mountains"></div></div>
         <div class="hero__wash"></div>
         <div class="hero__copy reveal">
-          <p class="eyebrow"><span></span> Onchain change intelligence</p>
+          <p class="eyebrow"><span></span> Onchain change intelligence · In development</p>
           <h1>Know what <em>changes.</em><br>See who is affected.</h1>
-          <p class="hero__lead">Evaluate Solana program upgrades, token migrations and lifecycle changes. Trace execution, balances and access back to the state and proposal you tested.</p>
+          <p class="hero__lead ov-only">Eplyx is being built to explain onchain changes and their consequences. Try today’s scoped upgrade checks, token migration rehearsals and lifecycle analyses.</p>
+          <p class="hero__lead tech-only">Replay baseline and candidate programs over retained Solana state. Rehearse migrations in a local VM and evaluate declared lifecycle policies. Coverage is limited to supported protocols and paths; the broader product is still in development.</p>
           <div class="hero__actions">
-            <a href="/cli" data-link class="button button--primary">Get started with the CLI <span>↗</span></a>
+            <a href="/cli" data-link class="button button--primary">Try Eplyx <span>↗</span></a>
             <a href="#evidence" class="button button--text">Explore an example <span>↓</span></a>
           </div>
 
@@ -32,11 +34,11 @@ export function LandingPage() {
 
 
       <section class="section product-section" id="product">
-        <div class="section-heading reveal"><p class="eyebrow eyebrow--dark"><span></span> Implemented today</p><h2>Three kinds of change.<br>Evidence you can inspect.</h2><p>For teams reviewing upgrades, migration operators and people investigating token lifecycle events. Each analysis states its inputs, findings and limits.</p></div>
+        <div class="section-heading reveal"><p class="eyebrow eyebrow--dark"><span></span> Current scope</p><h2>Tools you can try.<br>Coverage still growing.</h2><p>Eplyx is in development. These workflows cover selected protocols and scenarios; they are building blocks for the broader product.</p></div>
         <div class="product-grid reveal">
-          <article><span class="product-index">01 / Program upgrades</span><h3>Compare the proposed build.</h3><p>Replay a baseline and candidate over the same retained state. Inspect execution differences, measured economic effects and whether changes match your declarations.</p><p class="product-boundary">Historical replay requires validated state and a supported instruction path. Protocol coverage is bounded.</p><a href="/analyse" data-link class="text-link">Analyse a program upgrade ↗</a></article>
-          <article><span class="product-index">02 / Token migrations</span><h3>Account for the migration.</h3><p>Rehearse a proposed mechanism in a local VM. Inspect holder coverage, reserves, fees, authority requirements and balance reconciliation. Search and reproduce counterexamples.</p><p class="product-boundary">Findings apply to the recorded inputs. Passing a gate does not authorise execution or establish issuer entitlement.</p><a href="/token-transitions" data-link class="text-link">Explore token transitions ↗</a></article>
-          <article><span class="product-index">03 / Lifecycle changes</span><h3>Evaluate the declared terms.</h3><p>Compare a policy before and after its effective time over one retained snapshot. Keep consequences, observed state and execution evidence separate.</p><p class="product-boundary">A notice or proposed replacement is a declaration. Unknown eligibility and untested paths remain visible.</p><a href="/cli#lifecycle" data-link class="text-link">Use the lifecycle CLI ↗</a></article>
+          <article><span class="product-index">01 / Program upgrades</span><h3>Compare the proposed build.</h3><p class="ov-only">See how a proposed program build changes the interactions you test, and whether those changes were expected.</p><p class="tech-only">Replay a baseline and candidate over the same retained state. Inspect execution differences, measured economic effects and whether changes match your declarations.</p><p class="product-boundary">Historical replay requires validated state and a supported instruction path. Protocol coverage is bounded.</p><a href="/analyse" data-link class="text-link">Analyse a program upgrade ↗</a></article>
+          <article><span class="product-index">02 / Token migrations</span><h3>Account for the migration.</h3><p class="ov-only">Rehearse a token migration before execution. Check who is covered, what each holder receives and where the proposal fails.</p><p class="tech-only">Rehearse a proposed mechanism in a local VM. Inspect holder coverage, reserves, fees, authority requirements and balance reconciliation. Search and reproduce counterexamples.</p><p class="product-boundary">Findings apply to the recorded inputs. Passing a gate does not authorise execution or establish issuer entitlement.</p><a href="/token-transitions" data-link class="text-link">Explore token transitions ↗</a></article>
+          <article><span class="product-index">03 / Lifecycle changes</span><h3>Evaluate the declared terms.</h3><p class="ov-only">Explore how a change in declared terms affects token holders. See what is known, uncertain or still untested.</p><p class="tech-only">Compare a policy before and after its effective time over one retained snapshot. Keep consequences, observed state and execution evidence separate.</p><p class="product-boundary">A notice or proposed replacement is a declaration. Unknown eligibility and untested paths remain visible.</p><a href="/cli#lifecycle" data-link class="text-link">Use the lifecycle CLI ↗</a></article>
         </div>
         <div class="capability-notes reveal"><p><strong>Current paths.</strong> Bounded Transfer and Meteora market-exit checks, plus exact liquidity-withdrawal checks through the CLI. Each path needs its own recorded execution and reconciliation.</p><p><strong>Governance binding.</strong> Read-only Squads V4 binding and attestation for the supported single loader-v3 program-upgrade proposal. Broader governance support remains future work.</p></div>
       </section>
@@ -44,9 +46,9 @@ export function LandingPage() {
       <section class="section section--ink workflow-section" id="how">
         <div class="section-heading section-heading--light reveal"><p class="eyebrow"><span></span> How it works</p><h2>Declare. Evaluate.<br>Inspect the evidence.</h2><p>Use the CLI locally, review retained results in a dashboard, or submit checks to a configured Eplyx service.</p></div>
         <ol class="workflow-steps reveal">
-          <li><span>01</span><h3>Describe the change.</h3><p>Supply the proposal and exact inputs. Program checks use builds you provide; lifecycle analysis uses explicit policy terms.</p></li>
-          <li><span>02</span><h3>Evaluate the recorded state.</h3><p>Executable checks run in an isolated local VM. Current-state acquisition is a separate read-only step; offline workers use retained inputs.</p></li>
-          <li><span>03</span><h3>Review and reproduce.</h3><p>Follow findings to their inputs and measured outputs. Compare runs, inspect missing evidence and replay saved counterexamples.</p></li>
+          <li><span>01</span><h3>Describe the change.</h3><p class="ov-only">Describe the proposed change and provide the inputs you want to evaluate.</p><p class="tech-only">Supply the proposal and exact inputs. Program checks use builds you provide; lifecycle analysis uses explicit policy terms.</p></li>
+          <li><span>02</span><h3>Evaluate the recorded state.</h3><p class="ov-only">Test supported interactions locally, or compare declared terms over recorded state.</p><p class="tech-only">Executable checks run in an isolated local VM. Current-state acquisition is a separate read-only step; offline workers use retained inputs.</p></li>
+          <li><span>03</span><h3>Review and reproduce.</h3><p class="ov-only">Inspect what changed, where the evidence is missing and how to reproduce a finding.</p><p class="tech-only">Follow findings to their inputs and measured outputs. Compare runs, inspect missing evidence and replay saved counterexamples.</p></li>
         </ol>
         <p class="workflow-note">Current captures describe observations across a slot range. Historical replay has a separate fidelity requirement. Neither a passing check nor a policy finding grants signing authority.</p>
       </section>
@@ -62,8 +64,8 @@ export function LandingPage() {
             <a href="/runs/demo" data-link>Open demo report <span>↗</span></a>
           </div>
           <div class="findings">
-            <article class="finding finding--critical"><div><span>Critical</span><span>Unexpected</span></div><h3>WithdrawSol</h3><p>Transaction now reverts</p><dl><dt>Measured observations</dt><dd>4 / 4</dd><dt>Execution</dt><dd>Success → error</dd></dl></article>
-            <article class="finding finding--high"><div><span>High</span><span>Unexpected</span></div><h3>DepositSol</h3><p>pool_tokens_received decreased</p><dl><dt>Affected observations</dt><dd>1 / 6</dd><dt>Maximum delta</dt><dd>21 bps</dd></dl></article>
+            <article class="finding finding--critical"><div><span>Critical</span><span>Unexpected</span></div><h3>WithdrawSol</h3><p>Transaction now reverts</p><dl data-technical><dt>Measured observations</dt><dd>4 / 4</dd><dt>Execution</dt><dd>Success → error</dd></dl></article>
+            <article class="finding finding--high"><div><span>High</span><span>Unexpected</span></div><h3>DepositSol</h3><p>pool_tokens_received decreased</p><dl data-technical><dt>Affected observations</dt><dd>1 / 6</dd><dt>Maximum delta</dt><dd>21 bps</dd></dl></article>
           </div>
         </div>
         <p class="demo-note">This candidate implements DepositSol only, so WithdrawSol fails. These are saved demonstration results, not a live feed or a claim about every pool. Expected changes are reviewed against explicit declarations and bounds.</p>
@@ -75,11 +77,11 @@ export function LandingPage() {
       </section>
 
       <section class="section roadmap-section" id="roadmap">
-        <div class="section-heading reveal"><p class="eyebrow eyebrow--dark"><span></span> Where Eplyx is going</p><h2>More changes.<br>The same evidence standard.</h2><p>The direction is broader change and consequence analysis. New coverage must preserve the link between declarations, observations and executed results.</p></div>
+        <div class="section-heading reveal"><p class="eyebrow eyebrow--dark"><span></span> Where Eplyx is going</p><h2>More changes.<br>The same evidence standard.</h2><p>The goal is broader change and consequence analysis across Solana. Protocol coverage, real-world validation and the wider governance and monitoring layers still need work.</p></div>
         <div class="roadmap-grid reveal">
-          <article><span>Implemented</span><h3>Local and hosted workflows.</h3><p>CLI analyses, a local dashboard, durable hosted runs, workspace access and exact-byte sync. Hosted identity and current acquisition require operator configuration.</p><a href="${workspaceHref()}" class="text-link">Open workspace ↗</a></article>
+          <article><span>Current foundation</span><h3>Local and hosted workflows.</h3><p>The CLI, local dashboard and hosted workflows are integrated within their tested scope. Hosted identity and current acquisition need operator configuration; this is not the finished product.</p><a href="${workspaceHref()}" class="text-link">Open workspace ↗</a></article>
           <article><span>Next validation</span><h3>Exercise current-state acquisition.</h3><p>Current-state acquisition was checked against frozen captures and mock providers. The next milestone is a bounded read-only mainnet validation with fresh evidence.</p></article>
-          <article><span>Future scope</span><h3>Broaden what can be tested.</h3><p>Partial and claim-based migrations, a local-validator check of the unsigned plan, and wider supported protocol and governance paths. These are planned work, not current coverage.</p></article>
+          <article><span>Future scope</span><h3>Build the broader product.</h3><p>General governance, authority and parameter-change analysis, wider protocol coverage and continuous monitoring remain development goals. Partial and claim-based migrations and local-validator plan checks are also future work.</p></article>
         </div>
         <p class="scope-note">Eplyx analyses and reports. It does not submit transactions or establish possession of signing keys. Automated monitoring and general protocol coverage are not current features.</p>
       </section>
