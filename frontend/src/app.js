@@ -1,3 +1,4 @@
+import { StartPage, attachStart } from './start.js';
 import { CliPage, attachCommandCopy } from './cli.js';
 import { initializeMode } from './mode.js';
 import { TokenTransitionsPage } from './transitions.js';
@@ -23,14 +24,15 @@ function route() {
   disposeReport?.();
   disposeReport = undefined;
   const path = location.pathname.replace(/\/+$/, '') || '/';
-  if (path === '/cli') app.innerHTML = CliPage();
+  if (path === '/start') app.innerHTML = StartPage();
+  else if (path === '/cli') app.innerHTML = CliPage();
   else if (path === '/token-transitions') app.innerHTML = TokenTransitionsPage();
   else if (path === '/analyse') app.innerHTML = AnalysePage();
   else if (path === '/projects') app.innerHTML = ProjectsPage();
   else if (path.startsWith('/projects/')) app.innerHTML = ProjectPage(decodeURIComponent(path.slice(10)));
   else if (path.startsWith('/runs/')) app.innerHTML = ReportPage(decodeURIComponent(path.slice(6)));
   else app.innerHTML = LandingPage();
-  if (location.hash) requestAnimationFrame(() => document.querySelector(location.hash)?.scrollIntoView());
+  if (location.hash && path !== '/start') requestAnimationFrame(() => document.querySelector(location.hash)?.scrollIntoView());
   else window.scrollTo(0, 0);
   attachPage(path);
 }
@@ -73,6 +75,7 @@ function attachPage(path) {
     disposeCoreScene = attachCoreParallax();
     finishIntro();
   }
+  if (path === '/start') attachStart();
   if (path === '/analyse') attachAnalyse(navigate);
   if (path === '/projects') disposeReport = attachProjects(navigate);
   if (path.startsWith('/projects/')) disposeReport = attachProject(decodeURIComponent(path.slice(10)), navigate);

@@ -16,7 +16,7 @@ export function Header({ light = false } = {}) {
     <header class="site-header ${light ? 'site-header--light' : ''}">
       <a href="/" data-link class="logo-link">${Logo()}</a>
       <nav id="primary-navigation" aria-label="Primary navigation">
-        <a href="/#product" data-link>Product</a>
+        <a href="/start" data-link>Start here</a>
         <a href="/token-transitions" data-link>Token transitions</a>
         <a href="/cli" data-link>CLI</a>
         <a href="/#roadmap" data-link>Roadmap</a>
@@ -33,7 +33,7 @@ export function Footer() {
     <footer class="footer">
       <div>${Logo()}</div>
       <p>Change and consequence analysis for Solana.</p>
-      <div class="footer__links"><a href="/cli" data-link>CLI guide</a><a href="/runs/demo" data-link>Demo report</a><a href="https://github.com/thomasdevving/Eplyx">Source</a></div>
+      <div class="footer__links"><a href="/start" data-link>Start here</a><a href="/cli" data-link>CLI guide</a><a href="/runs/demo" data-link>Demo report</a><a href="https://github.com/thomasdevving/Eplyx">Source</a></div>
       <small>Evidence from tested interactions. Coverage is always explicit.</small>
     </footer>`;
 }

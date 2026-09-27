@@ -123,3 +123,56 @@ Follow-up verification with pnpm 11.24.0 and Node 22.23.1:
 
 The earlier full Rust and Postgres results remain unchanged; those suites and live
 provider checks were not rerun for this presentation correction.
+
+
+## Task-led entry points and CLI documentation
+
+The next increment adds `/start`. The hero's Try Eplyx action and shared Start
+here navigation lead to a question-based selector for upgrades, migrations,
+lifecycle terms, current token paths and Squads proposals. One workflow is shown
+at a time, with requirements, outputs, coverage limits and separate browser/CLI
+entry points. A labelled saved demo needs no setup. Selection supports radio-key
+navigation, direct hash links and reloads; Overview/Technical still changes the
+visible level of explanation.
+
+Workspace routes use the configured API origin and state their configuration
+requirements. The selector does not claim to detect deployment readiness. It
+distinguishes local full migration rehearsals, bounded hosted account checks,
+CLI-only withdrawal probes and governance report review from execution. The
+existing upgrade form links to the local command path and the selector.
+
+The `/cli` guide now documents the pre-STA command surfaces alongside the migrated
+ones: upgrade gating, local CI, asynchronous hosted submission, retained-corpus
+comparison, fixture reproduction, historical preparation, bundle verification
+and Squads binding/attestation. Examples distinguish actual prepared-input
+commands from help-only discovery. Hosted submission uses the current polling
+client, not the older synchronous example. Input paths, account requirements,
+provider access and gate meanings are explicit. Commands are copyable and the
+clipboard fallback remains available.
+
+The original checkout became accessible again. It was fast-forwarded to main's
+`8623e61`, retaining that commit's use-case overview; existing untracked media
+was excluded from the change. No analytical bytes, provider settings or engine
+behaviour were modified.
+
+Verification for this increment (pnpm 11.24.0, Node 22.23.1):
+
+- Existing `pnpm check:frontend` checks passed.
+- Production build and all **17 public browser tests passed**, including five
+  viewport widths, actual mode changes, normal-motion animation, workflow input
+  requirements, keyboard selection, deep links, workspace origin, all CLI section
+  anchors, existing demo/form routes and command-copy behaviour.
+- **36 documented `eplyx` invocations** were checked by invoking the built binary
+  with `--help`, including their example flags. All exited zero. This checks CLI
+  parsing/help, not the validity of placeholder inputs or successful analyses.
+  The hosted script options were checked against `scripts/eplyx-submit.sh`; no
+  submission was performed.
+- Desktop and phone start-page screenshots were inspected. No horizontal overflow
+  appeared at the tested widths. No external resources were requested by the
+  browser tests.
+- `git diff --check` passed. Full Rust/DB suites were not repeated for this frontend
+  and documentation change. No live provider calls or infrastructure changes.
+
+[Getting started](getting-started.md) records the workflow map.
+[Product next steps](product-next-steps.md) records proposed priorities separately
+from current capabilities.

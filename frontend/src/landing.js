@@ -23,7 +23,7 @@ export function LandingPage() {
           <p class="hero__lead ov-only">Eplyx is being built to explain onchain changes and their consequences. Try today’s scoped upgrade checks, token migration rehearsals and lifecycle analyses.</p>
           <p class="hero__lead tech-only">Replay baseline and candidate programs over retained Solana state. Rehearse migrations in a local VM and evaluate declared lifecycle policies. Coverage is limited to supported protocols and paths; the broader product is still in development.</p>
           <div class="hero__actions">
-            <a href="/cli" data-link class="button button--primary">Try Eplyx <span>↗</span></a>
+            <a href="/start" data-link class="button button--primary">Try Eplyx <span>↗</span></a>
             <a href="#evidence" class="button button--text">Explore an example <span>↓</span></a>
           </div>
 

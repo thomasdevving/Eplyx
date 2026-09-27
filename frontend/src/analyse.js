@@ -18,6 +18,7 @@ export function AnalysePage() {
         <h1>Analyse a program upgrade.</h1>
         <p>Choose the project and upload the build you intend to deploy. Eplyx identifies exactly what would change, replays it against the project’s validated history, and reports who and what it would affect.</p>
         <div class="input-model"><span>Target program</span><b>+</b><span>Candidate build</span><i>→</i><strong>Proposed change</strong><i>→</i><em>Effects report</em></div>
+        <p class="analysis-choice">Use this form with an existing hosted project and active bundle. For a local check, follow the <a href="/cli#upgrades" data-link>upgrade CLI guide</a>. For another kind of change, <a href="/start" data-link>choose a workflow</a>.</p>
         <a href="/runs/demo" data-link class="text-link">View the public demo report <span>↗</span></a>
       </div>
       <form class="analyse-form" id="analyse-form">

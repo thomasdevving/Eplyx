@@ -27,12 +27,17 @@ for (const width of [1440, 1024, 834, 390, 320]) {
     await page.locator('#product').scrollIntoViewIfNeeded();
     expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
     await page.getByRole('link', { name: 'Try Eplyx' }).click();
-    await expect(page).toHaveURL(/\/cli$/);
+    await expect(page).toHaveURL(/\/start$/);
+    await expect(page.getByRole('heading', { name: 'Start with your question.' })).toBeVisible();
+    await page.screenshot({ path: test.info().outputPath('start-' + width + '.png'), fullPage: true });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+    await page.getByRole('link', { name: 'Install the CLI', exact: false }).click();
+    await expect(page).toHaveURL(/\/cli#install$/);
     await expect(page.getByRole('heading', { name: 'Build the CLI from source.' })).toBeVisible();
     await expect(page.locator('#migration')).toContainText('init alone does not create a complete runnable migration');
     await expect(page.locator('#sync')).toContainText('configuration');
     expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
-    await page.getByRole('navigation', { name: 'CLI guide sections' }).getByRole('link', { name: 'Lifecycle', exact: true }).click();
+    await page.getByRole('navigation', { name: 'CLI guide sections' }).getByRole('link', { name: 'Evaluate lifecycle terms', exact: true }).click();
     await expect(page).toHaveURL(/\/cli#lifecycle$/);
     await expect(page.getByRole('heading', { name: 'Evaluate declared terms.' })).toBeInViewport();
     await page.screenshot({ path: test.info().outputPath(`cli-${width}.png`), fullPage: true });
@@ -151,6 +156,8 @@ for (const width of [1440, 390]) {
     await page.screenshot({ path: test.info().outputPath(`product-technical-${width}.png`) });
     expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
     await page.getByRole('link', { name: 'Try Eplyx' }).click();
+    await expect(page.locator('#start-upgrades [data-technical]')).toBeVisible();
+    await page.getByRole('link', { name: 'Install the CLI' }).click();
     await expect(page.locator('.guide-intro [data-technical]')).toBeVisible();
     await page.reload();
     await expect(technical).toHaveAttribute('aria-pressed', 'true');
@@ -178,6 +185,73 @@ test('presentation choice stays consistent when storage is blocked', async ({ pa
   await page.goto('/');
   await page.getByRole('button', { name: 'Technical', exact: true }).click();
   await page.getByRole('link', { name: 'Try Eplyx' }).click();
+  await page.getByRole('link', { name: 'Install the CLI' }).click();
   await expect(page.getByRole('button', { name: 'Technical', exact: true })).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('.guide-intro [data-technical]')).toBeVisible();
+});
+
+for (const width of [1440, 390]) {
+  test('workflow selection explains inputs, availability and route at ' + width + 'px', async ({ page }) => {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.goto('/start');
+    await expect(page.locator('.workflow-panel:visible')).toHaveCount(1);
+    await expect(page.locator('#start-upgrades')).toContainText('active bundle');
+    await page.getByRole('radio', { name: /Token migration/ }).check();
+    await expect(page).toHaveURL(/#migration$/);
+    await expect(page.locator('#start-migration')).toBeVisible();
+    await expect(page.locator('#start-upgrades')).toBeHidden();
+    await expect(page.locator('#start-migration')).toContainText('not a general migration upload form');
+    await page.reload();
+    await expect(page.getByRole('radio', { name: /Token migration/ })).toBeChecked();
+    await page.getByRole('radio', { name: /Lifecycle terms/ }).check();
+    await expect(page.locator('#start-lifecycle')).toContainText('Changing policy time does not refresh account state');
+    await page.getByRole('radio', { name: /Current token path/ }).check();
+    await expect(page.locator('#start-paths')).toContainText('Liquidity-withdrawal checks currently use the CLI');
+    await page.getByRole('radio', { name: /Squads upgrade proposal/ }).check();
+    await expect(page.locator('#start-governance')).toContainText('does not sign, approve or execute');
+    await page.locator('#start-governance').getByRole('link', { name: 'CLI commands and inputs' }).click();
+    await expect(page).toHaveURL(/\/cli#governance$/);
+    await expect(page.getByRole('heading', { name: 'Match a proposal to the analysed build.' })).toBeInViewport();
+    await expect(page.locator('#governance')).toContainText('SOLANA_RPC_URL');
+    await page.getByText('Attest deployment after execution', { exact: true }).click();
+    await expect(page.locator('#command-attest')).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+  });
+}
+
+test('workflow deep links, keyboard choice and configured workspace navigation', async ({ page }) => {
+  await page.route('**/public/runtime-config.js', route => route.fulfill({
+    contentType: 'text/javascript', body: 'globalThis.EPLYX_API_URL = "https://api.example.test";',
+  }));
+  await page.goto('/start#paths');
+  await expect(page.locator('#start-paths')).toBeVisible();
+  await expect(page.locator('#start-paths').getByRole('link', { name: 'Open workspace' }))
+    .toHaveAttribute('href', 'https://api.example.test/workspaces');
+  await page.getByRole('radio', { name: /Current token path/ }).focus();
+  await page.keyboard.press('ArrowUp');
+  await expect(page.getByRole('radio', { name: /Lifecycle terms/ })).toBeChecked();
+  await expect(page.locator('#start-lifecycle')).toBeVisible();
+  await page.goto('/start#unknown');
+  await expect(page.locator('#start-upgrades')).toBeVisible();
+  await page.locator('#start-upgrades').getByRole('link', { name: 'Open upgrade form' }).click();
+  await expect(page.getByRole('heading', { name: 'Analyse a program upgrade.' })).toBeVisible();
+  await page.getByRole('link', { name: 'choose a workflow', exact: true }).click();
+  await page.getByRole('link', { name: 'Explore a demo' }).click();
+  await expect(page).toHaveURL(/\/runs\/demo$/);
+});
+
+test('CLI task index resolves every section and distinguishes CI and saved-result sync', async ({ page }) => {
+  await page.goto('/cli');
+  const links = await page.getByRole('navigation', { name: 'CLI guide sections' }).getByRole('link').all();
+  for (const link of links) {
+    const href = await link.getAttribute('href');
+    await link.click();
+    await expect(page.locator(href).getByRole('heading', { level: 2 })).toBeInViewport();
+  }
+  await expect(page.locator('#prepare')).toContainText('Discovery alone does not create replay-ready evidence');
+  await expect(page.locator('#compare')).toContainText('Use ci check for expectation-based gating');
+  await page.goto('/cli#ci');
+  await page.getByText('Use an existing hosted project instead', { exact: true }).click();
+  await expect(page.locator('#command-hosted-ci')).toHaveText(CLI_COMMANDS.hostedCi);
+  await expect(page.locator('#sync')).toContainText('Upgrade CI uses the separate submission flow');
 });

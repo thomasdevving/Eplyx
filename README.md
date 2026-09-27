@@ -117,9 +117,16 @@ the toolchain is installed, no database, no container.
 The public site presents Eplyx as a product in development. It separates current,
 bounded upgrade, migration, lifecycle, current-path and Squads capabilities from
 early work and planned product layers. Overview gives a short explanation;
-Technical shows execution, input and evidence details. `/cli`
-provides source-build instructions, copyable commands and explicit input
-requirements. There is no advertised prebuilt download or installer.
+Technical shows execution, input and evidence details. **Try Eplyx** opens
+`/start`, a workflow selector that explains when to use each analysis, required
+inputs, results, limitations and browser/CLI entry points. `/cli` provides
+source-build instructions and copyable commands for upgrades, CI, retained-state
+comparison, historical preparation, Squads, migrations, lifecycle and current
+paths. There is no advertised prebuilt download or installer.
+
+See [Choose an Eplyx workflow](docs/getting-started.md) for the entry-point map
+and [suggested next product steps](docs/product-next-steps.md) for development
+opportunities; the latter describes proposed work, not shipped capabilities.
 
 `/analyse` remains the operator's upgrade form for an existing hosted project.
 Workspace links use the configured `EPLYX_API_URL` origin; hosted identity and
