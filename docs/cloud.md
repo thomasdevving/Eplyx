@@ -58,6 +58,53 @@ HTTPS outside loopback. Secrets belong in operator configuration, not a run, rep
 or request payload. Workers receive no environment variables. `/health` checks
 liveness and `/ready` verifies configured storage/identity readiness.
 
+## Project analysis capabilities
+
+`GET /v1/projects/{project_id}/capabilities` is the authenticated,
+project-scoped pre-submission contract. It uses the same project token,
+operator credential, or workspace access check as hosted submission and project
+retrieval. Callers without access receive the normal project authorization
+error and no capability details.
+
+The response has `schema_version`, `project_id`, and a deterministic `analyses`
+list. Each entry contains the existing hosted job `kind`, an explicit `status`
+(`ready`, `not_ready`, or `unsupported`), `supported`, `can_submit`, and a
+`missing` list. Every missing prerequisite has stable `code`, user-facing `message`,
+and high-level `action` fields. The current hosted kinds are
+`program_upgrade`, `token_migration`, `lifecycle_change`,
+`current_observation`, `current_path`, `current_candidate`,
+`current_preflight`, and `current_stress`.
+
+Readiness is derived on every request. All kinds require an enabled project.
+Program upgrades also require an upgrade target and a currently usable active
+bundle. Prepared token-migration and lifecycle inputs require neither a bundle
+nor an observation provider. Current-state kinds require the configured
+read-only observation service; `current_candidate` additionally requires the
+server-registered migration mechanism. Observation IDs, selected accounts,
+proposal terms, uploaded files, amounts, clocks, and other form inputs remain
+submission validation concerns and are not reported here.
+
+Reason codes currently returned are `project_disabled`,
+`upgrade_target_missing`, `active_bundle_missing`,
+`active_bundle_unavailable`, `observation_service_unavailable`, and
+`migration_candidate_not_configured`. Messages never include configuration
+values, credentials, provider details, database addresses, or filesystem
+paths.
+
+This endpoint is distinct from `/ready`, which reports infrastructure/service
+health, and from analysis reports, which contain evidence and verdicts. A
+`ready` capability does not mean a proposal is safe, approved, or verified and
+does not authorize a later POST. Every submission endpoint revalidates current
+state and its own inputs independently.
+
+Hosted project and analysis pages fetch this contract with their existing
+authenticated request path. Overview and Technical modes render the same
+per-kind response: Overview shows the server message and next action, while
+Technical additionally exposes the stable reason code and exact status fields.
+Controls remain disabled while capability discovery is loading or has failed.
+The display is informational and can become stale immediately; the subsequent
+submission remains authoritative.
+
 The candidate registration checks the T3 SHA-256 and requires an observation
 service. The browser cannot choose code. Catalogue import uses
 `node scripts/import-catalogue.mjs --server-binary SERVER_BINARY --data-dir DATA_DIR

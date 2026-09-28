@@ -51,6 +51,11 @@ const ASSETS: &[(&str, &str, &str)] = &[
         frontend!("src/format.js"),
     ),
     (
+        "capabilities.js",
+        "text/javascript; charset=utf-8",
+        frontend!("src/capabilities.js"),
+    ),
+    (
         "brand.js",
         "text/javascript; charset=utf-8",
         frontend!("src/brand.js"),

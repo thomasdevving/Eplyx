@@ -1,6 +1,10 @@
 import { Header, Footer } from './shell.js';
 import { api, isConnected, short, ApiError } from './session.js';
 import { bytes, fingerprint, middle } from './change.js';
+import {
+  fetchProjectCapabilities, capabilityFor, canSubmitCapability,
+  capabilityHTML, capabilityLoadingHTML, capabilityFailureHTML,
+} from './capabilities.js';
 
 const escapeHtml = value =>
   String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
@@ -23,14 +27,15 @@ export function AnalysePage() {
       </div>
       <form class="analyse-form" id="analyse-form">
         <div class="form-head"><span>Program upgrade</span><em>Uses the real hosted API</em></div>
-        <label>Project<select name="project" id="project-select" required><option value="">Loading projects…</option></select>
-          <small id="project-note">The project decides which program the upgrade targets. Only projects with an active bundle can be analysed.</small></label>
+        <label>Project<select name="project" id="project-select" required disabled><option value="">Loading projects…</option></select>
+          <small id="project-note">The project decides which program the upgrade targets. Availability comes from the project’s hosted capability record.</small></label>
+        <div id="project-readiness" aria-live="polite">${capabilityLoadingHTML()}</div>
         <label class="file-drop"><input name="candidate" type="file" accept=".so,application/octet-stream" required><span><b>Candidate build</b><em>Drop the compiled .so or choose a file</em></span><strong>Choose file</strong></label>
         <div id="change-preview" aria-live="polite"></div>
         <label>Name <small class="inline-optional">optional</small><input name="label" maxlength="120" placeholder="e.g. v2.1 release candidate" autocomplete="off"></label>
         <label class="file-drop file-drop--optional"><input name="expectations" type="file" accept=".toml,text/plain"><span><b>Expected changes</b><em>Optional .toml declaration</em></span><strong>Choose file</strong></label>
         <div class="form-status" role="status" aria-live="polite"></div>
-        <button class="button button--primary" type="submit">Analyse change <span>↗</span></button>
+        <button class="button button--primary" type="submit" disabled>Analyse change <span>↗</span></button>
         <p class="form-note">The analysis is accepted immediately and runs on the server; you can leave this page and come back to it.</p>
       </form>
     </section>
@@ -83,14 +88,33 @@ export function attachAnalyse(navigate) {
   const status = form.querySelector('.form-status');
   const select = form.querySelector('#project-select');
   const note = form.querySelector('#project-note');
+  const readiness = form.querySelector('#project-readiness');
   const submit = form.querySelector('button[type="submit"]');
   const preview = form.querySelector('#change-preview');
   let projects = [];
+  const capabilities = new Map();
+  const capabilityErrors = new Map();
   let candidate = null;
 
   const selected = () => projects.find(project => project.project_id === select.value);
+  const selectedCapability = () => capabilityFor(capabilities.get(select.value), 'program_upgrade');
+  const repaintReadiness = () => {
+    const project = selected();
+    if (!project) {
+      readiness.innerHTML = capabilityFailureHTML('Choose a project to check program-upgrade availability.');
+      submit.disabled = true;
+      return;
+    }
+    const error = capabilityErrors.get(project.project_id);
+    const capability = selectedCapability();
+    readiness.innerHTML = error
+      ? capabilityFailureHTML('Eplyx could not determine project analysis availability.')
+      : capabilityHTML(capability, { label: 'Program upgrade' });
+    submit.disabled = !canSubmitCapability(capability);
+  };
   const repaint = () => {
     preview.innerHTML = ProposedChangePreview({ project: selected(), candidate });
+    repaintReadiness();
   };
 
   document.querySelectorAll('.file-drop input').forEach(input => input.addEventListener('change', () => {
@@ -115,46 +139,48 @@ export function attachAnalyse(navigate) {
   if (!isConnected()) {
     select.innerHTML = '<option value="">Connect the console first</option>';
     note.textContent = 'Open Projects and connect with the operator token.';
+    readiness.innerHTML = capabilityFailureHTML('Connect the console to determine project analysis availability.');
     submit.disabled = true;
     return;
   }
 
   // Projects come from the server. There is no project-ID field, and no API URL
   // field: a person should not have to know either to use the product.
-  api('/v1/projects').then(({ projects: listed }) => {
+  api('/v1/projects').then(async ({ projects: listed }) => {
     projects = listed;
     if (!projects.length) {
       select.innerHTML = '<option value="">No projects yet</option>';
       note.textContent = 'Create a project first, then upload and activate a bundle.';
+      readiness.innerHTML = capabilityFailureHTML('No hosted project is available for this analysis.');
       submit.disabled = true;
       return;
     }
     select.innerHTML = projects
-      .map(project => {
-        const ready = project.status === 'ready';
-        const label = `${project.name} · ${short(project.program_id, 12)}${ready ? '' : ' — setup required'}`;
-        return `<option value="${escapeHtml(project.project_id)}"${ready ? '' : ' disabled'}>${escapeHtml(label)}</option>`;
-      })
+      .map(project => `<option value="${escapeHtml(project.project_id)}">${escapeHtml(`${project.name} · ${short(project.program_id, 12)}`)}</option>`)
       .join('');
-    const first = projects.find(project => project.status === 'ready');
-    if (first) {
-      select.value = first.project_id;
-      // A convenience only. The server decides what this project may do; the
-      // remembered choice is never the source of truth.
+    await Promise.all(projects.map(async project => {
       try {
-        const last = localStorage.getItem('eplyx-last-project');
-        if (last && projects.some(p => p.project_id === last && p.status === 'ready')) select.value = last;
-      } catch { /* A forgotten preference is not a failure. */ }
-      repaint();
-    } else {
-      note.textContent = 'No project has an active bundle yet. Upload and activate one on its project page.';
-      submit.disabled = true;
-    }
+        capabilities.set(project.project_id, await fetchProjectCapabilities(project.project_id, api));
+      } catch (error) {
+        capabilityErrors.set(project.project_id, error);
+      }
+    }));
+    const first = projects.find(project => canSubmitCapability(capabilityFor(capabilities.get(project.project_id), 'program_upgrade'))) ?? projects[0];
+    select.value = first.project_id;
+    // A convenience only. The server decides what this project may do; the
+    // remembered choice is never the source of truth.
+    try {
+      const last = localStorage.getItem('eplyx-last-project');
+      if (last && projects.some(project => project.project_id === last)) select.value = last;
+    } catch { /* A forgotten preference is not a failure. */ }
+    select.disabled = false;
+    repaint();
   }).catch(error => {
     select.innerHTML = '<option value="">Could not load projects</option>';
     note.textContent = error instanceof ApiError && error.status === 401
       ? 'The operator token was not accepted. Reconnect on the Projects page.'
       : error.message;
+    readiness.innerHTML = capabilityFailureHTML();
     submit.disabled = true;
   });
 
@@ -163,6 +189,9 @@ export function attachAnalyse(navigate) {
     const values = new FormData(form);
     const projectId = String(values.get('project'));
     if (!projectId) return refuse('Choose a project first.');
+    if (!canSubmitCapability(selectedCapability())) {
+      return refuse('This project is not currently ready for a hosted program-upgrade analysis.');
+    }
 
     const body = new FormData();
     body.append('candidate', values.get('candidate'));
@@ -201,7 +230,7 @@ export function attachAnalyse(navigate) {
   function refuse(message) {
     status.textContent = message;
     status.className = 'form-status is-visible is-error';
-    submit.disabled = false;
+    submit.disabled = !canSubmitCapability(selectedCapability());
     submit.innerHTML = 'Analyse change <span>↗</span>';
   }
 }

@@ -89,6 +89,9 @@ await check('the analyse form has no backend URL and no project id field', () =>
   assert.match(html, /<select name="project"/, 'there is no project selector');
   assert.match(html, /name="candidate"/);
   assert.match(html, /name="expectations"/);
+  assert.match(html, /Checking project analysis availability/);
+  assert.match(html, /<select name="project"[^>]*disabled/);
+  assert.match(html, /<button class="button button--primary" type="submit" disabled/);
 });
 
 await check('an unconnected console does not pretend it can submit', async () => {
@@ -103,17 +106,35 @@ await check('an unconnected console does not pretend it can submit', async () =>
 await check('the project selector is filled from the backend', async () => {
   store.clear();
   store.set(CONSOLE_KEY, 'operator-token');
-  let asked = '';
+  const asked = [];
   globalThis.fetch = async (url, options) => {
-    asked = String(url);
+    asked.push(String(url));
     assert.equal(options.headers.Authorization, 'Bearer operator-token');
+    const href = String(url);
+    if (href.endsWith('/v1/projects/proj_A/capabilities')) return {
+      ok: true,
+      status: 200,
+      json: async () => ({ schema_version: 1, project_id: 'proj_A', analyses: [
+        { kind: 'program_upgrade', status: 'ready', supported: true, can_submit: true, missing: [] },
+      ] }),
+    };
+    if (href.endsWith('/v1/projects/proj_B/capabilities')) return {
+      ok: true,
+      status: 200,
+      json: async () => ({ schema_version: 1, project_id: 'proj_B', analyses: [
+        { kind: 'program_upgrade', status: 'not_ready', supported: true, can_submit: false, missing: [
+          { code: 'active_bundle_missing', message: 'No active analysis bundle is selected.', action: 'Upload and activate a bundle.' },
+        ] },
+      ] }),
+    };
     return {
       ok: true,
       status: 200,
       json: async () => ({
         projects: [
-          { project_id: 'proj_A', name: 'Ready One', program_id: 'SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy', status: 'ready' },
-          { project_id: 'proj_B', name: 'Not Yet', program_id: 'HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq', status: 'setup' },
+          // Deliberately misleading generic statuses: capabilities must win.
+          { project_id: 'proj_A', name: 'Ready One', program_id: 'SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy', status: 'setup' },
+          { project_id: 'proj_B', name: 'Not Yet', program_id: 'HopcampquEa7pvG4d6xkVNE2fkMiT9oZmY8T77XkcMBq', status: 'ready' },
         ],
       }),
     };
@@ -122,13 +143,53 @@ await check('the project selector is filled from the backend', async () => {
   attachAnalyse(() => {});
   await new Promise(resolve => setTimeout(resolve, 10));
 
-  assert.equal(asked, 'http://api.test/v1/projects', 'the configured API base was not used');
+  assert.deepEqual(asked, [
+    'http://api.test/v1/projects',
+    'http://api.test/v1/projects/proj_A/capabilities',
+    'http://api.test/v1/projects/proj_B/capabilities',
+  ], 'projects and capabilities did not use the configured authenticated API');
   const options = form.querySelector('#project-select').innerHTML;
   assert.match(options, /Ready One/);
-  // A project without an active bundle is shown, and is not selectable.
-  assert.match(options, /Not Yet[^<]*setup required/);
-  assert.match(options, /value="proj_B"\s+disabled/);
-  assert.doesNotMatch(options, /value="proj_A"\s+disabled/);
+  assert.match(options, /Not Yet/);
+  assert.doesNotMatch(options, /setup required|disabled/, 'generic project status still drives the options');
+  const select = form.querySelector('#project-select');
+  assert.equal(select.value, 'proj_A', 'the capability-ready project was not preferred');
+  assert.match(form.querySelector('#project-readiness').innerHTML, /Program upgrade/);
+  assert.match(form.querySelector('#project-readiness').innerHTML, /Ready/);
+  select.value = 'proj_B';
+  for (const handler of select.listeners.change ?? []) handler({ target: select });
+  const blocked = form.querySelector('#project-readiness').innerHTML;
+  assert.match(blocked, /No active analysis bundle is selected/);
+  assert.match(blocked, /Upload and activate a bundle/);
+  assert.match(blocked, /active_bundle_missing/);
+  assert.equal(form.querySelector('button[type="submit"]').disabled, true);
+});
+
+await check('a capability request failure keeps upgrade submission closed', async () => {
+  store.clear();
+  store.set(CONSOLE_KEY, 'operator-token');
+  globalThis.fetch = async (url, options) => {
+    assert.equal(options.headers.Authorization, 'Bearer operator-token');
+    if (String(url).endsWith('/capabilities')) return {
+      ok: false,
+      status: 503,
+      json: async () => ({ error: 'capability service unavailable' }),
+    };
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({ projects: [
+        { project_id: 'proj_A', name: 'Project A', program_id: 'SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy', status: 'ready' },
+      ] }),
+    };
+  };
+  const form = mount(AnalysePage());
+  attachAnalyse(() => {});
+  await new Promise(resolve => setTimeout(resolve, 10));
+  const readiness = form.querySelector('#project-readiness').innerHTML;
+  assert.match(readiness, /could not determine project analysis availability/i);
+  assert.doesNotMatch(readiness, /Unsupported/);
+  assert.equal(form.querySelector('button[type="submit"]').disabled, true);
 });
 
 // --- the console keeps its credential to itself -------------------------

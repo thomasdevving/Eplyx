@@ -1,26 +1,80 @@
 # Choose an Eplyx workflow
 
-Eplyx is in development. Choose a question first, then an interface. The public
-site's **Try Eplyx** action opens `/start`, where each workflow lists its inputs,
-results, limits and browser/CLI entry points. `/cli` contains copyable command
-examples, prerequisites and links to the detailed input contracts.
+## First Eplyx analysis
+
+Begin with the canonical [offline SPL Stake Pool example](../examples/stake-pool-upgrade/README.md):
+
+```text
+build the Eplyx CLI
+→ build and hash-check the known regression candidate
+→ verify deploy/bundle
+→ run the pinned current program as the control
+→ run the constructed regression candidate
+→ compare why the control exits 0 and the regression exits 1
+```
+
+It uses ten retained historical observations, the pinned baseline and dependency
+programs, the normal `eplyx ci check` engine, semantic coverage reporting and the
+same candidate identity protected by clean-checkout CI. It is the shortest route
+to executing a meaningful analysis, not a universal Stake Pool or Solana safety
+claim. The [root quick start](../README.md#quick-start-one-real-historical-analysis-offline)
+has the copyable command sequence; the example guide is authoritative for exact
+results, provenance, limitations and the current macOS reproducibility boundary.
+
+## After that
+
+Choose the specialized workflow that matches the next question. These paths have
+their own inputs and evidence boundaries; they are not prerequisites for the first
+analysis.
 
 | Your question | Start here | Required preparation |
 | --- | --- | --- |
-| What does an Eplyx result look like? | `/runs/demo` | None. This is a labelled saved demonstration, not a new analysis. |
-| What changes if I deploy this program build? | `/analyse` for a hosted check; `/cli#upgrades` locally | Compiled candidate, validated bundle and supported replay coverage. The browser additionally needs access to a hosted project with an active bundle. |
-| Can this migration account for its holders and funds? | `/cli#migration` | Migration terms, captured or synthetic world, compatible candidate and local project configuration. Templates alone are not runnable evidence. |
-| What happens when these declared terms change? | `/cli#lifecycle`; Proposed scenario in a configured workspace | Snapshot, scenario, evaluation time and any independent execution evidence. Policy time does not refresh state. |
-| Can an exact token account use this path? | A configured workspace for Transfer/bounded Meteora exit; `/cli#paths` for retained inputs and withdrawal | Exact account/path terms, retained state and deployed code. Hosted acquisition needs an operator-configured provider. |
-| Does a Squads proposal match the analysed candidate? | `/cli#governance`, or the hosted API; review evidence in the run report | Supported single loader-v3 upgrade, ChangeSpec, multisig/index and read-only RPC. Deployment attestation additionally needs a sealed prior binding and exact candidate bytes. |
-| Can this run on every pull request? | `/cli#ci` | Candidate built in the team's runner, a provisioned local bundle or hosted project, and version-controlled expected changes. |
-| How do I prepare historical inputs? | `/cli#prepare` | Suitable archive access, supported transaction shapes and validated records. Discovery is not historical-state validation. |
-| How do I share a local run? | `/cli#sync` | Saved migration/lifecycle/current-state records, a configured workspace and project access. Sync uploads analytical documents; it does not execute an analysis. |
+| How do I compare another program upgrade? | [Upgrade gate, expectations and bundles](phase-10-hosted-ci.md) or `/cli#upgrades` | Compiled candidate, validated bundle and supported replay coverage. |
+| Can this migration account for its holders and funds? | [Token migration](token-migration.md) or `/cli#migration` | Migration terms, captured or synthetic world, compatible candidate and local project configuration. |
+| What happens when declared lifecycle terms change? | [Lifecycle analysis](lifecycle.md) or `/cli#lifecycle` | Snapshot, scenario, evaluation time and any independent execution evidence. |
+| Can an exact token account use this current-state path? | [Current-state analysis](current-state-analysis.md) or `/cli#paths` | Exact account/path terms, retained state and deployed code. |
+| Should a protocol team use hosted analysis? | [Production pilot](production-pilot.md) and [pilot onboarding](pilot-onboarding.md) | A hosted project, active bundle, credentials and an operator-configured service. |
+| Does a Squads proposal match the analysed candidate? | [Squads binding](phase-g1-squads-governance-binding.md) and [deployment attestation](phase-g2-squads-deployment-attestation.md) | Supported loader-v3 upgrade, ChangeSpec, multisig/index and read-only RPC. |
+| How do I acquire and prepare historical inputs? | [Historical state](phase-6-historical-state.md), [discovery](phase-5-mainnet-discovery.md) and [corpus preparation](phase-9-production-corpus.md) | Suitable archive access, supported transaction shapes and validated records. |
+| How do I share a local run? | [Workspace sync](cloud.md) or `/cli#sync` | Saved analytical records, a configured workspace and project access. Sync does not execute analysis. |
 
 ## CLI installation
 
-The current installation path is a source build with Git, Rust stable and native
-build tools. There is no prebuilt release or one-line installer advertised.
+### Versioned release: macOS Apple Silicon
+
+The only supported prebuilt target is `aarch64-apple-darwin`. Select a version
+that actually exists on the [GitHub Releases
+page](https://github.com/thomasdevving/Eplyx/releases), then download and verify
+its archive and checksum:
+
+```sh
+VERSION="X.Y.Z" # replace with the published version
+ASSET="eplyx-v${VERSION}-aarch64-apple-darwin.tar.gz"
+BASE_URL="https://github.com/thomasdevving/Eplyx/releases/download/v${VERSION}"
+
+curl -fLO "${BASE_URL}/${ASSET}"
+curl -fLO "${BASE_URL}/${ASSET}.sha256"
+shasum -a 256 -c "${ASSET}.sha256"
+tar -xzf "${ASSET}"
+./eplyx version --json
+./eplyx --help
+```
+
+Only versions actually listed on the Releases page are available. If it lists no
+matching release, use the source build below. A release archive contains the CLI
+only: it does not contain a historical bundle, SBF fixture, provider
+configuration, or `.eplyx` state. Run the extracted binary directly or move it
+into a directory already on `PATH`; no installer, `sudo`, or automatic profile
+edit is involved. Linux, Windows, Intel macOS, and universal macOS prebuilt
+binaries are not currently supported.
+
+The published SHA-256 authenticates the downloaded archive against the checksum
+attached to that release. It does not assert reproducible CLI bytes across
+independent builds.
+
+### Source build
+
+The source path requires Git, Rust stable and native build tools:
 
 ```sh
 git clone --branch main https://github.com/thomasdevving/Eplyx.git
@@ -32,7 +86,8 @@ eplyx --help
 
 The PATH setting applies to that terminal. Examples in the website guide use
 POSIX shell syntax. Candidate SBF builds have their own toolchain requirements;
-building the analysis CLI does not create candidate programs or captures.
+installing or building the analysis CLI does not create candidate programs,
+historical bundles, or captures.
 
 ## Three different kinds of work
 
