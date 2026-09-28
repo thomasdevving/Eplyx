@@ -243,20 +243,128 @@ async fn inconsistent_or_online_migration_inputs_never_enter_the_queue() {
     assert!(h.state.registry.project_run_ids(&p).unwrap().is_empty());
 }
 #[tokio::test]
-async fn lifecycle_completes_without_a_deployment_gate_and_matches_local_engine_bytes() {
+async fn browser_shaped_lifecycle_completes_and_matches_local_engine_bytes() {
+    use base64::{engine::general_purpose::STANDARD, Engine as _};
     use eplyx_engine::{
         change::ChangeSpec,
-        lifecycle::{policy::LifecycleScenario, LifecycleSnapshot},
+        lifecycle::{
+            decode::LEGACY_PROGRAM,
+            policy::{
+                AssetLifecyclePolicy, LifecycleDeadline, LifecycleScenario, LifecycleScenarioType,
+                LifecycleSource, LifecycleSourceKind, LifecycleStatus, ScenarioDescription,
+                SuccessorAsset,
+            },
+            AssetDescriptor, RpcEvidence,
+        },
     };
     let h = Harness::new(1);
     let p = project(&h);
-    let root = eplyx_engine::lifecycle::artifact::reference_root();
-    let snapshot = LifecycleSnapshot::load(&root.join("snapshots/spacex-exposure.json")).unwrap();
-    let scenario = LifecycleScenario::load(&root.join("scenarios/spacex-transition.json")).unwrap();
+    let asset_mint = bs58::encode([1_u8; 32]).into_string();
+    let successor_mint = bs58::encode([2_u8; 32]).into_string();
+    let captured_at = "2030-06-15T09:30:00Z".parse().unwrap();
+    let effective_at = "2031-01-01T00:00:00Z".parse().unwrap();
+    let deadline_at = "2031-02-01T00:00:00Z".parse().unwrap();
+    let scenario = LifecycleScenario {
+        schema_version: 1,
+        scenario_type: LifecycleScenarioType::LifecycleChange,
+        id: "browser-lifecycle-hosted-test".into(),
+        scenario_version: "browser-prepared/v1".into(),
+        captured_at,
+        change: ScenarioDescription {
+            description: "Evaluate a declared successor transition at the stated boundary.".into(),
+        },
+        policy: AssetLifecyclePolicy {
+            asset_mint: asset_mint.clone(),
+            effective_at,
+            before: LifecycleStatus::Active,
+            after: LifecycleStatus::TransitionRequired,
+            deadline: Some(LifecycleDeadline {
+                at: deadline_at,
+                after: LifecycleStatus::Expired,
+            }),
+            successor: Some(SuccessorAsset {
+                mint: successor_mint,
+                description: "Declared successor; no conversion mechanism asserted.".into(),
+            }),
+        },
+        sources: vec![LifecycleSource {
+            id: "browser-declaration".into(),
+            kind: LifecycleSourceKind::ScenarioAssumption,
+            reference: "proposal:hosted-lifecycle-test".into(),
+            description: "User-provided hypothetical lifecycle policy; not issuer verification."
+                .into(),
+            captured_at,
+            supports: vec![
+                "/policy/effective_at".into(),
+                "/policy/before".into(),
+                "/policy/after".into(),
+                "/policy/deadline".into(),
+                "/policy/successor".into(),
+            ],
+            artifact: None,
+            content_sha256: None,
+        }],
+    };
+    scenario.validate().unwrap();
+    let mut mint_bytes = vec![0_u8; 82];
+    mint_bytes[44] = 6;
+    mint_bytes[45] = 1;
+    let raw_mint = json!({
+        "owner": LEGACY_PROGRAM,
+        "data": [STANDARD.encode(mint_bytes), "base64"],
+        "executable": false,
+        "lamports": 1_000_000_u64,
+        "rentEpoch": u64::MAX,
+        "space": 82,
+    });
+    let config = json!({"encoding":"base64", "commitment":"finalized"});
+    let at_slot = json!({"encoding":"base64", "commitment":"finalized", "minContextSlot":10});
+    let evidence = vec![
+        RpcEvidence {
+            id: 0,
+            method: "getGenesisHash".into(),
+            params: json!([]),
+            result: json!("test-genesis"),
+        },
+        RpcEvidence {
+            id: 1,
+            method: "getAccountInfo".into(),
+            params: json!([asset_mint, config]),
+            result: json!({"context":{"slot":10}, "value":raw_mint}),
+        },
+        RpcEvidence {
+            id: 2,
+            method: "getProgramAccounts".into(),
+            params: json!([LEGACY_PROGRAM, {
+                "encoding":"base64", "commitment":"finalized", "minContextSlot":10,
+                "withContext":true, "filters":[{"memcmp":{"offset":0,"bytes":asset_mint}}]
+            }]),
+            result: json!({"context":{"slot":10}, "value":[]}),
+        },
+        RpcEvidence {
+            id: 3,
+            method: "getAccountInfo".into(),
+            params: json!([asset_mint, at_slot]),
+            result: json!({"context":{"slot":10}, "value":raw_mint}),
+        },
+    ];
+    let snapshot = eplyx_engine::lifecycle::normalize(
+        AssetDescriptor {
+            name: "Browser lifecycle fixture".into(),
+            mint: asset_mint,
+            expected_token_program: Some(LEGACY_PROGRAM.into()),
+            expected_genesis_hash: Some("test-genesis".into()),
+            verification: vec![],
+        },
+        "2030-06-15T09:30:00Z".into(),
+        "test://hosted-lifecycle".into(),
+        evidence,
+    )
+    .unwrap();
     let spec = ChangeSpec::lifecycle(&scenario).unwrap();
     let before = scenario.policy.effective_at - chrono::Duration::seconds(1);
-    let at = scenario.policy.effective_at + chrono::Duration::seconds(1);
-    let mut parts = vec![
+    let at = scenario.policy.effective_at;
+    let parts = vec![
         ("change_spec", spec.to_document().unwrap().into_bytes()),
         ("snapshot", snapshot.to_json().unwrap().into_bytes()),
         (
@@ -270,28 +378,28 @@ async fn lifecycle_completes_without_a_deployment_gate_and_matches_local_engine_
             serde_json::to_vec(&json!({"before":before,"at":at})).unwrap(),
         ),
     ];
-    let evidence: std::collections::BTreeMap<_, _> = scenario
-        .sources
-        .iter()
-        .filter_map(|source| {
-            source.artifact.as_ref().map(|path| {
-                (
-                    source.id.clone(),
-                    eplyx_engine::cloud::contract::Artifact::new(
-                        eplyx_engine::lifecycle::artifact::read_relative(
-                            &root.join("scenarios"),
-                            path,
-                        )
-                        .unwrap(),
-                    )
-                    .unwrap(),
-                )
-            })
-        })
-        .collect();
-    parts.push(("lifecycle_evidence", serde_json::to_vec(&evidence).unwrap()));
     let accepted = submit(&h, &p, &parts).await;
     let id = accepted["run_id"].as_str().unwrap();
+    assert_eq!(accepted["status_url"], format!("/v1/runs/{id}"));
+    assert_eq!(accepted["change"]["kind"], "lifecycle_change");
+    assert_eq!(accepted["change"]["label"], scenario.id);
+    let change_spec_id = accepted["change"]["change_spec_id"].as_str().unwrap();
+    assert_eq!(change_spec_id.len(), 64);
+    assert!(change_spec_id
+        .bytes()
+        .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte)));
+    assert_eq!(
+        accepted["change"]["asset_mint"].as_str(),
+        Some(scenario.policy.asset_mint.as_str())
+    );
+    assert_eq!(
+        accepted["change"]["destination_mint"].as_str(),
+        scenario
+            .policy
+            .successor
+            .as_ref()
+            .map(|value| value.mint.as_str())
+    );
     let deadline = std::time::Instant::now() + std::time::Duration::from_secs(180);
     loop {
         let status = h.state.registry.load_run(id).unwrap().status;

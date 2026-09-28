@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# LEGACY synchronous prototype. Use scripts/eplyx-submit.sh for hosted CI;
+# the current server accepts checks asynchronously and returns HTTP 202.
 # Upload a candidate to Eplyx, fetch the reports, and return Eplyx's gate code.
 #
 # Contains no analysis logic and makes no policy decisions. Every judgement -

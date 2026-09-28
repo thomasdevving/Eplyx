@@ -1,5 +1,9 @@
 # Production Pilot: Real Bundle Hosted CI
 
+This is the historical September 2026 deployment record. For a new protocol
+repository, follow [pilot onboarding](pilot-onboarding.md) and its current async
+client and workflow example.
+
 A candidate binary travelled from a developer workflow to a hosted Eplyx
 deployment, was evaluated against an immutable bundle of validated historical
 production-derived interactions, and produced the same deterministic gate result
