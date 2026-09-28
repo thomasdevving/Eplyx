@@ -35,15 +35,13 @@ jobs:
       # Candidate code is built here, never by Eplyx. The service receives
       # bytes and executes them inside the replay VM the engine sandboxes; it
       # never clones a repository and never runs a build.
-      - name: Install the Solana toolchain
+      - name: Install the pinned SBF build tool
         if: inputs.candidate == ''
-        run: |
-          sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
-          echo "$HOME/.local/share/solana/install/active_release/bin" >> "$GITHUB_PATH"
+        run: cargo install cargo-build-sbf --version 4.4.0 --locked
 
       - name: Build the candidate
         if: inputs.candidate == ''
-        run: ./scripts/build-programs.sh
+        run: ./scripts/build-stake-pool-candidate.sh
 
       - name: Choose the candidate binary
         id: candidate

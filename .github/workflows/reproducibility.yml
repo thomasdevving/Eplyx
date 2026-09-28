@@ -1,0 +1,77 @@
+name: Clean checkout offline analysis
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  stake-pool-example:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check clean inputs and Rust toolchain
+        run: |
+          test ! -e artifacts/fixture_stake_pool_v2.so
+          test ! -e .eplyx
+          rustup show active-toolchain
+          rustc --version
+          cargo --version
+
+      - name: Build Eplyx CLI
+        run: |
+          cargo build --locked -p eplyx-engine
+          target/debug/eplyx version --json
+
+      - name: Install pinned SBF build tool
+        run: |
+          cargo install cargo-build-sbf --version 4.4.0 --locked
+          cargo-build-sbf --version
+          echo 'Fixture build: platform-tools v1.54, SBF v0, locked dependencies'
+
+      - name: Build and hash-check regression candidate
+        run: ./scripts/build-stake-pool-candidate.sh
+
+      - name: Verify tracked bundle
+        run: target/debug/eplyx bundle verify --bundle deploy/bundle
+
+      - name: Run baseline control
+        run: |
+          mkdir -p "$RUNNER_TEMP/eplyx-repro"
+          target/debug/eplyx ci check \
+            --bundle deploy/bundle \
+            --candidate deploy/bundle/binaries/current.so \
+            --format json --out "$RUNNER_TEMP/eplyx-repro/control.json"
+
+      - name: Run expected regression
+        run: |
+          set +e
+          target/debug/eplyx ci check \
+            --bundle deploy/bundle \
+            --candidate artifacts/fixture_stake_pool_v2.so \
+            --format json --out "$RUNNER_TEMP/eplyx-repro/regression.json"
+          code=$?
+          set -e
+          echo "regression exit code: $code (expected 1)"
+          test "$code" -eq 1
+
+      - name: Check relocated CLI with explicit inputs
+        run: |
+          cp target/debug/eplyx "$RUNNER_TEMP/eplyx-repro/eplyx"
+          cd "$RUNNER_TEMP/eplyx-repro"
+          ./eplyx ci check \
+            --bundle "$GITHUB_WORKSPACE/deploy/bundle" \
+            --candidate "$GITHUB_WORKSPACE/deploy/bundle/binaries/current.so" \
+            --format json --out portable-control.json
+
+      - name: Assert canonical reports and portability
+        run: |
+          python3 scripts/assert-stake-pool-reproducibility.py \
+            --control "$RUNNER_TEMP/eplyx-repro/control.json" \
+            --regression "$RUNNER_TEMP/eplyx-repro/regression.json" \
+            --portable-control "$RUNNER_TEMP/eplyx-repro/portable-control.json"
