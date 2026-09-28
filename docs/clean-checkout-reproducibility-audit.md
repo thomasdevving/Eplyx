@@ -2,17 +2,33 @@
 
 Audited HEAD: `a3a6982dd8cebc8b5a2d2da69545d53397c1646f` (2026-09-28). This is a Phase 1 audit, not a claim that every supported analysis works on a clean machine. No product code was changed.
 
+> **Current status after Phases 2A and 2B:** the audit's recommended Stake Pool
+> path is now implemented. The candidate builds to the pinned SHA-256
+> `3193eabd…` on `macos-15`; `.github/workflows/reproducibility.yml` verifies a
+> clean checkout, bundle, control, expected regression and relocated CLI; and the
+> repository onboarding docs make this the canonical first analysis. Linux
+> produced different candidate bytes and is not part of the current fixture
+> reproducibility contract. The remainder of this document records what was true
+> at the audited Phase 1 commit and should not be read as the current roadmap.
+
 ## Method and environment
 
 I extracted `git archive HEAD` to `/private/tmp/eplyx-audit-a3a6982d` and ran builds there. An archive contains exactly tracked bytes at HEAD; unlike a clone, it has no `.git` metadata, so this build's `eplyx version --json` reports `commit: "unknown"`. The working repository already had ignored `target/`, `artifacts/`, `node_modules/`, imported migration captures, and unrelated untracked `media/`; none entered the archive. The borrowed binaries used in diagnostic runs below are **not** clean-checkout evidence.
 
 Host: macOS Darwin 25.6.0, arm64. Installed outside `PATH`: Rust/Cargo 1.98.1 (`stable-aarch64-apple-darwin`); `rust-toolchain.toml` requests stable with rustfmt and clippy. Also present: Node 22.23.1, Python 3.14, Make, Git. `cargo-build-sbf`, Solana CLI and `pnpm` were not available. The locked Rust dependencies were cached. `curl -I --max-time 10 https://static.rust-lang.org/dist/channel-rust-stable.toml` failed with DNS error 6 in this environment, so I could not install the missing SBF toolchain. This is an audit-environment limit, not evidence that the documented installer fails with normal network access. I did not test Linux or Windows.
 
-## Intended entry points and selected workflow
+## Intended entry points and selected workflow at the audited commit
 
-The [README](../README.md) makes `make` the quick start: build the lending V1/V2 SBF programs, then execute a synthetic 141-case comparison offline. [Getting started](getting-started.md) describes source installation and distinguishes the saved web demo, hosted upgrade checks, migration, lifecycle, paths, historical preparation and CI. [Product next steps](product-next-steps.md) explicitly calls for one self-contained offline example with a known control/regression pair. `eplyx compare --help` exposes `--v1`, `--v2`, `--fixture`, `--format`, `--out` and `--no-minimize`; `eplyx reproduce --help` accepts a fixture ID and explicit V1/V2 paths.
+At the audited commit, the [README](../README.md) made `make` the quick start:
+build the lending V1/V2 SBF programs, then execute a synthetic 141-case
+comparison offline. [Getting started](getting-started.md) described source
+installation and the other workflow choices, while [product next
+steps](product-next-steps.md) still called for the self-contained offline pair
+that Phases 2A and 2B later delivered. `eplyx compare --help` exposed `--v1`,
+`--v2`, `--fixture`, `--format`, `--out` and `--no-minimize`; `eplyx reproduce
+--help` accepted a fixture ID and explicit V1/V2 paths.
 
-The strongest first analysis is the **offline SPL Stake Pool CI bundle**. `deploy/bundle` contains the tracked, hash-verified baseline program, two dependency programs and ten historical replay records. `eplyx bundle verify` and `eplyx ci check --bundle deploy/bundle --candidate deploy/bundle/binaries/current.so` ran from the clean archive with no SBF build, provider, credential, prior `.eplyx` state, archive checkout or frontend. The baseline candidate produces a real replay/coverage report over one DepositSol and nine WithdrawSol observations, with zero findings and exit 0. A deliberately regressed candidate exists as source in `programs/fixture-stake-pool-candidate` and is built by `scripts/build-stake-pool-candidate.sh`, but its `.so` is ignored. Supplying the developer checkout's local artifact for diagnosis produced two expected findings and exit 1. Thus the **control already is fully reproducible** from Git plus the CLI, while the complete control/regression onboarding pair still needs a reproducible or distributed candidate asset.
+The strongest first analysis was the **offline SPL Stake Pool CI bundle**. `deploy/bundle` contained the tracked, hash-verified baseline program, two dependency programs and ten historical replay records. `eplyx bundle verify` and `eplyx ci check --bundle deploy/bundle --candidate deploy/bundle/binaries/current.so` ran from the clean archive with no SBF build, provider, credential, prior `.eplyx` state, archive checkout or frontend. The baseline candidate produced a real replay/coverage report over one DepositSol and nine WithdrawSol observations, with zero findings and exit 0. A deliberately regressed candidate existed as source in `programs/fixture-stake-pool-candidate` and was built by `scripts/build-stake-pool-candidate.sh`, but its `.so` was ignored. Supplying the developer checkout's local artifact for diagnosis produced two expected findings and exit 1. Thus, at the audited commit, the **control already was fully reproducible** from Git plus the CLI, while the complete pair had not yet gained the now-completed candidate-build and CI protection.
 
 The README's **synthetic lending V1/V2 comparison** is a second viable candidate once the SBF toolchain is installed. Its program source is tracked, the fixture corpus is generated by `engine/src/corpus.rs` at runtime, and all 142 files under `fixtures/states` are tracked reference output. It has `healthy-001` as a control and `boundary-position-017` as a critical regression, but neither required `.so` is in Git. It requires two SBF builds, and default binary paths point back to the source checkout. The existing stake-pool bundle needs no SBF build to reach a meaningful first result and uses the canonical `eplyx ci check` report path, so it is the recommended target.
 
@@ -77,27 +93,30 @@ I also ran `cp -R /private/tmp/eplyx-audit-a3a6982d/examples/migrations/minimal 
 - `engine/src/lib.rs::repo_root()` derives a **compile-time absolute** root from `CARGO_MANIFEST_DIR`. Default V1/V2 paths point to `<build-source>/artifacts/fixture_lending_{v1,v2}.so`, regardless of the current directory or executable location. `generate` also defaults to source-tree `fixtures/states`. `engine/src/migration/fixture.rs` and lifecycle reference helpers use that root for pinned assets. In contrast, dashboard HTML/JS is embedded with `include_str!` at build time; it does not need a sibling frontend directory at runtime.
 - I ran `cp /private/tmp/eplyx-audit-a3a6982d/target/debug/eplyx /private/tmp/eplyx-audit-portable/eplyx` and invoked it from the destination directory. `./eplyx version --json` and `./eplyx list` worked. `./eplyx ci check --bundle /private/tmp/eplyx-audit-a3a6982d/deploy/bundle --candidate /private/tmp/eplyx-audit-a3a6982d/deploy/bundle/binaries/current.so --format json --out /private/tmp/eplyx-audit-portable-baseline.json` also worked and produced **byte-identical JSON** to the in-repository baseline (`cmp` exit 0, both SHA-256 `cb0e9d12290191ea7fd6a8c5ab02f226fe56ab35b20070a253f4e6e760014bef`). The recommended `ci check` path is portable with explicit bundle/candidate inputs. By contrast, `./eplyx compare --no-minimize --format json` still sought the original archive's `artifacts/fixture_lending_v1.so` and failed; its default/demo path is tied to the build source. The binary itself is a macOS arm64 executable, not a cross-platform release.
 
-## CI reality
+## CI reality at the audited commit
 
 There is one tracked GitHub Actions workflow, [`.github/workflows/eplyx.yml`](../.github/workflows/eplyx.yml), triggered for pull requests and manual runs. It is a hosted **pilot/customer-style upgrade gate**: it builds a candidate in the runner, submits it to a configured Eplyx API, and needs `EPLYX_API_URL`, `EPLYX_PROJECT_ID`, `EPLYX_TOKEN` plus an active project bundle. It is not repository self-test CI. Its default candidate is `artifacts/fixture_stake_pool_v2.so`, but its build step runs `scripts/build-programs.sh`, which only creates lending and migration `.so` files. The stake-pool candidate is created by `scripts/build-stake-pool-candidate.sh`, which this job never calls. Thus the default candidate selection cannot succeed from this workflow's clean checkout, even if toolchain and secrets are present. Supplying a prebuilt `inputs.candidate` changes that path but still needs hosted configuration.
 
 The workflow **attempts to build the lending and migration SBF programs** through `build-programs.sh`, but does not build/test the CLI, run `make test`, evaluate the 141-case comparison, verify a clean checkout, run frontend checks or run server checks. The existing local commands are `make test` (`build`, stake-pool candidate, program unit tests, `cargo test`), `make fmt-check`, `make lint`, `make test-cloud` (Postgres required), `pnpm check:frontend`, `pnpm test:public`, and other package scripts. Many Rust tests need ignored generated SBF artifacts; captured migration tests additionally need the pinned STA import. A previous report saying a test passed is a historical record, not an automated gate on current HEAD.
 
-## Blockers and limits
+## Historical blockers and limits
 
-Severity uses the requested engineering scale. There is no P0 for the chosen baseline analysis: it completed from tracked bytes. The complete control/regression journey needs one candidate binary whose source is tracked but whose clean SBF build was unverified in this environment.
+Severity uses the requested engineering scale. These were blockers at the
+audited commit; B1, B2 and B4 were subsequently resolved by Phases 2A and 2B.
+There was no P0 for the chosen baseline analysis because it completed from
+tracked bytes.
 
-| ID | Blocker | Evidence | Severity | Type | Required for first analysis? | Recommended fix |
+| ID | Historical blocker / current status | Evidence | Severity | Type | Required for first analysis? | Recommended fix |
 | --- | --- | --- | --- | --- | --- | --- |
-| B1 | Known regressed stake-pool candidate `.so` is absent from Git | `artifacts/` is ignored; `build-stake-pool-candidate.sh` generates it; borrowed local SHA `3193eabd…` produced two findings | P1 | Generated example asset / build | Yes for the regression step; no for baseline | Package a licensed, hash-pinned candidate with the example, or prove its pinned SBF build in clean CI and give users exact build instructions. |
-| B2 | No repository CI protects the already runnable offline baseline and regression | Only workflow submits to hosted API; no `bundle verify` or local `ci check` step | P1 | CI verification | No for manual execution; yes for supported onboarding | Add clean-checkout CI for bundle verification, baseline report and known regression. |
+| B1 | **Resolved after audit:** the generated candidate remained absent from Git, but its source build now has a pinned identity and clean macOS CI protection. | `artifacts/` is ignored; `build-stake-pool-candidate.sh` generates it; SHA `3193eabd…` produces two findings. | P1 | Generated example asset / build | Yes for the regression step; no for baseline | Completed by the hash-pinned source build and exact user instructions. |
+| B2 | **Resolved after audit:** repository CI now protects the offline baseline and regression. | `.github/workflows/reproducibility.yml` runs `bundle verify`, both local checks and report assertions. | P1 | CI verification | No for manual execution; yes for supported onboarding | Completed by clean-checkout CI. |
 | B3 | Only Actions job selects an artifact its build step does not create and needs a hosted project | `.github/workflows/eplyx.yml` selects stake-pool V2; `build-programs.sh` makes lending/migration; workflow requires project secrets | P2 | CI configuration | No | Correct the pilot workflow's candidate build/selection; keep it separate from offline repository CI. |
-| B4 | The existing runnable historical bundle is not the documented first-run command | README leads to `make`; getting-started points to generic CLI and hosted/pilot preparation; `docs/production-pilot.md` contains the bundle cases | P1 | Documentation | Yes | Add one concise offline stake-pool example with explicit baseline and regression commands, report interpretation, provenance and limits. |
+| B4 | **Resolved after audit:** the historical bundle is now the documented first-run workflow. | README, getting-started and the example guide all point to the same bundle/control/regression sequence. | P1 | Documentation | Yes | Completed by the canonical onboarding route. |
 | B5 | Captured migration/SPACEX evidence is absent from Git | ignored JSON, STA importer, clean `migration_demo` failure at `population.capture.json` | P3 | Missing fixture / intentional boundary | No | Keep it explicitly advanced/archived; do not substitute synthetic bytes for a pinned capture. |
 | B6 | Lending `compare` default still depends on compile-time source path | `repo_root()` uses `CARGO_MANIFEST_DIR`; relocated `./eplyx compare` failed at archive path while explicit inputs worked | P3 | Portability of optional workflow | No | If a future release advertises default lending comparison, make asset discovery independent of build-source path or require explicit paths. |
 | B7 | README `make` builds unrelated migration flavors as part of lending demo | `build-programs.sh` calls `build-migration-candidate.sh` (v1.57/SBF v3) after lending builds (v1.54/SBF v0) | P3 | Build friction of optional workflow | No | Address only if lending remains a separately supported onboarding route. |
 
-## Canonical first analysis and Phase 2 scope
+## Canonical first analysis and historical Phase 2 plan
 
 Choose **offline SPL Stake Pool upgrade CI check**, using the existing `eplyx ci check` engine and canonical CI report. Desired user journey:
 
@@ -111,9 +130,16 @@ install/build Eplyx CLI
 → inspect decreased DepositSol pool tokens (1 observation) and newly reverting WithdrawSol (9 observations), exit 1
 ```
 
-The tracked bundle already contains historical source slots, baseline/dependency identities and coverage limits. The regressed candidate is a deliberately incomplete constructed counterexample, not a proposed SPL Stake Pool release. The observed regression findings relied on a borrowed ignored artifact; acceptance requires producing or distributing those exact bytes through the public example process.
+The tracked bundle already contained historical source slots,
+baseline/dependency identities and coverage limits. The regressed candidate is
+a deliberately incomplete constructed counterexample, not a proposed SPL Stake
+Pool release. At the audited commit the findings relied on a borrowed ignored
+artifact; the later macOS CI build now produces and hash-checks those exact bytes.
 
-Minimal Phase 2 work:
+The audit proposed the following Phase 2 work. Items 1–4 are now complete for
+the documented macOS contract. A later workflow now builds and packages the
+versioned macOS arm64 CLI; its first owner-approved publication and cross-platform
+fixture reproducibility remain separate work:
 
 1. Make the example regression candidate self-contained: use `programs/fixture-stake-pool-candidate`, `scripts/build-stake-pool-candidate.sh` and a small example directory/manifest. Either include the licensed `.so` with SHA-256 `3193eabd…` or pin and prove a clean SBF build that generates it. Keep `deploy/bundle` as the one pinned historical input; do not reconstruct its observations or create another evaluator.
 2. In `docs/getting-started.md`, `README.md` and the example README, document the exact CLI source build, bundle/candidate locations, two `ci check` commands, expected exit 0/1 and findings, original-data provenance and bounded coverage. Explain that the candidate's nine withdrawal reverts partly reflect its intentionally narrow instruction support; the one DepositSol decrease is the deliberate arithmetic defect. Do not present either as a proposed mainnet deployment.

@@ -1,10 +1,11 @@
 # Public frontend refresh
 
-The public site now describes the integrated Eplyx implementation instead of only
-the original upgrade demo. It adds `/cli` with source-build instructions, copyable
-commands and the input requirements for each workflow. No prebuilt binary or
-installer is advertised. The existing upgrade form, project console, demo report
-and analytical report contracts remain in place.
+At the time of this refresh, the public site described the integrated Eplyx
+implementation instead of only the original upgrade demo. It added `/cli` with
+source-build instructions, copyable commands and the input requirements for each
+workflow; no prebuilt binary or installer was then advertised. The repository now
+documents the later macOS arm64 release workflow separately. The existing upgrade
+form, project console, demo report and analytical report contracts remain in place.
 
 The owner authorised pushing the completed integration and this frontend change
 to `main`. Work used an isolated checkout of the pushed `t-token-migration` branch

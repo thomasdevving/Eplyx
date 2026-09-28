@@ -9,11 +9,15 @@ import { Header, Footer } from './shell.js';
 import { api, json, isConnected, setOperatorToken, short, when, ApiError } from './session.js';
 import { changeLine } from './change.js';
 import { runSummary } from './analysis.js';
+import {
+  fetchProjectCapabilities, capabilityFor, canSubmitCapability,
+  projectCapabilitiesHTML, capabilityFailureHTML,
+} from './capabilities.js';
 
 const STATUS_LABEL = {
-  setup: 'Setup required',
-  ready: 'Ready',
-  disabled: 'Disabled',
+  setup: 'No active bundle',
+  ready: 'Active bundle',
+  disabled: 'Project disabled',
 };
 
 const escapeHtml = value =>
@@ -204,19 +208,22 @@ export function attachProject(projectId, navigate) {
 
   async function load() {
     try {
-      const [detail, bundles, runs] = await Promise.all([
+      const [detail, bundles, runs, capabilityResult] = await Promise.all([
         api(`/v1/projects/${projectId}`),
         api(`/v1/projects/${projectId}/bundles`),
         api(`/v1/projects/${projectId}/runs?limit=10`),
+        fetchProjectCapabilities(projectId, api)
+          .then(capabilities => ({ capabilities }))
+          .catch(error => ({ error })),
       ]);
-      body.innerHTML = detail_view(detail, bundles.bundles, runs.runs, issued, verified);
-      wire(detail.project, bundles.bundles);
+      body.innerHTML = detail_view(detail, bundles.bundles, runs.runs, issued, verified, capabilityResult);
+      wire();
     } catch (error) {
       body.innerHTML = failure(error, 'this project');
     }
   }
 
-  function wire(project, bundles) {
+  function wire() {
     body.querySelectorAll('[data-run]').forEach(row =>
       row.addEventListener('click', () => navigate(`/runs/${row.dataset.run}`)));
     body.querySelector('#analyse-link')?.addEventListener('click', () => navigate('/analyse'));
@@ -281,16 +288,15 @@ export function attachProject(projectId, navigate) {
       event.target.textContent = 'Copied';
     });
 
-    const _ = project.status;
-    void bundles;
   }
 
   return () => {};
 }
 
-function detail_view(detail, bundles, runs, issued, verified) {
+function detail_view(detail, bundles, runs, issued, verified, capabilityResult) {
   const project = detail.project;
-  const setup = project.status === 'setup';
+  const capabilities = capabilityResult.capabilities;
+  const upgrade = capabilityFor(capabilities, 'program_upgrade');
   return `
     <div class="console-head">
       <div>
@@ -301,8 +307,13 @@ function detail_view(detail, bundles, runs, issued, verified) {
       <span class="pill pill--${escapeHtml(project.status)}">${escapeHtml(STATUS_LABEL[project.status] ?? project.status)}</span>
     </div>
 
-    ${setup ? `<div class="callout">Upload and activate a verified Eplyx bundle before checks can run.</div>` : ''}
     ${project.speaks_semantics ? '' : `<div class="callout callout--quiet">This build reads no semantics for this program. Checks run, and report no semantic coverage — Eplyx saying it did not look, not that nothing is wrong.</div>`}
+
+    <section class="console-section">
+      <h2>Analysis availability</h2>
+      <p class="console-note">Current project and service prerequisites. Submission validates them again.</p>
+      ${capabilities ? projectCapabilitiesHTML(capabilities) : capabilityFailureHTML()}
+    </section>
 
     <section class="console-section">
       <h2>Configuration</h2>
@@ -360,7 +371,7 @@ function detail_view(detail, bundles, runs, issued, verified) {
     <section class="console-section">
       <h2>Recent runs</h2>
       ${runs.length ? `<div class="run-list">${runs.map(runRow).join('')}</div>`
-        : `<div class="empty-result"><p>No runs yet.</p>${project.status === 'ready' ? '<button type="button" class="button button--primary" id="analyse-link">Analyse a program upgrade <span>↗</span></button>' : ''}</div>`}
+        : `<div class="empty-result"><p>No runs yet.</p>${canSubmitCapability(upgrade) ? '<button type="button" class="button button--primary" id="analyse-link">Analyse a program upgrade <span>↗</span></button>' : ''}</div>`}
     </section>`;
 }
 

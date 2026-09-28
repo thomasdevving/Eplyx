@@ -165,6 +165,10 @@ pub fn router(state: Shared) -> Router {
         .route("/v1/projects", post(create_project).get(list_projects))
         .route("/v1/projects/{project_id}", get(get_project))
         .route(
+            "/v1/projects/{project_id}/capabilities",
+            get(get_project_capabilities),
+        )
+        .route(
             "/v1/projects/{project_id}/workspace-binding",
             post(assign_workspace),
         )
@@ -1489,6 +1493,151 @@ async fn get_project(
         })),
     )
         .into_response())
+}
+
+// ------------------------------------------------ project capabilities
+
+/// Project-level prerequisites for one hosted analysis kind.
+///
+/// This is an informational pre-submission view. The submission handlers keep
+/// validating the same authoritative state independently; this response is
+/// never a capability token and says nothing about an analytical outcome.
+#[derive(Clone, Serialize)]
+struct MissingPrerequisite {
+    code: &'static str,
+    message: &'static str,
+    action: &'static str,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "snake_case")]
+enum CapabilityStatus {
+    Ready,
+    NotReady,
+    Unsupported,
+}
+
+#[derive(Serialize)]
+struct AnalysisCapability {
+    kind: &'static str,
+    status: CapabilityStatus,
+    supported: bool,
+    can_submit: bool,
+    missing: Vec<MissingPrerequisite>,
+}
+
+#[derive(Serialize)]
+struct ProjectCapabilitiesResponse {
+    schema_version: u32,
+    project_id: String,
+    analyses: Vec<AnalysisCapability>,
+}
+
+fn analysis_capability(
+    kind: &'static str,
+    supported: bool,
+    common: &[MissingPrerequisite],
+    specific: Vec<MissingPrerequisite>,
+) -> AnalysisCapability {
+    let missing = common.iter().cloned().chain(specific).collect::<Vec<_>>();
+    let can_submit = supported && missing.is_empty();
+    AnalysisCapability {
+        kind,
+        status: if !supported {
+            CapabilityStatus::Unsupported
+        } else if can_submit {
+            CapabilityStatus::Ready
+        } else {
+            CapabilityStatus::NotReady
+        },
+        supported,
+        can_submit,
+        missing,
+    }
+}
+
+fn project_capabilities(state: &AppState, project: &Project) -> ProjectCapabilitiesResponse {
+    let disabled = (project.status == ProjectStatus::Disabled).then_some(MissingPrerequisite {
+        code: "project_disabled",
+        message: "This project is disabled and does not accept hosted analyses.",
+        action: "Ask the service operator to enable this project.",
+    });
+    let common = disabled.into_iter().collect::<Vec<_>>();
+
+    let mut upgrade = Vec::new();
+    if project.program_id.is_none() {
+        upgrade.push(MissingPrerequisite {
+            code: "upgrade_target_missing",
+            message: "This project does not have a program upgrade target.",
+            action: "Use a project configured for the program being upgraded.",
+        });
+    }
+    match &project.active_bundle {
+        None => upgrade.push(MissingPrerequisite {
+            code: "active_bundle_missing",
+            message: "This project does not have an active replay bundle.",
+            action: "Ask the service operator to upload and activate a replay bundle.",
+        }),
+        Some(active) if state.registry.open_bundle(&active.bundle_sha256).is_err() => {
+            upgrade.push(MissingPrerequisite {
+                code: "active_bundle_unavailable",
+                message: "This project's active replay bundle is unavailable.",
+                action: "Ask the service operator to restore or replace the active replay bundle.",
+            });
+        }
+        Some(_) => {}
+    }
+
+    let observation = || {
+        if state.observation.is_none() {
+            vec![MissingPrerequisite {
+                code: "observation_service_unavailable",
+                message: "Read-only current-state observation is not configured.",
+                action: "Ask the service operator to configure the observation service.",
+            }]
+        } else {
+            Vec::new()
+        }
+    };
+    let mut candidate = observation();
+    if state
+        .observation
+        .as_ref()
+        .is_none_or(|service| service.candidate.is_none())
+    {
+        candidate.push(MissingPrerequisite {
+            code: "migration_candidate_not_configured",
+            message: "The hosted migration mechanism is not configured.",
+            action: "Ask the service operator to register the hosted migration mechanism.",
+        });
+    }
+
+    // Stable order: the public kinds first, followed by the current-state
+    // workflow's durable subchecks using their existing hosted job names.
+    let analyses = vec![
+        analysis_capability("program_upgrade", true, &common, upgrade),
+        analysis_capability("token_migration", true, &common, Vec::new()),
+        analysis_capability("lifecycle_change", true, &common, Vec::new()),
+        analysis_capability("current_observation", true, &common, observation()),
+        analysis_capability("current_path", true, &common, observation()),
+        analysis_capability("current_candidate", true, &common, candidate),
+        analysis_capability("current_preflight", true, &common, observation()),
+        analysis_capability("current_stress", true, &common, observation()),
+    ];
+    ProjectCapabilitiesResponse {
+        schema_version: 1,
+        project_id: project.project_id.clone(),
+        analyses,
+    }
+}
+
+async fn get_project_capabilities(
+    State(state): State<Shared>,
+    Path(project_id): Path<String>,
+    headers: HeaderMap,
+) -> ApiResult<Response> {
+    let project = project_for(&state, &project_id, &headers).await?;
+    Ok((StatusCode::OK, Json(project_capabilities(&state, &project))).into_response())
 }
 
 /// Resolve a project for a caller entitled to see it.

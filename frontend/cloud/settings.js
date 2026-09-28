@@ -2,7 +2,8 @@
 // summary with its linked local stores, and settings (CI tokens). Loaded only
 // in cloud mode. Statuses shown are copied from synced engine output.
 import { esc, pill, kv, panel, tile, commandLine, count, when, ago, ident, empty } from './ui.js';
-import { PROJECT } from './env.js';
+import { DEMO, PROJECT } from './env.js';
+import { fetchProjectCapabilities, projectCapabilitiesHTML, capabilityFailureHTML } from '/assets/capabilities.js';
 
 async function call(method, path, body) {
  const response = await fetch(path, { method, credentials:'same-origin', headers:{ Accept:'application/json', ...(body ? { 'Content-Type':'application/json' } : {}) }, body:body ? JSON.stringify(body) : undefined });
@@ -23,6 +24,10 @@ export async function projectPage({ project }) {
  const s = project.stats ?? {};
  const sources = s.run_sources ?? {};
  const links = cloud.links ?? [];
+ const id = project.project?.id ?? PROJECT;
+ const capabilityResult = DEMO ? null : await fetchProjectCapabilities(id, path => call('GET', path))
+  .then(capabilities => ({ capabilities }))
+  .catch(error => ({ error }));
  const html = `
  <div class="page-head"><h1>Project</h1><p class="muted">Private to the <strong>${esc(cloud.workspace?.name ?? 'workspace')}</strong> workspace${cloud.demo ? ' · also published read-only as this server’s public demo' : ''}. Counts include hosted and synced runs.</p></div>
  <div class="tiles">
@@ -42,6 +47,7 @@ export async function projectPage({ project }) {
   ['Created', esc(when(cloud.project?.created_at))],
   ['Branches in run history', (s.branches ?? []).map(b => `<code>${esc(b)}</code>`).join(' ') || '<span class="muted">none recorded</span>'],
  ]) })}
+ ${capabilityResult ? panel({ title:'Analysis availability', body:capabilityResult.capabilities ? projectCapabilitiesHTML(capabilityResult.capabilities) : capabilityFailureHTML() }) : ''}
  ${cloud.demo && !links.length ? '' : panel({ title:'Linked local projects', body:links.length ? `<div class="table-wrap"><table class="table"><thead><tr><th>Local project ID</th><th>Linked by</th><th>Via</th><th>When</th></tr></thead><tbody>${links.map(l => `<tr><td><code>${esc(l.local_project_id)}</code></td><td>${esc(l.linked_by)}</td><td>${esc(l.linked_via === 'ci' ? 'CI token' : 'CLI')}</td><td>${esc(when(l.linked_at))}</td></tr>`).join('')}</tbody></table></div><p class="note">Each developer checkout and CI workspace has its own stable local project ID. Their runs share this cloud project.</p>` : empty('No local project is linked yet.', `eplyx link --project ${project.project?.id ?? ''}`) })}
  ${panel({ title:'What is synced?', body:WHAT })}`;
  return { title:'Project', html };

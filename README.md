@@ -95,22 +95,98 @@ phase commits, the frozen before/after contract and verification. Historical
 SPACEX hackathon evidence remains in the [pinned STA archive](ARCHIVE.md).
 Live-provider checks and deployment were intentionally not performed.
 
-## Quick start
+## Quick start: one real historical analysis, offline
 
-```bash
-# 1. Toolchain (once)
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
-export PATH="$HOME/.cargo/bin:$HOME/.local/share/solana/install/active_release/bin:$PATH"
+Start here: reproduce the canonical SPL Stake Pool upgrade-impact check over the
+tracked historical bundle.
 
-# 2. Build both program versions and compare them
-make
+### Install the CLI
+
+The supported prebuilt target is currently **macOS on Apple Silicon**
+(`aarch64-apple-darwin`) only. Choose an actually published version from
+[GitHub Releases](https://github.com/thomasdevving/Eplyx/releases), then download
+and verify both assets:
+
+```sh
+VERSION="X.Y.Z" # replace with the version shown on the Releases page
+ASSET="eplyx-v${VERSION}-aarch64-apple-darwin.tar.gz"
+BASE_URL="https://github.com/thomasdevving/Eplyx/releases/download/v${VERSION}"
+
+curl -fLO "${BASE_URL}/${ASSET}"
+curl -fLO "${BASE_URL}/${ASSET}.sha256"
+shasum -a 256 -c "${ASSET}.sha256"
+tar -xzf "${ASSET}"
+./eplyx version --json
 ```
 
-`make` compiles V1 and V2 to SBF bytecode and runs the full corpus through both.
-For this default synthetic comparison, nothing else is required: no RPC endpoint,
-no API key, no network access after
-the toolchain is installed, no database, no container.
+Only versions actually listed on the Releases page are available; if no matching
+release appears there, use the source build below. The checksum identifies the
+bytes GitHub published; it is not a claim that independent CLI builds are
+byte-for-byte reproducible. The archive contains only `eplyx`. Run it directly
+or move it to a directory already on `PATH`; no installer, `sudo`, or
+shell-profile change is required.
+
+The source-development path remains:
+
+```sh
+cargo build --locked -p eplyx-engine
+target/debug/eplyx version --json
+```
+
+### Run the historical control and regression
+
+From the repository root, set the executable path for the installation you chose:
+
+```sh
+# For the source build:
+EPLYX=target/debug/eplyx
+# For an extracted release binary in this directory, use: EPLYX=./eplyx
+
+cargo install cargo-build-sbf --version 4.4.0 --locked
+
+./scripts/build-stake-pool-candidate.sh
+
+"$EPLYX" bundle verify \
+  --bundle deploy/bundle
+
+"$EPLYX" ci check \
+  --bundle deploy/bundle \
+  --candidate deploy/bundle/binaries/current.so \
+  --format json \
+  --out control.json
+
+"$EPLYX" ci check \
+  --bundle deploy/bundle \
+  --candidate artifacts/fixture_stake_pool_v2.so \
+  --format json \
+  --out regression.json
+```
+
+The control exits 0 with zero findings over ten pinned historical observations
+and six covered semantic subjects. It shows that the retained replay/evidence
+path reproduces when the candidate is the pinned current program; it does not
+prove universal correctness. The regression deliberately exits **1** with two
+finding categories: one `DepositSol` economic decrease and nine `WithdrawSol`
+executions that now revert. The deposit change is an intentional arithmetic
+defect; the withdrawal failures also reflect the fixture candidate's deliberately
+narrow instruction support. The constructed candidate is not a proposed Stake
+Pool release.
+
+Once the toolchain and candidate are built, bundle verification and both checks
+run without an RPC endpoint, API key, database or hosted service. This is a
+bounded result over the included corpus, not a claim that all Stake Pool behavior,
+Solana transactions or upgrades are covered, nor that zero findings prove an
+upgrade universally safe. The candidate's canonical hash is currently reproduced
+and protected on the repository's `macos-15` GitHub Actions runner. Other
+platforms may build different SBF bytes and are not yet part of the reproducibility
+contract; the hash check remains authoritative.
+
+See the [detailed example guide](examples/stake-pool-upgrade/README.md) for report
+interpretation and provenance, then [choose a specialized workflow](docs/getting-started.md).
+The earlier synthetic lending comparison remains an engine demonstration and can
+be run with `make` after installing its documented SBF toolchain requirements.
+Installing the CLI archive alone does not provide the tracked historical bundle
+or the separately built regression candidate.
 
 ### Public frontend
 
@@ -122,7 +198,8 @@ Technical shows execution, input and evidence details. **Try Eplyx** opens
 inputs, results, limitations and browser/CLI entry points. `/cli` provides
 source-build instructions and copyable commands for upgrades, CI, retained-state
 comparison, historical preparation, Squads, migrations, lifecycle and current
-paths. There is no advertised prebuilt download or installer.
+paths. The repository documentation above adds the narrowly supported macOS
+arm64 release archive; the public site does not provide an installer.
 
 See [Choose an Eplyx workflow](docs/getting-started.md) for the entry-point map
 and [suggested next product steps](docs/product-next-steps.md) for development
