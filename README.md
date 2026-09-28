@@ -1105,6 +1105,13 @@ The mainnet paths carry their own, narrower boundaries: see
 - Severity is a fixed mapping, not configurable per protocol.
 - The JSON report embeds full logs for every fixture, so it is large (~MBs).
 
+## Qualifying a historical bundle
+
+Use `eplyx bundle prepare --spec qualification.json --out <fresh-directory>`
+for the bounded schema-1 operator workflow. See [bundle qualification](docs/bundle-qualification.md)
+for provider inputs, semantic scope, durable receipts, offline repeats, and explicit
+coverage acceptance. Registration and activation remain separate.
+
 ## Licence
 
 MIT.

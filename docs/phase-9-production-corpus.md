@@ -1,5 +1,8 @@
 # Phase 9 — Validated production-derived corpus
 
+Current operator workflow: [`eplyx bundle prepare`](bundle-qualification.md).
+This document retains the historical Phase 9 measurements and command context.
+
 Implemented: automated generation of a regression corpus from real mainnet
 activity, and a deterministic selector that turns validated replay records into
 a small corpus a CI gate can afford to run on every upgrade.

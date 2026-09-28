@@ -24,6 +24,7 @@
 //! `corpus`, `interpret` and `impact`, which is the seam a protocol adapter
 //! would plug into in a later phase.
 
+pub mod acquisition_error;
 pub mod bundle;
 pub mod canonical;
 pub mod change;
@@ -49,6 +50,7 @@ pub mod message;
 pub mod money;
 pub mod numfmt;
 pub mod protocol;
+pub mod qualification;
 pub mod replay;
 pub mod report;
 pub mod review;

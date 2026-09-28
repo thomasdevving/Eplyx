@@ -362,6 +362,23 @@ pub struct BundleInputs<'a> {
 /// build that produced something unopenable fails at build time rather than in
 /// somebody's pull request.
 pub fn build(inputs: BundleInputs<'_>, out: &Path) -> Result<CiBundle> {
+    build_observed(inputs, out, &mut |_| {})
+}
+
+/// Results from the authoritative fidelity gate, including the failing record.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct FidelityOutcome {
+    pub record_id: String,
+    pub fidelity: Option<crate::replay::ReplayFidelity>,
+    pub failures: Vec<String>,
+}
+
+/// As `build`, with a receipt observer; the observer cannot waive fidelity.
+pub fn build_observed(
+    inputs: BundleInputs<'_>,
+    out: &Path,
+    observer: &mut dyn FnMut(FidelityOutcome),
+) -> Result<CiBundle> {
     let records = inputs.records;
     if records.is_empty() {
         bail!("refusing to build a bundle from an empty corpus");
@@ -400,7 +417,7 @@ pub fn build(inputs: BundleInputs<'_>, out: &Path) -> Result<CiBundle> {
 
     match inputs.validation {
         Validation::AgainstBaseline => {
-            validate_against_baseline(records, &baseline_bytes, inputs.dependencies)?
+            validate_against_baseline(records, &baseline_bytes, inputs.dependencies, observer)?
         }
         Validation::Skip { .. } => {}
     }
@@ -525,6 +542,7 @@ fn validate_against_baseline(
     records: &[ReplayRecord],
     baseline: &[u8],
     dependency_dir: &Path,
+    observer: &mut dyn FnMut(FidelityOutcome),
 ) -> Result<()> {
     let v1 = crate::executor::ProgramVersion {
         label: "baseline".to_string(),
@@ -536,15 +554,34 @@ fn validate_against_baseline(
         record
             .validate()
             .with_context(|| format!("record {} is not a valid replay record", record.id))?;
-        let original = record
-            .execute(&v1, &loaded)
-            .with_context(|| format!("replaying record {} under the baseline", record.id))?;
+        let original = match record.execute(&v1, &loaded) {
+            Ok(result) => result,
+            Err(error) => {
+                observer(FidelityOutcome {
+                    record_id: record.id.clone(),
+                    fidelity: None,
+                    failures: vec!["baseline_execution_failed".into()],
+                });
+                return Err(error)
+                    .with_context(|| format!("replaying record {} under the baseline", record.id));
+            }
+        };
         let fidelity = record.fidelity(&original)?;
-        if !matches!(
+        let matched = matches!(
             fidelity,
             crate::replay::ReplayFidelity::Exact | crate::replay::ReplayFidelity::Matched
-        ) {
-            let failures = record.fidelity_failures(&original)?;
+        );
+        let failures = if matched {
+            Vec::new()
+        } else {
+            record.fidelity_failures(&original)?
+        };
+        observer(FidelityOutcome {
+            record_id: record.id.clone(),
+            fidelity: Some(fidelity.clone()),
+            failures: failures.clone(),
+        });
+        if !matched {
             bail!(
                 "record {} does not reproduce under the baseline (fidelity {fidelity:?}); a \
                  corpus cannot be called validated while it contains it.{}",

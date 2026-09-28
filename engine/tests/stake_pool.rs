@@ -1391,3 +1391,6 @@ fn the_committed_mainnet_record_is_internally_consistent() {
         .iter()
         .all(|frame| frame.stack_height == 2));
 }
+
+#[path = "common/qualification.rs"]
+mod qualification;

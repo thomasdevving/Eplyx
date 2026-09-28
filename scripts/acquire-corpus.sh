@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# LEGACY / HISTORICAL REFERENCE — not the canonical qualification pipeline.
+# Use `eplyx bundle prepare --spec qualification.json --out <fresh-root>`.
+# See docs/bundle-qualification.md for typed refusals, coverage review and receipts.
+# Retained to reproduce historical phase workflows; no new policy belongs here.
 # Build a validated production corpus, and a CI bundle from it.
 #
 # This is the administrative half of Eplyx: it needs archive credentials, takes
