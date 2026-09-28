@@ -5,6 +5,7 @@
 //! proves its snapshots against validator pre/post balances before constructing
 //! a replay record. Anything approximate or ambiguous is rejected.
 
+use crate::acquisition_error::AcquisitionError as AE;
 use crate::{
     dependencies,
     ingest::{
@@ -56,7 +57,7 @@ fn account_at(rpc: &dyn RpcProvider, address: &str, slot: u64) -> Result<Account
     )?;
     anyhow::ensure!(
         response["context"]["slot"].as_u64() == Some(slot),
-        "account archive did not honor exact requested slot {slot} for {address}"
+        AE::ArchiveSlotMismatch
     );
     accounts::normalize(&response["value"])
         .with_context(|| format!("historical account {address} at slot {slot}"))
@@ -79,7 +80,7 @@ fn optional_account_at(
     )?;
     anyhow::ensure!(
         response["context"]["slot"].as_u64() == Some(slot),
-        "account archive did not honor exact requested slot {slot} for {address}"
+        AE::ArchiveSlotMismatch
     );
     if response["value"].is_null() {
         return Ok(None);
@@ -249,7 +250,13 @@ impl HistoricalStateProvider for SlotAccountArchiveProvider<'_> {
                     .into(),
             ],
         };
-        record.validate()?;
+        record.validate().map_err(|error| {
+            if record.rent_paying_credits().is_empty() {
+                AE::InvalidReplayEvidence.attach(error)
+            } else {
+                AE::UnsupportedRuntime.attach(error)
+            }
+        })?;
         Ok(HistoricalAcquisition {
             record,
             v1_program: program.data,
@@ -321,7 +328,9 @@ impl HistoricalStateProvider for ProtocolArchiveProvider<'_> {
         );
         anyhow::ensure!(transaction.slot > 0, "transaction has no predecessor slot");
         // Reject the shape before spending archive requests on it.
-        adapter.accept(&transaction)?;
+        adapter
+            .accept(&transaction)
+            .map_err(|error| AE::AdapterRejected.attach(error))?;
         anyhow::ensure!(
             transaction
                 .account_keys
@@ -333,7 +342,8 @@ impl HistoricalStateProvider for ProtocolArchiveProvider<'_> {
 
         let pre_slot = transaction.slot - 1;
         // The version that was live when the original transaction executed.
-        let v1 = crate::versions::resolve_at(self.account_archive_rpc, self.program_id, pre_slot)?;
+        let v1 = crate::versions::resolve_at(self.account_archive_rpc, self.program_id, pre_slot)
+            .map_err(|error| AE::TargetExecutableUnavailable.attach(error))?;
 
         // Everything else that executes, pinned to the deployment live at the
         // same slot. Resolving these is what keeps the replay a replay: the
@@ -345,7 +355,8 @@ impl HistoricalStateProvider for ProtocolArchiveProvider<'_> {
             Some(adapter),
             self.program_id,
             pre_slot,
-        )?;
+        )
+        .map_err(|error| AE::DependencyResolutionFailed.attach(error))?;
 
         // Every key that is not executed is state this replay has to reproduce.
         // The executed set is the union of every discovery route, not the
@@ -395,9 +406,11 @@ impl HistoricalStateProvider for ProtocolArchiveProvider<'_> {
             if discovered_by.is_empty() {
                 discovered_by.push(AccountDiscovery::MessageKey);
             }
-            let pre = optional_account_at(self.account_archive_rpc, &key.address, pre_slot)?;
+            let pre = optional_account_at(self.account_archive_rpc, &key.address, pre_slot)
+                .map_err(|error| AE::HistoricalAccountUnavailable.attach(error))?;
             let post =
-                optional_account_at(self.account_archive_rpc, &key.address, transaction.slot)?;
+                optional_account_at(self.account_archive_rpc, &key.address, transaction.slot)
+                    .map_err(|error| AE::HistoricalAccountUnavailable.attach(error))?;
             let (pre, post) = match (pre, post) {
                 (Some(pre), Some(post)) => (pre, post),
                 (None, None) => {
@@ -409,9 +422,8 @@ impl HistoricalStateProvider for ProtocolArchiveProvider<'_> {
                     anyhow::ensure!(
                         zero(transaction.pre_balances.as_ref())
                             && zero(transaction.post_balances.as_ref()),
-                        "account {} is absent from the archive but the validator recorded a \
-                         balance for it",
-                        key.address
+                        AE::HistoricalAccountUnavailable.attach(anyhow::anyhow!(
+                            "account {} is absent from the archive but the validator recorded a balance for it", key.address))
                     );
                     acquisitions.push(AccountAcquisition {
                         address: key.address.clone(),
@@ -426,11 +438,7 @@ impl HistoricalStateProvider for ProtocolArchiveProvider<'_> {
                     absent.push(key.address.clone());
                     continue;
                 }
-                _ => anyhow::bail!(
-                    "account {} exists on only one side of the transaction boundary; \
-                     account creation and closure are outside the supported contract",
-                    key.address
-                ),
+                _ => return Err(anyhow::anyhow!("account {} exists on only one side of the transaction boundary; account creation and closure are outside the supported contract", key.address).context(AE::CreationClosureUnsupported)),
             };
             anyhow::ensure!(
                 !pre.executable && !post.executable,
@@ -509,8 +517,11 @@ impl HistoricalStateProvider for ProtocolArchiveProvider<'_> {
             .collect();
         let slot_screening = match self.block_rpc {
             Some(rpc) => {
-                let screening = screening::screen(rpc, transaction.slot, signature, &required)?;
-                screening.ensure_unambiguous()?;
+                let screening = screening::screen(rpc, transaction.slot, signature, &required)
+                    .map_err(|error| AE::BlockHistoryUnavailable.attach(error))?;
+                screening
+                    .ensure_unambiguous()
+                    .map_err(|error| AE::SameSlotConflict.attach(error))?;
                 Some(screening)
             }
             None => {
@@ -526,8 +537,9 @@ impl HistoricalStateProvider for ProtocolArchiveProvider<'_> {
 
         // The adapter proves its own snapshots and reports what the proof rests
         // on, so the record carries the limits of its own evidence.
-        let mut assumptions =
-            adapter.prove_boundaries(&transaction, &pre_accounts, &post_accounts)?;
+        let mut assumptions = adapter
+            .prove_boundaries(&transaction, &pre_accounts, &post_accounts)
+            .map_err(|error| AE::BoundaryProofFailed.attach(error))?;
         if !absent.is_empty() {
             assumptions.push(format!(
                 "{} message key(s) held no account at either boundary and the validator \
@@ -619,7 +631,13 @@ impl HistoricalStateProvider for ProtocolArchiveProvider<'_> {
             transaction,
             assumptions,
         };
-        record.validate()?;
+        record.validate().map_err(|error| {
+            if record.rent_paying_credits().is_empty() {
+                AE::InvalidReplayEvidence.attach(error)
+            } else {
+                AE::UnsupportedRuntime.attach(error)
+            }
+        })?;
         let dependency_binaries = dependency_binaries
             .into_iter()
             .filter(|(program_id, _)| program_id != self.program_id)

@@ -107,7 +107,7 @@ fn account_at(rpc: &dyn RpcProvider, address: &str, slot: u64) -> Result<Account
     )?;
     anyhow::ensure!(
         response["context"]["slot"].as_u64() == Some(slot),
-        "account archive did not honor exact requested slot {slot} for {address}"
+        crate::acquisition_error::AcquisitionError::ArchiveSlotMismatch
     );
     accounts::normalize(&response["value"])
         .with_context(|| format!("historical account {address} at slot {slot}"))
@@ -132,7 +132,7 @@ fn slice_at(
     )?;
     anyhow::ensure!(
         response["context"]["slot"].as_u64() == Some(slot),
-        "account archive did not honor exact requested slot {slot} for {address}"
+        crate::acquisition_error::AcquisitionError::ArchiveSlotMismatch
     );
     // `space` is the account's full data length, independent of the slice, and
     // is how a chunked read learns how far it has to go.

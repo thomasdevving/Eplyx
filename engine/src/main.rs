@@ -4,6 +4,7 @@ mod cli_dashboard;
 mod cli_lifecycle;
 mod cli_local;
 mod cli_path;
+mod cli_qualification;
 
 use std::path::PathBuf;
 static LONG_VERSION: std::sync::LazyLock<String> =
@@ -689,6 +690,8 @@ struct ChangeProgramUpgradeArgs {
 
 #[derive(Subcommand)]
 enum BundleCommand {
+    /// Qualify a bounded schema-1 corpus from declared scope and historical providers.
+    Prepare(cli_qualification::PrepareArgs),
     /// Assemble an offline-executable bundle from a validated corpus.
     Build(BundleBuildArgs),
     /// Re-hash every byte a bundle pins and report what it covers.
@@ -1495,6 +1498,9 @@ fn run() -> Result<ExitCode> {
             SquadsCommand::Acquire(args) => squads_acquire(args),
             SquadsCommand::Attest(args) => squads_attest(args),
         },
+        Command::Bundle {
+            command: BundleCommand::Prepare(args),
+        } => cli_qualification::run(args),
         Command::Bundle {
             command: BundleCommand::Build(build_args),
         } => bundle_build(build_args),
