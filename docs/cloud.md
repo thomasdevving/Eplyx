@@ -105,8 +105,27 @@ Controls remain disabled while capability discovery is loading or has failed.
 The display is informational and can become stale immediately; the subsequent
 submission remains authoritative.
 
-The candidate registration checks the T3 SHA-256 and requires an observation
-service. The browser cannot choose code. Catalogue import uses
+Authenticated project users can choose **Token migration** from the Analyse
+page. The guided flow lives at `/p/{project_id}/analyse/migration` and consumes
+the existing `token_migration` capability entry; it does not derive another
+readiness model. A disabled project produces a conflict at submission even if
+the form was opened while ready, while malformed or mutually inconsistent
+prepared inputs remain an input rejection. Both leave the entered proposal in
+the browser.
+
+Authenticated project users can also choose **Lifecycle change** from Analyse.
+The guided flow lives at `/p/{project_id}/analyse/lifecycle` and consumes the
+same server-authored `lifecycle_change` capability entry used by the API. It is
+a narrow adapter for one prepared scenario shape: the user declares an
+`Active` to `TransitionRequired` policy boundary, may add a successor and
+deadline, and uploads an existing immutable lifecycle snapshot. The browser
+does not observe chain state, verify an issuer, infer eligibility, or evaluate
+consequences.
+
+The current-state candidate registration checks the T3 SHA-256 and requires an
+observation service. That current-state workflow cannot choose code; the prepared
+migration flow separately uploads the exact mechanism named by its ChangeSpec.
+Catalogue import uses
 `node scripts/import-catalogue.mjs --server-binary SERVER_BINARY --data-dir DATA_DIR
 --capture SAVED_CAPTURE`; omitting `--capture` explicitly fetches the one fixed
 public catalogue source. It never executes captured scripts. Import failure leaves
@@ -123,6 +142,35 @@ checkout dependency. Lifecycle jobs use `change_spec`, `snapshot`, `scenario`,
 optional hash-bound `lifecycle_evidence`, and explicit `before`/`at` options.
 Current-state browser requests use the typed observation/check endpoints described
 in [the current-state guide](current-state-analysis.md).
+
+The guided lifecycle form posts that existing lifecycle multipart contract to
+`POST /v1/projects/{project_id}/checks`; it introduces no new analytical model,
+job type, or run page. Its generated scenario uses one explicit
+`ScenarioAssumption` source and the fixed `browser-prepared/v1` version. The
+submitted comparison times are exactly one second before the declared effective
+time and the effective time itself. The ChangeSpec, scenario and analysis
+options shown in Technical mode are the exact JSON documents submitted, while
+the uploaded snapshot is retained byte-for-byte and identified by a browser
+SHA-256. The engine still parses and normalizes those documents, binds the
+ChangeSpec back to the scenario, validates the snapshot and asset identity, and
+derives all lifecycle findings.
+
+The lifecycle form distinguishes project availability from input validity and
+job creation. A stale project readiness response is reported separately from a
+scenario/snapshot rejection, and both preserve the entered draft and selected
+snapshot. After acceptance, the browser verifies the returned lifecycle asset
+and optional successor identities before navigating to the existing run route.
+
+The guided browser migration form posts that same multipart contract to
+`POST /v1/projects/{project_id}/checks`; it introduces no new job or analytical
+record. It builds one narrow ChangeSpec from the visible fields, attaches the
+user-selected SBF and already-prepared state files, and supplies the explicit
+`block-only` analysis option. The preview and submitted `change_spec` are the
+same JSON document. Exact raw amounts and ratio parts stay strings. Candidate
+SHA-256 and byte length are previewed and checked against the identity returned
+with the accepted run, after which the browser navigates to the existing run
+route. Backend parsing, normalization, state/candidate validation, job staging
+and analysis remain authoritative.
 
 Inputs are validated and stored before queuing. Durable runs retain attempts;
 interrupted work retries within MAIN's limit, while a saved complete projection

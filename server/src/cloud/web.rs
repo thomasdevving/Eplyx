@@ -31,6 +31,26 @@ const CLOUD_ASSETS: &[(&str, &str, &str)] = &[
         frontend!("cloud/analysis.js"),
     ),
     (
+        "migration.js",
+        "text/javascript; charset=utf-8",
+        frontend!("cloud/migration.js"),
+    ),
+    (
+        "migration-model.js",
+        "text/javascript; charset=utf-8",
+        frontend!("cloud/migration-model.js"),
+    ),
+    (
+        "lifecycle.js",
+        "text/javascript; charset=utf-8",
+        frontend!("cloud/lifecycle.js"),
+    ),
+    (
+        "lifecycle-model.js",
+        "text/javascript; charset=utf-8",
+        frontend!("cloud/lifecycle-model.js"),
+    ),
+    (
         "cloud.js",
         "text/javascript; charset=utf-8",
         frontend!("cloud/cloud.js"),

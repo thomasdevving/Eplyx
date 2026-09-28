@@ -1,50 +1,37 @@
-# Copy to .github/workflows/ in the protocol repository.
-#
-# Eplyx never builds your code. This workflow builds the candidate in your own
-# runner and uploads only the resulting SBF binary, so no build script of yours
-# ever executes inside Eplyx's infrastructure.
-name: Eplyx Upgrade Impact
-
+# Copy to a protocol repository after replacing the marked team build command
+# and candidate path. Copy scripts/eplyx-submit.sh from Eplyx as well.
+# GitHub repository secret: EPLYX_TOKEN (project token)
+# GitHub repository variables: EPLYX_API_URL, EPLYX_PROJECT_ID
+name: Eplyx upgrade check
 on:
   pull_request:
-
+permissions:
+  contents: read
 jobs:
-  upgrade-impact:
+  upgrade-check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Build the candidate program
-        run: cargo build-sbf
-
-      - name: Eplyx upgrade check
+      - name: Build candidate SBF (team owned)
+        run: YOUR_PROGRAM_BUILD_COMMAND
+      - name: Submit candidate and wait for Eplyx
         id: eplyx
-        continue-on-error: true     # the gate is enforced in its own step below
         env:
           EPLYX_TOKEN: ${{ secrets.EPLYX_TOKEN }}
-          EPLYX_PROJECT: ${{ vars.EPLYX_PROJECT }}
-          EPLYX_URL: ${{ vars.EPLYX_URL }}
-        run: ./scripts/eplyx-check.sh target/deploy/your_program.so .eplyx/expected-changes.toml
-
-      - name: Upload the Eplyx report
+          EPLYX_API_URL: ${{ vars.EPLYX_API_URL }}
+          EPLYX_PROJECT_ID: ${{ vars.EPLYX_PROJECT_ID }}
+        run: |
+          set +e
+          scripts/eplyx-submit.sh \
+            --api "$EPLYX_API_URL" \
+            --project "$EPLYX_PROJECT_ID" \
+            --candidate target/deploy/YOUR_PROGRAM.so \
+            --report-json eplyx-report.json \
+            --summary eplyx-summary.md
+          echo "exit=$?" >> "$GITHUB_OUTPUT"
+      - name: Show Eplyx result
         if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: eplyx-upgrade-impact
-          path: |
-            eplyx-response.json
-            eplyx-report.json
-            eplyx-report.md
-          if-no-files-found: ignore
-
-      # Enforced separately so the report is always uploaded first, and so the
-      # job fails with Eplyx's own code rather than a generic one:
-      #   1 undeclared or out-of-bounds change
-      #   2 malformed configuration
-      #   3 stale declaration
-      #   4 bundle or baseline incompatibility
-      #   5 declaration this corpus cannot judge
-      #  70 the Eplyx API could not be reached — not a gate result
-      - name: Enforce the Eplyx gate
+        run: cat eplyx-summary.md >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || true
+      - name: Enforce existing Eplyx gate
         if: always()
-        run: exit ${{ steps.eplyx.outputs.exit_code || steps.eplyx.outcome == 'success' && 0 || 70 }}
+        run: exit "${{ steps.eplyx.outputs.exit || '70' }}"

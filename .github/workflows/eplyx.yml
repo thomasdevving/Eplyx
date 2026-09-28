@@ -7,11 +7,11 @@
 # pull requests are measured against, so a passing run never moves the
 # baseline — promoting a build is an operator action taken elsewhere.
 #
-# There is no GitHub App and no operator token. Three repository secrets:
+# There is no GitHub App and no operator token. One secret and two variables:
 #
-#   EPLYX_API_URL     the hosted API, a public hostname
-#   EPLYX_PROJECT_ID  the project to measure against, not a secret either
-#   EPLYX_TOKEN       the project token, the only real secret here
+#   EPLYX_API_URL     repository variable: hosted API/public origin
+#   EPLYX_PROJECT_ID  repository variable: project to measure against
+#   EPLYX_TOKEN       repository secret: project token
 #
 name: Eplyx upgrade check
 
@@ -45,26 +45,28 @@ jobs:
 
       - name: Choose the candidate binary
         id: candidate
+        env:
+          PROVIDED_CANDIDATE: ${{ inputs.candidate }}
         run: |
-          path="${{ inputs.candidate }}"
+          path="$PROVIDED_CANDIDATE"
           [ -n "$path" ] || path=artifacts/fixture_stake_pool_v2.so
           [ -f "$path" ] || { echo "no candidate at $path" >&2; exit 1; }
           echo "path=$path" >> "$GITHUB_OUTPUT"
-          # Hashed here and never rebuilt before the upload. The client checks
-          # this value against what the server says it measured, so the report
-          # is about bytes this job can name rather than bytes it hopes it sent.
-          echo "sha256=$(sha256sum "$path" | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+          # The client hashes and checks the submitted bytes.
 
       - name: Submit to Eplyx and wait for the verdict
         id: eplyx
         env:
           EPLYX_TOKEN: ${{ secrets.EPLYX_TOKEN }}
+          EPLYX_API_URL: ${{ vars.EPLYX_API_URL }}
+          EPLYX_PROJECT_ID: ${{ vars.EPLYX_PROJECT_ID }}
+          CANDIDATE_PATH: ${{ steps.candidate.outputs.path }}
         run: |
           set +e
           ./scripts/eplyx-submit.sh \
-            --api "${{ secrets.EPLYX_API_URL }}" \
-            --project "${{ secrets.EPLYX_PROJECT_ID }}" \
-            --candidate "${{ steps.candidate.outputs.path }}" \
+            --api "$EPLYX_API_URL" \
+            --project "$EPLYX_PROJECT_ID" \
+            --candidate "$CANDIDATE_PATH" \
             ${{ hashFiles('.eplyx/expected-changes.toml') != '' && '--expectations .eplyx/expected-changes.toml' || '' }} \
             --report-json eplyx-report.json \
             --report-md eplyx-report.md \
@@ -88,20 +90,20 @@ jobs:
           if-no-files-found: warn
 
       # The job's result is the gate's result. 0-5 are Eplyx's own exit codes;
-      # 75 means the hosted run produced no verdict at all, which is a different
-      # thing from a candidate failing and must not be reported as one; 70 means
-      # this job could not trust its own result.
+      # 75 means execution produced no verdict; 76 means project setup blocked
+      # submission; 70 means transport, input or identity verification failed.
       - name: Apply the gate result
         run: |
           code="${{ steps.eplyx.outputs.exit }}"
           case "$code" in
             0) echo "Eplyx check passed against the project's active production-derived replay bundle." ;;
             1) echo "::error::Unexpected or over-bound semantic changes detected." ;;
-            2) echo "::error::Eplyx could not run the analysis (configuration or fidelity error)." ;;
+            2) echo "::error::Eplyx could not evaluate the candidate (configuration, fidelity or missing semantic coverage)." ;;
             3) echo "::error::A declaration in expected-changes.toml no longer describes anything." ;;
             4) echo "::error::The candidate is incompatible with the project's active bundle." ;;
             5) echo "::error::A declaration cannot be evaluated by this corpus." ;;
             75) echo "::error::The hosted run ended without a verdict. This is not a statement about the candidate." ;;
+            76) echo "::error::The Eplyx project is not ready; see the step summary for setup actions." ;;
             *) echo "::error::Eplyx integration error; the reported result could not be trusted." ;;
           esac
           exit "$code"

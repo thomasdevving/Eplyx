@@ -212,4 +212,20 @@ async fn observation_and_disabled_project_requirements_are_derived_per_kind() {
         missing_codes(analysis(&disabled, "lifecycle_change")),
         vec!["project_disabled"]
     );
+
+    // A capability response can become stale. The authoritative submission
+    // boundary reports that readiness change distinctly and creates no run,
+    // even before it tries to interpret multipart analytical inputs.
+    let (status, refused) = harness.submit_parts(&project, &token, &[]).await;
+    assert_eq!(status, axum::http::StatusCode::CONFLICT, "{refused}");
+    assert_eq!(
+        refused["error"],
+        "this project is disabled and accepts no checks"
+    );
+    assert!(harness
+        .state
+        .registry
+        .project_run_ids(&project)
+        .unwrap()
+        .is_empty());
 }

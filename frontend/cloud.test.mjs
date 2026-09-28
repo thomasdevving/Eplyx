@@ -21,5 +21,9 @@ const currentCapabilities={schema_version:1,project_id:'proj_fixture',analyses:[
 const gated=proposalHTML(currentCapabilities),form=name=>gated.match(new RegExp(`<form data-${name}-form[\\s\\S]*?<\\/form>`))?.[0]??'';
 assert.match(form('candidate'),/<button[^>]*disabled/);assert.doesNotMatch(form('preflight'),/<button[^>]*disabled/);assert.doesNotMatch(form('stress'),/<button[^>]*disabled/);
 assert.match(gated,/migration_candidate_not_configured/);assert.match(gated,/Ask the operator to configure it/);
-for(const name of readdirSync(new URL('./cloud/',import.meta.url)).filter(n=>n.endsWith('.js'))){const text=readFileSync(new URL(`./cloud/${name}`,import.meta.url),'utf8');assert.doesNotMatch(text,banned,name);assert.doesNotMatch(text,/<input[^>]*type=["']file/i,name);}
-console.log('Cloud presentation: exact amounts, escaping, separate assurance, neutral claims and terms-only forms verified.');
+for(const name of readdirSync(new URL('./cloud/',import.meta.url)).filter(n=>n.endsWith('.js'))){const text=readFileSync(new URL(`./cloud/${name}`,import.meta.url),'utf8');assert.doesNotMatch(text,banned,name);if(!['migration.js','lifecycle.js'].includes(name))assert.doesNotMatch(text,/<input[^>]*type=["']file/i,name);}
+const migration=readFileSync(new URL('./cloud/migration.js',import.meta.url),'utf8');
+for(const input of ['candidate','state_input','state_artifact'])assert.match(migration,new RegExp(`file\\([^\\n]+['"]${input}['"]`));
+const lifecycle=readFileSync(new URL('./cloud/lifecycle.js',import.meta.url),'utf8');
+assert.match(lifecycle,/name="snapshot"[^>]*type="file"/);assert.match(lifecycle,/lifecycle_change/);assert.match(lifecycle,/preparedLifecyclePage/);
+console.log('Cloud presentation: exact amounts, escaping, separate assurance, neutral claims and scoped hosted forms verified.');

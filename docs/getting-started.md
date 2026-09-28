@@ -33,7 +33,7 @@ analysis.
 | Can this migration account for its holders and funds? | [Token migration](token-migration.md) or `/cli#migration` | Migration terms, captured or synthetic world, compatible candidate and local project configuration. |
 | What happens when declared lifecycle terms change? | [Lifecycle analysis](lifecycle.md) or `/cli#lifecycle` | Snapshot, scenario, evaluation time and any independent execution evidence. |
 | Can an exact token account use this current-state path? | [Current-state analysis](current-state-analysis.md) or `/cli#paths` | Exact account/path terms, retained state and deployed code. |
-| Should a protocol team use hosted analysis? | [Production pilot](production-pilot.md) and [pilot onboarding](pilot-onboarding.md) | A hosted project, active bundle, credentials and an operator-configured service. |
+| Should a protocol team use hosted analysis? | [Pilot onboarding](pilot-onboarding.md) | A hosted project, active bundle, project token and operator-configured service. |
 | Does a Squads proposal match the analysed candidate? | [Squads binding](phase-g1-squads-governance-binding.md) and [deployment attestation](phase-g2-squads-deployment-attestation.md) | Supported loader-v3 upgrade, ChangeSpec, multisig/index and read-only RPC. |
 | How do I acquire and prepare historical inputs? | [Historical state](phase-6-historical-state.md), [discovery](phase-5-mainnet-discovery.md) and [corpus preparation](phase-9-production-corpus.md) | Suitable archive access, supported transaction shapes and validated records. |
 | How do I share a local run? | [Workspace sync](cloud.md) or `/cli#sync` | Saved analytical records, a configured workspace and project access. Sync does not execute analysis. |
@@ -116,8 +116,10 @@ an analysis. Public demos need no account; private hosted reports need access.
 - [Local result dashboard](dashboard.md) and [workspace sync](cloud.md)
 
 Hosted upgrade automation uses [scripts/eplyx-submit.sh](../scripts/eplyx-submit.sh)
-and the [asynchronous workflow example](../.github/workflows/eplyx.yml). It uploads
-the candidate, waits for the run and checks the returned identities. This differs
+and the [external repository workflow example](../examples/github/eplyx-upgrade-impact.yml).
+The [pilot onboarding checklist](pilot-onboarding.md) is the supported setup
+path. The client checks readiness, uploads the candidate, waits for the run and
+checks returned identities. This differs
 from `eplyx sync`, which shares saved analytical documents without uploading code.
 The older `examples/github/eplyx-check.sh` expects a synchronous response and is
 not the client used by this guide.

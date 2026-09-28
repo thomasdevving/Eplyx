@@ -1,131 +1,91 @@
-# Getting Eplyx into your CI
+# Program upgrade CI pilot
 
-For a protocol engineer with an existing Solana program. Budget under an hour
-once we have prepared your first bundle.
+This path checks one team's candidate SBF program against one **already prepared,
+active** Eplyx replay bundle. Bundle preparation and qualification remain a
+hands-on operator task. An active bundle is evidence for a bounded set of
+historical interactions, not a timeless safety statement about a protocol.
 
-You do not need to understand historical-state acquisition, corpus selection or
-replay fidelity to do this. Those happen on our side, before your first pull
-request.
+## One-time Eplyx setup
 
-## What you are getting
+1. The operator and team create a project with the intended program upgrade
+   target. The operator prepares, verifies, uploads, and activates its bundle.
+   Link the project to the team's workspace and grant developers membership so
+   the hosted run page is accessible. Record the project ID, target program ID,
+   and active bundle SHA-256.
+2. Issue a **project token** for this repository in project Settings (or
+   `POST /v1/projects/{id}/tokens` with an operator credential). Store the
+   once-shown token in GitHub Actions as the `EPLYX_TOKEN` repository secret.
+   It can submit and read this project's runs and use other project-scoped check
+   APIs, including governance verification if configured. It cannot access other
+   projects, activate bundles, or manage credentials. Never put the operator
+   token in CI.
+3. Set the non-secret repository variables `EPLYX_API_URL` (the hosted service
+   origin) and `EPLYX_PROJECT_ID`. The service origin must also serve the
+   hosted project UI for the default run link. If the UI has a separate origin,
+   pass that origin with `--web-url`.
 
-Every pull request that changes your program builds a candidate `.so`. Eplyx
-replays a pinned set of **real historical mainnet transactions against your
-program** — real accounts, real pool state, real amounts, at the slot they
-happened — under both the deployed version and your candidate, and fails the
-check if user-visible economics change in a way you did not declare.
+The project credential can inspect readiness with
+`GET /v1/projects/{id}/capabilities`. Its `program_upgrade` entry must be
+`ready`. Missing target, active bundle, unavailable bundle, and disabled project
+return concrete setup actions. Submission validates the state again.
 
-## 1. We prepare your bundle
+## Repository setup
 
-Send us your program ID. We build and verify the first validated corpus and
-activate it for your project, then send you:
+1. Copy [the async client](../scripts/eplyx-submit.sh) to
+   `scripts/eplyx-submit.sh` and keep it executable. The runner needs Bash,
+   curl, Python 3, and `shasum` or `sha256sum`.
+2. Know your own candidate build command and output `.so` path. Replace the
+   marked build command and path in [the external repository workflow](../examples/github/eplyx-upgrade-impact.yml),
+   then copy it to `.github/workflows/eplyx.yml`. The Eplyx repository's
+   [dogfood workflow](../.github/workflows/eplyx.yml) builds its own Stake Pool
+   fixture and is not a protocol team's build recipe.
+3. Start with no declarations or an optional tracked
+   `.eplyx/expected-changes.toml` containing `version = 1`. Intentional
+   differences should be declared with narrow bounds and reviewed with code.
+   The existing Eplyx gate policy is enforced: no pilot threshold is added.
 
-- a **project id** (e.g. `stake-pool`)
-- a **CI token** — shown once, store it immediately
+The canonical command, run after your own build, is:
 
-## 2. Add the token and project id to your repository
-
-- `EPLYX_TOKEN` as a **repository secret**
-- `EPLYX_PROJECT` and `EPLYX_URL` as **repository variables**
-
-## 3. Add the client script
-
-Copy `eplyx-check.sh` into `scripts/`. It uploads the candidate, fetches the
-reports, writes the GitHub summary and returns Eplyx's gate code. It contains no
-analysis logic.
-
-## 4. Add the workflow
-
-Copy `eplyx-upgrade-impact.yml` into `.github/workflows/`, and change the
-candidate path to your program's artefact:
-
-```yaml
-run: ./scripts/eplyx-check.sh target/deploy/your_program.so
+```sh
+EPLYX_TOKEN="$PROJECT_TOKEN" scripts/eplyx-submit.sh \
+  --api "$EPLYX_API_URL" --project "$EPLYX_PROJECT_ID" \
+  --candidate target/deploy/your_program.so \
+  --report-json eplyx-report.json --summary eplyx-summary.md
 ```
 
-Your program is built in **your** runner. Eplyx never clones your repository and
-never runs your build.
+Add `--expectations .eplyx/expected-changes.toml` only when the file exists.
+Add `--expect-bundle SHA256` if the team wants CI to stop when the operator
+rotates the active bundle. The client hashes the candidate before upload and
+checks the accepted run, completed run, and report identities. It polls for at
+most 30 minutes by default; `EPLYX_POLL_SECONDS` and
+`EPLYX_TIMEOUT_SECONDS` configure positive intervals in seconds.
 
-## 5. Create an empty expectation file
+## First pull request
 
-```toml
-# .eplyx/expected-changes.toml
-version = 1
-```
+1. Submit a known-good candidate and inspect the job summary and hosted run.
+   Confirm the target, candidate SHA-256, bundle SHA-256, and report limitations.
+2. Where practical, submit a deliberately regressed test candidate and confirm
+   the engine returns a blocking finding. Re-running the same PR creates a new
+   durable run; prior runs remain in project history.
+3. Open the run link as a project member. The URL is
+   `/p/{project_id}/runs/{run_id}` on the public UI origin; normal sign-in is
+   still required. CI exposes no project token in the link.
 
-Declaring nothing is the correct starting point. It means every behavioural
-change is unexpected, which is what you want until you deliberately intend one.
+## Read the result
 
-## 6. Open a pull request
+| Exit | Meaning | Next action |
+| ---: | --- | --- |
+| 0 | Pass within this bundle's evaluated coverage | Read limitations before approving. |
+| 1 | Undeclared, over-bound, or undeclarable change | Inspect findings; fix code or narrow declaration. |
+| 3 | Stale declaration | Update the declaration and review its intent. |
+| 2 | Configuration or fidelity failure; with a report, this can mean missing semantic coverage | Inspect the run to tell input error from evidence gap. |
+| 4, 5 | Bundle compatibility or unevaluable evidence | Repair setup, declarations, or evidence. |
+| 70 | Input, auth, transport, server, or identity verification failure | Fix the integration; no analytical regression is claimed. |
+| 75 | Hosted execution error with no verdict | Open the run and contact the operator. |
+| 76 | Capability preflight says project is not ready | Follow the setup action in the job summary; nothing was uploaded. |
 
-The check runs and posts a report to the job summary. A clean upgrade reports:
-
-> No unexpected economic changes were detected across the tested validated
-> historical corpus.
-
-## 7. When a change is intentional, declare it — narrowly
-
-Suppose you raise the deposit fee, and the check fails with:
-
-```text
-HIGH / UNEXPECTED
-spl-stake-pool/deposit_sol/economic/pool_tokens_received/decreased
-Affected: 5 of 6 measurable observations, 5 economic entities
-Largest change: -21 bps
-```
-
-Declare exactly that, with bounds and a reason:
-
-```toml
-version = 1
-
-[[change]]
-protocol = "spl-stake-pool"
-action   = "deposit_sol"
-domain   = "economic"
-subject  = "pool_tokens_received"
-change   = "decreased"
-
-max_delta_bps             = 25
-max_affected_observations = 6
-
-reason = "Approved deposit fee increase from 0.10% to 0.25% (governance #142)"
-```
-
-Push again and the finding becomes `HIGH / EXPECTED` and the check passes.
-
-This file is **not an allowlist**. There is no field that turns a severity off,
-no way to ignore an instruction, and no wildcard. A declaration names one exact
-change; anything else your candidate does stays visible and still fails. If the
-real impact turns out to be 40 bps, the bound catches it and the check fails as
-`EXPECTED_BUT_EXCEEDED` rather than passing.
-
-Keep the file in your repository, reviewed in the pull request alongside the
-code. An intentional economic change should be attributable to the commit that
-introduces it.
-
-## Reading the exit codes
-
-| Code | What happened | What to do |
-|---:|---|---|
-| 0 | passed | — |
-| 1 | a change nobody declared, or one larger than declared | fix the code, or declare it narrowly |
-| 2 | malformed configuration | fix `expected-changes.toml` |
-| 3 | a declaration for behaviour that no longer happens | remove the stale declaration |
-| 4 | bundle or baseline incompatibility | tell us — this is ours to fix |
-| 5 | a declaration this corpus cannot judge | the corpus has no coverage for it; tell us |
-| 70 | the Eplyx API was unreachable | a transport fault, never a verdict on your code |
-
-Codes 3 and 5 fail on purpose. A stale declaration leaves standing permission
-for behaviour that no longer exists, and an unjudgeable one means the analysis
-was incomplete — neither should quietly pass.
-
-## What this does not tell you
-
-The report carries its own limitations, and they hold for passing runs too. For
-the current stake-pool corpus, for example, Jito-tipped deposits are
-under-represented, transactions that failed on mainnet are not replayed, and
-account-creation paths are excluded.
-
-Eplyx tests a pinned set of real historical interactions. It is not a proof that
-an upgrade is safe, and it does not claim to cover all production activity.
+The step summary contains the run link, candidate and evidence identities,
+engine exit code, finding count and review counts when a report exists. The
+stored Eplyx report is authoritative. A network timeout is never converted
+into a finding. Subsequent candidate PRs use the same project and active bundle
+until the operator deliberately activates another bundle.

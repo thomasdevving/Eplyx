@@ -52,6 +52,50 @@ integer strings. Full-balance population rehearsal and stress remain distinct fr
 a one-account `ExactRaw` candidate check. Proposed reserves and authorities remain
 declarations until their relevant evidence is established.
 
+## Prepare one migration in the browser
+
+An authenticated cloud project exposes **Analyse → Token migration** at
+`/p/{project_id}/analyse/migration` when the project capability response says
+`token_migration.can_submit = true`. If it is unavailable, the page shows the
+server's reason and action and keeps the form disabled. The capability is only
+pre-submission guidance; the POST checks current project state again.
+
+The first browser workflow intentionally supports one prepared shape: a
+full-balance, whole-token UI ratio; owner authorization for wallet and multisig
+owners; source burn; proposed reserve transfer; program-derived migration
+authority; relayer fee payer; and the block-only gate policy. The form exposes
+source and replacement mint/program/decimals, exact ratio integers, rounding,
+an optional source-basis-point fee, minimum raw output, proposed raw reserve,
+UTC effective/deadline times, and the mechanism program. The exact candidate
+SBF, an existing migration `state.json`, and the fixture or captured-world JSON
+named by that state descriptor are imported as prepared files. A state recipe
+that uses `pinnedMainnetCapture` remains a CLI/API workflow because it also needs
+the separately retained pinned program capture.
+
+Raw amounts and ratio parts remain canonical decimal strings; the browser does
+not pass them through JavaScript `Number`. Effective and deadline fields are
+explicitly UTC and the preview shows the corresponding Unix seconds. Browser
+checks are structural only: required values, canonical u64 syntax, public-key
+syntax, positive ratio parts, bounded fee/decimals and deadline ordering. The
+engine still decides whether proposal terms, state, reserve, authorities and
+mechanism validate and what the rehearsal establishes.
+
+Before submission, Overview shows the source-to-replacement summary, exact
+ratio, canonical timing, fee/rounding, reserve and authority declarations, plus
+which optional declarations are omitted. Technical mode shows the exact
+ChangeSpec bytes sent in the multipart request and SHA-256 identities for the
+prepared files. “Ready to submit for analysis” means only that the browser's
+structural checks passed; it is not a safe, valid, approved or verified
+migration verdict. Submission uses the existing hosted check route and then
+opens the existing asynchronous run page.
+
+The browser does not expose bounded search settings, stress budgets,
+reproduction IDs, deployment-gate policy selection, unsigned plans, arbitrary
+account capture, provider configuration or execution/signing. The CLI remains
+the interface for those advanced workflows. There is no generic proposal JSON
+editor in this phase; the JSON file inputs are the already-prepared state
+descriptor and its named state artifact.
+
 ## Read the result
 
 The dashboard presents the proposal, affected accounts, sequential rehearsal,

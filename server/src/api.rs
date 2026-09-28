@@ -413,6 +413,17 @@ async fn create_check(
             .load_project(&project_id)
             .map_err(|_| ApiError::not_found("project"))?,
     };
+    // This is the same authoritative project state exposed by the capability
+    // endpoint, checked again at the mutation boundary. In particular, a
+    // prepared analytical submission that was opened while ready must report
+    // a readiness conflict—not a generic input error—if the project was
+    // disabled before POST.
+    if project.status == ProjectStatus::Disabled {
+        return Err(ApiError::new(
+            StatusCode::CONFLICT,
+            "this project is disabled and accepts no checks",
+        ));
+    }
     let upload = read_upload(&state, multipart).await?;
     if let Some(bytes) = &upload.change_spec {
         let spec = ChangeSpec::parse(bytes).map_err(|_| {
@@ -434,12 +445,6 @@ async fn create_check(
     // Readiness is a hosted configuration question, answered before a run
     // exists. It is deliberately not an Eplyx exit code: nothing was measured,
     // so there is no verdict to report about the candidate.
-    if project.status == ProjectStatus::Disabled {
-        return Err(ApiError::new(
-            StatusCode::CONFLICT,
-            "this project is disabled and accepts no checks",
-        ));
-    }
     // The client never chooses the baseline. The project's active bundle is
     // server state, so a pull request cannot quietly measure itself against
     // something more forgiving.
