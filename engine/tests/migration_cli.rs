@@ -472,3 +472,93 @@ fn historical_markdown_replays_without_changing_analytical_bytes() {
     );
     fs::remove_dir_all(root).unwrap();
 }
+
+#[test]
+fn selected_pair_cli_uses_saved_world_and_portable_offline_reproduction() {
+    let root = project("order", "eplyx_token_migration");
+    // This example normally rehearses at a future activation. The order fixture
+    // explicitly declares activation at the already pinned world Clock.
+    let terms_path = root.join("migration.json");
+    let mut terms: Value = serde_json::from_slice(&fs::read(&terms_path).unwrap()).unwrap();
+    terms["window"]["activation"]["value"] = "1000".into();
+    fs::write(&terms_path, serde_json::to_vec_pretty(&terms).unwrap()).unwrap();
+    let (code, out, err) = eplyx(&root, &["migration", "analyse"]);
+    assert_eq!(code, 0, "{out}{err}");
+    let run = latest_run(&root);
+    let plan: Value = serde_json::from_slice(
+        &fs::read(
+            root.join(".eplyx/runs")
+                .join(&run)
+                .join("result/migration.plan.json"),
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    let sources: Vec<&str> = plan["units"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter(|u| u["class"] == "Migratable")
+        .map(|u| u["source_account"].as_str().unwrap())
+        .take(2)
+        .collect();
+    assert_eq!(sources.len(), 2);
+    let out = root.join("order-case");
+    let (code, stdout, err) = eplyx(
+        &root,
+        &[
+            "migration",
+            "order",
+            "--run",
+            &run,
+            "--source-a",
+            sources[0],
+            "--source-b",
+            sources[1],
+            "--out",
+            out.to_str().unwrap(),
+            "--format",
+            "json",
+        ],
+    );
+    assert_eq!(code, 0, "{stdout}{err}");
+    let analysis: Value = serde_json::from_str(&stdout).unwrap();
+    assert_eq!(analysis["change_spec_id"], plan["change_spec_id"]);
+    assert!(out.join("case.json").is_file());
+    let detached = tempfile::tempdir().unwrap();
+    let (code, stdout, err) = eplyx(
+        detached.path(),
+        &[
+            "migration",
+            "reproduce-order",
+            out.to_str().unwrap(),
+            "--format",
+            "json",
+        ],
+    );
+    assert_eq!(code, 0, "{stdout}{err}");
+    assert_eq!(analysis, serde_json::from_str::<Value>(&stdout).unwrap());
+    let (code, stdout, err) = eplyx(
+        &root,
+        &[
+            "migration",
+            "order",
+            "--run",
+            &run,
+            "--source-a",
+            sources[0],
+            "--source-b",
+            sources[0],
+            "--out",
+            root.join("invalid-order").to_str().unwrap(),
+            "--format",
+            "json",
+        ],
+    );
+    assert_eq!(code, 2, "{stdout}{err}");
+    assert_eq!(
+        serde_json::from_str::<Value>(&stdout).unwrap()["error"]["kind"],
+        "UnsupportedComposition"
+    );
+    fs::remove_dir_all(root).unwrap();
+}

@@ -184,3 +184,28 @@ Do not rebuild either from display summaries. Tests require
 `EPLYX_CLOUD_TEST_DATABASE_URL`; missing Postgres fails loudly. Browser tests require
 a loopback scratch database and support `EPLYX_CHROME`. No live provider, deployment,
 new infrastructure or release packaging was performed. See [T9](phase-t9-cloud-hosted-analysis.md).
+
+
+## Squads governance review trail
+
+For a governance-bound program upgrade, read
+`GET /v1/projects/{project_id}/governance/changes/{change_spec_id}/trail`.
+It uses existing operator, workspace/project member and project-token access.
+The bound ChangeSpec is the root, and `runs` contains summaries only of analyses
+of that exact change. `events` interleaves retained `governance_check` and
+`deployment_attestation` observations while preserving sealed evidence IDs.
+
+`limit` defaults to 20 (maximum 100). Follow `next_cursor` as `cursor` to retrieve
+all events; follow `runs_next_cursor` as `run_cursor` for further linked analyses.
+Hosted observations are oldest first by durable recording ID. Legacy G2 evidence
+has null recording time and follows in deterministic hash order without a claim
+about relative chronology. Each G2 row identifies its exact matched G1 binding.
+Corrupt identities fail the page with an integrity error.
+
+Each new attest result receives an immutable `gocc_…` occurrence containing the
+project, bound ChangeSpec, binding ID, attestation ID and host recording time.
+Repeated identical proof content still produces separate occurrences. Existing
+sealed JSON and the original governance GET / attest POST responses remain
+compatible. Reads perform no RPC or evidence writes and require no observation
+provider. See the [review contract](governance-review-trail-audit.md#10-implemented-review-layer)
+for schemas, ordering, legacy behavior and the unchanged real-mainnet witness limit.

@@ -94,6 +94,70 @@ async fn g2_active_proposal_is_separate_sealed_evidence() {
     // Stored G1 matched means only what it meant before G2.
     assert_eq!(listed["checks"][0]["status"], "matched");
 
+    let trail_url = format!("/v1/projects/{project}/governance/changes/{bound_id}/trail");
+    // Equivalent RPC state produces the same seal, but another hosted request.
+    let before_slot = world.state().slot;
+    world.edit(|s| s.slot = before_slot - 2);
+    let (status, repeated) = harness
+        .post_json(
+            &attest,
+            &token,
+            json!({"change_spec_id":bound_id,"binding_id":binding_id}),
+        )
+        .await;
+    assert_eq!(status, StatusCode::OK, "{repeated}");
+    assert_eq!(repeated["attestation_id"], proof_id);
+    let reads = world.reads().len();
+    let (status, trail) = harness.get(&trail_url, &token).await;
+    assert_eq!(status, StatusCode::OK, "{trail}");
+    assert_eq!(world.reads().len(), reads, "GET must never read the chain");
+    let events = trail["events"].as_array().unwrap();
+    assert_eq!(events.len(), 3);
+    assert_eq!(events[0]["binding"]["outcome"], "matched");
+    assert_eq!(events[1]["attestation"]["outcome"], "not_executed");
+    assert_eq!(events[1]["attestation"], events[2]["attestation"]);
+    assert_ne!(events[1]["event_id"], events[2]["event_id"]);
+    assert!(events[1]["event_id"].as_str().unwrap() < events[2]["event_id"].as_str().unwrap());
+    assert!(events[1]["recorded_at_unix_seconds"].is_u64());
+    assert!(events[2]["recorded_at_unix_seconds"].is_u64());
+    assert!(
+        trail["runs"].as_array().unwrap().is_empty(),
+        "unbound run must not be relabelled"
+    );
+    assert_eq!(
+        trail["source_unbound_change_spec_id"],
+        world.spec().id().unwrap()
+    );
+
+    let sealed = eplyx_engine::governance::attestation::DeploymentAttestation::parse(
+        proof.to_string().as_bytes(),
+    )
+    .unwrap();
+    for _ in 0..23 {
+        harness
+            .state
+            .registry
+            .record_deployment_attestation(&project, &sealed)
+            .unwrap();
+    }
+    let (_, first) = harness.get(&trail_url, &token).await;
+    assert_eq!(first["events"].as_array().unwrap().len(), 20);
+    let cursor = first["next_cursor"].as_str().unwrap();
+    let (status, second) = harness
+        .get(&format!("{trail_url}?cursor={cursor}"), &token)
+        .await;
+    assert_eq!(status, StatusCode::OK);
+    assert_eq!(second["events"].as_array().unwrap().len(), 6);
+    assert!(second["next_cursor"].is_null());
+    let ids: std::collections::HashSet<_> = first["events"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .chain(second["events"].as_array().unwrap())
+        .map(|e| e["event_id"].as_str().unwrap())
+        .collect();
+    assert_eq!(ids.len(), 26);
+
     let path = harness
         .scratch
         .path()
@@ -113,6 +177,9 @@ async fn g2_active_proposal_is_separate_sealed_evidence() {
         )
         .await;
     assert_eq!(status, StatusCode::INTERNAL_SERVER_ERROR);
+    let (status, error) = harness.get(&trail_url, &token).await;
+    assert_eq!(status, StatusCode::INTERNAL_SERVER_ERROR);
+    assert!(!error.to_string().contains("/Users/"));
 }
 
 #[tokio::test]
@@ -256,6 +323,124 @@ async fn a_proposal_is_bound_to_an_analysis_by_identity_not_by_label() {
     assert_eq!(relisted["checks"].as_array().unwrap().len(), 4);
     assert_eq!(relisted["checks"][0]["status"], "unsupported_proposal");
 
+    let reads = world.reads().len();
+    let url = format!("/v1/projects/{project}/governance/changes/{bound_id}/trail");
+    let (status, trail) = harness.get(&url, &token).await;
+    assert_eq!(status, StatusCode::OK, "{trail}");
+    assert_eq!(world.reads().len(), reads);
+    assert_eq!(trail["runs"][0]["run_id"], bound_run);
+    assert_eq!(trail["runs"][0]["status"], "failed");
+    assert_eq!(
+        trail["runs"][0]["exit_code"],
+        harness
+            .state
+            .registry
+            .load_run(&bound_run)
+            .unwrap()
+            .exit_code
+            .unwrap()
+    );
+    assert_ne!(trail["runs"][0]["exit_code"], 0);
+    assert_eq!(trail["events"][0]["binding"]["outcome"], "matched");
+    assert_eq!(trail["events"][2]["binding"]["outcome"], "stale_artifact");
+    assert_eq!(
+        trail["events"][3]["binding"]["outcome"],
+        "unsupported_proposal"
+    );
+    let (status, _) = harness.get(&format!("{url}?cursor=bad"), &token).await;
+    assert_eq!(status, StatusCode::BAD_REQUEST);
+    let (other, other_token) = ready(&harness).await;
+    for credential in ["", other_token.as_str()] {
+        let (status, _) = harness.get(&url, credential).await;
+        assert_eq!(status, StatusCode::UNAUTHORIZED);
+        let (status, _) = harness
+            .get(
+                &format!("/v1/projects/missing/governance/changes/{bound_id}/trail"),
+                credential,
+            )
+            .await;
+        assert_eq!(status, StatusCode::UNAUTHORIZED);
+    }
+    let (status, _) = harness.get(&url, OPERATOR).await;
+    assert_eq!(status, StatusCode::OK);
+    let (status, _) = harness
+        .get(
+            &format!("/v1/projects/{other}/governance/changes/{bound_id}/trail"),
+            &other_token,
+        )
+        .await;
+    assert_eq!(status, StatusCode::NOT_FOUND);
+
+    // Multiple bound analyses stay separately linked and can also be paged.
+    let original_run = harness.state.registry.load_run(&bound_run).unwrap();
+    for _ in 0..22 {
+        let mut linked = original_run.clone();
+        linked.run_id = eplyx_server::ids::run();
+        harness.state.registry.create_run(&linked).unwrap();
+        harness
+            .state
+            .registry
+            .save_change_spec(&linked.run_id, &bound)
+            .unwrap();
+        harness
+            .state
+            .registry
+            .index_change(&project, &bound_id, &linked.run_id)
+            .unwrap();
+    }
+    let (_, first) = harness.get(&url, &token).await;
+    assert_eq!(first["runs"].as_array().unwrap().len(), 20);
+    let cursor = first["runs_next_cursor"].as_str().unwrap();
+    let (_, rest) = harness
+        .get(&format!("{url}?run_cursor={cursor}"), &token)
+        .await;
+    assert_eq!(rest["runs"].as_array().unwrap().len(), 3);
+    assert!(rest["runs_next_cursor"].is_null());
+    assert!(rest["runs"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|run| run["run_id"] == bound_run));
+
+    // A corrupted run index must not silently redirect the requested root.
+    let mut wrong_spec = bound.clone();
+    wrong_spec.activation = Some(eplyx_engine::change::Activation {
+        slot: Some(123),
+        unix_timestamp: None,
+    });
+    wrong_spec.change_spec_id = None;
+    let mut wrong_run = original_run.clone();
+    wrong_run.run_id = eplyx_server::ids::run();
+    wrong_run.change = Some(
+        eplyx_server::registry::RunChange::of(
+            &wrong_spec,
+            eplyx_server::registry::ChangeOrigin::Submitted,
+        )
+        .unwrap(),
+    );
+    harness.state.registry.create_run(&wrong_run).unwrap();
+    harness
+        .state
+        .registry
+        .save_change_spec(&wrong_run.run_id, &wrong_spec)
+        .unwrap();
+    harness
+        .state
+        .registry
+        .index_change(&project, &bound_id, &wrong_run.run_id)
+        .unwrap();
+    let (status, _) = harness.get(&url, &token).await;
+    assert_eq!(status, StatusCode::INTERNAL_SERVER_ERROR);
+    std::fs::remove_file(
+        harness
+            .state
+            .registry
+            .storage()
+            .project_change_run_marker(&project, &bound_id, &wrong_run.run_id)
+            .unwrap(),
+    )
+    .unwrap();
+
     // 7. A stored binding edited on disk is refused, never served as matched.
     let directory = harness
         .scratch
@@ -351,4 +536,38 @@ async fn governance_requests_are_scoped_validated_and_optional() {
         )
         .await;
     assert_eq!(status, StatusCode::SERVICE_UNAVAILABLE, "{body}");
+    // Retained trail reads also work with no governance RPC configured.
+    let offline_world = fixture_world();
+    let binding = eplyx_engine::governance::verify_squads_upgrade(
+        offline_world.as_ref(),
+        &eplyx_engine::governance::SquadsProposalRef {
+            multisig: simulated::multisig().to_string(),
+            transaction_index: simulated::TRANSACTION_INDEX,
+        },
+        &offline_world.spec(),
+        eplyx_engine::governance::Commitment::Finalized,
+    )
+    .unwrap();
+    let bound = binding.bound_spec(&offline_world.spec()).unwrap().unwrap();
+    plain
+        .state
+        .registry
+        .record_governance_check(&project, &binding)
+        .unwrap();
+    plain
+        .state
+        .registry
+        .save_governance_spec(&project, &bound)
+        .unwrap();
+    let (status, trail) = plain
+        .get(
+            &format!(
+                "/v1/projects/{project}/governance/changes/{}/trail",
+                bound.id().unwrap()
+            ),
+            &token,
+        )
+        .await;
+    assert_eq!(status, StatusCode::OK, "{trail}");
+    assert_eq!(trail["events"][0]["binding"]["outcome"], "matched");
 }

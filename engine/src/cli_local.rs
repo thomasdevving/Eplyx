@@ -30,6 +30,25 @@ use std::{
 
 #[derive(Subcommand)]
 pub enum MigrationCommand {
+    /// Analyse two selected source accounts from a saved run, completely offline.
+    Order {
+        #[arg(long)]
+        run: String,
+        #[arg(long)]
+        source_a: String,
+        #[arg(long)]
+        source_b: String,
+        #[arg(long)]
+        out: PathBuf,
+        #[arg(long, value_enum, default_value_t=Format::Text)]
+        format: Format,
+    },
+    /// Verify and replay a portable saved order case without the original project.
+    ReproduceOrder {
+        path: PathBuf,
+        #[arg(long, value_enum, default_value_t=Format::Text)]
+        format: Format,
+    },
     /// Capture or build state and evaluate a migration in the local VM.
     Analyse {
         #[arg(long, value_enum)]
@@ -94,6 +113,8 @@ pub struct ChangeArgs {
 }
 #[derive(Clone, Copy, ValueEnum)]
 pub enum WorkerAction {
+    Order,
+    ReproduceOrder,
     Gate,
     Search,
     Reproduce,
@@ -101,6 +122,12 @@ pub enum WorkerAction {
 }
 #[derive(Args)]
 pub struct WorkerArgs {
+    #[arg(long)]
+    source_a: Option<String>,
+    #[arg(long)]
+    source_b: Option<String>,
+    #[arg(long)]
+    out: Option<PathBuf>,
     #[arg(long)]
     base: PathBuf,
     #[arg(long)]
@@ -129,10 +156,14 @@ impl Response {
 fn error_response(error: anyhow::Error) -> Response {
     let code = migration::error::exit_code(&error);
     let message = format!("{error:#}");
+    let mut data = json!({"error":{"code":code,"message":message}});
+    if let Some(order) = error.downcast_ref::<migration::order::OrderError>() {
+        data["error"]["kind"] = json!(order.kind);
+    }
     Response {
         exit_code: code,
         text: format!("error: {message}"),
-        data: json!({"error":{"code":code,"message":message}}),
+        data,
     }
 }
 pub fn emit(format: Format, result: Result<Response>) -> ExitCode {
@@ -344,6 +375,15 @@ fn verify_metadata(base: &Path, id: &str) -> Result<PathBuf> {
     Ok(path)
 }
 fn worker(base: &Path, id: &str, action: WorkerAction, policy: Option<Policy>) -> Result<Response> {
+    worker_extra(base, id, action, policy, &[])
+}
+fn worker_extra(
+    base: &Path,
+    id: &str,
+    action: WorkerAction,
+    policy: Option<Policy>,
+    extra: &[std::ffi::OsString],
+) -> Result<Response> {
     let mut command = local_store::offline_command(&std::env::current_exe()?);
     command
         .arg("migration-worker")
@@ -358,6 +398,7 @@ fn worker(base: &Path, id: &str, action: WorkerAction, policy: Option<Policy>) -
                 .context("worker action")?
                 .get_name(),
         );
+    command.args(extra);
     if let Some(policy) = policy {
         command.arg("--policy").arg(policy.name());
     }
@@ -386,11 +427,37 @@ pub fn worker_entry(args: WorkerArgs) -> ExitCode {
 }
 fn worker_inner(args: WorkerArgs) -> Result<Response> {
     directory(&args.base, false)?;
+    if matches!(args.action, WorkerAction::ReproduceOrder) {
+        let analysis = migration::order_store::reproduce(&args.base)?;
+        return order_response(&analysis, "Verified offline order reproduction");
+    }
     if matches!(args.action, WorkerAction::Reproduce) {
         return reproduce(&args.base, &args.id);
     }
     let path = verify_metadata(&args.base, &args.id)?;
     match args.action {
+        WorkerAction::Order => {
+            let package = input::load(&path.join("input"))?;
+            let bindings = pipeline::bindings(&path.join("result"))?;
+            ensure!(
+                bindings.change_spec_id == package.change_spec_id()
+                    && bindings.analysis_input_sha256 == package.analysis_input_sha256()
+                    && bindings.candidate_program_sha256 == package.program_sha256(),
+                "saved run bindings differ"
+            );
+            let world = pipeline::world_for(&package, &path.join("result"), &bindings)?;
+            let analysis = migration::order_store::save(
+                args.out.as_deref().context("order output required")?,
+                package.change(),
+                &world,
+                package.candidate().bytes(),
+                [
+                    args.source_a.as_deref().context("source A required")?,
+                    args.source_b.as_deref().context("source B required")?,
+                ],
+            )?;
+            order_response(&analysis, "Saved bounded migration order analysis")
+        }
         WorkerAction::Gate => {
             let mut report = pipeline::replay_with_policy(
                 &path.join("input"),
@@ -480,12 +547,25 @@ fn worker_inner(args: WorkerArgs) -> Result<Response> {
                 text,
             ))
         }
-        WorkerAction::Reproduce => unreachable!(),
+        WorkerAction::Reproduce | WorkerAction::ReproduceOrder => unreachable!(),
     }
+}
+fn order_response(analysis: &migration::order::Analysis, message: &str) -> Result<Response> {
+    Ok(Response::ok(
+        json!({"change_spec_id": analysis.binding.change_spec_id,
+        "binding_id": analysis.binding.id()?, "comparison": analysis.comparison}),
+        format!(
+            "{message}\n{:?}\n{}",
+            analysis.comparison.status,
+            analysis.comparison.order_case_ids.join("\n")
+        ),
+    ))
 }
 pub fn execute(config_path: &Path, action: MigrationCommand) -> ExitCode {
     let format = match &action {
-        MigrationCommand::Analyse { format, .. }
+        MigrationCommand::Order { format, .. }
+        | MigrationCommand::ReproduceOrder { format, .. }
+        | MigrationCommand::Analyse { format, .. }
         | MigrationCommand::Search { format, .. }
         | MigrationCommand::Gate { format, .. }
         | MigrationCommand::Plan { format, .. }
@@ -495,6 +575,14 @@ pub fn execute(config_path: &Path, action: MigrationCommand) -> ExitCode {
     emit(
         format,
         (|| {
+            if let MigrationCommand::ReproduceOrder { path, .. } = &action {
+                return worker(
+                    &fs::canonicalize(path)?,
+                    "order-case",
+                    WorkerAction::ReproduceOrder,
+                    None,
+                );
+            }
             if let MigrationCommand::Fixture { recipe, .. } = &action {
                 let recipe = migration::fixture::Recipe::parse(&bounded_read(
                     recipe,
@@ -522,6 +610,29 @@ pub fn execute(config_path: &Path, action: MigrationCommand) -> ExitCode {
             }
             let (root, path) = root_and_config(config_path)?;
             match action {
+                MigrationCommand::Order {
+                    run,
+                    source_a,
+                    source_b,
+                    out,
+                    ..
+                } => {
+                    let out = std::path::absolute(out)?;
+                    worker_extra(
+                        &store(&root, None)?,
+                        &run,
+                        WorkerAction::Order,
+                        None,
+                        &[
+                            "--source-a".into(),
+                            source_a.into(),
+                            "--source-b".into(),
+                            source_b.into(),
+                            "--out".into(),
+                            out.into_os_string(),
+                        ],
+                    )
+                }
                 MigrationCommand::Analyse { policy, .. } => {
                     let c = read_config(&path)?;
                     let base = store(&root, Some(&c.project.name))?;
@@ -564,7 +675,9 @@ pub fn execute(config_path: &Path, action: MigrationCommand) -> ExitCode {
                         Ok(response)
                     }
                 }
-                MigrationCommand::Fixture { .. } => unreachable!(),
+                MigrationCommand::Fixture { .. } | MigrationCommand::ReproduceOrder { .. } => {
+                    unreachable!()
+                }
             }
         })(),
     )

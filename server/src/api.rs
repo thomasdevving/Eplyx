@@ -203,6 +203,10 @@ pub fn router(state: Shared) -> Router {
             post(attest_squads_governance),
         )
         .route(
+            "/v1/projects/{project_id}/governance/changes/{change_spec_id}/trail",
+            get(governance_trail),
+        )
+        .route(
             "/v1/projects/{project_id}/governance/changes/{change_spec_id}",
             get(list_governance_checks),
         )
@@ -1010,14 +1014,24 @@ async fn attest_squads_governance(
         .load_governance_spec(&project.project_id, &request.change_spec_id)
         .map_err(|e| ApiError::internal(format!("loading governance-bound change: {e:#}")))?
         .ok_or_else(|| ApiError::not_found("governance-bound change"))?;
+    let binding_path = state
+        .registry
+        .storage()
+        .project_governance_dir(&project.project_id, &request.change_spec_id)
+        .map_err(|_| ApiError::internal("governance storage unavailable"))?
+        .join("bindings")
+        .join(format!("{}.json", request.binding_id));
+    if !binding_path.is_file() {
+        return Err(ApiError::not_found("matched G1 binding for this change"));
+    }
     let binding = state
         .registry
-        .governance_checks(&project.project_id, &request.change_spec_id, 100)
-        .map_err(|e| ApiError::internal(format!("loading sealed G1 bindings: {e:#}")))?
-        .into_iter()
-        .map(|(_, binding)| binding)
-        .find(|binding| binding.binding_id.as_deref() == Some(request.binding_id.as_str()))
-        .ok_or_else(|| ApiError::not_found("matched G1 binding for this change"))?;
+        .governance_binding(
+            &project.project_id,
+            &request.change_spec_id,
+            &request.binding_id,
+        )
+        .map_err(|_| ApiError::internal("stored G1 binding integrity check failed"))?;
     if !state
         .registry
         .project_holds_artifact(&project.project_id, &executable_candidate(&spec)?.sha256)
@@ -1268,6 +1282,81 @@ async fn verify_squads_governance(
         .map_err(|error| ApiError::internal(format!("{error}")))?;
     view["analysis"] = json!({ "runs": analysis_runs, "bound_change_spec": bound_document });
     Ok((StatusCode::OK, Json(view)).into_response())
+}
+
+#[derive(serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+struct TrailQuery {
+    limit: Option<usize>,
+    cursor: Option<String>,
+    run_cursor: Option<String>,
+}
+
+async fn governance_trail(
+    State(state): State<Shared>,
+    Path((project_id, change_spec_id)): Path<(String, String)>,
+    headers: HeaderMap,
+    axum::extract::Query(query): axum::extract::Query<TrailQuery>,
+) -> ApiResult<Response> {
+    let project = project_for(&state, &project_id, &headers).await?;
+    if !crate::artifacts::canonical_sha256(&change_spec_id) {
+        return Err(ApiError::bad_request("invalid change_spec_id"));
+    }
+    if let Some(cursor) = &query.cursor {
+        crate::governance_trail::event_key(cursor)
+            .map_err(|_| ApiError::bad_request("invalid trail cursor"))?;
+    }
+    if query
+        .run_cursor
+        .as_ref()
+        .is_some_and(|id| !crate::storage::valid_id(id) || !id.starts_with("run_"))
+    {
+        return Err(ApiError::bad_request("invalid run cursor"));
+    }
+    let limit = query.limit.unwrap_or(20).clamp(1, 100);
+    let spec = analysed_spec(
+        &state,
+        &project.project_id,
+        &SquadsVerifyRequest {
+            multisig: String::new(),
+            transaction_index: 0,
+            change_spec_id: Some(change_spec_id.clone()),
+            run_id: None,
+            commitment: None,
+        },
+    )
+    .map_err(|e| {
+        if e.status == StatusCode::INTERNAL_SERVER_ERROR {
+            ApiError::internal("stored governance root integrity check failed")
+        } else {
+            e
+        }
+    })?;
+    if spec
+        .id()
+        .map_err(|_| ApiError::internal("stored governance root integrity check failed"))?
+        != change_spec_id
+    {
+        return Err(ApiError::internal(
+            "stored governance root identity differs",
+        ));
+    }
+    if spec.delivery().is_none() {
+        return Err(ApiError::bad_request(
+            "trail root must be a governance-bound ChangeSpec",
+        ));
+    }
+    let trail = state
+        .registry
+        .governance_trail(
+            &project.project_id,
+            &spec,
+            query.cursor.as_deref(),
+            query.run_cursor.as_deref(),
+            limit,
+        )
+        .map_err(|_| ApiError::internal("stored governance trail integrity check failed"))?;
+    Ok(Json(trail).into_response())
 }
 
 /// The recorded checks of one change, newest first. What was observed and

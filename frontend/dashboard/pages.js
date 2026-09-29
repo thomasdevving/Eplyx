@@ -313,12 +313,13 @@ export async function runDetail({ params }) {
   if(!document.querySelector('link[data-upgrade-style]')){const style=document.createElement('link');style.rel='stylesheet';style.href='/assets/main/styles.css';style.dataset.upgradeStyle='1';document.head.append(style);}
   const run=detail.hosted;const report=run.report_available?await fetch(detail.report_url,{credentials:'same-origin'}).then(r=>{if(!r.ok)throw new Error('Report unavailable');return r.json();}):null;
   const spec=run.change?await fetch(`/v1/runs/${encodeURIComponent(run.run_id)}/change_spec.json`,{credentials:'same-origin'}).then(r=>r.ok?r.json():null):null;
-  const extras={spec};
+  const extras={spec,runBase:`${BASE}/runs`};
   if(spec?.change?.delivery?.provider==='squads_v4' && run.project_id){
-   try { const response=await fetch(`/v1/projects/${encodeURIComponent(run.project_id)}/governance/changes/${encodeURIComponent(run.change.change_spec_id)}`,{credentials:'same-origin'});const body=await response.json();extras.governance=response.ok?{check:body.checks?.[0]??null,attestation:body.attestations?.[0]??null}:{error:body.error??`HTTP ${response.status}`}; }
-   catch {extras.governance={error:'the governance checks could not be fetched'};}
+   try { const response=await fetch(`/v1/projects/${encodeURIComponent(run.project_id)}/governance/changes/${encodeURIComponent(run.change.change_spec_id)}/trail`,{credentials:'same-origin'});const body=await response.json();extras.governance=response.ok?{trail:body}:{error:body.error??`HTTP ${response.status}`}; }
+   catch {extras.governance={error:'the governance trail could not be fetched'};}
   }
-  return {title:'Program upgrade',crumbs:[['Runs','/runs'],[run.run_id]],html:HostedReport({...run,canonical_report:report},extras)};
+  const {attachGovernanceTrail}=await import('/assets/main/governance.js');
+  return {title:'Program upgrade',crumbs:[['Runs','/runs'],[run.run_id]],html:HostedReport({...run,canonical_report:report},extras),attach(root){return attachGovernanceTrail(root,path=>fetch(path,{credentials:'same-origin'}));}};
  }
  return analyticalDetail(detail, { evidenceBlock });
 }

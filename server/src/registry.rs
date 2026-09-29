@@ -953,7 +953,8 @@ impl Registry {
         &self,
         project_id: &str,
         attestation: &DeploymentAttestation,
-    ) -> Result<()> {
+    ) -> Result<crate::governance_trail::AttestationOccurrence> {
+        let _guard = self.transitions.lock().unwrap_or_else(|e| e.into_inner());
         let id = attestation
             .attestation_id
             .as_deref()
@@ -975,11 +976,26 @@ impl Registry {
                 existing == *attestation,
                 "a different attestation already has id {id}"
             );
+            self.retain_legacy_attestation(project_id, &attestation.change_spec_id, id)?;
         } else {
             self.storage
                 .write_bytes(&path, attestation.to_document()?.as_bytes())?;
         }
-        Ok(())
+        let occurrence = crate::governance_trail::AttestationOccurrence {
+            occurrence_id: crate::ids::governance_occurrence(),
+            project_id: project_id.into(),
+            change_spec_id: attestation.change_spec_id.clone(),
+            binding_id: attestation.binding_id.clone(),
+            attestation_id: id.into(),
+            recorded_at_unix_seconds: now_unix_seconds(),
+        };
+        self.storage.write_json(
+            &directory
+                .join("attestation-occurrences")
+                .join(format!("{}.json", occurrence.occurrence_id)),
+            &occurrence,
+        )?;
+        Ok(occurrence)
     }
 
     pub fn deployment_attestations(
