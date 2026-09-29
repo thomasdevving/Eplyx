@@ -307,7 +307,14 @@ function evidenceBlock(detail) {
 export async function runDetail({ params }) {
  const detail = await api(`/api/runs/${params[0]}`);
  if(CLOUD)document.querySelector('link[data-upgrade-style]')?.remove();
- if (isMigration(detail)) return migrationRunDetail(detail, { GATE, gateSentence, copy, syncedLine, invariantList, gateBlock, evidenceBlock });
+ if (isMigration(detail)) {
+  const view = migrationRunDetail(detail, { GATE, gateSentence, copy, syncedLine, invariantList, gateBlock, evidenceBlock });
+  if (CLOUD && !DEMO) {
+   const order = await import('./migration-order.js');
+   return order.withOrders(view, detail.id);
+  }
+  return view;
+ }
  if(detail.kind==='program_upgrade' && detail.hosted){
   const {HostedReport}=await import('/assets/main/report.js');
   if(!document.querySelector('link[data-upgrade-style]')){const style=document.createElement('link');style.rel='stylesheet';style.href='/assets/main/styles.css';style.dataset.upgradeStyle='1';document.head.append(style);}

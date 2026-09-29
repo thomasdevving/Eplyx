@@ -73,6 +73,14 @@ async fn snapshot(state: &Shared, project: &str) -> ApiResult<Snapshot> {
         if record.project_id != project {
             return Err(ApiError::internal("run index mismatch"));
         }
+        // Derived order occurrences are listed on their immutable parent only.
+        if record
+            .hosted_analysis
+            .as_ref()
+            .is_some_and(|j| j.kind == "migration_order")
+        {
+            continue;
+        }
         if let Some(analysis) = &record.analysis {
             let doc = state.registry.analytical_projection(&record)?;
             let mut summary = view::summary(&doc.view());
@@ -222,6 +230,13 @@ async fn run_payload(state: &Shared, access: &Access, run: &str) -> ApiResult<Va
         return Err(ApiError::not_found("unknown run"));
     }
     let record = view_record(state, &access.project_id, run)?;
+    if record
+        .hosted_analysis
+        .as_ref()
+        .is_some_and(|j| j.kind == "migration_order")
+    {
+        return crate::hosted::order::result(&state.registry, &record).map_err(ApiError::internal);
+    }
     if record.analysis.is_none()
         && record
             .hosted_analysis
@@ -287,6 +302,14 @@ pub async fn demo_run(
     Path(run): Path<String>,
 ) -> ApiResult<Json<Value>> {
     let access = viewer(&state, &headers, None).await?;
+    let record = view_record(&state, &access.project_id, &run)?;
+    if record
+        .hosted_analysis
+        .as_ref()
+        .is_some_and(|j| j.kind == "migration_order")
+    {
+        return Err(ApiError::not_found("unknown run"));
+    }
     Ok(Json(run_payload(&state, &access, &run).await?))
 }
 
@@ -423,6 +446,15 @@ async fn compare_payload(state: &Shared, access: &Access, query: CompareQuery) -
     let mut parsed = Vec::new();
     for id in [&left, &right] {
         let record = view_record(state, &access.project_id, id)?;
+        if record
+            .hosted_analysis
+            .as_ref()
+            .is_some_and(|j| j.kind == "migration_order")
+        {
+            return Err(ApiError::bad_request(
+                "Order analyses are reviewed through their parent migration run.",
+            ));
+        }
         parsed.push(state.registry.analytical_projection(&record)?.view());
     }
     let snap = snapshot(state, &access.project_id).await?;

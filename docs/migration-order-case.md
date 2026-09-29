@@ -1,10 +1,11 @@
 # Bounded migration order case v1
 
-This local analysis selects two source accounts under one unchanged TokenMigration
+This bounded analysis selects two source accounts under one unchanged TokenMigration
 ChangeSpec. It executes A alone, B alone, A → B and B → A at the world's fixed
 Clock, using the existing instruction builder, Session, transaction execution and
 per-unit economic reconciliation. It does not introduce a ChangePlan, a new
-proposal identity, search, governance status or hosted workflow.
+proposal identity, search or governance status. The local CLI and hosted product
+call the same Rust order engine and retain the same portable artifact.
 
 ## Use
 
@@ -257,3 +258,93 @@ A completely green repository-wide migration baseline still requires the pinned
 legacy artifacts/binary and a test environment permitting the dashboard listener.
 Those existing verification limitations and any future hosted productization are
 outside this phase. No commit was made.
+
+## Hosted entry and immutable parent
+
+Open a completed hosted token-migration run, choose **Order Analysis**, select
+Source A and Source B from the server's eligible retained units, preview, then
+submit. The preview names one ChangeSpec, one retained world, one fixed Clock and
+runtime, and four analyses: A alone, B alone, A → B, B → A. It predicts no result.
+These are two operation instances of the same proposal, not separate ChangeSpecs.
+
+The parent supplies the project, exact candidate and dependency bytes, package,
+unit population and starting world. The server verifies the completed projection,
+package bindings, report's world/Clock/program identities and retained runtime.
+Order-case v1 requires reserve transfer, an open window at the retained Clock and
+at least two engine-eligible solo controls. The population's sequential reserve
+shortfall is not inherited as solo ineligibility. A Clock advanced by the parent
+rehearsal away from the retained world's Clock is unavailable for this bounded
+entry. New hosted migrations retain canonical world bytes and a runtime receipt. Legacy
+jobs without a runtime receipt require an exact producer-binary match, and
+synthetic parents require retained world bytes; otherwise eligibility fails
+closed with an unavailable reason. Reads never reconstruct a synthetic world.
+
+No current Solana state is refreshed. To compare newer state, first create a new
+migration observation/run. Synced summaries lacking a retained hosted package
+cannot serve as an order parent.
+
+### API
+
+All routes reuse project authorization (workspace session, project token or
+operator); no demo/public artifact access is added.
+
+- `GET /v1/projects/{project}/runs/{parent}/migration-order/eligibility`
+  returns authoritative eligibility, factual unavailable reason or eligible
+  engine units and preview identities.
+- `POST /v1/projects/{project}/runs/{parent}/migration-order` accepts exactly
+  `{"source_a":"...","source_b":"..."}`; unknown fields are rejected.
+  Sources must be distinct eligible units. It returns HTTP 202 with a durable
+  `run_id`, parent ID, status and result URL.
+- `GET /v1/projects/{project}/runs/{parent}/migration-order` lists that parent's
+  child occurrences.
+- `GET /v1/projects/{project}/migration-orders/{run}` returns status, selection,
+  parent binding and the verified structured engine result. The same endpoint
+  supplies the full presentation data; account bytes are omitted.
+- `GET /v1/projects/{project}/migration-orders/{run}/artifact` downloads a tar
+  archive with the original `order-case/` directory. Packaging uses the service
+  host's `/usr/bin/tar`; deployment must retain that utility.
+
+Order jobs use the existing persisted input manifest, queue/semaphore, isolated
+empty-environment worker and recovery path. Neither provider, wallet, signing nor
+RPC configuration is loaded. Repeated submissions create distinct hosted
+`run_...` occurrences while deterministic engine identities remain equal.
+
+The worker invokes `migration::order_store::save` directly. The exact manifest,
+Markdown report and evidence CAS members are retained in the existing write-once
+hosted CAS with content deduplication (candidate bytes reuse the program store).
+A portable-member map binds them to both immutable parent input and projection
+references. Reads verify those references, ChangeSpec/candidate/world/runtime,
+state/order-case/scenario IDs and all referenced CAS bytes using
+`order_store::verify`; reads never execute a VM, repair evidence or regenerate an
+artifact. The explicit CLI `reproduce-order` still executes all four scenarios
+and compares the evidence byte-for-byte.
+
+### Results and failures
+
+`SharedReserveChangesSuccessfulUnit` and `NoSuccessfulUnitEffect` are completed
+analyses. `NotEstablished` also remains completed when valid execution measures
+a candidate reconciliation mismatch; the stopped scenario and exact signature
+remain visible. Unsupported composition, evidence gaps, handoff failures and
+unexpected closure writes retain their engine failure kinds as failed analytical
+jobs. An internal worker failure is `execution_error` with no analytical
+conclusion. An order-dependent transaction rejection is not an infrastructure
+failure. Artifact tampering makes reads fail closed, without repair.
+
+Overview renders initial conditions, solo controls, ordered steps/state handoffs,
+and the authoritative comparison. Technical mode exposes pair, order-case and
+scenario IDs, runtime/world identities, unit and closure evidence, reserve
+before/after, reconciliation, failure signatures and known absence/account
+creation. It uses the same result and does not calculate a verdict in JavaScript.
+Child occurrences are listed on their parent and link back to it; the generic
+migration-proposal history excludes them.
+
+After downloading and extracting the archive:
+
+```sh
+eplyx migration reproduce-order ./order-case --format json
+```
+
+The limitations remain bounded to two selected units, one proposal, one fixed
+starting world and the supported shared-reserve mechanism. There is no automatic
+pair discovery, all-pairs analysis, live execution, signing, fairness policy or
+claim about other composite shapes.

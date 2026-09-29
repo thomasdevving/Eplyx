@@ -122,7 +122,18 @@ fn execute(state: &AppState, run_id: &str) -> RunOutcome {
             Ok(projection) => RunOutcome::Analytical {
                 projection: Box::new(projection),
             },
-            Err(_) => {
+            Err(error) => {
+                if metadata
+                    .hosted_analysis
+                    .as_ref()
+                    .is_some_and(|j| j.kind == "migration_order")
+                {
+                    if let Some(error) =
+                        error.downcast_ref::<eplyx_engine::migration::order::OrderError>()
+                    {
+                        return RunOutcome::OrderFailure { kind: error.kind };
+                    }
+                }
                 service_fault("offline analysis could not complete; no verdict recorded".into())
             }
         };

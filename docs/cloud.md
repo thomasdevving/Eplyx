@@ -209,3 +209,34 @@ sealed JSON and the original governance GET / attest POST responses remain
 compatible. Reads perform no RPC or evidence writes and require no observation
 provider. See the [review contract](governance-review-trail-audit.md#10-implemented-review-layer)
 for schemas, ordering, legacy behavior and the unchanged real-mainnet witness limit.
+
+## Derived hosted migration order analyses
+
+Completed hosted token-migration runs can launch bounded order analysis from the
+run page. Run-specific eligibility verifies the retained parent package, world,
+Clock/runtime, candidate/dependencies and eligible units. The existing
+`token_migration` project capability remains separate from this eligibility.
+
+`POST /v1/projects/{project}/runs/{parent}/migration-order` accepts only
+`source_a` and `source_b`, persists a queued occurrence before worker execution,
+and returns HTTP 202. Read full structured results at
+`GET /v1/projects/{project}/migration-orders/{run}` and list children at the
+parent's `migration-order` route. `/artifact` downloads the exact portable
+`order-case` directory as tar (the host must provide `/usr/bin/tar`). Existing
+project authorization protects create, list, read and download, including
+cross-project token rejection. No public demo evidence route is added.
+
+The worker reuses the local Rust `order_store::save` engine, with an empty
+environment and no provider/RPC. Same ChangeSpec, two operation instances, same
+retained world and Clock: A alone, B alone, A → B, B → A. New state requires a new
+parent migration run. Engine IDs remain content identities; hosted `run_...` IDs
+are occurrences. Repeated identical requests never overwrite history.
+
+Manifest, report, state/CAS and comparison bytes persist in MAIN's existing
+verified CAS; the input/projection references bind each artifact to its immutable
+parent. Reads validate the portable evidence without executing or repairing it.
+Effects, no effects and valid `NotEstablished` results complete normally;
+evidence/handoff failure kinds are retained separately from internal
+`execution_error`. Children stay on the parent run page, outside generic proposal
+history. See [migration-order-case.md](migration-order-case.md) for the full
+contract, reproduction and limitations.

@@ -45,6 +45,16 @@ pub enum Input {
         wallet_sha256: String,
         check_id: String,
     },
+    MigrationOrder {
+        change: ArtifactRef,
+        world: ArtifactRef,
+        candidate: ArtifactRef,
+        parent_run: String,
+        parent_input: ArtifactRef,
+        parent_projection: ArtifactRef,
+        source_a: String,
+        source_b: String,
+    },
     TokenMigration {
         change: ArtifactRef,
         state_input: ArtifactRef,
@@ -71,6 +81,7 @@ impl Input {
             Self::CurrentStress { .. } => "current_stress",
             Self::CurrentCandidate { .. } => "current_candidate",
             Self::CurrentPreflight { .. } => "current_preflight",
+            Self::MigrationOrder { .. } => "migration_order",
             Self::TokenMigration { .. } => "token_migration",
             Self::LifecycleChange { .. } => "lifecycle_change",
             Self::CurrentObservation { .. } => "current_observation",
@@ -81,9 +92,9 @@ impl Input {
         match self {
             Self::CurrentStress { change, .. } => Some(change),
             Self::CurrentCandidate { change, .. } => change.as_ref(),
-            Self::TokenMigration { change, .. } | Self::LifecycleChange { change, .. } => {
-                Some(change)
-            }
+            Self::MigrationOrder { change, .. }
+            | Self::TokenMigration { change, .. }
+            | Self::LifecycleChange { change, .. } => Some(change),
             _ => None,
         }
     }
@@ -103,6 +114,7 @@ pub struct Job {
 
 pub mod catalogue;
 pub mod observation;
+pub mod order;
 mod process;
 pub mod proposal;
 pub mod stress;
@@ -178,6 +190,12 @@ impl Registry {
             project.status != crate::project::ProjectStatus::Disabled,
             "project is disabled"
         );
+        if let Input::MigrationOrder { parent_run, .. } = &input {
+            ensure!(
+                self.load_run(parent_run)?.project_id == project.project_id,
+                "order parent project mismatch"
+            );
+        }
         let validation = tempfile::tempdir()?;
         worker::stage(self, &input, validation.path())?;
         let spec = input
@@ -193,7 +211,8 @@ impl Registry {
             .transpose()?;
         let input_ref = self.document_ref(&serde_json::to_vec(&input)?)?;
         let candidate = match &input {
-            Input::TokenMigration { candidate, .. }
+            Input::MigrationOrder { candidate, .. }
+            | Input::TokenMigration { candidate, .. }
             | Input::CurrentCandidate { candidate, .. }
             | Input::CurrentStress { candidate, .. } => Some(candidate.clone()),
             _ => None,
@@ -206,6 +225,7 @@ impl Registry {
             self.save_change_spec(&id, spec)?;
         }
         let record = RunMetadata {
+            order_failure: None,
             hosted_analysis: Some(Job {
                 request_key,
                 kind: input.kind().into(),
@@ -240,8 +260,10 @@ impl Registry {
             completed_at_unix_seconds: None,
         };
         self.index_run(&project.project_id, &id)?;
-        if let Some(change) = &change {
-            self.index_change(&project.project_id, &change.change_spec_id, &id)?;
+        if input.kind() != "migration_order" {
+            if let Some(change) = &change {
+                self.index_change(&project.project_id, &change.change_spec_id, &id)?;
+            }
         }
         self.create_run(&record)?;
         Ok(record)
@@ -291,6 +313,7 @@ impl Registry {
             "execution cannot manufacture a search"
         );
         match input {
+            Input::MigrationOrder { .. } => order::verify(self, record, projection)?,
             Input::CurrentStress {
                 parent_observation,
                 wallet_sha256,
@@ -403,6 +426,19 @@ impl Registry {
                         == self.document_bytes(&state_input)?,
                     "projection state mismatch"
                 );
+                if let Some(reference) = &projection.migration_world {
+                    let world: eplyx_engine::migration::world::World = serde_json::from_slice(
+                        &self
+                            .artifacts()
+                            .get(crate::artifacts::ArtifactClass::Capture, reference)?,
+                    )?;
+                    world.validate()?;
+                    let report: serde_json::Value = serde_json::from_str(&projection.report.text)?;
+                    ensure!(
+                        report["coverage"]["world"]["world_sha256"] == world.sha256()?,
+                        "parent retained world mismatch"
+                    );
+                }
                 let metadata: eplyx_engine::local_store::Metadata =
                     serde_json::from_str(&projection.metadata.text)?;
                 ensure!(

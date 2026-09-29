@@ -246,7 +246,16 @@ impl Harness {
 
     /// Poll the way a browser does, with a deadline rather than a fixed sleep.
     pub async fn wait_until(&self, run_id: &str, want: impl Fn(RunStatus) -> bool) -> RunStatus {
-        let deadline = std::time::Instant::now() + std::time::Duration::from_secs(30);
+        self.wait_until_timeout(run_id, want, 30).await
+    }
+
+    pub async fn wait_until_timeout(
+        &self,
+        run_id: &str,
+        want: impl Fn(RunStatus) -> bool,
+        timeout_seconds: u64,
+    ) -> RunStatus {
+        let deadline = std::time::Instant::now() + std::time::Duration::from_secs(timeout_seconds);
         loop {
             let status = self
                 .state

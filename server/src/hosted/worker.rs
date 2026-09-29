@@ -39,6 +39,7 @@ pub fn stage(registry: &Registry, input: &Input, directory: &Path) -> Result<()>
         write("change.json", ArtifactClass::Document, change)?;
     }
     match input {
+        Input::MigrationOrder { .. } => super::order::stage(registry, input, directory)?,
         Input::CurrentStress {
             state_input,
             candidate,
@@ -279,6 +280,8 @@ pub fn execute(directory: &Path) -> Result<()> {
     let timestamp = chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Millis, true);
     let mut projection = Projection {
         run_id: run_id.clone(),
+        migration_runtime_id: None,
+        migration_world: None,
         metadata: Artifact::new(b"{}".to_vec())?,
         report: Artifact::new(b"{}".to_vec())?,
         change_spec: change_bytes.map(Artifact::new).transpose()?,
@@ -288,6 +291,13 @@ pub fn execute(directory: &Path) -> Result<()> {
         local_artifact_sizes: BTreeMap::new(),
     };
     match &input {
+        Input::MigrationOrder { .. } => {
+            projection.report = Artifact::new(
+                eplyx_engine::canonical::document(&super::order::execute(&input, directory)?)?
+                    .into_bytes(),
+            )?;
+            analytical_metadata(&mut projection, input.kind(), timestamp, binary)?;
+        }
         Input::CurrentStress {
             state_input,
             candidate,
@@ -423,6 +433,16 @@ pub fn execute(directory: &Path) -> Result<()> {
             // validated a CapturedWorld or SyntheticFixture above.
             let report =
                 pipeline::run(directory, &output, *policy, pipeline::Isolation::InProcess)?;
+            projection.migration_runtime_id =
+                Some(eplyx_engine::migration::order::runtime_identity()?);
+            let bindings = pipeline::bindings(&output)?;
+            let package = input::load(directory)?;
+            let world = pipeline::world_for(&package, &output, &bindings)?;
+            std::fs::write(
+                directory.join("retained-world.json"),
+                eplyx_engine::canonical::document(&world)?,
+            )?;
+
             let required = |field: &str| {
                 report[field]
                     .as_str()
@@ -512,6 +532,17 @@ pub fn execute(directory: &Path) -> Result<()> {
 }
 
 pub fn exit_code(projection: &Projection) -> Result<u8> {
+    let metadata: Value = serde_json::from_str(&projection.metadata.text)?;
+    if metadata["kind"] == "migration_order" {
+        let report: Value = serde_json::from_str(&projection.report.text)?;
+        return if report["failure"].is_null() {
+            Ok(0)
+        } else {
+            let kind: eplyx_engine::migration::order::FailureKind =
+                serde_json::from_value(report["failure"]["kind"].clone())?;
+            Ok(super::order::failure_exit_code(kind))
+        };
+    }
     if serde_json::from_str::<Value>(&projection.metadata.text)?["schema_version"]
         == local_store::METADATA_VERSION
     {
@@ -537,7 +568,13 @@ pub fn run_isolated(
     let input = registry.hosted_input(record)?;
     registry.clear_run_work(&record.run_id)?;
     let work = registry.run_work_dir(&record.run_id)?;
-    stage(registry, &input, &work)?;
+    stage(registry, &input, &work).map_err(|e| {
+        if matches!(input, Input::MigrationOrder { .. }) {
+            super::order::evidence_error(e)
+        } else {
+            e
+        }
+    })?;
     std::fs::write(
         work.join("request.json"),
         serde_json::to_vec(&Request {
@@ -563,8 +600,41 @@ pub fn run_isolated(
         bytes.len() <= crate::projection::MAX_PROJECTION_BYTES,
         "offline worker output exceeds bound"
     );
-    let projection = serde_json::from_slice(&bytes)?;
-    registry.verify_hosted_projection(record, &projection)?;
+    let mut projection: Projection = serde_json::from_slice(&bytes)?;
+    if matches!(registry.hosted_input(record)?, Input::TokenMigration { .. }) {
+        let bytes = std::fs::read(work.join("retained-world.json"))?;
+        let world: eplyx_engine::migration::world::World = serde_json::from_slice(&bytes)?;
+        world.validate()?;
+        let report: Value = serde_json::from_str(&projection.report.text)?;
+        ensure!(
+            report["coverage"]["world"]["world_sha256"] == world.sha256()?,
+            "retained world differs from report"
+        );
+        projection.migration_world = Some(
+            registry
+                .artifacts()
+                .put(ArtifactClass::Capture, &bytes)?
+                .reference,
+        );
+    }
+    super::order::retain(
+        registry,
+        &registry.hosted_input(record)?,
+        &work,
+        &mut projection,
+    )?;
+    registry
+        .verify_hosted_projection(record, &projection)
+        .map_err(|e| {
+            if matches!(
+                registry.hosted_input(record),
+                Ok(Input::MigrationOrder { .. })
+            ) {
+                super::order::evidence_error(e)
+            } else {
+                e
+            }
+        })?;
     Ok(projection)
 }
 

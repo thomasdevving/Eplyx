@@ -329,6 +329,105 @@ fn program_identities(programs: &[LoadedProgram]) -> Vec<ProgramIdentity> {
         .collect()
 }
 
+// Selection uses exactly the solo-control planner and authority checks used by
+// analyse. Hosted callers may present these units without predicting a verdict.
+fn validate_unit(unit: &MigrationUnit, world: &World) -> Result<()> {
+    require(
+        unit.class == ImpactClass::Migratable && unit.quote.is_some() && unit.expected.is_some(),
+        if matches!(
+            unit.class,
+            ImpactClass::UnverifiableAuthority
+                | ImpactClass::AuthorityPathUnavailable
+                | ImpactClass::UnverifiableDestination
+                | ImpactClass::FundingPathUnavailable
+        ) {
+            FailureKind::EvidenceGap
+        } else {
+            FailureKind::UnsupportedComposition
+        },
+        format!(
+            "solo control {} cannot be constructed: {:?}: {:?}",
+            unit.unit_id, unit.class, unit.reasons
+        ),
+    )?;
+    // Signature verification is deliberately disabled in the local runtime.
+    // Every assumed external signer still needs captured wallet-compatible
+    // evidence; a declared address or PDA alone must not become a signer.
+    for signer in &unit.required_signers {
+        if signer.address != "relayer" {
+            let (class, _, detail) = crate::evidence::authority::classify_authority(
+                &signer.address,
+                &world.rpc_value(&signer.address),
+            )?;
+            require(
+                class == crate::evidence::authority::EntityType::WalletCompatible,
+                FailureKind::EvidenceGap,
+                format!(
+                    "signer {} lacks a supported direct signature path: {detail}",
+                    signer.address
+                ),
+            )?;
+        }
+    }
+    Ok(())
+}
+
+pub fn eligible_units(
+    change: &ChangeSpec,
+    world: &World,
+    candidate: &[u8],
+) -> Result<Vec<MigrationUnit>> {
+    (|| {
+        change.validate()?;
+        world.validate()?;
+        let migration = change
+            .as_token_migration()
+            .context("token migration required")?;
+        let spec = migration.evaluation_spec(change.activation.as_ref())?;
+        require(
+            matches!(
+                spec.destination_funding,
+                DestinationFunding::ReserveTransfer { .. }
+            ),
+            FailureKind::UnsupportedComposition,
+            "only shared reserve transfer is supported",
+        )?;
+        require(
+            spec.resolve()?
+                .window_state(world.clock.slot, world.clock.unix_timestamp)
+                == WindowState::Open,
+            FailureKind::UnsupportedComposition,
+            "migration window is not open at the pinned Clock",
+        )?;
+        change.resolve(CandidateSource::Bytes(candidate))?;
+        let change_id = change.id()?;
+        let plan_for = |focus| {
+            planner::plan(&PlanInput {
+                spec: &spec,
+                change_spec_id: &change_id,
+                world,
+                program_id: &migration.mechanism.program_id,
+                candidate_program_sha256: &migration.mechanism.artifact.sha256,
+                clock_policy: RehearsalClockPolicy::Captured,
+                reserve_override: None,
+                focus,
+            })
+        };
+        let population = plan_for(None)?;
+        let mut units = Vec::new();
+        for source in population.units.iter().map(|u| u.source_account.as_str()) {
+            let solo = plan_for(Some(source))?;
+            if let Some(unit) = solo.unit(source) {
+                if validate_unit(unit, world).is_ok() {
+                    units.push(unit.clone());
+                }
+            }
+        }
+        Ok(units)
+    })()
+    .map_err(evidence)
+}
+
 pub fn analyse(
     change: &ChangeSpec,
     world: &World,
@@ -391,45 +490,7 @@ fn analyse_inner(
         let unit = plan
             .unit(source)
             .context("selected source is not a unit in this world and ChangeSpec")?;
-        require(
-            unit.class == ImpactClass::Migratable
-                && unit.quote.is_some()
-                && unit.expected.is_some(),
-            if matches!(
-                unit.class,
-                ImpactClass::UnverifiableAuthority
-                    | ImpactClass::AuthorityPathUnavailable
-                    | ImpactClass::UnverifiableDestination
-                    | ImpactClass::FundingPathUnavailable
-            ) {
-                FailureKind::EvidenceGap
-            } else {
-                FailureKind::UnsupportedComposition
-            },
-            format!(
-                "solo control {} cannot be constructed: {:?}: {:?}",
-                unit.unit_id, unit.class, unit.reasons
-            ),
-        )?;
-        // Signature verification is deliberately disabled in the local runtime.
-        // Every assumed external signer still needs captured wallet-compatible
-        // evidence; a declared address or PDA alone must not become a signer.
-        for signer in &unit.required_signers {
-            if signer.address != "relayer" {
-                let (class, _, detail) = crate::evidence::authority::classify_authority(
-                    &signer.address,
-                    &world.rpc_value(&signer.address),
-                )?;
-                require(
-                    class == crate::evidence::authority::EntityType::WalletCompatible,
-                    FailureKind::EvidenceGap,
-                    format!(
-                        "signer {} lacks a supported direct signature path: {detail}",
-                        signer.address
-                    ),
-                )?;
-            }
-        }
+        validate_unit(unit, world)?;
         selected.push(unit.clone());
     }
     let units: [MigrationUnit; 2] = selected

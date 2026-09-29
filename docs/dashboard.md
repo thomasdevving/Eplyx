@@ -42,3 +42,25 @@ attributable deployed bytes stays `unverifiable`; supersession preserves the
 earlier execution. Analytical verdicts never inherit a governance outcome.
 Legacy G2 time is explicitly unavailable. See the
 [governance review contract](governance-review-trail-audit.md#10-implemented-review-layer).
+
+## Hosted migration order review
+
+Authenticated hosted migration run pages add a contained **Order analyses**
+section. The server determines parent eligibility; unavailable parents show a
+factual reason. Eligible parents expose **Order Analysis**, with two retained
+source pickers and a preview of the unchanged proposal, starting world,
+Clock/runtime and four scenarios. Changing either source invalidates the preview.
+
+Submission navigates to a child occurrence that follows queued/running status.
+The result shows A alone, B alone, A → B and B → A with intermediate/final state
+links expressed as identities, observed reserve changes, reconciliation and
+failure signatures. It renders the engine's order-effect/no-effect/NotEstablished
+classification. Overview and Technical use the same engine result; Technical
+adds identities and closure/known-absence evidence. Raw bytes remain in the
+project-authenticated portable artifact download, reproducible by the CLI.
+
+The parent lists its child occurrences; each child links to the parent. Derived
+analyses are excluded from ordinary migration-proposal history. The UI states
+that no refresh occurs and a newer state requires a new migration run. Evidence
+and handoff failures show their typed limitation; internal worker failures carry
+no analytical conclusion. See [migration-order-case.md](migration-order-case.md).

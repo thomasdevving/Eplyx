@@ -159,6 +159,7 @@ pub fn router(state: Shared) -> Router {
     Router::new()
         .merge(crate::cloud::router())
         .merge(crate::hosted::observation::router())
+        .merge(crate::hosted::order::router())
         .route("/health", get(health))
         .route("/ready", get(ready))
         .route("/v1/adapters", get(list_adapters))
@@ -574,6 +575,7 @@ async fn create_check(
         };
 
     let metadata = RunMetadata {
+        order_failure: None,
         hosted_analysis: None,
         analysis: None,
         run_id: run_id.clone(),
@@ -1574,6 +1576,16 @@ async fn get_project(
         .registry
         .project_run_ids(&project_id)
         .unwrap_or_default();
+    let run_ids: Vec<_> = run_ids
+        .into_iter()
+        .filter(|id| {
+            state.registry.load_run(id).is_ok_and(|run| {
+                !run.hosted_analysis
+                    .as_ref()
+                    .is_some_and(|j| j.kind == "migration_order")
+            })
+        })
+        .collect();
     let last = run_ids
         .first()
         .and_then(|id| state.registry.load_run(id).ok());
@@ -2066,6 +2078,13 @@ async fn list_project_runs(
         let Ok(run) = state.registry.load_run(&id) else {
             continue;
         };
+        if run
+            .hosted_analysis
+            .as_ref()
+            .is_some_and(|j| j.kind == "migration_order")
+        {
+            continue;
+        }
         if query.status.is_some_and(|want| want != run.status) {
             continue;
         }

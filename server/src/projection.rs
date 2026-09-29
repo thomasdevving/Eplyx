@@ -15,6 +15,11 @@ pub const MAX_PROJECTION_BYTES: usize = 256 * 1024 * 1024;
 #[serde(deny_unknown_fields)]
 pub struct Projection {
     pub run_id: String,
+    /// Retained offline migration runtime contract, outside engine artifact bytes.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub migration_runtime_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub migration_world: Option<crate::artifacts::ArtifactRef>,
     pub metadata: Artifact,
     pub report: Artifact,
     pub change_spec: Option<Artifact>,
@@ -27,6 +32,8 @@ impl From<RunDocument> for Projection {
     fn from(doc: RunDocument) -> Self {
         Self {
             run_id: doc.run_id,
+            migration_runtime_id: None,
+            migration_world: None,
             metadata: doc.metadata,
             report: doc.report,
             change_spec: doc.change_spec,
@@ -71,6 +78,28 @@ impl Projection {
                 artifact.sha256 == eplyx_engine::replay::hash_bytes(artifact.text.as_bytes()),
                 "projection artifact digest mismatch"
             );
+        }
+        let metadata: serde_json::Value = serde_json::from_str(&self.metadata.text)?;
+        if metadata["kind"] == "migration_order" {
+            let m: eplyx_engine::local_store::AnalyticalMetadata =
+                serde_json::from_str(&self.metadata.text)?;
+            ensure!(
+                m.schema_version == eplyx_engine::local_store::ANALYTICAL_METADATA_VERSION
+                    && m.run_id == self.run_id
+                    && m.report_sha256 == self.report.sha256
+                    && m.change_spec_sha256 == self.change_spec.as_ref().map(|a| a.sha256.clone())
+                    && m.state_input_sha256.is_none()
+                    && self.state_input.is_none()
+                    && self.search.is_none(),
+                "order projection metadata mismatch"
+            );
+            let report: serde_json::Value = serde_json::from_str(&self.report.text)?;
+            ensure!(
+                report["kind"] == "migration_order"
+                    && (!report["analysis"].is_null() || !report["failure"].is_null()),
+                "invalid order result"
+            );
+            return Ok("migration_order".into());
         }
         let parsed = self.view();
         ensure!(
