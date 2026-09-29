@@ -52,7 +52,7 @@ RUN touch interface/src/lib.rs engine/src/lib.rs engine/src/main.rs \
 
 FROM debian:bookworm-slim AS runtime
 
-RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates \
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates tar \
  && rm -rf /var/lib/apt/lists/*
 
 # A bundle baked in from deploy/bundle, if one was placed there. It is present,

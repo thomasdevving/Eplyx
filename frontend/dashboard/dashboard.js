@@ -25,6 +25,12 @@ const NAV = [
 const ROUTES = [
  [/^\/$/, pages.overview],
  [/^\/runs$/, pages.runs],
+ [/^\/runs\/(run_[A-Za-z0-9_-]+)\/order$/, args => CLOUD && !DEMO
+  ? import('./migration-order.js').then(m => m.selectionPage(args))
+  : Promise.reject(new Error('Order analysis requires an authenticated hosted parent.'))],
+ [/^\/migration-orders\/(run_[A-Za-z0-9_-]+)$/, args => CLOUD && !DEMO
+  ? import('./migration-order.js').then(m => m.resultPage(args))
+  : Promise.reject(new Error('Order analysis requires an authenticated hosted project.'))],
  [/^\/runs\/(run_[A-Za-z0-9_-]+)$/, pages.runDetail],
  [/^\/counterexamples$/, pages.counterexamples],
  [/^\/counterexamples\/(cx_[a-z0-9_]+)$/, pages.counterexampleDetail],

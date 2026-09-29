@@ -138,6 +138,9 @@ impl RunStatus {
 /// malformed expectation file or an incompatible bundle is a genuine Eplyx
 /// result carrying a genuine exit code, and it produces no report by design.
 pub enum RunOutcome {
+    OrderFailure {
+        kind: eplyx_engine::migration::order::FailureKind,
+    },
     Analytical {
         projection: Box<crate::projection::Projection>,
     },
@@ -364,6 +367,8 @@ pub struct Recovery {
 /// same shape it will see later, with the answers still empty.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct RunMetadata {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub order_failure: Option<eplyx_engine::migration::order::FailureKind>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub hosted_analysis: Option<crate::hosted::Job>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -1160,6 +1165,16 @@ impl Registry {
             RunOutcome::Analytical { projection } => {
                 match self.verify_hosted_projection(&metadata, &projection) {
                     Ok(()) => RunOutcome::Analytical { projection },
+                    Err(_)
+                        if metadata
+                            .hosted_analysis
+                            .as_ref()
+                            .is_some_and(|j| j.kind == "migration_order") =>
+                    {
+                        RunOutcome::OrderFailure {
+                            kind: eplyx_engine::migration::order::FailureKind::EvidenceGap,
+                        }
+                    }
                     Err(_) => RunOutcome::ExecutionError {
                         detail: "offline result did not match the accepted inputs".into(),
                     },
@@ -1168,6 +1183,14 @@ impl Registry {
             other => other,
         };
         match outcome {
+            RunOutcome::OrderFailure { kind } => {
+                metadata.status = RunStatus::Failed;
+                metadata.order_failure = Some(kind);
+                metadata.exit_code = Some(crate::hosted::order::failure_exit_code(kind));
+                metadata.report_available = false;
+                metadata.detail =
+                    Some("Retained order evidence could not establish an analysis.".into());
+            }
             RunOutcome::Analytical { projection } => {
                 let reference = self.document_ref(&serde_json::to_vec(&projection)?)?;
                 // Recovery can finalize this immutable result if metadata's
@@ -1180,7 +1203,16 @@ impl Registry {
                     &reference,
                 )?;
                 let code = crate::hosted::worker::exit_code(&projection)?;
-                metadata.status = if metadata
+                let order_failed = metadata
+                    .hosted_analysis
+                    .as_ref()
+                    .is_some_and(|j| j.kind == "migration_order")
+                    && !serde_json::from_str::<serde_json::Value>(&projection.report.text)?
+                        ["failure"]
+                        .is_null();
+                metadata.status = if order_failed {
+                    RunStatus::Failed
+                } else if metadata
                     .hosted_analysis
                     .as_ref()
                     .is_some_and(|j| j.kind == "token_migration")
@@ -1294,8 +1326,14 @@ impl Registry {
                 continue;
             };
             self.index_run(&metadata.project_id, &run_id)?;
-            if let Some(change) = &metadata.change {
-                self.index_change(&metadata.project_id, &change.change_spec_id, &run_id)?;
+            if !metadata
+                .hosted_analysis
+                .as_ref()
+                .is_some_and(|j| j.kind == "migration_order")
+            {
+                if let Some(change) = &metadata.change {
+                    self.index_change(&metadata.project_id, &change.change_spec_id, &run_id)?;
+                }
             }
             if metadata.status.is_terminal() {
                 self.clear_run_work(&run_id).ok();

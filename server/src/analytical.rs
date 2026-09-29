@@ -155,6 +155,7 @@ impl Registry {
             })
             .transpose()?;
         let metadata = RunMetadata {
+            order_failure: None,
             hosted_analysis: None,
             analysis: Some(AnalyticalRun {
                 kind: verified.run.kind().into(),

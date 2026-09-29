@@ -126,3 +126,20 @@ funding is the supported shape. `eplyx migration reproduce-order ./order-case`
 verifies and re-executes the portable evidence completely offline. See the
 [order-case contract](migration-order-case.md) for account closure, known absence,
 identities, reproduction and the precise limits of the ordering finding.
+
+## Hosted order analysis
+
+A completed hosted migration run with a verified retained package can expose
+**Order Analysis**. Choose two retained eligible sources, preview the bounded
+comparison, then submit an asynchronous derived child run. The parent owns the
+ChangeSpec, candidate/dependencies, world and fixed Clock/runtime; the request
+supplies only Source A and Source B. No state refresh occurs, and the ordinary
+migration history remains proposal history with children listed on the parent.
+
+The exact local Phase 7B engine evaluates A alone, B alone, A → B and B → A. The
+web UI presents its comparison and Technical evidence without another planner or
+verdict implementation. Ordering effects are completed analytical results, not
+worker errors or deployment authorization. Portable evidence can be downloaded
+and reproduced with `eplyx migration reproduce-order`. See
+[migration-order-case.md](migration-order-case.md) for eligibility, endpoints,
+legacy runtime verification, typed failures and bounded limitations.

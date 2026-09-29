@@ -171,6 +171,32 @@ pub fn reproduce(root: &Path) -> Result<Analysis> {
     reproduce_inner(root).map_err(order::evidence)
 }
 fn reproduce_inner(root: &Path) -> Result<Analysis> {
+    let expected = verify(root)?;
+    let manifest: Manifest =
+        serde_json::from_slice(&bounded_read(&root.join("case.json"), MAX_FILE)?)?;
+    let store = EvidenceStore::at(root.join("evidence"));
+    let change: ChangeSpec = get(&store, &manifest.change)?;
+    let world: World = get(&store, &manifest.world)?;
+    let candidate = read(&store, &manifest.candidate)?;
+    let actual = order::analyse(
+        &change,
+        &world,
+        &candidate,
+        [
+            &expected.binding.units[0].source_account,
+            &expected.binding.units[1].source_account,
+        ],
+    )?;
+    ensure!(actual == expected, "offline order replay differs: inputs, closure, scenarios, intermediate/final states, UnitExecution, reconciliation or comparison");
+    Ok(actual)
+}
+
+/// Verify retained portable evidence and its identities without executing a VM.
+/// Reproduction remains a separate explicit operation.
+pub fn verify(root: &Path) -> Result<Analysis> {
+    verify_inner(root).map_err(order::evidence)
+}
+fn verify_inner(root: &Path) -> Result<Analysis> {
     for ancestor in root.ancestors() {
         ensure!(!ancestor.is_symlink(), "symlinked order evidence");
     }
@@ -200,23 +226,59 @@ fn reproduce_inner(root: &Path) -> Result<Analysis> {
         "proposal/candidate/world/runtime identity mismatch"
     );
     for (id, state) in &expected.states {
-        ensure!(state.id()? == *id, "tampered intermediate state identity");
+        ensure!(
+            state.id()? == *id
+                && state.binding_id == expected.binding.id()?
+                && state
+                    .accounts
+                    .keys()
+                    .cloned()
+                    .collect::<std::collections::BTreeSet<_>>()
+                    == expected.binding.closure,
+            "tampered intermediate state identity or closure"
+        );
     }
-    let actual = order::analyse(
-        &change,
-        &world,
-        &candidate,
-        [
-            &expected.binding.units[0].source_account,
-            &expected.binding.units[1].source_account,
-        ],
-    )?;
-    ensure!(actual == expected, "offline order replay differs: inputs, closure, scenarios, intermediate/final states, UnitExecution, reconciliation or comparison");
+    for scenario in &expected.scenarios {
+        ensure!(
+            scenario.case.id()? == scenario.case_id
+                && scenario.case.binding_id == expected.binding.id()?
+                && scenario.case.initial_state_id == scenario.initial_state_id
+                && expected.states.contains_key(&scenario.initial_state_id)
+                && expected.states.contains_key(&scenario.final_state_id),
+            "order-case identity mismatch"
+        );
+        ensure!(
+            scenario.run_id
+                == canonical::digest(&(
+                    "eplyx-migration-order-run/v1",
+                    &scenario.case_id,
+                    &scenario.steps,
+                    &scenario.stopped
+                ))?,
+            "scenario identity mismatch"
+        );
+        for step in &scenario.steps {
+            ensure!(
+                expected.states.contains_key(&step.before_state_id)
+                    && expected.states.contains_key(&step.after_state_id),
+                "missing handoff state"
+            );
+        }
+    }
     ensure!(
-        bounded_read(&root.join("report.md"), MAX_FILE)? == markdown(&actual).as_bytes(),
+        expected.comparison.order_case_ids
+            == [
+                expected.scenarios[2].case_id.clone(),
+                expected.scenarios[3].case_id.clone()
+            ]
+            && expected.comparison.scenario_ids == expected.scenarios.clone().map(|s| s.run_id),
+        "comparison identity mismatch"
+    );
+    ensure!(
+        bounded_read(&root.join("report.md"), MAX_FILE)? == markdown(&expected).as_bytes(),
         "saved order report differs"
     );
-    Ok(actual)
+    Ok(expected)
 }
 
 pub fn markdown(a: &Analysis) -> String {
