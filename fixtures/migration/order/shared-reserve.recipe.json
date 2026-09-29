@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "bounded-order-pair",
+  "description": "Two selected migration holders; both destination ATAs begin absent",
+  "programs": "pinnedMainnetCapture",
+  "clock": {"slot": "1000", "unixTimestamp": "1760000000", "epoch": "400"},
+  "populationMint": "source",
+  "wallets": [
+    {"label": "alice", "lamports": "1000000000"},
+    {"label": "bob", "lamports": "1000000000"},
+    {"label": "issuer", "lamports": "1000000000"}
+  ],
+  "mints": [
+    {"label": "source", "tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA", "decimals": 6, "mintAuthority": {"label": "issuer"}},
+    {"label": "destination", "tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA", "decimals": 6, "mintAuthority": {"label": "issuer"}}
+  ],
+  "tokenAccounts": [
+    {"label": "alice-source", "mint": "source", "owner": {"label": "alice"}, "layout": "associated", "amount": "100"},
+    {"label": "bob-source", "mint": "source", "owner": {"label": "bob"}, "layout": "associated", "amount": "120"}
+  ]
+}

@@ -18,8 +18,8 @@ globalThis.sessionStorage = {
 globalThis.localStorage = { getItem: () => null, setItem() {}, removeItem() {} };
 globalThis.EPLYX_API_URL = 'http://api.test';
 
-const { governanceView, GovernanceSection, GovernanceRows, deliveryOf, STALE_BUFFER, FRESH_SECONDS } = await import('./src/governance.js');
-const { attachReport } = await import('./src/report.js');
+const { governanceView, GovernanceSection, GovernanceRows, deliveryOf, STALE_BUFFER, FRESH_SECONDS, trailEventView, TrailEvent, GovernanceTrailSection, attachGovernanceTrail } = await import('./src/governance.js');
+const { attachReport, HostedReport } = await import('./src/report.js');
 const { changeLine, ChangeIdentityRows } = await import('./src/change.js');
 
 const root = new URL('../', import.meta.url);
@@ -210,14 +210,76 @@ async function page(governance) {
   return { html, requests };
 }
 
-await check('the page fetches the bound change’s checks and renders the newest one', async () => {
-  const fresh = Math.floor(Date.now() / 1000) - 30;
-  const { html, requests } = await page(() => ({ ok: true, status: 200, json: async () => ({ checks: [{ checked_at_unix_seconds: fresh, binding: B.stale }, { checked_at_unix_seconds: fresh - 60, binding: B.matched }] }) }));
-  assert.ok(requests.includes(`/v1/projects/proj_G1/governance/changes/${bound.change_spec_id}`));
-  assert.ok(html.includes('Governance proposal'));
+const g1event = (binding, id, time = NOW - 60) => ({ type: 'governance_check', event_id: id, recorded_at_unix_seconds: time, check: {check_id: id}, binding });
+const g2event = (outcome, execution = null) => ({ type: 'deployment_attestation', event_id: 'gocc_2', recorded_at_unix_seconds: NOW,
+  occurrence: {occurrence_id: 'gocc_2'}, attestation: {change_spec_id: bound.change_spec_id, binding_id: B.matched.binding_id,
+    attestation_id: 'proof-A', outcome, observed_slot: 9000, execution, candidate: bound.change.candidate,
+    target_program: bound.change.target.program_id, transaction_index: 42, message_sha256: delivery.message_sha256} });
+
+await check('the bound page renders the complete sequence with separate analysis and G2 binding', async () => {
+  const events = [g1event(B.matched, 'gchk_1'), g1event(B.stale, 'gchk_2'), g2event('not_executed')];
+  const { html, requests } = await page(() => ({ ok: true, status: 200, json: async () => ({change_spec_id:bound.change_spec_id, events, runs:[], next_cursor:'gocc_2'}) }));
+  assert.ok(requests.includes(`/v1/projects/proj_G1/governance/changes/${bound.change_spec_id}/trail`));
+  assert.ok(html.includes('Squads governance trail'));
   assert.ok(html.includes("The proposal&#039;s buffer no longer matches the candidate Eplyx analysed."));
-  assert.ok(html.includes('Governance binding'));
+  assert.ok(html.includes('Technical evidence'));
   assert.ok(html.includes(B.stale.binding_id));
+  assert.ok(html.includes(B.matched.binding_id));
+  assert.ok(html.includes('Based on G1 binding'));
+  assert.ok(html.includes('More governance observations'));
+  assert.ok(html.includes('<h2>Analysis</h2>'));
+  assert.ok(html.indexOf('data-event-id="gchk_1"') < html.indexOf('data-event-id="gchk_2"'));
+  assert.ok(html.indexOf('data-event-id="gchk_2"') < html.indexOf('data-event-id="gocc_2"'));
+});
+
+await check('an analytical failure without a report still exposes the retained bound trail', () => {
+  const html = HostedReport({run_id:'failed-run',project_id:'proj_G1',status:'execution_error',report_available:false,
+    change:{change_spec_id:bound.change_spec_id,kind:'program_upgrade',target_program_id:bound.change.target.program_id}},
+    {spec:bound,governance:{trail:{change_spec_id:bound.change_spec_id,events:[g1event(B.matched,'check')],runs:[]}}});
+  assert.match(html,/Squads governance trail/);
+  assert.match(html,/Proposal binding observation: matched/);
+  assert.doesNotMatch(html,/CI gate Passed/);
+});
+
+await check('outcomes, age, status, execution and deployed proof remain distinct', () => {
+  const old = trailEventView(g1event(B.matched, 'old', NOW - 9999), NOW);
+  assert.equal(old.outcome, 'matched');
+  assert.equal(old.dated, true);
+  assert.match(old.note, /neither a current match nor execution/);
+  const noExecution = trailEventView(g2event('not_executed'), NOW);
+  assert.match(noExecution.note, /Execution had not been established as of this observation/);
+  assert.doesNotMatch(noExecution.note, /deployment failed/);
+  const execution = {signature:'execution-signature', slot:7000};
+  const uncertain = trailEventView(g2event('unverifiable', execution), NOW);
+  assert.match(uncertain.note, /Matching execution evidence was found/);
+  assert.match(uncertain.note, /No mismatch is claimed/);
+  assert.match(trailEventView(g2event('unverifiable'), NOW).note, /Proposal status alone does not prove/);
+  assert.match(trailEventView(g2event('deployed_match', execution), NOW).note, /not a permanent current-state claim/);
+  assert.match(trailEventView(g2event('deployed_mismatch', execution), NOW).note, /attributable deployed bytes did not match/);
+  assert.match(trailEventView(g2event('superseded', execution), NOW).note, /Later ProgramData deployment state superseded/);
+  const legacy = {...g2event('not_executed'), legacy:true, occurrence:null, recorded_at_unix_seconds:null};
+  assert.match(TrailEvent(legacy), /relative recording order unknown/);
+  const wrongBinding = governanceView({delivery, check:at(B.stale), attestation:g2event('deployed_match',execution).attestation, changeSpecId:bound.change_spec_id, now:NOW});
+  assert.equal(wrongBinding.state, 'stale_artifact');
+  const escaped = TrailEvent(g2event('unverifiable', {...execution, signature:'<script>alert(1)</script>'}));
+  assert.doesNotMatch(escaped, /<script>/);
+});
+
+await check('explicit pagination reads and appends the next page, with visible integrity errors', async () => {
+  let click; let appended = ''; let error = ''; let removed = false; let cursor = 'first';
+  const root = {addEventListener:(_,fn)=>{click=fn;},removeEventListener:()=>{click=null;}};
+  const section = {dataset:{endpoint:'/trail',rootId:bound.change_spec_id},querySelector:selector=>selector==='[data-trail-error]'?{set textContent(v){error=v;}}:{insertAdjacentHTML:(_,html)=>{appended+=html;}}};
+  const button = {disabled:false,closest:()=>section,hasAttribute:()=>false,getAttribute:()=>cursor,setAttribute:(_,v)=>{cursor=v;},remove:()=>{removed=true;}};
+  const target = {closest:()=>button}; const urls=[]; let ok=true;
+  const detach = attachGovernanceTrail(root, async url=>{urls.push(url);return {ok,json:async()=>({change_spec_id:bound.change_spec_id,events:[g2event('not_executed')],next_cursor:null})};});
+  assert.equal(urls.length, 0);
+  await click({target});
+  assert.deepEqual(urls,['/trail?cursor=first']);
+  assert.ok(removed);
+  assert.match(appended,/Execution had not been established/);
+  ok=false; await click({target});
+  assert.match(error,/Further history is unavailable/);
+  detach(); assert.equal(click,null);
 });
 
 await check('a tampered stored binding reaches the page as an error, not a match', async () => {

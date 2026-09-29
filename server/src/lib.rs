@@ -21,3 +21,5 @@ pub mod analytical;
 pub mod projection;
 
 pub mod hosted;
+
+pub mod governance_trail;

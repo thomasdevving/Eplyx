@@ -65,6 +65,10 @@ pub fn run() -> String {
     mint("run")
 }
 
+pub fn governance_occurrence() -> String {
+    mint("gocc")
+}
+
 pub fn governance_check() -> String {
     mint("gchk")
 }

@@ -829,3 +829,13 @@ a:focus-visible, button:focus-visible, pre:focus-visible { outline:2px solid var
 @media(max-width:1100px) { .start-next { margin-left:48px; margin-right:48px; } .start-workflows { gap:24px; grid-template-columns:220px minmax(0,1fr); } .workflow-panel { padding:25px; } }
 @media(max-width:900px) { .start-workflows { grid-template-columns:minmax(0,1fr); } .workflow-picker { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; } .workflow-picker label { margin:0; } .start-next { flex-direction:column; } }
 @media(max-width:760px) { .start-workflows { padding:10px 22px 42px; } .start-demo { align-items:flex-start; flex-direction:column; padding:20px; } .workflow-picker { grid-template-columns:minmax(0,1fr); } .workflow-picker label { padding:12px 16px; } .workflow-picker small { margin-top:3px; } .workflow-panel { padding:22px; } .workflow-requirements > div { grid-template-columns:minmax(0,1fr); gap:8px; } .workflow-entrypoints { grid-template-columns:minmax(0,1fr); } .start-next { margin:0 22px; padding-bottom:42px; } .cli-task-index { grid-template-columns:minmax(0,1fr); } }
+
+/* Retained governance observations share the report's evidence cards. */
+.governance-trail { list-style: none; padding: 0; margin: 24px 0; }
+.governance-trail .governance-card { margin: 0 0 16px; overflow-wrap: anywhere; }
+.governance-trail .governance-card p { font-size: 12px; line-height: 1.7; }
+.governance-trail details { margin-top: 16px; }
+.governance-trail summary { cursor: pointer; font-size: 12px; }
+[data-governance-trail] { margin-top: 28px; }
+[data-governance-trail] > p, [data-trail-runs] { overflow-wrap: anywhere; font-size: 12px; line-height: 1.7; }
+[data-trail-more], [data-trail-more-runs] { padding: 10px 16px; border: 1px solid currentColor; border-radius: 4px; background: transparent; color: inherit; cursor: pointer; }

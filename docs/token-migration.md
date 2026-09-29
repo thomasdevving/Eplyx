@@ -116,3 +116,13 @@ use 5. The full mapping and compatibility limits are in
 [T5](phase-t5-migration-cli-local-store.md). See [the frozen T3 comparison](phase-t3-migration-reference.json)
 for all 14 before/after cases and [T4](phase-t4-current-migration-guarantees.md) for
 coherence, authority resolution, final-state rebinding and observed search waves.
+
+## One selected ordering case
+
+`eplyx migration order --run RUN_ID --source-a SOURCE_A --source-b SOURCE_B --out
+./order-case` compares both solo controls and both transaction orders under one
+unchanged migration proposal and fixed world Clock. Shared reserve-transfer
+funding is the supported shape. `eplyx migration reproduce-order ./order-case`
+verifies and re-executes the portable evidence completely offline. See the
+[order-case contract](migration-order-case.md) for account closure, known absence,
+identities, reproduction and the precise limits of the ordering finding.

@@ -2,7 +2,7 @@ import { Header, Footer } from './shell.js';
 import { API_BASE, operatorToken } from './session.js';
 import { ChangeCard, ChangeIdentityRows, resolveChange } from './change.js';
 import { analysisView, shortId } from './analysis.js';
-import { governanceView, GovernanceSection, GovernanceRows, deliveryOf } from './governance.js';
+import { GovernanceTrailSection, attachGovernanceTrail, deliveryOf } from './governance.js';
 
 /** One request in flight at a time, and never sub-second. */
 const POLL_MS = 1500;
@@ -51,9 +51,11 @@ export function attachReport(id, render) {
   // run's canonical spec for the technical details. Neither is ever required to
   // render a run, and neither is ever invented when it cannot be fetched.
   let extras = null;
+  let detachTrail = () => {};
   const stop = () => {
     stopped = true;
     clearTimeout(timer);
+    detachTrail();
   };
   const ask = path => fetch(`${context.api}${path}`, { headers: { Authorization: `Bearer ${context.token}` } });
 
@@ -87,7 +89,11 @@ export function attachReport(id, render) {
     }
 
     stop();
-    if (!run.report_available) return render(renderIncomplete(id, run, extras));
+    if (!run.report_available) {
+      render(renderIncomplete(id, run, extras));
+      if (typeof document !== 'undefined') detachTrail = attachGovernanceTrail(document, ask);
+      return;
+    }
     try {
       const response = await ask(`/v1/runs/${encodeURIComponent(id)}/report.json`);
       run.canonical_report = response.ok ? await response.json() : null;
@@ -95,6 +101,7 @@ export function attachReport(id, render) {
       run.canonical_report = null;
     }
     render(renderReport(run, { demo: false, id, extras }));
+    if (typeof document !== 'undefined') detachTrail = attachGovernanceTrail(document, ask);
   };
 
   async function loadExtras(run) {
@@ -114,11 +121,11 @@ export function attachReport(id, render) {
     // re-verifies each stored binding on read and refuses one that does not.
     if (deliveryOf(found.spec) && run.project_id) {
       try {
-        const response = await ask(`/v1/projects/${encodeURIComponent(run.project_id)}/governance/changes/${encodeURIComponent(run.change.change_spec_id)}`);
+        const response = await ask(`/v1/projects/${encodeURIComponent(run.project_id)}/governance/changes/${encodeURIComponent(run.change.change_spec_id)}/trail`);
         const body = await response.json().catch(() => ({}));
-        found.governance = response.ok ? { check: body.checks?.[0] ?? null, attestation: body.attestations?.[0] ?? null } : { error: body.error ?? `HTTP ${response.status}` };
+        found.governance = response.ok ? { trail: body } : { error: body.error ?? `HTTP ${response.status}` };
       } catch {
-        found.governance = { error: 'the governance checks could not be fetched' };
+        found.governance = { error: 'the governance trail could not be fetched' };
       }
     }
     return found;
@@ -233,6 +240,7 @@ function renderIncomplete(id, run, extras = {}, embedded = false) {
       ${dimensions(view)}
       <div class="report-content">
         ${ChangeCard({ change: run.change, legacy: !run.change, targetName: extras.projectName, spec: extras.spec, candidateSha: run.candidate_sha256 })}
+        ${renderGovernanceTrail(run, extras)}
         <section><div class="report-section-title"><span>01</span><h2>Reason</h2></div>
           <div class="empty-result"><p>${run.detail ? escapeHtml(run.detail) : 'No further detail was recorded.'}</p></div>
         </section>
@@ -313,18 +321,23 @@ function renderIdentityConflict(id, live, resolution, embedded = false) {
       </div>`, embedded);
 }
 
+function renderGovernanceTrail(live, extras, changeSpecId = live.change?.change_spec_id) {
+  return GovernanceTrailSection({
+    delivery: deliveryOf(extras.spec),
+    trail: extras.governance?.trail,
+    error: extras.governance?.error,
+    changeSpecId,
+    projectId: live.project_id,
+    runBase: extras.runBase ?? '/runs',
+  });
+}
+
 function renderReport(live, { demo, id, extras = {}, embedded = false }) {
   const report = live.canonical_report;
   const resolution = resolveChange(live, report, extras.spec);
   if (resolution.conflicts.length) return renderIdentityConflict(id, live, resolution, embedded);
   const view = analysisView({ run: live, report });
-  const governance = governanceView({
-    delivery: deliveryOf(extras.spec),
-    check: extras.governance?.check ?? null,
-    attestation: extras.governance?.attestation ?? null,
-    error: extras.governance?.error ?? null,
-    changeSpecId: resolution.change?.change_spec_id ?? null,
-  });
+  const governance = renderGovernanceTrail(live, extras, resolution.change?.change_spec_id);
   if (!report) {
     // The run says a report exists, and this page could not fetch it.
     return shell(id, `
@@ -332,7 +345,7 @@ function renderReport(live, { demo, id, extras = {}, embedded = false }) {
       ${dimensions(view)}
       <div class="report-content">
         ${ChangeCard({ change: resolution.change, legacy: resolution.legacy, targetName: extras.projectName, spec: extras.spec, candidateSha: live.candidate_sha256 })}
-        ${GovernanceSection(governance)}
+        ${governance}
         <div class="empty-result">The canonical report could not be retrieved for this run, so its findings are not shown here. Fetch <span class="mono">report.json</span> with the project token.</div>
       </div>`, embedded);
   }
@@ -354,9 +367,9 @@ function renderReport(live, { demo, id, extras = {}, embedded = false }) {
         <div class="report-content">
           <section id="change"><div class="report-section-title"><span>01</span><h2>Proposed change</h2></div>
             ${ChangeCard({ change: resolution.change, legacy: resolution.legacy, targetName: extras.projectName, spec: extras.spec, candidateSha: live.candidate_sha256 })}
-            ${GovernanceSection(governance)}
+            ${governance}
           </section>
-          <section id="result"><div class="report-section-title"><span>02</span><h2>Result</h2></div>
+          <section id="result"><div class="report-section-title"><span>02</span><h2>Analysis</h2></div>
             ${renderPrimary(view)}
             ${renderResult(view)}
           </section>
@@ -374,7 +387,7 @@ function renderReport(live, { demo, id, extras = {}, embedded = false }) {
             ${renderProof(view)}
           </section>
           <section id="technical" data-technical><div class="report-section-title"><span>06</span><h2>Technical details</h2></div>
-            ${renderTechnical({ live, report, resolution, extras, governance })}
+            ${renderTechnical({ live, report, resolution, extras })}
           </section>
         </div>
       </div>
@@ -513,7 +526,7 @@ function renderProof(view) {
 }
 
 /** Everything, in full, one layer down. Nothing technical was removed. */
-function renderTechnical({ live, report, resolution, extras, governance }) {
+function renderTechnical({ live, report, resolution, extras }) {
   const bundle = report.bundle ?? {};
   const replay = report.replay_proof;
   const binding = report.semantic_binding;
@@ -537,7 +550,6 @@ function renderTechnical({ live, report, resolution, extras, governance }) {
   return `<details class="technical"><summary>Show identities, proof and raw evidence</summary>
       <h3 class="provenance-heading">Proposed change</h3>
       <div class="provenance-table">${ChangeIdentityRows({ change: resolution.change, spec: extras.spec, resolution })}</div>
-      ${governance?.rows?.length ? `<h3 class="provenance-heading">Governance binding</h3><div class="provenance-table">${GovernanceRows(governance)}</div>` : ''}
       <h3 class="provenance-heading">Evidence</h3>
       <div class="provenance-table">
         ${row('Program', bundle.program_id)}

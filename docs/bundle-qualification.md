@@ -235,3 +235,49 @@ server/client mutation dependency.
 
 `scripts/acquire-corpus.sh` remains a legacy historical reference. It is not the
 canonical qualification path and does not issue the new receipt.
+
+## Live validation — 2026-09-28
+
+One live run tested `spl-stake-pool@3`, program
+`SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy`, with action `deposit` and
+subject `spl-stake-pool/deposit_sol/economic/pool_tokens_received`. The requested
+reference window was **447850000–447906921**, with limits of **20 normalized
+interactions, 3 acquisition attempts, and 1 selected record**. No semantic
+population artifact or coverage acceptance was supplied.
+
+No provider variables or private credentials were available. The run used the
+existing public replay-demo provider/Origin defaults, supplied only at runtime,
+for all three provider roles. All genesis checks matched mainnet. Discovery
+then stopped with **`discovery_failed`, `acquisition_blocked`, exit `22`**.
+An independent request for the first uncached transaction, at slot 447906248,
+confirmed **HTTP 429**. The existing transport rejects that response; this is
+a provider rate-limit refusal, not evidence that historical transactions or
+accounts are absent. No orchestration defect or predicate change was indicated.
+
+The retained cache contains 65 signature pages (65,000 address-associated
+entries, including 91 in the requested window) and one transaction response.
+That response normalizes, but has no target-program invocation and resolves
+42 lookup addresses. These partial diagnostics are **not** a completed
+discovery population or semantic denominator. The discovery limit bounds
+normalized target interactions; historical pagination can read many newer
+signature pages before reaching the window. No discovery report or shortlist
+was completed. Acquisition attempted/accepted/refused counts are **0/0/0**;
+cohort qualification, record-level subject coverage, selection, fidelity and
+bundle verification were not reached. Exact-slot account/executable and block
+history capabilities remain untested. No bundle was produced.
+
+A fresh `--offline` run used disabled transport and produced a byte-identical
+receipt with exit `22`. Independent `ingest::discover_bounded` execution
+confirmed its underlying stop was a **`getTransaction` cache miss**: failed
+HTTP responses are not cached. Matching terminal receipts therefore do not
+establish a complete frozen evidence replay or reproduce the live HTTP refusal.
+Coverage acceptance was not tested. Disclosure checks found no configured
+endpoint/Origin values or private workspace/home paths in the retained outputs.
+
+The spec, live/offline receipts, RPC cache, independent checks and validation
+summary are retained locally under `data/bundle-qualification-live-20260928/`
+(ignored, not clean-checkout artifacts). The next manual step is to restore
+sufficient transaction-provider quota/access and rerun the same spec/cache into
+a fresh output directory; exact historical acquisition still needs qualification.
+No engine changes, new regression tests, registration, activation or deployment
+were performed for this validation.

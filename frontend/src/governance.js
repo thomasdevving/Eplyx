@@ -153,13 +153,13 @@ export function governanceView({ delivery, check = null, attestation = null, cha
     reasons: (binding.reasons ?? []).map(r => ({ code: r.code, detail: r.detail })),
     rows: technicalRows(binding),
   };
-  if (attestation && attestation.change_spec_id === changeSpecId) {
+  if (attestation && attestation.change_spec_id === changeSpecId && attestation.binding_id === binding.binding_id) {
     const execution = attestation.execution;
     const outcomes = {
       deployed_match: ['ok', 'Analysed candidate was deployed', `Executed at slot ${execution?.slot ?? '—'}. Transaction ${middle(execution?.signature ?? '')}.`],
       deployed_mismatch: ['alert', 'The code deployed by this proposal does not match the candidate Eplyx analysed.', `Executed at slot ${execution?.slot ?? '—'}. Transaction ${middle(execution?.signature ?? '')}.`],
       superseded: ['dated', 'This proposal executed, but the program has since been upgraded again.', `Executed at slot ${execution?.slot ?? '—'}. Transaction ${middle(execution?.signature ?? '')}.`],
-      not_executed: ['neutral', 'Proposal matches analysed change', 'Not executed yet.'],
+      not_executed: ['neutral', 'Execution not established at this observation', 'No failed deployment or byte mismatch is claimed.'],
       unsupported: ['neutral', 'Deployment attestation is unsupported for this proposal.', attestation.reasons?.join(' ') ?? ''],
       unverifiable: ['neutral', 'Deployment could not be verified.', attestation.reasons?.join(' ') ?? ''],
     };
@@ -198,12 +198,15 @@ function technicalRows(binding) {
     ['Vault transaction', delivery.transaction],
     ['Proposal account', delivery.proposal],
     ['Message SHA-256', delivery.message_sha256],
+    ['Expected target program', binding.expected?.target_program_id],
+    ['Expected ProgramData', binding.expected?.programdata_address],
     ['Target program', observed.upgrade?.program],
     ['ProgramData', observed.upgrade?.programdata],
     ['Buffer', observed.upgrade?.buffer],
     ['Buffer authority', observed.buffer ? observed.buffer.authority ?? 'none' : null],
     ['Buffer SHA-256', observed.buffer?.artifact?.sha256],
     ['Analysed candidate', binding.expected?.candidate?.sha256],
+    ['Candidate length', binding.expected?.candidate?.len],
     ['Upgrade authority', observed.current_program ? observed.current_program.upgrade_authority ?? 'none' : null],
   ];
   for (const account of observed.accounts ?? []) {
@@ -229,4 +232,134 @@ export function GovernanceSection(view) {
 export function GovernanceRows(view) {
   if (!view?.rows?.length) return '';
   return view.rows.map(([label, value]) => `<div><span>${escapeHtml(label)}</span><b>${escapeHtml(value)}</b></div>`).join('');
+}
+
+const recordedTime = seconds => seconds == null ? 'unavailable (legacy evidence; relative recording order unknown)' : new Date(seconds * 1000).toISOString().replace('T', ' ').replace('.000Z', ' UTC');
+
+/** Factual rows: outcomes remain verbatim; age is presentation only. */
+export function trailEventView(event, now = Date.now() / 1000) {
+  const g1 = event.type === 'governance_check';
+  const proof = g1 ? event.binding : event.attestation;
+  const delivery = g1 ? proof.observation?.delivery ?? proof.expected?.delivery : null;
+  const outcome = proof.outcome;
+  const slot = g1 ? proof.observation?.slot : proof.observed_slot;
+  const dated = g1 && outcome === 'matched' && (event.recorded_at_unix_seconds == null || now - event.recorded_at_unix_seconds > FRESH_SECONDS);
+  const proposal = delivery?.transaction_index ?? proof.transaction_index ?? proof.request?.transaction_index;
+  const candidate = g1 ? proof.expected?.candidate : proof.candidate;
+  const target = g1 ? proof.expected?.target_program_id : proof.target_program;
+  let note;
+  if (g1) {
+    note = outcome === 'matched'
+      ? 'Proposal binding matched at this observation. This is neither a current match nor execution or deployed-byte proof.'
+      : outcome === 'stale_artifact' ? STALE_BUFFER : proof.statement;
+  } else {
+    note = ({
+      not_executed: 'Execution had not been established as of this observation. No failed deployment or byte mismatch is claimed.',
+      deployed_match: 'Execution and deployment attribution were established; the candidate bytes and zero padding matched at this observation. This is not a permanent current-state claim.',
+      deployed_mismatch: 'Execution and deployment attribution were established; the attributable deployed bytes did not match the candidate.',
+      superseded: 'Matching execution was established. Later ProgramData deployment state superseded that execution; its historical evidence is retained.',
+      unverifiable: proof.execution
+        ? 'Matching execution evidence was found, but deployment attribution or deployed-byte proof could not be established. No mismatch is claimed.'
+        : 'Matching execution and deployed-byte proof could not be established. Proposal status alone does not prove execution or deployed bytes.',
+      unsupported: 'Deployment attestation is unsupported for this proposal.',
+    })[outcome] ?? 'Unrecognised retained outcome.';
+  }
+  const rows = g1 ? [
+    ['Check ID', event.check?.check_id], ['Host recorded time', recordedTime(event.recorded_at_unix_seconds)],
+    ['Message-read slot', proof.observation?.message_read_slot], ['Proposal status', proof.observation?.proposal?.status],
+    ...technicalRows(proof),
+  ] : [
+    ['Occurrence ID', event.occurrence?.occurrence_id ?? 'unavailable (legacy)'],
+    ['Attestation ID', proof.attestation_id], ['Binding ID used', proof.binding_id],
+    ['Bound ChangeSpec ID', proof.change_spec_id], ['Outcome', outcome],
+    ['Host recorded time', recordedTime(event.recorded_at_unix_seconds)], ['Observed slot', slot],
+    ['Commitment', proof.commitment], ['Multisig', proof.multisig], ['Proposal account', proof.proposal],
+    ['Vault transaction', proof.vault_transaction], ['Message SHA-256', proof.message_sha256],
+    ['Candidate SHA-256', candidate?.sha256], ['Candidate length', candidate?.len],
+    ['Target program', target], ['ProgramData', proof.programdata],
+    ...Object.entries(proof.execution ?? {}).map(([k, v]) => [`Execution · ${k}`, typeof v === 'object' ? JSON.stringify(v) : v]),
+    ...Object.entries(proof.deployed ?? {}).map(([k, v]) => [`ProgramData · ${k}`, v]),
+    ...(proof.reasons ?? []).map(reason => ['Evidence limit', reason]),
+  ];
+  return { eventId: event.event_id, type: event.type, outcome, dated,
+    title: `${g1 ? 'Proposal binding observation' : 'Deployment attestation'}: ${outcome}${dated ? ' · dated observation' : ''}`,
+    note, proposal, candidate: candidate?.sha256, target, slot,
+    recorded: recordedTime(event.recorded_at_unix_seconds),
+    status: g1 ? proof.observation?.proposal?.status : null,
+    bindingId: proof.binding_id,
+    sourceId: g1 ? proof.analysed_change_spec_id : proof.change_spec_id,
+    boundId: g1 ? proof.bound_change_spec_id : proof.change_spec_id,
+    execution: g1 ? null : proof.execution,
+    deploySlot: g1 ? null : proof.deployed?.deploy_slot,
+    tone: ['stale_artifact', 'deployed_mismatch', 'different_proposal', 'authority_mismatch'].includes(outcome) ? 'alert' : dated || outcome === 'superseded' ? 'dated' : 'neutral',
+    rows: rows.filter(([, v]) => v != null),
+  };
+}
+
+export function TrailEvent(event) {
+  const v = trailEventView(event);
+  return `<li class="governance-card is-${escapeHtml(v.tone)}" data-event-id="${escapeHtml(v.eventId)}">
+    <header><span>${escapeHtml(v.type)}</span><em>Squads #${escapeHtml(v.proposal ?? 'unknown')}</em></header>
+    <h3>${escapeHtml(v.title)}</h3>
+    <p>Recorded ${escapeHtml(v.recorded)} · Observed ${v.slot == null ? 'slot unavailable' : `slot ${escapeHtml(v.slot)}`}</p>
+    <p>Candidate ${escapeHtml(middle(v.candidate ?? 'unknown'))} · Target ${escapeHtml(middle(v.target ?? 'unknown'))}${v.status ? ` · Proposal status: ${escapeHtml(v.status)}` : ''}</p>
+    <p>${v.type === 'deployment_attestation' ? 'Based on G1 binding' : 'G1 binding'} <code>${escapeHtml(v.bindingId)}</code></p>
+    ${v.type === 'governance_check' ? `<p>Asked-about change ${escapeHtml(middle(v.sourceId))} · Derived bound change ${escapeHtml(middle(v.boundId ?? 'unavailable'))}</p>` : ''}
+    ${v.execution ? `<p>Matching execution: slot ${escapeHtml(v.execution.slot)} · Transaction ${escapeHtml(middle(v.execution.signature))}</p>` : ''}
+    ${v.deploySlot != null ? `<p>ProgramData deployment slot: ${escapeHtml(v.deploySlot)} (separate from the observation slot)</p>` : ''}
+    <p class="governance-card__note">${escapeHtml(v.note)}</p>
+    <details><summary>Technical evidence</summary><div class="provenance-table">${GovernanceRows(v)}</div></details>
+  </li>`;
+}
+
+function runLinks(runs, base) {
+  return runs.map(run => `<li><a href="${escapeHtml(base)}/${encodeURIComponent(run.run_id)}">${escapeHtml(run.run_id)}</a> · ${escapeHtml(run.status)} · analytical exit code ${escapeHtml(run.exit_code ?? 'unavailable')}<small> · Candidate ${escapeHtml(middle(run.candidate_sha256))} · Bundle ${escapeHtml(middle(run.bundle_sha256))} · Created ${escapeHtml(recordedTime(run.created_at_unix_seconds))}${run.completed_at_unix_seconds == null ? '' : ` · Completed ${escapeHtml(recordedTime(run.completed_at_unix_seconds))}`}</small></li>`).join('');
+}
+
+export function GovernanceTrailSection({ delivery, trail, error, changeSpecId, projectId, runBase = '/runs' }) {
+  if (!delivery) return '';
+  if (error || (trail && trail.change_spec_id !== changeSpecId)) return `<section class="governance-card is-alert" role="alert"><h2>Squads governance trail</h2><p>Stored governance evidence could not be verified.</p></section>`;
+  if (!trail) return '<section class="governance-card"><h2>Squads governance trail</h2><p>No retained trail was loaded.</p></section>';
+  const endpoint = `/v1/projects/${encodeURIComponent(projectId)}/governance/changes/${encodeURIComponent(changeSpecId)}/trail`;
+  return `<section data-governance-trail data-endpoint="${escapeHtml(endpoint)}" data-root-id="${escapeHtml(changeSpecId)}" data-run-base="${escapeHtml(runBase)}">
+    <h2>Analysis runs for this bound change</h2>
+    <p>Analytical verdicts are separate from proposal binding, execution evidence and deployed-byte proof. Earlier unbound analyses are not analyses of this proposal.</p>
+    <ul data-trail-runs>${runLinks(trail.runs ?? [], runBase)}</ul>
+    ${trail.runs?.length ? '' : '<p>No linked analysis run was retained for this bound change.</p>'}
+    ${trail.runs_next_cursor ? `<button type="button" data-trail-more-runs="${escapeHtml(trail.runs_next_cursor)}">More analysis runs</button>` : ''}
+    <h2>Squads governance trail</h2><p>Bound ChangeSpec <code>${escapeHtml(changeSpecId)}</code></p>
+    ${trail.source_unbound_change_spec_id ? `<p>Source unbound ChangeSpec <code>${escapeHtml(trail.source_unbound_change_spec_id)}</code></p>` : ''}
+    <p>Recorded observations are oldest first. Legacy evidence follows with recording time unavailable; its position does not establish chronology. Viewing this trail performs no chain reads.</p>
+    <ol class="governance-trail" data-trail-events>${(trail.events ?? []).map(TrailEvent).join('')}</ol>
+    ${trail.events?.length ? '' : '<p>No retained governance observations.</p>'}
+    ${trail.next_cursor ? `<button type="button" data-trail-more="${escapeHtml(trail.next_cursor)}">More governance observations</button>` : ''}
+    <p data-trail-error role="alert"></p>
+  </section>`;
+}
+
+/** Explicit page reads only. No verify/attest POST and no polling. */
+export function attachGovernanceTrail(root, ask) {
+  const click = async event => {
+    const button = event.target.closest?.('[data-trail-more], [data-trail-more-runs]');
+    if (!button || button.disabled) return;
+    const section = button.closest('[data-governance-trail]');
+    if (!section) return;
+    const runs = button.hasAttribute('data-trail-more-runs');
+    const attr = runs ? 'data-trail-more-runs' : 'data-trail-more';
+    button.disabled = true;
+    try {
+      const response = await ask(`${section.dataset.endpoint}?${runs ? 'run_cursor' : 'cursor'}=${encodeURIComponent(button.getAttribute(attr))}`);
+      if (!response.ok) throw new Error('Stored governance evidence could not be verified. Further history is unavailable.');
+      const page = await response.json();
+      if (page.change_spec_id !== section.dataset.rootId) throw new Error('Trail identity differs. Further history is unavailable.');
+      section.querySelector(runs ? '[data-trail-runs]' : '[data-trail-events]').insertAdjacentHTML('beforeend', runs ? runLinks(page.runs, section.dataset.runBase) : page.events.map(TrailEvent).join(''));
+      const cursor = runs ? page.runs_next_cursor : page.next_cursor;
+      if (cursor) button.setAttribute(attr, cursor); else button.remove();
+      section.querySelector('[data-trail-error]').textContent = '';
+    } catch (error) {
+      section.querySelector('[data-trail-error]').textContent = error.message;
+    } finally { button.disabled = false; }
+  };
+  root.addEventListener('click', click);
+  return () => root.removeEventListener('click', click);
 }

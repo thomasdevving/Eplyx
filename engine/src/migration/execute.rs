@@ -487,6 +487,22 @@ impl Session {
         self.svm.get_account(&key).map(|a| from_account(&a))
     }
 
+    /// Full local account census for detecting writes outside a bounded closure.
+    /// This is an internal verification aid, not a claim of a captured chain bank.
+    pub(crate) fn account_census(&self) -> BTreeMap<String, AccountSnapshot> {
+        self.svm
+            .accounts_db()
+            .inner
+            .iter()
+            .map(|(address, account)| {
+                (
+                    address.to_string(),
+                    from_account(&Account::from(account.clone())),
+                )
+            })
+            .collect()
+    }
+
     pub fn set_account(&mut self, address: &str, account: &AccountSnapshot) -> Result<()> {
         self.svm
             .set_account(address.parse()?, to_account(account)?)
@@ -600,6 +616,7 @@ impl RawExecution {
                 match (pre, post) {
                     (Some(a), Some(b)) => {
                         a.data == b.data
+                            && a.rent_epoch == b.rent_epoch
                             && a.owner == b.owner
                             && a.executable == b.executable
                             && a.lamports.checked_sub(b.lamports) == Some(self.fee)
