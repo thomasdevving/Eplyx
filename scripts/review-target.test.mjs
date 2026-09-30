@@ -1,4 +1,4 @@
-import {test} from 'node:test';
+import {test,after} from 'node:test';
 import assert from 'node:assert/strict';
 import {mkdtemp,writeFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
@@ -25,6 +25,5 @@ test('remote target requires HTTPS and attested independent storage',async()=>{
 test('explicit loopback review target is accepted',async()=>{
  assert.equal((await target({url:'http://127.0.0.1:4491',selection:'isolated-review'})).selection,'isolated-review');
 });
-process.on('exit',()=>{});
 // Only this test's newly allocated scratch data is disposable.
-await import('node:test').then(({after})=>after(()=>rm(root,{recursive:true,force:true})));
+after(()=>rm(root,{recursive:true,force:true}));

@@ -67,8 +67,10 @@ export async function smoke({target,credentials,project,parent,deniedProject,pro
    assert.equal(preview.record_id,record);assert.equal(String(preview.slot),'447850493');
    assert.equal(preview.v2.sha256,'a664f74b73dedc713f16934829b25f9a0c0c3a06c6ce21f03fdc7869ae5b555d');
    assert.ok(preview.upgrade_change_spec_id && preview.parameter_change_spec_id);
+   await page.getByRole('button',{name:'Technical',exact:true}).click();
    await page.locator('[data-interaction-preview]').getByText('Inspect both original proposals').click();
    assert.ok((await page.locator('[data-interaction-preview]').innerText()).includes(preview.parameter_change_spec_id));
+   await page.getByRole('button',{name:'Overview',exact:true}).click();
    const acceptedResponse=page.waitForResponse(r=>r.request().method()==='POST' && new URL(r.url()).pathname===listPath);
    await page.getByRole('button',{name:'Submit interaction analysis',exact:true}).click();
    const accepted=await acceptedResponse;assert.equal(accepted.status(),202);
