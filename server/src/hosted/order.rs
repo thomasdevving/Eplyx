@@ -805,7 +805,47 @@ pub(super) fn archive(directory: &FsPath, root: &str) -> Result<Vec<u8>> {
         .arg(directory)
         .arg(root)
         .env_clear()
+        // Public packaging switch: macOS must not add AppleDouble sidecars.
+        // This subprocess receives no credentials; analytical workers stay empty.
+        .env("COPYFILE_DISABLE", "1")
         .output()?;
     ensure!(archive.status.success(), "artifact packaging failed");
     Ok(archive.stdout)
+}
+
+#[cfg(test)]
+mod archive_tests {
+    #[test]
+    fn portable_archive_excludes_host_metadata_sidecars() {
+        let tmp = tempfile::tempdir().unwrap();
+        let artifact = tmp.path().join("interaction");
+        std::fs::create_dir(&artifact).unwrap();
+        let file = artifact.join("manifest.json");
+        std::fs::write(&file, b"{}\n").unwrap();
+        #[cfg(target_os = "macos")]
+        assert!(std::process::Command::new("/usr/bin/xattr")
+            .args(["-w", "eplyx.review.archive-test", "metadata"])
+            .arg(&file)
+            .status()
+            .unwrap()
+            .success());
+        let bytes = super::archive(tmp.path(), "interaction").unwrap();
+        let archive = tmp.path().join("download.tar");
+        std::fs::write(&archive, bytes).unwrap();
+        let listing = std::process::Command::new("/usr/bin/tar")
+            .arg("-tf")
+            .arg(archive)
+            .env_clear()
+            .output()
+            .unwrap();
+        assert!(listing.status.success());
+        let members = String::from_utf8(listing.stdout).unwrap();
+        assert!(
+            members
+                .lines()
+                .all(|name| name == "interaction/" || name == "interaction/manifest.json"),
+            "{members}"
+        );
+        assert!(members.contains("interaction/manifest.json"));
+    }
 }
