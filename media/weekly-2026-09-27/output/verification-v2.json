@@ -1,0 +1,62 @@
+{
+  "file": "eplyx-weekly-2026-09-27-v2.mp4",
+  "bytes": 23761798,
+  "sha256": "e8997b8c96c727d5d799e92a004dc9ad75f495e4daadabef0f9fa617331cab96",
+  "duration_seconds": 128.0,
+  "dimensions": [
+    1920,
+    1080
+  ],
+  "fps": 30,
+  "decoded_frames": 3840,
+  "decode_exit_code": 0,
+  "dropped_frames": 0,
+  "video_codec": "H.264 High / yuv420p / BT.709 limited range",
+  "audio_codec": "AAC stereo / 48 kHz",
+  "subtitle_codec": "mov_text / English",
+  "chapters": 16,
+  "visual_review": "34 composition frames and 11 encoded samples",
+  "moving_product_pane_checks": [
+    {
+      "sequence": "Native hero animation",
+      "times": [
+        1,
+        4.5
+      ],
+      "product_pane_mean_pixel_difference": 104.987
+    },
+    {
+      "sequence": "Dashboard navigation",
+      "times": [
+        44,
+        48
+      ],
+      "product_pane_mean_pixel_difference": 15.948
+    },
+    {
+      "sequence": "Observation inputs to result",
+      "times": [
+        78,
+        82
+      ],
+      "product_pane_mean_pixel_difference": 9.94
+    },
+    {
+      "sequence": "Queued path to result",
+      "times": [
+        90,
+        94
+      ],
+      "product_pane_mean_pixel_difference": 6.145
+    },
+    {
+      "sequence": "Lifecycle queue to result",
+      "times": [
+        110,
+        114
+      ],
+      "product_pane_mean_pixel_difference": 7.698
+    }
+  ],
+  "verified_at": "2026-09-27T18:25:08.846142+00:00"
+}

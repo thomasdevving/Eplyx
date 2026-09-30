@@ -82,3 +82,26 @@ analyses are excluded from ordinary migration-proposal history. The UI states
 that no refresh occurs and a newer state requires a new migration run. Evidence
 and handoff failures show their typed limitation; internal worker failures carry
 no analytical conclusion. See [migration-order-case.md](migration-order-case.md).
+
+## Hosted upgrade / parameter interaction review
+
+Private retained program-upgrade pages offer **Compare code and fee** when
+read-only parent eligibility succeeds, with a factual unavailable reason otherwise.
+Choose an eligible historical record explicitly and paste/import an existing
+parameter ChangeSpec. The authoritative preview shows both exact proposals,
+retained pool/slot, rational fees, code provenance and fixed epoch-zero/six-bank
+limitations. Editing invalidates preview; errors retain inputs and retry keys.
+
+The child review uses the same Overview/Technical switch, showing independent K1
+and K2 configuration executions, the four action cells, reconciliation and raw
+ledgers, and engine-provided signed effects without browser arithmetic. Unavailable
+values include reasons. Technical exposes stage/handoff hashes, both proposal IDs,
+analysis/report identities, programs/dependencies/runtime and manager/payer
+assumptions. Parent and children link both ways. Download of the original portable
+artifact requires project access; viewing never triggers VM/RPC or evidence repair.
+
+Zero interaction does not mean zero fee effect. Constructed candidate code is
+labelled test code, with no rollout/authority/governance claim. See
+[usage and API](upgrade-parameter-interaction.md#hosted-project-flow-step-10d).
+Desktop/mobile flow tests mock hosted HTTP at the established report boundary;
+they establish presentation behavior, not new candidate qualification.

@@ -58,6 +58,9 @@ pub fn stage(registry: &Registry, input: &Input, directory: &Path) -> Result<()>
             }
         }
         Input::MigrationOrder { .. } => super::order::stage(registry, input, directory)?,
+        Input::UpgradeParameterInteraction { .. } => {
+            super::interaction::stage(registry, input, directory)?
+        }
         Input::CurrentStress {
             state_input,
             candidate,
@@ -329,6 +332,15 @@ pub fn execute(directory: &Path) -> Result<()> {
             };
             projection.report =
                 Artifact::new(eplyx_engine::canonical::document(&report)?.into_bytes())?;
+            analytical_metadata(&mut projection, input.kind(), timestamp, binary)?;
+        }
+        Input::UpgradeParameterInteraction { .. } => {
+            projection.report = Artifact::new(
+                eplyx_engine::canonical::document(&super::interaction::execute(
+                    &input, directory,
+                )?)?
+                .into_bytes(),
+            )?;
             analytical_metadata(&mut projection, input.kind(), timestamp, binary)?;
         }
         Input::MigrationOrder { .. } => {
@@ -663,6 +675,12 @@ pub fn run_isolated(
         &work,
         &mut projection,
     )?;
+    super::interaction::retain(
+        registry,
+        &registry.hosted_input(record)?,
+        &work,
+        &mut projection,
+    )?;
     registry
         .verify_hosted_projection(record, &projection)
         .map_err(|e| {
@@ -671,6 +689,11 @@ pub fn run_isolated(
                 Ok(Input::MigrationOrder { .. })
             ) {
                 super::order::evidence_error(e)
+            } else if matches!(
+                registry.hosted_input(record),
+                Ok(Input::UpgradeParameterInteraction { .. })
+            ) {
+                super::interaction::EvidenceError.into()
             } else {
                 e
             }

@@ -1,0 +1,88 @@
+;FFMETADATA1
+title=Eplyx — The week in motion
+artist=Eplyx
+comment=21–27 September 2026. Real product captures; synthetic demonstrations labeled.
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=0
+END=8000
+title=Eplyx hero
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=8000
+END=14000
+title=Built this week
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=14000
+END=26000
+title=Historical replay
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=26000
+END=36000
+title=Protocol analysis
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=36000
+END=48000
+title=Upgrade analysis
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=48000
+END=60000
+title=Squads governance
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=60000
+END=66000
+title=Token migration and lifecycle
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=66000
+END=78000
+title=Migration rehearsal
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=78000
+END=88000
+title=Stress and search
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=88000
+END=98000
+title=Counterexamples and replay
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=98000
+END=108000
+title=Lifecycle and paths
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=108000
+END=120000
+title=Hosted browser workflow
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=120000
+END=134000
+title=Four ways to work
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=134000
+END=140000
+title=Eplyx

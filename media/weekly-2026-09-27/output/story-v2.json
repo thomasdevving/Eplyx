@@ -1,0 +1,257 @@
+{
+  "duration": 128,
+  "chapters": [
+    [
+      0,
+      6,
+      "Actual frontend intro"
+    ],
+    [
+      6,
+      9,
+      "What happens when things change?"
+    ],
+    [
+      9,
+      19,
+      "How historical replay works"
+    ],
+    [
+      19,
+      25,
+      "Protocol measurements"
+    ],
+    [
+      25,
+      35,
+      "Open and inspect an upgrade"
+    ],
+    [
+      35,
+      43,
+      "Squads governance"
+    ],
+    [
+      43,
+      52,
+      "Run and inspect a migration"
+    ],
+    [
+      52,
+      60,
+      "Stress failure and gate"
+    ],
+    [
+      60,
+      67,
+      "Copy and reproduce a witness"
+    ],
+    [
+      67,
+      74,
+      "Compare two runs"
+    ],
+    [
+      74,
+      86,
+      "Observe public state"
+    ],
+    [
+      86,
+      96,
+      "Execute one exact path"
+    ],
+    [
+      96,
+      105,
+      "Check the candidate"
+    ],
+    [
+      105,
+      116,
+      "Evaluate lifecycle policy"
+    ],
+    [
+      116,
+      124,
+      "Four moving workflows"
+    ],
+    [
+      124,
+      128,
+      "Eplyx"
+    ]
+  ],
+  "captions": [
+    [
+      0,
+      6,
+      "The actual Eplyx intro loads into the interactive homepage."
+    ],
+    [
+      6,
+      9,
+      "What happens when you change an onchain system?"
+    ],
+    [
+      9,
+      12,
+      "Pin the transaction, accounts, program bytes and historical runtime. Verify their hashes."
+    ],
+    [
+      12,
+      15.5,
+      "Run the baseline and candidate against the same transaction and state."
+    ],
+    [
+      15.5,
+      19,
+      "Compare logs, CPIs, account state and economic outcomes. Causal checkpoint boundaries remain explicit."
+    ],
+    [
+      19,
+      22,
+      "Orca SwapV2 measures user input and vault flows from account-state changes."
+    ],
+    [
+      22,
+      25,
+      "Drift settlePnl measures the bounded settlement. Unsupported quantities remain unevaluated."
+    ],
+    [
+      25,
+      30,
+      "Open the retained upgrade run. ChangeSpec binds its target and exact candidate bytes."
+    ],
+    [
+      30,
+      35,
+      "Read the impact: this controlled candidate breaks tested historical interactions."
+    ],
+    [
+      35,
+      39,
+      "G1 checks that the Squads proposal and buffer match the analysed change."
+    ],
+    [
+      39,
+      43,
+      "G2 checks execution and attributable deployed bytes. This archived proposal has not executed."
+    ],
+    [
+      43,
+      47,
+      "Run a local migration rehearsal. The dashboard then loads its saved records."
+    ],
+    [
+      47,
+      52,
+      "Technical mode reveals exact values and hashes without changing the analytical result."
+    ],
+    [
+      52,
+      56,
+      "Inspect the stress matrix. At the deadline, this defect candidate succeeds when rejection is required."
+    ],
+    [
+      56,
+      60,
+      "Follow the failing case to the deployment gate. Nineteen of twenty cases behaved as specified."
+    ],
+    [
+      60,
+      63.5,
+      "The witness retains the account, expected rejection, actual success and fixture provenance."
+    ],
+    [
+      63.5,
+      67,
+      "Copy its reproduction command and replay the same stored bytes offline."
+    ],
+    [
+      67,
+      70.5,
+      "Select reference and candidate runs, then compare the retained records."
+    ],
+    [
+      70.5,
+      74,
+      "Check funding, code, readiness and search comparability. A missing finding alone is not a proven fix."
+    ],
+    [
+      74,
+      78,
+      "The current-state form loads. Enter a public mint and owner; no wallet connection is needed."
+    ],
+    [
+      78,
+      82,
+      "Click Observe. Eplyx reads bounded account state and retains the observation."
+    ],
+    [
+      82,
+      86,
+      "The observed accounts appear and offline analysis is queued. Observation alone is not execution proof."
+    ],
+    [
+      86,
+      89.7,
+      "Choose Transfer, the exact amount and recipient token account."
+    ],
+    [
+      89.7,
+      91.8,
+      "Eplyx captures final state and queues the offline path check. Waiting time is condensed."
+    ],
+    [
+      91.8,
+      96,
+      "Read the actual result: local execution performed, no funds moved, signing possession cannot be judged."
+    ],
+    [
+      96,
+      99,
+      "Declare the replacement mint, amount, ratio and reserve for the candidate."
+    ],
+    [
+      99,
+      101.4,
+      "Retain immutable inputs and execute the candidate locally. Waiting time is condensed."
+    ],
+    [
+      101.4,
+      105,
+      "The exact account check passes. This does not establish population readiness or an official transition."
+    ],
+    [
+      105,
+      108.2,
+      "Bind a saved plan, successor, effective date and deadline to a hypothetical lifecycle scenario."
+    ],
+    [
+      108.2,
+      111.3,
+      "Evaluate declared policy against retained evidence. Waiting time is condensed."
+    ],
+    [
+      111.3,
+      116,
+      "Read each assurance separately: a ready candidate does not mean readiness for every holder."
+    ],
+    [
+      116,
+      120,
+      "CLI and local dashboard: analyse, search, gate, inspect and reproduce."
+    ],
+    [
+      120,
+      124,
+      "Hosted workspace and browser: exact-byte sync, observe, check a path and evaluate a scenario."
+    ],
+    [
+      124,
+      128,
+      "Eplyx. Know what changes before you deploy."
+    ]
+  ]
+}

@@ -1,0 +1,152 @@
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from '/Users/thomasnguyen/Downloads/Personal/Eplyx/Eplyx/media/weekly-2026-09-27/output/eplyx-weekly-2026-09-27-v2.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    title           : Eplyx — How it works / weekly update
+    artist          : Eplyx
+    encoder         : Lavf61.7.100
+    comment         : Revised cut: recorded frontend animation, actions and loading. Synthetic examples labeled; waiting time condensed.
+  Duration: 00:02:08.00, start: 0.000000, bitrate: 1485 kb/s
+  Chapters:
+    Chapter #0:0: start 0.000000, end 6.000000
+      Metadata:
+        title           : Actual frontend intro
+    Chapter #0:1: start 6.000000, end 9.000000
+      Metadata:
+        title           : What happens when things change?
+    Chapter #0:2: start 9.000000, end 19.000000
+      Metadata:
+        title           : How historical replay works
+    Chapter #0:3: start 19.000000, end 25.000000
+      Metadata:
+        title           : Protocol measurements
+    Chapter #0:4: start 25.000000, end 35.000000
+      Metadata:
+        title           : Open and inspect an upgrade
+    Chapter #0:5: start 35.000000, end 43.000000
+      Metadata:
+        title           : Squads governance
+    Chapter #0:6: start 43.000000, end 52.000000
+      Metadata:
+        title           : Run and inspect a migration
+    Chapter #0:7: start 52.000000, end 60.000000
+      Metadata:
+        title           : Stress failure and gate
+    Chapter #0:8: start 60.000000, end 67.000000
+      Metadata:
+        title           : Copy and reproduce a witness
+    Chapter #0:9: start 67.000000, end 74.000000
+      Metadata:
+        title           : Compare two runs
+    Chapter #0:10: start 74.000000, end 86.000000
+      Metadata:
+        title           : Observe public state
+    Chapter #0:11: start 86.000000, end 96.000000
+      Metadata:
+        title           : Execute one exact path
+    Chapter #0:12: start 96.000000, end 105.000000
+      Metadata:
+        title           : Check the candidate
+    Chapter #0:13: start 105.000000, end 116.000000
+      Metadata:
+        title           : Evaluate lifecycle policy
+    Chapter #0:14: start 116.000000, end 124.000000
+      Metadata:
+        title           : Four moving workflows
+    Chapter #0:15: start 124.000000, end 128.000000
+      Metadata:
+        title           : Eplyx
+  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709/unknown/unknown, progressive), 1920x1080 [SAR 1:1 DAR 16:9], 1275 kb/s, 30 fps, 30 tbr, 15360 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 libx264
+      Side data:
+        ICC Profile
+  Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 200 kb/s (default)
+      Metadata:
+        handler_name    : SoundHandler
+        vendor_id       : [0][0][0][0]
+  Stream #0:2[0x3](eng): Subtitle: mov_text (tx3g / 0x67337874), 0 kb/s (default)
+      Metadata:
+        handler_name    : SubtitleHandler
+  Stream #0:3[0x4](eng): Data: bin_data (text / 0x74786574), 0 kb/s
+      Metadata:
+        handler_name    : SubtitleHandler
+Stream mapping:
+  Stream #0:0 -> #0:0 (h264 (native) -> wrapped_avframe (native))
+  Stream #0:1 -> #0:1 (aac (native) -> pcm_s16le (native))
+Press [q] to stop, [?] for help
+Output #0, null, to 'pipe:':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    title           : Eplyx — How it works / weekly update
+    artist          : Eplyx
+    comment         : Revised cut: recorded frontend animation, actions and loading. Synthetic examples labeled; waiting time condensed.
+    encoder         : Lavf61.7.100
+  Chapters:
+    Chapter #0:0: start 0.000000, end 6.000000
+      Metadata:
+        title           : Actual frontend intro
+    Chapter #0:1: start 6.000000, end 9.000000
+      Metadata:
+        title           : What happens when things change?
+    Chapter #0:2: start 9.000000, end 19.000000
+      Metadata:
+        title           : How historical replay works
+    Chapter #0:3: start 19.000000, end 25.000000
+      Metadata:
+        title           : Protocol measurements
+    Chapter #0:4: start 25.000000, end 35.000000
+      Metadata:
+        title           : Open and inspect an upgrade
+    Chapter #0:5: start 35.000000, end 43.000000
+      Metadata:
+        title           : Squads governance
+    Chapter #0:6: start 43.000000, end 52.000000
+      Metadata:
+        title           : Run and inspect a migration
+    Chapter #0:7: start 52.000000, end 60.000000
+      Metadata:
+        title           : Stress failure and gate
+    Chapter #0:8: start 60.000000, end 67.000000
+      Metadata:
+        title           : Copy and reproduce a witness
+    Chapter #0:9: start 67.000000, end 74.000000
+      Metadata:
+        title           : Compare two runs
+    Chapter #0:10: start 74.000000, end 86.000000
+      Metadata:
+        title           : Observe public state
+    Chapter #0:11: start 86.000000, end 96.000000
+      Metadata:
+        title           : Execute one exact path
+    Chapter #0:12: start 96.000000, end 105.000000
+      Metadata:
+        title           : Check the candidate
+    Chapter #0:13: start 105.000000, end 116.000000
+      Metadata:
+        title           : Evaluate lifecycle policy
+    Chapter #0:14: start 116.000000, end 124.000000
+      Metadata:
+        title           : Four moving workflows
+    Chapter #0:15: start 124.000000, end 128.000000
+      Metadata:
+        title           : Eplyx
+  Stream #0:0(und): Video: wrapped_avframe, yuv420p(tv, bt709/unknown/unknown, progressive), 1920x1080 [SAR 1:1 DAR 16:9], q=2-31, 200 kb/s, 30 fps, 30 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 wrapped_avframe
+      Side data:
+        ICC Profile
+  Stream #0:1(und): Audio: pcm_s16le, 48000 Hz, stereo, s16, 1536 kb/s (default)
+      Metadata:
+        handler_name    : SoundHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 pcm_s16le
+[out#0/null @ 0x15380add0] video:1650KiB audio:24000KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
+frame= 3840 fps=0.0 q=-0.0 Lsize=N/A time=00:02:08.00 bitrate=N/A speed= 194x    

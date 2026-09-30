@@ -1,0 +1,26 @@
+EPLYX UPGRADE CHECK
+===================
+
+Baseline:   610b1e394973bd1b86de8afc983524bd21dea177e87bfae75ec289d4c350f9ae
+Candidate:  610b1e394973bd1b86de8afc983524bd21dea177e87bfae75ec289d4c350f9ae
+Change:     3266096699e426ac75f6c49d5b779653f8f9310e459168bce478bf8af8eacff2 (program_upgrade of whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc)
+Bundle:     69402834a044953035811db1bda95c1e0a4d8fe8f851285cdb5499d26c0b02b6 (orca-whirlpool @1)
+
+Corpus:     1 validated historical observations
+Replay/proof: matched (CheckpointedExecutionV1, 1 observations, proof contracts [2])
+
+COVERAGE
+  orca-whirlpool/swap_v2/economic/user_input_spent             1 observations
+  orca-whirlpool/swap_v2/economic/vault_a_tokens_out           1 observations
+  orca-whirlpool/swap_v2/economic/vault_b_tokens_in            1 observations
+  orca-whirlpool/swap_v2/execution/transaction                 1 observations
+
+RESULTS
+  expected                       0
+  unexpected                     0
+  expected but exceeded          0
+  stale declarations             0
+  unevaluable declarations       0
+
+GATE: PASSED
+exit 0

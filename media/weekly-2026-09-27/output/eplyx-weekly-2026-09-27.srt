@@ -1,0 +1,111 @@
+1
+00:00:00,000 --> 00:00:08,000
+The week in Eplyx. September 21–27, 2026.
+
+2
+00:00:08,000 --> 00:00:14,000
+35 commits. Historical replay, upgrade governance, token migration and lifecycle.
+
+3
+00:00:14,000 --> 00:00:20,000
+Legacy and native v0 replay share pinned state, code and runtime.
+
+4
+00:00:20,000 --> 00:00:26,000
+Five-transaction causal checkpoint replay keeps derived boundaries explicit.
+
+5
+00:00:26,000 --> 00:00:31,000
+Bounded Orca SwapV2 and Drift settlePnl adapters measure economic outcomes.
+
+6
+00:00:31,000 --> 00:00:36,000
+Shared semantic evaluation and onboarding contracts keep coverage explicit. Phoenix replay remains unqualified.
+
+7
+00:00:36,000 --> 00:00:42,000
+ChangeSpec binds a proposed upgrade to the exact candidate bytes.
+
+8
+00:00:42,000 --> 00:00:48,000
+Durable hosted runs separate execution, economic coverage and unexplained changes.
+
+9
+00:00:48,000 --> 00:00:54,000
+Squads V4 connects the analysis to the proposal. Three real mainnet proposals matched at observed slots.
+
+10
+00:00:54,000 --> 00:01:00,000
+Deployment attestation checks execution and deployed bytes. The saved proposal is not executed yet.
+
+11
+00:01:00,000 --> 00:01:06,000
+Token migration and lifecycle: run locally, inspect results, continue in a workspace.
+
+12
+00:01:06,000 --> 00:01:11,000
+A real CLI reference-fixture run: mechanism ready, population evidence incomplete.
+
+13
+00:01:11,000 --> 00:01:18,000
+The dashboard connects proposal, population, rehearsal, stress, search, invariants, gate and evidence.
+
+14
+00:01:18,000 --> 00:01:23,000
+The deadline-defect fixture exposes an unexpected result: 19 of 20 stress cases behaved as specified.
+
+15
+00:01:23,000 --> 00:01:28,000
+Bounded search, state-drift checks and authority checks preserve evidence limits.
+
+16
+00:01:28,000 --> 00:01:33,000
+A saved counterexample can be reproduced offline without replacing its history.
+
+17
+00:01:33,000 --> 00:01:38,000
+Compare runs without treating an absent finding as a proven fix. Export unsigned plans.
+
+18
+00:01:38,000 --> 00:01:43,000
+Lifecycle analysis separates declared policy and deadlines from observed state and readiness.
+
+19
+00:01:43,000 --> 00:01:48,000
+Transfer, bounded Meteora market exit and PositionV2 principal withdrawal keep separate proof.
+
+20
+00:01:48,000 --> 00:01:51,000
+In the real hosted browser flow, enter a token and wallet. This demonstration uses a synthetic provider.
+
+21
+00:01:51,000 --> 00:01:54,000
+Inspect the current observation and its focused paths.
+
+22
+00:01:54,000 --> 00:01:57,000
+Run an exact candidate check and preserve the result.
+
+23
+00:01:57,000 --> 00:02:00,000
+Evaluate a lifecycle scenario with separate assurance results.
+
+24
+00:02:00,000 --> 00:02:04,000
+CLI: analyse, search, gate and export an unsigned plan.
+
+25
+00:02:04,000 --> 00:02:07,000
+Local dashboard: browse runs, inspect stress and reproduce witnesses.
+
+26
+00:02:07,000 --> 00:02:11,000
+Hosted workspace: device-code login, project access and exact-byte sync.
+
+27
+00:02:11,000 --> 00:02:14,000
+Current-state browser: observe, check a path and evaluate a declared scenario.
+
+28
+00:02:14,000 --> 00:02:20,000
+Eplyx. Know what changes before you deploy.

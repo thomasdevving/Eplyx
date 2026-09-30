@@ -269,3 +269,21 @@ evidence/handoff failure kinds are retained separately from internal
 `execution_error`. Children stay on the parent run page, outside generic proposal
 history. See [migration-order-case.md](migration-order-case.md) for the full
 contract, reproduction and limitations.
+
+## Retained upgrade / parameter interactions
+
+A project-owned completed ordinary program-upgrade parent can supply immutable
+inputs even when its upgrade verdict is negative. The bounded Stake Pool analyzer
+uses one explicit retained record and one imported parameter ChangeSpec, retaining
+both proposal identities separately. Read-only eligibility/preview perform no VM
+or RPC; accepted jobs reuse MAIN's durable queue and credential-free isolated
+worker. Recovery uses accepted references, not active project state. Partial
+engine reports remain completed analyses; evidence failures establish no result.
+
+The original portable artifact is retained in CAS and downloaded through an
+authorized project route with no-VM binding verification. Parent/child listing
+uses the existing project occurrence index, without a workflow graph or ordinary
+proposal-history relabelling. See [the exact routes, authorization, limits and
+offline CLI reproduction](upgrade-parameter-interaction.md#hosted-project-flow-step-10d).
+Local hosted and Postgres session tests exercise these contracts; mocked HTTP
+browser tests cover UI presentation. This implementation includes no deployment.

@@ -1,0 +1,74 @@
+$ eplyx doctor
+✓ Installed binary    eplyx 0.1.0 (unknown) — running Eplyx needs no Rust compiler
+✓ Project config      eplyx.toml (token_migration_v1)
+✓ Migration spec        6u4knmGQ… → 9WDiiWiB… (SPL Token → Token-2022)
+✓ Candidate program     ./target/deploy/migration.so (e5db6948abca)
+✓ State                 synthetic fixture fixtures/world.json (never chain state)
+✓ Analysis input    4c8e817f4190 · token_migration_v1 · 9 invariants
+✓ RPC not needed: the state is a synthetic fixture
+
+[exit 0]
+
+$ eplyx migration analyse
+Eplyx migration analysis · run_20260927075251385933000_e5db6948abca
+Token Migration V1 rehearsal (local VM)
+Passed with warnings
+mechanism: Ready
+funding: Ready
+population: Incomplete
+reconciliation: Ready
+Reason codes: ["AUTHORITY_PATH_UNAVAILABLE","SOURCE_FROZEN","STRANDED_HOLDERS"]
+Rehearsal only: no transaction was signed or sent and no funds moved.
+
+[exit 0]
+
+$ eplyx runs --json
+{
+  "history_only": true,
+  "runs": [
+    {
+      "analysis_input_sha256": "4c8e817f419088daaaa61fbc24a17397373eb781b3b366e6153d585ea69fdedd",
+      "candidate_program_sha256": "e5db6948abca1317eb12155f73cdaf619d378c22d1bfc992c977063e10e9c1bb",
+      "change_spec_id": "b9a5a64b35d307770ee5ef4cda8bfda77287ee7e29c1e1796d9bb777466f1258",
+      "engine_binary_sha256": "e509a5d2fe162615c203ca64ecacaf91cf929d6385875d8a693ba6a139b957ba",
+      "eplyx_version": "0.1.0",
+      "gate_outcome": "Warn",
+      "gate_policy": "block-only",
+      "git_branch": null,
+      "git_commit": null,
+      "git_dirty": null,
+      "run_id": "run_20260927075251385933000_e5db6948abca",
+      "run_source": "local",
+      "schema_version": 2,
+      "timestamp": "2026-09-27T07:52:53.503Z"
+    }
+  ]
+}
+
+[exit 0]
+
+$ eplyx migration search --run run_20260927075251385933000_e5db6948abca
+Migration counterexample search · run_20260927075251385933000_e5db6948abca
+No counterexample found within this search domain and budget.
+
+No network used. Derived witnesses are local states, not observed mainnet failures.
+
+[exit 0]
+
+$ eplyx migration gate --run run_20260927075251385933000_e5db6948abca --policy strict
+Eplyx migration analysis · run_20260927075251385933000_e5db6948abca
+Token Migration V1 rehearsal (local VM)
+Failed
+mechanism: Ready
+funding: Ready
+population: Incomplete
+reconciliation: Ready
+Reason codes: ["AUTHORITY_PATH_UNAVAILABLE","SOURCE_FROZEN","STRANDED_HOLDERS"]
+Rehearsal only: no transaction was signed or sent and no funds moved.
+
+[exit 1]
+
+$ eplyx migration plan --run run_20260927075251385933000_e5db6948abca --out unsigned.json
+Wrote UNSIGNED execution plan. Re-check all preconditions against current state before use.
+
+[exit 0]
