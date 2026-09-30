@@ -41,7 +41,7 @@ const stop=async()=>{if(service?.exitCode===null){service.kill('SIGTERM');await 
 const post=async(path,data,{cookie='',admin=false}={})=>{
  const form=data instanceof FormData;
  const r=await fetch(base+path,{method:'POST',headers:{origin:base,...(form?{}:{'content-type':'application/json'}),...(cookie?{cookie}:{}),...(admin?{authorization:`Bearer ${operator}`}:{})},body:form?data:JSON.stringify(data)});
- assert.ok(r.ok,`Bootstrap ${path}: ${r.status()}`);
+ assert.ok(r.ok,`Bootstrap ${path}: ${r.status}`);
  return {body:await r.json(),cookie:r.headers.get('set-cookie')?.split(';')[0]||cookie};
 };
 try {
