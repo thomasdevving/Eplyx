@@ -6,7 +6,7 @@ and `/assets/...` share the API origin. The separate `frontend/Dockerfile` stati
 operator console is not the ordinary workspace login surface. Route `/p/...`
 refreshes must reach the server rather than the static console.
 
-The source is frozen on `codex/step11a-review`. Resolve its exact tested revision
+The source is frozen on `codex/step11a-fixed-review`. Resolve its exact tested revision
 from the private `validation-receipt.json` produced by the invocation below;
 `build-identities.json` also records the source commit, target, lockfile and
 server/worker/CLI hashes. The frontend is compiled into that same server binary.
@@ -18,9 +18,10 @@ Create a fresh worktree of the chosen review commit, never the dirty development
 directory. Existing unrelated `media/` is excluded from both source and images.
 
 ```sh
-git worktree add --detach /tmp/eplyx-review-source codex/step11a-review
+git worktree add --detach /tmp/eplyx-review-source codex/step11a-fixed-review
 cd /tmp/eplyx-review-source
 # Put the existing Rust, PostgreSQL, Node and pinned pnpm executables on PATH.
+export LC_ALL=C
 pnpm install --offline --frozen-lockfile
 EPLYX_BUILD_COMMIT="$(git rev-parse HEAD)" cargo build --locked --offline \
   -p eplyx-server -p eplyx-engine --bin eplyx-server --bin eplyx
@@ -55,7 +56,9 @@ results and downloads the authenticated archive. It checks both presentation
 modes and signed-out/cross-project read/list/create/download denials. After one
 controlled service restart it signs in anew and reads/downloads the same result
 using the same database/registry; no reseeding occurs. The project/baseline,
-parent/child/report and archive identities must survive. The script stops only
+parent/child/report and retained artifact identities must survive. Tar packaging
+may have different timestamps on repeated downloads; each actual archive checksum
+is recorded separately, while verification checks its canonical report/CAS bytes. The script stops only
 its own server and PostgreSQL processes, preserving private scratch evidence.
 There is no broad cleanup step. Delete only that explicitly returned scratch path
 when its private evidence is no longer needed.
