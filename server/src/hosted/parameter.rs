@@ -13,7 +13,7 @@ use axum::{
     Json,
 };
 use eplyx_engine::change::ChangeSpec;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
 fn unavailable(code: &str, reason: &str) -> Value {
@@ -171,12 +171,61 @@ pub async fn eligibility(
 pub struct Request {
     pub request_key: String,
     pub change_spec: ChangeSpec,
+    #[serde(default)]
+    pub record_id: Option<String>,
+}
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct HistoricalParent {
+    pub bundle_sha256: String,
+    pub record_id: String,
+    pub record_sha256: String,
+    pub baseline_sha256: String,
+}
+/// Reconstruct only from the parent upgrade run's immutable, project-owned
+/// bundle. Its candidate never supplies this analysis's executable.
+pub fn historical_input(
+    registry: &Registry,
+    parent: &RunMetadata,
+    record_id: &str,
+) -> Result<eplyx_engine::parameter_change::stake_pool::Input> {
+    ensure!(
+        parent.hosted_analysis.is_none()
+            && parent.analysis.is_none()
+            && parent.status.is_terminal()
+            && parent.report_available,
+        "parent must be a completed retained program-upgrade run"
+    );
+    let registered = registry.load_bundle_record(
+        &parent.project_id,
+        parent
+            .bundle_id
+            .as_deref()
+            .context("parent bundle ID missing")?,
+    )?;
+    ensure!(
+        registered.bundle_sha256 == parent.bundle_sha256,
+        "parent project bundle differs"
+    );
+    let bundle = registry.open_bundle(&parent.bundle_sha256)?;
+    ensure!(
+        parent.baseline_sha256.as_ref() == Some(&bundle.manifest().baseline_program_sha256)
+            && parent.corpus_sha256.as_ref() == Some(&bundle.manifest().corpus_sha256),
+        "parent baseline/corpus projection mismatch"
+    );
+    let input = eplyx_engine::parameter_change::stake_pool::Input::from_bundle(&bundle, record_id)?;
+    ensure!(
+        input.record.state_source == eplyx_engine::replay::ReplayStateSource::HistoricalArchive,
+        "hosted parent requires retained historical evidence"
+    );
+    Ok(input)
 }
 pub fn validate_parent(registry: &Registry, project: &str, input: &Input) -> Result<()> {
     let Input::ProtocolParameterChange {
         capture,
         parent_run,
-        ..
+        historical,
+        change,
     } = input
     else {
         anyhow::bail!("wrong parameter input kind")
@@ -186,6 +235,35 @@ pub fn validate_parent(registry: &Registry, project: &str, input: &Input) -> Res
         parent.project_id == project && parent.status.is_terminal() && parent.report_available,
         "parameter parent unavailable or wrong project"
     );
+    let spec = ChangeSpec::parse(&registry.document_bytes(change)?)?;
+    let operation = &spec
+        .as_protocol_parameter_change()
+        .context("parameter operation absent")?
+        .operation;
+    if let Some(source) = historical {
+        ensure!(
+            matches!(
+                operation,
+                eplyx_engine::parameter_change::Operation::SplStakePoolSolDepositFeeV1 { .. }
+            ),
+            "historical parent requires Stake Pool operation"
+        );
+        let input = historical_input(registry, &parent, &source.record_id)?;
+        ensure!(
+            source.bundle_sha256 == parent.bundle_sha256
+                && source.record_sha256 == input.record_sha256
+                && source.baseline_sha256 == input.record.current_program_sha256,
+            "pinned historical parent/record/executable mismatch"
+        );
+        let bytes = registry.artifacts().get(ArtifactClass::Capture, capture)?;
+        ensure!(
+            serde_json::from_slice::<eplyx_engine::parameter_change::stake_pool::Input>(&bytes)?
+                == input,
+            "historical input differs from authoritative retained bundle"
+        );
+        return Ok(());
+    }
+    ensure!(matches!(operation, eplyx_engine::parameter_change::Operation::Token2022ActiveNewerTransferFeeBasisPointsV1 { .. }), "Token-2022 current parent requires Token-2022 operation");
     let Input::CurrentPath {
         capture: retained, ..
     } = registry.hosted_input(&parent)?
@@ -217,14 +295,19 @@ pub async fn submit(
     if parent.project_id != project {
         return Err(ApiError::not_found("retained transfer"));
     }
-    let Input::CurrentPath { capture, .. } = state
-        .registry
-        .hosted_input(&parent)
-        .map_err(super::observation::invalid)?
-    else {
-        return Err(ApiError::bad_request(
-            "parent must be a retained current TransferChecked case",
-        ));
+    let (capture, historical) = match &request.change_spec.as_protocol_parameter_change().context("parameter change missing").map_err(super::observation::invalid)?.operation {
+        eplyx_engine::parameter_change::Operation::SplStakePoolSolDepositFeeV1 { .. } => {
+            let record_id = request.record_id.as_deref().ok_or_else(|| ApiError::bad_request("explicit historical record_id required"))?;
+            let input = historical_input(&state.registry, &parent, record_id).map_err(super::observation::invalid)?;
+            let source = HistoricalParent { bundle_sha256: parent.bundle_sha256.clone(), record_id: record_id.into(), record_sha256: input.record_sha256.clone(), baseline_sha256: input.record.current_program_sha256.clone() };
+            let bytes = eplyx_engine::canonical::document(&input).map_err(super::observation::invalid)?.into_bytes();
+            (state.registry.artifacts().put(ArtifactClass::Capture, &bytes).map_err(super::observation::invalid)?.reference, Some(source))
+        }
+        eplyx_engine::parameter_change::Operation::Token2022ActiveNewerTransferFeeBasisPointsV1 { .. } => {
+            if request.record_id.is_some() { return Err(ApiError::bad_request("record_id is only supported for a historical Stake Pool parent")); }
+            let Input::CurrentPath { capture, .. } = state.registry.hosted_input(&parent).map_err(super::observation::invalid)? else { return Err(ApiError::bad_request("parent must be a retained current TransferChecked case")); };
+            (capture, None)
+        }
     };
     let change = state
         .registry
@@ -240,6 +323,7 @@ pub async fn submit(
         change,
         capture,
         parent_run,
+        historical,
     };
     validate_parent(&state.registry, &project, &input).map_err(super::observation::invalid)?;
     let task = state.clone();
@@ -267,9 +351,15 @@ pub fn verify(registry: &Registry, input: &Input, report: &serde_json::Value) ->
     validate_parent(registry, &parent.project_id, input)?;
     let spec = ChangeSpec::parse(&registry.document_bytes(change)?)?;
     let bytes = registry.artifacts().get(ArtifactClass::Capture, capture)?;
-    let retained = eplyx_engine::path::current::parameter_input(&bytes)?;
+    let retained = match input {
+        Input::ProtocolParameterChange {
+            historical: Some(_),
+            ..
+        } => serde_json::from_slice::<serde_json::Value>(&bytes)?,
+        _ => serde_json::to_value(eplyx_engine::path::current::parameter_input(&bytes)?)?,
+    };
     ensure!(
-        report["retained_input"] == serde_json::to_value(retained)?,
+        report["retained_input"] == retained,
         "parameter report capture differs from authoritative retained source"
     );
     eplyx_engine::parameter_change::verify(&spec, report).context("parameter projection mismatch")

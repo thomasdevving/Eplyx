@@ -1,4 +1,5 @@
-//! One executable active-state counterfactual. Never a fee-admin instruction.
+//! Typed, operation-specific paired parameter analyses.
+pub mod stake_pool;
 use crate::{
     change::{Activation, BoundChange, Change, ChangeBinding, ChangeSpec},
     executor::{self, ProbeTransactionExecution},
@@ -36,6 +37,11 @@ pub struct ExpectedCurrent {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Operation {
+    #[serde(rename = "spl_stake_pool_sol_deposit_fee_v1")]
+    SplStakePoolSolDepositFeeV1 {
+        expected_current: stake_pool::ExpectedCurrent,
+        proposed_fee: stake_pool::RationalFee,
+    },
     #[serde(rename = "token_2022_active_newer_transfer_fee_basis_points_v1")]
     Token2022ActiveNewerTransferFeeBasisPointsV1 {
         expected_current: ExpectedCurrent,
@@ -43,12 +49,13 @@ pub enum Operation {
     },
 }
 impl Operation {
-    pub fn values(&self) -> (&ExpectedCurrent, u16) {
+    pub fn values(&self) -> Option<(&ExpectedCurrent, u16)> {
         match self {
             Self::Token2022ActiveNewerTransferFeeBasisPointsV1 {
                 expected_current,
                 proposed_basis_points,
-            } => (expected_current, *proposed_basis_points),
+            } => Some((expected_current, *proposed_basis_points)),
+            Self::SplStakePoolSolDepositFeeV1 { .. } => None,
         }
     }
 }
@@ -65,23 +72,42 @@ impl ParameterChange {
             "parameter change activation must be absent"
         );
         crate::change::canonical_address(&self.target.program_id, "target program")?;
-        crate::change::canonical_address(&self.target.config_account, "config mint")?;
+        crate::change::canonical_address(&self.target.config_account, "config account")?;
+        let hash = match &self.operation {
+            Operation::Token2022ActiveNewerTransferFeeBasisPointsV1 {
+                expected_current,
+                proposed_basis_points,
+            } => {
+                ensure!(
+                    self.target.program_id == token2022::PROGRAM_ID,
+                    "unsupported_config_field: Token-2022 operation requires Token-2022"
+                );
+                ensure!(
+                    expected_current.basis_points <= 10000 && *proposed_basis_points <= 10000,
+                    "invalid_proposed_value: basis points must be 0..=10000"
+                );
+                &expected_current.account_data_sha256
+            }
+            Operation::SplStakePoolSolDepositFeeV1 {
+                expected_current, ..
+            } => {
+                ensure!(
+                    self.target.program_id == crate::protocol::stake_pool::PROGRAM_ID,
+                    "unsupported_config_field: Stake Pool operation requires Stake Pool"
+                );
+                ensure!(
+                    expected_current.sol_referral_fee_percent <= 100,
+                    "invalid expected referral percentage"
+                );
+                &expected_current.account_data_sha256
+            }
+        };
         ensure!(
-            self.target.program_id == token2022::PROGRAM_ID,
-            "unsupported_config_field: only Token-2022 is supported"
-        );
-        let (expected, proposed) = self.operation.values();
-        ensure!(
-            expected.basis_points <= 10000 && proposed <= 10000,
-            "invalid_proposed_value: basis points must be 0..=10000"
-        );
-        ensure!(
-            expected.account_data_sha256.len() == 64
-                && expected
-                    .account_data_sha256
+            hash.len() == 64
+                && hash
                     .bytes()
                     .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b)),
-            "invalid expected mint SHA-256"
+            "invalid expected account SHA-256"
         );
         Ok(())
     }
@@ -95,6 +121,9 @@ pub enum Status {
     CurrentStateMismatch,
     ScheduleNotActive,
     MutationUnsupported,
+    ConfigExecutionRejected,
+    ConfigExecutionUnavailable,
+    PostConfigStateMismatch,
     DownstreamActionUnsupported,
     ExecutionRejected,
     ExecutionUnavailable,
@@ -357,7 +386,12 @@ fn prepare(
         .find(|a| a.address == c.target.config_account)
         .ok_or_else(|| failed(Status::ConfigEvidenceMissing, "mint absent"))?
         .account;
-    let (expect, bps) = c.operation.values();
+    let (expect, bps) = c.operation.values().ok_or_else(|| {
+        failed(
+            Status::UnsupportedConfigField,
+            "Token-2022 input requires Token-2022 operation",
+        )
+    })?;
     let proposed = mutate(mint, expect, bps, plan.clock.epoch)?;
     Ok((plan, proposed))
 }
@@ -368,6 +402,41 @@ fn plan_commitment(p: &ProbeExecutionPlan) -> Result<Value> {
 }
 pub fn runtime() -> Value {
     json!({"backend":"LiteSVM 0.16","profile":"mainnet/default","signature_verification":false,"recent_blockhash_verification":false,"eplyx_version":crate::build_info::VERSION,"revision":"eplyx-token-2022-paired-transfer-v1","lock_sha256":hash_bytes(include_bytes!("../../../Cargo.lock")),"executor_sha256":hash_bytes(include_bytes!("../executor.rs")),"transfer_sha256":hash_bytes(include_bytes!("../path/token_transfer.rs")),"derivation_source_sha256":hash_bytes(include_bytes!("mod.rs"))})
+}
+// Adding an operation does not invalidate the qualified Token-2022 contract.
+// Admit its prior source/lock commitments only when every execution-relevant
+// runtime field still matches. Reproduction checks actual outputs as before.
+fn retained_token_runtime(mut rebuilt: Value, recorded: &Value) -> Result<Value> {
+    if rebuilt["runtime"] == recorded["runtime"] {
+        return Ok(rebuilt);
+    }
+    let mut prior = recorded["runtime"].clone();
+    ensure!(
+        prior["derivation_source_sha256"]
+            == "a837d8962239e2de80471bb31f6a53d3a34ba3b4909b71f6ea24df9bf6d3394f",
+        "unsupported prior Token-2022 contract source"
+    );
+    ensure!(
+        prior["lock_sha256"] == "75b0e249ff44fe39b66e84d38abebf87f05b267b586d491711ffeb8af290d660",
+        "unsupported prior Token-2022 lock"
+    );
+    prior["derivation_source_sha256"] = rebuilt["runtime"]["derivation_source_sha256"].clone();
+    prior["lock_sha256"] = rebuilt["runtime"]["lock_sha256"].clone();
+    ensure!(
+        prior == rebuilt["runtime"],
+        "prior Token-2022 execution runtime differs"
+    );
+    rebuilt["runtime"] = recorded["runtime"].clone();
+    if rebuilt.get("shared_execution").is_some() {
+        rebuilt["shared_execution"]["runtime"] = recorded["runtime"].clone();
+        rebuilt["shared_execution_sha256"] =
+            crate::canonical::digest(&rebuilt["shared_execution"])?.into();
+    }
+    rebuilt
+        .as_object_mut()
+        .context("report object missing")?
+        .remove("report_sha256");
+    seal(rebuilt)
 }
 fn preamble(spec: &ChangeSpec, input: &Input) -> Result<Value> {
     Ok(
@@ -484,7 +553,10 @@ fn finish(
 ) -> Result<Value> {
     let mut r = preamble(spec, input)?;
     let c = proposal(spec)?;
-    let (expected, bps) = c.operation.values();
+    let (expected, bps) = c
+        .operation
+        .values()
+        .context("Token-2022 operation required")?;
     r["derived_proposed_pre_state"] = json!({"origin":"derived_from_observed","parent_observed_mint_sha256":expected.account_data_sha256,"proposed_mint_sha256":hash_bytes(&next.data),"derivation_revision":DERIVATION,"mutation":c.operation,"mint":next});
     r["observed_current_state"] = json!({"origin":"observed_finalized_capture","mint_sha256":expected.account_data_sha256,"capture_sha256":input.fixture_sha256});
     r["proposed_declaration"] = json!({"origin":"validated_changespec","change_spec_id":spec.id()?,"current_bps":expected.basis_points,"proposed_bps":bps,"newer_schedule_epoch":expected.schedule_epoch.to_string(),"captured_epoch":plan.clock.epoch.to_string(),"maximum_fee_raw":expected.maximum_fee_raw.to_string()});
@@ -554,6 +626,12 @@ pub fn analyze(spec: &ChangeSpec, input: &Input) -> Result<Value> {
 }
 /// Structural/integrity verification rebuilds inputs and reconciliation, never executes on read.
 pub fn verify(spec: &ChangeSpec, report: &Value) -> Result<()> {
+    if matches!(
+        proposal(spec)?.operation,
+        Operation::SplStakePoolSolDepositFeeV1 { .. }
+    ) {
+        return stake_pool::verify(spec, report);
+    }
     let mut unsealed = report.clone();
     let recorded = unsealed
         .as_object_mut()
@@ -569,7 +647,7 @@ pub fn verify(spec: &ChangeSpec, report: &Value) -> Result<()> {
         Ok(v) => v,
         Err(f) => {
             ensure!(
-                *report == failure_report(spec, &input, &f)?,
+                *report == retained_token_runtime(failure_report(spec, &input, &f)?, report)?,
                 "failure report mismatch"
             );
             return Ok(());
@@ -588,7 +666,7 @@ pub fn verify(spec: &ChangeSpec, report: &Value) -> Result<()> {
                 .context("missing execution-unavailable detail")?,
         );
         ensure!(
-            *report == failure_report(spec, &input, &f)?,
+            *report == retained_token_runtime(failure_report(spec, &input, &f)?, report)?,
             "unavailable report mismatch"
         );
         return Ok(());
@@ -608,16 +686,22 @@ pub fn verify(spec: &ChangeSpec, report: &Value) -> Result<()> {
     let pv = side(&input, &plan, &p)?;
     plan.accounts[i].account = old;
     ensure!(
-        *report == finish(spec, &input, &plan, &next, bv, pv)?,
+        *report == retained_token_runtime(finish(spec, &input, &plan, &next, bv, pv)?, report)?,
         "parameter report bindings/results mismatch"
     );
     Ok(())
 }
 pub fn reproduce(spec: &ChangeSpec, report: &Value) -> Result<()> {
+    if matches!(
+        proposal(spec)?.operation,
+        Operation::SplStakePoolSolDepositFeeV1 { .. }
+    ) {
+        return stake_pool::reproduce(spec, report);
+    }
     verify(spec, report)?;
     let input: Input = serde_json::from_value(report["retained_input"].clone())?;
     ensure!(
-        *report == analyze(spec, &input)?,
+        *report == retained_token_runtime(analyze(spec, &input)?, report)?,
         "offline paired execution differs from retained result"
     );
     Ok(())

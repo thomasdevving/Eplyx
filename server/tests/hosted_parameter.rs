@@ -334,7 +334,10 @@ async fn no_consequence_and_stale_expectations_are_durable_factual_results() {
         let Operation::Token2022ActiveNewerTransferFeeBasisPointsV1 {
             expected_current,
             proposed_basis_points,
-        } = &mut c.operation;
+        } = &mut c.operation
+        else {
+            panic!("Token-2022 operation expected")
+        };
         *proposed_basis_points = expected_current.basis_points;
         if stale {
             expected_current.account_data_sha256 = "0".repeat(64);

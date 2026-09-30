@@ -13,6 +13,8 @@ pub enum Input {
         change: ArtifactRef,
         capture: ArtifactRef,
         parent_run: String,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        historical: Option<parameter::HistoricalParent>,
     },
     CurrentStress {
         change: ArtifactRef,

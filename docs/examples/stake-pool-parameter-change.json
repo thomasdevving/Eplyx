@@ -1,0 +1,24 @@
+{
+  "change": {
+    "kind": "protocol_parameter_change",
+    "operation": {
+      "expected_current": {
+        "account_data_sha256": "943b7d5c8ca449d060e197a6dc851f7b2d170b4a50a7a768e431d6f22ab979f2",
+        "denominator": "1000",
+        "last_update_epoch": "1036",
+        "numerator": "0",
+        "sol_referral_fee_percent": 0
+      },
+      "kind": "spl_stake_pool_sol_deposit_fee_v1",
+      "proposed_fee": {
+        "denominator": "100",
+        "numerator": "1"
+      }
+    },
+    "target": {
+      "config_account": "CV6bkrUksMwcEC4jfLTJsbHwF3Y2YurZdWWua95Fpbtd",
+      "program_id": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy"
+    }
+  },
+  "schema_version": 1
+}

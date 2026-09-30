@@ -1,6 +1,6 @@
-# Active Token-2022 fee parameter change
+# Protocol parameter changes
 
-Eplyx's fourth schema-1 ChangeSpec is `protocol_parameter_change`. It supports exactly `token_2022_active_newer_transfer_fee_basis_points_v1`: change the already-active newer transfer-fee basis points on one observed Token-2022 mint, then run the same original-owner `TransferChecked` independently against current and derived mint state.
+Eplyx's fourth schema-1 ChangeSpec is `protocol_parameter_change`. It supports two typed operations. The original `token_2022_active_newer_transfer_fee_basis_points_v1` operation lets you change the already-active newer transfer-fee basis points on one observed Token-2022 mint, then run the same original-owner `TransferChecked` independently against current and derived mint state.
 
 This is a captured current-state counterfactual. It establishes the measured result of this exact transfer under the declared rate. It does not execute `SetTransferFee`, establish fee-authority control, deployability or on-chain activation, judge configuration safety, or establish effects for other holders. Governance and composition remain outside this contract. The authenticated guided form edits only the proposed basis-point rate for an eligible retained transfer.
 
@@ -138,6 +138,88 @@ Implementation files cover schema/binding (`engine/src/change.rs`), typed mutati
 
 Qualification passed **62 distinct integration tests**: 10 new engine parameter tests, four new hosted parameter tests and 48 existing regression tests covering ChangeSpec, current execution, Token-2022, migration/lifecycle identity, project capabilities and older hosted analyses. The frontend suite passed, including 70 dashboard views. Clippy passed for engine/server libraries, binaries and both new test targets with warnings denied. The broader engine library run passed 652 tests; five existing authority-resolution tests failed to read missing archived migration population fixtures. The pinned migration importer confirmed the available local archive lacks those artifacts, so full-library verification remains incomplete. The updated outer deserializer was additionally checked against all 11 ChangeSpec library tests and existing migration/lifecycle identity tests.
 
-Exact Phase 8B commitments and verification limits are recorded with the [qualification summary](examples/protocol-parameter-change-qualification.json). Phase 8C adds only authenticated eligibility, guided rate declaration and result presentation over that closed analytical contract. Its focused coverage lives in `frontend/parameter.test.mjs`, `frontend/tests/dashboard/parameter.spec.js` and the eligibility additions to `server/tests/hosted_parameter.rs`. There is no second parameter, fee-authority change, `SetTransferFee` execution, governance extension or composition.
+Exact Phase 8B commitments and verification limits are recorded with the [qualification summary](examples/protocol-parameter-change-qualification.json). Phase 8C adds only authenticated eligibility, guided rate declaration and result presentation over that closed analytical contract. Its focused coverage lives in `frontend/parameter.test.mjs`, `frontend/tests/dashboard/parameter.spec.js` and the eligibility additions to `server/tests/hosted_parameter.rs`. Phase 8C adds no fee-authority change, `SetTransferFee` execution, governance extension or composition. Step 9B adds the bounded second operation described below.
 
 Phase 8C verification passed all five hosted parameter tests and both project-capability tests, the complete frontend checks (including 70 dashboard views and the new guided-form tests), and one focused Playwright flow with mocked hosted HTTP. That browser flow covers entry, bounds, exact preview, mode retention, rejected submission/retry, accepted navigation, async completion, refresh recovery and mobile layout. Server Clippy with warnings denied and repository formatting checks also passed. No implementation blocker remains for this one guided capability; the historical Phase 8B full-library fixture limitation above is unchanged.
+
+
+## Step 9B: historical Stake Pool SOL deposit fee
+
+`spl_stake_pool_sol_deposit_fee_v1` is the second schema-1 operation inside the same `protocol_parameter_change` family. It executes the retained deployed Stake Pool program's real `SetFee(SolDeposit(Fee))` in an isolated VM, verifies its complete instruction-produced pool account, and independently executes the same historical `DepositSol` against original and proposed pool state. There is no direct-mutation fallback. This simulation establishes no manager authorization, key possession, governance approval or on-chain update.
+
+The outer identity mechanism, `candidate() = None`, absent activation, and original Token-2022 identifying bytes remain unchanged. Exact fractions are declarations: `1/100` and `2/200` identify different proposals. Record, deposit amount, executable, Clock and manager assumptions identify the analytical evidence, not the proposal. All new u64 fields require canonical decimal **strings**; referral percent is a JSON integer in `0..=100`. Unknown fields, byte offsets and unknown operations are rejected. No bps normalization or blanket positive-denominator validation is applied. The qualified deployed program accepts `0/0` and rejects `1/0` and `2/1` through actual configuration execution.
+
+The [public proposal](examples/stake-pool-parameter-change.json) has this operation:
+
+```json
+{
+  "kind": "spl_stake_pool_sol_deposit_fee_v1",
+  "expected_current": {
+    "account_data_sha256": "943b7d5c8ca449d060e197a6dc851f7b2d170b4a50a7a768e431d6f22ab979f2",
+    "numerator": "0",
+    "denominator": "1000",
+    "sol_referral_fee_percent": 0,
+    "last_update_epoch": "1036"
+  },
+  "proposed_fee": { "numerator": "1", "denominator": "100" }
+}
+```
+
+The configuration target is pool `CV6bkrUksMwcEC4jfLTJsbHwF3Y2YurZdWWua95Fpbtd`, owned by program `SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy`. Any differing observed hash, rational, referral percentage or last-update epoch produces `current_state_mismatch` before any VM execution; expectations are never rebased.
+
+### Executed retained qualification
+
+The untouched tracked `deploy/bundle` contains the explicitly selected `mainnet-spl-stake-pool-151010f709e113e7`, at slot `447850493`, signature `313DzTBevDnV33BCsQojL6mfZj3fsPPGnAALQohcdoo2kQnNeEXq25ugR9whszK6Y5UYcKxGo3495k2jAPd3UH5F`. Its original baseline replays with `Matched` fidelity and no failures under the existing historical-archive contract. `Exact` is the separate controlled-snapshot contract. The historical Stake Pool ELF is `ec2dfefaa70d560754a0000f39bd2cabc192b895d36205b3c428f601b6e1d7e1`, loaded by the upgradeable loader; the retained SPL Token dependency is pinned separately. The original retained Clock, including epoch `0`, is held fixed; this is the existing schema-1 VM contract, not a claim of slot-accurate validator feature reconstruction. No Clock advancement occurs.
+
+Only this qualified Stake Pool deployment is admitted by the new configuration path. A different deployment requires new layout and manager-boundary qualification and returns `config_execution_unavailable`. The official interface is pinned at `spl-stake-pool = 2.0.3` with `no-entrypoint`; it adds its required dependency graph without upgrading existing packages. Compatibility is established by complete retained Borsh roundtrip, cross-checks with Eplyx's partial reader, official instruction/enum equality, and successful execution of the retained ELF. It is **not** inferred from the crate release or asserted to be the ELF's build version. The wire Fee fields are denominator then numerator; the JSON declaration order is numerator then denominator. See the pinned official [state](https://docs.rs/spl-stake-pool/2.0.3/src/spl_stake_pool/state.rs.html), [instruction](https://docs.rs/spl-stake-pool/2.0.3/src/spl_stake_pool/instruction.rs.html) and [processor](https://docs.rs/spl-stake-pool/2.0.3/src/spl_stake_pool/processor.rs.html) sources.
+
+The decoded manager is `8zVQTFGiwCZQSkNhedqMnWSddeGDrSahmM4JdZMceagx`. Its historical account envelope is absent from the DepositSol boundary. The report explicitly retains an **assumed simulation-only** System-owned, empty-data, non-executable manager envelope with 1,000,000 lamports and an assumed signer meta. Qualification tests prove key/signer enforcement: wrong manager and missing signer reject, while differing manager owner/data/balance still succeed. This boundary is pinned to the qualified executable. A separate assumed fee payer funds the config VM; its state never enters either action VM.
+
+Actual SetFee succeeds using 3,597 CU and charges 10,000 modeled lamports. Complete post-state decoding verifies exact `1/100` and equality of every unrelated typed field, including authorities, balances, mint/reserve relationships, other fees, Options and FutureEpoch contents. Pool owner, lamports, executable flag, rent epoch, data length and exact trailing bytes are preserved. All non-payer/non-pool accounts are preserved; the payer changes only by its actual transaction fee. Populated variable-option/future-state controls run the real instruction and verify the same preservation. No padding differences are masked.
+
+The two action VMs share the same complete message, metas, deployed program/dependencies, Clock/runtime, signer assumptions, watch set and every non-pool account. Restoring the original pool in the proposed plan must yield the complete baseline execution commitment. Only the verified post-SetFee pool account is substituted.
+
+| Actual account delta | Baseline `0/1000` | Proposed `1/100` |
+| --- | ---: | ---: |
+| Recipient pool-token account credit | 760985008 | 753375157 |
+| Independent manager fee-account credit | 0 | 7609851 |
+| Mint supply delta | 760985008 | 760985008 |
+| StakePool pool-token supply delta | 760985008 | 760985008 |
+| Reserve / pool total-lamports delta | 822000000 | 822000000 |
+| Funding payer debit excluding action transaction fee | 822000000 | 822000000 |
+| Action transaction fee, separate from configuration | 14000 | 14000 |
+
+The recipient and referral roles alias the same token account; referral percentage is zero. Their combined account credit is measured once, with no independently measured referral split asserted. Unique-account credits reconcile exactly to mint and pool supply deltas, and native-account deltas reconcile to the action fee. Only the existing `pool_tokens_received` economic subject is promoted; manager/referral/supply/reserve evidence remains operation-specific. No local fee arithmetic is the economic oracle. The actual retained deployment rounds a tiny positive fraction upward to one pool token, despite the existing partial reader's truncating helper; that unrelated helper is unchanged.
+
+### Reports, failures and offline use
+
+The existing outer `eplyx-protocol-parameter-report-v1` binding and seal dispatch by typed operation. New reports retain separate origins for observed historical state, declared proposal, assumed manager-signed config instruction/result, instruction-produced proposed pool state, and both simulated user-action results. Token-2022 recipient-transfer and withheld-fee fields are not reused. The prior published Token-2022 report seal remains verifiable and fully reproducible: only its known original source/lock commitments are admitted, while every execution-relevant runtime field must still match.
+
+`config_execution_rejected` describes an executed SetFee rejection with verified rollback and separately retained config fee. Missing bytes or unqualified layout/signer boundaries are `config_evidence_missing` or `config_execution_unavailable`; unexplained post-state changes are `post_config_state_mismatch`. Unsupported actions fail admission as `downstream_action_unsupported`. DepositSol rejection/rollback is evaluated separately. Failed reconciliation emits no economic direction. Measured consequences and no-consequence controls are completed analytical results, not deployment BLOCK decisions.
+
+Run from the repository root, using the existing CLI:
+
+```sh
+eplyx parameter analyse \
+  --change docs/examples/stake-pool-parameter-change.json \
+  --bundle deploy/bundle \
+  --record-id mainnet-spl-stake-pool-151010f709e113e7 \
+  --out stake-fee-report.json --record .
+eplyx parameter reproduce \
+  --change docs/examples/stake-pool-parameter-change.json \
+  --report stake-fee-report.json
+```
+
+`--input` alternatively accepts the typed `spl_stake_pool_historical_deposit_v1` input. Existing Token-2022 `--capture`/`--input` commands remain compatible. A bundle always requires explicit `--record-id`. Reports retain the complete original record/boundaries/outcome, ELF/loader/dependencies, Clock, message/assumptions, config execution/post-state, action executions and commitments. Existing bounded artifact storage, local run reader and offline child execution are reused. Verification reconstructs bindings, preservation and reconciliation without a VM or provider. Reproduction executes configuration, baseline and proposed in three fresh VMs and requires complete deterministic report equality. Missing bytes fail; nothing is repaired from RPC.
+
+### Hosted historical parent and readers
+
+Use the existing authenticated `POST /v1/projects/{project}/runs/{parent}/parameter-changes` with `{ "request_key": "<unique valid key of at least 16 characters>", "change_spec": <proposal>, "record_id": "mainnet-spl-stake-pool-151010f709e113e7" }`. The historical parent is a terminal retained program-upgrade run with a retained report and project-owned qualified bundle, including a completed evaluation whose candidate was blocked. Its pinned **historical baseline**, never its candidate or a later active bundle, supplies this analysis's program bytes. Token-2022 still uses the original retained CurrentPath parent route and does not accept `record_id`.
+
+`Input::ProtocolParameterChange` gains an optional historical projection binding bundle SHA, record ID/SHA and baseline SHA. The server constructs authoritative retained input in its existing content-addressed capture storage; callers cannot supply proposed bytes, binaries, config results, offsets or findings. Acceptance persists the ChangeSpec, exact input and parent projection before 202. Existing queue, isolated offline worker, run kind, project/change index and restart recovery are reused. Read verification checks indexed/stored/report ChangeSpec IDs plus exact authoritative parent, record, baseline and operation-specific input equality. Clearing or changing the active bundle cannot change a queued input. Tests include cross-project denial, wrong record/operation, a deliberately different parent candidate, durable reader/index tampering and provider-free restarted execution.
+
+Minimal dashboard/hosted readers show exact fractions and integer deltas, record/slot/program commitments, manager assumption, configuration outcome separately from DepositSol, aliasing limits and factual failures. The completed Token-2022 guided form remains unchanged; no Stake Pool guided form is added.
+
+Qualification tests cover the retained real gate, wrong/missing manager signer, complete variable Borsh preservation, exact identities and canonical strings, stale expectations, `0/0`, invalid fees, equal fee and tiny-rounding no-consequence, actual downstream privilege rejection and rollback, corrupted reconciliation with no findings, resealed cross-object tampering, saved offline reproduction, and both hosted parent routes. Synthetic controls are explicitly labelled; they never replace or rewrite the observed record. Compact public evidence and test results are in the [qualification commitments](examples/stake-pool-parameter-change-qualification.json). Full input/report bytes need not be published.
+
+The scope is one retained interaction and one qualified deployment. There is no third operation, withdrawal/referral parameter, authority change, generic serializer, population sequencing, epoch advancement, governance, provider acquisition, signing, live execution or deployment.
