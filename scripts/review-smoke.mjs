@@ -91,7 +91,9 @@ export async function smoke({target,credentials,project,parent,deniedProject,pro
   if(preview)for(const k of ['upgrade_change_spec_id','parameter_change_spec_id'])assert.equal(result.analysis.facts[k],preview[k]);
   const a=result.analysis;
   assert.deepEqual(a.measurements.recipient_account_credit_raw.map(q=>q.value),['760985008','753375157','760985008','753375157']);
-  assert.deepEqual(Object.fromEntries(Object.entries(a.effects.recipient_account_credit_raw).map(([k,q])=>[k,q.value])),{parameter_v1:'-7609851',parameter_v2:'-7609851',code_c0:'0',code_c1:'0',combined:'-7609851',interaction:'0'});
+  const expectedEffects={parameter_v1:'-7609851',parameter_v2:'-7609851',code_c0:'0',code_c1:'0',combined:'-7609851',interaction:'0'};
+  for(const [key,value] of Object.entries(expectedEffects))assert.equal(a.effects.recipient_account_credit_raw[key].value,value);
+  assert.equal(a.effects.recipient_account_credit_raw.identity_cross_check,true);
   for(const k of ['k1','k2','r00','r01','r10','r11'])assert.equal(a[k].state,'verified');
   assert.equal(a.r01.parent.stage,'K1');assert.equal(a.r11.parent.stage,'K2');
   assert.ok(a.measurements.referral_account_credit_raw.every(q=>q.value===null && q.unavailable_reason));
