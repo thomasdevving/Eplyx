@@ -39,13 +39,23 @@ pub fn stage(registry: &Registry, input: &Input, directory: &Path) -> Result<()>
         write("change.json", ArtifactClass::Document, change)?;
     }
     match input {
-        Input::ProtocolParameterChange { capture, .. } => {
+        Input::ProtocolParameterChange {
+            capture,
+            historical,
+            ..
+        } => {
             write("capture.json", ArtifactClass::Capture, capture)?;
             let spec = ChangeSpec::parse(&std::fs::read(directory.join("change.json"))?)?;
             eplyx_engine::parameter_change::binding(&spec)?;
-            eplyx_engine::path::current::parameter_input(
-                &registry.artifacts().get(ArtifactClass::Capture, capture)?,
-            )?;
+            let bytes = registry.artifacts().get(ArtifactClass::Capture, capture)?;
+            if historical.is_some() {
+                serde_json::from_slice::<eplyx_engine::parameter_change::stake_pool::Input>(
+                    &bytes,
+                )?
+                .validate()?;
+            } else {
+                eplyx_engine::path::current::parameter_input(&bytes)?;
+            }
         }
         Input::MigrationOrder { .. } => super::order::stage(registry, input, directory)?,
         Input::CurrentStress {
@@ -299,13 +309,24 @@ pub fn execute(directory: &Path) -> Result<()> {
         local_artifact_sizes: BTreeMap::new(),
     };
     match &input {
-        Input::ProtocolParameterChange { capture, .. } => {
+        Input::ProtocolParameterChange {
+            capture,
+            historical,
+            ..
+        } => {
             let bytes = member(directory, "capture.json", capture)?;
-            let retained = eplyx_engine::path::current::parameter_input(&bytes)?;
-            let report = eplyx_engine::parameter_change::analyze(
-                spec.as_ref().context("missing parameter spec")?,
-                &retained,
-            )?;
+            let spec = spec.as_ref().context("missing parameter spec")?;
+            let report = if historical.is_some() {
+                eplyx_engine::parameter_change::stake_pool::analyze(
+                    spec,
+                    &serde_json::from_slice(&bytes)?,
+                )?
+            } else {
+                eplyx_engine::parameter_change::analyze(
+                    spec,
+                    &eplyx_engine::path::current::parameter_input(&bytes)?,
+                )?
+            };
             projection.report =
                 Artifact::new(eplyx_engine::canonical::document(&report)?.into_bytes())?;
             analytical_metadata(&mut projection, input.kind(), timestamp, binary)?;

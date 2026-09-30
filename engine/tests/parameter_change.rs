@@ -250,7 +250,7 @@ fn exhaustive_preservation_endpoints_and_unknown_or_malformed_tlv_fail_closed() 
     let Change::ProtocolParameterChange(c) = &s.change else {
         unreachable!()
     };
-    let (expected, _) = c.operation.values();
+    let (expected, _) = c.operation.values().unwrap();
     let plan = input.validate().unwrap();
     let current = plan
         .accounts
@@ -338,7 +338,10 @@ fn tampered_capture_derived_program_clock_accounts_spec_and_report_fail_closed()
     let Operation::Token2022ActiveNewerTransferFeeBasisPointsV1 {
         proposed_basis_points,
         ..
-    } = &mut c.operation;
+    } = &mut c.operation
+    else {
+        panic!("Token-2022 operation expected")
+    };
     *proposed_basis_points = 201;
     assert!(p::verify(&s, &report).is_err());
 }
@@ -358,7 +361,7 @@ fn official_tlv_field_isolation_survives_ordering_and_padding() {
     let Change::ProtocolParameterChange(c) = &s.change else {
         unreachable!()
     };
-    let (expected, _) = c.operation.values();
+    let (expected, _) = c.operation.values().unwrap();
     let mut at = 166;
     let mut entries = vec![];
     while at + 4 <= current.data.len() {
@@ -557,4 +560,41 @@ fn local_cli_durable_store_reader_reproduction_and_overwrite_boundary() {
         .output()
         .unwrap();
     assert!(!output.status.success());
+}
+
+#[test]
+fn frozen_token2022_report_identity_and_runtime_remain_reproducible() {
+    let input = retained();
+    let spec = spec(&input, 200);
+    let qualification: Value = serde_json::from_slice(include_bytes!(
+        "../../docs/examples/protocol-parameter-change-qualification.json"
+    ))
+    .unwrap();
+    let mut report = p::analyze(&spec, &input).unwrap();
+    // Restore the published Step-8 runtime commitments, then compare the exact
+    // prior report identity. No economic output or retained byte is changed.
+    report["runtime"] = qualification["runtime"].clone();
+    report["shared_execution"]["runtime"] = qualification["runtime"].clone();
+    report["shared_execution_sha256"] =
+        eplyx_engine::canonical::digest(&report["shared_execution"])
+            .unwrap()
+            .into();
+    report.as_object_mut().unwrap().remove("report_sha256");
+    report["report_sha256"] = eplyx_engine::canonical::digest(&report).unwrap().into();
+    assert_eq!(
+        spec.id().unwrap(),
+        qualification["change"]["change_spec_id"]
+    );
+    assert_eq!(report["report_sha256"], qualification["report_sha256"]);
+    p::verify(&spec, &report).unwrap();
+    p::reproduce(&spec, &report).unwrap();
+    report["runtime"]["executor_sha256"] = "f".repeat(64).into();
+    report["shared_execution"]["runtime"] = report["runtime"].clone();
+    report["shared_execution_sha256"] =
+        eplyx_engine::canonical::digest(&report["shared_execution"])
+            .unwrap()
+            .into();
+    report.as_object_mut().unwrap().remove("report_sha256");
+    report["report_sha256"] = eplyx_engine::canonical::digest(&report).unwrap().into();
+    assert!(p::verify(&spec, &report).is_err());
 }

@@ -1,0 +1,283 @@
+{
+  "analysis_input_sha256": "9b5c65e2ba9784629e219bebd315c3d751e1b54cea7328e44fd6aa1e299da352",
+  "baseline_fidelity": {
+    "failures": [],
+    "status": "matched"
+  },
+  "blockers": [],
+  "change": {
+    "change_spec_id": "60a78b2069fd1232d6b258ed27bcd503c17a92e1da52c71dd3b82a250905b9f7",
+    "kind": "protocol_parameter_change",
+    "operation": {
+      "expected_current": {
+        "account_data_sha256": "943b7d5c8ca449d060e197a6dc851f7b2d170b4a50a7a768e431d6f22ab979f2",
+        "denominator": "1000",
+        "last_update_epoch": "1036",
+        "numerator": "0",
+        "sol_referral_fee_percent": 0
+      },
+      "kind": "spl_stake_pool_sol_deposit_fee_v1",
+      "proposed_fee": {
+        "denominator": "100",
+        "numerator": "1"
+      }
+    },
+    "target": {
+      "config_account": "CV6bkrUksMwcEC4jfLTJsbHwF3Y2YurZdWWua95Fpbtd",
+      "program_id": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy"
+    }
+  },
+  "clock": {
+    "epoch": "0",
+    "epoch_start_timestamp": "0",
+    "leader_schedule_epoch": "0",
+    "slot": "447850493",
+    "unix_timestamp": "1789665625"
+  },
+  "config": {
+    "compute_units": "3597",
+    "execution_sha256": "01cfb7b2aa4bdc573eb7cefe803a7eab33432e93200e8fad42de7201ba48ab5b",
+    "fee_payer": {
+      "address": "6Ckm2BrnXxsSjyG5b17kQQRjoECVrts92RKXVGT8XeqS",
+      "origin": "assumed_simulation_only",
+      "propagated_to_user_action": false
+    },
+    "instruction": {
+      "accounts": [
+        {
+          "address": "CV6bkrUksMwcEC4jfLTJsbHwF3Y2YurZdWWua95Fpbtd",
+          "is_signer": false,
+          "is_writable": true
+        },
+        {
+          "address": "8zVQTFGiwCZQSkNhedqMnWSddeGDrSahmM4JdZMceagx",
+          "is_signer": true,
+          "is_writable": false
+        }
+      ],
+      "data_hex": "0c0464000000000000000100000000000000",
+      "program_id": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy"
+    },
+    "post_pool_data_sha256": "611571ab6c8ce78806acf4983909c8870f7415391e8c711a1acb825e305a0d9b",
+    "success": true,
+    "transaction_fee_lamports": "10000",
+    "unrelated_typed_fields_envelope_and_trailing_bytes_preserved": true
+  },
+  "controls": [
+    "Actual wrong manager/missing signer rejection; varied assumed envelope irrelevant to qualified path",
+    "Populated Option/FutureEpoch layout preservation and malformed layouts fail closed",
+    "0/0 and zero-fee/equal-fee no-consequence; 1/0 and 2/1 actual config rejection/rollback",
+    "Tiny positive exact rationals round upward to one token; labelled synthetic baseline and distinct proposed fraction give no consequence",
+    "Labelled readonly manager-fee CPI rejection with full watched-account rollback plus action fee",
+    "Labelled corrupt manager balance gives reconciliation_failed and no economic findings",
+    "Resealed cross-object evidence tampering, missing programs, stale expectations fail closed",
+    "Hosted project authorization, explicit selection, historical parent equality, caller injection denial, durable provider-free restart"
+  ],
+  "findings": [
+    {
+      "baseline_raw": "760985008",
+      "delta_raw": "-7609851",
+      "fingerprint": "spl-stake-pool/deposit_sol/economic/pool_tokens_received/decreased",
+      "proposed_raw": "753375157"
+    }
+  ],
+  "historical_record": {
+    "deposit_lamports": "822000000",
+    "id": "mainnet-spl-stake-pool-151010f709e113e7",
+    "observed_pool_data_sha256": "943b7d5c8ca449d060e197a6dc851f7b2d170b4a50a7a768e431d6f22ab979f2",
+    "pool": "CV6bkrUksMwcEC4jfLTJsbHwF3Y2YurZdWWua95Fpbtd",
+    "record_sha256": "c4bf9b5dea6bb6714003d4f4bc8e815058e567797d66cbf8e3afb3e800f34ddb",
+    "signature": "313DzTBevDnV33BCsQojL6mfZj3fsPPGnAALQohcdoo2kQnNeEXq25ugR9whszK6Y5UYcKxGo3495k2jAPd3UH5F",
+    "slot": "447850493",
+    "source_bundle_sha256": "5e5b67ac13e4f6b8249348ad81db29885ee8ee897ba78f6de213b55793f4285f",
+    "state_source": "historical_archive"
+  },
+  "hosted": {
+    "candidate_used": false,
+    "endpoint": "POST /v1/projects/{project}/runs/{parent}/parameter-changes",
+    "historical_projection_fields": [
+      "bundle_sha256",
+      "record_id",
+      "record_sha256",
+      "baseline_sha256"
+    ],
+    "input_kind": "protocol_parameter_change",
+    "later_active_bundle_used": false,
+    "offline_worker_provider_configured": false,
+    "parent": "Terminal project-owned retained program-upgrade run with report and qualified pinned historical bundle",
+    "request_fields": [
+      "request_key",
+      "change_spec",
+      "record_id"
+    ],
+    "token2022_current_parent_preserved": true
+  },
+  "inspected_start_head": "113d74ac764ef918e6e02ba17fef032e4e29a9f9",
+  "limits": [
+    "One retained historical DepositSol or explicitly labelled synthetic control; no live configuration, population-wide impact, fairness or valuation claim.",
+    "Same historical deployed program and dependencies on both sides. Independent user-action VMs differ only by the verified instruction-produced pool account.",
+    "SetFee is simulated with an assumed manager signer and separate assumed payer. No key possession, externally signable authority or governance approval is established.",
+    "The retained schema-1 Clock/runtime is fixed, including its retained epoch; no time advancement or slot-accurate validator feature reconstruction.",
+    "Pool-token credits are reconciled from actual VM account deltas. Aliased roles are counted once and do not establish an independent role split.",
+    "Only compact public commitments are published; complete input/report can be generated offline from the tracked retained bundle.",
+    "Observed historical evidence is distinct from labelled synthetic controls and all simulated execution results.",
+    "Fidelity uses the existing historical Matched contract and retained epoch-0 Clock; not a slot-accurate full validator bank."
+  ],
+  "local_usage": {
+    "analyse": "eplyx parameter analyse --change docs/examples/stake-pool-parameter-change.json --bundle deploy/bundle --record-id mainnet-spl-stake-pool-151010f709e113e7 --out stake-fee-report.json --record .",
+    "reproduce": "eplyx parameter reproduce --change docs/examples/stake-pool-parameter-change.json --report stake-fee-report.json"
+  },
+  "manager_assumption": {
+    "address": "8zVQTFGiwCZQSkNhedqMnWSddeGDrSahmM4JdZMceagx",
+    "boundary": "Qualified SetFee/check_manager checks only manager key and signer privilege; account owner, data and balance are simulation-only.",
+    "key_possession_established": false,
+    "observed": false,
+    "origin": "assumed_simulation_only",
+    "signer": true
+  },
+  "official_interface": {
+    "existing_packages_upgraded": 0,
+    "other_stake_pool_deployments": "config_execution_unavailable until separately qualified",
+    "pin": "spl-stake-pool=2.0.3/no-entrypoint",
+    "qualification": "Complete Borsh roundtrip of retained pool, official builder/enum equality, cross-decoder agreement, actual deployed SetFee execution and all unrelated typed/envelope/trailing-byte preservation. Not a claim of the historical ELF build version.",
+    "required_added_dependency_packages": 103,
+    "wire_fee_field_order": [
+      "denominator",
+      "numerator"
+    ]
+  },
+  "operation": "spl_stake_pool_sol_deposit_fee_v1",
+  "programs": [
+    {
+      "elf_sha256": "ec2dfefaa70d560754a0000f39bd2cabc192b895d36205b3c428f601b6e1d7e1",
+      "loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "program_id": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy"
+    },
+    {
+      "elf_sha256": "8190d3f7ceb6cb7a7a8d8924bff89f9f611e15ce1f806f2b6237f3311a98f697",
+      "loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    }
+  ],
+  "report_sha256": "0915b26a8c3efa74487a259a00c712984bae54ebfc0b7ddc262154d859280aba",
+  "runtime": {
+    "backend": "LiteSVM 0.16",
+    "clock_advanced": false,
+    "executor_sha256": "0f5ed5b8db2220e0dad1d8409b5871f203354c09a7038f55a6f7323b095d30eb",
+    "lock_sha256": "4417749a09e246a4fb8c111611fdf5825d295a28a414deeb30cd353eccec992a",
+    "official_interface": "spl-stake-pool=2.0.3",
+    "operation_source_sha256": "63aa307015b17f79d6b07e71f024f624eb2388ad15e6ba8264a5b3fa2a9a9a87",
+    "profile": "schema1_litesvm_mainnet",
+    "recent_blockhash_verification": false,
+    "replay_sha256": "8220e7051eafb8f52da4aa4f5555c2f4af0e0edd7bc36530109448d8823a8fa5",
+    "revision": "spl_stake_pool_sol_deposit_fee_v1",
+    "signature_verification": false
+  },
+  "schema": "eplyx-stake-pool-parameter-qualification-summary-v1",
+  "sides": {
+    "baseline": {
+      "execution_sha256": "3ef86748d7869c459ede39743963fb279d733cd2b80fac025f9f02334f82ad0b",
+      "reconciliation": {
+        "action_transaction_fee_lamports": "14000",
+        "config_transaction_fee_included": false,
+        "fee_split_limitation": "Aliased role credit is measured once; no independent role split is asserted.",
+        "funding_payer_debit_excluding_transaction_fee": "822000000",
+        "funding_payer_lamport_debit": "822014000",
+        "manager_fee_account_credit_raw": "0",
+        "mint_supply_delta_raw": "760985008",
+        "pool_token_supply_delta_raw": "760985008",
+        "pool_total_lamports_delta": "822000000",
+        "recipient_account_credit_raw": "760985008",
+        "recipient_credit_contains_aliased_roles": true,
+        "reconciled": true,
+        "referral_account_credit_raw": null,
+        "reserve_lamport_delta": "822000000",
+        "success": true,
+        "unique_token_account_credits": [
+          {
+            "address": "93eSDRCdrbN6sYDyvnHzoSYUkSgchGsU5ZzFvQrCqD3e",
+            "credit_raw": "0",
+            "independently_measured_role": true,
+            "roles": [
+              "manager_fee"
+            ]
+          },
+          {
+            "address": "EpomeRdrhUeAmVyECwima2gBpY3jUoA6cee89EcADaPT",
+            "credit_raw": "760985008",
+            "independently_measured_role": false,
+            "roles": [
+              "recipient",
+              "referral_fee"
+            ]
+          }
+        ]
+      }
+    },
+    "proposed": {
+      "execution_sha256": "d74b4a9117340e91b16053e4b5e2a0b7528a69928338da13f08b2d27bd9b708c",
+      "reconciliation": {
+        "action_transaction_fee_lamports": "14000",
+        "config_transaction_fee_included": false,
+        "fee_split_limitation": "Aliased role credit is measured once; no independent role split is asserted.",
+        "funding_payer_debit_excluding_transaction_fee": "822000000",
+        "funding_payer_lamport_debit": "822014000",
+        "manager_fee_account_credit_raw": "7609851",
+        "mint_supply_delta_raw": "760985008",
+        "pool_token_supply_delta_raw": "760985008",
+        "pool_total_lamports_delta": "822000000",
+        "recipient_account_credit_raw": "753375157",
+        "recipient_credit_contains_aliased_roles": true,
+        "reconciled": true,
+        "referral_account_credit_raw": null,
+        "reserve_lamport_delta": "822000000",
+        "success": true,
+        "unique_token_account_credits": [
+          {
+            "address": "93eSDRCdrbN6sYDyvnHzoSYUkSgchGsU5ZzFvQrCqD3e",
+            "credit_raw": "7609851",
+            "independently_measured_role": true,
+            "roles": [
+              "manager_fee"
+            ]
+          },
+          {
+            "address": "EpomeRdrhUeAmVyECwima2gBpY3jUoA6cee89EcADaPT",
+            "credit_raw": "753375157",
+            "independently_measured_role": false,
+            "roles": [
+              "recipient",
+              "referral_fee"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "status": "semantic_consequence_observed",
+  "tests": {
+    "clippy": "Engine library/binaries/all tests and server library/binaries/both parameter tests, -D warnings",
+    "diff_check": "git diff --check",
+    "engine_integration": {
+      "change_spec": 8,
+      "parameter_change_including_frozen_report": 11,
+      "replay": 16,
+      "stake_pool_parameter": 6,
+      "stake_pool_parameter_gate": 1
+    },
+    "engine_library": {
+      "change_identity": 11,
+      "parameter_change_qualification": 3,
+      "stake_pool": 26
+    },
+    "formatting": "cargo fmt --all --check",
+    "frontend": "Full npm run check:frontend passed; dashboard 75 rendered views",
+    "offline_cli_reproduction": true,
+    "server_integration": {
+      "change_identity": 16,
+      "hosted_parameter": 5,
+      "hosted_stake_pool_parameter": 2,
+      "project_capabilities": 2
+    }
+  }
+}

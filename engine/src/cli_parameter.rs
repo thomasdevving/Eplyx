@@ -6,15 +6,21 @@ use serde::{Deserialize, Serialize};
 use std::{path::PathBuf, process::ExitCode};
 #[derive(Subcommand, Serialize, Deserialize)]
 pub enum Command {
-    /// Compare the one supported active Token-2022 fee rate using a retained current transfer capture.
+    /// Compare one supported parameter using retained operation-specific evidence.
     Analyse {
         #[arg(long)]
         change: PathBuf,
-        #[arg(long, conflicts_with = "input", required_unless_present = "input")]
+        #[arg(long, conflicts_with_all = ["input", "bundle"], required_unless_present_any = ["input", "bundle"])]
         capture: Option<PathBuf>,
         /// Exact retained transfer fixture/context input, for already captured transfer cases.
-        #[arg(long, conflicts_with = "capture")]
+        #[arg(long, conflicts_with_all = ["capture", "bundle"])]
         input: Option<PathBuf>,
+        /// Immutable historical bundle for the Stake Pool operation.
+        #[arg(long, conflicts_with_all = ["capture", "input"], requires = "record_id")]
+        bundle: Option<PathBuf>,
+        /// Select one exact retained historical record; never the first deposit.
+        #[arg(long, requires = "bundle")]
+        record_id: Option<String>,
         #[arg(long)]
         out: PathBuf,
         #[arg(long)]
@@ -54,20 +60,46 @@ pub fn worker(encoded: &str) -> Result<ExitCode> {
             change,
             capture,
             input,
+            bundle,
+            record_id,
             out,
             record,
         } => {
             let spec = ChangeSpec::parse(&eplyx_engine::lifecycle::artifact::read(change)?)?;
-            let input = match (capture, input) {
-                (Some(path), None) => eplyx_engine::path::current::parameter_input(
-                    &eplyx_engine::lifecycle::artifact::read(path)?,
+            let report = match (capture, input, bundle) {
+                (Some(path), None, None) => engine::analyze(
+                    &spec,
+                    &eplyx_engine::path::current::parameter_input(
+                        &eplyx_engine::lifecycle::artifact::read(path)?,
+                    )?,
                 )?,
-                (None, Some(path)) => {
-                    serde_json::from_slice(&eplyx_engine::lifecycle::artifact::read(path)?)?
+                (None, Some(path), None) => {
+                    let bytes = eplyx_engine::lifecycle::artifact::read(path)?;
+                    if matches!(
+                        spec.as_protocol_parameter_change()
+                            .context("parameter change required")?
+                            .operation,
+                        engine::Operation::SplStakePoolSolDepositFeeV1 { .. }
+                    ) {
+                        engine::stake_pool::analyze(&spec, &serde_json::from_slice(&bytes)?)?
+                    } else {
+                        engine::analyze(&spec, &serde_json::from_slice(&bytes)?)?
+                    }
                 }
-                _ => anyhow::bail!("select exactly one retained capture or transfer input"),
+                (None, None, Some(path)) => {
+                    let bundle = eplyx_engine::bundle::CiBundle::open(path)?;
+                    let input = engine::stake_pool::Input::from_bundle(
+                        &bundle,
+                        record_id
+                            .as_deref()
+                            .context("explicit record ID required")?,
+                    )?;
+                    engine::stake_pool::analyze(&spec, &input)?
+                }
+                _ => anyhow::bail!(
+                    "select exactly one retained capture, typed input or historical bundle"
+                ),
             };
-            let report = engine::analyze(&spec, &input)?;
             let document = eplyx_engine::canonical::document(&report)?;
             ensure!(!out.exists(), "output must be new");
             use std::io::Write;

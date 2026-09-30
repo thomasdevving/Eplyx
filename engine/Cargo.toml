@@ -49,6 +49,9 @@ solana-loader-v3-interface = { version = "=8.0.1", features = ["wincode"] }
 solana-sdk-ids = "=3.1.0"
 
 spl-token-2022-interface = "=3.1.1"
+# Complete Borsh state and official SetFee wire interface. Historical ELF
+# compatibility is qualified against retained bytes, not inferred from version.
+spl-stake-pool = { version = "=2.0.3", features = ["no-entrypoint"] }
 solana-program-pack = "=3.1.0"
 chrono = { version = "0.4", default-features = false, features = ["clock", "serde"] }
 

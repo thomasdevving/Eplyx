@@ -71,4 +71,13 @@ for(const file of readdirSync(new URL('./dashboard/',import.meta.url)).filter(f=
  const source=readFileSync(new URL(`./dashboard/${file}`,import.meta.url),'utf8');
  assert.doesNotMatch(source,banned,file);
 }
+
+// Operation-specific Stake Pool reading keeps exact rationals and pool economics.
+const stakeReport={kind:'protocol_parameter_change',status:'semantic_consequence_observed',change:{change_spec_id:'stake-id',target:{config_account:'pool',program_id:'stake-program'},operation:{kind:'spl_stake_pool_sol_deposit_fee_v1',expected_current:{numerator:'0',denominator:'1000',sol_referral_fee_percent:0,last_update_epoch:'1036'},proposed_fee:{numerator:'1',denominator:'18446744073709551615'}}},observed_current_state:{record_id:'retained-deposit',slot:'447850493',programs:[{program_id:'stake-program',elf_sha256:'same-elf'}]},simulated_config_instruction:{execution:{success:true,transaction_fee_lamports:'10000'}},baseline:{execution:{success:true},reconciliation:{reconciled:true,recipient_account_credit_raw:'760985008',manager_fee_account_credit_raw:'0',mint_supply_delta_raw:'760985008',pool_token_supply_delta_raw:'760985008',reserve_lamport_delta:'822000000'}},proposed:{execution:{success:true},reconciliation:{reconciled:true,recipient_account_credit_raw:'760985007',manager_fee_account_credit_raw:'1',mint_supply_delta_raw:'760985008',pool_token_supply_delta_raw:'760985008',reserve_lamport_delta:'822000000'}},limitations:['<script>private-looking text</script>']};
+for(const status of ['semantic_consequence_observed','no_observed_consequence','config_execution_rejected','post_config_state_mismatch','reconciliation_failed']) {
+ const report=structuredClone(stakeReport);report.status=status;if(status==='reconciliation_failed'){report.proposed.reconciliation={reconciled:false};report.proposed.reconciliation_error='<script>bad reconciliation</script>';}if(status==='config_execution_rejected')report.simulated_config_instruction.execution={success:false,error:'<script>bad config</script>'};
+ const detail={kind:'protocol_parameter_change',state:'Complete',change:report.change,analysis:{report}};
+ const view=analyticalDetail(detail);check(view.html,`stake-pool/${status}`);assert.match(view.html,/Stake Pool deposit fee simulation/);assert.match(view.html,/0\/1000/);assert.match(view.html,/1\/18446744073709551615/);assert.match(view.html,/Aliased; split not independently measured/);assert.match(view.html,/Configuration execution/);assert.doesNotMatch(view.html,/<script>/);assert.doesNotMatch(visible(view.html),/Withheld increment| bps/);
+}
+
 console.log(`Dashboard: ${checked} rendered views, exact quantities, glossary, escaping and role-token palette verified.`);

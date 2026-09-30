@@ -868,7 +868,7 @@ impl ReplayRecord {
             watch: self.accounts.iter().map(|a| a.label.clone()).collect(),
         }
     }
-    fn message(&self) -> Result<Message> {
+    pub(crate) fn message(&self) -> Result<Message> {
         let keys = &self.transaction.account_keys;
         let signed = keys.iter().take_while(|k| k.is_signer).count();
         anyhow::ensure!(

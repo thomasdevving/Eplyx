@@ -37,7 +37,7 @@ pub fn json() -> Value {
     value["engine"]["token_migration"]["account_check_capture_schema"] = json!(1);
     value["engine"]["token_migration"]["account_check_report_schema"] = json!(1);
     value["engine"]["analytical_metadata_schema"] = json!(local_store::ANALYTICAL_METADATA_VERSION);
-    value["engine"]["protocol_parameter_change"] = json!({"report_schema":crate::parameter_change::REPORT_SCHEMA,"operation":crate::parameter_change::DERIVATION});
+    value["engine"]["protocol_parameter_change"] = json!({"report_schema":crate::parameter_change::REPORT_SCHEMA,"operation":crate::parameter_change::DERIVATION,"operations":[crate::parameter_change::DERIVATION,crate::parameter_change::stake_pool::OPERATION]});
     value["engine"]["dashboard_index_schema"] = json!(crate::dashboard::store::INDEX_VERSION);
     value["engine"]["sync"] = json!({"run":crate::cloud::contract::RUN_SCHEMA,"counterexample":crate::cloud::contract::COUNTEREXAMPLE_SCHEMA,"reproduction":crate::cloud::contract::REPRODUCTION_SCHEMA});
     value
