@@ -1,0 +1,13 @@
+{
+  "change": {
+    "candidate": {
+      "len": 133992,
+      "sha256": "a664f74b73dedc713f16934829b25f9a0c0c3a06c6ce21f03fdc7869ae5b555d"
+    },
+    "kind": "program_upgrade",
+    "target": {
+      "program_id": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy"
+    }
+  },
+  "schema_version": 1
+}

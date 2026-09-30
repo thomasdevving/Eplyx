@@ -1,0 +1,262 @@
+{
+  "K1": {
+    "compute_units": "3597",
+    "execution_sha256": "01cfb7b2aa4bdc573eb7cefe803a7eab33432e93200e8fad42de7201ba48ab5b",
+    "post_pool_data_sha256": "611571ab6c8ce78806acf4983909c8870f7415391e8c711a1acb825e305a0d9b",
+    "preservation_verified": true,
+    "success": true,
+    "transaction_fee_lamports": "10000"
+  },
+  "K2": {
+    "compute_units": "907",
+    "error": "InstructionError(0, InvalidInstructionData)",
+    "logs": [
+      "Program SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy invoke [1]",
+      "Program log: candidate supports DepositSol only",
+      "Program SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy consumed 907 of 200000 compute units",
+      "Program SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy failed: invalid instruction data"
+    ],
+    "manager_boundary_qualified": false,
+    "rollback_verified": true,
+    "success": false,
+    "transaction_fee_lamports": "10000"
+  },
+  "baseline_fidelity": {
+    "failures": [],
+    "status": "matched"
+  },
+  "candidate": {
+    "len": 33864,
+    "origin": "constructed test fixture; not upstream release",
+    "sha256": "3193eabd9fe2e479109ef3b2dd7301fffd06774325133ff8f88916ed482db099"
+  },
+  "candidate_build_recipe": {
+    "arch": "v0",
+    "cargo_build_sbf": "4.4.0",
+    "fresh_build_performed": false,
+    "historical_production": false,
+    "script": "scripts/build-stake-pool-candidate.sh",
+    "tools": "v1.54"
+  },
+  "candidate_lock": {
+    "len": 39322,
+    "sha256": "5d8b1bf7ffb73a4addf05206496e605f4c6080869999f12bf8707d2640367163"
+  },
+  "candidate_source": {
+    "len": 12623,
+    "sha256": "23f0cc6f3c25b6f981b4137e3e9337b57c058b05b839e986ea19dd1fe1a3e721"
+  },
+  "cells": {
+    "R00": {
+      "action_transaction_fee_lamports": "14000",
+      "config_transaction_fee_included": false,
+      "fee_split_limitation": "Aliased role credit is measured once; no independent role split is asserted.",
+      "funding_payer_debit_excluding_transaction_fee": "822000000",
+      "funding_payer_lamport_debit": "822014000",
+      "manager_fee_account_credit_raw": "0",
+      "mint_supply_delta_raw": "760985008",
+      "pool_token_supply_delta_raw": "760985008",
+      "pool_total_lamports_delta": "822000000",
+      "recipient_account_credit_raw": "760985008",
+      "recipient_credit_contains_aliased_roles": true,
+      "reconciled": true,
+      "referral_account_credit_raw": null,
+      "reserve_lamport_delta": "822000000",
+      "success": true,
+      "unique_token_account_credits": [
+        {
+          "address": "93eSDRCdrbN6sYDyvnHzoSYUkSgchGsU5ZzFvQrCqD3e",
+          "credit_raw": "0",
+          "independently_measured_role": true,
+          "roles": [
+            "manager_fee"
+          ]
+        },
+        {
+          "address": "EpomeRdrhUeAmVyECwima2gBpY3jUoA6cee89EcADaPT",
+          "credit_raw": "760985008",
+          "independently_measured_role": false,
+          "roles": [
+            "recipient",
+            "referral_fee"
+          ]
+        }
+      ]
+    },
+    "R01": {
+      "action_transaction_fee_lamports": "14000",
+      "config_transaction_fee_included": false,
+      "fee_split_limitation": "Aliased role credit is measured once; no independent role split is asserted.",
+      "funding_payer_debit_excluding_transaction_fee": "822000000",
+      "funding_payer_lamport_debit": "822014000",
+      "manager_fee_account_credit_raw": "7609851",
+      "mint_supply_delta_raw": "760985008",
+      "pool_token_supply_delta_raw": "760985008",
+      "pool_total_lamports_delta": "822000000",
+      "recipient_account_credit_raw": "753375157",
+      "recipient_credit_contains_aliased_roles": true,
+      "reconciled": true,
+      "referral_account_credit_raw": null,
+      "reserve_lamport_delta": "822000000",
+      "success": true,
+      "unique_token_account_credits": [
+        {
+          "address": "93eSDRCdrbN6sYDyvnHzoSYUkSgchGsU5ZzFvQrCqD3e",
+          "credit_raw": "7609851",
+          "independently_measured_role": true,
+          "roles": [
+            "manager_fee"
+          ]
+        },
+        {
+          "address": "EpomeRdrhUeAmVyECwima2gBpY3jUoA6cee89EcADaPT",
+          "credit_raw": "753375157",
+          "independently_measured_role": false,
+          "roles": [
+            "recipient",
+            "referral_fee"
+          ]
+        }
+      ]
+    },
+    "R10": {
+      "action_transaction_fee_lamports": "14000",
+      "config_transaction_fee_included": false,
+      "fee_split_limitation": "Aliased role credit is measured once; no independent role split is asserted.",
+      "funding_payer_debit_excluding_transaction_fee": "822000000",
+      "funding_payer_lamport_debit": "822014000",
+      "manager_fee_account_credit_raw": "0",
+      "mint_supply_delta_raw": "760925400",
+      "pool_token_supply_delta_raw": "760925400",
+      "pool_total_lamports_delta": "822000000",
+      "recipient_account_credit_raw": "760925400",
+      "recipient_credit_contains_aliased_roles": true,
+      "reconciled": true,
+      "referral_account_credit_raw": null,
+      "reserve_lamport_delta": "822000000",
+      "success": true,
+      "unique_token_account_credits": [
+        {
+          "address": "93eSDRCdrbN6sYDyvnHzoSYUkSgchGsU5ZzFvQrCqD3e",
+          "credit_raw": "0",
+          "independently_measured_role": true,
+          "roles": [
+            "manager_fee"
+          ]
+        },
+        {
+          "address": "EpomeRdrhUeAmVyECwima2gBpY3jUoA6cee89EcADaPT",
+          "credit_raw": "760925400",
+          "independently_measured_role": false,
+          "roles": [
+            "recipient",
+            "referral_fee"
+          ]
+        }
+      ]
+    },
+    "R11": {
+      "status": "unavailable: SetFee rejected; no verified K2 pool"
+    }
+  },
+  "claim": "code/configuration interaction under retained state",
+  "clock": {
+    "epoch": 0,
+    "epoch_start_timestamp": 0,
+    "leader_schedule_epoch": 0,
+    "slot": 447850493,
+    "unix_timestamp": 1789665625
+  },
+  "config_instruction": {
+    "accounts": [
+      {
+        "address": "CV6bkrUksMwcEC4jfLTJsbHwF3Y2YurZdWWua95Fpbtd",
+        "is_signer": false,
+        "is_writable": true
+      },
+      {
+        "address": "8zVQTFGiwCZQSkNhedqMnWSddeGDrSahmM4JdZMceagx",
+        "is_signer": true,
+        "is_writable": false
+      }
+    ],
+    "data_hex": "0c0464000000000000000100000000000000",
+    "program_id": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy"
+  },
+  "distinct_candidate_interaction_raw": null,
+  "evidence": {
+    "full_probe": {
+      "len": 7414174,
+      "sha256": "f7a9fa113e326b0ad4f5c360ec09ef4a22413108376d70f1e3c351226c75d51d"
+    },
+    "regenerate": "EPLYX_INTERACTION_PROBE_OUT=/private/tmp/eplyx-upgrade-parameter-probe cargo test -p eplyx-engine --test upgrade_parameter_interaction --offline -- --nocapture",
+    "scope": "Compact commitments only; full input, both same-code reports, actual distinct config/action executions regenerated by test. Not a production report schema or implemented analysis-input identity."
+  },
+  "fee_payer": {
+    "address": "6Ckm2BrnXxsSjyG5b17kQQRjoECVrts92RKXVGT8XeqS",
+    "origin": "assumed_simulation_only",
+    "propagated_to_user_action": false
+  },
+  "historical_record": {
+    "id": "mainnet-spl-stake-pool-151010f709e113e7",
+    "pre_state_hash": "bd36973f832ec2372a7793ceb5ee341b75df18695a262314c3c4fd2744e1d9f5",
+    "record_sha256": "c4bf9b5dea6bb6714003d4f4bc8e815058e567797d66cbf8e3afb3e800f34ddb",
+    "slot": "447850493",
+    "source_bundle_sha256": "5e5b67ac13e4f6b8249348ad81db29885ee8ee897ba78f6de213b55793f4285f"
+  },
+  "inspected_head": "984686eaf9e374fbd690275b3afb1411795486e9",
+  "manager_assumption": {
+    "address": "8zVQTFGiwCZQSkNhedqMnWSddeGDrSahmM4JdZMceagx",
+    "boundary": "Qualified SetFee/check_manager checks only manager key and signer privilege; account owner, data and balance are simulation-only.",
+    "key_possession_established": false,
+    "observed": false,
+    "origin": "assumed_simulation_only",
+    "signer": true
+  },
+  "parameter_change_spec_id": "60a78b2069fd1232d6b258ed27bcd503c17a92e1da52c71dd3b82a250905b9f7",
+  "probe_source": {
+    "len": 7375,
+    "sha256": "e1c404a0c227991d815a2a2d7d1202bc74b28aea4cc9465d6f5608acd865dca3"
+  },
+  "programs": [
+    {
+      "len": 1080464,
+      "loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "program_id": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+      "sha256": "ec2dfefaa70d560754a0000f39bd2cabc192b895d36205b3c428f601b6e1d7e1"
+    },
+    {
+      "len": 108600,
+      "loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "sha256": "8190d3f7ceb6cb7a7a8d8924bff89f9f611e15ce1f806f2b6237f3311a98f697"
+    }
+  ],
+  "runtime": {
+    "backend": "LiteSVM 0.16",
+    "clock_advanced": false,
+    "executor_sha256": "0f5ed5b8db2220e0dad1d8409b5871f203354c09a7038f55a6f7323b095d30eb",
+    "lock_sha256": "4417749a09e246a4fb8c111611fdf5825d295a28a414deeb30cd353eccec992a",
+    "official_interface": "spl-stake-pool=2.0.3",
+    "operation_source_sha256": "63aa307015b17f79d6b07e71f024f624eb2388ad15e6ba8264a5b3fa2a9a9a87",
+    "profile": "schema1_litesvm_mainnet",
+    "recent_blockhash_verification": false,
+    "replay_sha256": "8220e7051eafb8f52da4aa4f5555c2f4af0e0edd7bc36530109448d8823a8fa5",
+    "revision": "spl_stake_pool_sol_deposit_fee_v1",
+    "signature_verification": false
+  },
+  "same_code_control": {
+    "R10_recipient_credit_raw": "760985008",
+    "R11_recipient_credit_raw": "753375157",
+    "independent_config_and_actions": true,
+    "recipient_effect_raw": "-7609851",
+    "recipient_interaction_raw": "0",
+    "report_sha256": "0915b26a8c3efa74487a259a00c712984bae54ebfc0b7ddc262154d859280aba"
+  },
+  "schema": "eplyx-upgrade-parameter-feasibility-summary-v1",
+  "selected_next_implementation": "B: one separate two-instruction candidate configuration qualification fixture",
+  "upgrade_change_spec_id": "f563005c631c121c937e3f7b30b3a24f9bfd69b6b9158c0dfd0345beb8cea751",
+  "v1_recipient_effect_raw": "-7609851",
+  "v1_report_sha256": "0915b26a8c3efa74487a259a00c712984bae54ebfc0b7ddc262154d859280aba",
+  "v2_recipient_effect_raw": null
+}

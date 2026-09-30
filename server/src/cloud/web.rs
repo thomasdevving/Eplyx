@@ -31,6 +31,11 @@ const CLOUD_ASSETS: &[(&str, &str, &str)] = &[
         frontend!("cloud/parameter-model.js"),
     ),
     (
+        "interaction.js",
+        "text/javascript; charset=utf-8",
+        frontend!("cloud/interaction.js"),
+    ),
+    (
         "migration-order.js",
         "text/javascript; charset=utf-8",
         frontend!("cloud/migration-order.js"),

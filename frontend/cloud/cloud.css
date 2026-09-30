@@ -44,7 +44,7 @@
 .workspace .form-row { margin-top: 12px; }
 .analysis-form { display:grid; gap:1rem; max-width:50rem; }
 .analysis-field { display:grid; gap:.45rem; min-width:0; }
-.analysis-field input,.analysis-field select { width:100%; min-width:0; padding:.75rem; border:1px solid var(--border,#40334f); border-radius:.5rem; color:inherit; background:#171020; font:inherit; }
+.analysis-field input,.analysis-field select,.analysis-field textarea { width:100%; min-width:0; padding:.75rem; border:1px solid var(--border,#40334f); border-radius:.5rem; color:inherit; background:#171020; font:inherit; }
 .analysis-form .button { justify-self:start; }
 .analysis-form .button:disabled { cursor:not-allowed; opacity:.48; }
 .analysis-form [hidden] { display:none; }
@@ -122,3 +122,6 @@
  .capability-groups { grid-template-columns:1fr; }
  .capability-group { grid-column:auto; }
 }
+
+/* Retained interaction entry remains readable beside the upgrade report. */
+.interaction-parent { color: var(--text); }
