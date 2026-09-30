@@ -7,6 +7,7 @@ import { chromium } from '@playwright/test';
 import { fileURLToPath } from 'node:url';
 
 export async function reviewTarget(path) {
+ assert.ok(path,'EPLYX_REVIEW_TARGET must explicitly name a verified non-production target JSON');
  const target=JSON.parse(await readFile(path,'utf8'));
  const url=new URL(target.url);
  assert.equal(url.origin,target.url,'Use an exact origin without a path');

@@ -20,13 +20,13 @@ const candidate=resolve(process.env.EPLYX_REVIEW_CANDIDATE||join(repo,'artifacts
 assert.equal(hash(await readFile(candidate)),'a664f74b73dedc713f16934829b25f9a0c0c3a06c6ce21f03fdc7869ae5b555d');
 assert.equal((await readFile(candidate)).length,133992);
 const version=JSON.parse((await exec(cli,['version','--json'],{env:{},cwd:root})).stdout);assert.equal(version.commit,commit);
-const identities={commit,branch:(await exec('git',['branch','--show-current'],{cwd:repo})).stdout.trim(),cli:version,server_sha256:hash(await readFile(binary)),worker_sha256:hash(await readFile(binary)),cli_sha256:hash(await readFile(cli)),lock_sha256:hash(await readFile(join(repo,'Cargo.lock'))),frontend_source:commit,image:null,candidate_sha256:hash(await readFile(candidate)),data_mount:'private host filesystem directory; no container volume tested'};
+const identities={commit,branch:(await exec('git',['branch','--show-current'],{cwd:repo})).stdout.trim(),cli:version,server_sha256:hash(await readFile(binary)),worker_sha256:hash(await readFile(binary)),cli_sha256:hash(await readFile(cli)),lock_sha256:hash(await readFile(join(repo,'Cargo.lock'))),frontend_source:commit,frontend_lock_sha256:hash(await readFile(join(repo,'pnpm-lock.yaml'))),image:null,candidate_sha256:hash(await readFile(candidate)),data_mount:'private host filesystem directory; no container volume tested'};
 await writeFile(join(root,'build-identities.json'),JSON.stringify(identities,null,2)+'\n',{mode:0o600});
 const password=randomBytes(24).toString('hex'),operator=randomBytes(32).toString('hex'),signupCode=randomBytes(16).toString('hex');
 const passfile=join(root,'pg-password');await writeFile(passfile,password,{mode:0o600});
 const pg=join(root,'postgres'),port=process.env.EPLYX_REVIEW_LOCAL_PORT||'4491',pgPort=process.env.EPLYX_REVIEW_PG_PORT||'55491';
 const base=`http://127.0.0.1:${port}`;
-const pgEnv={PATH:process.env.PATH};
+const pgEnv={PATH:process.env.PATH,LC_ALL:'C'};
 await exec('initdb',['-D',pg,'-U',userInfo().username,'-A','scram-sha-256','--pwfile',passfile],{env:pgEnv});
 await exec('pg_ctl',['-D',pg,'-l',join(root,'postgres.log'),'-o',`-h 127.0.0.1 -p ${pgPort} -k ${root}`,'-w','start'],{env:pgEnv});
 const serviceEnv={EPLYX_DATA_DIR:join(root,'volume'),EPLYX_BIND:`127.0.0.1:${port}`,EPLYX_PUBLIC_URL:base,EPLYX_ALLOWED_ORIGINS:base,EPLYX_OPERATOR_TOKEN:operator,EPLYX_SIGNUP_CODE:signupCode,EPLYX_MAX_CONCURRENT_RUNS:'1',EPLYX_DATABASE_URL:`postgresql://${userInfo().username}:${password}@127.0.0.1:${pgPort}/postgres`};
@@ -73,7 +73,7 @@ try {
  // The exact same PostgreSQL cluster and filesystem are reused, with no bootstrap.
  await stop();await start();
  const second=await smoke({...options,out:join(root,'after-restart'),existingRun:first.child});
- assert.equal(second.report_sha256,first.report_sha256);assert.equal(second.checks.download_sha256,first.checks.download_sha256);
+ assert.equal(second.report_sha256,first.report_sha256);assert.equal(second.analysis_input_sha256,first.analysis_input_sha256);
  const parentAfter=await fetch(`${base}/v1/runs/${parent}`,{headers:{cookie:owner.cookie}});assert.ok(parentAfter.ok());assert.equal((await parentAfter.json()).bundle_sha256,parentResult.bundle_sha256);
  // Fresh standalone directory: only the executable and the downloaded artifact.
  const standalone=join(root,'standalone');await mkdir(standalone,{mode:0o700});await copyFile(cli,join(standalone,'eplyx'));
