@@ -215,6 +215,10 @@ pub fn router(state: Shared) -> Router {
             "/v1/projects/{project_id}/runs/{parent_run}/parameter-changes",
             post(crate::hosted::parameter::submit),
         )
+        .route(
+            "/v1/projects/{project_id}/runs/{parent_run}/parameter-change/eligibility",
+            get(crate::hosted::parameter::eligibility),
+        )
         .route("/v1/runs/{run_id}", get(get_run))
         .route("/v1/runs/{run_id}/report.json", get(get_report_json))
         .route("/v1/runs/{run_id}/report.md", get(get_report_markdown))

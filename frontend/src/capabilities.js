@@ -63,6 +63,7 @@ const labels = {
   program_upgrade: 'Program upgrade',
   token_migration: 'Prepared token migration',
   lifecycle_change: 'Prepared lifecycle analysis',
+  protocol_parameter_change: 'Token-2022 active fee Parameter Change',
   current_observation: 'Observe current state',
   current_path: 'Check a current path',
   current_candidate: 'Check a candidate migration',

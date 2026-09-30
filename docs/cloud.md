@@ -35,6 +35,35 @@ baseline or manage membership. The operator explicitly assigns legacy projects
 to a workspace with `POST /v1/projects/{p}/workspace-binding`, naming both the
 workspace and its owner. No existing project becomes public through migration.
 
+## Guided active Token-2022 fee comparison
+
+Open a retained hosted current-transfer run and choose **Parameter Change**. The
+authenticated server checks that this exact run retains a supported Token-2022
+TransferChecked with an already-active newer TransferFeeConfig schedule. The
+read-only helper is `GET /v1/projects/{project}/runs/{run}/parameter-change/eligibility`;
+it returns safe configuration/transfer facts and hashes, or a stable unavailable
+reason. It exposes no account bytes or provider internals and makes no RPC/VM call.
+Project-scoped credentials cannot read another project's eligibility.
+
+The guided page `/p/{project}/runs/{run}/parameter-change` edits only proposed bps
+(`0..=10000`). Mint, current rate, cap, epochs and transfer inputs come from retained
+server evidence and remain read-only. Technical preview shows the exact ChangeSpec;
+Overview and Technical share the same proposal. Preview shows configuration change
+without calculating or predicting recipient output. Submission reuses
+`POST /v1/projects/{project}/runs/{run}/parameter-changes` with only
+`{request_key, change_spec}`. The existing offline worker and analytical semantics
+remain authoritative.
+
+Accepted jobs navigate to the existing durable run view and recover on refresh.
+Validation/rejection preserves the proposed rate. Current-state mismatch is an
+evidence-binding issue; the browser does not refresh chain state or rebase it.
+Results show authoritative raw credit/withheld changes, or no observed consequence
+for this retained transfer. Pending schedule, unsupported analysis, VM rejection,
+infrastructure failure and failed reconciliation remain distinct. Program bytes
+are unchanged. This flow establishes no `SetTransferFee` execution, fee-authority
+control, on-chain activation, governance outcome or all-holder effect. See the
+[exact parameter contract](protocol-parameter-change.md).
+
 ## Operator configuration
 
 These are configuration references, not deployment instructions executed by this
@@ -72,7 +101,7 @@ list. Each entry contains the existing hosted job `kind`, an explicit `status`
 `missing` list. Every missing prerequisite has stable `code`, user-facing `message`,
 and high-level `action` fields. The current hosted kinds are
 `program_upgrade`, `token_migration`, `lifecycle_change`,
-`current_observation`, `current_path`, `current_candidate`,
+`protocol_parameter_change`, `current_observation`, `current_path`, `current_candidate`,
 `current_preflight`, and `current_stress`.
 
 Readiness is derived on every request. All kinds require an enabled project.
