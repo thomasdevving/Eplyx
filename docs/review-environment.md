@@ -172,3 +172,12 @@ login/journey, real worker, persistence, isolation and downloaded-artifact
 reproduction pass. Local full-stack success is
 `locally_verified_remote_not_validated`; a failing prerequisite is `blocked`.
 Neither is a repository-wide verification or security-audit claim.
+
+## Scoped route repair
+
+The real review browser exposed an asset collision: `/assets/migration.js`
+served the prepared cloud form instead of the dashboard module that exports
+`isMigration`, so every project page failed during module loading. The prepared
+form now uses `/assets/prepared-migration.js`; the dashboard module keeps its
+existing route. A focused server asset-routing regression check covers both.
+No authentication, runtime, candidate admission or analytical conclusion changed.
