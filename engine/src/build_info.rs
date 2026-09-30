@@ -27,7 +27,7 @@ pub fn json() -> Value {
     let mut value = json!({
         "schema_version":1,"name":"eplyx","version":VERSION,"commit":COMMIT,"target":TARGET,"platform":platform(),"os":std::env::consts::OS,"architecture":std::env::consts::ARCH,
         "engine":{"crate":"eplyx-engine","version":VERSION,"change_spec_schema":change::CHANGE_SPEC_SCHEMA,"ci_report_schema":ci::CI_REPORT_SCHEMA,"bundle_schema":bundle::CI_BUNDLE_SCHEMA,
-            "change_specs":{"program_upgrade":[1],"token_migration":[1],"lifecycle_change":[1]},"run_metadata_schema":local_store::METADATA_VERSION,"reproduction_schema":local_store::REPRODUCTION_VERSION,
+            "change_specs":{"program_upgrade":[1],"token_migration":[1],"lifecycle_change":[1],"protocol_parameter_change":[1]},"run_metadata_schema":local_store::METADATA_VERSION,"reproduction_schema":local_store::REPRODUCTION_VERSION,
             "lifecycle":{"snapshot_schemas":[1,2],"scenario_schema":1,"impact_schema":1,"counterfactual_schema":1,"notice_schema":1,"readiness_schema":1,"rollout_schema":1,"resolution_schema":1,"current_capture_schemas":[1,2,3]},
             "current_paths":{"check_capture_schema":1,"execution_schema":1,"probe_schema":1,"position_schema":1,"withdrawal_schema":1},
             "token_migration":{"adapter":m::adapter::ADAPTER,"adapter_version":m::adapter::ADAPTER_VERSION,"state_input_schema":m::input::SCHEMA_VERSION,"report_schema":m::report::REPORT_SCHEMA,"invariant_schema":m::invariants::INVARIANT_SCHEMA_VERSION,"fixture_recipe_schema":m::fixture::RECIPE_SCHEMA,"unsigned_plan_schema":m::unsigned::UNSIGNED_SCHEMA,"counterexample_search":m::search::SEARCH_VERSION,"token_2022_matrix":m::extensions::MATRIX_VERSION,"capture_schema":m::capture::CAPTURE_SCHEMA,"bindings_schema":m::pipeline::BINDINGS_SCHEMA,"plan_schema":m::planner::PLAN_SCHEMA,"planner":m::planner::PLANNER_VERSION,"executor":m::execute::EXECUTOR_VERSION,"rehearsal":m::rehearsal::REHEARSAL_VERSION,"stress":m::stress::STRESS_VERSION,"current":m::current::VERSION,"current_selector":m::current_select::SELECTOR_VERSION_V2,"observed_search":m::observed_search::VERSION,"authority_selector":m::authority_resolution::SELECTOR_VERSION,"authority_resolver":m::authority_resolution::RESOLVER_VERSION}
@@ -37,6 +37,7 @@ pub fn json() -> Value {
     value["engine"]["token_migration"]["account_check_capture_schema"] = json!(1);
     value["engine"]["token_migration"]["account_check_report_schema"] = json!(1);
     value["engine"]["analytical_metadata_schema"] = json!(local_store::ANALYTICAL_METADATA_VERSION);
+    value["engine"]["protocol_parameter_change"] = json!({"report_schema":crate::parameter_change::REPORT_SCHEMA,"operation":crate::parameter_change::DERIVATION});
     value["engine"]["dashboard_index_schema"] = json!(crate::dashboard::store::INDEX_VERSION);
     value["engine"]["sync"] = json!({"run":crate::cloud::contract::RUN_SCHEMA,"counterexample":crate::cloud::contract::COUNTEREXAMPLE_SCHEMA,"reproduction":crate::cloud::contract::REPRODUCTION_SCHEMA});
     value

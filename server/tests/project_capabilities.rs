@@ -61,7 +61,7 @@ async fn capabilities_require_project_access_and_report_independent_current_stat
     assert_eq!(status, axum::http::StatusCode::OK, "{setup}");
     assert_eq!(setup["schema_version"], 1);
     assert_eq!(setup["project_id"], project);
-    assert_eq!(setup["analyses"].as_array().unwrap().len(), 8);
+    assert_eq!(setup["analyses"].as_array().unwrap().len(), 9);
     assert_eq!(
         setup["analyses"]
             .as_array()
@@ -73,6 +73,7 @@ async fn capabilities_require_project_access_and_report_independent_current_stat
             "program_upgrade",
             "token_migration",
             "lifecycle_change",
+            "protocol_parameter_change",
             "current_observation",
             "current_path",
             "current_candidate",
@@ -87,7 +88,11 @@ async fn capabilities_require_project_access_and_report_independent_current_stat
     assert_eq!(upgrade["can_submit"], false);
     assert_eq!(missing_codes(upgrade), vec!["active_bundle_missing"]);
 
-    for kind in ["token_migration", "lifecycle_change"] {
+    for kind in [
+        "token_migration",
+        "lifecycle_change",
+        "protocol_parameter_change",
+    ] {
         let capability = analysis(&setup, kind);
         assert_eq!(capability["status"], "ready", "{kind}: {capability}");
         assert_eq!(capability["supported"], true);

@@ -221,6 +221,7 @@ pub fn save_analysis(
     ensure!(
         [
             "lifecycle_change",
+            "protocol_parameter_change",
             "current_observation",
             "current_path",
             "current_candidate",

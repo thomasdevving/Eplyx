@@ -71,7 +71,7 @@ pub struct LoadedProgram {
 }
 
 /// Actual inner instruction payloads for consequence probes (including event CPI).
-#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize)]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct ProbeInnerInstruction {
     pub program: String,
     pub stack_height: u8,
@@ -80,7 +80,7 @@ pub struct ProbeInnerInstruction {
     pub data: Vec<u8>,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize)]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct ProbeTransactionExecution {
     pub success: bool,
     pub error: Option<String>,

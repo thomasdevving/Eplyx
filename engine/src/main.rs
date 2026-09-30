@@ -3,6 +3,7 @@
 mod cli_dashboard;
 mod cli_lifecycle;
 mod cli_local;
+mod cli_parameter;
 mod cli_path;
 mod cli_qualification;
 
@@ -39,6 +40,13 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
+    /// Analyze one active Token-2022 transfer-fee parameter counterfactual.
+    Parameter {
+        #[command(subcommand)]
+        command: cli_parameter::Command,
+    },
+    #[command(hide = true)]
+    ParameterWorker { encoded: String },
     /// Sign in through a browser-approved device code.
     Login {
         #[arg(long)]
@@ -1554,6 +1562,8 @@ fn run() -> Result<ExitCode> {
             }
             Ok(ExitCode::SUCCESS)
         }
+        Command::Parameter { command } => cli_parameter::run(command),
+        Command::ParameterWorker { encoded } => cli_parameter::worker(&encoded),
         Command::Generate(args) => generate(args),
         Command::Reproduce(args) => reproduce(args),
         Command::List(args) => list(args),
@@ -2055,7 +2065,9 @@ fn change_program_upgrade(args: ChangeProgramUpgradeArgs) -> Result<ExitCode> {
                 *replaces = Some(ExecutableArtifact::of(&bytes));
             }
         }
-        Change::TokenMigration(_) | Change::LifecycleChange(_) => {
+        Change::TokenMigration(_)
+        | Change::LifecycleChange(_)
+        | Change::ProtocolParameterChange(_) => {
             unreachable!("program-upgrade constructor")
         }
     }
@@ -2322,6 +2334,9 @@ fn render_ci(report: &eplyx_engine::ci::CiReport) -> String {
                     change.kind().as_str(),
                     target_program_id
                 );
+            }
+            eplyx_engine::change::BoundChange::ProtocolParameterChange { target, .. } => {
+                let _ = writeln!(text, "Parameter mint: {}", target.config_account);
             }
             eplyx_engine::change::BoundChange::LifecycleChange { asset_mint, .. } => {
                 println!("Lifecycle asset: {asset_mint}");

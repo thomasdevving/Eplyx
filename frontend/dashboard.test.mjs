@@ -53,6 +53,16 @@ walletDetail.analysis.report.wallet_observation={public_owner:'public-owner',tok
 const walletHTML=analyticalDetail(walletDetail).html;assert.match(walletHTML,/9,007,199,254,740,993/);assert.match(walletHTML,/Initialized/);assert.doesNotMatch(walletHTML,/\[object Object\]/);
 const failedDetail=analyticalDetail({kind:'current_path',state:'ExecutionError',hosted:{detail:'Worker stopped; no result'}}).html;assert.match(failedDetail,/Worker stopped; no result/);assert.doesNotMatch(failedDetail,/has not finished/);
 const upgradeOverview=analyticalDetail({id:'run_upgrade',kind:'program_upgrade',state:'Complete',status:'failed'}).html;assert.match(upgradeOverview,/Open program-upgrade report/);assert.doesNotMatch(upgradeOverview,/Paths remain separate|Public owner/);
+for (const status of ['semantic_consequence_observed','no_observed_consequence','current_state_mismatch']) {
+ const executed=status!=='current_state_mismatch';
+ const side=(credit,fee)=>({execution:{success:true},reconciliation:{reconciled:true,input_debited_raw:'10000',output_received_raw:credit,token_accounts:[{}, {withheld_fee_change_raw:fee}]}});
+ const report={kind:'protocol_parameter_change',status,change:{target:{config_account:'retained-mint'}},proposed_declaration:{current_bps:50,proposed_bps:200,captured_epoch:'1037',maximum_fee_raw:'18446744073709551615'},limitations:['Exact retained case only.'],...(executed?{baseline:side('9950','50'),proposed:side(status==='no_observed_consequence'?'9950':'9800',status==='no_observed_consequence'?'50':'200')}:{failure:{detail:'<img src=x> stale expectation; execution prevented'}})};
+ const html=analyticalDetail({kind:report.kind,state:'Complete',status,analysis:{report}}).html;
+ check(html,`parameter/${status}`);
+ assert.match(html,/Token-2022 fee counterfactual/);assert.match(html,/raw token units/);assert.match(html,/No SetTransferFee instruction/);
+ assert.doesNotMatch(html,/<img|<form|candidate_sha256/);
+ if(executed)assert.match(html,/9,950/);else {assert.match(html,/Not executed/);assert.match(html,/&lt;img/);}
+}
 const css=readFileSync(new URL('./dashboard/dashboard.css',import.meta.url),'utf8');
 const outside=css.replace(/:root\s*\{[^}]*\}/g,'');
 assert.doesNotMatch(outside,/#(?:[a-f\d]{3,8})\b|\brgba?\(|\bhsla?\(/i);

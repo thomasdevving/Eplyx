@@ -97,7 +97,7 @@ struct Scope {
     source_raw: Value,
     unsupported: Option<String>,
 }
-fn unsupported(
+pub(crate) fn unsupported(
     mint: &decode::MintConfig,
     source: &decode::TokenAccountState,
     recipient: Option<&decode::TokenAccountState>,
@@ -731,4 +731,85 @@ impl SolanaRpc for ReplayRpc<'_> {
             .clone()
             .context("bounded public-state request failed")
     }
+}
+
+/// Rebuild an immutable retained original-owner transfer case without executing it.
+/// Both current replay and parameter analysis keep the final capture authoritative.
+pub fn parameter_input(bytes: &[u8]) -> Result<crate::parameter_change::Input> {
+    ensure!(
+        bytes.len() <= 64 * 1024 * 1024,
+        "config_evidence_missing: capture exceeds bound"
+    );
+    let c: Capture = serde_json::from_slice(bytes)?;
+    ensure!(
+        c.schema_version == 1
+            && c.request.path == ExitPathType::Transfer
+            && sha256(c.wallet_capture.as_bytes()) == c.wallet_capture_sha256,
+        "config_evidence_missing: invalid transfer capture/wallet binding"
+    );
+    let s = scope(&c.wallet_capture, &c.request)?;
+    if let Some(reason) = s.unsupported {
+        anyhow::bail!("downstream_action_unsupported: {reason}");
+    }
+    ensure!(
+        c.observations.len() == 4
+            && c.observations
+                .iter()
+                .all(|r| r.error.is_none() && r.result.is_some()),
+        "config_evidence_missing: final transfer observations absent"
+    );
+    let start = chrono::DateTime::parse_from_rfc3339(&c.started_at)?;
+    let end = chrono::DateTime::parse_from_rfc3339(&c.completed_at)?;
+    ensure!(start <= end, "invalid capture interval");
+    let mut previous = start;
+    for r in &c.observations {
+        let a = chrono::DateTime::parse_from_rfc3339(&r.started_at)?;
+        let b = chrono::DateTime::parse_from_rfc3339(&r.completed_at)?;
+        ensure!(
+            previous <= a && a <= b && b <= end,
+            "invalid capture record interval"
+        );
+        previous = b;
+    }
+    let fixture = CapturedExecutionFixture {
+        schema_version: 1,
+        decoder_revision: token_transfer::CURRENT_REVISION.into(),
+        captured_at: end.with_timezone(&Utc),
+        rpc_origin: c.rpc_origin,
+        evidence: c
+            .observations
+            .iter()
+            .enumerate()
+            .map(|(i, r)| crate::lifecycle::RpcEvidence {
+                id: i,
+                method: r.method.clone(),
+                params: r.params.clone(),
+                result: r.result.clone().unwrap(),
+            })
+            .collect(),
+    };
+    let batch = &fixture.evidence[3];
+    let n = batch.params[0]
+        .as_array()
+        .context("final accounts absent")?
+        .iter()
+        .position(|a| a == &s.context.source)
+        .context("source absent")?;
+    let final_source = &batch.result["value"][n];
+    ensure!(
+        ["data", "owner", "executable", "lamports"]
+            .iter()
+            .all(|f| final_source[f] == s.source_raw[f]),
+        "config_evidence_missing: source changed since wallet observation"
+    );
+    let input = crate::parameter_change::Input {
+        schema_version: 1,
+        context: s.context,
+        amount_raw: s.amount,
+        fixture_sha256: fixture.sha256()?,
+        source_capture_sha256: Some(sha256(bytes)),
+        fixture,
+    };
+    input.validate()?;
+    Ok(input)
 }

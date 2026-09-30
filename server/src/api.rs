@@ -211,6 +211,10 @@ pub fn router(state: Shared) -> Router {
             "/v1/projects/{project_id}/governance/changes/{change_spec_id}",
             get(list_governance_checks),
         )
+        .route(
+            "/v1/projects/{project_id}/runs/{parent_run}/parameter-changes",
+            post(crate::hosted::parameter::submit),
+        )
         .route("/v1/runs/{run_id}", get(get_run))
         .route("/v1/runs/{run_id}/report.json", get(get_report_json))
         .route("/v1/runs/{run_id}/report.md", get(get_report_markdown))
@@ -1724,6 +1728,7 @@ fn project_capabilities(state: &AppState, project: &Project) -> ProjectCapabilit
         analysis_capability("program_upgrade", true, &common, upgrade),
         analysis_capability("token_migration", true, &common, Vec::new()),
         analysis_capability("lifecycle_change", true, &common, Vec::new()),
+        analysis_capability("protocol_parameter_change", true, &common, Vec::new()),
         analysis_capability("current_observation", true, &common, observation()),
         analysis_capability("current_path", true, &common, observation()),
         analysis_capability("current_candidate", true, &common, candidate),

@@ -32,6 +32,8 @@ fn record(
 }
 
 /// Generic captured transfer inputs. Historical snapshots are adapted by wrappers below.
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct TransferContext {
     pub genesis_hash: String,
     pub minimum_slot: u64,
@@ -161,7 +163,11 @@ pub fn build_current(
     amount: u64,
     f: &CapturedExecutionFixture,
 ) -> Result<ProbeExecutionPlan> {
-    build_context(c, amount, f, CURRENT_REVISION)
+    ensure!(
+        [CURRENT_REVISION, REVISION].contains(&f.decoder_revision.as_str()),
+        "unsupported retained transfer revision"
+    );
+    build_context(c, amount, f, &f.decoder_revision)
 }
 fn build_context(
     c: &TransferContext,

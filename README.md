@@ -1,5 +1,7 @@
 # Eplyx
 
+The fourth first-class ChangeSpec, [`protocol_parameter_change`](docs/protocol-parameter-change.md), supports one captured current-state analysis: change the already-active newer Token-2022 transfer-fee bps on an exact observed mint and compare the same `TransferChecked` under identical deployed code and Clock. Local offline reproduction and authenticated hosted analysis retain exact raw credit/withheld consequences.
+
 Upgrade Impact CI for Solana programs.
 
 Eplyx deterministically executes the same transactions and account states

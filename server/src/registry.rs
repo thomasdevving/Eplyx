@@ -202,6 +202,10 @@ pub struct RunChange {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum IndexedChange {
+    ProtocolParameterChange {
+        target: eplyx_engine::parameter_change::ConfigTarget,
+        operation: eplyx_engine::parameter_change::Operation,
+    },
     LifecycleChange {
         asset_mint: String,
         destination_mint: Option<String>,
@@ -225,6 +229,10 @@ impl RunChange {
         Ok(Self {
             change_spec_id: spec.id()?,
             change: match &spec.change {
+                Change::ProtocolParameterChange(change) => IndexedChange::ProtocolParameterChange {
+                    target: change.target.clone(),
+                    operation: change.operation.clone(),
+                },
                 Change::LifecycleChange(change) => IndexedChange::LifecycleChange {
                     asset_mint: change.asset.mint.clone(),
                     destination_mint: change.destination.as_ref().map(|d| d.mint.clone()),
@@ -251,6 +259,7 @@ impl RunChange {
 
     pub fn kind(&self) -> ChangeKind {
         match &self.change {
+            IndexedChange::ProtocolParameterChange { .. } => ChangeKind::ProtocolParameterChange,
             IndexedChange::ProgramUpgrade { .. } => ChangeKind::ProgramUpgrade,
             IndexedChange::TokenMigration { .. } => ChangeKind::TokenMigration,
             IndexedChange::LifecycleChange { .. } => ChangeKind::LifecycleChange,

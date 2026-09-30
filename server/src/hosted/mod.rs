@@ -9,6 +9,11 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Input {
+    ProtocolParameterChange {
+        change: ArtifactRef,
+        capture: ArtifactRef,
+        parent_run: String,
+    },
     CurrentStress {
         change: ArtifactRef,
         state_input: ArtifactRef,
@@ -78,6 +83,7 @@ pub enum Input {
 impl Input {
     pub fn kind(&self) -> &'static str {
         match self {
+            Self::ProtocolParameterChange { .. } => "protocol_parameter_change",
             Self::CurrentStress { .. } => "current_stress",
             Self::CurrentCandidate { .. } => "current_candidate",
             Self::CurrentPreflight { .. } => "current_preflight",
@@ -90,6 +96,7 @@ impl Input {
     }
     pub fn change(&self) -> Option<&ArtifactRef> {
         match self {
+            Self::ProtocolParameterChange { change, .. } => Some(change),
             Self::CurrentStress { change, .. } => Some(change),
             Self::CurrentCandidate { change, .. } => change.as_ref(),
             Self::MigrationOrder { change, .. }
@@ -115,6 +122,7 @@ pub struct Job {
 pub mod catalogue;
 pub mod observation;
 pub mod order;
+pub mod parameter;
 mod process;
 pub mod proposal;
 pub mod stress;
@@ -195,6 +203,9 @@ impl Registry {
                 self.load_run(parent_run)?.project_id == project.project_id,
                 "order parent project mismatch"
             );
+        }
+        if matches!(input, Input::ProtocolParameterChange { .. }) {
+            parameter::validate_parent(self, &project.project_id, &input)?;
         }
         let validation = tempfile::tempdir()?;
         worker::stage(self, &input, validation.path())?;
@@ -313,6 +324,21 @@ impl Registry {
             "execution cannot manufacture a search"
         );
         match input {
+            Input::ProtocolParameterChange { .. } => {
+                let report: serde_json::Value = serde_json::from_str(&projection.report.text)?;
+                parameter::validate_parent(self, &record.project_id, &input)?;
+                parameter::verify(self, &input, &report)?;
+                let expected = RunChange::of(
+                    &eplyx_engine::change::ChangeSpec::parse(
+                        &self.document_bytes(input.change().context("missing change")?)?,
+                    )?,
+                    ChangeOrigin::Submitted,
+                )?;
+                ensure!(
+                    record.change.as_ref() == Some(&expected),
+                    "parameter index differs from proposal"
+                );
+            }
             Input::MigrationOrder { .. } => order::verify(self, record, projection)?,
             Input::CurrentStress {
                 parent_observation,
