@@ -181,3 +181,11 @@ served the prepared cloud form instead of the dashboard module that exports
 form now uses `/assets/prepared-migration.js`; the dashboard module keeps its
 existing route. A focused server asset-routing regression check covers both.
 No authentication, runtime, candidate admission or analytical conclusion changed.
+
+The actual macOS service download also contained AppleDouble `._` metadata
+sidecars from system tar. The packaging subprocess now sets the public
+`COPYFILE_DISABLE=1` switch after clearing its environment, without changing
+analytical workers or input bytes. A focused archive regression test writes
+host metadata and checks that only canonical artifact members enter the tar.
+Safe extraction continues to reject unexpected roots, links and traversal;
+previous downloads are preserved, never rewritten to make validation pass.
