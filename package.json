@@ -18,7 +18,9 @@
     "test:governance-browser": "node frontend/tests/governance/trail.browser.mjs",
     "test:dashboard": "playwright test --config playwright.dashboard.config.js",
     "test:cloud": "playwright test --config playwright.cloud.config.js",
-    "test:public": "pnpm build && playwright test --config playwright.public.config.js"
+    "test:public": "pnpm build && playwright test --config playwright.public.config.js",
+    "test:review": "node scripts/review-smoke.mjs",
+    "test:review-local": "node scripts/review-local.mjs"
   },
   "dependencies": {
     "three": "^0.186.0"

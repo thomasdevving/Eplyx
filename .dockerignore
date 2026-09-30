@@ -30,3 +30,6 @@ frontend/*.test.mjs
 **/.rpc-url
 **/eplyx.toml
 **/*.log
+
+# Unrelated media and private working material never enter a review image.
+media/

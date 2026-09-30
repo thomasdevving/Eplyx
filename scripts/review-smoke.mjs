@@ -97,8 +97,9 @@ export async function smoke({target,credentials,project,parent,deniedProject,pro
   const text=await page.locator('main').innerText();
   for(const s of ['760985008','753375157','-7609851','Retained','Unavailable','constructed'])assert.ok(text.toLowerCase().includes(s.toLowerCase()),`Rendered result missing ${s}`);
   // Overview and Technical use the same server result.
-  const mode=page.locator('[data-mode-toggle]');
-  if(await mode.count())await mode.click();
+  await page.getByRole('button',{name:'Technical',exact:true}).click();
+  assert.equal(await page.locator('html').getAttribute('data-mode'),'technical');
+  for(const value of [a.report_sha256,a.analysis_input_sha256,a.facts.upgrade_change_spec_id,a.facts.parameter_change_spec_id])assert.ok((await page.locator('main').innerText()).includes(value));
   const dl=page.waitForEvent('download');
   await page.getByRole('link',{name:'Download portable artifact',exact:true}).click();
   const download=await dl;assert.equal(download.suggestedFilename(),'interaction.tar');
