@@ -112,6 +112,144 @@ async fn submit(
     )
     .await
 }
+
+fn edit_retained_account(input: &mut p::Input, address: &str, edit: impl Fn(&mut Vec<u8>)) {
+    use base64::{engine::general_purpose::STANDARD, Engine};
+    let record = &mut input.fixture.evidence[3];
+    let index = record.params[0]
+        .as_array()
+        .unwrap()
+        .iter()
+        .position(|a| a == address)
+        .unwrap();
+    let raw = &mut record.result["value"][index];
+    let mut bytes = STANDARD.decode(raw["data"][0].as_str().unwrap()).unwrap();
+    edit(&mut bytes);
+    raw["data"][0] = STANDARD.encode(&bytes).into();
+    raw["space"] = json!(bytes.len());
+    input.fixture_sha256 = input.fixture.sha256().unwrap();
+}
+
+#[tokio::test]
+async fn eligibility_is_authoritative_offline_narrow_and_project_authorized() {
+    let (h, rpc, project, parent, _) = parent().await;
+    let token = h.create_token(&project, "eligibility").await;
+    let other = h.create_project("Other project").await;
+    let other_token = h.create_token(&other, "other").await;
+    let url = format!("/v1/projects/{project}/runs/{parent}/parameter-change/eligibility");
+    let calls = rpc.calls.lock().unwrap().len();
+    let (code, e) = h.get(&url, &token).await;
+    assert_eq!(code, StatusCode::OK, "{e}");
+    assert_eq!(e["eligible"], true);
+    assert_eq!(e["current_basis_points"], 50);
+    assert_eq!(e["transfer"]["amount_raw"], "10000");
+    assert_eq!(e["maximum_fee_raw"], "18446744073709551615");
+    assert_eq!(e["operation"], p::DERIVATION);
+    assert_eq!(e["run_id"], parent);
+    assert_eq!(h.get_on(h.reopen(), &url, &token).await.1, e);
+    assert_eq!(rpc.calls.lock().unwrap().len(), calls);
+    let text = e.to_string();
+    for marker in [
+        "rpc_origin",
+        "account_data",
+        "ProgramData",
+        "data:image",
+        "https://",
+        "observations",
+        "retained_input",
+    ] {
+        assert!(!text.contains(marker), "{marker}");
+    }
+    assert_eq!(h.get(&url, &other_token).await.0, StatusCode::UNAUTHORIZED);
+    assert_eq!(
+        h.send(
+            axum::http::Request::builder()
+                .uri(&url)
+                .body(Body::empty())
+                .unwrap()
+        )
+        .await
+        .0,
+        StatusCode::UNAUTHORIZED
+    );
+    assert_eq!(
+        h.get(
+            &format!("/v1/projects/{other}/runs/{parent}/parameter-change/eligibility"),
+            &other_token
+        )
+        .await
+        .0,
+        StatusCode::NOT_FOUND
+    );
+    let Input::CurrentPath {
+        capture,
+        parent_observation,
+        ..
+    } = h
+        .state
+        .registry
+        .hosted_input(&h.state.registry.load_run(&parent).unwrap())
+        .unwrap()
+    else {
+        unreachable!()
+    };
+    let input = eplyx_engine::path::current::parameter_input(
+        &h.state
+            .registry
+            .artifacts()
+            .get(ArtifactClass::Capture, &capture)
+            .unwrap(),
+    )
+    .unwrap();
+    let reason = |i: &p::Input| {
+        eplyx_server::hosted::parameter::retained_eligibility(i)["reason_code"].clone()
+    };
+    let pending =
+        eplyx_engine::path::current::parameter_input(
+            &std::fs::read(eplyx_engine::repo_root().join(
+                "fixtures/current/sta/reports/milestone4-validation/live-transfer.capture.json",
+            ))
+            .unwrap(),
+        )
+        .unwrap();
+    assert_eq!(reason(&pending), "schedule_not_active");
+    let mut missing = input.clone();
+    edit_retained_account(&mut missing, &input.context.mint, |bytes| {
+        bytes.truncate(82)
+    });
+    assert_eq!(reason(&missing), "missing_fee_config");
+    let mut unsupported = input.clone();
+    edit_retained_account(&mut unsupported, &input.context.source, |bytes| {
+        bytes[108] = 2
+    });
+    assert_eq!(reason(&unsupported), "downstream_action_unsupported");
+    let mut incomplete = input.clone();
+    incomplete.fixture.evidence.pop();
+    incomplete.fixture_sha256 = incomplete.fixture.sha256().unwrap();
+    assert_eq!(reason(&incomplete), "capture_incomplete");
+    let mut legacy = input.clone();
+    legacy.context.program = eplyx_engine::standard_programs::token::LEGACY_PROGRAM.into();
+    assert_eq!(reason(&legacy), "wrong_token_program");
+    let (code, accepted) = h
+        .post_json(
+            &format!("/v1/projects/{project}/observations/{parent_observation}/analyse"),
+            &token,
+            json!({"request_key":"eligibility-wrong-run"}),
+        )
+        .await;
+    assert_eq!(code, StatusCode::ACCEPTED);
+    let wrong = accepted["run_id"].as_str().unwrap();
+    h.wait_until(wrong, RunStatus::is_terminal).await;
+    assert_eq!(
+        h.get(
+            &format!("/v1/projects/{project}/runs/{wrong}/parameter-change/eligibility"),
+            &token
+        )
+        .await
+        .1["reason_code"],
+        "wrong_run_kind"
+    );
+}
 #[tokio::test]
 async fn authenticated_offline_consequence_index_projection_reproduction_and_restart() {
     let (h, rpc, project, parent, spec) = parent().await;
@@ -302,6 +440,14 @@ async fn cross_project_unauthenticated_wrong_kind_and_arbitrary_inputs_are_refus
             .await,
         RunStatus::Completed
     );
+    let (code, eligibility) = h
+        .get(
+            &format!("/v1/projects/{project}/runs/{market_run}/parameter-change/eligibility"),
+            OPERATOR,
+        )
+        .await;
+    assert_eq!(code, StatusCode::OK);
+    assert_eq!(eligibility["reason_code"], "wrong_path");
     assert_eq!(
         submit(
             &h,

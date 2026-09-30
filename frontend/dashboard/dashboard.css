@@ -163,6 +163,8 @@ html[data-mode="technical"] .mode-switch__thumb { transform: translateX(104px); 
 .tiles { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; }
 .tiles--3 { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
 .tiles--4 { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+.tiles--parameter .tile__value { overflow-wrap: anywhere; }
+.tiles--parameter .pill { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
 .tile { position: relative; display: flex; flex-direction: column; gap: 4px; min-height: 104px; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); color: var(--text); }
 a.tile:hover { text-decoration: none; border-color: var(--line-2); background: var(--panel-2); }
 .tile::after { content: ''; position: absolute; left: 16px; right: 16px; bottom: 0; height: 2px; border-radius: 2px 2px 0 0; background: transparent; }
@@ -379,6 +381,7 @@ details summary { cursor: pointer; color: var(--text-2); margin: 12px 0 6px; }
   .answer > .pill, .answer > .tag { grid-column: 2; justify-self: start; }
   .story__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tiles--parameter { grid-template-columns: minmax(0, 1fr); }
   .tile__value { font-size: 20px; }
   .hide-sm { display: none; }
   .kv { grid-template-columns: minmax(0, 1fr); }

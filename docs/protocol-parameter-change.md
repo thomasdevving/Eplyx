@@ -2,7 +2,7 @@
 
 Eplyx's fourth schema-1 ChangeSpec is `protocol_parameter_change`. It supports exactly `token_2022_active_newer_transfer_fee_basis_points_v1`: change the already-active newer transfer-fee basis points on one observed Token-2022 mint, then run the same original-owner `TransferChecked` independently against current and derived mint state.
 
-This is a captured current-state counterfactual. It establishes the measured result of this exact transfer under the declared rate. It does not execute `SetTransferFee`, establish fee-authority control, deployability or on-chain activation, judge configuration safety, or establish effects for other holders. Governance and composition remain outside this contract. No guided parameter form is included.
+This is a captured current-state counterfactual. It establishes the measured result of this exact transfer under the declared rate. It does not execute `SetTransferFee`, establish fee-authority control, deployability or on-chain activation, judge configuration safety, or establish effects for other holders. Governance and composition remain outside this contract. The authenticated guided form edits only the proposed basis-point rate for an eligible retained transfer.
 
 ## Proposal schema and identity
 
@@ -97,6 +97,24 @@ POST /v1/projects/{project_id}/runs/{retained_current_path_run}/parameter-change
 
 The parent must be a completed, project-owned retained current transfer run. The server selects its authoritative immutable capture; callers cannot submit proposed account bytes, independent ELF, execution results, fee calculations or offsets. The existing durable queue and empty-environment worker validate the stored spec/capture, derive the mint themselves, execute, persist and index the result. Reads reverify parent ownership, authoritative capture, spec/index/binding equality and report projection. No provider is configured inside the worker. Restart recovery preserves the same input references.
 
+### Guided authenticated browser flow
+
+Open a retained hosted current-transfer run at `/p/{project_id}/runs/{run_id}`. Its **Parameter Change** section requests authenticated run-specific eligibility from:
+
+```text
+GET /v1/projects/{project_id}/runs/{run_id}/parameter-change/eligibility
+```
+
+The server verifies the parent projection/capture, original-owner Token-2022 transfer admission, deployed executable evidence and isolated no-op mutation proof at the retained Clock. It performs no RPC or VM execution. Eligible responses contain only safe facts: mint/program, current bps, schedule/captured epochs, maximum fee, mint/capture/ELF hashes and source/destination/raw amount/decimals. Raw account bytes and provider internals are omitted. Ineligible responses carry a stable `reason_code` and factual explanation, including pending schedule, missing fee config, unsupported shape, incomplete capture, wrong path/run/program or unfinished parent. Project access and parent ownership apply equally to this GET and the existing POST.
+
+Eligible parents link to `/p/{project_id}/runs/{run_id}/parameter-change`. The form has one editable analytical field, **Proposed transfer fee (basis points)**, accepting integers `0..=10000`, including an equal-value control. Every expected-current field comes from the immutable server response. Mint, cap, epochs, source/destination and amount remain read-only. Project capabilities independently gate submission.
+
+Preview shows current → proposed rate, retained configuration/interaction and the same-code comparison contract. Technical mode exposes the exact existing schema-1 ChangeSpec, operation and evidence identities. Overview/Technical switching changes presentation and retains the proposed value. No JavaScript fee calculation or predicted recipient/withheld output is present. The server verifies the ChangeSpec ID; the accepted result exposes it in Technical mode.
+
+Submission sends only `{request_key, change_spec}` to the existing `/parameter-changes` POST. Editing the rate invalidates its preview; a retry of the same preview retains its request key. Validation or server rejection preserves the rate and displays the factual error. A mismatch is an evidence-binding issue; the browser never refreshes chain state or rebases expectations. Acceptance navigates to the existing run page, which polls a queued/running parameter job and recovers its durable status on refresh.
+
+The result shows the authoritative rate declaration, unchanged program bytes, raw recipient credit and withheld increment when reconciled, and the recorded ChangeSpec/ELF identities. No-consequence means the measured result of this exact retained transfer did not change. Pending schedule and stale evidence do not imply program rejection. Reconciliation failure establishes no economic findings. Internal worker errors remain separate from analytical statuses. The scope is still one captured transfer, with no `SetTransferFee`, signing, authority, activation or governance claim.
+
 The shared dashboard view-model reader and hosted analytical reader recognize the kind through the existing metadata/report contract. Stored validated spec ID = indexed change ID = report binding ID is enforced. The minimal dashboard view displays raw consequences, status and limitations. This complete evidence-bearing report exceeds the existing 4 MiB generic local-to-cloud sync report bound; generic sync is not the submission path for this capability. Use the authenticated hosted API above. Sync privacy scanning and limits remain unchanged; archived provider-bearing captures are private fixture inputs, not public downloadable report examples.
 
 ## Qualification and implementation coverage
@@ -120,4 +138,6 @@ Implementation files cover schema/binding (`engine/src/change.rs`), typed mutati
 
 Qualification passed **62 distinct integration tests**: 10 new engine parameter tests, four new hosted parameter tests and 48 existing regression tests covering ChangeSpec, current execution, Token-2022, migration/lifecycle identity, project capabilities and older hosted analyses. The frontend suite passed, including 70 dashboard views. Clippy passed for engine/server libraries, binaries and both new test targets with warnings denied. The broader engine library run passed 652 tests; five existing authority-resolution tests failed to read missing archived migration population fixtures. The pinned migration importer confirmed the available local archive lacks those artifacts, so full-library verification remains incomplete. The updated outer deserializer was additionally checked against all 11 ChangeSpec library tests and existing migration/lifecycle identity tests.
 
-Exact commitments and verification limits are recorded with the [qualification summary](examples/protocol-parameter-change-qualification.json). There is no implementation blocker for this single-operation capability. There is no second parameter, fee-authority change, `SetTransferFee` execution, guided form, governance extension or composition.
+Exact Phase 8B commitments and verification limits are recorded with the [qualification summary](examples/protocol-parameter-change-qualification.json). Phase 8C adds only authenticated eligibility, guided rate declaration and result presentation over that closed analytical contract. Its focused coverage lives in `frontend/parameter.test.mjs`, `frontend/tests/dashboard/parameter.spec.js` and the eligibility additions to `server/tests/hosted_parameter.rs`. There is no second parameter, fee-authority change, `SetTransferFee` execution, governance extension or composition.
+
+Phase 8C verification passed all five hosted parameter tests and both project-capability tests, the complete frontend checks (including 70 dashboard views and the new guided-form tests), and one focused Playwright flow with mocked hosted HTTP. That browser flow covers entry, bounds, exact preview, mode retention, rejected submission/retry, accepted navigation, async completion, refresh recovery and mobile layout. Server Clippy with warnings denied and repository formatting checks also passed. No implementation blocker remains for this one guided capability; the historical Phase 8B full-library fixture limitation above is unchanged.

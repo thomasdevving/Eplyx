@@ -27,6 +27,24 @@ no observation or execution.
 See [cloud](cloud.md) for workspace access and sync, [token migration](token-migration.md)
 for execution commands, and [T8](phase-t8-dashboard.md) for presentation provenance.
 
+## Hosted Token-2022 Parameter Change
+
+An authenticated retained hosted current-transfer run exposes **Parameter Change**
+when the server verifies eligibility for the active newer Token-2022 fee-bps field.
+The guided page is `/p/{project}/runs/{run}/parameter-change`; there is no blank
+configuration-account picker. Current rate, mint, cap, schedule/captured epochs and
+exact transfer come from retained evidence and stay read-only. Only proposed bps
+(`0..=10000`) can be edited. Preview exposes the exact ChangeSpec in Technical mode
+without predicting token outputs. Mode switches retain the input; errors preserve it.
+
+The existing hosted submission and run view are reused. Queued/running jobs update
+in that view and remain recoverable on refresh. Results distinguish reconciled
+consequence, no observed consequence for this transfer, evidence mismatch, pending
+schedule, unsupported mutation/action, rejection, unavailable execution and failed
+reconciliation. Program bytes stay unchanged. None of these views establishes fee
+authority possession, `SetTransferFee` execution or on-chain activation. See the
+[parameter contract](protocol-parameter-change.md) for exact scope and API fields.
+
 
 Bound upgrade review separates **Analysis** from the **Squads governance trail**.
 The timeline retains proposal binding/recheck outcomes, host recording times and

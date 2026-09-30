@@ -328,7 +328,13 @@ export async function runDetail({ params }) {
   const {attachGovernanceTrail}=await import('/assets/main/governance.js');
   return {title:'Program upgrade',crumbs:[['Runs','/runs'],[run.run_id]],html:HostedReport({...run,canonical_report:report},extras),attach(root){return attachGovernanceTrail(root,path=>fetch(path,{credentials:'same-origin'}));}};
  }
- return analyticalDetail(detail, { evidenceBlock });
+ const view = analyticalDetail(detail, { evidenceBlock });
+ if(CLOUD && !DEMO && ['current_path','protocol_parameter_change'].includes(detail.kind)) {
+  const parameter=await import('./parameter.js');
+  if(detail.kind==='current_path')return parameter.withParameterEntry(view,detail);
+  return parameter.withParameterPolling(view,detail,()=>api(`/api/runs/${params[0]}`),fresh=>analyticalDetail(fresh,{evidenceBlock}));
+ }
+ return view;
 }
 
 // ---------------------------------------------------------- Counterexamples

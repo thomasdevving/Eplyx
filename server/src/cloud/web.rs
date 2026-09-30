@@ -21,6 +21,16 @@ macro_rules! frontend {
 const CLOUD_INDEX: &str = frontend!("cloud/index.html");
 const CLOUD_ASSETS: &[(&str, &str, &str)] = &[
     (
+        "parameter.js",
+        "text/javascript; charset=utf-8",
+        frontend!("cloud/parameter.js"),
+    ),
+    (
+        "parameter-model.js",
+        "text/javascript; charset=utf-8",
+        frontend!("cloud/parameter-model.js"),
+    ),
+    (
         "migration-order.js",
         "text/javascript; charset=utf-8",
         frontend!("cloud/migration-order.js"),

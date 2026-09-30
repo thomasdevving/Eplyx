@@ -25,6 +25,9 @@ const NAV = [
 const ROUTES = [
  [/^\/$/, pages.overview],
  [/^\/runs$/, pages.runs],
+ [/^\/runs\/(run_[A-Za-z0-9_-]+)\/parameter-change$/, args => CLOUD && !DEMO
+  ? import('./parameter.js').then(m => m.parameterPage(args))
+  : Promise.reject(new Error('Parameter Change requires an authenticated retained hosted transfer.'))],
  [/^\/runs\/(run_[A-Za-z0-9_-]+)\/order$/, args => CLOUD && !DEMO
   ? import('./migration-order.js').then(m => m.selectionPage(args))
   : Promise.reject(new Error('Order analysis requires an authenticated hosted parent.'))],
