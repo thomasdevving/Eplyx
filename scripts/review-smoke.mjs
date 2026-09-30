@@ -41,7 +41,7 @@ export async function smoke({target,credentials,project,parent,deniedProject,pro
   await page.locator('button[type=submit]').click();
   await page.waitForURL(target.url+'/');
   await page.getByRole('heading',{name:'Workspaces',exact:true}).waitFor();
-  const access=await json(`/v1/projects/${project}`);
+  const access=await json(`/v1/projects/${project}/workspace`);
   assert.equal(access.role,'member','Reviewer must use the existing minimum member role');
   const cookie=(await context.cookies()).find(c=>c.name==='eplyx_session');
   assert.ok(cookie?.httpOnly);assert.equal(cookie.sameSite,'Strict');
