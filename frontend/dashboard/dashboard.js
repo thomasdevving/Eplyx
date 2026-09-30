@@ -50,7 +50,7 @@ const ROUTES = [
  [/^\/project$/, CLOUD ? (args => cloudPages().then(m => m.projectPage(args))) : pages.projectPage],
  [/^\/analyse$/, args => import('./analysis.js').then(m => m.analysisPage(args))],
  [/^\/analyse\/migration$/, args => CLOUD && !DEMO
-  ? import('./migration.js').then(m => m.preparedMigrationPage(args))
+  ? import('./prepared-migration.js').then(m => m.preparedMigrationPage(args))
   : Promise.reject(new Error('Prepared token migration entry is available only in an authenticated workspace project.'))],
  [/^\/analyse\/lifecycle$/, args => CLOUD && !DEMO
   ? import('./lifecycle.js').then(m => m.preparedLifecyclePage(args))

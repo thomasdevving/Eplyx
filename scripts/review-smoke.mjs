@@ -124,6 +124,10 @@ export async function smoke({target,credentials,project,parent,deniedProject,pro
   const receipt={url:target.url,project,parent,child,analysis_input_sha256:a.analysis_input_sha256,report_sha256:a.report_sha256,upgrade_change_spec_id:a.facts.upgrade_change_spec_id,parameter_change_spec_id:a.facts.parameter_change_spec_id,checks};
   await writeFile(join(out,'smoke-receipt.json'),JSON.stringify(receipt,null,2)+'\n',{mode:0o600});
   console.log(JSON.stringify(receipt));return receipt;
+ } catch(error) {
+  await writeFile(join(out,'failure-page.txt'),await page.locator('body').innerText(),{mode:0o600}).catch(()=>{});
+  await writeFile(join(out,'failure-browser-errors.json'),JSON.stringify(failures),{mode:0o600}).catch(()=>{});
+  throw error;
  } finally {await context.close();await browser.close();}
 }
 if(process.argv[1] && resolve(process.argv[1])===fileURLToPath(import.meta.url)) {

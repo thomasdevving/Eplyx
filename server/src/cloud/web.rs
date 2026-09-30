@@ -51,7 +51,7 @@ const CLOUD_ASSETS: &[(&str, &str, &str)] = &[
         frontend!("cloud/analysis.js"),
     ),
     (
-        "migration.js",
+        "prepared-migration.js",
         "text/javascript; charset=utf-8",
         frontend!("cloud/migration.js"),
     ),
@@ -195,4 +195,28 @@ async fn main_asset(Path(name): Path<String>) -> Response {
         _ => return ApiError::not_found("unknown asset").into_response(),
     };
     ([(header::CONTENT_TYPE, kind)], body).into_response()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[tokio::test]
+    async fn migration_view_and_prepared_form_have_distinct_asset_routes() {
+        let view = asset(Path("migration.js".into())).await;
+        assert_eq!(view.status(), axum::http::StatusCode::OK);
+        let view = axum::body::to_bytes(view.into_body(), 128 * 1024)
+            .await
+            .unwrap();
+        let view = std::str::from_utf8(&view).unwrap();
+        assert!(view.contains("export function isMigration"));
+        assert!(!view.contains("export async function preparedMigrationPage"));
+        let form = asset(Path("prepared-migration.js".into())).await;
+        assert_eq!(form.status(), axum::http::StatusCode::OK);
+        let form = axum::body::to_bytes(form.into_body(), 128 * 1024)
+            .await
+            .unwrap();
+        assert!(std::str::from_utf8(&form)
+            .unwrap()
+            .contains("export async function preparedMigrationPage"));
+    }
 }
