@@ -208,7 +208,7 @@ mod tests {
             .await
             .unwrap();
         let view = std::str::from_utf8(&view).unwrap();
-        assert!(view.contains("export function isMigration"));
+        assert!(view.contains("export const isMigration"));
         assert!(!view.contains("export async function preparedMigrationPage"));
         let form = asset(Path("prepared-migration.js".into())).await;
         assert_eq!(form.status(), axum::http::StatusCode::OK);
