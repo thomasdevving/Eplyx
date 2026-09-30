@@ -234,3 +234,5 @@ pub mod presentation;
 
 /// Optional hosted identity and exact-byte sync.
 pub mod cloud;
+
+pub mod parameter_change;

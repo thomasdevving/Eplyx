@@ -47,6 +47,7 @@ const IDENTITY_DOMAIN: &str = "eplyx-change-spec-v1";
 /// (a developer, CI, a governance flow, the API) and the engine.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
+#[serde(try_from = "WireChangeSpec")]
 pub struct ChangeSpec {
     pub schema_version: u32,
     /// Recomputed on every load. Present in a file only as a commitment: a
@@ -58,6 +59,46 @@ pub struct ChangeSpec {
     pub activation: Option<Activation>,
     #[serde(default, skip_serializing_if = "ChangeMetadata::is_empty")]
     pub metadata: ChangeMetadata,
+}
+
+// Preserve established serialization while distinguishing an absent activation
+// from an explicitly supplied null for the parameter kind's strict contract.
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct WireChangeSpec {
+    schema_version: u32,
+    #[serde(default)]
+    change_spec_id: Option<String>,
+    change: Change,
+    #[serde(default, deserialize_with = "present_activation")]
+    activation: Option<serde_json::Value>,
+    #[serde(default)]
+    metadata: ChangeMetadata,
+}
+fn present_activation<'de, D: serde::Deserializer<'de>>(
+    deserializer: D,
+) -> std::result::Result<Option<serde_json::Value>, D::Error> {
+    serde_json::Value::deserialize(deserializer).map(Some)
+}
+impl TryFrom<WireChangeSpec> for ChangeSpec {
+    type Error = anyhow::Error;
+    fn try_from(wire: WireChangeSpec) -> Result<Self> {
+        ensure!(
+            !matches!(wire.change, Change::ProtocolParameterChange(_)) || wire.activation.is_none(),
+            "parameter change activation must be absent"
+        );
+        Ok(Self {
+            schema_version: wire.schema_version,
+            change_spec_id: wire.change_spec_id,
+            change: wire.change,
+            activation: wire
+                .activation
+                .map(serde_json::from_value::<Option<Activation>>)
+                .transpose()?
+                .flatten(),
+            metadata: wire.metadata,
+        })
+    }
 }
 
 /// What is changing. The target lives inside each kind, not beside it, because
@@ -72,6 +113,7 @@ pub struct ChangeSpec {
 // Keep the established public upgrade variant; boxing it would churn its callers.
 #[allow(clippy::large_enum_variant)]
 pub enum Change {
+    ProtocolParameterChange(Box<crate::parameter_change::ParameterChange>),
     LifecycleChange(Box<crate::lifecycle::spec::LifecycleChange>),
     TokenMigration(Box<crate::migration::spec::TokenMigration>),
     ProgramUpgrade {
@@ -98,6 +140,7 @@ pub enum Change {
 /// targets will be added with their evaluators, not represented as programs.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ChangeTarget<'a> {
+    Configuration(&'a crate::parameter_change::ConfigTarget),
     LifecycleAsset(&'a crate::lifecycle::spec::Asset),
     Asset(&'a crate::migration::spec::TokenSide),
     Program(&'a ProgramTarget),
@@ -148,6 +191,7 @@ pub struct SquadsV4Delivery {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum ChangeKind {
+    ProtocolParameterChange,
     LifecycleChange,
     TokenMigration,
     ProgramUpgrade,
@@ -156,6 +200,7 @@ pub enum ChangeKind {
 impl ChangeKind {
     pub fn as_str(self) -> &'static str {
         match self {
+            Self::ProtocolParameterChange => "protocol_parameter_change",
             Self::ProgramUpgrade => "program_upgrade",
             Self::TokenMigration => "token_migration",
             Self::LifecycleChange => "lifecycle_change",
@@ -331,8 +376,20 @@ impl ChangeSpec {
         }
     }
 
+    pub fn as_protocol_parameter_change(
+        &self,
+    ) -> Option<&crate::parameter_change::ParameterChange> {
+        match &self.change {
+            Change::ProtocolParameterChange(change) => Some(change),
+            Change::ProgramUpgrade { .. }
+            | Change::TokenMigration(_)
+            | Change::LifecycleChange(_) => None,
+        }
+    }
+
     pub fn kind(&self) -> ChangeKind {
         match self.change {
+            Change::ProtocolParameterChange(_) => ChangeKind::ProtocolParameterChange,
             Change::ProgramUpgrade { .. } => ChangeKind::ProgramUpgrade,
             Change::TokenMigration(_) => ChangeKind::TokenMigration,
             Change::LifecycleChange(_) => ChangeKind::LifecycleChange,
@@ -358,6 +415,7 @@ impl ChangeSpec {
             self.schema_version
         );
         match &self.change {
+            Change::ProtocolParameterChange(change) => change.validate(self.activation.as_ref())?,
             Change::LifecycleChange(change) => change.validate(self.activation.as_ref())?,
             Change::TokenMigration(migration) => {
                 migration
@@ -430,12 +488,13 @@ impl ChangeSpec {
         match &self.change {
             Change::ProgramUpgrade { candidate, .. } => Some(candidate),
             Change::TokenMigration(migration) => Some(&migration.mechanism.artifact),
-            Change::LifecycleChange(_) => None,
+            Change::LifecycleChange(_) | Change::ProtocolParameterChange(_) => None,
         }
     }
 
     pub fn target(&self) -> ChangeTarget<'_> {
         match &self.change {
+            Change::ProtocolParameterChange(change) => ChangeTarget::Configuration(&change.target),
             Change::ProgramUpgrade { target, .. } => ChangeTarget::Program(target),
             Change::TokenMigration(migration) => ChangeTarget::Asset(&migration.source),
             Change::LifecycleChange(change) => ChangeTarget::LifecycleAsset(&change.asset),
@@ -447,14 +506,18 @@ impl ChangeSpec {
     pub fn target_program_id(&self) -> Option<&str> {
         match self.target() {
             ChangeTarget::Program(target) => Some(&target.program_id),
-            ChangeTarget::Asset(_) | ChangeTarget::LifecycleAsset(_) => None,
+            ChangeTarget::Asset(_)
+            | ChangeTarget::LifecycleAsset(_)
+            | ChangeTarget::Configuration(_) => None,
         }
     }
 
     /// Explicit narrowing for upgrade-only consumers such as governance.
     pub fn as_program_upgrade(&self) -> Option<ProgramUpgradeRef<'_>> {
         match &self.change {
-            Change::TokenMigration(_) | Change::LifecycleChange(_) => None,
+            Change::TokenMigration(_)
+            | Change::LifecycleChange(_)
+            | Change::ProtocolParameterChange(_) => None,
             Change::ProgramUpgrade {
                 target,
                 candidate,
@@ -475,7 +538,9 @@ impl ChangeSpec {
     pub fn delivery(&self) -> Option<&Delivery> {
         match &self.change {
             Change::ProgramUpgrade { delivery, .. } => delivery.as_ref(),
-            Change::TokenMigration(_) | Change::LifecycleChange(_) => None,
+            Change::TokenMigration(_)
+            | Change::LifecycleChange(_)
+            | Change::ProtocolParameterChange(_) => None,
         }
     }
 
@@ -486,7 +551,9 @@ impl ChangeSpec {
         spec.change_spec_id = None;
         match &mut spec.change {
             Change::ProgramUpgrade { delivery: slot, .. } => *slot = delivery,
-            Change::TokenMigration(_) | Change::LifecycleChange(_) => {
+            Change::TokenMigration(_)
+            | Change::LifecycleChange(_)
+            | Change::ProtocolParameterChange(_) => {
                 anyhow::bail!("asset changes have no upgrade delivery")
             }
         }
@@ -670,6 +737,10 @@ pub struct ChangeBinding {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum BoundChange {
+    ProtocolParameterChange {
+        target: crate::parameter_change::ConfigTarget,
+        operation: crate::parameter_change::Operation,
+    },
     LifecycleChange {
         asset_mint: String,
         destination_mint: Option<String>,
@@ -690,6 +761,7 @@ pub enum BoundChange {
 impl ChangeBinding {
     pub fn kind(&self) -> ChangeKind {
         match &self.change {
+            BoundChange::ProtocolParameterChange { .. } => ChangeKind::ProtocolParameterChange,
             BoundChange::ProgramUpgrade { .. } => ChangeKind::ProgramUpgrade,
             BoundChange::TokenMigration { .. } => ChangeKind::TokenMigration,
             BoundChange::LifecycleChange { .. } => ChangeKind::LifecycleChange,
@@ -701,13 +773,17 @@ impl ChangeBinding {
             BoundChange::ProgramUpgrade {
                 target_program_id, ..
             } => Some(target_program_id),
-            BoundChange::TokenMigration { .. } | BoundChange::LifecycleChange { .. } => None,
+            BoundChange::TokenMigration { .. }
+            | BoundChange::LifecycleChange { .. }
+            | BoundChange::ProtocolParameterChange { .. } => None,
         }
     }
 
     pub fn candidate_sha256(&self) -> Option<&str> {
         match &self.change {
-            BoundChange::LifecycleChange { .. } => None,
+            BoundChange::LifecycleChange { .. } | BoundChange::ProtocolParameterChange { .. } => {
+                None
+            }
             BoundChange::ProgramUpgrade {
                 candidate_sha256, ..
             } => Some(candidate_sha256),
@@ -720,7 +796,9 @@ impl ChangeBinding {
     pub fn delivery(&self) -> Option<&Delivery> {
         match &self.change {
             BoundChange::ProgramUpgrade { delivery, .. } => delivery.as_ref(),
-            BoundChange::TokenMigration { .. } | BoundChange::LifecycleChange { .. } => None,
+            BoundChange::TokenMigration { .. }
+            | BoundChange::LifecycleChange { .. }
+            | BoundChange::ProtocolParameterChange { .. } => None,
         }
     }
 }

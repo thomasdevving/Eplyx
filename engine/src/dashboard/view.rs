@@ -303,6 +303,7 @@ fn parse(id: &str, bytes: RunBytes, mut problems: Vec<String>) -> Run {
         }
         if ![
             "lifecycle_change",
+            "protocol_parameter_change",
             "current_observation",
             "current_path",
             "current_candidate",
@@ -396,6 +397,10 @@ fn parse(id: &str, bytes: RunBytes, mut problems: Vec<String>) -> Run {
     }
     if let (Some(m), Some(r)) = (&analytical_metadata, &report) {
         let valid = match m.kind.as_str() {
+            "protocol_parameter_change" => bytes
+                .change_spec
+                .and_then(|b| crate::change::ChangeSpec::parse(b).ok())
+                .is_some_and(|spec| crate::parameter_change::verify(&spec, r).is_ok()),
             "lifecycle_change" => {
                 r["change"]["kind"] == "lifecycle_change" && r["impact"].is_object()
             }

@@ -1,0 +1,163 @@
+{
+  "analysis_input_sha256": "673243a2596137129e7324221bdd9c3136720a13cf2cad0c2b51d7f10ccb77f9",
+  "capability_blockers": [],
+  "captured_at": "2026-09-18T07:39:15.727432Z",
+  "change": {
+    "change_spec_id": "7f24680b92d65edec79f97175be9a81cb35dbf8670581af13519c8f444da3a11",
+    "kind": "protocol_parameter_change",
+    "operation": {
+      "expected_current": {
+        "account_data_sha256": "5031771a84320c80236f4453c9b7d554446acc23490a9e1abffdd141cfada219",
+        "basis_points": 50,
+        "maximum_fee_raw": "18446744073709551615",
+        "schedule_epoch": "1032"
+      },
+      "kind": "token_2022_active_newer_transfer_fee_basis_points_v1",
+      "proposed_basis_points": 200
+    },
+    "target": {
+      "config_account": "PreANxuXjsy2pvisWWMNB6YaJNzr7681wJJr2rHsfTh",
+      "program_id": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+    }
+  },
+  "declaration": {
+    "captured_epoch": "1037",
+    "change_spec_id": "7f24680b92d65edec79f97175be9a81cb35dbf8670581af13519c8f444da3a11",
+    "current_bps": 50,
+    "maximum_fee_raw": "18446744073709551615",
+    "newer_schedule_epoch": "1032",
+    "origin": "validated_changespec",
+    "proposed_bps": 200
+  },
+  "derived_mint_sha256": "0ac448fe3d6788a9bf8d641b4a7a932859e301a99a7110c9b66b6972ce6503f8",
+  "evidence_class": "untouched_retained_finalized_transfer_capture",
+  "findings": [
+    {
+      "baseline_raw": "9950",
+      "delta_raw": "-150",
+      "fingerprint": "token-2022/transfer_checked/economic/recipient_tokens_received/decreased",
+      "proposed_raw": "9800"
+    },
+    {
+      "baseline_raw": "50",
+      "delta_raw": "150",
+      "fingerprint": "token-2022/transfer_checked/economic/destination_withheld_transfer_fee/increased",
+      "proposed_raw": "200"
+    }
+  ],
+  "fixture_import": "scripts/import-lifecycle-fixtures.py with exact pinned provenance manifest hashes",
+  "fixture_source": "fixtures/lifecycle/main-t7/probes/phase7-captures/fixtures/group-0.json",
+  "interaction_sha256": "cd75700dfe3997560ed444fb2ae0439e2c846b47cdda4ad150ad56e18283eadf",
+  "limits": [
+    "Typed active-state counterfactual only; no authorization, key possession, fee-admin execution or on-chain activation established.",
+    "One retained finalized capture and exact original-owner TransferChecked; no all-holder, safety or historical representativeness claim.",
+    "Independent fresh local VMs with captured Clock and identical deployed code; synthetic fee payer and assumed owner signature. Not a full validator bank.",
+    "Compact commitment summary only: full provider-bearing retained fixture/input/report remain private fixture data.",
+    "Current captured case qualification does not establish historical coverage or population effects."
+  ],
+  "observed_capture_sha256": "d99ec5e1c0c6aedf4d1a675ddaff9c5cbf7dab11b77c478ef045416c6185c264",
+  "programs": [
+    {
+      "elf_sha256": "0999dbf708971e723b08d1caafc988826a59c6001ed6dc02260da07defbe1469",
+      "loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "program_id": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+    }
+  ],
+  "report_sha256": "db7e773caae53baec26092e10ba6d988132e6be7fbc149308c3d798469696b78",
+  "runtime": {
+    "backend": "LiteSVM 0.16",
+    "derivation_source_sha256": "a837d8962239e2de80471bb31f6a53d3a34ba3b4909b71f6ea24df9bf6d3394f",
+    "eplyx_version": "0.1.0",
+    "executor_sha256": "0f5ed5b8db2220e0dad1d8409b5871f203354c09a7038f55a6f7323b095d30eb",
+    "lock_sha256": "75b0e249ff44fe39b66e84d38abebf87f05b267b586d491711ffeb8af290d660",
+    "profile": "mainnet/default",
+    "recent_blockhash_verification": false,
+    "revision": "eplyx-token-2022-paired-transfer-v1",
+    "signature_verification": false,
+    "transfer_sha256": "7e46bc17c3f03ca123d1c1d3075cb427e4d64940afa7c8e7950f977db9ee3ad8"
+  },
+  "schema": "eplyx-protocol-parameter-qualification-summary-v1",
+  "shared_execution_sha256": "137fdb6924757c933706baa795c9cba2fdb7501c46ecf3fb8514fc0eca14efb3",
+  "sides": {
+    "baseline": {
+      "destination_withheld_increment_raw": "50",
+      "mint_state": {
+        "after_sha256": "5031771a84320c80236f4453c9b7d554446acc23490a9e1abffdd141cfada219",
+        "before_sha256": "5031771a84320c80236f4453c9b7d554446acc23490a9e1abffdd141cfada219"
+      },
+      "raw_token_state": {
+        "destination": {
+          "after": {
+            "public_amount_raw": "70304",
+            "withheld_amount_raw": "50"
+          },
+          "before": {
+            "public_amount_raw": "60354",
+            "withheld_amount_raw": "0"
+          }
+        },
+        "source": {
+          "after": {
+            "public_amount_raw": "7621",
+            "withheld_amount_raw": "0"
+          },
+          "before": {
+            "public_amount_raw": "17621",
+            "withheld_amount_raw": "0"
+          }
+        }
+      },
+      "recipient_credit_raw": "9950",
+      "reconciled": true,
+      "source_debit_raw": "10000",
+      "success": true
+    },
+    "proposed": {
+      "destination_withheld_increment_raw": "200",
+      "mint_state": {
+        "after_sha256": "0ac448fe3d6788a9bf8d641b4a7a932859e301a99a7110c9b66b6972ce6503f8",
+        "before_sha256": "0ac448fe3d6788a9bf8d641b4a7a932859e301a99a7110c9b66b6972ce6503f8"
+      },
+      "raw_token_state": {
+        "destination": {
+          "after": {
+            "public_amount_raw": "70154",
+            "withheld_amount_raw": "200"
+          },
+          "before": {
+            "public_amount_raw": "60354",
+            "withheld_amount_raw": "0"
+          }
+        },
+        "source": {
+          "after": {
+            "public_amount_raw": "7621",
+            "withheld_amount_raw": "0"
+          },
+          "before": {
+            "public_amount_raw": "17621",
+            "withheld_amount_raw": "0"
+          }
+        }
+      },
+      "recipient_credit_raw": "9800",
+      "reconciled": true,
+      "source_debit_raw": "10000",
+      "success": true
+    }
+  },
+  "status": "semantic_consequence_observed",
+  "tests": {
+    "clippy": "library, binaries and both new test targets passed with -D warnings",
+    "engine_library_missing_fixture_failures": 5,
+    "engine_library_passed": 652,
+    "existing_integration_regression_tests": 48,
+    "focused_integration_total_passed": 62,
+    "frontend_check": "passed",
+    "frontend_dashboard_views": 70,
+    "new_engine_parameter_tests": 10,
+    "new_hosted_parameter_tests": 4
+  },
+  "transfer_fixture_sha256": "d99ec5e1c0c6aedf4d1a675ddaff9c5cbf7dab11b77c478ef045416c6185c264",
+  "verification_limit": "Five pre-existing migration::authority_resolution tests could not read absent population fixtures. The pinned migration importer also found the local archive lacks milestone8-healthy-worker; no state was fabricated to replace it."
+}

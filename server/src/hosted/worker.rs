@@ -39,6 +39,14 @@ pub fn stage(registry: &Registry, input: &Input, directory: &Path) -> Result<()>
         write("change.json", ArtifactClass::Document, change)?;
     }
     match input {
+        Input::ProtocolParameterChange { capture, .. } => {
+            write("capture.json", ArtifactClass::Capture, capture)?;
+            let spec = ChangeSpec::parse(&std::fs::read(directory.join("change.json"))?)?;
+            eplyx_engine::parameter_change::binding(&spec)?;
+            eplyx_engine::path::current::parameter_input(
+                &registry.artifacts().get(ArtifactClass::Capture, capture)?,
+            )?;
+        }
         Input::MigrationOrder { .. } => super::order::stage(registry, input, directory)?,
         Input::CurrentStress {
             state_input,
@@ -291,6 +299,17 @@ pub fn execute(directory: &Path) -> Result<()> {
         local_artifact_sizes: BTreeMap::new(),
     };
     match &input {
+        Input::ProtocolParameterChange { capture, .. } => {
+            let bytes = member(directory, "capture.json", capture)?;
+            let retained = eplyx_engine::path::current::parameter_input(&bytes)?;
+            let report = eplyx_engine::parameter_change::analyze(
+                spec.as_ref().context("missing parameter spec")?,
+                &retained,
+            )?;
+            projection.report =
+                Artifact::new(eplyx_engine::canonical::document(&report)?.into_bytes())?;
+            analytical_metadata(&mut projection, input.kind(), timestamp, binary)?;
+        }
         Input::MigrationOrder { .. } => {
             projection.report = Artifact::new(
                 eplyx_engine::canonical::document(&super::order::execute(&input, directory)?)?

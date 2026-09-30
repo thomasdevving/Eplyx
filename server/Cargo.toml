@@ -41,3 +41,6 @@ tower = { version = "0.5", features = ["util"] }
 http-body-util = "0.1"
 
 reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls", "cookies", "blocking"] }
+
+[dev-dependencies.spl-token-2022-interface]
+version = "=3.1.1"
