@@ -9,6 +9,10 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Input {
+    UpgradeParameterInteraction {
+        capture: ArtifactRef,
+        binding: Box<interaction::Binding>,
+    },
     ProtocolParameterChange {
         change: ArtifactRef,
         capture: ArtifactRef,
@@ -85,6 +89,7 @@ pub enum Input {
 impl Input {
     pub fn kind(&self) -> &'static str {
         match self {
+            Self::UpgradeParameterInteraction { .. } => interaction::KIND,
             Self::ProtocolParameterChange { .. } => "protocol_parameter_change",
             Self::CurrentStress { .. } => "current_stress",
             Self::CurrentCandidate { .. } => "current_candidate",
@@ -112,6 +117,8 @@ impl Input {
 #[serde(deny_unknown_fields)]
 pub struct Job {
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub interaction_failure: Option<interaction::FailureKind>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub request_key: Option<String>,
     pub kind: String,
     /// Immutable input manifest in MAIN's document CAS. Every member is also
@@ -122,6 +129,7 @@ pub struct Job {
 }
 
 pub mod catalogue;
+pub mod interaction;
 pub mod observation;
 pub mod order;
 pub mod parameter;
@@ -209,6 +217,12 @@ impl Registry {
         if matches!(input, Input::ProtocolParameterChange { .. }) {
             parameter::validate_parent(self, &project.project_id, &input)?;
         }
+        if let Input::UpgradeParameterInteraction { binding, .. } = &input {
+            ensure!(
+                binding.project_id == project.project_id,
+                "interaction project mismatch"
+            );
+        }
         let validation = tempfile::tempdir()?;
         worker::stage(self, &input, validation.path())?;
         let spec = input
@@ -240,6 +254,7 @@ impl Registry {
         let record = RunMetadata {
             order_failure: None,
             hosted_analysis: Some(Job {
+                interaction_failure: None,
                 request_key,
                 kind: input.kind().into(),
                 input: input_ref,
@@ -342,6 +357,9 @@ impl Registry {
                 );
             }
             Input::MigrationOrder { .. } => order::verify(self, record, projection)?,
+            Input::UpgradeParameterInteraction { .. } => {
+                interaction::verify(self, record, projection)?
+            }
             Input::CurrentStress {
                 parent_observation,
                 wallet_sha256,

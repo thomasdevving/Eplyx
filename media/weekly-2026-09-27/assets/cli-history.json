@@ -1,0 +1,21 @@
+{
+  "history_only": true,
+  "runs": [
+    {
+      "analysis_input_sha256": "4c8e817f419088daaaa61fbc24a17397373eb781b3b366e6153d585ea69fdedd",
+      "candidate_program_sha256": "e5db6948abca1317eb12155f73cdaf619d378c22d1bfc992c977063e10e9c1bb",
+      "change_spec_id": "b9a5a64b35d307770ee5ef4cda8bfda77287ee7e29c1e1796d9bb777466f1258",
+      "engine_binary_sha256": "e509a5d2fe162615c203ca64ecacaf91cf929d6385875d8a693ba6a139b957ba",
+      "eplyx_version": "0.1.0",
+      "gate_outcome": "Warn",
+      "gate_policy": "block-only",
+      "git_branch": null,
+      "git_commit": null,
+      "git_dirty": null,
+      "run_id": "run_20260927075251385933000_e5db6948abca",
+      "run_source": "local",
+      "schema_version": 2,
+      "timestamp": "2026-09-27T07:52:53.503Z"
+    }
+  ]
+}

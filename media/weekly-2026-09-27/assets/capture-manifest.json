@@ -1,0 +1,262 @@
+[
+  {
+    "file": "hero.png",
+    "source": "Actual public homepage, local source at a3eac9d",
+    "url": "http://127.0.0.1:4189/",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:53:56.818Z"
+  },
+  {
+    "file": "transitions.png",
+    "source": "Actual public token-transitions page",
+    "url": "http://127.0.0.1:4189/token-transitions",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:53:57.599Z"
+  },
+  {
+    "file": "dashboard.png",
+    "source": "Actual CLI dashboard; committed synthetic transition-acceptance fixture",
+    "url": "http://127.0.0.1:4185/",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:53:58.257Z"
+  },
+  {
+    "file": "migration.png",
+    "source": "Actual migration result; deficient-reserve deadline-defect fixture",
+    "url": "http://127.0.0.1:4185/runs/run_20260926202807178818000_c43467360081",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:53:58.890Z"
+  },
+  {
+    "file": "migration-stress.png",
+    "source": "Actual fixture stress table",
+    "url": "http://127.0.0.1:4185/runs/run_20260926202807178818000_c43467360081",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:53:59.160Z"
+  },
+  {
+    "file": "migration-gate.png",
+    "source": "Actual fixture deployment gate",
+    "url": "http://127.0.0.1:4185/runs/run_20260926202807178818000_c43467360081",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:53:59.432Z"
+  },
+  {
+    "file": "counterexample.png",
+    "source": "Actual saved derived counterexample and reproduction history",
+    "url": "http://127.0.0.1:4185/counterexamples/cx_7749391abe584a4c5a4e31b9",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:54:00.086Z"
+  },
+  {
+    "file": "comparison.png",
+    "source": "Actual comparison; search domains differ",
+    "url": "http://127.0.0.1:4185/compare?left=run_20260926202758877209000_e5db6948abca&right=run_20260926202807178818000_c43467360081",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:54:00.734Z"
+  },
+  {
+    "file": "observation.png",
+    "source": "Actual saved synthetic current observation; paths untested",
+    "url": "http://127.0.0.1:4190/runs/run_20260926202906605473000_44c93fb9dbbf",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:54:01.366Z"
+  },
+  {
+    "file": "lifecycle.png",
+    "source": "Actual lifecycle dashboard; hypothetical fixture declaration",
+    "url": "http://127.0.0.1:4190/runs/run_20260926202905460858000_9dbcca44b106",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:54:02.017Z"
+  },
+  {
+    "file": "lifecycle-policy.png",
+    "source": "Actual lifecycle policy and consequences",
+    "url": "http://127.0.0.1:4190/runs/run_20260926202905460858000_9dbcca44b106",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:54:02.274Z"
+  },
+  {
+    "file": "orca.png",
+    "source": "Unmodified HostedReport component rendering media/weekly-2026-09-27/assets/orca-report.json",
+    "url": "http://127.0.0.1:4189/runs/demo",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:54:03.085Z"
+  },
+  {
+    "file": "orca-detail.png",
+    "source": "Unmodified report component, economic coverage and retained proof",
+    "url": "http://127.0.0.1:4189/runs/demo",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:54:03.508Z"
+  },
+  {
+    "file": "drift.png",
+    "source": "Unmodified HostedReport component rendering docs/examples/phase-u14-drift-validation/ci.json",
+    "url": "http://127.0.0.1:4189/runs/demo",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:54:04.303Z"
+  },
+  {
+    "file": "drift-detail.png",
+    "source": "Unmodified report component, economic coverage and retained proof",
+    "url": "http://127.0.0.1:4189/runs/demo",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:54:04.707Z"
+  },
+  {
+    "file": "governance.png",
+    "source": "Unmodified GovernanceSection; archived real mainnet G1 binding + G2 not_executed attestation. Archived date is a presentation timestamp.",
+    "url": "http://127.0.0.1:4189/runs/demo",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:54:05.434Z"
+  },
+  {
+    "file": "hosted.png",
+    "source": "Actual hosted workspace; real exact-byte sync of synthetic fixtures",
+    "url": "http://127.0.0.1:4390/p/proj_01M3GXEK95WR2SZEA4RHMFSA78",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:54:06.816Z"
+  },
+  {
+    "file": "upgrade.png",
+    "source": "Real local hosted upgrade job using committed Stake Pool fixture candidate",
+    "url": "http://127.0.0.1:4390/p/proj_01M3GXEMA60868QN64GWP8RPZZ/runs/run_01M3GXEMXSW88ZA5MZ2D59HWWE",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:54:07.468Z"
+  },
+  {
+    "file": "upgrade-impact.png",
+    "source": "Actual hosted economic impact report",
+    "url": "http://127.0.0.1:4390/p/proj_01M3GXEMA60868QN64GWP8RPZZ/runs/run_01M3GXEMXSW88ZA5MZ2D59HWWE",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:54:07.748Z"
+  },
+  {
+    "file": "current-form.png",
+    "source": "Actual current-state analysis form",
+    "url": "http://127.0.0.1:4390/p/proj_01M3GXEM9AHX3BT89YPJ78Q7GS/analyse",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:54:08.469Z"
+  },
+  {
+    "file": "current-input.png",
+    "source": "Actual form populated with the synthetic provider wallet",
+    "url": "http://127.0.0.1:4390/p/proj_01M3GXEM9AHX3BT89YPJ78Q7GS/analyse",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:54:08.546Z"
+  },
+  {
+    "file": "current-observed.png",
+    "source": "Actual current-state observation through synthetic test provider",
+    "url": "http://127.0.0.1:4390/p/proj_01M3GXEM9AHX3BT89YPJ78Q7GS/analyse?observation=obs_49e0f73bfd45e72f99cf133044f854b22616720f",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:54:08.965Z"
+  },
+  {
+    "file": "path-result.png",
+    "source": "Actual offline Transfer result against synthetic provider state",
+    "url": "http://127.0.0.1:4390/p/proj_01M3GXEM9AHX3BT89YPJ78Q7GS/analyse?observation=obs_49e0f73bfd45e72f99cf133044f854b22616720f",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:54:14.134Z"
+  },
+  {
+    "file": "candidate-result.png",
+    "source": "Actual candidate check; synthetic provider; exact checks and incomplete evidence preserved",
+    "url": "http://127.0.0.1:4390/p/proj_01M3GXEM9AHX3BT89YPJ78Q7GS/analyse?observation=obs_49e0f73bfd45e72f99cf133044f854b22616720f",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:54:19.288Z"
+  },
+  {
+    "file": "scenario-result.png",
+    "source": "Actual hypothetical scenario; separate readiness results retained",
+    "url": "http://127.0.0.1:4390/p/proj_01M3GXEM9AHX3BT89YPJ78Q7GS/analyse?observation=obs_49e0f73bfd45e72f99cf133044f854b22616720f",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "captured_at": "2026-09-27T07:54:28.457Z"
+  },
+  {
+    "file": "orca-impact.png",
+    "source": "Unmodified production #impact component rendering assets/orca-report.json",
+    "captured_at": "2026-09-27T08:03:08.428Z"
+  },
+  {
+    "file": "drift-impact.png",
+    "source": "Unmodified production #impact component rendering assets/drift-report.json",
+    "captured_at": "2026-09-27T08:03:08.554Z"
+  }
+]

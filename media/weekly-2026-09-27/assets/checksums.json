@@ -1,0 +1,212 @@
+[
+  {
+    "file": "assets/candidate-result.png",
+    "bytes": 284435,
+    "sha256": "5658a1430b08dcf4bd6ca3e0728a9162192f12a43c95ed4fcc477d85f83814f5"
+  },
+  {
+    "file": "assets/capture-manifest.json",
+    "bytes": 8186,
+    "sha256": "7aa6cf85ccda73f501a250d5665dbd1357322d9703e254a2e6e2458709035670"
+  },
+  {
+    "file": "assets/cli-history.json",
+    "bytes": 783,
+    "sha256": "115ba91769ed1190c4b7725e1bb622d4640452e9b7fd1e91ea232dc995e72c1d"
+  },
+  {
+    "file": "assets/cli-recording.json",
+    "bytes": 3178,
+    "sha256": "d3df967c1aa02973df27b0dddd21877041ac937c7370e24922c39dc8451e2a77"
+  },
+  {
+    "file": "assets/cli-transcript.txt",
+    "bytes": 2675,
+    "sha256": "7a2934a0ea4ca98eec8ba0886532b2a6bbcd9a406798e5ff5f9c44bcb75cca37"
+  },
+  {
+    "file": "assets/comparison.png",
+    "bytes": 359192,
+    "sha256": "f881966ea45a2bc6c7d813bc05af4d89181f8a3656d8f3bb5e4d9012324ea359"
+  },
+  {
+    "file": "assets/counterexample.png",
+    "bytes": 344607,
+    "sha256": "aadea99eabf3a2c5f274b6433b66b49272653c88c115f610656a7323f07a8ef7"
+  },
+  {
+    "file": "assets/current-form.png",
+    "bytes": 314018,
+    "sha256": "8fa224ae2d728690f6243d2e21fafa2a72571874e5792e0f8d59ba948613699c"
+  },
+  {
+    "file": "assets/current-input.png",
+    "bytes": 339547,
+    "sha256": "990ff2d0886b369c5b9ea095310f3ed553e64ee626a810ade50181a433ad86f8"
+  },
+  {
+    "file": "assets/current-observed.png",
+    "bytes": 303903,
+    "sha256": "cc311b583c401e3f2987b16188fd186be091714f0df4338c29d5723eae644305"
+  },
+  {
+    "file": "assets/dashboard.png",
+    "bytes": 403466,
+    "sha256": "76867a6be79c08fd01653b4aaab52c18aff3da2f911dfe9bb4a635fca5d12c78"
+  },
+  {
+    "file": "assets/deployment-attestation.json",
+    "bytes": 1082,
+    "sha256": "727da92c907ad7739b806fc4b1df75ee7789770fb34fad235026ce2189580096"
+  },
+  {
+    "file": "assets/dm-sans-OFL.txt",
+    "bytes": 4388,
+    "sha256": "7ec15e79c59bc14b86436a17e5eb7926b46cbcaeb08e1a7e6c110b415e6eb2a2"
+  },
+  {
+    "file": "assets/dm-sans-latin.woff2",
+    "bytes": 36980,
+    "sha256": "468d56b6b25b05b70190b6c233d773f6f1770e8579827ce022a57f03fa8002fb"
+  },
+  {
+    "file": "assets/drift-detail.png",
+    "bytes": 769640,
+    "sha256": "b3e4f598527370aff6cff494648190276ac300604b80c384a9a953d033193362"
+  },
+  {
+    "file": "assets/drift-impact.png",
+    "bytes": 139940,
+    "sha256": "10d1a0639321aca736617e38fab29ef8bc780c0f2ebc08ab7e3b7ec4488a9f05"
+  },
+  {
+    "file": "assets/drift-report.json",
+    "bytes": 4103,
+    "sha256": "08cb9ff221228e81e5ac27f7342dae9b60b9902e60924a46f5f78d1a062b4ffc"
+  },
+  {
+    "file": "assets/drift.png",
+    "bytes": 971941,
+    "sha256": "3ebd91da3768e7c46babd7e9d2197b106f8fc68304b3426dd38c651a2ca897af"
+  },
+  {
+    "file": "assets/governance.png",
+    "bytes": 568874,
+    "sha256": "8b9afdeb4eeaa516860b9d1d130cef92204c6dcd75d31d67b914fd79d423bbda"
+  },
+  {
+    "file": "assets/hero.png",
+    "bytes": 2042691,
+    "sha256": "52da2e56e7454450aff747c4b3a55a34f94c871e2895db20c51040bbd78bfc33"
+  },
+  {
+    "file": "assets/hosted.png",
+    "bytes": 450696,
+    "sha256": "9fdf3897c9f2176414e148c3252ff7901d008cc0061278a369e2c715d0ad1489"
+  },
+  {
+    "file": "assets/lifecycle-policy.png",
+    "bytes": 216220,
+    "sha256": "86062d80a9f2a0965bb2b46a49882eae0982017053e960a1a65663251b09dce2"
+  },
+  {
+    "file": "assets/lifecycle.png",
+    "bytes": 259504,
+    "sha256": "6249970a7d947388f1963cdf0aaf74649ba6ba89d7f38eb435adb6c0e29a83af"
+  },
+  {
+    "file": "assets/logo.svg",
+    "bytes": 818,
+    "sha256": "bf4fbdecdf07620c16e22f0d0e4fe531030ef495fc07796022072ca5599b7614"
+  },
+  {
+    "file": "assets/manrope-OFL.txt",
+    "bytes": 4386,
+    "sha256": "d6a309fcfb963d329a93baf9df66fa5f3c23a4be2b5f67edf24d6cafecde12ac"
+  },
+  {
+    "file": "assets/manrope-latin.woff2",
+    "bytes": 24576,
+    "sha256": "e310b55a7fd9677f5e3555e6c6c4d064fa1f1d24393f0ddbe217cea12a8c432f"
+  },
+  {
+    "file": "assets/migration-gate.png",
+    "bytes": 381413,
+    "sha256": "ed951f24520fdd24400d22c3d06d6fcce4ef6dff984c439170df43daf9b344d2"
+  },
+  {
+    "file": "assets/migration-stress.png",
+    "bytes": 363186,
+    "sha256": "f0ebb970b9808cbc61f1e646d697bd12a0b3e163c758d0850fcfe182b93ba68f"
+  },
+  {
+    "file": "assets/migration.png",
+    "bytes": 318125,
+    "sha256": "24affe4a710341056038e8fbc9e94d5846e34c692da959fe14a75e1829546e8c"
+  },
+  {
+    "file": "assets/observation.png",
+    "bytes": 231686,
+    "sha256": "386a4848848cf45f4e1c8b6de959ae702a1a431e2ea07121371a3580e68c9759"
+  },
+  {
+    "file": "assets/orca-cli.txt",
+    "bytes": 1095,
+    "sha256": "8cdd32dd6746ca92dde36cc1b2d48127a07911cace8fbac71cfc5ed5b008fd7c"
+  },
+  {
+    "file": "assets/orca-detail.png",
+    "bytes": 838282,
+    "sha256": "2c149f45f5830c756393ff2d1214162c97331859079b0cc5e60797c5e35f9800"
+  },
+  {
+    "file": "assets/orca-impact.png",
+    "bytes": 188660,
+    "sha256": "d45c5cd3921246315b315f624fed01d1aadc1b3e9aa7c2ea00180bfc553b741e"
+  },
+  {
+    "file": "assets/orca-report.json",
+    "bytes": 2056,
+    "sha256": "a6dc8af8f16c9f894eb90c9fc408a5ca8008217fd36115b737cd4142aa7f607a"
+  },
+  {
+    "file": "assets/orca.png",
+    "bytes": 1017604,
+    "sha256": "7136e8a566cf07d1bf9d96cd3a93b60cd229f4a1c905f2a226d4761874005ed4"
+  },
+  {
+    "file": "assets/path-result.png",
+    "bytes": 223129,
+    "sha256": "7d590e03fed39a5838b65ac59a70c20d4918cefa8eae64f6135c43c922c89090"
+  },
+  {
+    "file": "assets/recorded-data.js",
+    "bytes": 4154,
+    "sha256": "da1d3a8cac863c03e820389a0e400b1d4458289c74a5c1ed12195b617ccff94d"
+  },
+  {
+    "file": "assets/scenario-result.png",
+    "bytes": 278939,
+    "sha256": "6bf568b45a723ccd0ab35f70388a99b58068919f234aa51e8c312943733b2131"
+  },
+  {
+    "file": "assets/soundtrack.wav",
+    "bytes": 26880044,
+    "sha256": "4f8f42abf3b34acf245538103dd55545bef4cffe9a5f8afa45780263ccf81f12"
+  },
+  {
+    "file": "assets/transitions.png",
+    "bytes": 946412,
+    "sha256": "963dd3b915ce593d631615e312e98f95dc0e3c5b411cbb9d6d6958f400c97faa"
+  },
+  {
+    "file": "assets/upgrade-impact.png",
+    "bytes": 257527,
+    "sha256": "337b26e195544c0c56d4c967c26d6cdfe53199561a4b573e6fa7c4173bad4fb5"
+  },
+  {
+    "file": "assets/upgrade.png",
+    "bytes": 271784,
+    "sha256": "6ce0c55e4b7537247031552bca3f98f5660e47dbd124599a1a093bf2a600cfca"
+  }
+]

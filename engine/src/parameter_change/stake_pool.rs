@@ -190,7 +190,7 @@ impl Input {
         ensure!(self.record.current_program_sha256==QUALIFIED_STAKE_POOL_ELF,"config_execution_unavailable: deployed Stake Pool layout/manager boundary has not been qualified");
         Ok(())
     }
-    fn loaded(&self) -> Result<Vec<LoadedProgram>> {
+    pub(crate) fn loaded(&self) -> Result<Vec<LoadedProgram>> {
         self.programs
             .iter()
             .map(|p| {
@@ -202,7 +202,14 @@ impl Input {
             })
             .collect()
     }
-    fn execute(&self, record: &ReplayRecord) -> Result<ExecutionResult> {
+    pub(crate) fn execute(&self, record: &ReplayRecord) -> Result<ExecutionResult> {
+        self.execute_code(record, None)
+    }
+    pub(crate) fn execute_code(
+        &self,
+        record: &ReplayRecord,
+        candidate: Option<&[u8]>,
+    ) -> Result<ExecutionResult> {
         // Resolve the same verified historical dependency manifest in a private
         // temporary directory. No provider or active bundle participates.
         let temp = tempfile::tempdir()?;
@@ -218,7 +225,7 @@ impl Input {
         record.execute(
             &ProgramVersion {
                 label: "historical-baseline".into(),
-                bytes: program.elf.clone(),
+                bytes: candidate.unwrap_or(&program.elf).to_vec(),
             },
             &dependencies,
         )
@@ -255,7 +262,7 @@ fn named<'a>(record: &'a ReplayRecord, address: &str) -> Result<&'a NamedAccount
         .find(|a| a.address == address)
         .context("retained role account missing")
 }
-fn pool(record: &ReplayRecord) -> Result<&NamedAccount> {
+pub(crate) fn pool(record: &ReplayRecord) -> Result<&NamedAccount> {
     named(
         record,
         &deposit(record)?
@@ -267,7 +274,7 @@ fn pool(record: &ReplayRecord) -> Result<&NamedAccount> {
 }
 /// Decode every official typed field, retain the exact trailing bytes, require
 /// a byte-identical roundtrip, and cross-check Eplyx's qualified partial reader.
-fn decode(account: &AccountSnapshot) -> Result<(StakePool, Vec<u8>)> {
+pub(crate) fn decode(account: &AccountSnapshot) -> Result<(StakePool, Vec<u8>)> {
     ensure!(
         account.owner == adapter::PROGRAM_ID && !account.executable,
         "invalid pool envelope"
@@ -297,7 +304,7 @@ fn decode(account: &AccountSnapshot) -> Result<(StakePool, Vec<u8>)> {
     );
     Ok((state, bytes.to_vec()))
 }
-fn values(spec: &ChangeSpec) -> Result<(&ExpectedCurrent, &RationalFee)> {
+pub(crate) fn values(spec: &ChangeSpec) -> Result<(&ExpectedCurrent, &RationalFee)> {
     spec.validate()?;
     match &super::proposal(spec)?.operation {
         Operation::SplStakePoolSolDepositFeeV1 {
@@ -307,7 +314,10 @@ fn values(spec: &ChangeSpec) -> Result<(&ExpectedCurrent, &RationalFee)> {
         _ => anyhow::bail!("unsupported_config_field: Stake Pool operation required"),
     }
 }
-fn prepare(spec: &ChangeSpec, input: &Input) -> std::result::Result<ConfigPlan, Failure> {
+pub(crate) fn prepare(
+    spec: &ChangeSpec,
+    input: &Input,
+) -> std::result::Result<ConfigPlan, Failure> {
     let (expected, fee) = values(spec).map_err(|e| failed(Status::UnsupportedConfigField, e))?;
     input.validate().map_err(|e| {
         failed(
@@ -348,14 +358,14 @@ fn prepare(spec: &ChangeSpec, input: &Input) -> std::result::Result<ConfigPlan, 
     }
     config_plan(input, fee, &state).map_err(|e| failed(Status::ConfigExecutionUnavailable, e))
 }
-struct ConfigPlan {
-    accounts: Vec<NamedAccount>,
-    watch: Vec<String>,
-    message: Message,
+pub(crate) struct ConfigPlan {
+    pub(crate) accounts: Vec<NamedAccount>,
+    pub(crate) watch: Vec<String>,
+    pub(crate) message: Message,
     instruction: Instruction,
     manager: String,
     payer: String,
-    clock: Clock,
+    pub(crate) clock: Clock,
 }
 fn config_plan(input: &Input, fee: &RationalFee, state: &StakePool) -> Result<ConfigPlan> {
     let observed = pool(&input.record)?;
@@ -436,10 +446,10 @@ fn config_plan(input: &Input, fee: &RationalFee, state: &StakePool) -> Result<Co
         },
     })
 }
-fn config_commitment(input: &Input, plan: &ConfigPlan) -> Value {
+pub(crate) fn config_commitment(input: &Input, plan: &ConfigPlan) -> Value {
     json!({"origin":"simulated_configuration_instruction","message":ProbeMessage::from(&plan.message),"instruction":{"program_id":plan.instruction.program_id.to_string(),"accounts":plan.instruction.accounts.iter().map(|a|json!({"address":a.pubkey.to_string(),"is_signer":a.is_signer,"is_writable":a.is_writable})).collect::<Vec<_>>(),"data_hex":crate::hexfmt::encode(&plan.instruction.data)},"pre_accounts":plan.accounts,"watch":plan.watch,"clock":ProbeClock::from(&plan.clock),"programs":program_commitments(input),"manager_assumption":{"origin":"assumed_simulation_only","address":plan.manager,"signer":true,"observed":false,"key_possession_established":false,"boundary":"Qualified SetFee/check_manager checks only manager key and signer privilege; account owner, data and balance are simulation-only."},"fee_payer":{"origin":"assumed_simulation_only","address":plan.payer,"propagated_to_user_action":false},"runtime":runtime()})
 }
-fn verify_config(
+pub(crate) fn verify_config(
     input: &Input,
     fee: &RationalFee,
     plan: &ConfigPlan,
@@ -500,7 +510,10 @@ fn verify_config(
     }
     Ok(next.clone())
 }
-fn verify_config_rejection(plan: &ConfigPlan, x: &ProbeTransactionExecution) -> Result<()> {
+pub(crate) fn verify_config_rejection(
+    plan: &ConfigPlan,
+    x: &ProbeTransactionExecution,
+) -> Result<()> {
     ensure!(
         !x.success && x.error.is_some() && x.inner_instructions.is_empty(),
         "configuration rejection outcome missing or inconsistent"
@@ -539,12 +552,12 @@ fn program_commitments(input: &Input) -> Value {
 pub fn runtime() -> Value {
     json!({"backend":"LiteSVM 0.16","profile":"schema1_litesvm_mainnet","signature_verification":false,"recent_blockhash_verification":false,"clock_advanced":false,"revision":OPERATION,"official_interface":"spl-stake-pool=2.0.3","lock_sha256":replay::hash_bytes(include_bytes!("../../../Cargo.lock")),"executor_sha256":replay::hash_bytes(include_bytes!("../executor.rs")),"replay_sha256":replay::hash_bytes(include_bytes!("../replay.rs")),"operation_source_sha256":replay::hash_bytes(include_bytes!("stake_pool.rs"))})
 }
-fn action_commitment(input: &Input, record: &ReplayRecord) -> Result<Value> {
+pub(crate) fn action_commitment(input: &Input, record: &ReplayRecord) -> Result<Value> {
     Ok(
         json!({"accounts":record.accounts,"pre_state_hash":record.pre_state_hash,"transaction":record.transaction,"message":ProbeMessage::from(&record.message()?),"clock":record.clock,"dependencies":record.dependencies,"programs":program_commitments(input),"watch":record.fixture().watch,"assumptions":record.assumptions,"runtime":runtime()}),
     )
 }
-fn proposed_record(input: &Input, next: &AccountSnapshot) -> Result<ReplayRecord> {
+pub(crate) fn proposed_record(input: &Input, next: &AccountSnapshot) -> Result<ReplayRecord> {
     let mut record = input.record.clone();
     let address = &deposit(&record)?.accounts[0].address.clone();
     let index = record
@@ -961,7 +974,7 @@ fn execute_analysis(spec: &ChangeSpec, input: &Input, configuration_first: bool)
     finish(spec, input, &plan, &x, &next, b, side(&proposed, &p)?)
 }
 /// Reconstruct provenance, preservation and all derived results without a VM.
-pub fn verify(spec: &ChangeSpec, report: &Value) -> Result<()> {
+fn verify_current(spec: &ChangeSpec, report: &Value) -> Result<()> {
     let mut unsealed = report.clone();
     let hash = unsealed
         .as_object_mut()
@@ -1081,11 +1094,70 @@ pub fn verify(spec: &ChangeSpec, report: &Value) -> Result<()> {
     );
     Ok(())
 }
+// Reviewed compatibility: only the visibility/generalized execution seam changed.
+// All runtime pins and every other receipt field remain checked. Archived source
+// commitments are preserved, never silently upgraded on disk.
+const RETAINED_SOURCE: &str = "63aa307015b17f79d6b07e71f024f624eb2388ad15e6ba8264a5b3fa2a9a9a87";
+fn replace_runtime(value: &mut Value, from: &Value, to: &Value) -> Result<()> {
+    match value {
+        Value::Object(map) => {
+            for (key, child) in map {
+                if key == "runtime" {
+                    ensure!(*child == *from, "inconsistent retained runtime");
+                    *child = to.clone();
+                } else {
+                    replace_runtime(child, from, to)?;
+                }
+            }
+        }
+        Value::Array(items) => {
+            for item in items {
+                replace_runtime(item, from, to)?;
+            }
+        }
+        _ => (),
+    }
+    Ok(())
+}
+fn runtime_compatible(report: &Value) -> Result<()> {
+    let mut recorded = report["runtime"].clone();
+    if recorded == runtime() {
+        return Ok(());
+    }
+    ensure!(
+        recorded["operation_source_sha256"] == RETAINED_SOURCE,
+        "unreviewed retained Stake Pool source"
+    );
+    recorded["operation_source_sha256"] = runtime()["operation_source_sha256"].clone();
+    ensure!(
+        recorded == runtime(),
+        "retained Stake Pool runtime pins differ"
+    );
+    Ok(())
+}
+pub fn verify(spec: &ChangeSpec, report: &Value) -> Result<()> {
+    let mut normalized = report.clone();
+    let seal = normalized
+        .as_object_mut()
+        .context("report object required")?
+        .remove("report_sha256")
+        .context("report seal missing")?;
+    ensure!(
+        seal == crate::canonical::digest(&normalized)?,
+        "report seal mismatch"
+    );
+    runtime_compatible(report)?;
+    replace_runtime(&mut normalized, &report["runtime"], &runtime())?;
+    verify_current(spec, &super::seal(normalized)?)
+}
 pub fn reproduce(spec: &ChangeSpec, report: &Value) -> Result<()> {
     verify(spec, report)?;
     let input: Input = serde_json::from_value(report["retained_input"].clone())?;
+    let mut rebuilt = execute_analysis(spec, &input, true)?;
+    rebuilt.as_object_mut().unwrap().remove("report_sha256");
+    replace_runtime(&mut rebuilt, &runtime(), &report["runtime"])?;
     ensure!(
-        *report == execute_analysis(spec, &input, true)?,
+        *report == super::seal(rebuilt)?,
         "offline configuration/action reproduction differs"
     );
     Ok(())

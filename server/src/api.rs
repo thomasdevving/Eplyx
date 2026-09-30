@@ -160,6 +160,7 @@ pub fn router(state: Shared) -> Router {
         .merge(crate::cloud::router())
         .merge(crate::hosted::observation::router())
         .merge(crate::hosted::order::router())
+        .merge(crate::hosted::interaction::router())
         .route("/health", get(health))
         .route("/ready", get(ready))
         .route("/v1/adapters", get(list_adapters))
@@ -1588,9 +1589,12 @@ async fn get_project(
         .into_iter()
         .filter(|id| {
             state.registry.load_run(id).is_ok_and(|run| {
-                !run.hosted_analysis
-                    .as_ref()
-                    .is_some_and(|j| j.kind == "migration_order")
+                !run.hosted_analysis.as_ref().is_some_and(|j| {
+                    matches!(
+                        j.kind.as_str(),
+                        "migration_order" | "upgrade_parameter_interaction"
+                    )
+                })
             })
         })
         .collect();
@@ -1733,6 +1737,7 @@ fn project_capabilities(state: &AppState, project: &Project) -> ProjectCapabilit
         analysis_capability("token_migration", true, &common, Vec::new()),
         analysis_capability("lifecycle_change", true, &common, Vec::new()),
         analysis_capability("protocol_parameter_change", true, &common, Vec::new()),
+        analysis_capability("upgrade_parameter_interaction", true, &common, Vec::new()),
         analysis_capability("current_observation", true, &common, observation()),
         analysis_capability("current_path", true, &common, observation()),
         analysis_capability("current_candidate", true, &common, candidate),
@@ -2087,11 +2092,12 @@ async fn list_project_runs(
         let Ok(run) = state.registry.load_run(&id) else {
             continue;
         };
-        if run
-            .hosted_analysis
-            .as_ref()
-            .is_some_and(|j| j.kind == "migration_order")
-        {
+        if run.hosted_analysis.as_ref().is_some_and(|j| {
+            matches!(
+                j.kind.as_str(),
+                "migration_order" | "upgrade_parameter_interaction"
+            )
+        }) {
             continue;
         }
         if query.status.is_some_and(|want| want != run.status) {

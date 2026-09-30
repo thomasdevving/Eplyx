@@ -1,0 +1,100 @@
+;FFMETADATA1
+title=Eplyx — How it works / weekly update
+artist=Eplyx
+comment=Revised cut: recorded frontend animation, actions and loading. Synthetic examples labeled; waiting time condensed.
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=0
+END=6000
+title=Actual frontend intro
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=6000
+END=9000
+title=What happens when things change?
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=9000
+END=19000
+title=How historical replay works
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=19000
+END=25000
+title=Protocol measurements
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=25000
+END=35000
+title=Open and inspect an upgrade
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=35000
+END=43000
+title=Squads governance
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=43000
+END=52000
+title=Run and inspect a migration
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=52000
+END=60000
+title=Stress failure and gate
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=60000
+END=67000
+title=Copy and reproduce a witness
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=67000
+END=74000
+title=Compare two runs
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=74000
+END=86000
+title=Observe public state
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=86000
+END=96000
+title=Execute one exact path
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=96000
+END=105000
+title=Check the candidate
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=105000
+END=116000
+title=Evaluate lifecycle policy
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=116000
+END=124000
+title=Four moving workflows
+
+[CHAPTER]
+TIMEBASE=1/1000
+START=124000
+END=128000
+title=Eplyx

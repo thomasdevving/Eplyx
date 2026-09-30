@@ -1,0 +1,20 @@
+{
+  "file": "eplyx-weekly-2026-09-27.mp4",
+  "bytes": 37010715,
+  "sha256": "365114a6283808a38c6e70d70fcca38ecaf814ba2ec31d239f63e2cd75d3ef8b",
+  "duration_seconds": 140.0,
+  "dimensions": [
+    1920,
+    1080
+  ],
+  "fps": 30,
+  "decoded_frames": 4200,
+  "decode_exit_code": 0,
+  "dropped_frames": 0,
+  "video_codec": "H.264 High / 4:2:0 full range",
+  "audio_codec": "AAC stereo / 48 kHz",
+  "subtitle_codec": "mov_text / English / optional",
+  "chapters": 14,
+  "visual_review": "17 composition stills plus encoded MP4 split-screen extraction",
+  "verified_at": "2026-09-27T08:07:32.540560+00:00"
+}

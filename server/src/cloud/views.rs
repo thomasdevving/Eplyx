@@ -73,12 +73,13 @@ async fn snapshot(state: &Shared, project: &str) -> ApiResult<Snapshot> {
         if record.project_id != project {
             return Err(ApiError::internal("run index mismatch"));
         }
-        // Derived order occurrences are listed on their immutable parent only.
-        if record
-            .hosted_analysis
-            .as_ref()
-            .is_some_and(|j| j.kind == "migration_order")
-        {
+        // Derived order/interaction occurrences are listed on their immutable parent only.
+        if record.hosted_analysis.as_ref().is_some_and(|j| {
+            matches!(
+                j.kind.as_str(),
+                "migration_order" | "upgrade_parameter_interaction"
+            )
+        }) {
             continue;
         }
         if let Some(analysis) = &record.analysis {
@@ -230,12 +231,22 @@ async fn run_payload(state: &Shared, access: &Access, run: &str) -> ApiResult<Va
         return Err(ApiError::not_found("unknown run"));
     }
     let record = view_record(state, &access.project_id, run)?;
-    if record
-        .hosted_analysis
-        .as_ref()
-        .is_some_and(|j| j.kind == "migration_order")
-    {
-        return crate::hosted::order::result(&state.registry, &record).map_err(ApiError::internal);
+    if record.hosted_analysis.as_ref().is_some_and(|j| {
+        matches!(
+            j.kind.as_str(),
+            "migration_order" | "upgrade_parameter_interaction"
+        )
+    }) {
+        return if record
+            .hosted_analysis
+            .as_ref()
+            .is_some_and(|j| j.kind == crate::hosted::interaction::KIND)
+        {
+            crate::hosted::interaction::result(&state.registry, &record)
+        } else {
+            crate::hosted::order::result(&state.registry, &record)
+        }
+        .map_err(ApiError::internal);
     }
     if record.analysis.is_none()
         && record
@@ -303,11 +314,12 @@ pub async fn demo_run(
 ) -> ApiResult<Json<Value>> {
     let access = viewer(&state, &headers, None).await?;
     let record = view_record(&state, &access.project_id, &run)?;
-    if record
-        .hosted_analysis
-        .as_ref()
-        .is_some_and(|j| j.kind == "migration_order")
-    {
+    if record.hosted_analysis.as_ref().is_some_and(|j| {
+        matches!(
+            j.kind.as_str(),
+            "migration_order" | "upgrade_parameter_interaction"
+        )
+    }) {
         return Err(ApiError::not_found("unknown run"));
     }
     Ok(Json(run_payload(&state, &access, &run).await?))
@@ -446,13 +458,14 @@ async fn compare_payload(state: &Shared, access: &Access, query: CompareQuery) -
     let mut parsed = Vec::new();
     for id in [&left, &right] {
         let record = view_record(state, &access.project_id, id)?;
-        if record
-            .hosted_analysis
-            .as_ref()
-            .is_some_and(|j| j.kind == "migration_order")
-        {
+        if record.hosted_analysis.as_ref().is_some_and(|j| {
+            matches!(
+                j.kind.as_str(),
+                "migration_order" | "upgrade_parameter_interaction"
+            )
+        }) {
             return Err(ApiError::bad_request(
-                "Order analyses are reviewed through their parent migration run.",
+                "Derived analyses are reviewed through their retained parent run.",
             ));
         }
         parsed.push(state.registry.analytical_projection(&record)?.view());

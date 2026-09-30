@@ -1,6 +1,7 @@
 //! `eplyx` - command line entry point.
 
 mod cli_dashboard;
+mod cli_interaction;
 mod cli_lifecycle;
 mod cli_local;
 mod cli_parameter;
@@ -40,6 +41,13 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
+    /// Analyze a qualified local program-upgrade and parameter interaction.
+    Interaction {
+        #[command(subcommand)]
+        command: cli_interaction::Command,
+    },
+    #[command(hide = true)]
+    InteractionWorker { encoded: String },
     /// Analyze one active Token-2022 transfer-fee parameter counterfactual.
     Parameter {
         #[command(subcommand)]
@@ -1562,6 +1570,8 @@ fn run() -> Result<ExitCode> {
             }
             Ok(ExitCode::SUCCESS)
         }
+        Command::Interaction { command } => cli_interaction::run(command),
+        Command::InteractionWorker { encoded } => cli_interaction::worker(&encoded),
         Command::Parameter { command } => cli_parameter::run(command),
         Command::ParameterWorker { encoded } => cli_parameter::worker(&encoded),
         Command::Generate(args) => generate(args),

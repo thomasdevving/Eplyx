@@ -1,0 +1,726 @@
+{
+  "build": {
+    "arch": "v0",
+    "build_script": {
+      "len": 3575,
+      "sha256": "27ac3354ccf137f0cfc7f9e01de9c4d6d16025ae66eacf155a3540b9c1874fdb"
+    },
+    "cargo_build_sbf": "4.4.0",
+    "elf": {
+      "len": 133992,
+      "sha256": "a664f74b73dedc713f16934829b25f9a0c0c3a06c6ce21f03fdc7869ae5b555d"
+    },
+    "files": {
+      "Cargo.lock": {
+        "len": 67748,
+        "sha256": "cc23055109634efc0d3802b7ced6bc79c057d68407637a737b054d86530d096d"
+      },
+      "Cargo.toml": {
+        "len": 769,
+        "sha256": "a62e504a0d7114ee13a3bc1395bd303b727a72001ca07f633ea4a11037336172"
+      },
+      "LICENSE": {
+        "len": 9136,
+        "sha256": "048838ecab23173fe6db9b3a4f5d9e2f5480b8692dfca556fed4aa039ca06bc8"
+      },
+      "NOTICE": {
+        "len": 767,
+        "sha256": "2413f7bd574d951d0805d85e766317a20a53e8729ff526e4dc8d2cab07f05b64"
+      },
+      "src/lib.rs": {
+        "len": 8110,
+        "sha256": "4fca14386f02299376186e32d53c58548c930c3ed623ac3e14390742367f3d12"
+      }
+    },
+    "fresh_network_installation_tested": false,
+    "fresh_target_and_output": true,
+    "host": {
+      "machine": "arm64",
+      "macos": "26.6.2",
+      "system": "Darwin"
+    },
+    "offline": true,
+    "origin": "constructed test fixture; not upstream release; not for deployment",
+    "platform_tools": "v1.54",
+    "platform_tools_revisions": {
+      "len": 240,
+      "sha256": "c33d3fa3cae3d9ece4ea08bc8e51a754041286a351067bc3afd2635595619895"
+    },
+    "public_dependency_and_tool_caches_reused": true,
+    "rustc": "1.89.0-dev",
+    "schema": "eplyx-stake-pool-config-fixture-build-v1",
+    "source_only_staging": true
+  },
+  "candidate": {
+    "len": 133992,
+    "sha256": "a664f74b73dedc713f16934829b25f9a0c0c3a06c6ce21f03fdc7869ae5b555d"
+  },
+  "cells": {
+    "R00": {
+      "action_input_id": "382876e3287b4514cd0dd1441366fc81b571bd645237aaaa28603b5a2a200bee",
+      "compute_units": 12189,
+      "execution_sha256": "3ef86748d7869c459ede39743963fb279d733cd2b80fac025f9f02334f82ad0b",
+      "program_sha256": "ec2dfefaa70d560754a0000f39bd2cabc192b895d36205b3c428f601b6e1d7e1",
+      "reconciliation": {
+        "action_transaction_fee_lamports": "14000",
+        "config_transaction_fee_included": false,
+        "fee_split_limitation": "Aliased role credit is measured once; no independent role split is asserted.",
+        "funding_payer_debit_excluding_transaction_fee": "822000000",
+        "funding_payer_lamport_debit": "822014000",
+        "manager_fee_account_credit_raw": "0",
+        "mint_supply_delta_raw": "760985008",
+        "pool_token_supply_delta_raw": "760985008",
+        "pool_total_lamports_delta": "822000000",
+        "recipient_account_credit_raw": "760985008",
+        "recipient_credit_contains_aliased_roles": true,
+        "reconciled": true,
+        "referral_account_credit_raw": null,
+        "reserve_lamport_delta": "822000000",
+        "success": true,
+        "unique_token_account_credits": [
+          {
+            "address": "93eSDRCdrbN6sYDyvnHzoSYUkSgchGsU5ZzFvQrCqD3e",
+            "credit_raw": "0",
+            "independently_measured_role": true,
+            "roles": [
+              "manager_fee"
+            ]
+          },
+          {
+            "address": "EpomeRdrhUeAmVyECwima2gBpY3jUoA6cee89EcADaPT",
+            "credit_raw": "760985008",
+            "independently_measured_role": false,
+            "roles": [
+              "recipient",
+              "referral_fee"
+            ]
+          }
+        ]
+      },
+      "success": true
+    },
+    "R01": {
+      "action_input_id": "9ce486cd6d18185a46de3890b95833c07b7ac4dca278bf2f7063d26840585203",
+      "compute_units": 14285,
+      "execution_sha256": "d74b4a9117340e91b16053e4b5e2a0b7528a69928338da13f08b2d27bd9b708c",
+      "program_sha256": "ec2dfefaa70d560754a0000f39bd2cabc192b895d36205b3c428f601b6e1d7e1",
+      "reconciliation": {
+        "action_transaction_fee_lamports": "14000",
+        "config_transaction_fee_included": false,
+        "fee_split_limitation": "Aliased role credit is measured once; no independent role split is asserted.",
+        "funding_payer_debit_excluding_transaction_fee": "822000000",
+        "funding_payer_lamport_debit": "822014000",
+        "manager_fee_account_credit_raw": "7609851",
+        "mint_supply_delta_raw": "760985008",
+        "pool_token_supply_delta_raw": "760985008",
+        "pool_total_lamports_delta": "822000000",
+        "recipient_account_credit_raw": "753375157",
+        "recipient_credit_contains_aliased_roles": true,
+        "reconciled": true,
+        "referral_account_credit_raw": null,
+        "reserve_lamport_delta": "822000000",
+        "success": true,
+        "unique_token_account_credits": [
+          {
+            "address": "93eSDRCdrbN6sYDyvnHzoSYUkSgchGsU5ZzFvQrCqD3e",
+            "credit_raw": "7609851",
+            "independently_measured_role": true,
+            "roles": [
+              "manager_fee"
+            ]
+          },
+          {
+            "address": "EpomeRdrhUeAmVyECwima2gBpY3jUoA6cee89EcADaPT",
+            "credit_raw": "753375157",
+            "independently_measured_role": false,
+            "roles": [
+              "recipient",
+              "referral_fee"
+            ]
+          }
+        ]
+      },
+      "success": true
+    },
+    "R10": {
+      "action_input_id": "b2d8f193a714528791fd074c4baf7704247366b0f84f811cb5ffd4e3d96c2dcd",
+      "compute_units": 14872,
+      "execution_sha256": "01687a56fe77a3fe778374083e1a1b024af4d9f0367d77a98afa539722549136",
+      "program_sha256": "a664f74b73dedc713f16934829b25f9a0c0c3a06c6ce21f03fdc7869ae5b555d",
+      "reconciliation": {
+        "action_transaction_fee_lamports": "14000",
+        "config_transaction_fee_included": false,
+        "fee_split_limitation": "Aliased role credit is measured once; no independent role split is asserted.",
+        "funding_payer_debit_excluding_transaction_fee": "822000000",
+        "funding_payer_lamport_debit": "822014000",
+        "manager_fee_account_credit_raw": "0",
+        "mint_supply_delta_raw": "760985008",
+        "pool_token_supply_delta_raw": "760985008",
+        "pool_total_lamports_delta": "822000000",
+        "recipient_account_credit_raw": "760985008",
+        "recipient_credit_contains_aliased_roles": true,
+        "reconciled": true,
+        "referral_account_credit_raw": null,
+        "reserve_lamport_delta": "822000000",
+        "success": true,
+        "unique_token_account_credits": [
+          {
+            "address": "93eSDRCdrbN6sYDyvnHzoSYUkSgchGsU5ZzFvQrCqD3e",
+            "credit_raw": "0",
+            "independently_measured_role": true,
+            "roles": [
+              "manager_fee"
+            ]
+          },
+          {
+            "address": "EpomeRdrhUeAmVyECwima2gBpY3jUoA6cee89EcADaPT",
+            "credit_raw": "760985008",
+            "independently_measured_role": false,
+            "roles": [
+              "recipient",
+              "referral_fee"
+            ]
+          }
+        ]
+      },
+      "success": true
+    },
+    "R11": {
+      "action_input_id": "a68ebea4d64c6ba055c8b537ac3f23937a8c1d2c9619ee47d209fa4dee5e3384",
+      "compute_units": 16927,
+      "execution_sha256": "97c0b745419efab34cef146312af4b15b3116eac5665eb661b0f1e23a6e10e5d",
+      "program_sha256": "a664f74b73dedc713f16934829b25f9a0c0c3a06c6ce21f03fdc7869ae5b555d",
+      "reconciliation": {
+        "action_transaction_fee_lamports": "14000",
+        "config_transaction_fee_included": false,
+        "fee_split_limitation": "Aliased role credit is measured once; no independent role split is asserted.",
+        "funding_payer_debit_excluding_transaction_fee": "822000000",
+        "funding_payer_lamport_debit": "822014000",
+        "manager_fee_account_credit_raw": "7609851",
+        "mint_supply_delta_raw": "760985008",
+        "pool_token_supply_delta_raw": "760985008",
+        "pool_total_lamports_delta": "822000000",
+        "recipient_account_credit_raw": "753375157",
+        "recipient_credit_contains_aliased_roles": true,
+        "reconciled": true,
+        "referral_account_credit_raw": null,
+        "reserve_lamport_delta": "822000000",
+        "success": true,
+        "unique_token_account_credits": [
+          {
+            "address": "93eSDRCdrbN6sYDyvnHzoSYUkSgchGsU5ZzFvQrCqD3e",
+            "credit_raw": "7609851",
+            "independently_measured_role": true,
+            "roles": [
+              "manager_fee"
+            ]
+          },
+          {
+            "address": "EpomeRdrhUeAmVyECwima2gBpY3jUoA6cee89EcADaPT",
+            "credit_raw": "753375157",
+            "independently_measured_role": false,
+            "roles": [
+              "recipient",
+              "referral_fee"
+            ]
+          }
+        ]
+      },
+      "success": true
+    }
+  },
+  "configurations": {
+    "K1": {
+      "compute_units": "3597",
+      "config_input_id": "1824cbc6a47f4dbd931b90f10b353e9466c00b891dd0b03984d6d30c67940c0f",
+      "execution_sha256": "01cfb7b2aa4bdc573eb7cefe803a7eab33432e93200e8fad42de7201ba48ab5b",
+      "fee_payer": {
+        "address": "6Ckm2BrnXxsSjyG5b17kQQRjoECVrts92RKXVGT8XeqS",
+        "origin": "assumed_simulation_only",
+        "propagated_to_user_action": false
+      },
+      "full_preservation_verified": true,
+      "manager_assumption": {
+        "address": "8zVQTFGiwCZQSkNhedqMnWSddeGDrSahmM4JdZMceagx",
+        "boundary": "Qualified SetFee/check_manager checks only manager key and signer privilege; account owner, data and balance are simulation-only.",
+        "key_possession_established": false,
+        "observed": false,
+        "origin": "assumed_simulation_only",
+        "signer": true
+      },
+      "post_pool_data_sha256": "611571ab6c8ce78806acf4983909c8870f7415391e8c711a1acb825e305a0d9b",
+      "success": true,
+      "transaction_fee_lamports": "10000"
+    },
+    "K2": {
+      "compute_units": "3350",
+      "config_input_id": "bdadf7d3ca6fc93d8ff77eff36f044812fc6a960482f2d737facbbbc3b6187ff",
+      "execution_sha256": "cc7a0903ea77b5c76cb7206e9d705f74698c68977699cce29fed4586083f4bc6",
+      "fee_payer": {
+        "address": "6Ckm2BrnXxsSjyG5b17kQQRjoECVrts92RKXVGT8XeqS",
+        "origin": "assumed_simulation_only",
+        "propagated_to_user_action": false
+      },
+      "full_preservation_verified": true,
+      "manager_assumption": {
+        "address": "8zVQTFGiwCZQSkNhedqMnWSddeGDrSahmM4JdZMceagx",
+        "key_possession_established": false,
+        "origin": "assumed_simulation_only",
+        "signer": true
+      },
+      "post_pool_data_sha256": "611571ab6c8ce78806acf4983909c8870f7415391e8c711a1acb825e305a0d9b",
+      "success": true,
+      "transaction_fee_lamports": "10000"
+    }
+  },
+  "controls": {
+    "action_controls": [
+      {
+        "error": "InstructionError(3, InvalidSeeds)",
+        "evidence_sha256": "a94276110a96442314a04b54576526db5630db911e5571403e23d0019c8e67d4",
+        "mode": "withdraw_pda",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(3, InvalidArgument)",
+        "evidence_sha256": "5b8711f269d67c85978ec5e4f45fbfdc33157d12eb5a6aa05e341f10791c6bb9",
+        "mode": "reserve_relationship",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(3, InvalidArgument)",
+        "evidence_sha256": "2be8d8539d799cea5a0a4cd56d3ba1bdc42e32d208e5f32eb24e2bbfc940f826",
+        "mode": "mint_relationship",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(3, InvalidArgument)",
+        "evidence_sha256": "4c4b7e415f566688e18f3a53b9e8a85e737d7699a2ea2f45d0de420b8c775726",
+        "mode": "manager_relationship",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(3, InvalidArgument)",
+        "evidence_sha256": "1949f326db6e6c1809b2436db483d79501b27209b0865f34b71f54b35fcac379",
+        "mode": "token_relationship",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(3, InvalidArgument)",
+        "evidence_sha256": "3285fa7644982b96778c9381b831ae5d686cb751af7c1dd857863ce2ec44e866",
+        "mode": "gated",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(3, InvalidArgument)",
+        "evidence_sha256": "dfc157598a43fe7334641ac5877b95708af3cce0325df6c2be31da2cca33f3e1",
+        "mode": "referral_nonzero",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(3, InvalidAccountData)",
+        "evidence_sha256": "8d4c5ebe4114750f3dc184e2223365605443e64379f0541f8402b0d24d3b8678",
+        "mode": "bad_token_mint",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(3, IncorrectProgramId)",
+        "evidence_sha256": "9658dd2917ad859cdc3d09db80e6402691f15cf6b0fd98eb13b38a9bf697ede0",
+        "mode": "bad_token_owner",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(3, InvalidAccountData)",
+        "evidence_sha256": "6c99bc67f092d23fd7571e8c4c24ea3b42c4606c842f80b50202f7e51bddbdcc",
+        "mode": "bad_mint_authority",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(3, IncorrectProgramId)",
+        "evidence_sha256": "2fa3f017cbada1d4363cd30cad896d83437eaae60c8c5314785627cef0c09d9e",
+        "mode": "bad_pool_owner",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(3, InvalidArgument)",
+        "evidence_sha256": "912e907486f1613f0f74369ac301b652648eb11f15906806c12b3a996cdf9f84",
+        "mode": "bad_reserve_owner",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(3, InvalidAccountData)",
+        "evidence_sha256": "9308fd4894770ec2f672c4659c59234fb3f6026c96f637d1649e487093353b2e",
+        "mode": "frozen_role",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(3, InvalidAccountData)",
+        "evidence_sha256": "85e42b118dd7d7cb6aecc692672963eec0b059b2a26bc55a1d38e42a53c8ae0e",
+        "mode": "stale_epoch",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(2, Custom(1))",
+        "evidence_sha256": "047c4f8c7b968b6935e7e8651c93cf97363a0f1786d0eb593b3504befc3994c8",
+        "mode": "insufficient_funding",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": null,
+        "evidence_sha256": "6dc93508dfdfaf1792825868d980b5759abbd772b9b2fc98f5c3c16b76b7d1bd",
+        "mode": "corrupt_manager_balance",
+        "reconciliation_error": "negative minted account credit",
+        "success": true
+      },
+      {
+        "error": "InstructionError(3, InsufficientFunds)",
+        "evidence_sha256": "2694bfab9172fd10a7633880bb626f75f9a235dba02f19de2fc826670d8cb29f",
+        "mode": "full_fee_deposit",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": null,
+        "evidence_sha256": "b2ac25cc450444394f8c2ac946e5bc1f9aeaf627aef4ec4447a1c6fccf44e3d4",
+        "mode": "all_fee_roles_alias",
+        "reconciliation_error": null,
+        "success": true
+      },
+      {
+        "error": null,
+        "evidence_sha256": "16a74d2a112216dc59aff3729a09fae02cdd72476469d5ecf145f6492f87069f",
+        "mode": "tiny_round_up",
+        "reconciliation_error": null,
+        "success": true
+      },
+      {
+        "error": null,
+        "evidence_sha256": "4b27428c76c810c5fc825f4e5e72c7b01638b22d2dfdf225132346ca3afbdc31",
+        "mode": "zero_fee",
+        "reconciliation_error": null,
+        "success": true
+      },
+      {
+        "error": null,
+        "evidence_sha256": "a8fb126df6d94c9e3a07669dce2f3f63bbe548b2f0968b5294499f0a1006cd9c",
+        "mode": "equal_fee",
+        "reconciliation_error": null,
+        "success": true
+      }
+    ],
+    "config_controls": [
+      {
+        "error": null,
+        "evidence_sha256": "db9137f8db78e45f1a67ea22dcdd8e5028442aa1eb831ec4148c2e0502d1f4f4",
+        "mode": "correct",
+        "reconciliation_error": null,
+        "success": true
+      },
+      {
+        "error": "InstructionError(0, InvalidArgument)",
+        "evidence_sha256": "a4596adb4168206c4f3048a5a641f6b7d5b9c771d294e485255b0f56bf3af7a3",
+        "mode": "wrong_manager",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(0, MissingRequiredSignature)",
+        "evidence_sha256": "dc01dcce8d10165df51524de5c5c5b3803ca86e52064d9db4c187dccf581bd81",
+        "mode": "missing_signer",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": null,
+        "evidence_sha256": "efa7729ba082a19bd04905307108a51ec793647edea7a3f313af541c0b1e0342",
+        "mode": "manager_owner",
+        "reconciliation_error": null,
+        "success": true
+      },
+      {
+        "error": null,
+        "evidence_sha256": "9b5de613c67edb9763c0ac62e05c3de4fb8ce74df3d26628b118afd20731a801",
+        "mode": "manager_data",
+        "reconciliation_error": null,
+        "success": true
+      },
+      {
+        "error": null,
+        "evidence_sha256": "eea3e421706f873f72db219af2f2b8c5e6e0253c974701e97082b7d6ab26ff97",
+        "mode": "manager_balance",
+        "reconciliation_error": null,
+        "success": true
+      },
+      {
+        "error": null,
+        "evidence_sha256": "dff295db5601e8805f348215c45feccbf3530ab713605c4c192c81a85bb826bd",
+        "mode": "zero",
+        "reconciliation_error": null,
+        "success": true
+      },
+      {
+        "error": null,
+        "evidence_sha256": "46c70e898ac71c7a5966c638ecf55b500ded5edcd27610a3f3cb17286ce991da",
+        "mode": "equal",
+        "reconciliation_error": null,
+        "success": true
+      },
+      {
+        "error": "InstructionError(0, Custom(4))",
+        "evidence_sha256": "f348abc318723434d676d1962f3e39d88699a6553e68aa1aeeb67f2e31fb5eb4",
+        "mode": "invalid_zero",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(0, Custom(4))",
+        "evidence_sha256": "6b9ad8af0626b8399f7c7e1dccd5eff4c61710a5c21feb84b69abaa9412c6bf3",
+        "mode": "invalid_high",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": null,
+        "evidence_sha256": "8443e7cdc04b309747d1dc8e389a2e0b8010a64775c6f895ee03c553bd60694a",
+        "mode": "tiny",
+        "reconciliation_error": null,
+        "success": true
+      },
+      {
+        "error": null,
+        "evidence_sha256": "a365830bce0e9dc43ccacf9ec9eaafaa09a3af20ab6be9d16064301cbc0b30d7",
+        "mode": "variable_layout",
+        "reconciliation_error": null,
+        "success": true
+      },
+      {
+        "error": "InstructionError(0, InvalidAccountData)",
+        "evidence_sha256": "b8bc2cc7ac5dae6945977d8943eefd9265be878a789e5118eb39009f65f4fc33",
+        "mode": "malformed_layout",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(0, InvalidAccountData)",
+        "evidence_sha256": "dbaaf2a645b822240078345cfed0a9884072e6ea39ceafae077a9a5ab0bb4a9b",
+        "mode": "uninitialized",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(0, IncorrectProgramId)",
+        "evidence_sha256": "cdf30a7dc540d41e293aa373da6133f3381fc50d83a691b4aa7e39c97f900dc9",
+        "mode": "incorrect_owner",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(0, InvalidInstructionData)",
+        "evidence_sha256": "83e42e83352140c5a6633a1d8c8ed2069c1a25ee3f927a125138e90a1878c7dd",
+        "mode": "other_fee",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(0, InvalidInstructionData)",
+        "evidence_sha256": "ab5fa1aa1241fbab4d0e6d1560b155347fa870dd612c62a4a97c3c78f4278d9a",
+        "mode": "trailing_instruction",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(0, InvalidArgument)",
+        "evidence_sha256": "17bc2610310e259b189c4e7bd8d28df190ad392f81fc34f6bb5340e0d5a8cec1",
+        "mode": "extra_config_account",
+        "reconciliation_error": null,
+        "success": false
+      }
+    ],
+    "message_controls": [
+      {
+        "error": "InstructionError(3, MissingRequiredSignature)",
+        "evidence_sha256": "de756b196f1ca32b1c42a512fed4af7e871d0c67e93b1ba4bf8175b22cc2bb71",
+        "mode": "missing_funding_signer",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(3, InvalidArgument)",
+        "evidence_sha256": "2cf9ad3ccdb12e1bc1107bb55781cff1cd5f1b442d8de205062361f8658a3d3c",
+        "mode": "extra_deposit_account",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(3, InvalidArgument)",
+        "evidence_sha256": "926678a54a1eba4d96204d30d7cef1f39c2b5ad21747fc69ccdec3fad1e974d9",
+        "mode": "missing_deposit_account",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(3, InvalidInstructionData)",
+        "evidence_sha256": "56070480a3437785fd4e9a183396044242320ed6eacd0d8cde7ddadae9637766",
+        "mode": "trailing_deposit_instruction",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(3, InvalidInstructionData)",
+        "evidence_sha256": "adb04b3f1d05bf5dceb278f4a0614f0e45a268cc5d09c9c30fb5fe69e1a31804",
+        "mode": "unsupported_instruction",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(3, IncorrectProgramId)",
+        "evidence_sha256": "67bd2cd56111053e64fe3279433077a719835934ee32a22d4bb23ef0b65e9c8d",
+        "mode": "wrong_target_program",
+        "reconciliation_error": null,
+        "success": false
+      },
+      {
+        "error": "InstructionError(3, PrivilegeEscalation)",
+        "evidence_sha256": "dbddc5f35110d955791f745c6288ea53c396b9be39426de90d21184c477d7f83",
+        "mode": "readonly_manager_fee",
+        "reconciliation_error": null,
+        "success": false
+      }
+    ]
+  },
+  "effects": {
+    "interaction_recipient_raw": "0",
+    "v1_recipient_raw": "-7609851",
+    "v2_recipient_raw": "-7609851"
+  },
+  "full_evidence": {
+    "len": 3901735,
+    "regenerate": "EPLYX_STAKE_CONFIG_QUALIFICATION_OUT=/private/tmp/eplyx-step10b-qualification cargo test -p eplyx-engine --test stake_pool_config_candidate --offline -- --nocapture",
+    "sha256": "0b5a9050c731321ba663d8de017d09452f88bd832bf6a5124977b20afc400ebe"
+  },
+  "harness_sha256": "14622be395ac7a97203b6e03e903201e3f371cea77e76a708308d0412813f7fc",
+  "historical_record": {
+    "clock": {
+      "epoch": 0,
+      "epoch_start_timestamp": 0,
+      "leader_schedule_epoch": 0,
+      "slot": 447850493,
+      "unix_timestamp": 1789665625
+    },
+    "id": "mainnet-spl-stake-pool-151010f709e113e7",
+    "pre_state_hash": "bd36973f832ec2372a7793ceb5ee341b75df18695a262314c3c4fd2744e1d9f5",
+    "programs": {
+      "programs": [
+        {
+          "discovered_by": [
+            "top_level_instruction",
+            "inner_instruction",
+            "execution_log",
+            "adapter_declared"
+          ],
+          "note": "owned by the native loader at this slot; the validator implements it and no artefact is loaded",
+          "observed_slot": 447850492,
+          "program_id": "11111111111111111111111111111111",
+          "source": "builtin"
+        },
+        {
+          "discovered_by": [
+            "top_level_instruction",
+            "execution_log"
+          ],
+          "note": "owned by the native loader at this slot; the validator implements it and no artefact is loaded",
+          "observed_slot": 447850492,
+          "program_id": "ComputeBudget111111111111111111111111111111",
+          "source": "builtin"
+        },
+        {
+          "binary_len": 1080464,
+          "binary_sha256": "ec2dfefaa70d560754a0000f39bd2cabc192b895d36205b3c428f601b6e1d7e1",
+          "deployed_slot": 429882117,
+          "discovered_by": [
+            "program_under_test",
+            "top_level_instruction",
+            "execution_log"
+          ],
+          "loader": "upgradeable",
+          "observed_slot": 447850492,
+          "program_id": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+          "source": "historical_mainnet"
+        },
+        {
+          "binary_len": 108600,
+          "binary_sha256": "8190d3f7ceb6cb7a7a8d8924bff89f9f611e15ce1f806f2b6237f3311a98f697",
+          "deployed_slot": 419472000,
+          "discovered_by": [
+            "inner_instruction",
+            "execution_log",
+            "adapter_declared"
+          ],
+          "loader": "upgradeable",
+          "observed_slot": 447850492,
+          "program_id": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "source": "historical_mainnet"
+        }
+      ]
+    },
+    "record_sha256": "c4bf9b5dea6bb6714003d4f4bc8e815058e567797d66cbf8e3afb3e800f34ddb",
+    "source_bundle_sha256": "5e5b67ac13e4f6b8249348ad81db29885ee8ee897ba78f6de213b55793f4285f"
+  },
+  "limitations": [
+    "Constructed code only; no arbitrary candidate or upstream release qualification.",
+    "Zero referral, ungated action only; no authority possession or live signability.",
+    "Retained schema-1 Clock epoch 0 and runtime; no exact validator equivalence.",
+    "Fresh VMs and pool-only handoffs; no installed upgrade, deployment or rollout ordering.",
+    "Aliased token roles measured once; no independent referral split."
+  ],
+  "origin": "constructed test fixture; not upstream release; not intended for deployment",
+  "parameter_change_spec_id": "60a78b2069fd1232d6b258ed27bcd503c17a92e1da52c71dd3b82a250905b9f7",
+  "qualification_sha256": "2a5247b4dcad7d8c49ef0f7e0a3763d2960e0ddaef9a78fb8763c59220552cc9",
+  "runtime": {
+    "backend": "LiteSVM 0.16",
+    "clock_advanced": false,
+    "executor_sha256": "0f5ed5b8db2220e0dad1d8409b5871f203354c09a7038f55a6f7323b095d30eb",
+    "lock_sha256": "4417749a09e246a4fb8c111611fdf5825d295a28a414deeb30cd353eccec992a",
+    "official_interface": "spl-stake-pool=2.0.3",
+    "operation_source_sha256": "63aa307015b17f79d6b07e71f024f624eb2388ad15e6ba8264a5b3fa2a9a9a87",
+    "profile": "schema1_litesvm_mainnet",
+    "recent_blockhash_verification": false,
+    "replay_sha256": "8220e7051eafb8f52da4aa4f5555c2f4af0e0edd7bc36530109448d8823a8fa5",
+    "revision": "spl_stake_pool_sol_deposit_fee_v1",
+    "signature_verification": false
+  },
+  "same_code_control": {
+    "effect_raw": "-7609851",
+    "independent_config_and_actions": true,
+    "interaction_raw": "0",
+    "report_sha256": "0915b26a8c3efa74487a259a00c712984bae54ebfc0b7ddc262154d859280aba"
+  },
+  "schema": "eplyx-stake-pool-config-candidate-qualification-summary-v1",
+  "scope": {
+    "historical_fidelity_cell": "R00",
+    "instructions": [
+      "SetFee(SolDeposit)",
+      "ungated ten-account DepositSol"
+    ],
+    "layout": "full spl-stake-pool 2.0.3 Borsh typed-prefix roundtrip, exact trailing bytes",
+    "manager_boundary": "key and signer enforced; tested owner/data/balance variations irrelevant",
+    "production_candidate_admission": false,
+    "sol_referral_percent": 0
+  },
+  "upgrade_change_spec_id": "f0cad689583cc23db7f8c03f4224f0fbb849243989d529b4b4789a37315f5b71"
+}

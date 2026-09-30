@@ -80,7 +80,9 @@ impl Projection {
             );
         }
         let metadata: serde_json::Value = serde_json::from_str(&self.metadata.text)?;
-        if metadata["kind"] == "migration_order" {
+        if metadata["kind"] == "migration_order"
+            || metadata["kind"] == crate::hosted::interaction::KIND
+        {
             let m: eplyx_engine::local_store::AnalyticalMetadata =
                 serde_json::from_str(&self.metadata.text)?;
             ensure!(
@@ -95,11 +97,20 @@ impl Projection {
             );
             let report: serde_json::Value = serde_json::from_str(&self.report.text)?;
             ensure!(
-                report["kind"] == "migration_order"
+                report["kind"] == metadata["kind"]
                     && (!report["analysis"].is_null() || !report["failure"].is_null()),
                 "invalid order result"
             );
-            return Ok("migration_order".into());
+            if m.kind == crate::hosted::interaction::KIND {
+                ensure!(
+                    self.change_spec.is_none()
+                        && self.migration_runtime_id.is_none()
+                        && self.migration_world.is_none()
+                        && !report["analysis"].is_null(),
+                    "interaction cannot invent a single proposal or migration context"
+                );
+            }
+            return Ok(m.kind);
         }
         let parsed = self.view();
         ensure!(

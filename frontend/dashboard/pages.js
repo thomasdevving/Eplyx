@@ -306,6 +306,7 @@ function evidenceBlock(detail) {
 
 export async function runDetail({ params }) {
  const detail = await api(`/api/runs/${params[0]}`);
+ if(CLOUD && !DEMO && detail.kind === "upgrade_parameter_interaction") return (await import("./interaction.js")).resultPage({params});
  if(CLOUD)document.querySelector('link[data-upgrade-style]')?.remove();
  if (isMigration(detail)) {
   const view = migrationRunDetail(detail, { GATE, gateSentence, copy, syncedLine, invariantList, gateBlock, evidenceBlock });
@@ -326,7 +327,8 @@ export async function runDetail({ params }) {
    catch {extras.governance={error:'the governance trail could not be fetched'};}
   }
   const {attachGovernanceTrail}=await import('/assets/main/governance.js');
-  return {title:'Program upgrade',crumbs:[['Runs','/runs'],[run.run_id]],html:HostedReport({...run,canonical_report:report},extras),attach(root){return attachGovernanceTrail(root,path=>fetch(path,{credentials:'same-origin'}));}};
+  const view = {title:'Program upgrade',crumbs:[['Runs','/runs'],[run.run_id]],html:HostedReport({...run,canonical_report:report},extras),attach(root){return attachGovernanceTrail(root,path=>fetch(path,{credentials:'same-origin'}));}};
+  return CLOUD && !DEMO ? (await import('./interaction.js')).withInteractions(view,run.run_id) : view;
  }
  const view = analyticalDetail(detail, { evidenceBlock });
  if(CLOUD && !DEMO && ['current_path','protocol_parameter_change'].includes(detail.kind)) {
