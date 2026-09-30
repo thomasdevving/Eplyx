@@ -1,0 +1,12 @@
+Constructed test fixture. Not an upstream release. Not intended for deployment.
+
+This fixture uses SPL Stake Pool 2.0.3 state, instruction and arithmetic helpers,
+and adapts the bounded DepositSol CPI/allocation sequence from its processor.
+SPL Stake Pool: Copyright Solana Labs Maintainers, Apache License 2.0.
+https://github.com/solana-labs/solana-program-library/tree/master/stake-pool
+The resolved published source is spl-stake-pool 2.0.3 in Cargo.lock.
+
+Changes: only two instruction paths; explicit program/account/layout validation;
+only ungated ten-account SOL deposits with zero referral percentage; exact
+typed-prefix serialization and unchanged trailing bytes. No other protocol
+instruction or general-purpose Stake Pool processor is included in dispatch.

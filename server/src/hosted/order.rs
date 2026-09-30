@@ -733,14 +733,7 @@ async fn download(
         let directory = tempfile::tempdir()?;
         let root = directory.path().join("order-case");
         materialize(registry, &portable, &root)?;
-        let archive = std::process::Command::new("/usr/bin/tar")
-            .args(["-cf", "-", "-C"])
-            .arg(directory.path())
-            .arg("order-case")
-            .env_clear()
-            .output()?;
-        ensure!(archive.status.success(), "artifact packaging failed");
-        Ok(archive.stdout)
+        archive(directory.path(), "order-case")
     })
     .await
     .map_err(|_| {
@@ -799,4 +792,20 @@ pub(crate) fn failure_exit_code(kind: order::FailureKind) -> u8 {
         order::FailureKind::UnsupportedComposition => 4,
         _ => 2,
     }
+}
+
+/// Existing tar download machinery, shared by bounded derived artifacts.
+pub(super) fn archive(directory: &FsPath, root: &str) -> Result<Vec<u8>> {
+    ensure!(
+        matches!(root, "order-case" | "interaction"),
+        "invalid archive root"
+    );
+    let archive = std::process::Command::new("/usr/bin/tar")
+        .args(["-cf", "-", "-C"])
+        .arg(directory)
+        .arg(root)
+        .env_clear()
+        .output()?;
+    ensure!(archive.status.success(), "artifact packaging failed");
+    Ok(archive.stdout)
 }

@@ -138,6 +138,9 @@ impl RunStatus {
 /// malformed expectation file or an incompatible bundle is a genuine Eplyx
 /// result carrying a genuine exit code, and it produces no report by design.
 pub enum RunOutcome {
+    InteractionFailure {
+        kind: crate::hosted::interaction::FailureKind,
+    },
     OrderFailure {
         kind: eplyx_engine::migration::order::FailureKind,
     },
@@ -1184,6 +1187,16 @@ impl Registry {
                             kind: eplyx_engine::migration::order::FailureKind::EvidenceGap,
                         }
                     }
+                    Err(_)
+                        if metadata
+                            .hosted_analysis
+                            .as_ref()
+                            .is_some_and(|j| j.kind == crate::hosted::interaction::KIND) =>
+                    {
+                        RunOutcome::InteractionFailure {
+                            kind: crate::hosted::interaction::FailureKind::EvidenceIntegrity,
+                        }
+                    }
                     Err(_) => RunOutcome::ExecutionError {
                         detail: "offline result did not match the accepted inputs".into(),
                     },
@@ -1192,6 +1205,15 @@ impl Registry {
             other => other,
         };
         match outcome {
+            RunOutcome::InteractionFailure { kind } => {
+                metadata.status = RunStatus::ExecutionError;
+                metadata
+                    .hosted_analysis
+                    .as_mut()
+                    .context("missing interaction job")?
+                    .interaction_failure = Some(kind);
+                metadata.detail = Some("Retained interaction evidence could not be verified; no analytical conclusion is available.".into());
+            }
             RunOutcome::OrderFailure { kind } => {
                 metadata.status = RunStatus::Failed;
                 metadata.order_failure = Some(kind);

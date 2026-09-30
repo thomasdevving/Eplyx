@@ -61,7 +61,7 @@ async fn capabilities_require_project_access_and_report_independent_current_stat
     assert_eq!(status, axum::http::StatusCode::OK, "{setup}");
     assert_eq!(setup["schema_version"], 1);
     assert_eq!(setup["project_id"], project);
-    assert_eq!(setup["analyses"].as_array().unwrap().len(), 9);
+    assert_eq!(setup["analyses"].as_array().unwrap().len(), 10);
     assert_eq!(
         setup["analyses"]
             .as_array()
@@ -74,6 +74,7 @@ async fn capabilities_require_project_access_and_report_independent_current_stat
             "token_migration",
             "lifecycle_change",
             "protocol_parameter_change",
+            "upgrade_parameter_interaction",
             "current_observation",
             "current_path",
             "current_candidate",
@@ -92,6 +93,7 @@ async fn capabilities_require_project_access_and_report_independent_current_stat
         "token_migration",
         "lifecycle_change",
         "protocol_parameter_change",
+        "upgrade_parameter_interaction",
     ] {
         let capability = analysis(&setup, kind);
         assert_eq!(capability["status"], "ready", "{kind}: {capability}");

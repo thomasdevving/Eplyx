@@ -43,6 +43,9 @@ RUN mkdir -p interface/src engine/src server/src \
  && rm -rf interface/src engine/src server/src
 
 COPY . .
+# Bind this image to the exact clean source snapshot supplied by the builder.
+ARG EPLYX_BUILD_COMMIT
+ENV EPLYX_BUILD_COMMIT=${EPLYX_BUILD_COMMIT}
 # Cargo decides what to rebuild from mtimes, and the real sources arrive with
 # the build context's timestamps, which can predate the stub build above. Every
 # stubbed file is listed so the set stays obvious next to the one above.

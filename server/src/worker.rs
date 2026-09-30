@@ -126,6 +126,18 @@ fn execute(state: &AppState, run_id: &str) -> RunOutcome {
                 if metadata
                     .hosted_analysis
                     .as_ref()
+                    .is_some_and(|j| j.kind == crate::hosted::interaction::KIND)
+                    && error
+                        .downcast_ref::<crate::hosted::interaction::EvidenceError>()
+                        .is_some()
+                {
+                    return RunOutcome::InteractionFailure {
+                        kind: crate::hosted::interaction::FailureKind::EvidenceIntegrity,
+                    };
+                }
+                if metadata
+                    .hosted_analysis
+                    .as_ref()
                     .is_some_and(|j| j.kind == "migration_order")
                 {
                     if let Some(error) =
