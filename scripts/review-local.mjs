@@ -41,7 +41,7 @@ const stop=async()=>{if(service?.exitCode===null){service.kill('SIGTERM');await 
 const post=async(path,data,{cookie='',admin=false}={})=>{
  const form=data instanceof FormData;
  const r=await fetch(base+path,{method:'POST',headers:{origin:base,...(form?{}:{'content-type':'application/json'}),...(cookie?{cookie}:{}),...(admin?{authorization:`Bearer ${operator}`}:{})},body:form?data:JSON.stringify(data)});
- assert.ok(r.ok(),`Bootstrap ${path}: ${r.status()}`);
+ assert.ok(r.ok,`Bootstrap ${path}: ${r.status()}`);
  return {body:await r.json(),cookie:r.headers.get('set-cookie')?.split(';')[0]||cookie};
 };
 try {
@@ -62,7 +62,7 @@ try {
  const upload=new FormData();upload.append('candidate',new Blob([await readFile(candidate)]),'candidate.so');upload.append('change_spec',new Blob([await readFile(join(repo,'docs/examples/stake-pool-config-upgrade-change.json'))]),'change.json');
  const parent=(await post(`/v1/projects/${project}/checks`,upload,{admin:true})).body.run_id;
  let parentResult;
- for(let i=0;i<180;i++){const r=await fetch(`${base}/v1/runs/${parent}`,{headers:{cookie:owner.cookie}});assert.ok(r.ok());parentResult=await r.json();if(!['queued','running'].includes(parentResult.status))break;await new Promise(r=>setTimeout(r,1000));}
+ for(let i=0;i<180;i++){const r=await fetch(`${base}/v1/runs/${parent}`,{headers:{cookie:owner.cookie}});assert.ok(r.ok);parentResult=await r.json();if(!['queued','running'].includes(parentResult.status))break;await new Promise(r=>setTimeout(r,1000));}
  assert.equal(parentResult.report_available,true,'Retained parent must come from the real worker');
  const selection={url:base,selection:'isolated-review',mode:'local',source_commit:commit};
  await writeFile(join(root,'target.json'),JSON.stringify(selection,null,2)+'\n',{mode:0o600});
@@ -74,7 +74,7 @@ try {
  await stop();await start();
  const second=await smoke({...options,out:join(root,'after-restart'),existingRun:first.child});
  assert.equal(second.report_sha256,first.report_sha256);assert.equal(second.analysis_input_sha256,first.analysis_input_sha256);
- const parentAfter=await fetch(`${base}/v1/runs/${parent}`,{headers:{cookie:owner.cookie}});assert.ok(parentAfter.ok());assert.equal((await parentAfter.json()).bundle_sha256,parentResult.bundle_sha256);
+ const parentAfter=await fetch(`${base}/v1/runs/${parent}`,{headers:{cookie:owner.cookie}});assert.ok(parentAfter.ok);assert.equal((await parentAfter.json()).bundle_sha256,parentResult.bundle_sha256);
  // Fresh standalone directory: only the executable and the downloaded artifact.
  const standalone=join(root,'standalone');await mkdir(standalone,{mode:0o700});await copyFile(cli,join(standalone,'eplyx'));
  await exec('python3',['-c',`import tarfile,pathlib,sys
