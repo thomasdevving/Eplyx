@@ -72,7 +72,9 @@ def main():
         assert digest(candidate / 'candidate/spl_stake_pool.so') == {'sha256': CANDIDATE, 'len': 293200}
         assert case_manifest['bundle']['bundle_sha256'] == BUNDLE
         initial = read(evidence / 'initial-inventory.json')
-        denied = ['/private/tmp', *[v['path'] for v in initial.values()]]
+        owner_home = Path.home()
+        denied = ['/private/tmp', *[v['path'] for v in initial.values()],
+                  *[str(owner_home / p) for p in ['.ssh', '.aws', '.codex', '.config', '.cargo']]]
         policy = out / 'offline.sb'
         rules = '\n'.join('(deny file-read* (subpath ' + json.dumps(p) + '))' for p in denied)
         policy.write_text('(version 1)\n(allow default)\n(deny network*)\n' + rules + '\n'
@@ -139,7 +141,7 @@ def main():
         run('fresh-search-output-protection', [*args_search, '--out', fresh], expected=2)
         bad_spec = read(parent / 'search-spec.json');bad_spec['extra'] = True
         (out / 'bad-spec.json').write_bytes(canonical(bad_spec))
-        run('extra-search-field-rejected', [*args_search[:8], '--spec', out / 'bad-spec.json', '--out', out / 'bad-search', '--format', 'json'], expected=2)
+        run('extra-search-field-rejected', [*args_search[:6], '--spec', out / 'bad-spec.json', '--out', out / 'bad-search', '--format', 'json'], expected=2)
         for label, artifact in [('fresh', fresh), ('archived', archived_search)]:
             verification = run(label + '-verify-search', ['parameter', 'verify-search', '--artifact', artifact, '--format', 'json'])
             assert verification['operation_vm_calls'] == 0
@@ -195,10 +197,19 @@ def main():
             seal_report(report); path = out / ('negative-' + mutation + '.json');path.write_bytes(canonical(report))
             run('reject-resealed-' + mutation, ['parameter', 'reproduce', '--change', archived_cases / 'change.json', '--report', path], expected=2)
 
-        for logical in ['single-parameter', 'prior-token-parameter']:
+        for logical in ['single-parameter']:
             package = evidence / 'evidence' / logical
             result = run('archived-' + logical, ['parameter', 'reproduce', '--change', package / 'change.json', '--report', package / 'report.json'])
             assert result['reproduced'] is True
+        # This extra scratch package is not the published frozen Step 8 receipt.
+        # Its a837.../4417... pair was rejected by Step 12A before integration.
+        scratch = evidence / 'evidence/prior-token-parameter'
+        run('reject-unsupported-prior-scratch', ['parameter', 'reproduce', '--change', scratch / 'change.json', '--report', scratch / 'report.json'], expected=2)
+        assert 'unsupported prior Token-2022 contract source/lock' in (out / 'reject-unsupported-prior-scratch.stderr').read_text()
+        receipt['checks']['unsupported_prior_scratch'] = {'report': read(scratch / 'report.json')['report_sha256'],
+                                                        'runtime': read(scratch / 'report.json')['runtime'],
+                                                        'supported': False, 'original_bytes_preserved': True,
+                                                        'limitation': 'Pre-existing unsupported source/lock pair; not the published frozen Step 8 report. Original generating executable not located; no compatibility expansion.'}
         bundle = candidate / 'input/bundle'; baseline = bundle / 'binaries/current.so'
         compare = ['compare', '--corpus', bundle / 'corpus/corpus.json', '--v1', baseline, '--dependencies', bundle / 'binaries/dependencies', '--no-minimize', '--format', 'json']
         run('bundle-verification', ['bundle', 'verify', '--bundle', bundle, '--format', 'json'])
