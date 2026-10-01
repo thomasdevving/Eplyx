@@ -1,0 +1,9 @@
+[build]
+builder = "dockerfile"
+dockerfilePath = "deploy/review/Dockerfile"
+
+[deploy]
+healthcheckPath = "/ready"
+healthcheckTimeout = 120
+restartPolicyType = "never"
+numReplicas = 1
