@@ -195,7 +195,7 @@ previous downloads are preserved, never rewritten to make validation pass.
 
 The original fixed input is `cef17fe3d3c485d925960c4e5aef3a8106206da0`.
 A deployment-only revision adds `deploy/review/Dockerfile`, its scoped ignore
-file, `deploy/review/railway.toml`, and the absolute-deadline startup. Engine,
+file and the absolute-deadline startup. Engine,
 frontend, identity checks and qualified fixture sources are unchanged. The image
 contains the native Linux server (also its isolated worker) and matching CLI;
 the CLI's existing embedded template is retained in its build context. No SBF
@@ -209,6 +209,9 @@ are `eplyx-cloud`, `friendly-bravery`, `loyal-comfort` and `marvelous-sparkle`.
 Read-only provider trigger inspection found this repository's existing deploy
 triggers on **main**; the dedicated review branch is not a production trigger.
 Deploy explicit archived source through CLI upload, with no GitHub auto-deploy.
+The current API rejects new legacy Config-as-Code paths; set the Dockerfile,
+readiness, replica limits and NEVER restart policy directly on this review service.
+The upload context has no root railway.toml; no workspace-wide IaC migration is made.
 
 Billing is USD. The current cycle ends `2026-10-23T23:04:15Z`; neither the four-day
 compute period nor fourteen-day storage cleanup window crosses that reset.
