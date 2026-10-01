@@ -28,7 +28,7 @@ async function setup(page,{eligible=true}={}) {
   if(path==='/assets/main/brand.js')return route.fulfill({contentType:'text/javascript',body:readFileSync(new URL('../../src/brand.js',import.meta.url),'utf8')});
   if(path==='/assets/capabilities.js')return route.fulfill({contentType:'text/javascript',body:readFileSync(new URL('../../src/capabilities.js',import.meta.url),'utf8')});
   if(path==='/assets/cloud.css')return route.fulfill({contentType:'text/css',body:readFileSync(new URL('../../cloud/cloud.css',import.meta.url),'utf8')});
-  if(path.startsWith('/assets/main/')){const file=path.slice('/assets/main/'.length);if(['shell.js','session.js','change.js','analysis.js','brand.js','mode.js','styles.css'].includes(file))return route.fulfill({contentType:file.endsWith('.css')?'text/css':'text/javascript',body:readFileSync(new URL(`../../src/${file}`,import.meta.url),'utf8')});return route.fulfill({contentType:'text/javascript',body:''});}
+  if(path.startsWith('/assets/main/')){const file=path.slice('/assets/main/'.length);if(['shell.js','session.js','change.js','analysis.js','brand.js','mode.js','styles.css','demo.js'].includes(file))return route.fulfill({contentType:file.endsWith('.css')?'text/css':'text/javascript',body:readFileSync(new URL(`../../src/${file}`,import.meta.url),'utf8')});return route.fulfill({contentType:'text/javascript',body:''});}
   return route.continue();
  });return posts;
 }

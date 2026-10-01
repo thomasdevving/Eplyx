@@ -20,7 +20,7 @@ export function AnalysePage() {
       <div class="analyse-copy">
         <p class="eyebrow"><span></span> Proposed change</p>
         <h1>Analyse a program upgrade.</h1>
-        <p>Choose the project and upload the build you intend to deploy. Eplyx identifies exactly what would change, replays it against the project’s validated history, and reports who and what it would affect.</p>
+        <p>Choose the project and upload the build you intend to deploy. Eplyx compares it with the project’s pinned baseline and reports measured differences for the interactions covered by that bundle.</p>
         <div class="input-model"><span>Target program</span><b>+</b><span>Candidate build</span><i>→</i><strong>Proposed change</strong><i>→</i><em>Effects report</em></div>
         <p class="analysis-choice">Use this form with an existing hosted project and active bundle. For a local check, follow the <a href="/cli#upgrades" data-link>upgrade CLI guide</a>. For another kind of change, <a href="/start" data-link>choose a workflow</a>.</p>
         <a href="/runs/demo" data-link class="text-link">View the public demo report <span>↗</span></a>
@@ -36,7 +36,7 @@ export function AnalysePage() {
         <label class="file-drop file-drop--optional"><input name="expectations" type="file" accept=".toml,text/plain"><span><b>Expected changes</b><em>Optional .toml declaration</em></span><strong>Choose file</strong></label>
         <div class="form-status" role="status" aria-live="polite"></div>
         <button class="button button--primary" type="submit" disabled>Analyse change <span>↗</span></button>
-        <p class="form-note">The analysis is accepted immediately and runs on the server; you can leave this page and come back to it.</p>
+        <p class="form-note">After the server accepts the inputs, a run is queued. Its report page follows progress and can be reopened from project history.</p>
       </form>
     </section>
   </main>${Footer()}`;

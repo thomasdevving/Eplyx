@@ -6,10 +6,8 @@ The CI bundle the hosted service serves from, copied into the image at
 `/opt/eplyx/bundle`.
 
 It has to be here at image build time. A managed host builds from the git
-remote, so a bundle that exists only on your machine is not reachable, and
-there is no HTTP endpoint that installs one — an upload that could replace the
-corpus a project is measured against is exactly what a CI credential must not
-be able to do.
+remote, so a bundle that exists only on your machine is not reachable, or be registered through the operator-authenticated bundle upload API. A project CI
+credential cannot replace or activate its evidence bundle.
 
 Build one from validated records, verify it, and copy it in:
 
@@ -41,4 +39,5 @@ bundle onto the volume, so it survives the next image build.
 
 `create-token` prints the project's API token once and never again — only a
 hash is stored. That is the value CI sends as `Authorization: Bearer …`; it can
-submit checks for its own project and nothing else.
+submit supported checks, sync and read results within its own project. It cannot
+activate bundles or manage workspace membership. See [pilot onboarding](../docs/pilot-onboarding.md).

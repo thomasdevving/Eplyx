@@ -6,6 +6,7 @@ export const vendorFiles = new Map([
   ['SVGLoader.js', new URL('../node_modules/three/examples/jsm/loaders/SVGLoader.js', import.meta.url)],
   ['RoomEnvironment.js', new URL('../node_modules/three/examples/jsm/environments/RoomEnvironment.js', import.meta.url)],
   ['LICENSE', new URL('../node_modules/three/LICENSE', import.meta.url)],
+  ['LICENSE.txt', new URL('../node_modules/three/LICENSE', import.meta.url)],
 ]);
 
 export async function prepareVendorAssets() {

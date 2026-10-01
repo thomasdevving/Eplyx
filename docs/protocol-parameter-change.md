@@ -1,8 +1,12 @@
 # Protocol parameter changes
 
+For a task-oriented introduction and copyable example, start with the
+[fee-analysis walkthrough](parameter-analysis-guide.md). This document is the
+technical contract.
+
 Eplyx's fourth schema-1 ChangeSpec is `protocol_parameter_change`. It supports two typed operations. The original `token_2022_active_newer_transfer_fee_basis_points_v1` operation lets you change the already-active newer transfer-fee basis points on one observed Token-2022 mint, then run the same original-owner `TransferChecked` independently against current and derived mint state.
 
-This is a captured current-state counterfactual. It establishes the measured result of this exact transfer under the declared rate. It does not execute `SetTransferFee`, establish fee-authority control, deployability or on-chain activation, judge configuration safety, or establish effects for other holders. Governance and composition remain outside this contract. The authenticated guided form edits only the proposed basis-point rate for an eligible retained transfer.
+This is a captured current-state counterfactual. It establishes the measured result of this exact transfer under the declared rate. It does not execute `SetTransferFee`, establish fee-authority control, deployability or on-chain activation, judge configuration safety, or establish effects for other holders. Governance remains outside this operation. The separate [Stake Pool code/fee interaction](upgrade-parameter-interaction.md) has its own bounded contract. The authenticated guided form edits only the proposed basis-point rate for an eligible retained transfer.
 
 ## Proposal schema and identity
 
@@ -86,7 +90,7 @@ eplyx parameter analyse --change change.json --capture transfer.capture.json \
 eplyx parameter reproduce --change change.json --report parameter-report.json
 ```
 
-An existing exact retained transfer fixture/context can instead be supplied using `--input input.json`. Select exactly one of `--capture`/`--input`. Output must be new. `--record` persists the analytical report and validated spec in the existing `.eplyx` store. Analysis returns exit 0 after paired execution and exit 2 for a factual pre-execution failure; inspect report status for the scientific result. Reproduction checks bindings/derivation, runs both sides again without RPC and requires complete report equality. Read-only integrity verification reconstructs plans and reconciliation from retained evidence without running the VM or reacquiring state.
+An existing exact retained transfer fixture/context can instead be supplied using `--input input.json`. For Token-2022, select exactly one of `--capture`/`--input`. The Stake Pool operation below also accepts `--bundle` with an explicit `--record-id`. Output must be new. `--record` persists the analytical report and validated spec in the existing `.eplyx` store. Analysis returns exit 0 after paired execution and exit 2 for a factual pre-execution failure; inspect report status for the scientific result. Reproduction checks bindings/derivation, runs both sides again without RPC and requires complete report equality. Read-only integrity verification reconstructs plans and reconciliation from retained evidence without running the VM or reacquiring state.
 
 Hosted submission uses authenticated project access:
 

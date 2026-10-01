@@ -30,7 +30,7 @@ test.beforeEach(async ({ page }) => {
 
 test('signed-out visitors see that sync is optional and cannot read projects', async ({ page }) => {
  await page.goto('/');
- await expect(page.locator('h1')).toHaveText('Cloud sync is optional. CLI execution stays local.');
+ await expect(page.locator('h1')).toHaveText('Analyse locally. Share results or run hosted checks.');
  await expect(page.getByText('What is synced.')).toBeVisible();
  await page.goto(`/p/${seed().project}`);
  await expect(page).toHaveURL(/\/login\?next=/);

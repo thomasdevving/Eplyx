@@ -1,10 +1,13 @@
-# Local upgrade × parameter interaction
+# Upgrade × parameter interaction
 
 The bounded analyzer accepts one existing `program_upgrade` ChangeSpec and one
 existing `protocol_parameter_change` ChangeSpec for
 `spl_stake_pool_sol_deposit_fee_v1`. It answers whether the measured fee-change
 effect differs between historical V1 and explicitly qualified V2 for one retained
 DepositSol. It does not execute a loader Upgrade.
+
+For the user workflow, see the [fee-analysis walkthrough](parameter-analysis-guide.md).
+The CLI and hosted flow below share the same bounded analyzer.
 
 Build the host CLI with `cargo build -p eplyx-engine --bin eplyx --offline --locked`.
 The already qualified fixture ELF must be present for analysis; its reproducible
@@ -138,7 +141,8 @@ naturally have new runtime-bound receipt identities.
 There is no slot-accurate validator reconstruction, time advancement, installed
 loader world, real Upgrade, rollout-order or atomicity proof, signing, governance,
 live acquisition, broad candidate qualification, valuation, population-wide
-impact, hosted API/UI or deployment policy. A measured zero interaction covers
+impact or deployment policy. The hosted flow below submits this same bounded experiment;
+it does not expand candidate qualification or its analytical scope. A measured zero interaction covers
 only available reconciled metrics in this bounded experiment.
 
 ## Hosted project flow (Step 10D)

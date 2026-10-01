@@ -12,7 +12,7 @@ invented migration gate. Provenance distinguishes captured state, synthetic
 fixtures and derived variants. Counterexample pages preserve saved witness and
 reproduction history. Comparison never equates an absent finding with a fix.
 
-The Overview/Technical switch persists across MAIN pages. Technical mode exposes
+The Overview/Technical switch persists across dashboard pages. Public website pages use one presentation without a mode switch. Technical mode exposes
 hashes, exact quantities and execution details; it does not change an engine result.
 Local artifact links expose only a fixed verified allowlist. Incomplete or corrupt
 records are presented as unavailable, never as a successful result.

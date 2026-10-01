@@ -39,11 +39,11 @@ async function landing() {
  const demo = await fetch('/v1/demo/view/project', { credentials:'omit' }).then(r => r.ok).catch(() => false);
  app.innerHTML = frame(`<section class="welcome">
   <span class="eyebrow">Optional team sync</span>
-  <h1>Cloud sync is optional. CLI execution stays local.</h1>
-  <p class="lead">Run preflight, search, reproduction and gate evaluation on your machine or in CI, without an account. This workspace brings your local and CI results together with counterexamples, reproduction history and run comparisons.</p>
+  <h1>Analyse locally. Share results or run hosted checks.</h1>
+  <p class="lead">Run preflight, search, reproduction and gate evaluation on your machine or in CI, without an account. This workspace brings saved local and CI results together. Configured projects can also submit supported hosted checks; those execute on the service with separately retained inputs.</p>
   <p><a class="button" href="/signup">Create an account</a> <a class="button button--ghost" href="/login">Sign in</a>${demo ? ' <a class="button button--ghost" href="/demo">View the public demo project</a>' : ''}</p>
  </section>
- ${panel({ title:'Local work and optional sync', body:`<div class="grid-2 grid-2--tight"><div><h3 class="subhead">Local only</h3>${commandLine('eplyx migration analyse')}${commandLine('eplyx migration search')}${commandLine('eplyx dashboard')}</div><div><h3 class="subhead">Optional team sync</h3>${commandLine(`eplyx login --server ${location.origin}`)}${commandLine('eplyx link')}${commandLine('eplyx sync')}</div></div>` })}
+ ${panel({ title:'Local work and optional sync', body:`<div class="grid-2 grid-2--tight"><div><h3 class="subhead">Local only</h3>${commandLine('eplyx migration analyse')}${commandLine('eplyx migration search')}${commandLine('eplyx dashboard')}</div><div><h3 class="subhead">Optional team sync</h3>${commandLine(`eplyx login --server ${location.origin}`)}${commandLine('eplyx link --project PROJECT_ID')}${commandLine('eplyx sync')}</div></div>` })}
  ${panel({ title:'What is synced?', body:WHAT })}`, null);
 }
 
@@ -115,7 +115,7 @@ async function home(user) {
  app.innerHTML = frame(`<div class="page-head"><h1>Workspaces</h1><p class="muted">Projects are private to their workspace. Owners manage members and CI tokens. Members can view the workspace and sync runs.</p></div>
   ${workspaces.map(section).join('')}
   ${panel({ title:'New workspace', body:'<form class="form-row" data-new-workspace><label class="field"><span>Name</span><input name="name" required maxlength="80"></label><button class="button button--ghost" type="submit">Create workspace</button></form>' })}
-  ${panel({ title:'Connect a local project', body:`${commandLine(`eplyx login --server ${location.origin}`)}${commandLine('eplyx link')}${commandLine('eplyx sync')}<p class="muted">Cloud sync is optional. CLI execution stays local; hosted checks are requested separately.</p>` })}
+  ${panel({ title:'Connect a local project', body:`${commandLine(`eplyx login --server ${location.origin}`)}${commandLine('eplyx link --project PROJECT_ID')}${commandLine('eplyx sync')}<p class="muted">Cloud sync is optional. CLI execution stays local; hosted checks are requested separately.</p>` })}
   ${panel({ title:'What is synced?', body:WHAT })}`, user);
  const fail = (ws, error) => { const slot = app.querySelector(`[data-ws-error="${ws}"]`); if (slot) slot.textContent = error.message; else alert(error.message); };
  app.querySelectorAll('[data-new-project]').forEach(form => form.addEventListener('submit', async event => { event.preventDefault(); const ws = form.dataset.newProject;

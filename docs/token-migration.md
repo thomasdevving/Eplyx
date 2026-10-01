@@ -7,12 +7,19 @@ issuer eligibility or legal entitlement.
 
 ## Start with an offline example
 
-Build the programs with `make programs` and the CLI with
-`cargo build -p eplyx-engine`. The executable is `target/debug/eplyx`; use that path or add its directory to `PATH`. Use a copy of
-`examples/migrations/minimal` as a disposable project, place
-`artifacts/eplyx_token_migration.so` at its `target/deploy/migration.so`, then run:
+The minimal example declares synthetic state and LiteSVM-bundled token programs.
+It does not need an RPC provider or private captured-program fixture. From the
+repository root, build the CLI and reference migration candidate with the pinned
+SBF toolchain, then create a disposable copy:
 
 ```sh
+cargo build --locked -p eplyx-engine
+./scripts/build-migration-candidate.sh
+export PATH="$PWD/target/debug:$PATH"
+cp -R examples/migrations/minimal ./my-migration-example
+mkdir -p ./my-migration-example/target/deploy
+cp artifacts/eplyx_token_migration.so ./my-migration-example/target/deploy/migration.so
+cd ./my-migration-example
 eplyx doctor
 eplyx migration analyse
 eplyx runs --json
@@ -22,14 +29,18 @@ eplyx migration plan --run RUN_ID --out unsigned.json
 eplyx dashboard --no-open
 ```
 
+Use a new destination directory; the copy does not modify the tracked example.
+The build script requires `cargo-build-sbf` and its pinned platform tools. It builds
+the reference mechanism and its defect controls, independently of installing the CLI.
+
 Replace `RUN_ID` with the saved identifier. A new output path must not already
 exist. The minimal example deliberately contains required holder/authority gaps;
 its reference stress result is **20/20 cases behaved as specified**, including
 nine expected rejections, not twenty successful migrations. The strict gate can
 therefore fail even when the reference mechanism behaves correctly.
 
-The captured token-program dependency is not in Git because the original capture
-contains provider-origin fields. Import its exact bytes with
+Other archived recipes using `pinnedMainnetCapture` need a captured token-program
+dependency. That capture is not in Git because it contains provider-origin fields. Import its exact bytes with
 `scripts/import-migration-fixtures.py --sta STA_CHECKOUT`, using the pinned archive
 identified in [ARCHIVE.md](../ARCHIVE.md). The importer reads a fixed allowlist,
 checks sizes/digests and never reads provider configuration. Missing fixtures fail

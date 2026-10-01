@@ -1,3 +1,4 @@
+import { DEMO_REPORT } from './demo.js';
 import { IntroAnimation } from './intro.js';
 import { EplyxCoreScene } from './core-scene.js';
 import { Header, Footer, workspaceHref } from './shell.js';
@@ -10,6 +11,9 @@ const twinkles = [
   [59, 12, 1.6, 6.2, 1.5], [65, 37, 2.3, 4.9, 5.7], [44, 65, 1.5, 3.4, 2.1], [71, 23, 2, 6.9, 4.8],
 ];
 
+const deposit = DEMO_REPORT.findings.find(finding => finding.fingerprint.includes('/deposit_sol/'));
+const withdrawal = DEMO_REPORT.findings.find(finding => finding.fingerprint.includes('/withdraw_sol/'));
+
 export function LandingPage() {
   return `${IntroAnimation()}
     <main id="main">
@@ -20,7 +24,7 @@ export function LandingPage() {
         <div class="hero__copy reveal">
           <p class="eyebrow"><span></span> Onchain change intelligence · In development</p>
           <h1>Know what <em>changes.</em><br>See who is affected.</h1>
-          <p class="hero__lead ov-only">Eplyx is being built to explain onchain changes and their consequences. Try today’s scoped upgrade checks, token migration rehearsals and lifecycle analyses.</p>
+          <p class="hero__lead ov-only">Eplyx is being built to explain onchain changes and their consequences. Try scoped upgrade checks, token migration rehearsals, lifecycle analyses and fee-change simulations.</p>
           <p class="hero__lead tech-only">Replay baseline and candidate programs over retained Solana state. Rehearse migrations in a local VM and evaluate declared lifecycle policies. Coverage is limited to supported protocols and paths; the broader product is still in development.</p>
           <div class="hero__actions">
             <a href="/start" data-link class="button button--primary">Try Eplyx <span>↗</span></a>
@@ -38,7 +42,7 @@ export function LandingPage() {
             <p class="eyebrow eyebrow--dark"><span></span> Eplyx, in brief</p>
             <h2 id="overview-title">Understand an onchain change before it reaches users.</h2>
           </div>
-          <p>Eplyx is a developing set of tools for examining how proposed Solana changes affect recorded state. Today, it offers scoped program upgrade checks, token migration rehearsals and lifecycle analyses.</p>
+          <p>Eplyx is a developing set of tools for examining how proposed Solana changes affect recorded state. Today, it offers scoped program upgrade checks, token migration rehearsals, lifecycle analyses and two supported fee-change operations.</p>
         </div>
         <div class="overview__details reveal">
           <article>
@@ -61,7 +65,7 @@ export function LandingPage() {
           <article><span class="product-index">02 / Token migrations</span><h3>Account for the migration.</h3><p class="ov-only">Rehearse a token migration before execution. Check who is covered, what each holder receives and where the proposal fails.</p><p class="tech-only">Rehearse a proposed mechanism in a local VM. Inspect holder coverage, reserves, fees, authority requirements and balance reconciliation. Search and reproduce counterexamples.</p><p class="product-boundary">Findings apply to the recorded inputs. Passing a gate does not authorise execution or establish issuer entitlement.</p><a href="/token-transitions" data-link class="text-link">Explore token transitions ↗</a></article>
           <article><span class="product-index">03 / Lifecycle changes</span><h3>Evaluate the declared terms.</h3><p class="ov-only">Explore how a change in declared terms affects token holders. See what is known, uncertain or still untested.</p><p class="tech-only">Compare a policy before and after its effective time over one retained snapshot. Keep consequences, observed state and execution evidence separate.</p><p class="product-boundary">A notice or proposed replacement is a declaration. Unknown eligibility and untested paths remain visible.</p><a href="/cli#lifecycle" data-link class="text-link">Use the lifecycle CLI ↗</a></article>
         </div>
-        <div class="capability-notes reveal"><p><strong>Current paths.</strong> Bounded Transfer and Meteora market-exit checks, plus exact liquidity-withdrawal checks through the CLI. Each path needs its own recorded execution and reconciliation.</p><p><strong>Governance binding.</strong> Read-only Squads V4 binding and attestation for the supported single loader-v3 program-upgrade proposal. Broader governance support remains future work.</p></div>
+        <div class="capability-notes reveal"><p><strong>Parameter changes.</strong> Compare the active Token-2022 transfer-fee rate for one retained transfer, or simulate the SOL deposit fee for one retained Stake Pool deposit. A bounded code-and-fee interaction check is also available. <a href="/start#parameters" data-link>Choose a fee-change workflow ↗</a></p><p><strong>Current paths.</strong> Bounded Transfer and Meteora market-exit checks, plus exact liquidity-withdrawal checks through the CLI. Each path needs its own recorded execution and reconciliation.</p><p><strong>Governance binding.</strong> Read-only Squads V4 binding and attestation for the supported single loader-v3 program-upgrade proposal. Broader governance support remains future work.</p></div>
       </section>
 
       <section class="section section--ink workflow-section" id="how">
@@ -80,21 +84,21 @@ export function LandingPage() {
           <div class="window-bar"><span><i></i><i></i><i></i></span><b>eplyx / stake-pool / controlled regression demo</b><em>Exit code 1</em></div>
           <div class="result-summary">
             <div><span class="status-dot status-dot--fail"></span><p>Upgrade check</p><h3>Failed</h3></div>
-            <div><p>Corpus</p><h3>10</h3><span>validated interactions</span></div>
-            <div><p>Findings</p><h3>10</h3><span>4 critical · 1 high · 5 warning</span></div>
+            <div><p>Corpus</p><h3>${DEMO_REPORT.bundle.record_count}</h3><span>validated interactions</span></div>
+            <div><p>Finding categories</p><h3>${DEMO_REPORT.findings.length}</h3><span>${deposit.observations.length} economic decrease · ${withdrawal.observations.length} reverts</span></div>
             <a href="/runs/demo" data-link>Open demo report <span>↗</span></a>
           </div>
           <div class="findings">
-            <article class="finding finding--critical"><div><span>Critical</span><span>Unexpected</span></div><h3>WithdrawSol</h3><p>Transaction now reverts</p><dl data-technical><dt>Measured observations</dt><dd>4 / 4</dd><dt>Execution</dt><dd>Success → error</dd></dl></article>
-            <article class="finding finding--high"><div><span>High</span><span>Unexpected</span></div><h3>DepositSol</h3><p>pool_tokens_received decreased</p><dl data-technical><dt>Affected observations</dt><dd>1 / 6</dd><dt>Maximum delta</dt><dd>21 bps</dd></dl></article>
+            <article class="finding finding--critical"><div><span>Critical</span><span>Unexpected</span></div><h3>WithdrawSol</h3><p>Transaction now reverts</p><dl data-technical><dt>Measured observations</dt><dd>${withdrawal.observations.length} / ${withdrawal.covered_observations}</dd><dt>Execution</dt><dd>Success → error</dd></dl></article>
+            <article class="finding finding--high"><div><span>High</span><span>Unexpected</span></div><h3>DepositSol</h3><p>pool_tokens_received decreased</p><dl data-technical><dt>Affected observations</dt><dd>${deposit.observations.length} / ${deposit.covered_observations}</dd><dt>Maximum delta</dt><dd>${deposit.max_relative_delta_bps} bps</dd></dl></article>
           </div>
         </div>
-        <p class="demo-note">This candidate implements DepositSol only, so WithdrawSol fails. These are saved demonstration results, not a live feed or a claim about every pool. Expected changes are reviewed against explicit declarations and bounds.</p>
+        <p class="demo-note">This candidate implements DepositSol only, so WithdrawSol fails. These are saved historical results for a constructed fixture, not a live feed or a claim about every pool. Expected changes are reviewed against explicit declarations and bounds.</p>
       </section>
 
       <section class="section section--ink cli-preview" id="cli">
-        <div class="section-heading section-heading--light reveal"><p class="eyebrow"><span></span> One CLI · local evidence</p><h2>Start from your terminal.</h2><p>Build Eplyx from source, inspect its commands and keep analytical records locally. The CLI guide covers migration, lifecycle, upgrade checks and workspace sync.</p><a href="/cli" data-link class="button button--light">Installation and commands <span>↗</span></a></div>
-        <div class="reveal">${CommandBlock('install', 'Build from source', CLI_COMMANDS.install)}<p class="command-note">Requires Git, Rust stable and native build tools. Prebuilt downloads and an installer are not available yet.</p></div>
+        <div class="section-heading section-heading--light reveal"><p class="eyebrow"><span></span> One CLI · local evidence</p><h2>Start from your terminal.</h2><p>Build Eplyx from source, inspect its commands and keep analytical records locally. The CLI guide covers migration, lifecycle, upgrade and fee checks, and workspace sync.</p><a href="/cli" data-link class="button button--light">Installation and commands <span>↗</span></a></div>
+        <div class="reveal">${CommandBlock('install', 'Build from source', CLI_COMMANDS.install)}<p class="command-note">Requires Git, Rust stable and native build tools. The source build works independently of release publication. Check GitHub Releases for published macOS arm64 archives; no one-line installer is provided.</p></div>
       </section>
 
       <section class="section roadmap-section" id="roadmap">
@@ -102,7 +106,7 @@ export function LandingPage() {
         <div class="roadmap-grid reveal">
           <article><span>Current foundation</span><h3>Local and hosted workflows.</h3><p>The CLI, local dashboard and hosted workflows are integrated within their tested scope. Hosted identity and current acquisition need operator configuration; this is not the finished product.</p><a href="${workspaceHref()}" class="text-link">Open workspace ↗</a></article>
           <article><span>Next validation</span><h3>Exercise current-state acquisition.</h3><p>Current-state acquisition was checked against frozen captures and mock providers. The next milestone is a bounded read-only mainnet validation with fresh evidence.</p></article>
-          <article><span>Future scope</span><h3>Build the broader product.</h3><p>General governance, authority and parameter-change analysis, wider protocol coverage and continuous monitoring remain development goals. Partial and claim-based migrations and local-validator plan checks are also future work.</p></article>
+          <article><span>Future scope</span><h3>Build the broader product.</h3><p>General governance, authority analysis, additional parameter operations, wider protocol coverage and continuous monitoring remain development goals. Partial and claim-based migrations and local-validator plan checks are also future work.</p></article>
         </div>
         <p class="scope-note">Eplyx analyses and reports. It does not submit transactions or establish possession of signing keys. Automated monitoring and general protocol coverage are not current features.</p>
       </section>

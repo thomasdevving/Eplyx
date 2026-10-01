@@ -1,8 +1,6 @@
 import { StartPage, attachStart } from './start.js';
 import { CliPage, attachCommandCopy } from './cli.js';
-import { initializeMode } from './mode.js';
 import { TokenTransitionsPage } from './transitions.js';
-initializeMode();
 import { LandingPage } from './landing.js';
 import { AnalysePage, attachAnalyse } from './analyse.js';
 import { ReportPage, attachReport } from './report.js';
@@ -10,6 +8,7 @@ import { ProjectsPage, ProjectPage, attachProjects, attachProject } from './proj
 import { finishIntro } from './intro.js';
 import { attachCoreParallax } from './core-scene.js';
 import { attachShell } from './shell.js';
+import { LegalPage, legalTitle } from './legal.js';
 
 const app = document.querySelector('#app');
 let revealObserver;
@@ -24,7 +23,10 @@ function route() {
   disposeReport?.();
   disposeReport = undefined;
   const path = location.pathname.replace(/\/+$/, '') || '/';
-  if (path === '/start') app.innerHTML = StartPage();
+  const legal = LegalPage(path);
+  document.title = legalTitle(path) || 'Eplyx — Know what changes';
+  if (legal) app.innerHTML = legal;
+  else if (path === '/start') app.innerHTML = StartPage();
   else if (path === '/cli') app.innerHTML = CliPage();
   else if (path === '/token-transitions') app.innerHTML = TokenTransitionsPage();
   else if (path === '/analyse') app.innerHTML = AnalysePage();

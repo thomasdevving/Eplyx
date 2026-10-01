@@ -162,6 +162,7 @@ async fn cloud_shell() -> Html<&'static str> {
 async fn main_asset(Path(name): Path<String>) -> Response {
     let (kind, body) = match name.as_str() {
         "report.js" => ("text/javascript; charset=utf-8", frontend!("src/report.js")),
+        "demo.js" => ("text/javascript; charset=utf-8", frontend!("src/demo.js")),
         "session.js" => (
             "text/javascript; charset=utf-8",
             frontend!("src/session.js"),

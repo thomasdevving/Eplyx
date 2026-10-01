@@ -26,6 +26,7 @@ const types = {
   '.json': 'application/json; charset=utf-8',
   '.png': 'image/png',
   '.woff2': 'font/woff2',
+  '.txt': 'text/plain; charset=utf-8',
 };
 
 // `runtime-config.js` carries the API base URL and is rewritten per deployment,
@@ -62,6 +63,7 @@ createServer(async (request, response) => {
       'Content-Type': types[extname(file)] || 'application/octet-stream',
       'Cache-Control': neverCache.has(requested) ? 'no-store' : 'public, max-age=300',
       'X-Content-Type-Options': 'nosniff',
+      'Referrer-Policy': 'no-referrer',
     });
     response.end(body);
   } catch {

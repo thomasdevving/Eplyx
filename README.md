@@ -1,101 +1,47 @@
 # Eplyx
 
-The fourth first-class ChangeSpec, [`protocol_parameter_change`](docs/protocol-parameter-change.md), supports one captured current-state analysis: change the already-active newer Token-2022 transfer-fee bps on an exact observed mint and compare the same `TransferChecked` under identical deployed code and Clock. Local offline reproduction and authenticated hosted analysis retain exact raw credit/withheld consequences.
+Eplyx compares proposed Solana changes with retained state and reports the
+measured consequences for the interactions it can evaluate. Start with the
+[offline Stake Pool example](#quick-start-one-real-historical-analysis-offline),
+[choose a workflow](docs/getting-started.md), or use the
+[documentation index](docs/README.md).
 
-Upgrade Impact CI for Solana programs.
+## What you can do today
 
-Eplyx deterministically executes the same transactions and account states
-against the current and proposed versions of a Solana program to detect
-state-dependent behavioral and economic regressions before deployment.
-
-It answers one question:
-
-> **What will actually change for users, positions and capital if this new
-> program version is deployed?**
-
-Ordinary testing asks whether the new build compiles, passes its unit tests and
-keeps its interface. A program can satisfy all of that and still change what
-specific existing accounts are worth. This tool executes identical transactions
-against identical state under both program versions and reports the difference.
-
-Eplyx keeps three parts of the upgrade report distinct:
-
-| Layer | Question | Unit |
+| Question | Supported source capability | Guide |
 | --- | --- | --- |
-| **Behavioural regression** | Did anything change? | fixtures, differences, severity |
-| **Economic impact aggregation** | How much does it matter? | positions, collateral, debt |
-| **Regression clustering** | What triggers it, and what is the smallest example? | groups, conditions, counterexamples |
+| What changes under a new program build? | Baseline/candidate execution, measured effects and an expectation-based CI gate over a validated bundle. | [Upgrade example](examples/stake-pool-upgrade/README.md), [CI](docs/phase-10-hosted-ci.md) |
+| Does a token migration reconcile? | Candidate rehearsal, holder coverage, stress, bounded search and one supported two-source ordering experiment. | [Token migration](docs/token-migration.md) |
+| Who is affected by declared lifecycle terms? | Policy consequences over an immutable snapshot, separate from execution/readiness evidence. | [Lifecycle](docs/lifecycle.md) |
+| Can this exact account use a path? | Bounded Transfer, Meteora market-exit and CLI liquidity-withdrawal checks with their own retained evidence. | [Current paths](docs/current-state-analysis.md) |
+| What changes under a fee proposal? | Two operations: active newer Token-2022 transfer-fee bps and a qualified historical Stake Pool SOL deposit fee. | [Fee walkthrough](docs/parameter-analysis-guide.md) |
+| Does code change the fee effect? | A bounded Stake Pool code/fee comparison under explicitly qualified candidate code. | [Interaction analysis](docs/upgrade-parameter-interaction.md) |
+| Does a Squads proposal match the analysed build? | Read-only binding and deployment attestation for a single supported loader-v3 upgrade. | [Governance](docs/phase-g1-squads-governance-binding.md) |
 
-The first is a statement about code. The second is a statement about capital -
-but only about the capital in this corpus. See
-[Economic impact aggregation](#economic-impact-aggregation) for exactly what is
-and is not being claimed.
+Local analysis consumes prepared inputs. Hosted forms and workers require a
+configured service, project access and server-confirmed eligibility. A website
+link does not establish service readiness. The browser now supports prepared
+migration and lifecycle submissions, a guided Token-2022 fee form from an eligible
+retained transfer, and code/fee interaction from an eligible retained upgrade.
+Stake Pool single-parameter submission uses the CLI or authenticated API.
 
-**Current scope.** Deterministic V1/V2 execution, structured diffing, economic
-interpretation, corpus-wide impact aggregation, regression clustering and
-counterexample minimization against a synthetic corpus; exact controlled replay;
-and deterministic discovery, classification, clustering and representative
-selection for real public-program activity; and one exact slot-archive path for
-a bounded real mainnet System-transfer/Memo interaction. Discovery and replay
-corpora are separate, provenance and replay eligibility are explicit, and
-current account samples remain approximate; and one exact CPI-aware path for a
-real stateful protocol interaction, with every dependency binary pinned to the
-deployment live at the transaction's slot. No arbitrary mainnet pre-state
-reconstruction, universal CPI replay, arbitrary DeFi support, GitHub
-App, AI, third-party decoding or sequence search. A CI gate *is* implemented —
-locally as `eplyx ci check` and as a small hosted API — over exactly the bounded
-replay contract described here. See
-[Phase 4](docs/phase-4-replay.md) for controlled replay,
-[Phase 5](docs/phase-5-mainnet-discovery.md) for discovery,
-[Phase 6](docs/phase-6-historical-state.md) for historical state,
-[Phase 7](docs/phase-7-production-protocol-upgrade.md) for a real production
-protocol upgrade replayed against the binaries mainnet actually ran, and
-[Phase 8](docs/phase-8-cpi-mainnet-replay.md) for the same with cross-program
-invocation, and
-[Phase 9](docs/phase-9-production-corpus.md) for the validated
-production-derived corpus a gate runs on, and
-[Phase 10](docs/phase-10-hosted-ci.md) for the CI gate and its hosted API
-([pilot onboarding](docs/pilot-onboarding.md),
-[Railway deployment](docs/railway-deployment.md)).
+**Local parameter tools.** The source includes bounded Token-2022 amount search,
+selected two/three-case analysis and an upstream source-built Stake Pool candidate
+rehearsal consolidated from `codex/analysis-integration`. Older CLI binaries may
+not include these commands; build current source and check command help. These
+extensions add no hosted form and do not update the fixed Step 11A review
+deployment. Their private reference inputs are not clean-clone examples. See
+[the build and evidence requirements](docs/parameter-analysis-guide.md#local-integration-extensions).
 
-The semantic adapter work is recorded in [U1](docs/universal-evidence-layer.md)
-and [U2](docs/phase-u2-kamino.md). The [U3 preflight](docs/phase-u3-modern-replay-surface.md)
-documents the incomplete recovered U2 sample; [U3A](docs/phase-u3a-production-baseline.md)
-freezes a separate reproducible production sample before modern replay changes.
-[U3B](docs/phase-u3b-historical-lut-reconstruction.md) proves historical LUT
-reconstruction; [U3C](docs/phase-u3c-transaction-envelope.md) adds narrow structural
-envelope admission, with historical dependencies and production replay still incomplete.
+Coverage belongs to each result. A passing check does not prove universal safety,
+production-wide impact, issuer entitlement, governance approval or possession of
+signing keys. Current observations cover a slot range; historical replay has a
+separate fidelity contract. Successful fresh current-provider qualification,
+general protocol coverage and continuous monitoring remain future work.
 
----
-
-## Token transitions and analytical workspaces
-
-MAIN also evaluates declared token migrations, lifecycle changes and bounded
-current-state paths. These are separate analytical kinds, with their own inputs
-and evidence boundaries. Program-upgrade replay keeps its existing report and
-identity contracts.
-
-- [Token migration](docs/token-migration.md): proposal, retained state, actual
-  candidate execution, stress, search and reproduction.
-- [Lifecycle analysis](docs/lifecycle.md): declared policy, consequences and
-  independent readiness questions over immutable snapshots.
-- [Current-state analysis](docs/current-state-analysis.md): catalogue/custom mint,
-  public owner scope, focused Transfer/exit checks, candidate scenarios and bounded
-  stress. Refresh begins untested.
-- [Dashboard](docs/dashboard.md): local read-only history and shared hosted views,
-  with Overview/Technical mode and embedded fonts.
-- [Cloud](docs/cloud.md): optional identity, workspaces, exact-byte sync and durable
-  offline hosted execution in the existing API service.
-
-The filesystem registry and content-addressed store remain authoritative for
-analytical bytes. Optional Postgres stores mutable identity and authorization.
-Read-only acquisition is separate from empty-environment workers. No analytical
-result establishes issuer entitlement, keys or permission to move funds.
-
-The [integration report](docs/stock-transition-integration-report.md) records all
-phase commits, the frozen before/after contract and verification. Historical
-SPACEX hackathon evidence remains in the [pinned STA archive](ARCHIVE.md).
-Live-provider checks and deployment were intentionally not performed.
+The [documentation index](docs/README.md) separates user guides from dated
+engineering and qualification records. The [STA archive](ARCHIVE.md) retains the
+older SPACEX evidence; it is not a source of current account facts.
 
 ## Quick start: one real historical analysis, offline
 
@@ -194,14 +140,14 @@ or the separately built regression candidate.
 
 The public site presents Eplyx as a product in development. It separates current,
 bounded upgrade, migration, lifecycle, current-path and Squads capabilities from
-early work and planned product layers. Overview gives a short explanation;
-Technical shows execution, input and evidence details. **Try Eplyx** opens
+early work and planned product layers. The public pages show one readable explanation with expandable evidence. The
+separate dashboard retains its Overview/Technical switch. **Try Eplyx** opens
 `/start`, a workflow selector that explains when to use each analysis, required
 inputs, results, limitations and browser/CLI entry points. `/cli` provides
 source-build instructions and copyable commands for upgrades, CI, retained-state
 comparison, historical preparation, Squads, migrations, lifecycle and current
 paths. The repository documentation above adds the narrowly supported macOS
-arm64 release archive; the public site does not provide an installer.
+arm64 release archive; the public site links to published releases but does not provide an installer.
 
 See [Choose an Eplyx workflow](docs/getting-started.md) for the entry-point map
 and [suggested next product steps](docs/product-next-steps.md) for development
@@ -218,8 +164,8 @@ pnpm build            # static output in dist/
 pnpm test:public      # built-site browser checks; accepts EPLYX_CHROME
 ```
 
-The public routes are `/`, `/cli`, `/token-transitions`, `/analyse`, `/projects`,
-`/projects/:id` and `/runs/:id`. A static host must rewrite those application routes
+The public routes are `/`, `/start`, `/cli`, `/token-transitions`, `/analyse`,
+`/projects`, `/projects/:id`, `/runs/:id` and the legal/privacy routes. A static host must rewrite those application routes
 to `index.html`. `/workspaces` belongs to the API service. Public and dashboard
 fonts are bundled locally. See [the public frontend verification](docs/public-frontend-refresh.md).
 
