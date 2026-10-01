@@ -11,7 +11,9 @@ docs/
 examples/**
 !examples/migrations/
 !examples/migrations/minimal/
+!examples/migrations/minimal/migration.json
 !examples/migrations/minimal/fixtures/
+!examples/migrations/minimal/migration.json
 !examples/migrations/minimal/fixtures/world.json
 scripts/
 test-ledger/
