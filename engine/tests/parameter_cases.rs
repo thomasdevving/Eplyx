@@ -143,6 +143,8 @@ fn genuine_selected_cases_and_complete_offline_repeat() {
         "{}",
         String::from_utf8_lossy(&result.stderr)
     );
+    let receipt: Value = serde_json::from_slice(&result.stdout).unwrap();
+    assert_eq!(receipt["vm_calls"], 4);
     let summary: cases::Summary = artifact::load(&package.join("summary.json")).unwrap();
     assert_eq!(
         summary.change_spec_id,
@@ -256,6 +258,52 @@ fn genuine_selected_cases_and_complete_offline_repeat() {
             std::fs::copy(item.path(), out.join(item.file_name())).unwrap();
         }
     }
+}
+
+#[test]
+fn concurrent_case_set_and_search_keep_caller_owned_budgets() {
+    use eplyx_engine::parameter_search as search;
+    let selected = inputs();
+    let temporary = tempfile::tempdir().unwrap();
+    let manifest = prepared(temporary.path(), &selected);
+    let mut input = selected[0].clone();
+    input.amount_raw = 4;
+    let change = ChangeSpec::parse(&artifact::read(proposal()).unwrap()).unwrap();
+    let parent_report = p::analyze(&change, &input).unwrap();
+    let search_input = search::Input {
+        change,
+        parent_report,
+        source_capture: None,
+        spec: serde_json::from_value(json!({"schema_version":1,"dimension":"transfer_amount_raw",
+            "min_raw":"1","max_raw":"4","predicate":{"kind":"recipient_loss_exceeds","threshold_raw":"100"},
+            "budget":{"max_evaluations":4,"max_refinements":0,"max_vm_calls":8}})).unwrap(),
+    };
+    let barrier = std::sync::Barrier::new(2);
+    std::thread::scope(|scope| {
+        let search_task = scope.spawn(|| {
+            barrier.wait();
+            let report = search::search(&search_input).unwrap();
+            assert_eq!(report.summary["total_vm_calls"], 8);
+            search::verify(&report).unwrap();
+            search::reproduce(&report).unwrap();
+        });
+        let case_task = scope.spawn(|| {
+            barrier.wait();
+            let mut calls = 0;
+            let out = temporary.path().join("concurrent-result");
+            let result = cases::analyze_with_vm_counter(&manifest, &out, &mut calls).unwrap();
+            assert_eq!(calls, 4);
+            assert_eq!(result.counts.executed_pairs, 2);
+            assert_eq!(cases::check(&out, false).unwrap()["summary_verified"], true);
+            assert_eq!(calls, 4);
+            assert_eq!(
+                cases::check(&out, true).unwrap()["reproduction_performed"],
+                true
+            );
+        });
+        search_task.join().unwrap();
+        case_task.join().unwrap();
+    });
 }
 
 #[test]
