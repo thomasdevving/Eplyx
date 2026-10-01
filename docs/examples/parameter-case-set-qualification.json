@@ -1,0 +1,286 @@
+{
+  "status": "selected_case_set_evaluated",
+  "development_branch": "codex/parameter-case-set",
+  "base_commit": "4c521f5815de2238ae0b921e7c34d2ead07cf5cd",
+  "selection": {
+    "rule": "Full already-retained transfers from the first two eligible Transfer capture groups, selected before comparison.",
+    "eligible_groups": [
+      0,
+      4,
+      5
+    ],
+    "selected_groups": [
+      0,
+      4
+    ],
+    "eligible_unselected": [
+      {
+        "group": 5,
+        "reason": "Two independently retained source accounts suffice; no execution for the unselected case."
+      }
+    ],
+    "rejected": [
+      {
+        "groups": [
+          1,
+          2,
+          3
+        ],
+        "reason": "SecondaryMarketExit is outside the original-owner TransferChecked contract."
+      },
+      {
+        "capture": "retained current transfer",
+        "reason": "Repeated source account and current_state_mismatch under the unchanged reference proposal; execution_performed=false."
+      }
+    ],
+    "retained_origin_results": [
+      {
+        "case_id": "group-0-raw-17621",
+        "result_sha256": "4161c1ef0f3b90bf0b3276ba04b3373d32fbf3cfe6ae4e5275e47b36396b5874"
+      },
+      {
+        "case_id": "group-4-raw-309138",
+        "result_sha256": "9a30f751c4cfeff3587378c74c2df225b3ef24be3edad0282a767424abc5d8b3"
+      }
+    ]
+  },
+  "manifest": {
+    "schema_version": 1,
+    "revision": "eplyx-distinct-source-parameter-cases-v1",
+    "change": {
+      "path": "change.json",
+      "sha256": "4f9ede13bf01b3a4f02c04367e84bf7f2c5f6a036c1793049efac522ed988570"
+    },
+    "change_spec_id": "7f24680b92d65edec79f97175be9a81cb35dbf8670581af13519c8f444da3a11",
+    "contract": {
+      "parameter_runtime": {
+        "backend": "LiteSVM 0.16",
+        "derivation_source_sha256": "51643aa9ca1fd8dcba3d21bf8af8b9e45ac53f39b92a66616dade06b3445de74",
+        "eplyx_version": "0.1.0",
+        "executor_sha256": "0f5ed5b8db2220e0dad1d8409b5871f203354c09a7038f55a6f7323b095d30eb",
+        "lock_sha256": "4417749a09e246a4fb8c111611fdf5825d295a28a414deeb30cd353eccec992a",
+        "profile": "mainnet/default",
+        "recent_blockhash_verification": false,
+        "revision": "eplyx-token-2022-paired-transfer-v1",
+        "signature_verification": false,
+        "transfer_sha256": "7e46bc17c3f03ca123d1c1d3075cb427e4d64940afa7c8e7950f977db9ee3ad8"
+      },
+      "runner_sha256": "7962b3c6319b464b8d755dfdb183b799a5f90b84def0bb566bf545828a35fbfd",
+      "decoder_revision": "token-2022-transfer-checked-interface-3.1.1-v1",
+      "programs": [
+        {
+          "elf_sha256": "0999dbf708971e723b08d1caafc988826a59c6001ed6dc02260da07defbe1469",
+          "loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+          "program_id": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        }
+      ],
+      "assumptions": [
+        "Original owner locally assumed to sign; possession and authorization are unknown. Signature and recent-blockhash verification are disabled locally.",
+        "Actual deployed Token-2022 executes TransferChecked with captured epoch fees. Permanent delegate and active delegate remain unused; raw quantities exclude scaled display transforms.",
+        "Fresh existing LiteSVM 0.16 backend with pinned mainnet/default runtime profile and synthetic fee payer; not a full validator bank. No token account or token balance is fabricated.",
+        "Transfer is movement to a different actual observed recipient token account. No market sale, redemption, withdrawal, entitlement, or official successor transition is implied."
+      ]
+    },
+    "cases": [
+      {
+        "case_id": "case_1a75f9c8572aa6e20176d9a1f6fcb380adf59c0e557b1f16fd9876cb9b00df77",
+        "input_sha256": "1a75f9c8572aa6e20176d9a1f6fcb380adf59c0e557b1f16fd9876cb9b00df77",
+        "input": {
+          "path": "input-0.json",
+          "sha256": "1a75f9c8572aa6e20176d9a1f6fcb380adf59c0e557b1f16fd9876cb9b00df77"
+        }
+      },
+      {
+        "case_id": "case_b5e92e24a57b8fac38d6f6a0931b291c76163f7f9b6f1eb2062c8cec227f6b3b",
+        "input_sha256": "b5e92e24a57b8fac38d6f6a0931b291c76163f7f9b6f1eb2062c8cec227f6b3b",
+        "input": {
+          "path": "input-1.json",
+          "sha256": "b5e92e24a57b8fac38d6f6a0931b291c76163f7f9b6f1eb2062c8cec227f6b3b"
+        }
+      }
+    ],
+    "case_set_id": "5149236f71f18bec3b5ecda0ffeb3e387d222e2b0c1598e8b6be5c0e3cfbc73b"
+  },
+  "summary": {
+    "schema_version": 1,
+    "revision": "eplyx-distinct-source-parameter-cases-v1",
+    "case_set_id": "5149236f71f18bec3b5ecda0ffeb3e387d222e2b0c1598e8b6be5c0e3cfbc73b",
+    "change_spec_id": "7f24680b92d65edec79f97175be9a81cb35dbf8670581af13519c8f444da3a11",
+    "rows": [
+      {
+        "amount_raw": "17621",
+        "baseline_execution_success": true,
+        "baseline_reconciliation": true,
+        "capture_sha256": "d99ec5e1c0c6aedf4d1a675ddaff9c5cbf7dab11b77c478ef045416c6185c264",
+        "captured_at": "2026-09-18T07:39:15.727432Z",
+        "case_id": "case_1a75f9c8572aa6e20176d9a1f6fcb380adf59c0e557b1f16fd9876cb9b00df77",
+        "clock": {
+          "epoch": "1037",
+          "epoch_start_timestamp": "1789708003",
+          "leader_schedule_epoch": "1038",
+          "slot": "448018365",
+          "unix_timestamp": "1789717146"
+        },
+        "destination": "124XHuTYUNnCf2ABCNcCEdQFpHQ7Y6MnPe9NeouDB1az",
+        "destination_owner": "BQbqzVpDkhFoCyV3YQR2LLJNpsVFzg9UhmASd9dLYsAz",
+        "execution_performed": true,
+        "failure": null,
+        "initial_destination_balance_raw": "60354",
+        "initial_source_balance_raw": "17621",
+        "input_sha256": "1a75f9c8572aa6e20176d9a1f6fcb380adf59c0e557b1f16fd9876cb9b00df77",
+        "limitations": [
+          "Typed active-state counterfactual only; no authorization, key possession, fee-admin execution or on-chain activation established.",
+          "One retained finalized capture and exact original-owner TransferChecked; no all-holder, safety or historical representativeness claim.",
+          "Independent fresh local VMs with captured Clock and identical deployed code; synthetic fee payer and assumed owner signature. Not a full validator bank."
+        ],
+        "owner": "2wCvQzHiDHAHTvzwPeof9H3uEzq8Bzvg38DFbvZMGkuj",
+        "proposed_execution_success": true,
+        "proposed_reconciliation": true,
+        "quantities": {
+          "baseline_destination_withheld_change_raw": "89",
+          "baseline_recipient_credit_raw": "17532",
+          "destination_withheld_difference_raw": "264",
+          "proposed_destination_withheld_change_raw": "353",
+          "proposed_recipient_credit_raw": "17268",
+          "recipient_credit_difference_raw": "-264"
+        },
+        "report_sha256": "c01d4c1867a8a602bc8a24be7245502817fd33a8eb0cfa2e041d7cac7285c0b7",
+        "source": "741ZXYKzgjPZucRhPUQFK7kKAgP1ESJwimhumgGpuPHs",
+        "status": "semantic_consequence_observed",
+        "transfer_fixture_sha256": "d99ec5e1c0c6aedf4d1a675ddaff9c5cbf7dab11b77c478ef045416c6185c264"
+      },
+      {
+        "amount_raw": "309138",
+        "baseline_execution_success": true,
+        "baseline_reconciliation": true,
+        "capture_sha256": "a83e9a55c1e6fc2cd2d0e363e32ad9f7ec6cb8434ca269f32ce24618be70ef68",
+        "captured_at": "2026-09-18T07:40:03.392352Z",
+        "case_id": "case_b5e92e24a57b8fac38d6f6a0931b291c76163f7f9b6f1eb2062c8cec227f6b3b",
+        "clock": {
+          "epoch": "1037",
+          "epoch_start_timestamp": "1789708003",
+          "leader_schedule_epoch": "1038",
+          "slot": "448018544",
+          "unix_timestamp": "1789717193"
+        },
+        "destination": "124XHuTYUNnCf2ABCNcCEdQFpHQ7Y6MnPe9NeouDB1az",
+        "destination_owner": "BQbqzVpDkhFoCyV3YQR2LLJNpsVFzg9UhmASd9dLYsAz",
+        "execution_performed": true,
+        "failure": null,
+        "initial_destination_balance_raw": "60354",
+        "initial_source_balance_raw": "309138",
+        "input_sha256": "b5e92e24a57b8fac38d6f6a0931b291c76163f7f9b6f1eb2062c8cec227f6b3b",
+        "limitations": [
+          "Typed active-state counterfactual only; no authorization, key possession, fee-admin execution or on-chain activation established.",
+          "One retained finalized capture and exact original-owner TransferChecked; no all-holder, safety or historical representativeness claim.",
+          "Independent fresh local VMs with captured Clock and identical deployed code; synthetic fee payer and assumed owner signature. Not a full validator bank."
+        ],
+        "owner": "8uN1R2nEei4kzst55bRqGhJEA7kNYxmJyeWpvCzZcpcD",
+        "proposed_execution_success": true,
+        "proposed_reconciliation": true,
+        "quantities": {
+          "baseline_destination_withheld_change_raw": "1546",
+          "baseline_recipient_credit_raw": "307592",
+          "destination_withheld_difference_raw": "4637",
+          "proposed_destination_withheld_change_raw": "6183",
+          "proposed_recipient_credit_raw": "302955",
+          "recipient_credit_difference_raw": "-4637"
+        },
+        "report_sha256": "11d7aa140adb493fa227424168df8a095be85890c585576cbece057fb0a97188",
+        "source": "E6NHqVMSHrssPiKGgKnfxNqjoTnQXMoL5xDUvDBXiFdE",
+        "status": "semantic_consequence_observed",
+        "transfer_fixture_sha256": "a83e9a55c1e6fc2cd2d0e363e32ad9f7ec6cb8434ca269f32ce24618be70ef68"
+      }
+    ],
+    "reports": [
+      {
+        "path": "report-0.json",
+        "sha256": "556062ff8c738b7fb0121ff88e50e847fdc6de3fc9c89a5860042f4092528b17"
+      },
+      {
+        "path": "report-1.json",
+        "sha256": "88d386d9fccb699b9e42e7c4fad7eb5ab04f451618006c0fbdf596c4418a24e5"
+      }
+    ],
+    "counts": {
+      "selected_cases": 2,
+      "executed_pairs": 2,
+      "reconciled_pairs": 2,
+      "measured_consequence": 2,
+      "no_observed_consequence": 0,
+      "unavailable_or_failed": 0
+    },
+    "limitations": [
+      "Explicit selected cases only: no production coverage, population, representativeness or aggregate funds claim.",
+      "Within each case only the mint fee field differs. Cross-case amounts, balances and observation times differ; source accounts do not identify people.",
+      "Each single-case report retains its original authorization, signer, captured Clock and local runtime limitations. Offline repetition qualified on one host/runtime only."
+    ],
+    "result_sha256": "d53da5d4a16955d30683aa217be582d0e81d1f91f1b01a5c470cef01edc681b1"
+  },
+  "qualification": {
+    "host": "aarch64-apple-darwin",
+    "native_cli_sha256": "ccfac3e3c678429023b49e43fb69e41b06c39cc08fdbfbf194a5f47606cfadf5",
+    "offline_package_only_repeat": true,
+    "verification": {
+      "case_set_id": "5149236f71f18bec3b5ecda0ffeb3e387d222e2b0c1598e8b6be5c0e3cfbc73b",
+      "cases": [
+        {
+          "case_id": "case_1a75f9c8572aa6e20176d9a1f6fcb380adf59c0e557b1f16fd9876cb9b00df77",
+          "error": null,
+          "report_sha256": "c01d4c1867a8a602bc8a24be7245502817fd33a8eb0cfa2e041d7cac7285c0b7",
+          "reproduced": null,
+          "verified": true
+        },
+        {
+          "case_id": "case_b5e92e24a57b8fac38d6f6a0931b291c76163f7f9b6f1eb2062c8cec227f6b3b",
+          "error": null,
+          "report_sha256": "11d7aa140adb493fa227424168df8a095be85890c585576cbece057fb0a97188",
+          "reproduced": null,
+          "verified": true
+        }
+      ],
+      "offline": true,
+      "reproduction_blocker": null,
+      "reproduction_performed": false,
+      "result_sha256": "d53da5d4a16955d30683aa217be582d0e81d1f91f1b01a5c470cef01edc681b1",
+      "status": "selected_case_set_evaluated",
+      "summary_verified": true
+    },
+    "reproduction": {
+      "case_set_id": "5149236f71f18bec3b5ecda0ffeb3e387d222e2b0c1598e8b6be5c0e3cfbc73b",
+      "cases": [
+        {
+          "case_id": "case_1a75f9c8572aa6e20176d9a1f6fcb380adf59c0e557b1f16fd9876cb9b00df77",
+          "error": null,
+          "report_sha256": "c01d4c1867a8a602bc8a24be7245502817fd33a8eb0cfa2e041d7cac7285c0b7",
+          "reproduced": true,
+          "verified": true
+        },
+        {
+          "case_id": "case_b5e92e24a57b8fac38d6f6a0931b291c76163f7f9b6f1eb2062c8cec227f6b3b",
+          "error": null,
+          "report_sha256": "11d7aa140adb493fa227424168df8a095be85890c585576cbece057fb0a97188",
+          "reproduced": true,
+          "verified": true
+        }
+      ],
+      "offline": true,
+      "reproduction_blocker": null,
+      "reproduction_performed": true,
+      "result_sha256": "d53da5d4a16955d30683aa217be582d0e81d1f91f1b01a5c470cef01edc681b1",
+      "status": "selected_case_set_evaluated",
+      "summary_verified": true
+    },
+    "tests": {
+      "case_set_integration": 6,
+      "parameter_regressions": 11,
+      "current_execution_regressions": 15,
+      "token_2022_regressions": 12,
+      "synthetic_unavailable_quantities_unit": 1,
+      "total_passed": 45,
+      "targeted_clippy": "passed",
+      "formatting": "passed"
+    }
+  },
+  "privacy": "Safe commitments and reviewed summary only; complete provider-bearing inputs and single-case reports remain in the private local package."
+}

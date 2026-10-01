@@ -50,6 +50,11 @@ pub enum Command {
         #[arg(long, value_enum, default_value = "text")]
         format: Format,
     },
+    /// Evaluate or repeat two or three explicitly selected distinct-source cases locally.
+    Cases {
+        #[command(subcommand)]
+        command: CaseCommand,
+    },
     /// Compare one supported parameter using retained operation-specific evidence.
     Analyse {
         #[arg(long)]
@@ -76,6 +81,35 @@ pub enum Command {
         change: PathBuf,
         #[arg(long)]
         report: PathBuf,
+    },
+}
+#[derive(Subcommand, Serialize, Deserialize)]
+pub enum CaseCommand {
+    /// Validate exact retained inputs and save a private, bounded request manifest; no execution.
+    Prepare {
+        #[arg(long)]
+        change: PathBuf,
+        #[arg(long, num_args = 2..=3)]
+        input: Vec<PathBuf>,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Run the existing analyzer independently for every admitted input and save complete evidence.
+    Analyse {
+        #[arg(long)]
+        manifest: PathBuf,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Check every complete report and the evidence-linked summary without executing.
+    Verify {
+        #[arg(long)]
+        package: PathBuf,
+    },
+    /// Independently repeat every complete report through existing offline reproduction.
+    Reproduce {
+        #[arg(long)]
+        package: PathBuf,
     },
 }
 #[derive(Serialize, Deserialize)]
@@ -165,6 +199,24 @@ pub fn worker(encoded: &str) -> Result<ExitCode> {
                 Format::Text => println!("{}", serde_json::to_string_pretty(&value)?),
             }
             Ok(ExitCode::SUCCESS)
+        }
+        Command::Cases { command } => {
+            use eplyx_engine::parameter_cases as cases;
+            let receipt = match command {
+                CaseCommand::Prepare { change, input, out } => {
+                    let manifest = cases::prepare(&change, &input, &out)?;
+                    serde_json::json!({"status":"selected_case_set_prepared","case_set_id":manifest.case_set_id,"offline":true})
+                }
+                CaseCommand::Analyse { manifest, out } => {
+                    let summary = cases::analyze(&manifest, &out)?;
+                    serde_json::json!({"status":if summary.counts.unavailable_or_failed == 0 {"selected_case_set_evaluated"} else {"case_set_evidence_blocked"},"case_set_id":summary.case_set_id,"result_sha256":summary.result_sha256,"counts":summary.counts,"offline":true})
+                }
+                CaseCommand::Verify { package } => cases::check(&package, false)?,
+                CaseCommand::Reproduce { package } => cases::check(&package, true)?,
+            };
+            let blocked = receipt["status"] == "case_set_evidence_blocked";
+            println!("{receipt}");
+            Ok(ExitCode::from(if blocked { 2 } else { 0 }))
         }
         Command::Analyse {
             change,
