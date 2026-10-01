@@ -1,39 +1,39 @@
 import { Mark } from './brand.js';
 
-// Two orbital planes around the mark: the changes Eplyx tracks, and the
+// Two orbital planes around the mark: the changes Eplyx supports, and the
 // consequences it measures. Each ring keeps its own inclination and travel
 // direction, so the toggle reads as a change of axis rather than a swap of
 // labels. Depth is the ring angle alone — the far half passes behind the mark.
 const rings = {
   changes: {
     label: 'Changes',
-    caption: 'Current tools and the broader product direction',
+    caption: 'Supported changes · selected protocols and scenarios',
     tilt: -17,
     direction: -1,
     duration: 38,
     bodies: [
       ['Program upgrades', 'live', 'Current scope: baseline and candidate replay over validated retained state, for supported protocols and instruction paths.'],
-      ['Governance', 'early', 'A narrow Squads V4 upgrade binding exists. General proposal and governance-action analysis still needs development.'],
-      ['Authority changes', 'planned', 'Broader analysis of changes to authority and privilege is planned. Existing custody and binding checks cover specific questions only.'],
-      ['Parameter changes', 'early', 'Two scoped fee operations exist: an active Token-2022 transfer-fee counterfactual and a retained Stake Pool SOL deposit-fee simulation. General parameter coverage remains future work.'],
+      ['Token migrations', 'live', 'Rehearse a proposed migration mechanism over retained inputs. Check holder coverage, balances, fees and reserves. Authority requirements and issuer claims remain explicit.'],
+      ['Lifecycle changes', 'live', 'Compare declared token terms before and after their effective time over a retained snapshot. Unknown eligibility and untested execution paths remain visible.'],
+      ['Fee changes', 'live', 'Compare the active Token-2022 transfer-fee rate for one retained transfer, or simulate the Stake Pool SOL deposit fee for one retained deposit. Broader parameter coverage remains future work.'],
     ],
   },
   consequences: {
     label: 'Consequences',
-    caption: 'Scoped evidence today · wider coverage in development',
+    caption: 'Measured outcomes · explicit coverage and evidence gaps',
     tilt: 19,
     direction: 1,
     duration: 34,
     bodies: [
       ['Economic effects', 'live', 'Measured balances, fees and protocol quantities for supported actions. General asset valuation is outside current scope.'],
-      ['CI checks', 'live', 'Declared upgrade expectations and scoped migration policies can be checked against retained evidence.'],
-      ['Transition outcomes', 'early', 'Migration rehearsals, lifecycle policies and selected current paths are integrated. Wider coverage and fresh mainnet validation remain work ahead.'],
-      ['Monitoring', 'planned', 'Continuous change monitoring and economic exposure alerts are product direction, not current features.'],
+      ['Execution differences', 'live', 'Compare success, errors and measured outputs across supported baseline and candidate executions. Findings apply to the recorded instruction paths and inputs.'],
+      ['Holder impact', 'live', 'Inspect migration allocations and declared lifecycle consequences for holders in the retained snapshot. This does not establish issuer entitlement or cover every holder.'],
+      ['Evidence gaps', 'live', 'See missing inputs, coverage limits and untested paths alongside the findings. A passing check does not turn missing evidence into a tested outcome.'],
     ],
   },
 };
 
-const stageLabels = { live: 'Current scope', early: 'Early scope', planned: 'Planned' };
+const stageLabels = { live: 'Current scope' };
 
 const orbitBody = (ring, [name, status, detail, metric, value], index) =>
   `<button type="button" class="orbit-body orbit-body--${status}" data-ring="${ring}" data-index="${index}" data-name="${name}" data-status="${stageLabels[status]}" data-detail="${detail}"${metric ? ` data-metric="${metric}" data-value="${value}"` : ''}>
@@ -65,7 +65,7 @@ const orbitPlane = side => `<svg class="orbit-plane orbit-plane--${side}" aria-h
 
 export function EplyxCoreScene() {
   const planes = Object.entries(rings);
-  return `<div class="core-scene" data-ring="changes" role="group" aria-label="Eplyx’s current scope and product direction, orbiting the Eplyx mark. Switch between changes and consequences to explore current, early and planned capabilities.">
+  return `<div class="core-scene" data-ring="changes" role="group" aria-label="Eplyx’s supported changes and analytical findings, orbiting the Eplyx mark. Switch between changes and consequences to explore current workflows and their bounded coverage.">
     <div class="core-stage">
       ${orbitPlane('back')}
       <div class="core-glow" aria-hidden="true"></div>
