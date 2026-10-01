@@ -1,0 +1,207 @@
+{
+  "change_spec_id": "7f24680b92d65edec79f97175be9a81cb35dbf8670581af13519c8f444da3a11",
+  "development_branch": "codex/parameter-amount-search",
+  "fixed_commitment_sha256": "faa6467e3d3ef02db7ad4a8eaf3dd1dd9524506da401032fbc79db22f54af9f6",
+  "fixed_state": {
+    "clock": {
+      "epoch": "1037",
+      "epoch_start_timestamp": "1789708003",
+      "leader_schedule_epoch": "1038",
+      "slot": "448018365",
+      "unix_timestamp": "1789717146"
+    },
+    "context": {
+      "decimals": 9,
+      "destination": "124XHuTYUNnCf2ABCNcCEdQFpHQ7Y6MnPe9NeouDB1az",
+      "destination_owner": null,
+      "genesis_hash": "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d",
+      "minimum_slot": 447865805,
+      "mint": "PreANxuXjsy2pvisWWMNB6YaJNzr7681wJJr2rHsfTh",
+      "owner": "2wCvQzHiDHAHTvzwPeof9H3uEzq8Bzvg38DFbvZMGkuj",
+      "program": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "source": "741ZXYKzgjPZucRhPUQFK7kKAgP1ESJwimhumgGpuPHs"
+    },
+    "declaration": {
+      "captured_epoch": "1037",
+      "change_spec_id": "7f24680b92d65edec79f97175be9a81cb35dbf8670581af13519c8f444da3a11",
+      "current_bps": 50,
+      "maximum_fee_raw": "18446744073709551615",
+      "newer_schedule_epoch": "1032",
+      "origin": "validated_changespec",
+      "proposed_bps": 200
+    },
+    "fixture_sha256": "d99ec5e1c0c6aedf4d1a675ddaff9c5cbf7dab11b77c478ef045416c6185c264",
+    "observed_source_balance_raw": "17621",
+    "original_amount_raw": "10000",
+    "programs": [
+      {
+        "elf_sha256": "0999dbf708971e723b08d1caafc988826a59c6001ed6dc02260da07defbe1469",
+        "loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "program_id": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+      }
+    ]
+  },
+  "limitations": [
+    "No global minimum, exhaustive-domain or protocol safety claim.",
+    "Declared recipient-loss condition is an expected fee impact, not a vulnerability verdict.",
+    "Exact provider-bearing capture/report bytes remain private local artifacts, excluded from Git.",
+    "Completed CLI and direct API runs have identical analytical identities, ledgers and witnesses; content reports additionally preserve the input ChangeSpec declared-ID representation."
+  ],
+  "local_binary_sha256": "3645593e80e9edcaa0927359a66af288f71ddf32ca59bdf5d06c71bd87657bf2",
+  "local_compatible_binary": "artifacts/step12a/eplyx",
+  "original_amount_witness": {
+    "amount_raw": "10000",
+    "case_id": "89a83a5c2515393b09c4428d83e8fbc12d76af881e4d564422ba8074a66151ba",
+    "derived_input_sha256": "673243a2596137129e7324221bdd9c3136720a13cf2cad0c2b51d7f10ccb77f9",
+    "outcome": {
+      "anomaly": null,
+      "baseline_credit_raw": "9950",
+      "loss_raw": "150",
+      "predicate": "matched",
+      "proposed_credit_raw": "9800",
+      "signature": {
+        "kind": "recipient_loss_exceeds",
+        "threshold_raw": "100"
+      },
+      "status": "supported_successful_comparison"
+    },
+    "paired_report_sha256": "01d80e5e2900559ad341f3b44a5e8df9c828533df39529e21020ad945ce7ec96",
+    "parent_report_sha256": "01d80e5e2900559ad341f3b44a5e8df9c828533df39529e21020ad945ce7ec96",
+    "refinement_executed_case_ids": [
+      "b40f5ddb95be4de19cd6751086a3bac63463bc424930739828b6c470a14ef331",
+      "d9d7934f8cd0bfdf9a583431c9d9597c2bc414e88ee265c6ab65f4834ec8957b",
+      "55aa92a924ad9584896bc4b39cba10e11a230aa9e9d5e752bfe43a2a0778c770",
+      "54bffe889005267b5eda156eaba81f014e49a46eeb4efa9d32165300e36e62fc",
+      "a030d01d3053c58e8a2ada7571c4f89c91a215e0fa89c65c64a09fa165dfd15a",
+      "932ac6e7a2172dcef81ef07a3bbbc4ab80618880498754a55cb38873e65015fb",
+      "f6881f557edec33333e21d0e119d27719ae76bda8c2996328a206119da8faae8",
+      "74740a40ca7f2d23db02a60f1c04ba6dff7488c7c72450348db818a5fb28d999",
+      "7324406d2e285bf79a975f30ae3ec4887d82ea215ef4d16fe901f5d93d85e8a1",
+      "86635d10ea950b83d50e5d42137369613d10532ff0b81e5338d5bd75a8ffedeb",
+      "a7d6e3da84610cac18ab23ad03233ed9bc61c22fa6f1ca7dd15f2487c8a3a1a3",
+      "a067882c85a45743b72d259217a816c488bd47bed5c1b54c3dcc2133beba7467",
+      "148cd189fe63abdc31cd614d8740f28a624ee3fb0ee77eabfc88839fe5f714af",
+      "ec1b4d2c34a9a520fa2c9ce7d27f53dbda4c089338d649c392f4d956edbf42da",
+      "999fc619e53b0966c036d9fb001d32ec91554eb3729350fa8281523d86869cab",
+      "12cf9ea1207e7db613c0bc927ef029867a68c23bc364dcc787cfad520ec9ac05"
+    ],
+    "refinement_origin_case_id": "89a83a5c2515393b09c4428d83e8fbc12d76af881e4d564422ba8074a66151ba",
+    "search_input_sha256": "6f4c7c1d07a974fabff0737e935765df555f0c1db2d95e53e0f00a9868218e69",
+    "signature": {
+      "kind": "recipient_loss_exceeds",
+      "threshold_raw": "100"
+    },
+    "witness_sha256": "4e2157f3be9395800dd937f9f62c1b636b55a6c925e102d5b6fb074d34df55e9"
+  },
+  "parent_report_sha256": "01d80e5e2900559ad341f3b44a5e8df9c828533df39529e21020ad945ce7ec96",
+  "portable_cas_bytes": 6217871,
+  "portable_local_artifact": "artifacts/step12a/parameter-search",
+  "remaining_blockers": [],
+  "report_sha256": "f456f1c296eab606ae20c32bd7e765b196bbaf2b8debd66742e286f4039cf5fb",
+  "review_deployment_proposal_identity_and_prior_evidence_unchanged": true,
+  "schema": "eplyx-parameter-edge-search-qualification-v1",
+  "search_input_sha256": "6f4c7c1d07a974fabff0737e935765df555f0c1db2d95e53e0f00a9868218e69",
+  "smallest_tested_matching_witness": {
+    "amount_raw": "6732",
+    "case_id": "1e6fe97116c366fe14ba195343e8ef1a5d2f35b70e8764f71f70ff546d8db6a2",
+    "derived_input_sha256": "ceb3ad9b5ea3d1b36863e4f4a44ab9ffb5c12bf7a4394975b9c46d95a8e03d56",
+    "outcome": {
+      "anomaly": null,
+      "baseline_credit_raw": "6698",
+      "loss_raw": "101",
+      "predicate": "matched",
+      "proposed_credit_raw": "6597",
+      "signature": {
+        "kind": "recipient_loss_exceeds",
+        "threshold_raw": "100"
+      },
+      "status": "supported_successful_comparison"
+    },
+    "paired_report_sha256": "5508364f0d2fd028f3211226a36d7622510e852d3a993801154b7777cb84e9a8",
+    "parent_report_sha256": "01d80e5e2900559ad341f3b44a5e8df9c828533df39529e21020ad945ce7ec96",
+    "refinement_executed_case_ids": [
+      "b40f5ddb95be4de19cd6751086a3bac63463bc424930739828b6c470a14ef331",
+      "d9d7934f8cd0bfdf9a583431c9d9597c2bc414e88ee265c6ab65f4834ec8957b",
+      "55aa92a924ad9584896bc4b39cba10e11a230aa9e9d5e752bfe43a2a0778c770",
+      "54bffe889005267b5eda156eaba81f014e49a46eeb4efa9d32165300e36e62fc",
+      "a030d01d3053c58e8a2ada7571c4f89c91a215e0fa89c65c64a09fa165dfd15a",
+      "932ac6e7a2172dcef81ef07a3bbbc4ab80618880498754a55cb38873e65015fb",
+      "f6881f557edec33333e21d0e119d27719ae76bda8c2996328a206119da8faae8",
+      "74740a40ca7f2d23db02a60f1c04ba6dff7488c7c72450348db818a5fb28d999",
+      "7324406d2e285bf79a975f30ae3ec4887d82ea215ef4d16fe901f5d93d85e8a1",
+      "86635d10ea950b83d50e5d42137369613d10532ff0b81e5338d5bd75a8ffedeb",
+      "a7d6e3da84610cac18ab23ad03233ed9bc61c22fa6f1ca7dd15f2487c8a3a1a3",
+      "a067882c85a45743b72d259217a816c488bd47bed5c1b54c3dcc2133beba7467",
+      "148cd189fe63abdc31cd614d8740f28a624ee3fb0ee77eabfc88839fe5f714af",
+      "ec1b4d2c34a9a520fa2c9ce7d27f53dbda4c089338d649c392f4d956edbf42da",
+      "999fc619e53b0966c036d9fb001d32ec91554eb3729350fa8281523d86869cab",
+      "12cf9ea1207e7db613c0bc927ef029867a68c23bc364dcc787cfad520ec9ac05"
+    ],
+    "refinement_origin_case_id": "89a83a5c2515393b09c4428d83e8fbc12d76af881e4d564422ba8074a66151ba",
+    "search_input_sha256": "6f4c7c1d07a974fabff0737e935765df555f0c1db2d95e53e0f00a9868218e69",
+    "signature": {
+      "kind": "recipient_loss_exceeds",
+      "threshold_raw": "100"
+    },
+    "witness_sha256": "7f9f34dbdc2a3ea4110ce5e3e4157cfc90b795eec7f650054020264a141172ac"
+  },
+  "source_base": "4c521f5815de2238ae0b921e7c34d2ead07cf5cd",
+  "spec": {
+    "budget": {
+      "max_evaluations": 64,
+      "max_refinements": 16,
+      "max_vm_calls": 128
+    },
+    "dimension": "transfer_amount_raw",
+    "max_raw": "10000",
+    "min_raw": "1",
+    "predicate": {
+      "kind": "recipient_loss_exceeds",
+      "threshold_raw": "100"
+    },
+    "schema_version": 1
+  },
+  "summary": {
+    "admitted_pairs": 64,
+    "anomaly_cases": 0,
+    "completion_status": "budget_exhausted",
+    "conclusion": "Declared condition matched in 25 executed cases; fee impact is not a protocol bug verdict.",
+    "domain_cardinality": "10000",
+    "first_witness_case_id": "89a83a5c2515393b09c4428d83e8fbc12d76af881e4d564422ba8074a66151ba",
+    "fully_reconciled_pairs": 64,
+    "generated_considered": 66,
+    "matching_cases": 25,
+    "maximum_loss_among_tested_successful_cases_raw": "150",
+    "minimality_claim": "smallest matching amount among the executed cases; no global minimum certified",
+    "numeric_domain_fully_enumerated": false,
+    "refinement_evaluations": 16,
+    "rejected_cases": 0,
+    "requested_max_raw": "10000",
+    "requested_min_raw": "1",
+    "smallest_matching_amount_among_executed_cases_raw": "6732",
+    "total_vm_calls": 128,
+    "unavailable_cases": 0,
+    "unique_evaluated_amounts": 64,
+    "untested_amount_count": "9936"
+  },
+  "tests": {
+    "cargo_fmt_check": "passed",
+    "current_execution": 15,
+    "existing_parameter_change": 11,
+    "git_diff_check": "passed",
+    "migration_search": 3,
+    "parameter_search": 10,
+    "targeted_clippy_warnings_denied": "passed",
+    "token_transfer_library": 8,
+    "total_distinct_passed": 47
+  },
+  "verification": {
+    "credential_free_worker": true,
+    "full_reproduction_report_sha256": "f456f1c296eab606ae20c32bd7e765b196bbaf2b8debd66742e286f4039cf5fb",
+    "full_reproduction_vm_calls": 128,
+    "network_explicitly_denied": true,
+    "read_only_vm_calls": 0,
+    "selected_witness_reproduction_vm_calls": 2,
+    "source_repositories_and_original_parent_directory_explicitly_read_denied": true
+  }
+}

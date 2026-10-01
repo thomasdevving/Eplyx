@@ -411,14 +411,25 @@ fn retained_token_runtime(mut rebuilt: Value, recorded: &Value) -> Result<Value>
         return Ok(rebuilt);
     }
     let mut prior = recorded["runtime"].clone();
+    // Explicit compatibility with the completed Step 11A source. The only
+    // Token-2022 execution-path addition is counting the same two VM calls;
+    // all execution-relevant fields and actual reproduced outputs still match.
+    let supported = [
+        (
+            "a837d8962239e2de80471bb31f6a53d3a34ba3b4909b71f6ea24df9bf6d3394f",
+            "75b0e249ff44fe39b66e84d38abebf87f05b267b586d491711ffeb8af290d660",
+        ),
+        (
+            "51643aa9ca1fd8dcba3d21bf8af8b9e45ac53f39b92a66616dade06b3445de74",
+            "4417749a09e246a4fb8c111611fdf5825d295a28a414deeb30cd353eccec992a",
+        ),
+    ];
     ensure!(
-        prior["derivation_source_sha256"]
-            == "a837d8962239e2de80471bb31f6a53d3a34ba3b4909b71f6ea24df9bf6d3394f",
-        "unsupported prior Token-2022 contract source"
-    );
-    ensure!(
-        prior["lock_sha256"] == "75b0e249ff44fe39b66e84d38abebf87f05b267b586d491711ffeb8af290d660",
-        "unsupported prior Token-2022 lock"
+        supported.iter().any(
+            |(source, lock)| prior["derivation_source_sha256"] == *source
+                && prior["lock_sha256"] == *lock
+        ),
+        "unsupported prior Token-2022 contract source/lock"
     );
     prior["derivation_source_sha256"] = rebuilt["runtime"]["derivation_source_sha256"].clone();
     prior["lock_sha256"] = rebuilt["runtime"]["lock_sha256"].clone();
@@ -573,12 +584,22 @@ fn finish(
     seal(r)
 }
 pub fn analyze(spec: &ChangeSpec, input: &Input) -> Result<Value> {
+    analyze_with_vm_counter(spec, input, &mut 0)
+}
+/// Same paired analysis, with an observable count of attempted fresh VM calls.
+/// Admission and structural verification do not increment this counter.
+pub fn analyze_with_vm_counter(
+    spec: &ChangeSpec,
+    input: &Input,
+    vm_calls: &mut u32,
+) -> Result<Value> {
     proposal(spec)?;
     let (mut plan, next) = match prepare(spec, input) {
         Ok(v) => v,
         Err(f) => return failure_report(spec, input, &f),
     };
     let original = plan_commitment(&plan)?;
+    *vm_calls += 1;
     let b = match executor::execute_probe_message(
         &plan.accounts,
         &plan.watch,
@@ -607,6 +628,7 @@ pub fn analyze(spec: &ChangeSpec, input: &Input) -> Result<Value> {
         restored == original,
         "paired execution invariants differ beyond mint"
     );
+    *vm_calls += 1;
     let p = match executor::execute_probe_message(
         &plan.accounts,
         &plan.watch,

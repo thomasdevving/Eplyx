@@ -223,3 +223,19 @@ Minimal dashboard/hosted readers show exact fractions and integer deltas, record
 Qualification tests cover the retained real gate, wrong/missing manager signer, complete variable Borsh preservation, exact identities and canonical strings, stale expectations, `0/0`, invalid fees, equal fee and tiny-rounding no-consequence, actual downstream privilege rejection and rollback, corrupted reconciliation with no findings, resealed cross-object tampering, saved offline reproduction, and both hosted parent routes. Synthetic controls are explicitly labelled; they never replace or rewrite the observed record. Compact public evidence and test results are in the [qualification commitments](examples/stake-pool-parameter-change-qualification.json). Full input/report bytes need not be published.
 
 The scope is one retained interaction and one qualified deployment. There is no third operation, withdrawal/referral parameter, authority change, generic serializer, population sequencing, epoch advancement, governance, provider acquisition, signing, live execution or deployment.
+
+## Bounded action-input search (Step 12A)
+
+The local `parameter search`, `verify-search`, `reproduce-search` and
+`reproduce-witness` commands now search only hypothetical `TransferChecked` raw
+amounts for one fixed active-newer Token-2022 fee proposal and verified retained
+parent. Account evidence, deployed code, source balance, cap, epochs and Clock
+stay fixed. `recipient_loss_exceeds` compares exact reconciled public credits;
+a matching fee consequence is the user's stated condition, not a bug verdict.
+Explicit domain and shared evaluation/refinement/VM ceilings bound execution.
+Derived provenance separates the unchanged observed fixture from generated
+requests. Portable private CAS artifacts retain the complete ledger, paired
+reports and witnesses, with read-only verification and independent offline
+reproduction. Minimum claims apply only to executed cases. See the
+[operator/developer guide](parameter-edge-search.md) for schema, CLI, bounds,
+compatibility and unsupported cases.
