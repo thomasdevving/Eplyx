@@ -113,6 +113,36 @@ available. No cross-platform portability or fresh SBF-build claim is made.
 
 ## Verification record
 
+The combined offline check passed against clean source consolidation commit
+`5868d5ee5a8aa9dfa3ceff4cf6d842e2cf5f6626`, using one release CLI for all
+44 integrated-tool invocations. The final descendant commit records this result
+and the finalized check script; its exact rebuilt/tested identity is in the
+private build and acceptance receipts. Network and source-read denial controls
+passed. All three concrete reference checks and supported archived repetitions
+passed, including the original candidate's separate four-report byte-identical
+rerun. Unknown fields, conflicting arguments, existing outputs and resealed
+runtime/execution inconsistencies were rejected.
+
+Fresh search input/report identities remain
+`6f4c7c1d07a974fabff0737e935765df555f0c1db2d95e53e0f00a9868218e69` /
+`f456f1c296eab606ae20c32bd7e765b196bbaf2b8debd66742e286f4039cf5fb`.
+The fresh case set/result are
+`87532d8e7a6dc8358dcd8223c01f86c85e2b94a64d3a623a6e5db3279a0a5209` /
+`62cb3b1e191bf9d9c80fd1bc786b0852a14a7cde838aa48d49ea30c0bb47370f`.
+Their new runtime-bound identity preserves both measured outcomes; archived case
+identities remain unchanged and reproducible through the explicit bridge.
+Baseline/candidate replay and gate documents match their original JSON contents.
+
+Joint checks cover the parameter/search/case-set suites, concurrent caller-owned
+budgets, current transfer execution, migration search, Stake Pool parameter/gate
+and upgrade/interaction behavior. Focused unit checks cover the contract bridge,
+unavailable quantities, Token-2022 decoding and real Stake Pool parameter
+execution. Engine/server locked checks, release builds, targeted Clippy,
+formatting and diff checks pass. Initial missing migration test imports were
+resolved using verified existing manifest-pinned bytes; no fixtures were
+fabricated. Frontend files/readers are unchanged, so no frontend or remote smoke
+run is required. Exact distinct test outcomes are in the private test record.
+
 The authoritative generated private receipt records the full tested integration
 commit/tree, clean status, compiler/target, lock and binary hashes, runtime
 commitments, each invocation and exit code, original/fresh artifact identities,
@@ -143,3 +173,12 @@ parameter/interaction qualification or deployed-byte equivalence claim.
 
 No push, merge, tag, deployment, Railway operation, paid resource, live Solana
 acquisition, outreach or cleanup is part of this integration.
+
+An additional pre-Step-9 scratch report (`f4315181462931bcf8cef7cfaecf4df48c8403e698a9a362885e3ce434def728`)
+uses the old `a837d896...` source with the newer `4417749a...` lock, a pair
+never supported by the existing verifier. Both the original retained Step 12A
+engine and integration reject it. Its bytes are preserved separately; its
+original generating executable was not located. This is outside the published
+frozen Step 8 receipt contract and is recorded as an archive limitation.
+The existing frozen-receipt regression checks the published identity and its
+explicitly admitted old source/lock pair. No compatibility was weakened.
