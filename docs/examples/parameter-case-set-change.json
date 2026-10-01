@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "change_spec_id": "7f24680b92d65edec79f97175be9a81cb35dbf8670581af13519c8f444da3a11",
+  "change": {
+    "kind": "protocol_parameter_change",
+    "target": {
+      "program_id": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "config_account": "PreANxuXjsy2pvisWWMNB6YaJNzr7681wJJr2rHsfTh"
+    },
+    "operation": {
+      "kind": "token_2022_active_newer_transfer_fee_basis_points_v1",
+      "expected_current": {
+        "account_data_sha256": "5031771a84320c80236f4453c9b7d554446acc23490a9e1abffdd141cfada219",
+        "basis_points": 50,
+        "schedule_epoch": "1032",
+        "maximum_fee_raw": "18446744073709551615"
+      },
+      "proposed_basis_points": 200
+    }
+  }
+}
