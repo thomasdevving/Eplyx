@@ -143,6 +143,29 @@ fn contract(input: &p::Input, plan: &ProbeExecutionPlan) -> Contract {
         assumptions: plan.assumptions.clone(),
     }
 }
+// The retained Step 14A runner differs only in this exact-contract admission
+// bridge, report/manifest consistency check and caller-owned execution counting.
+// The Step 12A parameter change only counts the same two execution sites and
+// extends the already explicit prior-source verifier; executor/transfer bytes,
+// lock, semantics, program bytes and every other contract field must agree.
+fn compatible_contract(current: &Contract, recorded: &Contract) -> bool {
+    if current == recorded {
+        return true;
+    }
+    if recorded.runner_sha256 != "7962b3c6319b464b8d755dfdb183b799a5f90b84def0bb566bf545828a35fbfd"
+        || recorded.parameter_runtime["derivation_source_sha256"]
+            != "51643aa9ca1fd8dcba3d21bf8af8b9e45ac53f39b92a66616dade06b3445de74"
+        || recorded.parameter_runtime["lock_sha256"]
+            != "4417749a09e246a4fb8c111611fdf5825d295a28a414deeb30cd353eccec992a"
+    {
+        return false;
+    }
+    let mut prior = recorded.clone();
+    prior.runner_sha256 = current.runner_sha256.clone();
+    prior.parameter_runtime["derivation_source_sha256"] =
+        current.parameter_runtime["derivation_source_sha256"].clone();
+    prior == *current
+}
 fn preflight(spec: &ChangeSpec, input: &p::Input) -> Result<ProbeExecutionPlan> {
     p::binding(spec)?;
     let change = spec
@@ -206,7 +229,7 @@ fn admit(manifest: &Manifest, spec: &ChangeSpec, inputs: &[p::Input]) -> Result<
         let plan =
             preflight(spec, input).with_context(|| format!("case {} admission", case.case_id))?;
         ensure!(
-            contract(input, &plan) == manifest.contract,
+            compatible_contract(&contract(input, &plan), &manifest.contract),
             "case {} executable/interpretation/runtime contract mismatch",
             case.case_id
         );
@@ -413,8 +436,12 @@ fn summarize(manifest: &Manifest, reports: &[Value], refs: Vec<Reference>) -> Re
     s.result_sha256 = s.digest()?;
     Ok(s)
 }
-fn bind_report(spec: &ChangeSpec, case: &Case, report: &Value) -> Result<()> {
+fn bind_report(spec: &ChangeSpec, case: &Case, contract: &Contract, report: &Value) -> Result<()> {
     p::verify(spec, report)?;
+    ensure!(
+        report["runtime"] == contract.parameter_runtime,
+        "report runtime differs from case-set manifest"
+    );
     ensure!(
         report["analysis_input_sha256"] == case.input_sha256,
         "report references another selected input"
@@ -424,7 +451,19 @@ fn bind_report(spec: &ChangeSpec, case: &Case, report: &Value) -> Result<()> {
 
 /// Every reference and case is admitted before the first paired analysis.
 pub fn analyze(manifest_path: &Path, out: &Path) -> Result<Summary> {
+    analyze_with_vm_counter(manifest_path, out, &mut 0)
+}
+/// Caller-owned count of the existing paired analyzer's attempted fresh VMs.
+pub fn analyze_with_vm_counter(
+    manifest_path: &Path,
+    out: &Path,
+    vm_calls: &mut u32,
+) -> Result<Summary> {
     let mut l = load(manifest_path)?;
+    ensure!(
+        l.manifest.contract == contract(&l.inputs[0], &preflight(&l.spec, &l.inputs[0])?),
+        "fresh analysis requires a manifest prepared by this build; archived packages use verify/reproduce"
+    );
     std::fs::create_dir(out).context("output package must be new")?;
     l.manifest.change = write(out, "change.json", &l.change)?;
     for (i, (case, bytes)) in l.manifest.cases.iter_mut().zip(&l.bytes).enumerate() {
@@ -439,8 +478,8 @@ pub fn analyze(manifest_path: &Path, out: &Path) -> Result<Summary> {
     let mut refs = Vec::new();
     let mut errors = Vec::new();
     for (i, (case, input)) in l.manifest.cases.iter().zip(&l.inputs).enumerate() {
-        let report = match p::analyze(&l.spec, input).and_then(|r| {
-            bind_report(&l.spec, case, &r)?;
+        let report = match p::analyze_with_vm_counter(&l.spec, input, vm_calls).and_then(|r| {
+            bind_report(&l.spec, case, &l.manifest.contract, &r)?;
             Ok(r)
         }) {
             Ok(r) => r,
@@ -507,7 +546,7 @@ pub fn check(package: &Path, reproduce: bool) -> Result<Value> {
         let report =
             read_ref(package, reference).and_then(|b| Ok(serde_json::from_slice::<Value>(&b)?));
         let result = report.and_then(|r| {
-            bind_report(&l.spec, case, &r)?;
+            bind_report(&l.spec, case, &l.manifest.contract, &r)?;
             reports.push(r.clone());
             Ok(r["report_sha256"].clone())
         });
@@ -550,6 +589,40 @@ pub fn check(package: &Path, reproduce: bool) -> Result<Value> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn prior_case_contract_requires_exact_source_lock_and_all_other_fields() {
+        let current = Contract {
+            parameter_runtime: p::runtime(),
+            runner_sha256: hash_bytes(include_bytes!("parameter_cases.rs")),
+            decoder_revision: "token-2022-transfer-checked-interface-3.1.1-v1".into(),
+            programs: vec![json!({"elf_sha256":"pinned","loader":"pinned"})],
+            assumptions: vec!["unchanged".into()],
+        };
+        let mut prior = current.clone();
+        prior.runner_sha256 =
+            "7962b3c6319b464b8d755dfdb183b799a5f90b84def0bb566bf545828a35fbfd".into();
+        prior.parameter_runtime["derivation_source_sha256"] =
+            json!("51643aa9ca1fd8dcba3d21bf8af8b9e45ac53f39b92a66616dade06b3445de74");
+        assert!(compatible_contract(&current, &prior));
+        for field in [
+            "lock_sha256",
+            "executor_sha256",
+            "transfer_sha256",
+            "profile",
+            "revision",
+            "derivation_source_sha256",
+        ] {
+            let mut changed = prior.clone();
+            changed.parameter_runtime[field] = json!("mutated");
+            assert!(!compatible_contract(&current, &changed), "{field}");
+        }
+        let mut changed = prior.clone();
+        changed.runner_sha256 = "0".repeat(64);
+        assert!(!compatible_contract(&current, &changed));
+        let mut changed = prior;
+        changed.programs[0]["elf_sha256"] = json!("changed");
+        assert!(!compatible_contract(&current, &changed));
+    }
     #[test]
     fn synthetic_missing_or_unreconciled_quantities_are_unavailable() {
         for report in [

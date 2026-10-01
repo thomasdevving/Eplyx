@@ -208,8 +208,9 @@ pub fn worker(encoded: &str) -> Result<ExitCode> {
                     serde_json::json!({"status":"selected_case_set_prepared","case_set_id":manifest.case_set_id,"offline":true})
                 }
                 CaseCommand::Analyse { manifest, out } => {
-                    let summary = cases::analyze(&manifest, &out)?;
-                    serde_json::json!({"status":if summary.counts.unavailable_or_failed == 0 {"selected_case_set_evaluated"} else {"case_set_evidence_blocked"},"case_set_id":summary.case_set_id,"result_sha256":summary.result_sha256,"counts":summary.counts,"offline":true})
+                    let mut vm_calls = 0;
+                    let summary = cases::analyze_with_vm_counter(&manifest, &out, &mut vm_calls)?;
+                    serde_json::json!({"status":if summary.counts.unavailable_or_failed == 0 {"selected_case_set_evaluated"} else {"case_set_evidence_blocked"},"case_set_id":summary.case_set_id,"result_sha256":summary.result_sha256,"counts":summary.counts,"vm_calls":vm_calls,"offline":true})
                 }
                 CaseCommand::Verify { package } => cases::check(&package, false)?,
                 CaseCommand::Reproduce { package } => cases::check(&package, true)?,
