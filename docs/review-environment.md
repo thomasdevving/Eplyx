@@ -7,7 +7,7 @@ operator console is not the ordinary workspace login surface. Route `/p/...`
 refreshes must reach the server rather than the static console.
 
 The source is frozen on `codex/step11a-fixed-review`. Resolve its exact tested revision
-from the private `validation-receipt.json` produced by the invocation below;
+from the private local `validation-receipt.json` or remote `remote-validation-receipt.json`;
 `build-identities.json` also records the source commit, target, lockfile and
 server/worker/CLI hashes. The frontend is compiled into that same server binary.
 Operational receipts remain outside Git and never change analytical identities.
@@ -70,9 +70,10 @@ reproduce commands run with an empty environment under macOS `sandbox-exec`
 `deny network*`; a loopback curl negative control proves denial. The child inherits
 that restriction. Reproduce re-executes the matrix and must match the downloaded
 report/input identities. PostgreSQL/Python/browser tools are needed for setup and
-extraction only, not analytical reproduction. Linux deployment reproduction needs
-an equivalent explicit network-denial mechanism and a compatible native CLI;
-macOS binaries cannot be Linux workers.
+extraction only, not analytical reproduction. A Linux service needs Linux server/worker
+binaries. Offline reproduction uses a compatible same-snapshot native CLI on its
+actual host and checks the bound runtime without waiving mismatches; record that
+host and its enforced network-denial mechanism separately.
 
 Completed-result persistence and queued/running recovery are separate claims.
 This script does not manufacture an in-flight restart or claim to test recovery
@@ -254,3 +255,132 @@ only the two recorded review volumes by first billable creation +14 days. At ful
 margin); eight GB is USD 0.04/day. Automatic storage cleanup is not claimed.
 Exact created IDs, timestamps, configured expiry, validation and cleanup commands
 belong in the private remote receipt. Keep the original local receipt unchanged.
+
+
+## Verified remote review — 2026-10-01
+
+Status: **ready_for_external_review**. Review origin:
+<https://review-app-review-80b8.up.railway.app>.
+Deployed source is `codex/step11a-fixed-review` at
+`b3244996a68ecac81037cdfe997155f76a5b8de4`; later documentation-only commits do
+not advance this running image. Explicit CLI upload has no repository auto-deploy.
+Application deployment `9238a18f-4bbc-485b-99db-611a62d9401a`, image
+`sha256:7b0f8b2e2c570108ffdb9a1c3072a33aeb4189aeb7913c637d4ee49d853b0733`,
+built with Rust/Cargo 1.98.1 for `x86_64-unknown-linux-gnu`.
+The server and isolated worker share executable SHA-256
+`18c0fe84273375a49e45566d20bcdafe36d5689832df2e261526e2dba9c35e3a`;
+image CLI SHA-256 is
+`987ffd7a60ba04ba59422b7bbb25a1ba19ab5c373c09a61f043f087eb6205a67`.
+Cargo.lock SHA-256 is
+`4417749a09e246a4fb8c111611fdf5825d295a28a414deeb30cd353eccec992a`.
+The first of two bounded app builds failed because an existing CLI migration
+JSON include was excluded from the Docker context. The second, after retaining
+both template JSONs, passed. The source-derived include check and two real
+expiry checks passed (three focused tests); runtime expiry was also tested remotely.
+No analytical or fixture bytes changed.
+
+| Review resource | ID | Created UTC |
+| --- | --- | --- |
+| Project `eplyx-step11a-review-20261001` | `b2660f15-4103-406f-9266-59385cc3fdd1` | `2026-10-01T08:43:29.644Z` |
+| Environment `review` | `7b6501b2-2cd8-4188-8556-c903e3f60583` | created with project |
+| App | `5e6ba9dc-927b-4ec7-b913-912c517fd6de` | `2026-10-01T08:43:32.296Z` |
+| Private PostgreSQL | `274a9491-20a0-4e2f-bd52-f7c9a0d6967a` | `2026-10-01T08:47:07.579Z` |
+| Analytical volume `/data` | `8ad3bc74-f2a9-4cf1-8234-d30da4b3de09` | `2026-10-01T08:49:45.354Z` |
+| Identity volume `/var/lib/postgresql/data` | `38333286-474d-435b-bc2a-d4cc475cba82` | `2026-10-01T08:49:48.187Z` |
+
+Both mounts were verified as persistent ext4 devices, owned by root, writable and
+with about 48 GB available each. The running app resolves
+`review-postgres.railway.internal`; provider queries confirm no database public
+domain or TCP proxy. Database deployment is
+`71e2a84c-c39d-4fad-b9b1-05615a30bb85` (`postgres:17-bookworm`).
+
+The genuine reviewer used a clean password-form session with **member** role.
+Parent `run_01M3VBJSJWD98E1FWM13Z4N19C` was produced by the real worker, with
+an expected negative upgrade verdict and retained report. Child
+`run_01M3VBM18VQSY20H38FNP0DKAK` completed with the four expected credits,
+parameter effects `-7609851`, code effects `0`, combined `-7609851`, interaction
+`0` and `no_measured_interaction`. All K1/K2/R00/R01/R10/R11 states and handoffs,
+original proposal IDs, historical inputs and constructed provenance passed the
+existing unmodified browser smoke. Refresh occurred while the child was running.
+One controlled app restart preserved the project, active baseline, parent, same
+child/report and download. Fresh member login and signed-out/cross-project
+read/list/create/download denial passed again. Queued/running restart recovery
+was **not exercised**.
+
+Post-restart downloaded tar SHA-256:
+`c7a292ad2dd28e404ffe13942ea8758235c68cce5fe0a7d3832899886b24b24a`.
+A fresh standalone directory with only the artifact and same-snapshot Darwin
+arm64 CLI verified all evidence and actually re-executed the VM matrix, under
+empty environment and macOS `sandbox-exec` network denial (HTTPS negative control
+also denied). CLI SHA-256:
+`1198699bef9bc2fcf34d3142c98e6b1f0f8911bfc9ce954bbd84eee3de876724`.
+The compatible bound runtime passed without an override. Remote and reproduced
+report SHA-256:
+`ed73f7b1895be8dfb74913eb21eea52bfc8932802328dbc855a818bb67673ce3`;
+analysis input SHA-256:
+`39faccc088197efa811af419693152f4dc4a998b88b6e423f15721b995ea9a1b`.
+This validates this remote artifact's portability; it is not a cross-platform
+release qualification.
+
+Private owner evidence is retained at
+`/Users/thomasnguyen/Downloads/Personal/Eplyx/Eplyx/data/step11a-railway-review/`:
+`remote-validation-receipt.json`, original unchanged local receipt, both smoke
+receipts/downloads, source-context manifest, runtime/cost evidence, standalone CLI,
+verified `exports/identity.dump` and `exports/analytical.tar`, and this runbook.
+The database export is a consistent custom-format pg_dump, inspected with
+pg_restore --list (including user/member/project table data); a full restore test
+was not exercised. Both exports match remote checksums; the analytical archive
+contains the actual parent/child evidence and has only safe regular members.
+A temporary validation SSH key was revoked and its agent/key files removed.
+Credentials stay only in private mode-600 files; no external invitations were sent.
+The owner can use the saved owner account, register a designated reviewer with the
+private signup code, and add that already-registered account through the existing
+workspace-members operation. Provide credentials securely and never operator access.
+No additional access/MFA action is required for the tested route.
+
+### Exact deadline and owner cleanup
+
+First billable resource: `2026-10-01T08:49:45.354Z`, or
+**1 October 2026 10:49:45.354 Europe/Amsterdam (CEST)**.
+Both running PID-1 commands are GNU timeout wrappers using absolute deadline
+`1791190185`: **5 October 2026 08:49:45 UTC / 10:49:45 CEST**.
+A restart subtracts the current clock from that same deadline; it cannot renew it.
+Actual short-deadline testing terminated the command and its child process group,
+then refused an expired restart. Railway restart policy is NEVER on both services;
+no automatic sleep, renewal or new deployment trigger is configured. TERM begins
+at the deadline and KILL follows after at most ten seconds if needed. This stops
+compute automatically, not storage billing or arbitrary egress spending.
+
+Authorized final expiry and manual storage removal deadline:
+**15 October 2026 08:49:45.354 UTC / 10:49:45.354 CEST**.
+Owner cleanup is mandatory by then. Keep the verified local exports/runbook;
+export later needed review activity again before removing its only remote copy.
+The private `cleanup-review.mjs` verifies the listed local export checksums and
+requires an explicit cleanup argument before stopping/deleting only the recorded
+review resources. Run it after review ends and before the deadline:
+
+```sh
+node /Users/thomasnguyen/Downloads/Personal/Eplyx/Eplyx/data/step11a-railway-review/cleanup-review.mjs --remove-verified-review
+```
+
+Equivalent provider actions are `railway down --project <review-project-id>
+--environment <review-environment-id> --service <review-service-id> --yes` for
+each of the two services, then `railway volume --project <review-project-id>
+--environment <review-environment-id> delete --volume <exact-volume-id> --yes` for
+the two volumes above. Never rely on a saved linked production target. 2FA, if
+enabled later, must be completed by the owner. No storage deletion was performed.
+
+Observed review usage at validation was USD `0.0016614836485498578` before tax/FX,
+about EUR 0.002 with the stated margins. Provider billing is delayed: this is not
+an invoice or a final accrued-cost ceiling. Plan reserves EUR 10.88 total and
+leaves EUR 9.12 inside the EUR 20 allowance; the full-volume risk scenario leaves
+EUR 1.92. No shared included credit is subtracted. Sampled app memory peaked at
+134.8 MB and PostgreSQL at 78.2 MB during this window; samples are not an exact
+instantaneous worker RSS measurement. Current idle app/database were roughly
+117/42 MB. Provider used-volume metrics, including filesystem overhead, were
+roughly 0.72/0.84 GB, larger than logical file totals. Retained storage after
+compute stops costs at most USD 0.50/day for fully used 100 GB (about EUR 0.56/day
+with margins); at eight GB it is USD 0.04/day. Manual cleanup, billing delay,
+FX/tax variation and unbounded public egress prevent a guaranteed EUR invoice cap.
+Production, plan/subscription, shared spending limits and unrelated work were
+untouched. No external paid service was created.
