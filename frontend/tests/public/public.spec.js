@@ -1,10 +1,55 @@
 import { test, expect } from '@playwright/test';
 import { CLI_COMMANDS } from '../../src/cli.js';
+import { LEGAL_ROUTES } from '../../src/legal.js';
 
 test.beforeEach(async ({ page }) => {
   page.on('pageerror', error => { throw error; });
   await page.route('**/*', route => new URL(route.request().url()).hostname === '127.0.0.1'
     ? route.continue() : route.abort());
+});
+
+for (const width of [1440, 390, 320]) {
+  test(`legal notices navigate, reload and fit at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/');
+    await page.getByRole('navigation', { name: 'Legal and privacy' }).getByRole('link', { name: 'Legal & privacy', exact: true }).click();
+    await expect(page).toHaveURL(/\/legal$/);
+    for (const [path, label] of LEGAL_ROUTES) {
+      await page.getByRole('navigation', { name: 'Legal documents' }).getByRole('link', { name: label, exact: true }).click();
+      await expect(page).toHaveURL(new RegExp(`${path}$`));
+      await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+      await expect(page).toHaveTitle(/— Eplyx$/);
+      await expect(page.getByRole('complementary', { name: 'Notice status' })).toContainText('Draft');
+      if (path !== '/licenses') await expect(page.locator('main a[href="mailto:eplyxcontact@gmail.com"]')).not.toHaveCount(0);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+      await page.reload();
+      await expect(page.getByRole('navigation', { name: 'Legal documents' }).getByRole('link', { name: label, exact: true })).toHaveAttribute('aria-current', 'page');
+      if (path === '/privacy') await page.screenshot({ path: test.info().outputPath(`privacy-${width}.png`), fullPage: true });
+    }
+    await page.goBack();
+    await expect(page).toHaveURL(/\/contact$/);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Contact & operator.');
+  });
+}
+
+test('licence notices are distributed as readable text', async ({ page, request }) => {
+  await page.goto('/licenses');
+  for (const [name, text] of [['Read the bundled Three.js licence', 'MIT License'], ['DM Sans copyright and licence', 'SIL OPEN FONT LICENSE'], ['Manrope copyright and licence', 'SIL OPEN FONT LICENSE']]) {
+    const href = await page.getByRole('link', { name, exact: true }).getAttribute('href');
+    const response = await request.get(href);
+    expect(response.status()).toBe(200);
+    expect(response.headers()['content-type']).toContain('text/plain');
+    expect(await response.text()).toContain(text);
+  }
+});
+
+test('public browsing adds no cookies or persistent preference storage', async ({ page, context }) => {
+  for (const path of ['/', '/runs/demo', '/privacy', '/cookies']) {
+    await page.goto(path);
+    await expect(page.locator('main')).toBeVisible();
+    expect(await context.cookies()).toEqual([]);
+    expect(await page.evaluate(() => ({ local: Object.keys(localStorage), session: Object.keys(sessionStorage) }))).toEqual({ local: [], session: [] });
+  }
 });
 
 for (const width of [1440, 1024, 834, 390, 320]) {
@@ -66,10 +111,9 @@ test('commands copy exactly and denied clipboard access has an honest fallback',
   expect(await page.evaluate(() => window.getSelection().toString())).toBe(CLI_COMMANDS.install);
 });
 
-test('mobile menu closes on Escape and mode survives page navigation', async ({ page }) => {
+test('mobile menu closes on Escape without a presentation toggle', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/cli');
-  await page.getByRole('button', { name: 'Technical', exact: true }).click();
   await page.getByRole('button', { name: 'Open navigation' }).click();
   const nav = page.getByRole('navigation', { name: 'Primary navigation' });
   await nav.getByRole('link', { name: 'CLI', exact: true }).focus();
@@ -78,7 +122,7 @@ test('mobile menu closes on Escape and mode survives page navigation', async ({ 
   await page.getByRole('button', { name: 'Open navigation' }).click();
   await nav.getByRole('link', { name: 'Token transitions' }).click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Know what a transition changes.');
-  await expect(page.locator('html')).toHaveAttribute('data-mode', 'technical');
+  await expect(page.getByRole('group', { name: 'Presentation', exact: true })).toHaveCount(0);
 });
 
 test('workspace links use the configured service instead of the static-site origin', async ({ page }) => {
@@ -104,7 +148,7 @@ test('public routes retain the existing demo and analysis pages', async ({ page 
 test.describe('original motion and product maturity', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 
-  test('intro, orbit movement and scroll reveals remain animated', async ({ page }) => {
+  test('intro and orbit stay animated while section text stays visible', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/');
     await expect(page.locator('.intro')).toBeVisible();
@@ -114,17 +158,22 @@ test.describe('original motion and product maturity', () => {
     const planet = page.locator('.orbit-body[data-ring="changes"]').first();
     const before = await planet.evaluate(el => getComputedStyle(el).transform);
     await expect.poll(() => planet.evaluate(el => getComputedStyle(el).transform)).not.toBe(before);
-    await expect(page.locator('#product .section-heading')).toHaveCSS('opacity', '0');
+    await expect(page.locator('#product .section-heading')).toHaveCSS('opacity', '1');
     await page.locator('#product .section-heading').scrollIntoViewIfNeeded();
     await expect(page.locator('#product .section-heading')).toHaveCSS('opacity', '1');
     await page.screenshot({ path: test.info().outputPath('product-normal-motion.png') });
 
-    await page.goto('/');
+    await page.getByRole('link', { name: 'Try Eplyx' }).click();
+    await page.locator('.site-header .logo-link').click();
     await expect(page.locator('.intro')).toHaveCount(0);
+    expect(await page.evaluate(() => ({ local: Object.keys(localStorage), session: Object.keys(sessionStorage) }))).toEqual({ local: [], session: [] });
     await page.getByRole('button', { name: 'Consequences', exact: true }).click();
     await expect(page.locator('.orbit-caption')).toContainText('in development');
     const future = page.locator('.orbit-body[data-name="Monitoring"]');
+    await expect(future).toHaveCSS('visibility', 'visible');
+    await page.getByRole('button', { name: 'Consequences', exact: true }).focus();
     await page.keyboard.press('Shift+Tab');
+    await expect(page.getByRole('button', { name: 'Changes', exact: true })).toBeFocused();
     await page.keyboard.press('Shift+Tab');
     await expect(future).toBeFocused();
     await expect(page.locator('.orbit-detail')).toBeVisible();
@@ -135,60 +184,55 @@ test.describe('original motion and product maturity', () => {
 });
 
 for (const width of [1440, 390]) {
-  test(`presentation modes change visible content at ${width}px`, async ({ page }) => {
+  test(`public content needs no presentation toggle at ${width}px`, async ({ page }) => {
+    // A preference left by the separate dashboard must not switch public copy.
+    await page.addInitScript(() => localStorage.setItem('eplyx-detail', 'technical'));
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/');
-    const overview = page.getByRole('button', { name: 'Overview', exact: true });
-    const technical = page.getByRole('button', { name: 'Technical', exact: true });
+    await expect(page.getByRole('group', { name: 'Presentation', exact: true })).toHaveCount(0);
     await expect(page.locator('.hero__lead.ov-only')).toBeVisible();
     await expect(page.locator('.hero__lead.tech-only')).toBeHidden();
-    await technical.click();
-    await expect(technical).toHaveAttribute('aria-pressed', 'true');
-    await expect(overview).toHaveAttribute('aria-pressed', 'false');
-    await expect(page.locator('.hero__lead.ov-only')).toBeHidden();
-    await expect(page.locator('.hero__lead.tech-only')).toBeVisible();
-    await expect(page.locator('.hero__lead.tech-only')).toContainText('still in development');
-    await page.screenshot({ path: test.info().outputPath(`hero-technical-${width}.png`) });
-    await page.locator('#product').scrollIntoViewIfNeeded();
-    await expect(page.locator('.product-grid .tech-only').first()).toBeVisible();
-    await expect(page.locator('.product-grid .ov-only').first()).toBeHidden();
-    await expect(page.locator('.product-boundary').first()).toBeVisible();
-    await page.screenshot({ path: test.info().outputPath(`product-technical-${width}.png`) });
-    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+    await expect(page.locator('#evidence [data-technical]').first()).toBeVisible();
     await page.getByRole('link', { name: 'Try Eplyx' }).click();
     await expect(page.locator('#start-upgrades [data-technical]')).toBeVisible();
     await page.getByRole('link', { name: 'Install the CLI' }).click();
     await expect(page.locator('.guide-intro [data-technical]')).toBeVisible();
     await page.reload();
-    await expect(technical).toHaveAttribute('aria-pressed', 'true');
-    await expect(page.locator('.guide-intro [data-technical]')).toBeVisible();
-    await overview.click();
-    await expect(page.locator('.guide-intro [data-technical]')).toBeHidden();
-    await expect(page.locator('#command-install')).toBeVisible();
-    await page.goto('/token-transitions');
-    await expect(page.locator('.analyse-copy [data-technical]')).toBeHidden();
-    await technical.click();
-    await expect(page.locator('.analyse-copy [data-technical]')).toBeVisible();
+    await expect(page.getByRole('group', { name: 'Presentation', exact: true })).toHaveCount(0);
     await page.goto('/runs/demo');
     await expect(page.locator('#technical')).toBeVisible();
-    await overview.click();
-    await expect(page.locator('#technical')).toBeHidden();
-    await page.goto('/analyse');
-    await expect(page.getByRole('group', { name: 'Presentation', exact: true })).toHaveCount(0);
+  });
+
+  test(`orbit line cutouts follow the rock silhouettes at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/');
+    for (const ring of ['changes', 'consequences']) {
+      await page.getByRole('button', { name: ring === 'changes' ? 'Changes' : 'Consequences', exact: true }).click();
+      const cutouts = await page.evaluate(ring => {
+        const stage = document.querySelector('.core-stage').getBoundingClientRect();
+        return [...document.querySelectorAll(`.orbit-body[data-ring="${ring}"]`)].map(body => {
+          const cutout = document.querySelector(`[data-rock-cutout="${body.dataset.index}"]`);
+          const matrix = cutout.getCTM();
+          const centre = new DOMPoint(.5, .5).matrixTransform(matrix);
+          const rock = body.getBoundingClientRect();
+          return {
+            distance: Math.hypot(centre.x - (rock.x + rock.width / 2 - stage.x), centre.y - (rock.y + rock.height / 2 - stage.y)),
+            image: cutout.querySelector('image').getAttribute('href'),
+          };
+        });
+      }, ring);
+      expect(cutouts).toHaveLength(4);
+      for (const cutout of cutouts) {
+        expect(cutout.distance).toBeLessThan(.2);
+        expect(cutout.image).toBe('/public/orbit-rocks.png');
+      }
+      await expect(page.locator('.orbit-plane > g, .orbit-leaders > g')).toHaveCount(3);
+      for (const lines of await page.locator('.orbit-plane > g, .orbit-leaders > g').all()) {
+        await expect(lines).toHaveAttribute('mask', 'url(#orbit-rock-mask)');
+      }
+    }
   });
 }
-
-test('presentation choice stays consistent when storage is blocked', async ({ page }) => {
-  await page.addInitScript(() => {
-    Object.defineProperty(window, 'localStorage', { get() { throw new Error('Storage unavailable'); } });
-  });
-  await page.goto('/');
-  await page.getByRole('button', { name: 'Technical', exact: true }).click();
-  await page.getByRole('link', { name: 'Try Eplyx' }).click();
-  await page.getByRole('link', { name: 'Install the CLI' }).click();
-  await expect(page.getByRole('button', { name: 'Technical', exact: true })).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.locator('.guide-intro [data-technical]')).toBeVisible();
-});
 
 for (const width of [1440, 390]) {
   test('workflow selection explains inputs, availability and route at ' + width + 'px', async ({ page }) => {
@@ -200,13 +244,21 @@ for (const width of [1440, 390]) {
     await expect(page).toHaveURL(/#migration$/);
     await expect(page.locator('#start-migration')).toBeVisible();
     await expect(page.locator('#start-upgrades')).toBeHidden();
-    await expect(page.locator('#start-migration')).toContainText('not a general migration upload form');
+    await expect(page.locator('#start-migration')).toContainText('guided form accepts a prepared candidate');
     await page.reload();
     await expect(page.getByRole('radio', { name: /Token migration/ })).toBeChecked();
     await page.getByRole('radio', { name: /Lifecycle terms/ }).check();
     await expect(page.locator('#start-lifecycle')).toContainText('Changing policy time does not refresh account state');
     await page.getByRole('radio', { name: /Current token path/ }).check();
     await expect(page.locator('#start-paths')).toContainText('Liquidity-withdrawal checks currently use the CLI');
+    await page.getByRole('radio', { name: /Protocol fee change/ }).check();
+    await expect(page.locator('#start-parameters')).toBeVisible();
+    await expect(page.locator('#start-parameters')).toContainText('there is no standalone guided fee form');
+    await page.locator('#start-parameters').getByRole('link', { name: 'CLI commands and inputs' }).click();
+    await expect(page).toHaveURL(/\/cli#parameters$/);
+    await expect(page.locator('#command-parameter')).toHaveText(CLI_COMMANDS.parameter);
+    await expect(page.locator('#parameter-search')).toContainText('codex/analysis-integration');
+    await page.goto('/start#parameters');
     await page.getByRole('radio', { name: /Squads upgrade proposal/ }).check();
     await expect(page.locator('#start-governance')).toContainText('does not sign, approve or execute');
     await page.locator('#start-governance').getByRole('link', { name: 'CLI commands and inputs' }).click();
@@ -254,4 +306,18 @@ test('CLI task index resolves every section and distinguishes CI and saved-resul
   await page.getByText('Use an existing hosted project instead', { exact: true }).click();
   await expect(page.locator('#command-hosted-ci')).toHaveText(CLI_COMMANDS.hostedCi);
   await expect(page.locator('#sync')).toContainText('Upgrade CI uses the separate submission flow');
+});
+
+
+test('saved demo uses retained evidence and leaves absent proof unavailable', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('.result-summary')).toContainText('Finding categories');
+  await expect(page.locator('.result-summary')).toContainText('1 economic decrease · 9 reverts');
+  await page.locator('#evidence').getByRole('link', { name: 'Open demo report' }).click();
+  await expect(page.locator('main')).toContainText('One deposit loses pool tokens; nine withdrawals revert');
+  await expect(page.locator('main')).toContainText('predates ChangeSpec identities');
+  await page.locator('#technical summary').click();
+  await expect(page.locator('#technical')).toContainText('3193eabd9fe2e479109ef3b2dd7301fffd06774325133ff8f88916ed482db099');
+  await expect(page.locator('#technical')).toContainText('447850493 → 447904974');
+  await expect(page.locator('main')).not.toContainText('60b7e1ac');
 });

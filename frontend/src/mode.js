@@ -1,7 +1,10 @@
+function savedPresentationMode() {
+ try { return localStorage.getItem('eplyx-detail') === 'technical' ? 'technical' : 'overview'; } catch { return 'overview'; }
+}
 export function presentationMode() {
  const active = globalThis.document?.documentElement?.dataset.mode;
  if (active === 'overview' || active === 'technical') return active;
- try { return localStorage.getItem('eplyx-detail') === 'technical' ? 'technical' : 'overview'; } catch { return 'overview'; }
+ return savedPresentationMode();
 }
 export function setPresentationMode(mode) {
  const selected=mode==='technical'?'technical':'overview';
@@ -9,4 +12,5 @@ export function setPresentationMode(mode) {
  try { localStorage.setItem('eplyx-detail',selected); } catch { /* Presentation still works without storage. */ }
  document.dispatchEvent(new CustomEvent('eplyx-mode',{detail:selected}));
 }
-export function initializeMode() { document.documentElement.dataset.mode=presentationMode(); }
+// The initial HTML declares Overview. On reload the saved choice takes priority.
+export function initializeMode() { document.documentElement.dataset.mode=savedPresentationMode(); }

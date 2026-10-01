@@ -1,4 +1,5 @@
 import { Header, Footer } from './shell.js';
+import { DEMO_REPORT } from './demo.js';
 import { API_BASE, operatorToken } from './session.js';
 import { ChangeCard, ChangeIdentityRows, resolveChange } from './change.js';
 import { analysisView, shortId } from './analysis.js';
@@ -23,7 +24,7 @@ const TERMINAL = ['passed', 'failed', 'execution_error'];
  * The demo is a fixture, and it lives behind one explicit route.
  */
 export function ReportPage(id) {
-  if (id === 'demo') return renderReport(DEMO, { demo: true, id, extras: { spec: DEMO.change_spec, projectName: 'Example Stake Pool' } });
+  if (id === 'demo') return renderReport(DEMO, { demo: true, id, extras: { projectName: 'SPL Stake Pool · retained regression' } });
 
   const context = readContext();
   if (!context) return renderUnavailable(id);
@@ -64,7 +65,7 @@ export function attachReport(id, render) {
     let run;
     try {
       const response = await ask(`/v1/runs/${encodeURIComponent(id)}`);
-      if (response.status === 401) return finish(renderStalled(id, 'Authentication failed.', 'The stored token no longer authenticates this project. Submit the check again with a current token.'));
+      if (response.status === 401) return finish(renderStalled(id, 'Authentication failed.', 'Reconnect in Projects with a current operator token, then reopen this run. Authentication failure does not require a new analysis.'));
       if (response.status === 404) return finish(renderUnavailable(id));
       if (!response.ok) throw new Error(`status ${response.status}`);
       run = await response.json();
@@ -178,7 +179,7 @@ function renderUnavailable(id) {
           </div>
         </section>
         <section><div class="report-section-title"><span>02</span><h2>Example</h2></div>
-          <div class="empty-result"><p><a href="/runs/demo" data-link class="text-link">See the public demo report <span>↗</span></a> for the shape of a completed check. It is a fixture, not a record of any run.</p></div>
+          <div class="empty-result"><p><a href="/runs/demo" data-link class="text-link">See the public demo report <span>↗</span></a> for the shape of a completed check. It uses a saved report from a deliberately regressed fixture candidate; it is not a live run.</p></div>
         </section>
       </div>
     </section>
@@ -280,7 +281,7 @@ function top(id, view, { exit, gate, demo = false }) {
   const gateText = gate == null ? '' : ` · CI gate ${gate ? 'Passed' : 'Failed'}`;
   return `<div class="report-top">
         <div>
-          <p class="eyebrow"><span></span> ${demo ? 'Public demo report · fixture' : `Run ${escapeHtml(id)}`}</p>
+          <p class="eyebrow"><span></span> ${demo ? 'Public demo report · retained fixture candidate' : `Run ${escapeHtml(id)}`}</p>
           <h1>${escapeHtml(view.headline.title)}</h1>
           <p>${escapeHtml(view.headline.note)}</p>
         </div>
@@ -354,6 +355,7 @@ function renderReport(live, { demo, id, extras = {}, embedded = false }) {
     <section class="report-shell">
       ${top(id, view, { exit: live.exit_code ?? view.gate.exitCode, gate: view.gate.passed, demo })}
       ${dimensions(view)}
+      ${demo ? '<p class="demo-note">Saved historical report for a constructed DepositSol-only fixture, not an upstream release. One deposit loses pool tokens; nine withdrawals revert. The original report predates ChangeSpec identities and contains no replay-proof section; missing evidence remains unavailable. <a href="https://github.com/thomasdevving/Eplyx/blob/main/examples/stake-pool-upgrade/README.md">Run this offline example ↗</a></p>' : ''}
       <div class="report-grid">
         <aside class="report-nav"><span>Analysis</span>
           <a href="#change" class="active">Proposed change</a>
@@ -629,64 +631,13 @@ function escapeHtml(value) {
  */
 const DEMO = {
   status: 'failed',
-  exit_code: 1,
+  exit_code: DEMO_REPORT.summary.exit_code,
   report_available: true,
-  bundle_sha256: 'a18d72bc2f46…3e9c',
-  corpus_sha256: 'c253aefc08d1…a901',
-  baseline_sha256: '9f3a0d4be24e…8c21',
-  candidate_sha256: '60b7e1ac3198…bf14',
-  change: {
-    change_spec_id: '5c1f0e9ad27b44c08e1d7fa3b60c2e95d8a41f7c63b09e2d15a8c4f70b3e6d21',
-    kind: 'program_upgrade',
-    target_program_id: 'SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy',
-    candidate_sha256: '60b7e1ac3198…bf14',
-    candidate_len: 32240,
-    label: 'Fee rounding change (fixture)',
-    origin: 'derived_from_candidate'
-  },
-  change_spec: {
-    schema_version: 1,
-    change_spec_id: '5c1f0e9ad27b44c08e1d7fa3b60c2e95d8a41f7c63b09e2d15a8c4f70b3e6d21',
-    change: { kind: 'program_upgrade', target: { program_id: 'SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy' }, candidate: { sha256: '60b7e1ac3198…bf14', len: 32240 } },
-    metadata: { label: 'Fee rounding change (fixture)' }
-  },
-  canonical_report: {
-    change: {
-      change_spec_id: '5c1f0e9ad27b44c08e1d7fa3b60c2e95d8a41f7c63b09e2d15a8c4f70b3e6d21',
-      kind: 'program_upgrade',
-      target_program_id: 'SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy',
-      candidate_sha256: '60b7e1ac3198…bf14'
-    },
-    summary: { unexpected: 2, expected: 0, passed: false, exit_code: 1 },
-    bundle: {
-      program_id: 'SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy',
-      record_count: 10,
-      adapter: 'spl-stake-pool',
-      adapter_version: 3,
-      semantic_schema_version: 2,
-      source_slot_range: { first: 447454329, last: 447488871 },
-      limitations: [
-        { code: 'deposit_replayability_materially_below_observed', detail: 'Jito-tipped DepositSol is under-represented relative to observed production activity.' },
-        { code: 'failed_original_transactions_unsupported', detail: 'Transactions that failed on mainnet are observed but not replayed, so no failure path is represented.' },
-        { code: 'account_creation_paths_unsupported', detail: 'Interactions that create a token account are outside the exact historical contract and are excluded.' }
-      ]
-    },
-    coverage: [
-      { subject: 'spl-stake-pool/deposit_sol/economic/pool_tokens_received', observations: 6 },
-      { subject: 'spl-stake-pool/withdraw_sol/execution/transaction', observations: 4 }
-    ],
-    findings: [
-      { severity: 'CRITICAL', status: 'unexpected', fingerprint: 'spl-stake-pool/withdraw_sol/execution/transaction/now_reverts', observations: ['a', 'b', 'c', 'd'], covered_observations: 4 },
-      {
-        severity: 'HIGH', status: 'unexpected', fingerprint: 'spl-stake-pool/deposit_sol/economic/pool_tokens_received/decreased', observations: ['e'], covered_observations: 6, max_relative_delta_bps: -21,
-        values: [{ observation_id: 'e', baseline: { kind: 'quantity', quantity: '10.412337901' }, candidate: { kind: 'quantity', quantity: '10.390472189' }, relative_delta_bps: -21 }]
-      }
-    ],
-    undeclarable: [
-      { layer: 'decoded_economic', description: 'manager-fee amount', observations: ['a', 'b', 'c', 'd', 'e'] }
-    ],
-    unmatched: []
-  }
+  bundle_sha256: DEMO_REPORT.bundle.sha256,
+  corpus_sha256: DEMO_REPORT.bundle.corpus_sha256,
+  baseline_sha256: DEMO_REPORT.bundle.baseline_sha256,
+  candidate_sha256: DEMO_REPORT.candidate.sha256,
+  canonical_report: DEMO_REPORT,
 };
 
 /** Shared P3/G1 report construction for the authenticated hosted dashboard. */

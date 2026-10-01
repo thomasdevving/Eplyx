@@ -15,7 +15,7 @@ const rings = {
       ['Program upgrades', 'live', 'Current scope: baseline and candidate replay over validated retained state, for supported protocols and instruction paths.'],
       ['Governance', 'early', 'A narrow Squads V4 upgrade binding exists. General proposal and governance-action analysis still needs development.'],
       ['Authority changes', 'planned', 'Broader analysis of changes to authority and privilege is planned. Existing custody and binding checks cover specific questions only.'],
-      ['Parameter changes', 'planned', 'General analysis of fee, rate and limit changes without a new program binary is a future layer.'],
+      ['Parameter changes', 'early', 'Two scoped fee operations exist: an active Token-2022 transfer-fee counterfactual and a retained Stake Pool SOL deposit-fee simulation. General parameter coverage remains future work.'],
     ],
   },
   consequences: {
@@ -41,7 +41,6 @@ const orbitBody = (ring, [name, status, detail, metric, value], index) =>
     <span class="visually-hidden">${name}. ${stageLabels[status]}. ${detail}</span>
   </button>
   <div class="orbit-label orbit-label--${status}" data-ring="${ring}" data-index="${index}" aria-hidden="true">
-    <svg class="orbit-label__leader"><path/><circle r="2"/></svg>
     <span class="orbit-body__name">${name}</span>
     <small class="orbit-body__status">${stageLabels[status]}</small>
   </div>`;
@@ -51,10 +50,17 @@ const orbitPlane = side => `<svg class="orbit-plane orbit-plane--${side}" aria-h
     <linearGradient id="orbit-main"><stop offset="0" stop-color="#b98cf0"/><stop offset=".38" stop-color="#fdf6ff"/><stop offset=".72" stop-color="#d3b0fb"/><stop offset="1" stop-color="#8646dd"/></linearGradient>
     <linearGradient id="orbit-sheen"><stop offset="0" stop-color="#fffaff" stop-opacity=".1"/><stop offset=".45" stop-color="#fffaff" stop-opacity=".9"/><stop offset="1" stop-color="#f0dfff" stop-opacity=".15"/></linearGradient>
     <filter id="orbit-bloom" x="-25%" y="-70%" width="150%" height="240%"><feGaussianBlur stdDeviation="5"/></filter>
+    <filter id="orbit-rock-silhouette" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"/></filter>
+    <mask id="orbit-rock-mask" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" style="mask-type: luminance">
+      <rect fill="white"/>
+      ${[0, 1, 2, 3].map(index => `<g data-rock-cutout="${index}"><svg viewBox="0 0 1 1" width="1" height="1" overflow="hidden"><image href="/public/orbit-rocks.png" x="${-(index % 2)}" y="${-Math.floor(index / 2)}" width="2" height="2" filter="url(#orbit-rock-silhouette)"/></svg></g>`).join('')}
+    </mask>
   </defs>` : ''}
+  <g mask="url(#orbit-rock-mask)">
   ${side === 'front' ? '<path class="orbit-line orbit-line--bloom"/>' : ''}
   <path class="orbit-line orbit-line--main"/>
   ${side === 'front' ? '<path class="orbit-line orbit-line--sheen"/><path class="orbit-pulse" pathLength="1"/>' : ''}
+  </g>
 </svg>`;
 
 export function EplyxCoreScene() {
@@ -66,6 +72,7 @@ export function EplyxCoreScene() {
       <div class="logo-core" aria-hidden="true"><div class="sculpture-fallback">${Mark({ className: 'core-mark core-mark--face' })}</div><div class="sculpture-mount"></div></div>
       ${orbitPlane('front')}
       ${planes.map(([name, ring]) => ring.bodies.map((body, index) => orbitBody(name, body, index)).join('')).join('')}
+      <svg class="orbit-leaders" aria-hidden="true"><g mask="url(#orbit-rock-mask)">${[0, 1, 2, 3].map(index => `<g data-leader="${index}"><path/><circle r="2"/></g>`).join('')}</g></svg>
       <div class="orbit-detail" aria-hidden="true">
         <div class="orbit-detail__head"><strong class="orbit-detail__name"></strong><em class="orbit-detail__status"></em></div>
         <p class="orbit-detail__text"></p>
@@ -87,6 +94,13 @@ export function attachCoreParallax() {
   const detail = scene.querySelector('.orbit-detail');
   const caption = scene.querySelector('.orbit-caption');
   const bodies = [...scene.querySelectorAll('.orbit-body')];
+  // Both arcs and label leaders use the actual transparent rock silhouettes.
+  // A far-side rock still passes behind the logo, but no line cuts through it.
+  const mask = scene.querySelector('#orbit-rock-mask');
+  const cutouts = [...mask.querySelectorAll('[data-rock-cutout]')];
+  const leaders = scene.querySelector('.orbit-leaders');
+  const leaderPaths = [...leaders.querySelectorAll('path')];
+  const leaderDots = [...leaders.querySelectorAll('circle')];
   // Labels stay above the mark even when their rock travels behind it.
   const labels = new Map(bodies.map(body => [body, {
     element: scene.querySelector(`.orbit-label[data-ring="${body.dataset.ring}"][data-index="${body.dataset.index}"]`),
@@ -123,6 +137,11 @@ export function attachCoreParallax() {
 
   const drawPlanes = () => {
     if (!width || !height) return;
+    mask.setAttribute('width', width);
+    mask.setAttribute('height', height);
+    mask.querySelector('rect').setAttribute('width', width);
+    mask.querySelector('rect').setAttribute('height', height);
+    leaders.setAttribute('viewBox', `0 0 ${width} ${height}`);
     for (const [side, from, to] of [['back', Math.PI, Math.PI * 2], ['front', 0, Math.PI]]) {
       const plane = scene.querySelector(`.orbit-plane--${side}`);
       plane.setAttribute('viewBox', `0 0 ${width} ${height}`);
@@ -158,7 +177,9 @@ export function attachCoreParallax() {
       body.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translate(-50%, -50%) scale(${scale.toFixed(3)})`;
       body.style.zIndex = depth > 0 ? 6 : 2;
       body.style.setProperty('--near', near.toFixed(3));
-      body.style.setProperty('--rock-turn', `${(Math.sin(elapsed * .12 + index * 1.7) * 9).toFixed(2)}deg`);
+      const rockTurn = (Math.sin(elapsed * .12 + index * 1.7) * 9).toFixed(2);
+      body.style.setProperty('--rock-turn', `${rockTurn}deg`);
+      cutouts[index].setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${scale.toFixed(3)}) rotate(${rockTurn}) scale(1.18) translate(${-bodyWidth / 2} ${-bodyWidth / 2}) scale(${bodyWidth})`);
       const label = labels.get(body);
       const outwardX = (x - width / 2) / spanX;
       const outwardY = (y - height / 2) / spanY;
@@ -182,10 +203,9 @@ export function attachCoreParallax() {
       const endScale = 1 / Math.max(Math.abs(x - labelX) / (label.width / 2 + 4), Math.abs(y - labelY) / (label.height / 2 + 4), 1);
       const endX = (x - labelX) * endScale;
       const endY = (y - labelY) * endScale;
-      label.element.querySelector('path').setAttribute('d', `M${dotX.toFixed(1)} ${dotY.toFixed(1)} L${endX.toFixed(1)} ${endY.toFixed(1)}`);
-      const dot = label.element.querySelector('circle');
-      dot.setAttribute('cx', dotX.toFixed(1));
-      dot.setAttribute('cy', dotY.toFixed(1));
+      leaderPaths[index].setAttribute('d', `M${(labelX + dotX).toFixed(1)} ${(labelY + dotY).toFixed(1)} L${(labelX + endX).toFixed(1)} ${(labelY + endY).toFixed(1)}`);
+      leaderDots[index].setAttribute('cx', (labelX + dotX).toFixed(1));
+      leaderDots[index].setAttribute('cy', (labelY + dotY).toFixed(1));
       if (body === held) anchor(x, y);
     }
     scene.classList.add('is-placed');

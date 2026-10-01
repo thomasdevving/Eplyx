@@ -1,8 +1,10 @@
 import { markPaths, markGradient } from './brand.js';
 
+// Decorative replay prevention needs no persistent browser storage.
+let introSeen = false;
+
 export function IntroAnimation() {
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return '';
-  try { if (sessionStorage.getItem('eplyx-intro-seen')) return ''; } catch { /* Storage may be disabled. */ }
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches || introSeen) return '';
   return `
     <div class="intro" aria-hidden="true">
       <div class="intro__bloom"></div>
@@ -30,7 +32,7 @@ export function finishIntro() {
   if (!intro) return;
   const hero = document.querySelector('.hero');
   hero?.classList.add('hero--intro');
-  try { sessionStorage.setItem('eplyx-intro-seen', '1'); } catch { /* The intro still completes without storage. */ }
+  introSeen = true;
   const complete = () => {
     clearTimeout(fallback);
     hero?.classList.remove('hero--intro');

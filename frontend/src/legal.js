@@ -1,0 +1,93 @@
+import { Header, Footer } from './shell.js';
+import { LEGAL_CONFIG, legalOpenItems } from './legal-config.js';
+
+const esc = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const email = `<a href="mailto:${esc(LEGAL_CONFIG.email)}">${esc(LEGAL_CONFIG.email)}</a>`;
+const pending = value => value ? esc(value) : '<span class="legal-pending">Not yet confirmed</span>';
+const section = (id, title, body) => `<section id="${id}"><h2>${title}</h2>${body}</section>`;
+const table = (label, headings, rows) => `<div class="legal-table" role="region" aria-label="${label}" tabindex="0"><table><thead><tr>${headings.map(h => `<th scope="col">${h}</th>`).join('')}</tr></thead><tbody>${rows.map(row => `<tr>${row.map((cell, index) => index ? `<td>${cell}</td>` : `<th scope="row">${cell}</th>`).join('')}</tr>`).join('')}</tbody></table></div><p class="legal-table-hint">Scroll the table horizontally to read all columns.</p>`;
+
+export const LEGAL_ROUTES = [
+  ['/legal', 'Legal & privacy'],
+  ['/privacy', 'Privacy notice'],
+  ['/cookies', 'Cookies & browser storage'],
+  ['/terms', 'Website use & disclaimer'],
+  ['/contact', 'Contact & operator'],
+  ['/licenses', 'Third-party notices'],
+];
+
+const documents = {
+  '/legal': {
+    title: 'Legal & privacy.',
+    intro: 'How this website works, how to contact Eplyx and what its demonstration results mean.',
+    body: () => section('current-site', 'The current website', `<p>Eplyx is a developing project operated from the ${esc(LEGAL_CONFIG.country)}. The current public release is a free information website with demonstration reports. It has no advertising, analytics, checkout or paid subscriptions.</p><p>Hosting is in the ${esc(LEGAL_CONFIG.hostingCountry)}, as confirmed by the operator. That does not mean every external provider processes data only in that country. Email is handled through Gmail.</p>`) +
+      section('documents', 'Find the information you need', `<ul class="legal-directory">${LEGAL_ROUTES.slice(1).map(([href, label]) => `<li><a href="${href}" data-link>${label}</a></li>`).join('')}</ul>`) +
+      section('contact', 'Questions or concerns', `<p>For website questions, privacy requests, complaints or a suspected security issue, contact ${email}. Please do not email passwords, API tokens, wallet keys or sensitive personal records.</p>`),
+  },
+  '/privacy': {
+    title: 'Privacy notice.',
+    intro: 'This notice covers the public information website, its demonstrations and email sent to Eplyx.',
+    body: () => section('operator', 'Who is responsible', `<p>The project name is Eplyx and the operator is based in the ${esc(LEGAL_CONFIG.country)}. Contact: ${email}.</p>${LEGAL_CONFIG.legalName ? `<p>Legal operator: ${esc(LEGAL_CONFIG.legalName)}.</p>` : '<p>The full legal identity of the operator has not yet been confirmed. This notice remains a draft until the required operator and processing details are complete.</p>'}`) +
+      section('processing', 'What is processed and why', table('Personal data and purposes', ['Activity', 'Data and purpose', 'Basis for processing'], [
+        ['Website delivery and security', 'Hosting infrastructure necessarily handles network requests, including your IP address and request headers. Any logging, its exact fields and retention must be confirmed with the provider.', 'Proposed basis: legitimate interests in delivering and protecting the site. The assessment is awaiting operator review.'],
+        ['Email correspondence', 'Your email address, name if supplied, message and attachments, to answer your question or handle a request. Send only what is needed.', 'Proposed basis: legitimate interests in responding to enquiries; legal obligations where a privacy request requires a response. The assessment is awaiting operator review.'],
+        ['Demonstration reports', 'Saved examples may contain public blockchain addresses, transaction references and quantities. Addresses can be personal data when linked to a person. They do not establish a person’s identity or permission to transact.', 'The provenance, necessity and publication basis of the demonstration corpus must be reviewed before publication.'],
+      ])) +
+      section('providers', 'Recipients and processing locations', `<p>Website hosting is in the ${esc(LEGAL_CONFIG.hostingCountry)}. Hosting provider: ${pending(LEGAL_CONFIG.hostingProvider)}.</p><p>Email sent to ${email} is handled using Google Gmail. Google may process data in other countries under its applicable arrangements; the mailbox arrangement and transfer safeguards still need to be verified. See <a href="https://policies.google.com/privacy" rel="noreferrer">Google’s privacy policy</a>.</p><p>Provider access, other subprocessors and international transfer safeguards: ${pending(LEGAL_CONFIG.internationalTransfers)}. Infrastructure location alone is not proof that all processing remains in the Netherlands or the EEA.</p><p>The frontend contains no advertising or analytics SDKs. It loads its fonts, images and Three.js assets from the website itself. External links make requests to another site only when you follow them; that site’s privacy notice then applies.</p>`) +
+      section('retention', 'How long data is kept', `<dl class="legal-facts"><div><dt>Hosting access logs</dt><dd>${pending(LEGAL_CONFIG.hostingLogRetention)}</dd></div><div><dt>Email and attachments</dt><dd>${pending(LEGAL_CONFIG.emailRetention)}</dd></div></dl><p>No verified deletion schedule has been supplied for these records. These details must be completed and matched to the provider settings and mailbox procedure before this notice is final.</p><p>Browser storage has separate lifetimes, listed in the <a href="/cookies" data-link>cookies and storage notice</a>. Deleting browser storage does not delete email or data held by a separately connected service.</p>`) +
+      section('rights', 'Your privacy rights', `<p>Under applicable data protection law, you may request access, correction, deletion or restriction of your personal data, object to processing based on legitimate interests, and request portability where it applies. If a processing activity relies on consent, you can withdraw that consent without affecting earlier lawful processing.</p><p>Send a request to ${email}. Explain which information or activity concerns you. Do not send a complete identity document, passwords or wallet keys. If needed, only proportionate information should be requested to verify identity.</p><p>GDPR requests normally require a response within one month; an extension is permitted in certain circumstances and must be explained within that first month. You may complain to the <a href="https://autoriteitpersoonsgegevens.nl/" rel="noreferrer">Dutch Autoriteit Persoonsgegevens</a> or the competent supervisory authority in your country.</p>`) +
+      section('other-services', 'Developer tools and separate services', `<p>The public website does not require an account. Some developer pages let you connect to an Eplyx backend or open a workspace. Connecting, uploading or creating an account can cause additional processing, including credentials, account details, project metadata and submitted evidence. The responsible service operator must provide its own complete notice before collecting that data. This website notice is not a substitute for it.</p><p>The website has no advertising profiles or automated decisions about people with legal or similarly significant effects. Demonstration findings are technical examples, not decisions about a person’s rights or eligibility.</p>`),
+  },
+  '/cookies': {
+    title: 'Cookies & browser storage.',
+    intro: 'The public information pages use no advertising or analytics cookies. There is no optional tracking to accept.',
+    body: () => section('public-pages', 'Visiting the public site', '<p>The frontend sets no cookies when you browse the information pages and demonstration report. Fonts, images and the logo renderer are served from the website itself.</p><p>The intro animation is remembered only in page memory, without cookies, local storage or session storage. Reloading the page resets that memory. No cookie-consent banner is needed for this implementation because it loads no consent-requiring trackers.</p><p>This describes the frontend code. Any cookies, analytics or logging introduced by a hosting proxy or later deployment must be checked separately and reflected here.</p>') +
+      section('tool-storage', 'Storage used by optional developer tools', table('Browser storage inventory', ['Item', 'Purpose and when used', 'Lifetime'], [
+        ['<code>eplyx-operator-token</code> · session storage', 'Holds the operator credential only if you enter one to connect to a backend. Sent to that backend when making authorised requests.', 'Until removed by the tool or the browser session ends. Browser session restoration can extend this.'],
+        ['<code>eplyx-last-project</code> · local storage', 'Remembers the project selected in the upgrade form.', 'Until the browser’s site data is cleared or overwritten by another selection.'],
+        ['<code>eplyx-detail</code> · local storage', 'Remembers an explicitly chosen presentation mode in the separate dashboard. Public information pages do not use this preference.', 'Until the browser’s site data is cleared or the preference changes.'],
+        ['<code>eplyx_session</code> · cookie, on a connected hosted service', 'Keeps a person signed in after signup or login. HttpOnly and SameSite=Strict; Secure must be enabled on a production HTTPS deployment.', 'Up to 14 days, or until sign-out removes it. This is not a cookie placed by the public static frontend.'],
+        ['<code>eplyx-project-request:…</code> and <code>eplyx-pending-…</code> · session storage, on a hosted service', 'Preserves request identifiers during explicitly requested project creation or checks so retries do not duplicate the operation.', 'Removed after a successful request, or when the browser session ends. Restoration may preserve it.'],
+      ])) +
+      section('controls', 'Your browser controls', '<p>You can inspect, block or clear cookies and website storage in your browser’s privacy or site-data settings. Clearing a connected service’s login data can sign you out. Blocking storage may stop convenience settings and some retry protection from working; it does not prevent reading the public information pages.</p><p>Use the connected service’s sign-out control to end its session. Clearing site data alone does not revoke issued API tokens or remove records held by a server.</p>') +
+      section('future-tracking', 'If optional tracking is added', `<p>Optional analytics, advertising or third-party embeds that require consent must remain off until you actively opt in. Refusal must be as easy as acceptance, and consent must be easy to withdraw. Browsing or scrolling is not consent.</p><p>No such integrations are currently included. Any future addition needs a new inventory and a working consent mechanism before it goes live. Contact ${email} with questions.</p>`),
+  },
+  '/terms': {
+    title: 'Website use & disclaimer.',
+    intro: 'The public site explains a project in development. Its examples help you inspect evidence within a stated scope.',
+    body: () => section('scope', 'Free information and demonstrations', '<p>The current public site is provided for information and demonstration. It has no checkout, paid subscriptions or promise of a production service. These website-use guidelines do not create a paid service contract, and visiting a page is not a consent action.</p><p>Hosted accounts, uploads, commercial services or future paid features need separate, applicable terms and privacy information before they are offered.</p>') +
+      section('interpretation', 'How to interpret a result', '<p>Eplyx examples describe supported interactions, retained inputs and declared policies. A demonstration is not a live monitoring feed, a complete protocol audit or proof that every interaction was tested.</p><p>A passing check is not a guarantee of safety, security, economic performance or fitness for deployment. It does not establish signing authority, ownership, issuer entitlement or a right to execute a transaction. The site does not submit blockchain transactions or move funds.</p><p>The content is not personalised financial, investment, tax or legal advice. Independently verify the inputs, coverage and evidence before using a result to inform a real decision.</p>') +
+      section('responsible-use', 'Use the site responsibly', '<p>Do not try to bypass access controls, obtain another person’s data, interrupt the service or submit material you are not authorised to share. Never submit seed phrases, private wallet keys or credentials as analysis evidence.</p><p>For a suspected vulnerability, email Eplyx with a brief description and the minimum information needed to investigate. Do not include someone else’s private data.</p>') +
+      section('content', 'Content and third-party rights', '<p>The Eplyx name, website design and original materials are subject to applicable intellectual-property rights. Public availability of a repository does not by itself grant an open-source licence. Check the licence that accompanies the specific code or material you want to use.</p><p>Third-party software and fonts keep their own licence terms. Their notices are available on the <a href="/licenses" data-link>third-party notices page</a>. External websites operate under their own terms.</p>') +
+      section('rights', 'Your statutory rights', '<p>Nothing in this notice excludes rights or obligations that cannot lawfully be excluded, including applicable consumer and data-protection rights. No blanket liability waiver or exclusive court clause is imposed here.</p><p>Information and demonstrations may change as the project develops. Each legal page shows its revision date. Material processing changes require a notice update and, where required, fresh consent before they are introduced.</p>') +
+      section('questions', 'Questions or complaints', `<p>Contact ${email} with the page URL, the issue and the outcome you are requesting. Privacy requests are described in the <a href="/privacy" data-link>privacy notice</a>.</p>`),
+  },
+  '/contact': {
+    title: 'Contact & operator.',
+    intro: 'For questions about Eplyx, website content, privacy or a suspected security issue.',
+    body: () => section('details', 'Contact details', `<dl class="legal-facts"><div><dt>Project</dt><dd>Eplyx</dd></div><div><dt>Based in</dt><dd>${esc(LEGAL_CONFIG.country)}</dd></div><div><dt>Email</dt><dd>${email}</dd></div><div><dt>Public offering</dt><dd>${esc(LEGAL_CONFIG.scope)}</dd></div>${LEGAL_CONFIG.legalName ? `<div><dt>Legal operator</dt><dd>${esc(LEGAL_CONFIG.legalName)}</dd></div>` : ''}</dl><p>An address and business registration details are not currently published. The operator’s legal identity and the applicable disclosure requirements still need to be resolved before these notices are final.</p>`) +
+      section('email', 'What to include in your message', '<p>Tell us which page or demonstration you are referring to and explain your question. For a complaint, describe the issue and your requested resolution. For a privacy request, identify the relevant processing activity.</p><p>Email is handled through Gmail. Do not send seed phrases, passwords, API tokens, full identity documents or unnecessary sensitive information. See the <a href="/privacy" data-link>privacy notice</a> for the processing details and items still awaiting confirmation.</p>'),
+  },
+  '/licenses': {
+    title: 'Third-party notices.',
+    intro: 'Licence notices for software and fonts bundled with this website.',
+    body: () => section('three', 'Three.js', '<p>The logo renderer uses Three.js, including SVGLoader and RoomEnvironment, under the MIT licence. The distributed copyright and licence notice is included with the website.</p><p><a href="/public/vendor/LICENSE.txt" rel="noreferrer">Read the bundled Three.js licence</a>.</p>') +
+      section('fonts', 'Self-hosted fonts', '<p>DM Sans and Manrope are served locally. They use the SIL Open Font License 1.1; the copyright statements and licence texts are retained.</p><ul><li><a href="/public/fonts/dm-sans-OFL.txt">DM Sans copyright and licence</a></li><li><a href="/public/fonts/manrope-OFL.txt">Manrope copyright and licence</a></li></ul>') +
+      section('visuals', 'Website imagery', '<p>Repository production notes record that the orbital stone atlas and mountain background were created using the built-in image-generation tool. This provenance does not guarantee exclusive rights or clear every possible third-party claim. The operator still needs to confirm the right to publish the logo, reference material and generated imagery.</p>') +
+      section('scope', 'Scope of these notices', '<p>These notices cover the browser assets distributed with this website. They do not grant a licence to the complete Eplyx repository or replace the notices for separately distributed backend, CLI or fixture dependencies.</p>'),
+  },
+};
+
+export function LegalPage(path) {
+  const doc = documents[path];
+  if (!doc) return null;
+  const open = legalOpenItems();
+  const date = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Amsterdam' }).format(new Date(`${LEGAL_CONFIG.updated}T12:00:00Z`));
+  return `<div class="legal-page">${Header({ light: true })}<main id="main" class="legal-main" tabindex="-1">
+    <nav class="legal-nav" aria-label="Legal documents">${LEGAL_ROUTES.map(([href, label]) => `<a href="${href}" data-link${href === path ? ' aria-current="page"' : ''}>${label}</a>`).join('')}</nav>
+    <article class="legal-document"><header><h1>${doc.title}</h1><p class="legal-intro">${doc.intro}</p><p class="legal-revision">Last updated <time datetime="${esc(LEGAL_CONFIG.updated)}">${date}</time></p></header>
+    ${open.length ? '<aside class="legal-draft" aria-label="Notice status"><strong>Draft — operator review pending.</strong><p>The operator’s legal identity, provider details and retention arrangements are incomplete. These pages describe the verified website scope; they are not a confirmation of legal compliance.</p></aside>' : ''}
+    ${doc.body()}</article></main>${Footer()}</div>`;
+}
+
+export const legalTitle = path => documents[path] ? `${documents[path].title.replace(/\.$/, '')} — Eplyx` : null;

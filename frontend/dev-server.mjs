@@ -10,7 +10,7 @@ const apiUrl = await writeRuntimeConfig(fileURLToPath(new URL('./public/', impor
 
 const root = fileURLToPath(new URL('.', import.meta.url));
 const port = Number(process.env.PORT || 4173);
-const types = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.svg':'image/svg+xml', '.json':'application/json', '.woff2':'font/woff2' };
+const types = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.svg':'image/svg+xml', '.json':'application/json', '.woff2':'font/woff2', '.txt':'text/plain; charset=utf-8' };
 
 createServer(async (request, response) => {
   const rawPath = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);

@@ -1,95 +1,87 @@
-# Deploying the Eplyx CI API on Railway
+# Deploying the Eplyx service on Railway
 
-The serving path is entirely offline. **No RPC or archive credentials are
-required**, and a candidate check that tries to reach one is a bug.
+This is an operator configuration guide for the existing service. It does not
+establish that a remote service has been deployed or is ready. For the fixed
+review build, use [its pinned instructions](review-environment.md); for team
+onboarding, use [the pilot guide](pilot-onboarding.md).
 
-## Build
+The upgrade analysis worker runs offline from retained inputs. Historical corpus
+preparation is separate. Optional current-state and governance acquisition use
+read-only providers in the parent service, never inside the analytical workers.
 
-```bash
-cargo build --release -p eplyx-server
+## Build and persistent storage
+
+```sh
+cargo build --locked --release -p eplyx-server
 ```
 
-The binary serves by default; `eplyx-server admin ...` is the operator surface.
+`eplyx-server` serves by default; `eplyx-server admin --help` lists local operator
+commands. Dashboard/cloud assets are embedded at build time: rebuild the service
+after changing those assets.
 
-## Environment
+| Setting | Default / purpose |
+| --- | --- |
+| `EPLYX_DATA_DIR` | `/data`; mount persistent storage for the authoritative registry, reports, inputs and content-addressed artifacts |
+| `EPLYX_BIND` | Overrides the bind address; otherwise the injected `PORT` is honoured, falling back to `0.0.0.0:8080` |
+| `EPLYX_OPERATOR_TOKEN` | Explicit operator credential for administrative HTTP actions; no default |
+| `EPLYX_MAX_CANDIDATE_BYTES` | 8 MiB |
+| `EPLYX_MAX_EXPECTATION_BYTES` | 256 KiB |
+| `EPLYX_MAX_BUNDLE_BYTES` | 192 MiB |
+| `EPLYX_MAX_CONCURRENT_RUNS` | 2 simultaneous durable queued executions |
+| `EPLYX_ALLOWED_ORIGINS` | Empty by default; explicitly allow a separate frontend origin for cross-origin browser API access |
 
-| Variable | Default | |
-|---|---|---|
-| `EPLYX_DATA_DIR` | `/data` | must be a **persistent volume** — Railway's deployment filesystem is ephemeral and everything would be lost on redeploy |
-| `EPLYX_BIND` | `0.0.0.0:8080` | |
-| `EPLYX_MAX_CANDIDATE_BYTES` | 8 MiB | |
-| `EPLYX_MAX_EXPECTATION_BYTES` | 256 KiB | |
-| `EPLYX_MAX_CONCURRENT_RUNS` | 2 | replay is CPU-bound and synchronous; this bounds how many run at once |
-| `EPLYX_ALLOWED_ORIGINS` | *(empty)* | comma-separated browser origins allowed to call the API, e.g. `https://eplyx.dev` |
+Same-origin workspace pages do not need a CORS allowlist. A separate public
+frontend must use the intended `EPLYX_API_URL` and an allowed origin. CI requests
+are unaffected by browser CORS rules. Do not put an operator token in CI.
 
-**`EPLYX_ALLOWED_ORIGINS` is required for the browser flow and for nothing else.**
-A request carrying an `Authorization` header triggers a CORS preflight, and with
-no origin named the API answers it without `Access-Control-Allow-Origin`, so the
-browser blocks the call. CI runners are unaffected — `curl` does not enforce the
-same-origin policy — so leaving it empty is the right default and naming a
-wildcard never is: these requests are authenticated.
+The volume holds project/token/bundle/run indices, report documents and immutable
+program/capture/input artifacts. Candidate bytes are retained by content identity
+for queued execution and recovery; they are not merely temporary uploads.
+Optional Postgres stores identity and authorization mappings. Back up the volume
+and database together. See [cloud configuration](cloud.md#operator-configuration)
+for identity, public URL, observation provider and registered mechanism settings.
 
-Deliberately absent: `SOLANA_RPC_URL`, `SOLANA_ARCHIVE_RPC_URL`,
-`SOLANA_BLOCK_RPC_URL`, `SOLANA_RPC_ORIGIN`. Corpus construction is a separate
-workflow that runs elsewhere with its own credentials, and never on the path of
-a pull request.
+## Provision a project and its evidence
 
-## Volume layout
+Run these in the configured service environment. Replace each placeholder with
+the identifier printed by the previous command:
 
-```text
-/data
-  projects/<project-id>/project.json
-  bundles/<bundle-sha256>/            immutable, content addressed
-  runs/<run-id>/{metadata.json,report.json,report.md}
-```
-
-Uploaded candidate binaries are **not** stored here. They live in a temporary
-directory removed on both success and failure; only the SHA-256 survives.
-
-## Health checks
-
-Point Railway's healthcheck at `/ready`, not `/health`. `/health` means the
-process is alive; `/ready` additionally proves the persistent volume is
-writable, which is the failure that actually matters after a redeploy.
-
-## Provisioning a project
-
-```bash
-eplyx-server admin create-project --id stake-pool --name "SPL Stake Pool" \
+```sh
+eplyx-server admin create-project --name "SPL Stake Pool" \
   --program-id SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy
+eplyx-server admin register-bundle --project PROJECT_ID --path ./eplyx-bundle
+eplyx-server admin activate-bundle --project PROJECT_ID --bundle BUNDLE_ID
+eplyx-server admin create-token --project PROJECT_ID --label ci
 ```
 
-The CI token is printed **once**. Only a salted SHA-256 verifier is stored, and
-there is no endpoint that can hand the token back.
+Project IDs are generated, not supplied to `create-project`. `register-bundle`
+verifies and retains the bytes and prints a registered `bndl_...` ID. Activation
+uses that ID, not the bundle SHA-256. Registration and activation are separate
+because activation changes the evidence used by future checks.
 
-## Installing and activating a bundle
+The token is shown once; retain it in the team's secret store. Project tokens
+can submit/read their own supported checks and sync. They cannot activate bundles.
+The authenticated operator console/API also supports bundle upload and activation;
+it is distinct from workspace member access. [Pilot onboarding](pilot-onboarding.md)
+explains workspace binding, project capabilities and the async submission client.
 
-```bash
-eplyx-server admin install-bundle   --path ./eplyx-bundle
-eplyx-server admin activate-bundle  --project stake-pool --bundle <sha256>
-```
+## Health, jobs and validation
 
-Two steps on purpose. Installing verifies and stores; activating changes what
-every pull request is measured against, so a human chooses when that happens.
-Activation refuses a bundle that fails verification, belongs to another program,
-or was built under a different adapter version.
+Use `/ready` for readiness and `/health` for liveness. Readiness checks configured
+storage and identity prerequisites; it is not a successful analysis or proof that
+every observation provider/path is ready. Inspect project capabilities separately.
 
-There is no HTTP route to either. A project's CI token can run checks and read
-its own reports — it cannot replace the bundle it is measured against.
+Accepted checks return an asynchronous run. The durable queue retains inputs,
+attempts and completed outputs and reconciles interrupted work on restart. Follow
+the returned run link or poll its state before reading the verdict. Submission,
+worker failure and candidate regression are different outcomes.
 
-## Verifying a deployment
+Run documented local tests with scratch storage before operating a deployment.
+The [review guide](review-environment.md) describes the separate explicit remote
+smoke procedure and required identities. Remote checks, service restarts, provider
+acquisition and infrastructure changes are deliberate operator actions; this
+configuration guide does not perform them.
 
-```bash
-scripts/hosted-demo.sh ./eplyx-bundle
-```
-
-Runs the five gate outcomes, proves the hosted report is byte-identical to the
-local one, and checks authorization isolation, upload limits, retention and that
-no token reaches disk or logs — with every RPC variable unset.
-
-## Not built yet
-
-No queue, no worker pool, no object storage, no dashboard, no user accounts, no
-GitHub App. Checks run synchronously, which the current corpus sizes comfortably
-allow. The orchestration is shaped so a queue can be introduced later without
-touching the engine.
+A GitHub App, continuous monitoring and universal protocol coverage remain outside
+the current implementation. Durable workers, dashboards and optional user
+accounts are implemented.

@@ -29,7 +29,7 @@ test('lifecycle and observation views retain their distinct scope',async({page})
  expect(new Set(requests)).toEqual(new Set(['127.0.0.1']));
 });
 
-test('public transition route keeps the app-wide mode and responsive navigation',async({page})=>{
+test('public transition route uses one presentation and responsive navigation',async({page})=>{
  page.on('pageerror',error=>{throw error;});
  // Existing public-site fonts have an external fallback. No external request is
  // needed for this local check; loopback dashboard fonts are tested separately.
@@ -39,9 +39,10 @@ test('public transition route keeps the app-wide mode and responsive navigation'
   await page.goto('http://127.0.0.1:4189/token-transitions');
   await expect(page.getByRole('heading',{name:'Know what a transition changes.'})).toBeVisible();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
-  await page.getByRole('button',{name:'Technical',exact:true}).click();
-  await expect(page.locator('html')).toHaveAttribute('data-mode','technical');
-  await page.reload();await expect(page.getByRole('button',{name:'Technical',exact:true})).toHaveAttribute('aria-pressed','true');
+  await expect(page.getByRole('group',{name:'Presentation',exact:true})).toHaveCount(0);
+  await expect(page.locator('main [data-technical]')).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole('group',{name:'Presentation',exact:true})).toHaveCount(0);
   await page.screenshot({path:test.info().outputPath(`transitions-${width}.png`),fullPage:true});
  }
 });

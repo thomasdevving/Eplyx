@@ -93,7 +93,7 @@ function list(projects) {
 }
 
 const empty = () => `<div class="empty-result">
-  <p>No projects yet. A project is one Solana program Eplyx watches.</p>
+  <p>No projects yet. A project binds one Solana program to retained upgrade evidence.</p>
   <button type="button" class="button button--primary" id="first-project">Create the first one <span>+</span></button>
 </div>`;
 
@@ -134,7 +134,7 @@ function renderCreate(body, navigate) {
     <label>Project name<input name="name" required maxlength="80" placeholder="Example Lending"></label>
     <label>Solana program ID<input name="program_id" required placeholder="SPoo1Ku8…" spellcheck="false"></label>
     <label>Adapter<select name="adapter_id" required><option value="">Loading…</option></select>
-      <small id="adapter-note">The adapter is decided by the program, not chosen. This confirms which one this build speaks for it.</small></label>
+      <small id="adapter-note">The adapter is decided by the program, not chosen. This confirms which adapter this build uses to interpret its results.</small></label>
     <div class="form-status" role="status" aria-live="polite"></div>
     <div class="console-form__actions">
       <button type="submit" class="button button--primary">Create project <span>↗</span></button>
@@ -168,7 +168,7 @@ function renderCreate(body, navigate) {
     const chosen = adapters.find(a => a.adapter_id === select.value);
     form.querySelector('#adapter-note').textContent = chosen && !chosen.speaks_semantics
       ? 'This build reads no semantics for that program. Checks will run and report no semantic coverage, which fails the gate: that is Eplyx saying it did not look, not that nothing is wrong.'
-      : 'The adapter is decided by the program, not chosen. This confirms which one this build speaks for it.';
+      : 'The adapter is decided by the program, not chosen. This confirms which adapter this build uses to interpret its results.';
   };
   form.querySelector('[name=program_id]').addEventListener('input', matchProgram);
   select.addEventListener('change', matchProgram);

@@ -1,4 +1,3 @@
-import { presentationMode, setPresentationMode } from './mode.js';
 import { Logo } from './brand.js';
 import { API_BASE } from './session.js';
 
@@ -23,7 +22,6 @@ export function Header({ light = false } = {}) {
         <a href="/projects" data-link>Projects</a>
         <a href="${workspaceHref()}" class="nav-cta">Workspace <span>↗</span></a>
       </nav>
-      <div class="site-mode" role="group" aria-label="Presentation" hidden><button type="button" data-mode-option="overview" aria-pressed="${presentationMode()==='overview'}">Overview</button><button type="button" data-mode-option="technical" aria-pressed="${presentationMode()==='technical'}">Technical</button></div>
       <button class="menu-button" type="button" aria-label="Open navigation" aria-controls="primary-navigation" aria-expanded="false"><span></span><span></span></button>
     </header>`;
 }
@@ -34,18 +32,12 @@ export function Footer() {
       <div>${Logo()}</div>
       <p>Change and consequence analysis for Solana.</p>
       <div class="footer__links"><a href="/start" data-link>Start here</a><a href="/cli" data-link>CLI guide</a><a href="/runs/demo" data-link>Demo report</a><a href="https://github.com/thomasdevving/Eplyx">Source</a></div>
+      <nav class="footer__legal" aria-label="Legal and privacy"><a href="/legal" data-link>Legal & privacy</a><a href="/privacy" data-link>Privacy</a><a href="/cookies" data-link>Cookies & storage</a><a href="/terms" data-link>Website use</a><a href="/contact" data-link>Contact</a><a href="/licenses" data-link>Licences</a></nav>
       <small>Evidence from tested interactions. Coverage is always explicit.</small>
     </footer>`;
 }
 
 export function attachShell() {
-  const modeControl = document.querySelector('.site-mode');
-  // Only offer a mode switch when this page has content for it to change.
-  if (modeControl) modeControl.hidden = !document.querySelector('[data-technical], .tech-only, .ov-only');
-  document.querySelectorAll('[data-mode-option]').forEach(button => button.addEventListener('click',()=>{
-    setPresentationMode(button.dataset.modeOption);
-    document.querySelectorAll('[data-mode-option]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
-  }));
   const button = document.querySelector('.menu-button');
   const nav = document.querySelector('.site-header nav');
   button?.addEventListener('click', () => {

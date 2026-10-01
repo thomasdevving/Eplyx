@@ -525,7 +525,7 @@ export async function projectPage({ project }) {
   ${tile({ label:'Runs', value:count(s.runs), sub:`${count(s.preflights)} completed analyses${s.unfinished_or_unreadable ? ` · ${count(s.unfinished_or_unreadable)} unfinished or unreadable` : ''}` })}
   ${tile({ label:'Searches', value:count(s.searches) })}
   ${tile({ label:'Counterexamples saved', value:count(s.counterexamples_saved), sub:`${count(s.counterexample_kinds?.Observed)} observed · ${count(s.counterexample_kinds?.Derived)} derived` })}
-  ${tile({ label:'Blocked releases', value:count(s.blocked), sub:`${count(s.warned)} warned · ${count(s.passed)} passed` })}
+  ${tile({ label:'Blocked checks', value:count(s.blocked), sub:`${count(s.warned)} warned · ${count(s.passed)} passed` })}
   ${tile({ label:'Offline reproductions', value:count(s.offline_reproductions ?? 0), sub:s.offline_reproductions ? `${count(s.reproductions_succeeded)} reproduced · ${count(s.reproductions_failed)} failed · last ${esc(ago(s.latest_reproduction))}` : esc(s.offline_reproductions_note ?? '') })}
   ${tile({ label:'First → latest run', value:esc(s.first_run ? when(s.first_run) : '—'), sub:esc(s.latest_run ? `latest ${ago(s.latest_run)}` : '') })}
  </div>

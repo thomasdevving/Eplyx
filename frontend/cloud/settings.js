@@ -34,7 +34,7 @@ export async function projectPage({ project }) {
   ${tile({ label:'Recorded runs', value:count(s.runs), sub:`${count(sources.local)} local · ${count(sources.ci)} CI${sources.not_recorded ? ` · ${count(sources.not_recorded)} source not recorded` : ''}` })}
   ${tile({ label:'Searches', value:count(s.searches) })}
   ${tile({ label:'Counterexamples', value:count(s.counterexamples_saved), sub:`${count(s.counterexample_kinds?.Observed)} observed · ${count(s.counterexample_kinds?.Derived)} derived` })}
-  ${tile({ label:'Blocked releases', value:count(s.blocked), sub:`${count(s.warned)} warned · ${count(s.passed)} passed` })}
+  ${tile({ label:'Blocked checks', value:count(s.blocked), sub:`${count(s.warned)} warned · ${count(s.passed)} passed` })}
   ${tile({ label:'Reproductions', value:count(s.offline_reproductions ?? 0), sub:s.offline_reproductions ? `${count(s.reproductions_succeeded)} reproduced · ${count(s.reproductions_failed)} failed · last ${esc(ago(s.latest_reproduction))}` : 'none synced' })}
   ${tile({ label:'First → latest run', value:esc(s.first_run ? when(s.first_run) : '—'), sub:esc(s.latest_run ? `latest ${ago(s.latest_run)}` : '') })}
  </div>
@@ -60,7 +60,7 @@ export async function settingsPage({ project }) {
  const tokens = owner ? (await call('GET', `/v1/projects/${id}/tokens`)).tokens : [];
  const html = `
  <div class="page-head"><h1>Settings</h1><p class="muted">Set analysis options in <code>eplyx.toml</code> and link projects from the CLI.</p></div>
- ${panel({ title:'Local projects', body:`${commandLine('eplyx login', 'Sign in (browser approval)')}${commandLine(`eplyx link --project ${id}`, 'Link a local project')}${commandLine('eplyx sync', 'Sync completed runs')}${commandLine('eplyx sync --dry-run', 'Show exactly what would be synced')}` })}
+ ${panel({ title:'Local projects', body:`<p>Set <code>EPLYX_URL</code> to this service’s origin before signing in. Run these commands inside the local project you want to link.</p>${commandLine('eplyx login --server "$EPLYX_URL"', 'Sign in to the configured service (browser approval)')}${commandLine(`eplyx link --project ${id}`, 'Link a local project')}${commandLine('eplyx sync', 'Sync completed runs')}${commandLine('eplyx sync --dry-run', 'Show exactly what would be synced')}` })}
  ${panel({ title:'CI tokens', body:owner ? `
   <p>A project CI token can submit checks, sync and read this project’s results. It cannot change the active bundle. Store it as the <code>EPLYX_TOKEN</code> secret of trusted workflows, next to <code>EPLYX_PROJECT_ID=${esc(id)}</code>. Fork pull requests must not receive it.</p>
   <form class="form-row" data-new-token><label class="field"><span>Label</span><input name="label" required maxlength="80" placeholder="github-actions main"></label><button class="button" type="submit">Create CI token</button></form>

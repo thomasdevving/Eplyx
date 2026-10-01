@@ -1,5 +1,10 @@
 # Choose an Eplyx workflow
 
+No files or build tools yet? Open `/runs/demo` on the public site to inspect a
+saved regression report. To execute a real offline check, follow the example
+below. To find a specialist guide or understand a result label, use the
+[documentation index](README.md).
+
 ## First Eplyx analysis
 
 Begin with the canonical [offline SPL Stake Pool example](../examples/stake-pool-upgrade/README.md):
@@ -30,6 +35,8 @@ analysis.
 | Your question | Start here | Required preparation |
 | --- | --- | --- |
 | How do I compare another program upgrade? | [Upgrade gate, expectations and bundles](phase-10-hosted-ci.md) or `/cli#upgrades` | Compiled candidate, validated bundle and supported replay coverage. |
+| What changes under a supported protocol fee? | [Fee-analysis walkthrough](parameter-analysis-guide.md) or `/cli#parameters` | Exact proposal and retained transfer input, or qualified Stake Pool bundle plus an explicit record. |
+| Does proposed code change the fee effect? | [Code/fee interaction](upgrade-parameter-interaction.md) or `/cli#interaction` | Both ChangeSpecs, qualified candidate, retained bundle and explicit DepositSol record. |
 | Can this migration account for its holders and funds? | [Token migration](token-migration.md) or `/cli#migration` | Migration terms, captured or synthetic world, compatible candidate and local project configuration. |
 | What happens when declared lifecycle terms change? | [Lifecycle analysis](lifecycle.md) or `/cli#lifecycle` | Snapshot, scenario, evaluation time and any independent execution evidence. |
 | Can an exact token account use this current-state path? | [Current-state analysis](current-state-analysis.md) or `/cli#paths` | Exact account/path terms, retained state and deployed code. |
@@ -37,6 +44,26 @@ analysis.
 | Does a Squads proposal match the analysed candidate? | [Squads binding](phase-g1-squads-governance-binding.md) and [deployment attestation](phase-g2-squads-deployment-attestation.md) | Supported loader-v3 upgrade, ChangeSpec, multisig/index and read-only RPC. |
 | How do I acquire and prepare historical inputs? | [Historical state](phase-6-historical-state.md), [discovery](phase-5-mainnet-discovery.md) and [corpus preparation](phase-9-production-corpus.md) | Suitable archive access, supported transaction shapes and validated records. |
 | How do I share a local run? | [Workspace sync](cloud.md) or `/cli#sync` | Saved analytical records, a configured workspace and project access. Sync does not execute analysis. |
+
+## Browser or terminal?
+
+- **Public example:** `/runs/demo` reads saved results without login or installation.
+- **Operator upgrade form:** `/analyse` needs the operator console connection and
+  a project with an active validated bundle. `/projects` is an administrative
+  console, not the workspace sign-in page.
+- **Authenticated workspace:** open the configured service's `/workspaces`, enter
+  your project and choose **Analyse**. Prepared migration and lifecycle forms
+  accept existing input files within their documented shapes. Fresh mint/owner
+  observations additionally require the operator's provider configuration.
+- **Retained fee checks:** an eligible Token-2022 transfer run offers **Parameter
+  Change**. A retained upgrade can offer **Compare code and fee**. A single Stake
+  Pool fee proposal uses the CLI or authenticated API.
+- **Local extensions:** amount search and selected parameter cases require the
+  current compatible CLI build and retained evidence. They have no
+  hosted entry. See [the walkthrough](parameter-analysis-guide.md#local-integration-extensions).
+
+If a form is unavailable, read its server-provided reason. Uploading another file
+or viewing an old result does not create missing evidence or project eligibility.
 
 ## CLI installation
 
@@ -109,6 +136,8 @@ an analysis. Public demos need no account; private hosted reports need access.
 - [Upgrade gate, expectations and bundles](phase-10-hosted-ci.md)
 - [Historical corpus preparation](phase-9-production-corpus.md)
 - [Token migration inputs, candidate and fixture requirements](token-migration.md)
+- [Fee operations and local extension prerequisites](parameter-analysis-guide.md)
+- [Code/fee interaction inputs](upgrade-parameter-interaction.md)
 - [Lifecycle policy inputs](lifecycle.md)
 - [Current observations and exact paths](current-state-analysis.md)
 - [Squads binding](phase-g1-squads-governance-binding.md) and
