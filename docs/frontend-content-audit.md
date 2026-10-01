@@ -16,6 +16,7 @@ readiness or contents of a remote deployment.
 | Minimal migration example incorrectly required a private capture | Copy/build/run instructions use its declared LiteSVM-bundled synthetic recipe; archived pinned-capture recipes retain separate requirements. | [Minimal recipe](../examples/migrations/minimal/fixtures/world.json), [migration walkthrough](token-migration.md) |
 | Deployment guide described synchronous execution without accounts/dashboard | Operator commands, generated IDs, registered bundle IDs, durable queue, retained candidate bytes and optional identity match the server. | [Service guide](railway-deployment.md), server CLI/storage/config |
 | Dashboard detail choice reset on reload | Initialization restores the saved Overview/Technical choice; public pages retain one presentation. | Existing persistence browser regression |
+| Hero mixed supported changes with roadmap and workflow features | Changes now show program upgrades, token migrations, lifecycle changes and the two bounded fee operations. Consequences show economic effects, execution differences, holder impact and evidence gaps. All use “Current scope”; future features stay in the roadmap. | Hero source, migration/lifecycle/parameter contracts |
 
 [The documentation index](README.md) now separates task guides from dated phase,
 design and qualification records and explains common result terms. Product next
@@ -42,6 +43,8 @@ with fabricated evidence. Historical reports and qualification bytes are unchang
   with no missing targets before adding this audit record. Desktop/mobile
   screenshots were inspected; the scoped mechanical design scan returned no
   findings.
+- The revised hero passed all 24 public browser checks and frontend checks.
+  Both rings were inspected at 1440px and 390px; geometry and motion are unchanged.
 - Engine/server locked offline builds and formatting were checked. The previous
   integration's **82 distinct tests** and enforced offline qualification remain
   recorded in its existing receipts; this frontend review does not claim to have

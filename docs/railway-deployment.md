@@ -19,6 +19,20 @@ cargo build --locked --release -p eplyx-server
 commands. Dashboard/cloud assets are embedded at build time: rebuild the service
 after changing those assets.
 
+Configure Railway's watch patterns to include the Rust service and embedded
+frontend, not just `/ts/**`. The current deployment uses `/**` so changes anywhere
+in the repository trigger a rebuild. A successful Git push alone does not prove
+the deployed service contains that commit; check the deployment's source commit.
+
+For workspace accounts, provision Postgres on Railway's private network and set
+`EPLYX_DATABASE_URL` to `${{Postgres.DATABASE_URL}}` on the API service. Set
+`EPLYX_PUBLIC_URL` to that service's public HTTPS origin. Keep the database
+unexposed and retain the existing `/data` service volume. With a Postgres volume
+mounted at `/var/lib/postgresql/data`, use
+`PGDATA=/var/lib/postgresql/data/pgdata`; the data directory must be inside the
+actual volume mount. Confirm that Postgres logs report readiness before checking
+the API. These settings configure identity storage, not chain acquisition.
+
 | Setting | Default / purpose |
 | --- | --- |
 | `EPLYX_DATA_DIR` | `/data`; mount persistent storage for the authoritative registry, reports, inputs and content-addressed artifacts |
@@ -70,6 +84,10 @@ explains workspace binding, project capabilities and the async submission client
 Use `/ready` for readiness and `/health` for liveness. Readiness checks configured
 storage and identity prerequisites; it is not a successful analysis or proof that
 every observation provider/path is ready. Inspect project capabilities separately.
+
+Also open `/workspaces` and `/login` and check that their assets load. A healthy
+older binary may still lack these routes. Without a session, the identity API
+should require authentication; a storage-unavailable response needs investigation.
 
 Accepted checks return an asynchronous run. The durable queue retains inputs,
 attempts and completed outputs and reconciles interrupted work on restart. Follow

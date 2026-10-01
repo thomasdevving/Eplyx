@@ -62,13 +62,21 @@ for (const width of [1440, 1024, 834, 390, 320]) {
     await expect(page.locator('#product')).toContainText('Governance binding.');
     await expect(page.locator('#product')).toContainText('Eplyx is in development.');
     await expect(page.locator('main')).not.toContainText('Implemented');
-    await expect(page.locator('.orbit-label[data-ring="changes"][data-index="2"]')).toContainText('Planned');
+    await expect(page.locator('.orbit-label[data-ring="changes"][data-index="2"]')).toContainText('Lifecycle changes');
+    await expect(page.locator('.orbit-label[data-ring="changes"][data-index="2"]')).toContainText('Current scope');
+    await expect(page.locator('.orbit-label[data-ring="changes"][data-index="3"]')).toContainText('Fee changes');
     await expect(page.locator('#roadmap')).toContainText('mock providers');
     await expect(page.locator('.intro')).toHaveCount(0);
     await expect(page.locator('#roadmap .section-heading')).toHaveCSS('opacity', '1');
     expect(await page.locator('.cli-preview .section-heading > p:not(.eyebrow)').evaluate(el => el.getBoundingClientRect().width)).toBeGreaterThan(230);
     await page.screenshot({ path: test.info().outputPath(`home-${width}.png`), fullPage: true });
     await page.screenshot({ path: test.info().outputPath(`hero-${width}.png`) });
+    if (width === 1440 || width === 390) {
+      await page.getByRole('button', { name: 'Consequences', exact: true }).click();
+      await expect(page.locator('.orbit-label[data-ring="consequences"][data-index="2"]')).toContainText('Holder impact');
+      await page.screenshot({ path: test.info().outputPath(`consequences-${width}.png`) });
+      await page.getByRole('button', { name: 'Changes', exact: true }).click();
+    }
     await page.locator('#product').scrollIntoViewIfNeeded();
     expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
     await page.getByRole('link', { name: 'Try Eplyx' }).click();
@@ -168,18 +176,18 @@ test.describe('original motion and product maturity', () => {
     await expect(page.locator('.intro')).toHaveCount(0);
     expect(await page.evaluate(() => ({ local: Object.keys(localStorage), session: Object.keys(sessionStorage) }))).toEqual({ local: [], session: [] });
     await page.getByRole('button', { name: 'Consequences', exact: true }).click();
-    await expect(page.locator('.orbit-caption')).toContainText('in development');
-    const future = page.locator('.orbit-body[data-name="Monitoring"]');
-    await expect(future).toHaveCSS('visibility', 'visible');
+    await expect(page.locator('.orbit-caption')).toContainText('evidence gaps');
+    const evidence = page.locator('.orbit-body[data-name="Evidence gaps"]');
+    await expect(evidence).toHaveCSS('visibility', 'visible');
     await page.getByRole('button', { name: 'Consequences', exact: true }).focus();
     await page.keyboard.press('Shift+Tab');
     await expect(page.getByRole('button', { name: 'Changes', exact: true })).toBeFocused();
     await page.keyboard.press('Shift+Tab');
-    await expect(future).toBeFocused();
+    await expect(evidence).toBeFocused();
     await expect(page.locator('.orbit-detail')).toBeVisible();
-    await expect(page.locator('.orbit-detail__status')).toHaveText('Planned');
-    await expect(page.locator('.orbit-detail__text')).toContainText('not current features');
-    await page.screenshot({ path: test.info().outputPath('roadmap-orbit.png') });
+    await expect(page.locator('.orbit-detail__status')).toHaveText('Current scope');
+    await expect(page.locator('.orbit-detail__text')).toContainText('untested paths');
+    await page.screenshot({ path: test.info().outputPath('consequences-orbit.png') });
   });
 });
 
