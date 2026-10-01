@@ -20,7 +20,7 @@ commands. Dashboard/cloud assets are embedded at build time: rebuild the service
 after changing those assets.
 
 Configure Railway's watch patterns to include the Rust service and embedded
-frontend, not just `/ts/**`. The current deployment uses `/**` so changes anywhere
+frontend, not just `/ts/**`. The current deployment uses `**` so changes anywhere
 in the repository trigger a rebuild. A successful Git push alone does not prove
 the deployed service contains that commit; check the deployment's source commit.
 
