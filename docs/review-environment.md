@@ -105,8 +105,8 @@ No remote environment was present at task start. The owner subsequently authoriz
 creating one; that authorization does not establish accessible infrastructure,
 free capacity, storage isolation or compatibility. Do not deploy until account,
 project, environment, service, private PostgreSQL and persistent analytical volume
-are positively identified and isolated from production. No paid provisioning or
-plan upgrade is authorized. The saved Railway association names production and
+are positively identified and isolated from production. The owner now authorizes up to EUR 20 total additional usage, including tax/FX,
+under the existing plan for at most 14 days. No plan upgrade is authorized. The saved Railway association names production and
 must not be reused as a review destination.
 
 Inspect the platform's current repository deployment triggers before pushing the
@@ -189,3 +189,64 @@ analytical workers or input bytes. A focused archive regression test writes
 host metadata and checks that only canonical artifact members enter the tar.
 Safe extraction continues to reject unexpected roots, links and traversal;
 previous downloads are preserved, never rewritten to make validation pass.
+
+
+## Bounded Railway review continuation
+
+The original fixed input is `cef17fe3d3c485d925960c4e5aef3a8106206da0`.
+A deployment-only revision adds `deploy/review/Dockerfile`, its scoped ignore
+file, `deploy/review/railway.toml`, and the absolute-deadline startup. Engine,
+frontend, identity checks and qualified fixture sources are unchanged. The image
+contains the native Linux server (also its isolated worker) and matching CLI;
+the CLI's existing embedded template is retained in its build context. No SBF
+fixture is rebuilt. There is no local Docker runtime; remote build identity and
+runtime verification are therefore mandatory, not inferred from the Darwin binary.
+
+The Railway CLI 5.63.1 reuses/refreshed the existing saved sign-in successfully.
+Account workspace is `4620b527-2d7b-4731-ac7f-2138933cd64e`
+(`thomasdevving's Projects`), on the existing Pro subscription. Unrelated projects
+are `eplyx-cloud`, `friendly-bravery`, `loyal-comfort` and `marvelous-sparkle`.
+Read-only provider trigger inspection found this repository's existing deploy
+triggers on **main**; the dedicated review branch is not a production trigger.
+Deploy explicit archived source through CLI upload, with no GitHub auto-deploy.
+
+Billing is USD. The current cycle ends `2026-10-23T23:04:15Z`; neither the four-day
+compute period nor fourteen-day storage cleanup window crosses that reset.
+The existing workspace compute hard limit is USD 20 and affects unrelated
+services; it is not changed or claimed as a review cap. Included Pro usage is
+shared, so this estimate counts no included credits. Billing country is NL;
+21% VAT is a conservative assumption, not a confirmed invoice rate. The ECB
+2026-09-30 reference is USD 1.1355/EUR; allow another 5% for payment/FX variation.
+See [pricing](https://docs.railway.com/pricing/plans),
+[cost-control scope](https://docs.railway.com/pricing/cost-control), and
+[used-volume billing](https://docs.railway.com/volumes/reference).
+
+Planned stack: one app, 2 GB/1 vCPU cap, concurrency one; one private PostgreSQL,
+0.5 GB/0.25 vCPU cap; one analytical and one identity volume. An existing offline
+reproduction measured 107,282,432 bytes peak RSS. Idle memory is not measured;
+the idle estimate assumes a conservative 0.5 GB total. Four days at *full caps*
+cost USD 6.66 compute. Include eight GB used storage through day fourteen,
+ten GB egress, and USD 2 failed-build/cleanup reserve: about EUR 10.88 all-in.
+Even both standard 50 GB volumes fully occupied for fourteen days raise this
+risk scenario to about EUR 18.08. Resource caps do not guarantee an invoice
+ceiling; egress, billing delay, tax/FX and owner cleanup remain explicit risks.
+No external paid build/registry, paid domain, agent or third compute service is used.
+
+Both review services receive one absolute `EPLYX_REVIEW_EXPIRES_UNIX`, chosen no
+later than four days after their first billable resource. Standard GNU timeout
+terminates the service process group at that UTC deadline; startup rejects an
+expired deadline, and Railway restart policy is NEVER. Restart cannot renew it.
+This is a scoped runtime shutdown, independent of billing reset; it is not
+unattended spend monitoring. Confirm the same startup/deadline and enforced caps
+in the actual provider configuration, and test a shortened deadline remotely
+before marking the review ready. The local focused check covers missing/expired
+values, actual timed shutdown and restart denial.
+
+Storage survives compute shutdown and remains billable. Export the actual remote
+artifact, receipts, runbook and both needed stores to the owner's private local
+review directory; verify checksums before deleting anything. The owner must remove
+only the two recorded review volumes by first billable creation +14 days. At full
+100 GB storage, residual storage is USD 0.50/day (about EUR 0.56/day with this
+margin); eight GB is USD 0.04/day. Automatic storage cleanup is not claimed.
+Exact created IDs, timestamps, configured expiry, validation and cleanup commands
+belong in the private remote receipt. Keep the original local receipt unchanged.
