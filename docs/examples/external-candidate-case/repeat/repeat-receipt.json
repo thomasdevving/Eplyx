@@ -1,0 +1,139 @@
+{
+  "network_denial_enforced": true,
+  "artifact_identities_verified": true,
+  "commands": [
+    {
+      "argv": [
+        "/private/tmp/eplyx-step13a-source/docs/examples/external-candidate-case/tools/eplyx",
+        "bundle",
+        "verify",
+        "--bundle",
+        "input/bundle",
+        "--format",
+        "json"
+      ],
+      "sandbox_prefix": [
+        "/usr/bin/sandbox-exec",
+        "-f",
+        "/private/tmp/eplyx-step13a-source/docs/examples/external-candidate-case/tools/offline.sb",
+        "/usr/bin/env",
+        "-i",
+        "PATH=/usr/bin:/bin"
+      ],
+      "cwd": "/private/tmp/eplyx-step13a-source/docs/examples/external-candidate-case",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/private/tmp/eplyx-step13a-source/docs/examples/external-candidate-case/tools/eplyx",
+        "compare",
+        "--corpus",
+        "input/bundle/corpus/corpus.json",
+        "--v1",
+        "input/bundle/binaries/current.so",
+        "--dependencies",
+        "input/bundle/binaries/dependencies",
+        "--no-minimize",
+        "--format",
+        "json",
+        "--v2",
+        "input/bundle/binaries/current.so",
+        "--out",
+        "/private/tmp/eplyx-step13a-offline-repeat-2/baseline-fidelity.json"
+      ],
+      "sandbox_prefix": [
+        "/usr/bin/sandbox-exec",
+        "-f",
+        "/private/tmp/eplyx-step13a-source/docs/examples/external-candidate-case/tools/offline.sb",
+        "/usr/bin/env",
+        "-i",
+        "PATH=/usr/bin:/bin"
+      ],
+      "cwd": "/private/tmp/eplyx-step13a-source/docs/examples/external-candidate-case",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/private/tmp/eplyx-step13a-source/docs/examples/external-candidate-case/tools/eplyx",
+        "ci",
+        "check",
+        "--bundle",
+        "input/bundle",
+        "--change-spec",
+        "change-spec.json",
+        "--candidate",
+        "candidate/spl_stake_pool.so",
+        "--format",
+        "json",
+        "--out",
+        "/private/tmp/eplyx-step13a-offline-repeat-2/candidate-ci.json"
+      ],
+      "sandbox_prefix": [
+        "/usr/bin/sandbox-exec",
+        "-f",
+        "/private/tmp/eplyx-step13a-source/docs/examples/external-candidate-case/tools/offline.sb",
+        "/usr/bin/env",
+        "-i",
+        "PATH=/usr/bin:/bin"
+      ],
+      "cwd": "/private/tmp/eplyx-step13a-source/docs/examples/external-candidate-case",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/private/tmp/eplyx-step13a-source/docs/examples/external-candidate-case/tools/eplyx",
+        "compare",
+        "--corpus",
+        "input/bundle/corpus/corpus.json",
+        "--v1",
+        "input/bundle/binaries/current.so",
+        "--dependencies",
+        "input/bundle/binaries/dependencies",
+        "--no-minimize",
+        "--format",
+        "json",
+        "--v2",
+        "candidate/spl_stake_pool.so",
+        "--out",
+        "/private/tmp/eplyx-step13a-offline-repeat-2/candidate-replay.json"
+      ],
+      "sandbox_prefix": [
+        "/usr/bin/sandbox-exec",
+        "-f",
+        "/private/tmp/eplyx-step13a-source/docs/examples/external-candidate-case/tools/offline.sb",
+        "/usr/bin/env",
+        "-i",
+        "PATH=/usr/bin:/bin"
+      ],
+      "cwd": "/private/tmp/eplyx-step13a-source/docs/examples/external-candidate-case",
+      "exit_code": 0
+    }
+  ],
+  "report_commitments": {
+    "bundle-verification": {
+      "sha256": "28e4962b95903ff8d3080a3d604d538d3e64869d223828e58c823ca7a0824d32",
+      "len": 1651
+    },
+    "baseline-fidelity": {
+      "sha256": "e7ce46fdbddd0ce4f731392deaa6ab9ab6554098bba79b8369ae9c8700d1b171",
+      "len": 815333
+    },
+    "candidate-ci": {
+      "sha256": "f03749b742bf219082a21058b87518a070d42911252dd3c7bbb22595b98e2a6e",
+      "len": 2911
+    },
+    "candidate-replay": {
+      "sha256": "ae4aaf50c93a805044033314b7329edd84da68146eb775bf533d3f02c5a487b6",
+      "len": 817110
+    }
+  },
+  "network_probe": {
+    "exit_code": 0,
+    "result": {
+      "errno": 1,
+      "error": "[Errno 1] Operation not permitted"
+    },
+    "address": "127.0.0.1:9"
+  },
+  "deterministic_reports_byte_identical": true
+}

@@ -1,0 +1,13 @@
+{
+  "all_records_retained": true,
+  "successful_transactions": 10,
+  "baseline_fidelity_matched": 10,
+  "fees_equal": true,
+  "watched_snapshots_equal": true,
+  "post_state_hashes_equal": true,
+  "economic_fields_equal": true,
+  "cpi_shapes_equal": true,
+  "only_compute_differences": true,
+  "protected_worktree_heads_status_and_dirty_bytes_unchanged": true,
+  "eplyx_integration_fixes": []
+}

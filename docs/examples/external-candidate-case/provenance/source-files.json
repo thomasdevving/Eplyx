@@ -1,0 +1,554 @@
+{
+  ".github/dependabot.yml": {
+    "len": 833,
+    "sha256": "fb687935c9322d646e7085e21be2346251ebfae2e843c7fa32b734195759d083"
+  },
+  ".github/workflows/dependabot-auto-merge.yml": {
+    "len": 665,
+    "sha256": "cde7b6e2070fcad9b45143bcd87ea8279fb84fac89efda20d01dc2a26899ebb2"
+  },
+  ".github/workflows/main.yml": {
+    "len": 2122,
+    "sha256": "82fca69bc0bac32ab269e98245b01c182df67a44af4b101abcdbcce88fa50bac"
+  },
+  ".github/workflows/publish-js.yml": {
+    "len": 1953,
+    "sha256": "d6af6bb777bb0f33f953336db1386ceee12cf2dd8a16f793ca3d7f06ab3093e0"
+  },
+  ".github/workflows/publish-rust.yml": {
+    "len": 2736,
+    "sha256": "b6e9c17a813848b20c21c816fda495af9e6d25ed76d725beddf8009a21c1e59f"
+  },
+  ".gitignore": {
+    "len": 89,
+    "sha256": "2306d41e51bfb0ce526d2f63062ab06b24d0c12e2d86388c66a02c8494f98afb"
+  },
+  "Cargo.lock": {
+    "len": 241964,
+    "sha256": "e96dddcd3c70dbeefd875335e2973f7ad5ff32db959089f602f43eeb1c7b2e17"
+  },
+  "Cargo.toml": {
+    "len": 422,
+    "sha256": "640b920bf84383b5367b1022d93f21a90aa6bc1567a4f3072fe8ba7f3274f521"
+  },
+  "LICENSE": {
+    "len": 10173,
+    "sha256": "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9"
+  },
+  "Makefile": {
+    "len": 4391,
+    "sha256": "1bd15cbd677f839c4190d987f59ce64dcc30bbcbeb76e8c215c705d0f4281c2e"
+  },
+  "README.md": {
+    "len": 419,
+    "sha256": "e8d6efdd06beaffb71c3486df9e5fb50297768d22a6a868de9fd605e5e36c71c"
+  },
+  "SECURITY.md": {
+    "len": 1637,
+    "sha256": "e8d2533f029c11675721ea6931998d6a75f391418f2d7ff2f608add6f1c6bc8a"
+  },
+  "clients/cli/Cargo.toml": {
+    "len": 1248,
+    "sha256": "2c1471523ae5a143f1af01b785df972ae0a91a68489478f5cea7eab6c8dd440b"
+  },
+  "clients/cli/README.md": {
+    "len": 359,
+    "sha256": "3b60ee62d455dcb8871b453d3027ef3d06b8a2f16ad6d7e2b00c0becbd26fef7"
+  },
+  "clients/cli/scripts/add-validators.sh": {
+    "len": 802,
+    "sha256": "b5582ae2a4c5990e1a5a74e0e0fbf56b767f9e09b7b2569eee2c51aedb9c02bb"
+  },
+  "clients/cli/scripts/deposit.sh": {
+    "len": 2144,
+    "sha256": "2faabb167e39ab04d60f82d4e529f5885e2ec3caca621fc8c01e3930bb9367a5"
+  },
+  "clients/cli/scripts/rebalance.sh": {
+    "len": 819,
+    "sha256": "6ec7f8c5e06ca6d3d327e59b86451cfe0dbc13a5916f4ddce7bdaf9d44f36511"
+  },
+  "clients/cli/scripts/setup-stake-pool-token-2022.sh": {
+    "len": 2686,
+    "sha256": "f0796d24ba99454d0db43724f40bc35ecf2276d5f3ef5d89acfb6227c38b5468"
+  },
+  "clients/cli/scripts/setup-stake-pool.sh": {
+    "len": 2759,
+    "sha256": "3d4864061cf71144df0d31fc69122cd493db623fcbd4e5bbeb76a27cdc16aef3"
+  },
+  "clients/cli/scripts/setup-test-validator.sh": {
+    "len": 2182,
+    "sha256": "54f78d7ffcbd347f06a7a32ce5b93c744ffcb20e5df36c14351bd18c40646ba0"
+  },
+  "clients/cli/scripts/withdraw.sh": {
+    "len": 2392,
+    "sha256": "ae1165fe9d4abb9277af015ea20492a5445766ed000e68d77d6fc1b15350f09b"
+  },
+  "clients/cli/src/client.rs": {
+    "len": 7288,
+    "sha256": "1fa15a2725603a863b7449de9ad0c5881b9d03cc49e6ea28af1091f9e164358e"
+  },
+  "clients/cli/src/main.rs": {
+    "len": 135008,
+    "sha256": "eb37c647b4acebb3d57e4571da0177e5d60098b1aeec20246d588046e7843526"
+  },
+  "clients/cli/src/output.rs": {
+    "len": 17958,
+    "sha256": "fae18bf8dba97c083cb04213086a41ec3498a4d081116f4c359e62c02a1da5d8"
+  },
+  "clients/js-legacy/.eslintignore": {
+    "len": 32,
+    "sha256": "64eca574c89ec1f0e3135a2e8764322c8c06bcc691ca763e2f016d845a2512d5"
+  },
+  "clients/js-legacy/.eslintrc.js": {
+    "len": 584,
+    "sha256": "87555d76eaccb2311df543841f06ca797b965a2a912c6ac68e92b1994afb2eb1"
+  },
+  "clients/js-legacy/.gitignore": {
+    "len": 181,
+    "sha256": "ebb1abc03012be5f262303df0d330457338984c77350c32f2f4094c8abe5b43c"
+  },
+  "clients/js-legacy/.prettierrc.js": {
+    "len": 119,
+    "sha256": "c17ace6227b87904de341c99c57d1e6996cef4e8a5d05a1b85867cda10b56354"
+  },
+  "clients/js-legacy/README.md": {
+    "len": 1004,
+    "sha256": "dde4341e36ce2652b3bf62199d0bc7391c6e1ea3a6173b8b4f16f4de6a8eb032"
+  },
+  "clients/js-legacy/package.json": {
+    "len": 2532,
+    "sha256": "7257435e762a38d9a62481dd10baa3463617db6cab68a77b4db8106d2db31059"
+  },
+  "clients/js-legacy/pnpm-lock.yaml": {
+    "len": 182547,
+    "sha256": "2cde5eea0c82d8e6831716e5b745cab94a37f7638cd81a0ba4ba03cc49c417d1"
+  },
+  "clients/js-legacy/rollup.config.mjs": {
+    "len": 2589,
+    "sha256": "32683c01382a3ac06b80f44990e607134f1d3a5e83b1b6ec649ec17c453ae683"
+  },
+  "clients/js-legacy/src/codecs.ts": {
+    "len": 4063,
+    "sha256": "54e2feb211d0731e269327c739c27d1cf9c19853967357d59d05d52b83d6a76b"
+  },
+  "clients/js-legacy/src/constants.ts": {
+    "len": 1260,
+    "sha256": "b2abe2f1c9e4353480835f66d3fa87942332805652ad3c88243e7c99b383a719"
+  },
+  "clients/js-legacy/src/index.ts": {
+    "len": 39902,
+    "sha256": "164f7743c777b15b0e3a66ab42894f3f2d8cc2f8ff79a983938154e83b487b2d"
+  },
+  "clients/js-legacy/src/instructions.ts": {
+    "len": 36768,
+    "sha256": "4095ad080d6103506f2691bcb9aed77c2f3d5a0a213c6323701cff16990ba75a"
+  },
+  "clients/js-legacy/src/layouts.ts": {
+    "len": 7273,
+    "sha256": "480714ef72835c95cd322dccbc97afbfc6fffc543ea4bf1db59d1ff0ef0af033"
+  },
+  "clients/js-legacy/src/types/buffer-layout.d.ts": {
+    "len": 1149,
+    "sha256": "b41019383674c29436a1c82a46ea40e6b2f3f084e55eac641aece3334f5db8b5"
+  },
+  "clients/js-legacy/src/utils/index.ts": {
+    "len": 316,
+    "sha256": "55f82398fb597d502b9283090090ae8e787996019b781ed246877b3856bab7fa"
+  },
+  "clients/js-legacy/src/utils/instruction.ts": {
+    "len": 1159,
+    "sha256": "89f9b6b44e11ce63d7c97e230f0c3980f8ba73be994e88583e6252016d0e0858"
+  },
+  "clients/js-legacy/src/utils/math.ts": {
+    "len": 870,
+    "sha256": "a11eaa9d111eac9754d434c50044cc9569bc7a3feab3acbff57ad1a6078fc34e"
+  },
+  "clients/js-legacy/src/utils/program-address.ts": {
+    "len": 2322,
+    "sha256": "94955d7502f40c5c65a5e989cb433b6cf5d94f2ef18af80e7987674c3447f458"
+  },
+  "clients/js-legacy/src/utils/stake.ts": {
+    "len": 7033,
+    "sha256": "a964894ac758642c45dbd4d193a79c90978c2d1407c251e2670e5c95ad025259"
+  },
+  "clients/js-legacy/test/calculation.test.ts": {
+    "len": 740,
+    "sha256": "05e2792e68ed2d8f1a3139494b142a9297ae2ed66b2dbe9864acdd611b980418"
+  },
+  "clients/js-legacy/test/equal.ts": {
+    "len": 1255,
+    "sha256": "5de58e39e08950a3fe31c21d1833c409dfafa3a6e8416194d47d17ca71343509"
+  },
+  "clients/js-legacy/test/instructions.test.ts": {
+    "len": 19568,
+    "sha256": "46f18c3a93a7280dc05389e9673accd3a81296b7235c6b72dd6f2bfed29e5404"
+  },
+  "clients/js-legacy/test/layouts.test.ts": {
+    "len": 1389,
+    "sha256": "551321ab5daba1639eb6cd870441b2d99a8c3f562eca79574d0b101d43935144"
+  },
+  "clients/js-legacy/test/mocks.ts": {
+    "len": 5735,
+    "sha256": "1433bc9423256e07feaba0ad6120d4f5de5e605124e3b2cc0a1a9cab3c4bbf85"
+  },
+  "clients/js-legacy/tsconfig.json": {
+    "len": 615,
+    "sha256": "cc722dcf91090bdd6a4f05381f4f3446999a502d0e6a91961ef474914963cf5b"
+  },
+  "clients/py/.flake8": {
+    "len": 29,
+    "sha256": "f757af0ddbe418220b9bbf5358c4ff18ec5fe3cb2932932df124707929ce466d"
+  },
+  "clients/py/.gitignore": {
+    "len": 75,
+    "sha256": "353af61ce702d8e61b33896bd15570382fc81135fe4c3c92cdaa50679941fc75"
+  },
+  "clients/py/LICENSE": {
+    "len": 559,
+    "sha256": "2c55066019573204a54f2277e50038f1f3c1f5b7c606f4f63995096f65eea957"
+  },
+  "clients/py/README.md": {
+    "len": 1768,
+    "sha256": "252fbc4ddfac964a4c02412de8da5f02078fe43d859adaf97425f87353e6f336"
+  },
+  "clients/py/bot/__init__.py": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "clients/py/bot/rebalance.py": {
+    "len": 6624,
+    "sha256": "69a5ff6a789012a8ba1f34ac137c8feb8b6b8f5db3f10fa7628bbb2ce52264ff"
+  },
+  "clients/py/optional-requirements.txt": {
+    "len": 182,
+    "sha256": "8a5557254b2f781a22a61e59a78404e6872d03938c26b9006c425641e803d867"
+  },
+  "clients/py/requirements.txt": {
+    "len": 236,
+    "sha256": "7890068ebe27c20e37413be4cdf89fa83cc847ea96cc6de27eb7a76032ca24bd"
+  },
+  "clients/py/spl_token/__init__.py": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "clients/py/spl_token/actions.py": {
+    "len": 2341,
+    "sha256": "56a3fa40fbc90322cf0d75b4cb0f2b70962646e22d899d8382c01cd2a21d8075"
+  },
+  "clients/py/stake/__init__.py": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "clients/py/stake/actions.py": {
+    "len": 3654,
+    "sha256": "984b78f7e0d1003de6cbadce9873281b0134da4a6c564d3b2d82e01c2ebb710b"
+  },
+  "clients/py/stake/constants.py": {
+    "len": 560,
+    "sha256": "469b8d3752ebc3ec9441a665ea541d80f53a9af10459e42ea56e97888415a562"
+  },
+  "clients/py/stake/instructions.py": {
+    "len": 5615,
+    "sha256": "9e383125dcc4121820f6872c7e7ff3a60c002e198bd69b283feaac6285f5dba0"
+  },
+  "clients/py/stake/state.py": {
+    "len": 3013,
+    "sha256": "8a553ec74b43c7294b65439be3aaef8c6db3b0475daa347631f0dc488426d603"
+  },
+  "clients/py/stake_pool/__init__.py": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "clients/py/stake_pool/actions.py": {
+    "len": 33285,
+    "sha256": "61cff094302d63cd561ec8bedf8e5b83fd8978a6b5bd96fe942ce0246b0311d5"
+  },
+  "clients/py/stake_pool/constants.py": {
+    "len": 3571,
+    "sha256": "cbc24bea7d64d7d01aaa1e9f411f5521ae755460d8d85dc4379d62778b407ecb"
+  },
+  "clients/py/stake_pool/instructions.py": {
+    "len": 51026,
+    "sha256": "f869298051458678e137f1efc07257c9c7b8e41f2d533f65a228ff0d85054a4d"
+  },
+  "clients/py/stake_pool/state.py": {
+    "len": 11834,
+    "sha256": "6d1259f7e2303c9989bb9db8edb9fe601cd95ca1e1ae07c902846abcf03e130c"
+  },
+  "clients/py/system/__init__.py": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "clients/py/system/actions.py": {
+    "len": 326,
+    "sha256": "2d83bcc9b21a592963f6afa08b9d680aa95e6e0a1401e8236b2fef413c29211e"
+  },
+  "clients/py/tests/conftest.py": {
+    "len": 4195,
+    "sha256": "816032539ee1b971da14954081bd61e68d8af5f43d4135398d637e5f54189a82"
+  },
+  "clients/py/tests/test_a_time_sensitive.py": {
+    "len": 5113,
+    "sha256": "de20e6112b6e4ecdd91105932a43551d996e637c4eadc7fbedb7adf5769e61b8"
+  },
+  "clients/py/tests/test_add_remove.py": {
+    "len": 1708,
+    "sha256": "e52d2e94bdbfdd320409eee2333ac4a57aa717e661629df04d2c3c6f65797a7a"
+  },
+  "clients/py/tests/test_bot_rebalance.py": {
+    "len": 4308,
+    "sha256": "d843da7d258789f5bef724e768d663154a60041c6a26217fa36dd1ee9aed89fe"
+  },
+  "clients/py/tests/test_create.py": {
+    "len": 2969,
+    "sha256": "edea1bf6659c77426c5c91c8d676612752b088da3571bf395e041edac46eaa6d"
+  },
+  "clients/py/tests/test_create_update_token_metadata.py": {
+    "len": 3125,
+    "sha256": "a995256d0c628e2e8b0b5c49ea40f7cefc670a6e19f6b6d5ca984b9c7415e541"
+  },
+  "clients/py/tests/test_deposit_withdraw_sol.py": {
+    "len": 1525,
+    "sha256": "0ee60c819497bfcf0b11f11a6b505c749d8d4ecdbad896ee4cb0d25aef860a3b"
+  },
+  "clients/py/tests/test_deposit_withdraw_stake.py": {
+    "len": 2608,
+    "sha256": "7cd7f814a7bc96bc6c4baa3c59b69fd65b5ed259c8a1031cceccc7b6200f4a61"
+  },
+  "clients/py/tests/test_stake.py": {
+    "len": 1274,
+    "sha256": "635b70c3f1ad87e8be759d8d2cde059deda30e7a184325db41ad06810b9b0783"
+  },
+  "clients/py/tests/test_system.py": {
+    "len": 442,
+    "sha256": "e3905b3dd1655af3e23796e42e128d792074d7a44709801ce1f14ad6becf9f5d"
+  },
+  "clients/py/tests/test_token.py": {
+    "len": 432,
+    "sha256": "22c71bb64beb697a1e0aaba284b43c68943a2ae5ca60f3a400d13524f2fb2cfc"
+  },
+  "clients/py/tests/test_vote.py": {
+    "len": 511,
+    "sha256": "ed37721fa3bc20a1df06e1c118f18ffcf2180ccce8ca9ff1e212a7e63cf45687"
+  },
+  "clients/py/vote/__init__.py": {
+    "len": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "clients/py/vote/actions.py": {
+    "len": 1834,
+    "sha256": "d0c99c235dee9a5e50eb1cf5ba369fc1a4513cb964d1902e43d5f0cfa6f21e12"
+  },
+  "clients/py/vote/constants.py": {
+    "len": 222,
+    "sha256": "ac7fd538297985dda3e8ce687c7de3d380943b09894448be10ac8357a5124c68"
+  },
+  "clients/py/vote/instructions.py": {
+    "len": 2967,
+    "sha256": "4a3c4b0c1708da62447222ed0a0c838d553daabda8ab2cc64e71c27bb31d4abb"
+  },
+  "package.json": {
+    "len": 153,
+    "sha256": "842774e32c50c669ee58cc385b39b3a790cb6cd3f7e51034b8afd1ed12c50637"
+  },
+  "pnpm-lock.yaml": {
+    "len": 114,
+    "sha256": "17c814b167307942d3609c7b9d916ceddb85839573ab39baa114e30edb132a1a"
+  },
+  "program/Cargo.toml": {
+    "len": 1913,
+    "sha256": "7a005214eb2fac700da72db8322defcdde52af10c3bb3d8c48d9b9113a89119f"
+  },
+  "program/Xargo.toml": {
+    "len": 62,
+    "sha256": "815f2dfb6197712a703a8e1f75b03c6991721e9eb7c40dfaec8b0b49da4aa629"
+  },
+  "program/program-id.md": {
+    "len": 44,
+    "sha256": "b93c899a1aabd15c3acfc5fdafe67db41886e2af687c1e49b41a6e3dbd8acd68"
+  },
+  "program/proptest-regressions/state.txt": {
+    "len": 68,
+    "sha256": "57a029278b9f456449d96086f637d2c0b280d95576d882309bda72b53ed91974"
+  },
+  "program/src/big_vec.rs": {
+    "len": 10519,
+    "sha256": "47dfc5e0486b252bdfcd7088c8be968ec8fcf5503b6b3a394be4a139796f3075"
+  },
+  "program/src/entrypoint.rs": {
+    "len": 1381,
+    "sha256": "60cb2aa9c7556092c285cc14f06798e89f25b791acdfaae0398c1db732164b19"
+  },
+  "program/src/error.rs": {
+    "len": 12041,
+    "sha256": "a0fc653d09b9d6cfdf310a2aac15bbea0ce6f8b865f8e875919a461e732ae4f4"
+  },
+  "program/src/inline_mpl_token_metadata.rs": {
+    "len": 4587,
+    "sha256": "e28211fc9a51c9b15b87c2fdc1b04c89b3a956528818a34dc5a1c4d7afed9195"
+  },
+  "program/src/instruction.rs": {
+    "len": 94983,
+    "sha256": "11023fa1adde181b0a15d1b4fa7990cbae35676d10ac0e6ac61ce985674848f1"
+  },
+  "program/src/lib.rs": {
+    "len": 5720,
+    "sha256": "53deec9d08b5b792972b26c7071a4d8d6df7c455c6ade3ec2c9e35eba9cb39b5"
+  },
+  "program/src/processor.rs": {
+    "len": 158799,
+    "sha256": "6807ce6e6ae9d27e092deb0eae6df0e097c80eace9e781636427dd6043d93b14"
+  },
+  "program/src/state.rs": {
+    "len": 56152,
+    "sha256": "62a95efc34d3bc52a9612d818061f76b6918b94565d3a22260e2250e52ff8f16"
+  },
+  "program/tests/create_pool_token_metadata.rs": {
+    "len": 7872,
+    "sha256": "108ced335db625c3e08e0a4698855c9316853d80ea7f064c6c89cf49d2b2902f"
+  },
+  "program/tests/decrease.rs": {
+    "len": 23506,
+    "sha256": "9a76ae67fb8e10fa4343133096867f544c19e7516542312517e5d98daa974e41"
+  },
+  "program/tests/deposit.rs": {
+    "len": 27385,
+    "sha256": "0f4ce92bcce14af4622d0496a561ac894227ff0b00014e361fcb074ab587fe6a"
+  },
+  "program/tests/deposit_authority.rs": {
+    "len": 6317,
+    "sha256": "d9b53313864d4c336c0e5c210e470dbacaff11c18cd330d3e3f6fc229b095cb0"
+  },
+  "program/tests/deposit_edge_cases.rs": {
+    "len": 9677,
+    "sha256": "93f8e01101ac642ad761f320396f53361152fd8bb4c068e28d6f860f601b6ab4"
+  },
+  "program/tests/deposit_sol.rs": {
+    "len": 18516,
+    "sha256": "3d7a49aabe596f6f59e7188b5e9de5a3b27648e5fb7759f9e10a058c001df6b6"
+  },
+  "program/tests/fixtures/mpl_token_metadata.so": {
+    "len": 693904,
+    "sha256": "ea92efaa367ed3e23adeff8f1caef602ecea5f824df1c96591c961a6cded5a41"
+  },
+  "program/tests/fixtures/solana_stake_program.so": {
+    "len": 200984,
+    "sha256": "36a84b559d7f1f6d0478cd962cd9f786cff03f84d648724e8b7ba74d2a26623f"
+  },
+  "program/tests/force_destake.rs": {
+    "len": 10632,
+    "sha256": "bdf8ce6110983620cbc4687414348bc67c853c991bd6c25d6f90ef3cc686230d"
+  },
+  "program/tests/helpers/mod.rs": {
+    "len": 86819,
+    "sha256": "8894229a1ad0f8338fa4e9e51bc24672a345d458f710229318c13dc032fc7297"
+  },
+  "program/tests/huge_pool.rs": {
+    "len": 22550,
+    "sha256": "5b0c93ceb5166e8c715697505a896fa82b2fddf2cb45b039a4809f39ff01372e"
+  },
+  "program/tests/increase.rs": {
+    "len": 19677,
+    "sha256": "104ad7c7c3462de474f3f54dc8462e0718d8c643d883f1309febe7bb5f672010"
+  },
+  "program/tests/initialize.rs": {
+    "len": 53910,
+    "sha256": "e449ad5a99d2cd75fbf911376c8f7b43a183825f327afcd5fdd281cf7668db2d"
+  },
+  "program/tests/preferred_validators.rs": {
+    "len": 20590,
+    "sha256": "914f5f3cf68d7774edac6fa0e3a68ab01ebc9ec1d9062cb3c11799b96ca1ad1e"
+  },
+  "program/tests/set_deposit_fee.rs": {
+    "len": 8453,
+    "sha256": "38d9a575a195347144bdf8a2838ebac101001cf6be84215153e042579f0c420b"
+  },
+  "program/tests/set_epoch_fee.rs": {
+    "len": 7451,
+    "sha256": "0cde3bf3537dfb8e4c3c6c2b14ebd791ef2a711ffd766a9bc77e9f0c3626612e"
+  },
+  "program/tests/set_funding_authority.rs": {
+    "len": 9106,
+    "sha256": "fe18a46ffd0c567071bf7c4a3bde04e7c9e924e50461a3bf740bc5ee29c1bde6"
+  },
+  "program/tests/set_manager.rs": {
+    "len": 8700,
+    "sha256": "852d63a0b44ce083caaf63d0cce507e59155ae2181510f47d6457fc81144f404"
+  },
+  "program/tests/set_preferred.rs": {
+    "len": 8155,
+    "sha256": "b4e8de5c4192c4a1b8afc8ef4ff616512f2f207286db38574fe6e225915643c6"
+  },
+  "program/tests/set_referral_fee.rs": {
+    "len": 8181,
+    "sha256": "b2940f40160b38a2b9cdd2a8c246f744f2c5006c5d2f2235dfbcfb5fbf7a04c9"
+  },
+  "program/tests/set_staker.rs": {
+    "len": 5997,
+    "sha256": "08f9f73f486484c8bd3e5103abfd424b6e6f82b72c7734584258f59abb802dae"
+  },
+  "program/tests/set_withdrawal_fee.rs": {
+    "len": 29821,
+    "sha256": "8f726dc20a70931effc6714cde85add069f0bcb35f3dc413da51460ffab7cc4e"
+  },
+  "program/tests/update_pool_token_metadata.rs": {
+    "len": 5370,
+    "sha256": "d5f11f30ec4a81b6d912cfdc058df1d9b4be69d822f5a5f5b9a8a42a5fccad41"
+  },
+  "program/tests/update_stake_pool_balance.rs": {
+    "len": 12873,
+    "sha256": "757cec3d405805b9ac764e687047067b0c013f6b5962f75ed758da9c7d12aac1"
+  },
+  "program/tests/update_validator_list_balance.rs": {
+    "len": 44288,
+    "sha256": "869ad5087c6d5fd03feb025c40d059482e326ebb16af4947af220f952b85660e"
+  },
+  "program/tests/vsa_add.rs": {
+    "len": 27928,
+    "sha256": "beb985ecfc6b46bca152e76e2e155f53d2038cb114c8eaf4b5617b670a122d12"
+  },
+  "program/tests/vsa_remove.rs": {
+    "len": 34301,
+    "sha256": "0c9fc670d85268c1021b6366be84b381f900deb4e2ff3ba68ab4fe9186406c06"
+  },
+  "program/tests/withdraw.rs": {
+    "len": 26065,
+    "sha256": "733b7bbfcc232801f1adac2870d872e82e9cec3b505e2a324dd4a265a731875f"
+  },
+  "program/tests/withdraw_edge_cases.rs": {
+    "len": 51666,
+    "sha256": "73f0b33256130906dea52dcf130aaecba8fd50acd4ecc1e32326f770240d3c88"
+  },
+  "program/tests/withdraw_sol.rs": {
+    "len": 11404,
+    "sha256": "8360c5a554307d6e2112d8f6939dbadc5e553067497975ecf822277cdc7a518a"
+  },
+  "program/tests/withdraw_with_fee.rs": {
+    "len": 6384,
+    "sha256": "24ccb28c0d5b69a6f43ff451e233ce3fccbb82ea3aa4ee322b97d2588b03680b"
+  },
+  "rust-toolchain.toml": {
+    "len": 31,
+    "sha256": "92b454c1ccf330de9b94242f73bc3214370fb420d5152baeec12dc82ceef9dcc"
+  },
+  "rustfmt.toml": {
+    "len": 229,
+    "sha256": "e85dd602fc7bae3f86b7d5f5dc1a5488224b17a99f7c716f19675f681e2614e9"
+  },
+  "scripts/cliff.toml": {
+    "len": 1909,
+    "sha256": "35edb96d9e6cbf6fe6ca273d84f5baaa16db1877891c01caf4f063c0b8a35de2"
+  },
+  "scripts/restart-test-validator.sh": {
+    "len": 954,
+    "sha256": "7b22edb58fb7c9cacb0b2d9a672d043ed784679ea68f70a55d155f754fab6f52"
+  },
+  "scripts/solana.dic": {
+    "len": 539,
+    "sha256": "0d730a581b625f53e0eb35fe3a8eef31a234ba08bfb54977da9d6100f93718f1"
+  },
+  "scripts/spellcheck.toml": {
+    "len": 111,
+    "sha256": "e90194f3702034bba925fbae104c68912e036e1b41c0007aa8598778ca6d7f7c"
+  }
+}

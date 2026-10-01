@@ -1,0 +1,11 @@
+[2026-10-01T12:09:22.043908000Z ERROR cargo_build_sbf] Failed to obtain package metadata: `cargo metadata` exited with an error:     Updating crates.io index
+     Downloading crates ...
+      Downloaded block-buffer v0.9.0
+    error: failed to unpack package `block-buffer v0.9.0`
+    
+    Caused by:
+      failed to unpack entry at `block-buffer-0.9.0/Cargo.toml.orig`
+    
+    Caused by:
+      Operation not permitted (os error 1) while canonicalizing /private/tmp/eplyx-step13a-upstream/cargo-home/registry/src/index.crates.io-1949cf8c6b5b557f/block-buffer-0.9.0
+    

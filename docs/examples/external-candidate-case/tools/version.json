@@ -1,0 +1,99 @@
+{
+  "architecture": "aarch64",
+  "commit": "4c521f5815de2238ae0b921e7c34d2ead07cf5cd",
+  "engine": {
+    "analytical_metadata_schema": 3,
+    "bundle_schema": 1,
+    "change_spec_schema": 1,
+    "change_specs": {
+      "lifecycle_change": [
+        1
+      ],
+      "program_upgrade": [
+        1
+      ],
+      "protocol_parameter_change": [
+        1
+      ],
+      "token_migration": [
+        1
+      ]
+    },
+    "ci_report_schema": 1,
+    "crate": "eplyx-engine",
+    "current_paths": {
+      "check_capture_schema": 1,
+      "execution_schema": 1,
+      "position_schema": 1,
+      "probe_schema": 1,
+      "withdrawal_schema": 1
+    },
+    "dashboard_index_schema": 3,
+    "lifecycle": {
+      "counterfactual_schema": 1,
+      "current_capture_schemas": [
+        1,
+        2,
+        3
+      ],
+      "current_preflight_schema": 1,
+      "impact_schema": 1,
+      "notice_schema": 1,
+      "readiness_schema": 1,
+      "resolution_schema": 1,
+      "rollout_schema": 1,
+      "scenario_schema": 1,
+      "snapshot_schemas": [
+        1,
+        2
+      ]
+    },
+    "protocol_parameter_change": {
+      "operation": "token_2022_active_newer_transfer_fee_basis_points_v1",
+      "operations": [
+        "token_2022_active_newer_transfer_fee_basis_points_v1",
+        "spl_stake_pool_sol_deposit_fee_v1"
+      ],
+      "report_schema": "eplyx-protocol-parameter-report-v1"
+    },
+    "reproduction_schema": 1,
+    "run_metadata_schema": 2,
+    "sync": {
+      "counterexample": "eplyx.sync.counterexample.v1",
+      "reproduction": "eplyx.sync.reproduction.v1",
+      "run": "eplyx.sync.run.v1"
+    },
+    "token_migration": {
+      "account_check_capture_schema": 1,
+      "account_check_report_schema": 1,
+      "adapter": "token_migration_v1",
+      "adapter_version": 1,
+      "authority_resolver": "eplyx-authority-resolution/v1",
+      "authority_selector": "eplyx-authority-resolution-select/v1",
+      "bindings_schema": 1,
+      "capture_schema": 1,
+      "counterexample_search": "eplyx-migration-counterexample-search/v1",
+      "current": "eplyx-migration-current/v1",
+      "current_selector": "eplyx-migration-current-select/v2",
+      "executor": "eplyx-migration-executor/v1",
+      "fixture_recipe_schema": 1,
+      "invariant_schema": 2,
+      "observed_search": "eplyx-migration-observed-search/v1",
+      "plan_schema": 1,
+      "planner": "eplyx-migration-planner/v1",
+      "rehearsal": "eplyx-migration-population-rehearsal/v1",
+      "report_schema": 1,
+      "state_input_schema": 1,
+      "stress": "eplyx-migration-stress/v1",
+      "token_2022_matrix": "eplyx-token-2022-migration-matrix/v1",
+      "unsigned_plan_schema": 1
+    },
+    "version": "0.1.0"
+  },
+  "name": "eplyx",
+  "os": "macos",
+  "platform": "darwin-arm64",
+  "schema_version": 1,
+  "target": "aarch64-apple-darwin",
+  "version": "0.1.0"
+}

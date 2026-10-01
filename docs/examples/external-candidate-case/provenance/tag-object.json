@@ -1,0 +1,24 @@
+{
+  "node_id": "TA_kwDONaC4BtoAKDJhMjMxMzNlMmVkMmE4MmNjOTU4NzY0OTBlMDRkMzRmZWU0M2RmMTg",
+  "sha": "2a23133e2ed2a82cc95876490e04d34fee43df18",
+  "url": "https://api.github.com/repos/solana-program/stake-pool/git/tags/2a23133e2ed2a82cc95876490e04d34fee43df18",
+  "tagger": {
+    "name": "github-actions[bot]",
+    "email": "41898282+github-actions[bot]@users.noreply.github.com",
+    "date": "2026-09-09T13:33:25Z"
+  },
+  "object": {
+    "sha": "3cda955e59a261f8c82f53f72560c6ea5a6647e8",
+    "type": "commit",
+    "url": "https://api.github.com/repos/solana-program/stake-pool/git/commits/3cda955e59a261f8c82f53f72560c6ea5a6647e8"
+  },
+  "tag": "program@v2.1.1",
+  "message": "chore: Release spl-stake-pool version 2.1.1\n",
+  "verification": {
+    "verified": false,
+    "reason": "unsigned",
+    "signature": null,
+    "payload": null,
+    "verified_at": null
+  }
+}

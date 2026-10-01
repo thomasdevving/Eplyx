@@ -1,0 +1,7 @@
+(version 1)
+(allow default)
+(deny file-read* (subpath "/Users") (subpath "/private/tmp") (subpath "/tmp"))
+(allow file-read* (subpath "/private/tmp/eplyx-step13a-upstream") (subpath "/private/tmp/eplyx-cargo/bin") (subpath "/Users/thomasnguyen/.cache/solana/v1.57/platform-tools"))
+(deny file-write*)
+(allow file-write* (subpath "/private/tmp/eplyx-step13a-upstream") (literal "/dev/null"))
+(allow file-read-metadata (literal "/private/tmp") (literal "/tmp") (literal "/Users") (literal "/Users/thomasnguyen") (literal "/Users/thomasnguyen/.cache") (literal "/Users/thomasnguyen/.cache/solana") (literal "/Users/thomasnguyen/.cache/solana/v1.57"))

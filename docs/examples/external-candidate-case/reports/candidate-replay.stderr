@@ -1,0 +1,1 @@
+Replay performance: dependency load 1021 us for 2 binary(ies); V1 replay 23357 us; V2 replay 14238 us; comparison total 58935 us; 20 VM executions; 78 accounts loaded; 48 program dependencies (29 loaded from history, 19 runtime-provided)

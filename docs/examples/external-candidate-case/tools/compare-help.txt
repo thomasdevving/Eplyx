@@ -1,0 +1,17 @@
+Run the corpus against both program builds and report the differences
+
+Usage: eplyx compare [OPTIONS]
+
+Options:
+      --config <CONFIG>              Project configuration for migration and local store commands [default: eplyx.toml]
+      --corpus <CORPUS>              Durable replay corpus JSON. Runs offline with a V1 fidelity gate
+      --v1 <V1>                      Path to the V1 program artefact
+      --v2 <V2>                      Path to the V2 program artefact
+      --format <FORMAT>              [default: text] [possible values: text, json]
+      --fixture <FIXTURE>            Restrict the run to one fixture ID
+      --category <CATEGORY>          Restrict the run to one category
+      --out <OUT>                    Write the report to a file instead of stdout
+      --fail-on-critical             Exit non-zero when critical regressions are found (for CI gates)
+      --no-minimize                  Skip counterexample minimization, which re-executes candidate states
+      --dependencies <DEPENDENCIES>  Directory holding the historical dependency binaries a replay corpus pins. Defaults to a `dependencies` directory beside the corpus file
+  -h, --help                         Print help
