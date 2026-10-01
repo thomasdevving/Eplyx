@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { mkdtempSync, existsSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, existsSync, readFileSync, rmSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, relative, dirname } from 'node:path';
 import { spawnSync } from 'node:child_process';
 const guard = new URL('../deploy/review/expire.sh', import.meta.url).pathname;
 const run = (expiry, args) => spawnSync('/bin/sh', [guard, ...args], {
@@ -32,6 +32,15 @@ test('review image contains matching CLI and retained embedded CLI fixture', () 
   assert.ok(docker.includes('--locked --release -p eplyx-server -p eplyx-engine --bin eplyx-server --bin eplyx'));
   assert.ok(docker.includes('/build/target/release/eplyx /usr/local/bin/eplyx'));
   const ignore=readFileSync(new URL('../deploy/review/Dockerfile.dockerignore',import.meta.url),'utf8');
-  assert.ok(ignore.includes('!examples/migrations/minimal/fixtures/world.json'));
+  const repo=new URL('../',import.meta.url).pathname;
+  const sources=join(repo,'engine/src');
+  for(const file of readdirSync(sources).filter(x=>x.startsWith('cli')&&x.endsWith('.rs'))) {
+    const path=join(sources,file);
+    const source=readFileSync(path,'utf8');
+    for(const match of source.matchAll(/include_(?:str|bytes)!\(\s*"([^"]+)"/g)) {
+      const input=relative(repo,join(dirname(path),match[1]));
+      if(input.startsWith('examples/'))assert.ok(ignore.split('\n').includes('!'+input),`CLI embedded input excluded from review image: ${input}`);
+    }
+  }
   assert.ok(ignore.includes('media/'));
 });

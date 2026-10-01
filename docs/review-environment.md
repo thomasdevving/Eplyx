@@ -198,7 +198,8 @@ A deployment-only revision adds `deploy/review/Dockerfile`, its scoped ignore
 file and the absolute-deadline startup. Engine,
 frontend, identity checks and qualified fixture sources are unchanged. The image
 contains the native Linux server (also its isolated worker) and matching CLI;
-the CLI's existing embedded template is retained in its build context. No SBF
+the CLI's two existing embedded migration templates are retained in its build
+context. A focused source-derived check prevents another omitted CLI include. No SBF
 fixture is rebuilt. There is no local Docker runtime; remote build identity and
 runtime verification are therefore mandatory, not inferred from the Darwin binary.
 
