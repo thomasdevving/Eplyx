@@ -1,0 +1,105 @@
+{
+  "origin": "public_upstream_release_rehearsal",
+  "retrieval_date": "2026-10-01",
+  "repository": "https://github.com/solana-program/stake-pool",
+  "tag": "program@v2.1.1",
+  "tag_object": "2a23133e2ed2a82cc95876490e04d34fee43df18",
+  "commit": "3cda955e59a261f8c82f53f72560c6ea5a6647e8",
+  "published_at": "2026-09-09T13:33:37Z",
+  "program_id": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+  "artifact_kind": "local_source_build",
+  "official_distributed_executable": false,
+  "published_expected_executable_hash": null,
+  "deployment_byte_equivalence": "not_checked",
+  "source_unchanged_after_build": true,
+  "source_files": "provenance/source-files.json",
+  "source_archive": {
+    "sha256": "169a0cdf8097b9460529706bb8423df8519479ddd3b7eda18bbfee0cf8c9c9e6",
+    "len": 529985
+  },
+  "license": "Apache-2.0",
+  "license_file": "provenance/LICENSE",
+  "upstream_build_path": "Makefile build-sbf-program: cargo build-sbf --manifest-path program/Cargo.toml $(ARGS)",
+  "upstream_declared_environment": {
+    "solana_cli": "3.1.14",
+    "host_rust": "1.93.0",
+    "ci_reusable_workflow": "solana-program/actions/.github/workflows/main.yml@main; not executed or treated as pinned build provenance"
+  },
+  "actual_build": {
+    "cwd": "isolated-source-root",
+    "command": [
+      "cargo-build-sbf",
+      "--tools-version",
+      "v1.57",
+      "--skip-tools-install",
+      "--no-rustup-override",
+      "--manifest-path",
+      "program/Cargo.toml",
+      "--sbf-out-dir",
+      "isolated-output",
+      "--",
+      "--locked"
+    ],
+    "environment": {
+      "PATH": "cached platform-tools/rust/bin; existing cargo-build-sbf directory; /usr/bin; /bin",
+      "CARGO_HOME": "fresh isolated cargo-home",
+      "CARGO_TARGET_DIR": "fresh isolated target",
+      "TMPDIR": "fresh isolated temporary directory",
+      "RUSTC": "cached platform-tools v1.57 rustc",
+      "inherited_environment": "cleared with env -i; HOME retained solely for public tool cache lookup"
+    },
+    "builder_version": "cargo-build-sbf 4.4.0\nplatform-tools v1.57\nrustc 1.95.0",
+    "cargo_version": "cargo 1.95.0 (bbbd3a760 2026-07-09)",
+    "rustc_version": "rustc 1.95.0-dev (ae660768a 2026-08-17)",
+    "arch": "v3 (builder default)",
+    "target": "sbpf-solana-solana",
+    "profile": "release",
+    "additional_features": [],
+    "no_default_features": false,
+    "dependency_lock": "upstream unchanged Cargo.lock; --locked",
+    "container_image": null,
+    "host": {
+      "system": "Darwin",
+      "machine": "arm64",
+      "macos": "26.6.2",
+      "build": "25G83"
+    },
+    "isolation_policy": "provenance/build-isolation.sb",
+    "public_dependency_network_allowed": true,
+    "credential_environment_inherited": false,
+    "attempt_count": 2,
+    "environment_correction": "Allow metadata-only checks of ancestor directories for Cargo canonicalization. First attempt failed unpacking block-buffer before compilation. No source/dependency/feature changes.",
+    "reproducible_upstream_build": "No v2.1.1 published build hash or solana-verify recipe in selected release; earlier v2.1.0 recipe is retained only as excluded control metadata. solana-verify/Docker unavailable. No match claimed to upstream CI tooling or deployed bytes."
+  },
+  "tool_commitments": {
+    "cargo-build-sbf": {
+      "sha256": "6079d64d29eab4947198f569db779a96ceb7018645e01df5562d2ebaa91cfed8",
+      "len": 9131248
+    },
+    "cargo": {
+      "sha256": "ce68aedc3093d7b0b19fc038118f3ffedadf0f894458d8740bd09ba646beb291",
+      "len": 34264224
+    },
+    "rustc": {
+      "sha256": "a6bab6b6060c911f3f3e601532e6064500a7f7d53645bc62692c633a0541797a",
+      "len": 50680
+    },
+    "platform-tools-version.md": {
+      "sha256": "bf8c605a76b374d71316ffe5c93fd8abb4e954a602e99301d7340a00d4390f0f",
+      "len": 240
+    }
+  },
+  "candidate": {
+    "sha256": "1113fbd035048c456d2768325e4e6d3699672070267e68b96c01abbc080fdb62",
+    "len": 293200
+  },
+  "excluded_releases": [
+    {
+      "tag": "program@v2.1.0",
+      "reason": "official raw asset digest equals historical baseline; same-code control excluded before execution",
+      "asset_sha256": "ec2dfefaa70d560754a0000f39bd2cabc192b895d36205b3c428f601b6e1d7e1",
+      "published_solana_verify_build_hash": "8df58bc9f9428c02bf34fa845ae2961274156e7ff07a8dc1be0018dd765baeff",
+      "hash_definitions": "The release asset raw SHA-256 and the documented solana-verify build hash are distinct identifiers; no equivalence or mismatch is inferred."
+    }
+  ]
+}

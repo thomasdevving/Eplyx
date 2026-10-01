@@ -1,0 +1,14 @@
+Replay a pinned corpus against a candidate and gate on the result
+
+Usage: eplyx ci check [OPTIONS] --bundle <BUNDLE>
+
+Options:
+      --bundle <BUNDLE>              Directory holding the pinned, offline CI bundle
+      --config <CONFIG>              Project configuration for migration and local store commands [default: eplyx.toml]
+      --candidate <CANDIDATE>        The candidate program artefact under test. Alone, it stands for an upgrade of the bundle's program to exactly these bytes. With --change-spec, it supplies the bytes the spec names and must be them
+      --change-spec <CHANGE_SPEC>    The proposed change, as written by `eplyx change program-upgrade`
+      --artifacts <ARTIFACTS>        Content-addressed store holding the spec's candidate at `programs/<sha256>`, instead of --candidate
+      --expectations <EXPECTATIONS>  Declared intentional changes. Omitted, nothing is declared and every finding is unexpected, which is the correct default
+      --format <FORMAT>              [default: text] [possible values: text, json]
+      --out <OUT>                    Write the report to a file instead of stdout
+  -h, --help                         Print help

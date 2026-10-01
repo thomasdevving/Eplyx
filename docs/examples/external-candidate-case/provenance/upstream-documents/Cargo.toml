@@ -1,0 +1,20 @@
+# Reduce the size of debug builds
+[profile.dev]
+debug = "line-tables-only"
+
+[workspace]
+resolver = "2"
+members = ["clients/cli", "program"]
+
+[workspace.metadata.spellcheck]
+config = "scripts/spellcheck.toml"
+
+[workspace.lints.rust.unexpected_cfgs]
+level = "warn"
+check-cfg = [
+    'cfg(target_os, values("solana"))',
+    'cfg(feature, values("frozen-abi", "no-entrypoint"))',
+]
+
+[workspace.metadata.cli]
+solana = "3.1.14"

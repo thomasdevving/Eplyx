@@ -1,0 +1,310 @@
+[
+  {
+    "id": "mainnet-spl-stake-pool-0c4fe6c80dd53827",
+    "slot": null,
+    "clock": {
+      "slot": 447857248,
+      "epoch_start_timestamp": 0,
+      "epoch": 0,
+      "leader_schedule_epoch": 0,
+      "unix_timestamp": 1789667771
+    },
+    "original_success": true,
+    "original_fee": 84999,
+    "record_sha256": "c97c2d48f544304548022fe605ad7ad64576c83ee2a416377a1e9259c0f941f2",
+    "assumptions": [
+      "2 token account balance(s) at S-1 and S match the validator-observed pre/post token balances",
+      "every snapshot's lamports match validator-observed pre/post balances",
+      "the pool's total_lamports change equals the validator-observed lamport change of the reserve stake account",
+      "the pool's pool_token_supply change equals the validator-observed change in holdings of the pool mint",
+      "read-only accounts are byte-identical across the boundary; validator metadata records no account data, so their bytes rest on the archive and on V1 reproducing the original outcome",
+      "the Clock and StakeHistory sysvars are exempt from that byte-identity check: the runtime rewrites them every slot, so they carry no boundary evidence and are supplied to the replay at their acquired S-1 values",
+      "the reserve stake account is debited through the Stake program's Withdraw, which the runtime implements natively; its delegation state and the rent-exempt floor it must retain are enforced by that program, not by this adapter",
+      "supported contract is one WithdrawSol from a pool with no SOL withdraw authority, with cross-program invocation into the SPL Token and Stake programs only",
+      "the Clock and StakeHistory sysvars the withdrawal reads are acquired at the historical boundary like any other account; the Stake program's lockup and deactivation checks therefore see the slot's real values",
+      "the pool's own share arithmetic reads no Clock; the pinned replay clock reproduces the transaction's slot and block time",
+      "2 message key(s) held no account at either boundary and the validator recorded a zero balance for each; the runtime materializes them as empty System-owned accounts, matching the original execution",
+      "V1 is the slot-429882117 deployment live at slot 447857248, read from ProgramData at slot 447857247",
+      "2 dependency program(s) are loaded from the deployment live at slot 447857247, not from today's; 2 are implemented by the runtime and nothing is substituted for them",
+      "no other transaction among the 1598 in slot 447857248 takes any of the 7 required accounts as writable",
+      "the runtime feature set is LiteSVM's mainnet snapshot rather than a slot-accurate reconstruction; both builds run under the identical set, and V1 reproducing the original outcome - its fee, its invocation graph and its post-state - is what rules out a material difference"
+    ]
+  },
+  {
+    "id": "mainnet-spl-stake-pool-13f83ad421a7c1b5",
+    "slot": null,
+    "clock": {
+      "slot": 447851942,
+      "epoch_start_timestamp": 0,
+      "epoch": 0,
+      "leader_schedule_epoch": 0,
+      "unix_timestamp": 1789666085
+    },
+    "original_success": true,
+    "original_fee": 10000,
+    "record_sha256": "d4c069aa897f3957dae43a981b13fd94871a8dbd50e98a5b9ecbb57eeb6da074",
+    "assumptions": [
+      "2 token account balance(s) at S-1 and S match the validator-observed pre/post token balances",
+      "every snapshot's lamports match validator-observed pre/post balances",
+      "the pool's total_lamports change equals the validator-observed lamport change of the reserve stake account",
+      "the pool's pool_token_supply change equals the validator-observed change in holdings of the pool mint",
+      "read-only accounts are byte-identical across the boundary; validator metadata records no account data, so their bytes rest on the archive and on V1 reproducing the original outcome",
+      "the Clock and StakeHistory sysvars are exempt from that byte-identity check: the runtime rewrites them every slot, so they carry no boundary evidence and are supplied to the replay at their acquired S-1 values",
+      "the reserve stake account is debited through the Stake program's Withdraw, which the runtime implements natively; its delegation state and the rent-exempt floor it must retain are enforced by that program, not by this adapter",
+      "supported contract is one WithdrawSol from a pool with no SOL withdraw authority, with cross-program invocation into the SPL Token and Stake programs only",
+      "the Clock and StakeHistory sysvars the withdrawal reads are acquired at the historical boundary like any other account; the Stake program's lockup and deactivation checks therefore see the slot's real values",
+      "the pool's own share arithmetic reads no Clock; the pinned replay clock reproduces the transaction's slot and block time",
+      "2 message key(s) held no account at either boundary and the validator recorded a zero balance for each; the runtime materializes them as empty System-owned accounts, matching the original execution",
+      "V1 is the slot-429882117 deployment live at slot 447851942, read from ProgramData at slot 447851941",
+      "2 dependency program(s) are loaded from the deployment live at slot 447851941, not from today's; 1 are implemented by the runtime and nothing is substituted for them",
+      "no other transaction among the 1766 in slot 447851942 takes any of the 7 required accounts as writable",
+      "the runtime feature set is LiteSVM's mainnet snapshot rather than a slot-accurate reconstruction; both builds run under the identical set, and V1 reproducing the original outcome - its fee, its invocation graph and its post-state - is what rules out a material difference"
+    ]
+  },
+  {
+    "id": "mainnet-spl-stake-pool-151010f709e113e7",
+    "slot": null,
+    "clock": {
+      "slot": 447850493,
+      "epoch_start_timestamp": 0,
+      "epoch": 0,
+      "leader_schedule_epoch": 0,
+      "unix_timestamp": 1789665625
+    },
+    "original_success": true,
+    "original_fee": 14000,
+    "record_sha256": "8a16ee492fc40bafa8344862ccb45b189b2b613fb2dc56bc2ecf7a17da5c5018",
+    "assumptions": [
+      "2 token account balance(s) at S-1 and S match the validator-observed pre/post token balances",
+      "every snapshot's lamports match validator-observed pre/post balances",
+      "the pool's total_lamports change equals the validator-observed lamport change of the reserve stake account",
+      "the pool's pool_token_supply change equals the validator-observed change in holdings of the pool mint",
+      "read-only accounts are byte-identical across the boundary; validator metadata records no account data, so their bytes rest on the archive and on V1 reproducing the original outcome",
+      "the reserve stake account's delegation state is carried through unchanged: a SOL deposit credits its lamports and does not invoke the stake program",
+      "supported contract is one DepositSol into a pool with no SOL deposit authority, with cross-program invocation into the System and SPL Token programs only",
+      "the pool's own share arithmetic reads no Clock; the pinned replay clock reproduces the transaction's slot and block time",
+      "2 message key(s) held no account at either boundary and the validator recorded a zero balance for each; the runtime materializes them as empty System-owned accounts, matching the original execution",
+      "V1 is the slot-429882117 deployment live at slot 447850493, read from ProgramData at slot 447850492",
+      "1 dependency program(s) are loaded from the deployment live at slot 447850492, not from today's; 2 are implemented by the runtime and nothing is substituted for them",
+      "no other transaction among the 1824 in slot 447850493 takes any of the 5 required accounts as writable",
+      "the runtime feature set is LiteSVM's mainnet snapshot rather than a slot-accurate reconstruction; both builds run under the identical set, and V1 reproducing the original outcome - its fee, its invocation graph and its post-state - is what rules out a material difference"
+    ]
+  },
+  {
+    "id": "mainnet-spl-stake-pool-1575fae8f62d7fe1",
+    "slot": null,
+    "clock": {
+      "slot": 447883702,
+      "epoch_start_timestamp": 0,
+      "epoch": 0,
+      "leader_schedule_epoch": 0,
+      "unix_timestamp": 1789676179
+    },
+    "original_success": true,
+    "original_fee": 84999,
+    "record_sha256": "72c9ebab27010ab3d69998d5820431aa563ef0b60f04939e532b4c4fd17d7c84",
+    "assumptions": [
+      "2 token account balance(s) at S-1 and S match the validator-observed pre/post token balances",
+      "every snapshot's lamports match validator-observed pre/post balances",
+      "the pool's total_lamports change equals the validator-observed lamport change of the reserve stake account",
+      "the pool's pool_token_supply change equals the validator-observed change in holdings of the pool mint",
+      "read-only accounts are byte-identical across the boundary; validator metadata records no account data, so their bytes rest on the archive and on V1 reproducing the original outcome",
+      "the Clock and StakeHistory sysvars are exempt from that byte-identity check: the runtime rewrites them every slot, so they carry no boundary evidence and are supplied to the replay at their acquired S-1 values",
+      "the reserve stake account is debited through the Stake program's Withdraw, which the runtime implements natively; its delegation state and the rent-exempt floor it must retain are enforced by that program, not by this adapter",
+      "supported contract is one WithdrawSol from a pool with no SOL withdraw authority, with cross-program invocation into the SPL Token and Stake programs only",
+      "the Clock and StakeHistory sysvars the withdrawal reads are acquired at the historical boundary like any other account; the Stake program's lockup and deactivation checks therefore see the slot's real values",
+      "the pool's own share arithmetic reads no Clock; the pinned replay clock reproduces the transaction's slot and block time",
+      "2 message key(s) held no account at either boundary and the validator recorded a zero balance for each; the runtime materializes them as empty System-owned accounts, matching the original execution",
+      "V1 is the slot-429882117 deployment live at slot 447883702, read from ProgramData at slot 447883701",
+      "2 dependency program(s) are loaded from the deployment live at slot 447883701, not from today's; 2 are implemented by the runtime and nothing is substituted for them",
+      "no other transaction among the 1464 in slot 447883702 takes any of the 7 required accounts as writable",
+      "the runtime feature set is LiteSVM's mainnet snapshot rather than a slot-accurate reconstruction; both builds run under the identical set, and V1 reproducing the original outcome - its fee, its invocation graph and its post-state - is what rules out a material difference"
+    ]
+  },
+  {
+    "id": "mainnet-spl-stake-pool-1970f44e62cb6be7",
+    "slot": null,
+    "clock": {
+      "slot": 447851715,
+      "epoch_start_timestamp": 0,
+      "epoch": 0,
+      "leader_schedule_epoch": 0,
+      "unix_timestamp": 1789666014
+    },
+    "original_success": true,
+    "original_fee": 84999,
+    "record_sha256": "9687756b301acdeb0bf950de068e1ee22ee7e8533939f7f5209fe530e2bd18e3",
+    "assumptions": [
+      "2 token account balance(s) at S-1 and S match the validator-observed pre/post token balances",
+      "every snapshot's lamports match validator-observed pre/post balances",
+      "the pool's total_lamports change equals the validator-observed lamport change of the reserve stake account",
+      "the pool's pool_token_supply change equals the validator-observed change in holdings of the pool mint",
+      "read-only accounts are byte-identical across the boundary; validator metadata records no account data, so their bytes rest on the archive and on V1 reproducing the original outcome",
+      "the Clock and StakeHistory sysvars are exempt from that byte-identity check: the runtime rewrites them every slot, so they carry no boundary evidence and are supplied to the replay at their acquired S-1 values",
+      "the reserve stake account is debited through the Stake program's Withdraw, which the runtime implements natively; its delegation state and the rent-exempt floor it must retain are enforced by that program, not by this adapter",
+      "supported contract is one WithdrawSol from a pool with no SOL withdraw authority, with cross-program invocation into the SPL Token and Stake programs only",
+      "the Clock and StakeHistory sysvars the withdrawal reads are acquired at the historical boundary like any other account; the Stake program's lockup and deactivation checks therefore see the slot's real values",
+      "the pool's own share arithmetic reads no Clock; the pinned replay clock reproduces the transaction's slot and block time",
+      "2 message key(s) held no account at either boundary and the validator recorded a zero balance for each; the runtime materializes them as empty System-owned accounts, matching the original execution",
+      "V1 is the slot-429882117 deployment live at slot 447851715, read from ProgramData at slot 447851714",
+      "2 dependency program(s) are loaded from the deployment live at slot 447851714, not from today's; 2 are implemented by the runtime and nothing is substituted for them",
+      "no other transaction among the 1932 in slot 447851715 takes any of the 7 required accounts as writable",
+      "the runtime feature set is LiteSVM's mainnet snapshot rather than a slot-accurate reconstruction; both builds run under the identical set, and V1 reproducing the original outcome - its fee, its invocation graph and its post-state - is what rules out a material difference"
+    ]
+  },
+  {
+    "id": "mainnet-spl-stake-pool-a61d372b8976c9e9",
+    "slot": null,
+    "clock": {
+      "slot": 447904974,
+      "epoch_start_timestamp": 0,
+      "epoch": 0,
+      "leader_schedule_epoch": 0,
+      "unix_timestamp": 1789682930
+    },
+    "original_success": true,
+    "original_fee": 85001,
+    "record_sha256": "b0ef9e5548859ad9a792857fb47c7779cb112a70cac9f56fb165daf5ab536a4b",
+    "assumptions": [
+      "2 token account balance(s) at S-1 and S match the validator-observed pre/post token balances",
+      "every snapshot's lamports match validator-observed pre/post balances",
+      "the pool's total_lamports change equals the validator-observed lamport change of the reserve stake account",
+      "the pool's pool_token_supply change equals the validator-observed change in holdings of the pool mint",
+      "read-only accounts are byte-identical across the boundary; validator metadata records no account data, so their bytes rest on the archive and on V1 reproducing the original outcome",
+      "the Clock and StakeHistory sysvars are exempt from that byte-identity check: the runtime rewrites them every slot, so they carry no boundary evidence and are supplied to the replay at their acquired S-1 values",
+      "the reserve stake account is debited through the Stake program's Withdraw, which the runtime implements natively; its delegation state and the rent-exempt floor it must retain are enforced by that program, not by this adapter",
+      "supported contract is one WithdrawSol from a pool with no SOL withdraw authority, with cross-program invocation into the SPL Token and Stake programs only",
+      "the Clock and StakeHistory sysvars the withdrawal reads are acquired at the historical boundary like any other account; the Stake program's lockup and deactivation checks therefore see the slot's real values",
+      "the pool's own share arithmetic reads no Clock; the pinned replay clock reproduces the transaction's slot and block time",
+      "2 message key(s) held no account at either boundary and the validator recorded a zero balance for each; the runtime materializes them as empty System-owned accounts, matching the original execution",
+      "V1 is the slot-429882117 deployment live at slot 447904974, read from ProgramData at slot 447904973",
+      "2 dependency program(s) are loaded from the deployment live at slot 447904973, not from today's; 2 are implemented by the runtime and nothing is substituted for them",
+      "no other transaction among the 1659 in slot 447904974 takes any of the 7 required accounts as writable",
+      "the runtime feature set is LiteSVM's mainnet snapshot rather than a slot-accurate reconstruction; both builds run under the identical set, and V1 reproducing the original outcome - its fee, its invocation graph and its post-state - is what rules out a material difference"
+    ]
+  },
+  {
+    "id": "mainnet-spl-stake-pool-a8b2f3a9fc36f2dc",
+    "slot": null,
+    "clock": {
+      "slot": 447865625,
+      "epoch_start_timestamp": 0,
+      "epoch": 0,
+      "leader_schedule_epoch": 0,
+      "unix_timestamp": 1789670426
+    },
+    "original_success": true,
+    "original_fee": 84999,
+    "record_sha256": "0edb77b5571aba8550a682cda4d2c0d30c2b1b4b5d737a7924cfb5cde189ce43",
+    "assumptions": [
+      "2 token account balance(s) at S-1 and S match the validator-observed pre/post token balances",
+      "every snapshot's lamports match validator-observed pre/post balances",
+      "the pool's total_lamports change equals the validator-observed lamport change of the reserve stake account",
+      "the pool's pool_token_supply change equals the validator-observed change in holdings of the pool mint",
+      "read-only accounts are byte-identical across the boundary; validator metadata records no account data, so their bytes rest on the archive and on V1 reproducing the original outcome",
+      "the Clock and StakeHistory sysvars are exempt from that byte-identity check: the runtime rewrites them every slot, so they carry no boundary evidence and are supplied to the replay at their acquired S-1 values",
+      "the reserve stake account is debited through the Stake program's Withdraw, which the runtime implements natively; its delegation state and the rent-exempt floor it must retain are enforced by that program, not by this adapter",
+      "supported contract is one WithdrawSol from a pool with no SOL withdraw authority, with cross-program invocation into the SPL Token and Stake programs only",
+      "the Clock and StakeHistory sysvars the withdrawal reads are acquired at the historical boundary like any other account; the Stake program's lockup and deactivation checks therefore see the slot's real values",
+      "the pool's own share arithmetic reads no Clock; the pinned replay clock reproduces the transaction's slot and block time",
+      "2 message key(s) held no account at either boundary and the validator recorded a zero balance for each; the runtime materializes them as empty System-owned accounts, matching the original execution",
+      "V1 is the slot-429882117 deployment live at slot 447865625, read from ProgramData at slot 447865624",
+      "2 dependency program(s) are loaded from the deployment live at slot 447865624, not from today's; 2 are implemented by the runtime and nothing is substituted for them",
+      "no other transaction among the 1497 in slot 447865625 takes any of the 7 required accounts as writable",
+      "the runtime feature set is LiteSVM's mainnet snapshot rather than a slot-accurate reconstruction; both builds run under the identical set, and V1 reproducing the original outcome - its fee, its invocation graph and its post-state - is what rules out a material difference"
+    ]
+  },
+  {
+    "id": "mainnet-spl-stake-pool-d5a70b997bcf1d00",
+    "slot": null,
+    "clock": {
+      "slot": 447884765,
+      "epoch_start_timestamp": 0,
+      "epoch": 0,
+      "leader_schedule_epoch": 0,
+      "unix_timestamp": 1789676517
+    },
+    "original_success": true,
+    "original_fee": 84998,
+    "record_sha256": "8f5473999df56bcdc55739f3e2704e229dae5c17462e7dd346a877b1efdc6450",
+    "assumptions": [
+      "2 token account balance(s) at S-1 and S match the validator-observed pre/post token balances",
+      "every snapshot's lamports match validator-observed pre/post balances",
+      "the pool's total_lamports change equals the validator-observed lamport change of the reserve stake account",
+      "the pool's pool_token_supply change equals the validator-observed change in holdings of the pool mint",
+      "read-only accounts are byte-identical across the boundary; validator metadata records no account data, so their bytes rest on the archive and on V1 reproducing the original outcome",
+      "the Clock and StakeHistory sysvars are exempt from that byte-identity check: the runtime rewrites them every slot, so they carry no boundary evidence and are supplied to the replay at their acquired S-1 values",
+      "the reserve stake account is debited through the Stake program's Withdraw, which the runtime implements natively; its delegation state and the rent-exempt floor it must retain are enforced by that program, not by this adapter",
+      "supported contract is one WithdrawSol from a pool with no SOL withdraw authority, with cross-program invocation into the SPL Token and Stake programs only",
+      "the Clock and StakeHistory sysvars the withdrawal reads are acquired at the historical boundary like any other account; the Stake program's lockup and deactivation checks therefore see the slot's real values",
+      "the pool's own share arithmetic reads no Clock; the pinned replay clock reproduces the transaction's slot and block time",
+      "2 message key(s) held no account at either boundary and the validator recorded a zero balance for each; the runtime materializes them as empty System-owned accounts, matching the original execution",
+      "V1 is the slot-429882117 deployment live at slot 447884765, read from ProgramData at slot 447884764",
+      "2 dependency program(s) are loaded from the deployment live at slot 447884764, not from today's; 2 are implemented by the runtime and nothing is substituted for them",
+      "no other transaction among the 1559 in slot 447884765 takes any of the 7 required accounts as writable",
+      "the runtime feature set is LiteSVM's mainnet snapshot rather than a slot-accurate reconstruction; both builds run under the identical set, and V1 reproducing the original outcome - its fee, its invocation graph and its post-state - is what rules out a material difference"
+    ]
+  },
+  {
+    "id": "mainnet-spl-stake-pool-d5e15c805ba927b7",
+    "slot": null,
+    "clock": {
+      "slot": 447889621,
+      "epoch_start_timestamp": 0,
+      "epoch": 0,
+      "leader_schedule_epoch": 0,
+      "unix_timestamp": 1789678053
+    },
+    "original_success": true,
+    "original_fee": 85000,
+    "record_sha256": "4094761eadcd932fcb110f025f15fe3859930bd4fbe024f95bb57089b1dc1848",
+    "assumptions": [
+      "2 token account balance(s) at S-1 and S match the validator-observed pre/post token balances",
+      "every snapshot's lamports match validator-observed pre/post balances",
+      "the pool's total_lamports change equals the validator-observed lamport change of the reserve stake account",
+      "the pool's pool_token_supply change equals the validator-observed change in holdings of the pool mint",
+      "read-only accounts are byte-identical across the boundary; validator metadata records no account data, so their bytes rest on the archive and on V1 reproducing the original outcome",
+      "the Clock and StakeHistory sysvars are exempt from that byte-identity check: the runtime rewrites them every slot, so they carry no boundary evidence and are supplied to the replay at their acquired S-1 values",
+      "the reserve stake account is debited through the Stake program's Withdraw, which the runtime implements natively; its delegation state and the rent-exempt floor it must retain are enforced by that program, not by this adapter",
+      "supported contract is one WithdrawSol from a pool with no SOL withdraw authority, with cross-program invocation into the SPL Token and Stake programs only",
+      "the Clock and StakeHistory sysvars the withdrawal reads are acquired at the historical boundary like any other account; the Stake program's lockup and deactivation checks therefore see the slot's real values",
+      "the pool's own share arithmetic reads no Clock; the pinned replay clock reproduces the transaction's slot and block time",
+      "2 message key(s) held no account at either boundary and the validator recorded a zero balance for each; the runtime materializes them as empty System-owned accounts, matching the original execution",
+      "V1 is the slot-429882117 deployment live at slot 447889621, read from ProgramData at slot 447889620",
+      "2 dependency program(s) are loaded from the deployment live at slot 447889620, not from today's; 2 are implemented by the runtime and nothing is substituted for them",
+      "no other transaction among the 1439 in slot 447889621 takes any of the 7 required accounts as writable",
+      "the runtime feature set is LiteSVM's mainnet snapshot rather than a slot-accurate reconstruction; both builds run under the identical set, and V1 reproducing the original outcome - its fee, its invocation graph and its post-state - is what rules out a material difference"
+    ]
+  },
+  {
+    "id": "mainnet-spl-stake-pool-eeffb53e253469b7",
+    "slot": null,
+    "clock": {
+      "slot": 447852096,
+      "epoch_start_timestamp": 0,
+      "epoch": 0,
+      "leader_schedule_epoch": 0,
+      "unix_timestamp": 1789666134
+    },
+    "original_success": true,
+    "original_fee": 84999,
+    "record_sha256": "ff5195d790a42333d53bcb7cb5db9690287fdb316db924d2e5d81b7c90ce0435",
+    "assumptions": [
+      "2 token account balance(s) at S-1 and S match the validator-observed pre/post token balances",
+      "every snapshot's lamports match validator-observed pre/post balances",
+      "the pool's total_lamports change equals the validator-observed lamport change of the reserve stake account",
+      "the pool's pool_token_supply change equals the validator-observed change in holdings of the pool mint",
+      "read-only accounts are byte-identical across the boundary; validator metadata records no account data, so their bytes rest on the archive and on V1 reproducing the original outcome",
+      "the Clock and StakeHistory sysvars are exempt from that byte-identity check: the runtime rewrites them every slot, so they carry no boundary evidence and are supplied to the replay at their acquired S-1 values",
+      "the reserve stake account is debited through the Stake program's Withdraw, which the runtime implements natively; its delegation state and the rent-exempt floor it must retain are enforced by that program, not by this adapter",
+      "supported contract is one WithdrawSol from a pool with no SOL withdraw authority, with cross-program invocation into the SPL Token and Stake programs only",
+      "the Clock and StakeHistory sysvars the withdrawal reads are acquired at the historical boundary like any other account; the Stake program's lockup and deactivation checks therefore see the slot's real values",
+      "the pool's own share arithmetic reads no Clock; the pinned replay clock reproduces the transaction's slot and block time",
+      "2 message key(s) held no account at either boundary and the validator recorded a zero balance for each; the runtime materializes them as empty System-owned accounts, matching the original execution",
+      "V1 is the slot-429882117 deployment live at slot 447852096, read from ProgramData at slot 447852095",
+      "2 dependency program(s) are loaded from the deployment live at slot 447852095, not from today's; 2 are implemented by the runtime and nothing is substituted for them",
+      "no other transaction among the 1644 in slot 447852096 takes any of the 7 required accounts as writable",
+      "the runtime feature set is LiteSVM's mainnet snapshot rather than a slot-accurate reconstruction; both builds run under the identical set, and V1 reproducing the original outcome - its fee, its invocation graph and its post-state - is what rules out a material difference"
+    ]
+  }
+]

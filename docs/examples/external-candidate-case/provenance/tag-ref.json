@@ -1,0 +1,10 @@
+{
+  "ref": "refs/tags/program@v2.1.1",
+  "node_id": "REF_kwDONaC4BrhyZWZzL3RhZ3MvcHJvZ3JhbUB2Mi4xLjE",
+  "url": "https://api.github.com/repos/solana-program/stake-pool/git/refs/tags/program@v2.1.1",
+  "object": {
+    "sha": "2a23133e2ed2a82cc95876490e04d34fee43df18",
+    "type": "tag",
+    "url": "https://api.github.com/repos/solana-program/stake-pool/git/tags/2a23133e2ed2a82cc95876490e04d34fee43df18"
+  }
+}

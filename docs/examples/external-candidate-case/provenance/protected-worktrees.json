@@ -1,0 +1,56 @@
+[
+  {
+    "path": "/Users/thomasnguyen/Downloads/Personal/Eplyx/Eplyx",
+    "branch": "codex/step11a-review",
+    "head": "4c521f5815de2238ae0b921e7c34d2ead07cf5cd",
+    "status": "",
+    "dirty_file_commitments": []
+  },
+  {
+    "path": "/private/tmp/eplyx-step11a-fixed-source",
+    "branch": "codex/step11a-fixed-review",
+    "head": "81e1f35fecd3eb7d95b8da985b2c05afcbc88a78",
+    "status": "",
+    "dirty_file_commitments": []
+  },
+  {
+    "path": "/Users/thomasnguyen/.codex/worktrees/parameter-amount-search/Eplyx",
+    "branch": "codex/parameter-amount-search",
+    "head": "4c521f5815de2238ae0b921e7c34d2ead07cf5cd",
+    "status": "M docs/protocol-parameter-change.md\n M engine/src/cli_parameter.rs\n M engine/src/lib.rs\n M engine/src/parameter_change/mod.rs\n?? docs/examples/parameter-edge-search-qualification.json\n?? docs/parameter-edge-search.md\n?? engine/src/parameter_search.rs\n?? engine/src/parameter_search/store.rs\n?? engine/tests/parameter_search.rs",
+    "dirty_file_commitments": [
+      {
+        "path": "engine/src/cli_parameter.rs",
+        "sha256": "c4606153a5dda9ed239cd298718e7662310b9fe86ef2ec10ab33b5135336b47e"
+      },
+      {
+        "path": "engine/src/lib.rs",
+        "sha256": "c813074d3b457aa5dc8737704a4e45e38719449352f4efbfaf7c13574c6af574"
+      },
+      {
+        "path": "engine/src/parameter_change/mod.rs",
+        "sha256": "1e1c1ab2c15caf3c57510583bcbbb4ee2f625ab88addefac38d66503b6845e90"
+      },
+      {
+        "path": "docs/examples/parameter-edge-search-qualification.json",
+        "sha256": "d1f50584a0e17443240d69a4cfa7b3e759a28ca34966dd7a462a9836b8f16e57"
+      },
+      {
+        "path": "docs/parameter-edge-search.md",
+        "sha256": "99c2e87e30d8cca7533b632f315d81fe378c74446d481e590d7872b320fbb8e8"
+      },
+      {
+        "path": "engine/src/parameter_search.rs",
+        "sha256": "878e95d7f241687598b98e5908317d93079c7f7a47b21942deb8d8364e47f61a"
+      },
+      {
+        "path": "engine/src/parameter_search/store.rs",
+        "sha256": "89c1fc1935da2b552909e933336749b1d44672099860ff5db42f003483c69f04"
+      },
+      {
+        "path": "engine/tests/parameter_search.rs",
+        "sha256": "69de24502503cf470ca918e9f0692a63c370b51ec919a3ac6a868fd09895803a"
+      }
+    ]
+  }
+]

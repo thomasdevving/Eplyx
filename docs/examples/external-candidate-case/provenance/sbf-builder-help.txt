@@ -1,0 +1,107 @@
+cargo-build-sbf 4.4.0
+platform-tools v1.57
+rustc 1.95.0
+Compile a local package and all of its dependencies using the Solana SBF SDK
+
+USAGE:
+    cargo-build-sbf [OPTIONS] [-- <cargo_args>...]
+
+ARGS:
+    <cargo_args>...    Arguments passed directly to `cargo build`
+
+OPTIONS:
+        --abi-v2
+            Compile program for ABIv2. This is still an experimental features and only works with
+            `--arch v3`
+
+        --arch <arch>
+            Build for the given target architecture [default: v3] [possible values: v0, v1, v2, v3,
+            v4]
+
+        --debug
+            Create debug objects at `target/deploy/debug`.
+            `target/deploy/debug/program.so.debug` contains all debug information available.
+            `target/deploy/debug/program.so` is a stripped version for execution in the VM.
+            These objects are not optimized for mainnet-beta deployment.
+
+        --disable-remap-cwd
+            Disable remap of cwd prefix and preserve full path strings in binaries
+
+        --dump
+            Dump ELF information to a text file on success. Requires `rustfilt` to demangle Rust
+            symbols.
+
+        --features <FEATURES>...
+            Space-separated list of features to activate
+
+        --force-tools-install
+            Download and install platform-tools even when existing tools are located
+
+        --generate-child-script-on-failure
+            Generate a shell script to rerun a failed subcommand
+
+    -h, --help
+            Print help information
+
+        --install-only
+            Download and install platform-tools, without building a program. May be used together
+            with `--force-tools-install` to override an existing installation. To choose a specific
+            version, use `--install-only --tools-version v1.51`
+
+    -j, --jobs <N>
+            Number of parallel jobs, defaults to # of CPUs
+
+        --lto
+            Enable Link-Time Optimization (LTO) for all crates being built. This option may decrease
+            program size and CU consumption. The default option is LTO disabled, as one may get
+            mixed results with it.
+
+        --manifest-path <PATH>
+            Path to Cargo.toml
+
+        --no-default-features
+            Do not activate the `default` feature
+
+        --no-rustup-override
+            Do not use rustup to manage the toolchain. By default, cargo-build-sbf invokes rustup to
+            find the Solana rustc using a `+solana` toolchain override. This flag disables that
+            behavior.
+
+        --offline
+            Run without accessing the network
+
+        --optimize-size
+            Optimize program for size. This option may reduce program size, potentially increasing
+            CU consumption.
+
+        --patch-binaries-for-nix <patch_binaries_for_nix>
+            Patch the downloaded toolchain binaries to work on nix systems [possible values: true,
+            false]
+
+    -q, --quiet
+            Do not print cargo log messages
+
+        --sbf-out-dir <DIRECTORY>
+            Place final SBF build artifacts in this directory [env: SBF_OUT_PATH=]
+
+        --sbf-sdk <PATH>
+            UNUSED: Path to the Solana SBF SDK. [env: SBF_SDK_PATH=]
+
+        --sbf-stack-size <BYTES>
+            Set the SBF stack frame size in bytes (default: 4096). Requires a platform-tools version
+            that supports the -sbf-stack-size LLVM option.
+
+        --skip-tools-install
+            Skip downloading and installing platform-tools, assuming they are properly mounted
+
+        --tools-version <STRING>
+            platform-tools version to use or to install, a version string, e.g. "v1.32"
+
+    -v, --verbose
+            Use verbose output
+
+    -V, --version
+            Print version information
+
+        --workspace
+            Build all Solana packages in the workspace

@@ -1,0 +1,33 @@
+{
+  "name": "spl-stake-pool",
+  "version": 3,
+  "supports_cpi": true,
+  "actions": [
+    {
+      "semantic_action": "deposit",
+      "observations": 1
+    },
+    {
+      "semantic_action": "withdraw",
+      "observations": 9
+    }
+  ],
+  "limitations": [
+    {
+      "code": "failed_original_transactions_unsupported",
+      "detail": "Transactions that failed on mainnet are observed but not replayed, so no failure path is represented."
+    },
+    {
+      "code": "account_creation_paths_unsupported",
+      "detail": "Interactions that create a token account are outside the exact historical contract and are excluded."
+    },
+    {
+      "code": "replay_runtime_rent_semantics_unsupported",
+      "detail": "Transactions crediting an account that stays below its rent-exempt minimum are accepted by mainnet and refused by the replay runtime, so they are excluded. Tip accounts are the common case."
+    },
+    {
+      "code": "address_lookup_tables_unsupported",
+      "detail": "A v0 message that actually resolves addresses through a lookup table is outside the replay contract and is excluded, so any interaction shape that requires one is unrepresented."
+    }
+  ]
+}
