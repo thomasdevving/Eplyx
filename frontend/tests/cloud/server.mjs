@@ -61,5 +61,15 @@ await sendOperator(`/v1/projects/${upgradeProject.id}/bundles/${registered.bundl
 const check=new FormData();check.append('candidate',new Blob([await readFile(join(repo,'artifacts/fixture_stake_pool_v2.so'))]),'candidate.so');
 const upgrade=await sendOperator(`/v1/projects/${upgradeProject.id}/checks`,check);
 for(let n=0;n<600;n++){const response=await fetch(`${base}/v1/runs/${upgrade.run_id}`,{headers:{cookie}});const run=await response.json();if(run.report_available)break;if(n===599)throw new Error('Upgrade seed did not finish');await new Promise(r=>setTimeout(r,100));}
-await writeFile(join(scratch,'cloud-seed.json'),JSON.stringify({base,email,password,project:project.id,analysisProject:analysisProject.id,upgradeProject:upgradeProject.id,upgradeRun:upgrade.run_id,mint:observation.mint,source:observation.source,owner:observation.owner}),{mode:0o600});
+// Submit the retained reference fixture through the real hosted worker. The
+// input commitments and fixture bytes remain unchanged.
+const migrationInput=join(repo,'fixtures/dashboard/token-migration/.eplyx/runs/run_20260926202828340195000_e5db6948abca/input');
+const migrationFiles=new FormData();
+for(const [name,path] of [['candidate','artifacts/eplyx_token_migration.so'],['change_spec',join(migrationInput,'change.json')],['state_input',join(migrationInput,'state.json')],['state_artifact','examples/migrations/minimal/fixtures/world.json']]){
+ const source=path.startsWith(repo)?path:join(repo,path);
+ migrationFiles.append(name,new Blob([await readFile(source)]),name);
+}
+const migration=await sendOperator(`/v1/projects/${analysisProject.id}/checks`,migrationFiles);
+for(let n=0;n<600;n++){const response=await fetch(`${base}/v1/runs/${migration.run_id}`,{headers:{cookie}});const run=await response.json();if(run.report_available)break;if(run.status==='failed'||n===599)throw new Error('Migration seed did not finish');await new Promise(r=>setTimeout(r,100));}
+await writeFile(join(scratch,'cloud-seed.json'),JSON.stringify({base,email,password,project:project.id,analysisProject:analysisProject.id,upgradeProject:upgradeProject.id,upgradeRun:upgrade.run_id,migrationRun:migration.run_id,mint:observation.mint,source:observation.source,owner:observation.owner}),{mode:0o600});
 console.log('Seeded test workspace');

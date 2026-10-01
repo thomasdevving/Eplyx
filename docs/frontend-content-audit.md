@@ -55,3 +55,24 @@ items. `check:legal` reports them; `check:legal:release` intentionally requires
 their resolution. Source/build verification does not finalize legal facts.
 No private capture, credential, generated executable, dependency directory or
 build output is included in the publication change.
+
+## Hosted workspace regression follow-up (2026-10-02)
+
+The fixed review branch's migration module routing had not been included in the
+publication history. The prepared form now uses `prepared-migration.js`, leaving
+`migration.js` for the shared dashboard's named exports. A server regression
+checks both embedded responses and the form import.
+
+Completed hosted projections now retain their hosted run metadata and canonical
+report URL in the dashboard API payload. This allows an eligible retained
+transfer to show the server-authorized Parameter Change entry and hosted evidence
+links to open the retained report. Synced local/CI runs remain separate.
+
+Two real-service browser regressions passed with scratch PostgreSQL, password
+login and actual child workers: an eligible Token-2022 transfer opens the rate
+form after refresh, and a hosted reference migration renders all eight answers,
+seven reconciliation equations and its authenticated report after refresh.
+Observation uses the existing local RPC fixture; these checks do not claim fresh
+mainnet acquisition or an authenticated production test.
+The complete shared cloud browser suite also passed: 17 tests, including synced
+history, upgrade reports, mobile layouts, settings and device approval.

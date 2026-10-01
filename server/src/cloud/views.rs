@@ -295,6 +295,10 @@ async fn run_payload(state: &Shared, access: &Access, run: &str) -> ApiResult<Va
         .map_or(Value::Null, |r| r["id"].clone());
     // Synced results retain source artifacts locally; hosted inputs live in CAS.
     detail["artifacts_local_only"] = json!(record.hosted_analysis.is_none());
+    if record.hosted_analysis.is_some() {
+        detail["hosted"] = json!(record);
+        detail["report_url"] = json!(format!("/v1/runs/{run}/report.json"));
+    }
     Ok(detail)
 }
 
