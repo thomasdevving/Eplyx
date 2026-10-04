@@ -1,6 +1,8 @@
 import { Logo } from './brand.js';
 import { API_BASE } from './session.js';
 
+export const SOURCE_URL = 'https://github.com/thomasdevving/Eplyx';
+
 export function workspaceHref() {
   if (!API_BASE) return '/workspaces';
   try {
@@ -31,7 +33,7 @@ export function Footer() {
     <footer class="footer">
       <div>${Logo()}</div>
       <p>Change and consequence analysis for Solana.</p>
-      <div class="footer__links"><a href="/start" data-link>Start here</a><a href="/cli" data-link>CLI guide</a><a href="/runs/demo" data-link>Demo report</a><a href="https://github.com/thomasdevving/Eplyx">Source</a></div>
+      <div class="footer__links"><a href="/start" data-link>Start here</a><a href="/cli" data-link>CLI guide</a><a href="/runs/demo" data-link>Demo report</a><a href="/technical-overview" data-link>Technical Overview</a><a href="${SOURCE_URL}">Source</a></div>
       <nav class="footer__legal" aria-label="Legal and privacy"><a href="/legal" data-link>Legal & privacy</a><a href="/privacy" data-link>Privacy</a><a href="/cookies" data-link>Cookies & storage</a><a href="/terms" data-link>Website use</a><a href="/contact" data-link>Contact</a><a href="/licenses" data-link>Licences</a></nav>
       <small>Evidence from tested interactions. Coverage is always explicit.</small>
     </footer>`;

@@ -825,6 +825,74 @@ a:focus-visible, button:focus-visible, pre:focus-visible { outline:2px solid var
 .orbit-detail[data-status="Early scope"] .orbit-detail__status { background:#e58b3c1f; color:#895014; }
 .hero__copy > .eyebrow { line-height:1.5; }
 
+/* Public technical overview: the existing inner-page palette and type system. */
+.technical-hero { max-width:1320px; margin:auto; padding:76px 48px 90px; display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); gap:64px; align-items:center; }
+.technical-intro h1 { max-width:650px; margin:0 0 28px; font:500 clamp(38px,4.1vw,60px)/1.09 'Manrope',sans-serif; letter-spacing:-.035em; text-wrap:balance; }
+.technical-no-break { white-space:nowrap; }
+.technical-intro > p:not(.eyebrow) { max-width:65ch; margin:0 0 20px; font-size:16px; line-height:1.75; color:var(--lavender); }
+.technical-actions { display:flex; flex-wrap:wrap; align-items:center; gap:20px 24px; margin-top:30px; }
+.technical-actions .text-link { min-height:44px; }
+.technical-icon { flex-shrink:0; width:16px; height:16px; }
+.technical-intro .text-link, .technical-reading .text-link { color:var(--lavender); }
+.technical-architecture { min-width:0; margin:0; text-align:center; color:var(--paper); }
+.technical-node { padding:18px 20px; border:1px solid rgba(231,221,255,.24); border-radius:12px; background:rgba(231,221,255,.04); }
+.technical-node h2, .technical-node h3 { margin:0; font:600 16px/1.4 'Manrope',sans-serif; letter-spacing:-.02em; }
+.technical-node p { margin:7px 0 0; font-size:12px; line-height:1.6; color:var(--lavender); }
+.technical-arrow { display:block; width:20px; height:28px; margin:0 auto; color:var(--violet-2); }
+.technical-branch { position:relative; height:64px; color:var(--lavender); }
+.technical-branch::before { content:''; position:absolute; top:0; left:50%; height:12px; border-left:1px solid var(--violet-2); }
+.technical-branch p { margin:0; padding-top:17px; font-size:12px; }
+.technical-branch span { position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:calc(50% + 8px); height:16px; border-top:1px solid var(--violet-2); border-left:1px solid var(--violet-2); border-right:1px solid var(--violet-2); }
+.technical-vms { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+.technical-node--vm { padding:20px 12px; }
+.technical-merge { position:relative; height:20px; width:calc(50% + 8px); margin:0 auto 12px; border-left:1px solid var(--violet-2); border-right:1px solid var(--violet-2); border-bottom:1px solid var(--violet-2); }
+.technical-merge::after { content:''; position:absolute; top:100%; left:50%; height:12px; border-left:1px solid var(--violet-2); }
+.technical-node--result { background:rgba(156,104,255,.12); }
+.technical-evidence { margin:0; font:600 16px/1.5 'Manrope',sans-serif; }
+.technical-architecture figcaption { max-width:52ch; margin:22px auto 0; font-size:12px; line-height:1.7; color:var(--lavender); }
+.technical-capabilities { padding-top:90px; padding-bottom:90px; background:var(--paper); color:var(--ink); }
+.technical-capabilities h2 { margin:0 0 32px; font:500 clamp(32px,3.2vw,46px)/1.15 'Manrope',sans-serif; letter-spacing:-.035em; text-wrap:balance; }
+.technical-capability-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 64px; margin:0; }
+.technical-capability-list > div { padding:22px 0; border-top:1px solid var(--line); }
+.technical-capability-list dt { font:600 18px/1.4 'Manrope',sans-serif; letter-spacing:-.02em; }
+.technical-capability-list dd { max-width:60ch; margin:8px 0 0; color:#514759; font-size:14px; line-height:1.65; }
+.technical-capabilities .scope-note { margin-top:32px; }
+.technical-reading { max-width:1320px; margin:auto; padding:90px 48px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:80px; color:var(--paper); }
+.technical-reading h2 { margin:0 0 22px; font:500 32px/1.2 'Manrope',sans-serif; letter-spacing:-.035em; }
+.technical-reading p { max-width:65ch; margin:0 0 18px; font-size:15px; line-height:1.75; color:var(--lavender); }
+.technical-document { border-left:1px solid rgba(231,221,255,.24); padding-left:48px; }
+.technical-document .technical-document__note { margin:22px 0 0; font-size:12px; }
+.footer__links { flex-wrap:wrap; }
+@media (max-width:1100px) {
+ .technical-hero { gap:36px; }
+ .technical-intro h1 { font-size:44px; }
+ .technical-intro > p:not(.eyebrow) { font-size:15px; }
+ .technical-reading { gap:40px; }
+ .technical-document { padding-left:32px; }
+}
+@media (max-width:900px) {
+ .technical-hero { grid-template-columns:minmax(0,1fr); gap:54px; }
+ .technical-intro { max-width:740px; }
+ .technical-architecture { width:100%; max-width:640px; margin:0 auto; }
+ .technical-reading { grid-template-columns:minmax(0,1fr); gap:40px; }
+ .technical-document { padding:36px 0 0; border-left:0; border-top:1px solid rgba(231,221,255,.24); }
+}
+@media (max-width:760px) {
+ .technical-hero { padding:42px 22px 60px; }
+ .technical-intro h1 { font-size:clamp(34px,9vw,44px); }
+ .technical-intro > p:not(.eyebrow) { font-size:16px; }
+ .technical-actions { gap:20px; }
+ .technical-actions .button { gap:18px; padding:0 18px; }
+ .technical-node { padding:16px 12px; }
+ .technical-node h2, .technical-node h3 { font-size:14px; }
+ .technical-vms { align-items:stretch; }
+ .technical-node--vm { display:flex; flex-direction:column; justify-content:center; padding:18px 10px; }
+ .technical-capabilities { padding-top:60px; padding-bottom:60px; }
+ .technical-capability-list { grid-template-columns:minmax(0,1fr); }
+ .technical-reading { padding:60px 22px; }
+ .technical-reading h2 { font-size:28px; }
+}
+
 
 
 /* Task-led onboarding: keep requirements beside the entry point. */
