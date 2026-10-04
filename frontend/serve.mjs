@@ -27,6 +27,7 @@ const types = {
   '.png': 'image/png',
   '.woff2': 'font/woff2',
   '.txt': 'text/plain; charset=utf-8',
+  '.pdf': 'application/pdf',
 };
 
 // `runtime-config.js` carries the API base URL and is rewritten per deployment,

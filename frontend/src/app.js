@@ -9,8 +9,10 @@ import { finishIntro } from './intro.js';
 import { attachCoreParallax } from './core-scene.js';
 import { attachShell } from './shell.js';
 import { LegalPage, legalTitle } from './legal.js';
+import { TechnicalOverviewPage, OVERVIEW_PATH, OVERVIEW_TITLE, OVERVIEW_DESCRIPTION } from './technical-overview.js';
 
 const app = document.querySelector('#app');
+const defaultDescription = 'Eplyx is in development: scoped Solana upgrade checks, migration rehearsals and lifecycle analysis, working towards broader change and consequence intelligence.';
 let revealObserver;
 let disposeCoreScene;
 let disposeReport;
@@ -24,8 +26,19 @@ function route() {
   disposeReport = undefined;
   const path = location.pathname.replace(/\/+$/, '') || '/';
   const legal = LegalPage(path);
-  document.title = legalTitle(path) || 'Eplyx — Know what changes';
+  document.title = path === OVERVIEW_PATH ? OVERVIEW_TITLE : legalTitle(path) || 'Eplyx — Know what changes';
+  document.querySelector('meta[name="description"]').content = path === OVERVIEW_PATH ? OVERVIEW_DESCRIPTION : defaultDescription;
+  let canonical = document.querySelector('link[rel="canonical"]');
+  if (path === OVERVIEW_PATH) {
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.rel = 'canonical';
+      document.head.append(canonical);
+    }
+    canonical.href = new URL(OVERVIEW_PATH, location.origin).href;
+  } else canonical?.remove();
   if (legal) app.innerHTML = legal;
+  else if (path === OVERVIEW_PATH) app.innerHTML = TechnicalOverviewPage();
   else if (path === '/start') app.innerHTML = StartPage();
   else if (path === '/cli') app.innerHTML = CliPage();
   else if (path === '/token-transitions') app.innerHTML = TokenTransitionsPage();
