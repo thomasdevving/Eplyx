@@ -226,8 +226,13 @@ fn version_needs_no_project_config_store_or_network() {
     assert_eq!(value["version"], env!("CARGO_PKG_VERSION"));
     assert_eq!(value["engine"]["run_metadata_schema"], 2);
     assert_eq!(
-        value["engine"]["change_specs"].as_object().unwrap().len(),
-        3
+        value["engine"]["change_specs"],
+        serde_json::json!({
+            "program_upgrade": [1],
+            "token_migration": [1],
+            "lifecycle_change": [1],
+            "protocol_parameter_change": [1],
+        })
     );
     assert!(value["platform"].as_str().unwrap().contains('-'));
     assert!(!out.contains(dir.path().to_string_lossy().as_ref()));

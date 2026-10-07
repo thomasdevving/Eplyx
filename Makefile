@@ -5,7 +5,7 @@
 SHELL := /bin/bash
 CARGO := cargo
 
-.PHONY: all build programs compare report fixtures impact-fixtures governance-fixtures test test-engine test-programs fmt fmt-check lint clean demo-replay demo-discovery demo-mainnet-replay demo-token2022-upgrade demo-cpi-mainnet-replay memo-candidate token2022-candidate stake-pool-candidate
+.PHONY: all build programs compare report fixtures impact-fixtures governance-fixtures test test-artifacts test-engine test-programs fmt fmt-check lint clean demo-replay demo-discovery demo-mainnet-replay demo-token2022-upgrade demo-cpi-mainnet-replay memo-candidate token2022-candidate stake-pool-candidate stake-pool-config-candidate migration-candidate
 
 all: compare
 
@@ -36,10 +36,14 @@ governance-fixtures:
 
 ## Everything: program unit tests plus the differential suite.
 #
-# The stake-pool candidate is built here because the Phase 8 CPI execution tests
-# load both of its flavours. Everything that executes needs its artefact present;
-# the tests fail with an explanatory message rather than skipping.
-test: build stake-pool-candidate test-programs test-engine
+# Every execution test needs its candidate artifacts present. Making the host
+# test depend on this step also preserves ordering under `make -j test`.
+test: test-programs
+	$(MAKE) test-artifacts
+	$(MAKE) test-engine
+
+# build-programs.sh also builds all three migration candidates.
+test-artifacts: build memo-candidate token2022-candidate stake-pool-candidate stake-pool-config-candidate
 
 test-engine:
 	$(CARGO) test
@@ -54,6 +58,7 @@ fmt:
 	$(CARGO) fmt --all --manifest-path programs/fixture-memo-candidate/Cargo.toml
 	$(CARGO) fmt --all --manifest-path programs/fixture-token2022-candidate/Cargo.toml
 	$(CARGO) fmt --all --manifest-path programs/fixture-stake-pool-candidate/Cargo.toml
+	$(CARGO) fmt --all --manifest-path programs/fixture-stake-pool-config-candidate/Cargo.toml
 
 fmt-check:
 	$(CARGO) fmt --all --manifest-path programs/eplyx-token-migration/Cargo.toml -- --check
@@ -62,6 +67,7 @@ fmt-check:
 	$(CARGO) fmt --all --manifest-path programs/fixture-memo-candidate/Cargo.toml -- --check
 	$(CARGO) fmt --all --manifest-path programs/fixture-token2022-candidate/Cargo.toml -- --check
 	$(CARGO) fmt --all --manifest-path programs/fixture-stake-pool-candidate/Cargo.toml -- --check
+	$(CARGO) fmt --all --manifest-path programs/fixture-stake-pool-config-candidate/Cargo.toml -- --check
 
 lint:
 	$(CARGO) clippy --all-targets -- -D warnings
@@ -80,6 +86,8 @@ lint:
 		--all-targets -- -D warnings
 	$(CARGO) clippy --manifest-path programs/fixture-stake-pool-candidate/Cargo.toml \
 		--features reference --all-targets -- -D warnings
+	$(CARGO) clippy --manifest-path programs/fixture-stake-pool-config-candidate/Cargo.toml \
+		--all-targets -- -D warnings
 
 clean:
 	$(CARGO) clean
@@ -87,6 +95,8 @@ clean:
 	$(CARGO) clean --manifest-path programs/fixture-memo-candidate/Cargo.toml
 	$(CARGO) clean --manifest-path programs/fixture-token2022-candidate/Cargo.toml
 	$(CARGO) clean --manifest-path programs/fixture-stake-pool-candidate/Cargo.toml
+	$(CARGO) clean --manifest-path programs/fixture-stake-pool-config-candidate/Cargo.toml
+	$(CARGO) clean --manifest-path programs/eplyx-token-migration/Cargo.toml
 	rm -rf artifacts report.json
 
 ## Real local-validator capture, RPC ingestion and offline replay demonstration.
@@ -117,6 +127,12 @@ token2022-candidate:
 
 stake-pool-candidate:
 	./scripts/build-stake-pool-candidate.sh
+
+stake-pool-config-candidate:
+	./scripts/build-stake-pool-config-candidate.sh
+
+migration-candidate:
+	./scripts/build-migration-candidate.sh
 
 # Required Postgres-backed identity/sync checks. Missing configuration fails.
 .PHONY: test-cloud

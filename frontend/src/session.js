@@ -12,6 +12,8 @@
 
 const DEFAULT_LOCAL_API = 'http://127.0.0.1:8891';
 const KEY = 'eplyx-operator-token';
+let memoryToken = '';
+let storageUnavailable = false;
 
 export const API_BASE = resolveApiBase();
 
@@ -27,19 +29,23 @@ function resolveApiBase() {
 }
 
 export function operatorToken() {
+  if (storageUnavailable) return memoryToken;
   try {
-    return sessionStorage.getItem(KEY) || '';
+    memoryToken = sessionStorage.getItem(KEY) || '';
+    return memoryToken;
   } catch {
-    return '';
+    return memoryToken;
   }
 }
 
 export function setOperatorToken(token) {
+  memoryToken = token || '';
   try {
     if (token) sessionStorage.setItem(KEY, token);
     else sessionStorage.removeItem(KEY);
+    storageUnavailable = false;
   } catch {
-    /* The console still works for this page view without storage. */
+    storageUnavailable = true;
   }
 }
 
@@ -74,7 +80,14 @@ export async function api(path, { method = 'GET', body, headers = {} } = {}) {
   } catch (error) {
     throw new ApiError(0, { error: 'Could not reach Eplyx.' });
   }
-  const payload = response.status === 204 ? {} : await response.json().catch(() => ({}));
+  let payload = {};
+  if (response.status !== 204) {
+    try {
+      payload = await response.json();
+    } catch {
+      if (response.ok) throw new ApiError(response.status, { error: 'Eplyx returned an invalid response. Check the API configuration and try again.' });
+    }
+  }
   if (!response.ok) throw new ApiError(response.status, payload);
   return payload;
 }
