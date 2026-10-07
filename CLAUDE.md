@@ -370,6 +370,25 @@ is tested against engine-produced fixtures in
 `docs/examples/phase-p3-impact-view/` (`make impact-fixtures`; the controlled
 Drift ones are counterexamples, not builds). See `docs/phase-p3-impact-view.md`.
 
+### Rollout rehearsal
+
+`rollout` executes the loader-v3 `Upgrade` instruction over a seeded installed
+world (Program, ProgramData with retained V1 bytes and deploy slot, a Buffer
+holding the candidate) and orders it against the unchanged
+`spl_stake_pool_sol_deposit_fee_v1` SetFee before the retained DepositSol, in
+five scenarios restored from S0. Each step runs in a fresh VM from a
+content-addressed byte-bearing state (`Present`/`KnownAbsent`; a missing row is
+unknown); the VM's full census rejects writes outside the closure. LiteSVM 0.16
+makes an upgrade callable in the same slot, so the model refuses program steps
+before `deploy_slot + 1` and advances only `Clock.slot` explicitly, refusing an
+epoch crossing. ProgramData capacity is a typed blocker, never a resize. No
+ChangeSpec kind was added; `eplyx-rollout-rehearsal-input-v1` binds both
+proposals. The counterexample candidate (`programs/fixture-stake-pool-rollout-candidate`,
+tracked bytes in `fixtures/rollout/`) is Linux-x86_64-qualified and not an
+upstream release. Do not edit `executor.rs`, `replay.rs`, `parameter_change/`,
+`interaction.rs` or the lockfiles for it: their bytes are committed into
+existing receipts. See `docs/rollout-rehearsal.md`.
+
 ### Governance binding (Phase G1)
 
 `governance::verify_squads_upgrade` binds one Squads V4 vault transaction to a

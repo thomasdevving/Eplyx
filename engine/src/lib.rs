@@ -241,3 +241,4 @@ pub mod parameter_change;
 pub mod parameter_search;
 
 pub mod interaction;
+pub mod rollout;

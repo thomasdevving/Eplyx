@@ -18,6 +18,7 @@ installation. Neither route covers every Solana program or account.
 | Check a transfer, exit or withdrawal | [Current-state analysis](current-state-analysis.md) | Exact account/path inputs and retained state/code; new acquisition needs configured provider access. |
 | Evaluate a supported fee proposal | [Fee walkthrough](parameter-analysis-guide.md) | Exact declaration and operation-specific retained input. |
 | Compare code and fee effects together | [Interaction](upgrade-parameter-interaction.md) | Qualified Stake Pool candidate, two proposals and one retained deposit. |
+| Rehearse upgrade/fee rollout order with an installed upgrade | [Rollout rehearsal](rollout-rehearsal.md) | Qualified rollout candidate, the two existing proposals and one retained deposit; signer assumptions are explicit. |
 | Compare two migration transaction orders | [Migration order](migration-order-case.md) | Eligible retained migration and two selected source accounts. |
 | Review a Squads upgrade | [Binding](phase-g1-squads-governance-binding.md), [deployment attestation](phase-g2-squads-deployment-attestation.md) | Supported proposal, exact candidate evidence and read-only RPC. |
 | Review or share saved results | [Dashboard](dashboard.md), [cloud sync](cloud.md) | Saved local records; hosted sharing needs workspace access. Sync does not rerun analysis. |
