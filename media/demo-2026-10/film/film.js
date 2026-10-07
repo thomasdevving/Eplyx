@@ -60,7 +60,7 @@ const bounds = chapters.map((_, i) => chapterBounds(i));
 
 function updateHud(t, scene) {
   const show = scene.hud !== false;
-  const o = show ? Math.min(seg(t, scene.at + .1, scene.at + .7), seg(t, scene.end + .2, scene.end - .35)) : 0;
+  const o = show ? Math.min(seg(t, scene.at + .1, scene.at + .7), 1 - seg(t, scene.end - .35, scene.end + .2)) : 0;
   // the brand stays while any HUD scene is on screen; chips change per scene
   const anyHud = scenes.some(s => s.hud !== false && t >= s.at - .3 && t < s.end + .3);
   hudBrand.style.opacity = (anyHud ? 1 : 0) * (scene.hud === false ? seg(t, scene.at + .3, scene.at - .2) : 1);
