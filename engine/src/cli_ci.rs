@@ -166,7 +166,7 @@ fn render_ci(report: &eplyx_engine::ci::CiReport) -> String {
                 let _ = writeln!(text, "Parameter mint: {}", target.config_account);
             }
             eplyx_engine::change::BoundChange::LifecycleChange { asset_mint, .. } => {
-                println!("Lifecycle asset: {asset_mint}");
+                let _ = writeln!(text, "Lifecycle asset: {asset_mint}");
             }
             eplyx_engine::change::BoundChange::TokenMigration {
                 source_mint,
@@ -341,4 +341,37 @@ fn render_ci(report: &eplyx_engine::ci::CiReport) -> String {
     );
     let _ = write!(text, "exit {}", report.summary.exit_code);
     text
+}
+
+#[cfg(test)]
+mod tests {
+    use super::render_ci;
+    use eplyx_engine::change::BoundChange;
+
+    /// `ci check` never binds a lifecycle change today, so the arm is reached
+    /// only by a report carrying one. Its line belongs to the rendered report,
+    /// not to whatever stdout the caller happens to have.
+    #[test]
+    fn a_lifecycle_change_is_rendered_into_the_report() {
+        let bundle = eplyx_engine::repo_root().join("deploy/bundle");
+        let mut report =
+            eplyx_engine::ci::check(&bundle, &bundle.join("binaries/current.so"), None)
+                .expect("the tracked bundle checks its own baseline");
+        report.change.as_mut().expect("bound change").change = BoundChange::LifecycleChange {
+            asset_mint: "LifecycleMint1111111111111111111111111111111".into(),
+            destination_mint: None,
+        };
+        let text = render_ci(&report);
+        assert_eq!(
+            text.matches("Lifecycle asset: LifecycleMint1111111111111111111111111111111\n")
+                .count(),
+            1,
+            "{text}"
+        );
+        // In the header, next to the candidate it describes.
+        let candidate = text.find("Candidate:").unwrap();
+        let lifecycle = text.find("Lifecycle asset:").unwrap();
+        let bundle_line = text.find("Bundle:").unwrap();
+        assert!(candidate < lifecycle && lifecycle < bundle_line, "{text}");
+    }
 }
