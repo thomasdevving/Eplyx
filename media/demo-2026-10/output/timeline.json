@@ -1,666 +1,581 @@
 {
- "duration": 178,
+ "duration": 177,
  "scenes": [
   {
-   "id": "intro",
+   "id": "hook",
    "at": 0,
-   "end": 11,
-   "chapter": 0
+   "end": 10
   },
   {
-   "id": "channels",
-   "at": 11,
-   "end": 16.5,
-   "chapter": 0
+   "id": "how",
+   "at": 10,
+   "end": 26
+  },
+  {
+   "id": "who",
+   "at": 26,
+   "end": 32
   },
   {
    "id": "website",
-   "at": 16.5,
-   "end": 25,
-   "chapter": 1
-  },
-  {
-   "id": "concept",
-   "at": 25,
-   "end": 29.5,
-   "chapter": 2
+   "at": 32,
+   "end": 39
   },
   {
    "id": "upgrade",
-   "at": 29.5,
-   "end": 40.5,
-   "chapter": 2
+   "at": 39,
+   "end": 53
   },
   {
    "id": "expectations",
-   "at": 40.5,
-   "end": 48,
-   "chapter": 2
+   "at": 53,
+   "end": 60
   },
   {
    "id": "gate",
-   "at": 48,
-   "end": 53,
-   "chapter": 2
+   "at": 60,
+   "end": 65
   },
   {
    "id": "operator",
-   "at": 53,
-   "end": 61.5,
-   "chapter": 3
+   "at": 65,
+   "end": 73
   },
   {
    "id": "hosted",
-   "at": 61.5,
-   "end": 71,
-   "chapter": 3
+   "at": 73,
+   "end": 83
   },
   {
    "id": "governance",
-   "at": 71,
-   "end": 79,
-   "chapter": 4
+   "at": 83,
+   "end": 92
   },
   {
    "id": "history",
-   "at": 79,
-   "end": 89.5,
-   "chapter": 4
+   "at": 92,
+   "end": 102
   },
   {
    "id": "migration",
-   "at": 89.5,
-   "end": 99.5,
-   "chapter": 5
+   "at": 102,
+   "end": 112
   },
   {
    "id": "dashboard",
-   "at": 99.5,
-   "end": 108,
-   "chapter": 5
+   "at": 112,
+   "end": 119
   },
   {
    "id": "lifecycle",
-   "at": 108,
-   "end": 115,
-   "chapter": 5
+   "at": 119,
+   "end": 125
   },
   {
    "id": "current",
-   "at": 115,
-   "end": 125.5,
-   "chapter": 5
+   "at": 125,
+   "end": 135
   },
   {
    "id": "fee",
-   "at": 125.5,
-   "end": 133,
-   "chapter": 6
+   "at": 135,
+   "end": 141.5
   },
   {
    "id": "interaction",
-   "at": 133,
-   "end": 139.5,
-   "chapter": 6
+   "at": 141.5,
+   "end": 147
   },
   {
    "id": "share",
-   "at": 139.5,
-   "end": 148,
-   "chapter": 7
+   "at": 147,
+   "end": 154
   },
   {
    "id": "api",
-   "at": 148,
-   "end": 153.5,
-   "chapter": 7
-  },
-  {
-   "id": "evidence",
-   "at": 153.5,
-   "end": 160,
-   "chapter": 7
-  },
-  {
-   "id": "personas",
-   "at": 160,
-   "end": 167,
-   "chapter": 8
+   "at": 154,
+   "end": 159
   },
   {
    "id": "boundaries",
-   "at": 167,
-   "end": 173,
-   "chapter": 8
+   "at": 159,
+   "end": 166
+  },
+  {
+   "id": "vision",
+   "at": 166,
+   "end": 172
   },
   {
    "id": "end",
-   "at": 173,
-   "end": 178,
-   "chapter": 8
+   "at": 172,
+   "end": 177
   }
  ],
  "cues": [
   {
    "t": 0,
    "type": "scene",
-   "id": "intro",
-   "chapter": 0
+   "id": "hook"
   },
   {
-   "t": 5.3,
-   "type": "whoosh"
-  },
-  {
-   "t": 8.6,
-   "type": "tick"
-  },
-  {
-   "t": 8.82,
-   "type": "tick"
-  },
-  {
-   "t": 9.04,
-   "type": "tick"
-  },
-  {
-   "t": 11,
-   "type": "scene",
-   "id": "channels",
-   "chapter": 0
-  },
-  {
-   "t": 11.1,
+   "t": 4.4,
    "type": "boom"
   },
   {
-   "t": 11.7,
-   "type": "tick"
-  },
-  {
-   "t": 11.82,
-   "type": "tick"
-  },
-  {
-   "t": 11.94,
-   "type": "tick"
-  },
-  {
-   "t": 12.06,
-   "type": "tick"
-  },
-  {
-   "t": 12.18,
-   "type": "tick"
-  },
-  {
-   "t": 12.3,
-   "type": "tick"
-  },
-  {
-   "t": 12.42,
-   "type": "tick"
-  },
-  {
-   "t": 12.54,
-   "type": "tick"
-  },
-  {
-   "t": 16.5,
+   "t": 10,
    "type": "scene",
-   "id": "website",
-   "chapter": 1
+   "id": "how"
   },
   {
-   "t": 16.6,
-   "type": "whoosh"
-  },
-  {
-   "t": 21.25,
-   "type": "whoosh"
-  },
-  {
-   "t": 25,
-   "type": "scene",
-   "id": "concept",
-   "chapter": 2
-  },
-  {
-   "t": 25.25,
+   "t": 10.8,
    "type": "tick"
   },
   {
-   "t": 25.9,
+   "t": 11.02,
    "type": "tick"
   },
   {
-   "t": 26,
+   "t": 11.24,
    "type": "tick"
   },
   {
-   "t": 27.1,
+   "t": 11.46,
    "type": "tick"
   },
   {
-   "t": 29.5,
-   "type": "scene",
-   "id": "upgrade",
-   "chapter": 2
+   "t": 14,
+   "type": "tick"
   },
   {
-   "t": 29.8,
-   "type": "typing",
-   "dur": 0.8999999999999999
+   "t": 14.3,
+   "type": "tick"
   },
   {
-   "t": 32.6,
-   "type": "typing",
-   "dur": 0.9500000000000002
+   "t": 16.8,
+   "type": "tick"
   },
   {
-   "t": 33.9,
+   "t": 17.05,
+   "type": "tick"
+  },
+  {
+   "t": 19.2,
+   "type": "tick"
+  },
+  {
+   "t": 19.75,
+   "type": "tick"
+  },
+  {
+   "t": 20.3,
+   "type": "tick"
+  },
+  {
+   "t": 22.4,
    "type": "pass"
   },
   {
-   "t": 35.45,
+   "t": 26,
+   "type": "scene",
+   "id": "who"
+  },
+  {
+   "t": 26.6,
+   "type": "tick"
+  },
+  {
+   "t": 26.78,
+   "type": "tick"
+  },
+  {
+   "t": 26.96,
+   "type": "tick"
+  },
+  {
+   "t": 27.14,
+   "type": "tick"
+  },
+  {
+   "t": 32,
+   "type": "scene",
+   "id": "website"
+  },
+  {
+   "t": 32.1,
+   "type": "whoosh"
+  },
+  {
+   "t": 35.95,
+   "type": "whoosh"
+  },
+  {
+   "t": 39,
+   "type": "scene",
+   "id": "upgrade"
+  },
+  {
+   "t": 39.4,
+   "type": "typing",
+   "dur": 0.9
+  },
+  {
+   "t": 42.4,
+   "type": "typing",
+   "dur": 0.9499999999999997
+  },
+  {
+   "t": 43.7,
+   "type": "pass"
+  },
+  {
+   "t": 45.55,
    "type": "typing",
    "dur": 0.9500000000000002
   },
   {
-   "t": 37.2,
+   "t": 47.3,
    "type": "fail"
-  },
-  {
-   "t": 40.5,
-   "type": "scene",
-   "id": "expectations",
-   "chapter": 2
-  },
-  {
-   "t": 40.75,
-   "type": "typing",
-   "dur": 0.8
-  },
-  {
-   "t": 43.6,
-   "type": "typing",
-   "dur": 0.9999999999999996
-  },
-  {
-   "t": 46.5,
-   "type": "fail"
-  },
-  {
-   "t": 48,
-   "type": "scene",
-   "id": "gate",
-   "chapter": 2
-  },
-  {
-   "t": 48.5,
-   "type": "tick"
-  },
-  {
-   "t": 48.6,
-   "type": "tick"
-  },
-  {
-   "t": 48.7,
-   "type": "tick"
-  },
-  {
-   "t": 48.8,
-   "type": "tick"
-  },
-  {
-   "t": 48.9,
-   "type": "tick"
-  },
-  {
-   "t": 49,
-   "type": "tick"
   },
   {
    "t": 53,
    "type": "scene",
-   "id": "operator",
-   "chapter": 3
+   "id": "expectations"
   },
   {
-   "t": 53.35,
+   "t": 53.25,
    "type": "typing",
-   "dur": 0.6999999999999998
+   "dur": 0.75
   },
   {
-   "t": 55.4,
+   "t": 55.95,
    "type": "typing",
-   "dur": 0.6999999999999997
+   "dur": 0.9500000000000002
   },
   {
-   "t": 57.4,
-   "type": "typing",
-   "dur": 0.7000000000000002
+   "t": 58.6,
+   "type": "fail"
   },
   {
-   "t": 61.5,
+   "t": 60,
    "type": "scene",
-   "id": "hosted",
-   "chapter": 3
+   "id": "gate"
   },
   {
-   "t": 61.8,
+   "t": 60.5,
+   "type": "tick"
+  },
+  {
+   "t": 60.6,
+   "type": "tick"
+  },
+  {
+   "t": 60.7,
+   "type": "tick"
+  },
+  {
+   "t": 60.8,
+   "type": "tick"
+  },
+  {
+   "t": 60.9,
+   "type": "tick"
+  },
+  {
+   "t": 61,
+   "type": "tick"
+  },
+  {
+   "t": 65,
+   "type": "scene",
+   "id": "operator"
+  },
+  {
+   "t": 65.35,
+   "type": "typing",
+   "dur": 0.65
+  },
+  {
+   "t": 67.3,
+   "type": "typing",
+   "dur": 0.6499999999999999
+  },
+  {
+   "t": 69.2,
+   "type": "typing",
+   "dur": 0.6500000000000004
+  },
+  {
+   "t": 73,
+   "type": "scene",
+   "id": "hosted"
+  },
+  {
+   "t": 73.3,
    "type": "typing",
    "dur": 0.5
   },
   {
-   "t": 62.85,
+   "t": 74.35,
    "type": "typing",
    "dur": 1.1
   },
   {
-   "t": 65.15,
+   "t": 76.65,
    "type": "fail"
   },
   {
-   "t": 67.1,
+   "t": 78.9,
    "type": "whoosh"
   },
   {
-   "t": 71,
+   "t": 83,
    "type": "scene",
-   "id": "governance",
-   "chapter": 4
+   "id": "governance"
   },
   {
-   "t": 71.3,
+   "t": 83.3,
    "type": "typing",
    "dur": 1.2
   },
   {
-   "t": 73.5,
+   "t": 85.5,
    "type": "pass"
   },
   {
-   "t": 79,
+   "t": 92,
    "type": "scene",
-   "id": "history",
-   "chapter": 4
+   "id": "history"
   },
   {
-   "t": 79.3,
+   "t": 92.3,
    "type": "typing",
-   "dur": 0.8999999999999999
+   "dur": 0.8499999999999999
   },
   {
-   "t": 81.7,
+   "t": 94.6,
    "type": "typing",
-   "dur": 1
+   "dur": 0.9499999999999997
   },
   {
-   "t": 84.3,
+   "t": 97.1,
    "type": "typing",
-   "dur": 0.7999999999999998
+   "dur": 0.75
   },
   {
-   "t": 86.55,
+   "t": 99.2,
    "type": "typing",
-   "dur": 0.7000000000000002
+   "dur": 0.6500000000000004
   },
   {
-   "t": 89.05,
+   "t": 101.55,
    "type": "typing",
-   "dur": 0.8000000000000007
+   "dur": 0.75
   },
   {
-   "t": 89.5,
+   "t": 102,
    "type": "scene",
-   "id": "migration",
-   "chapter": 5
+   "id": "migration"
   },
   {
-   "t": 89.75,
+   "t": 102.25,
    "type": "typing",
    "dur": 0.35
   },
   {
-   "t": 90.6,
+   "t": 103.05,
    "type": "fail"
   },
   {
-   "t": 91.05,
+   "t": 103.55,
    "type": "typing",
    "dur": 0.44999999999999996
   },
   {
-   "t": 93.05,
+   "t": 105.55,
    "type": "typing",
    "dur": 0.5000000000000004
   },
   {
-   "t": 94.15,
+   "t": 106.65,
    "type": "typing",
    "dur": 0.4500000000000002
   },
   {
-   "t": 95.05,
+   "t": 107.55,
    "type": "fail"
   },
   {
-   "t": 96.1,
+   "t": 108.6,
    "type": "typing",
    "dur": 0.5999999999999996
   },
   {
-   "t": 97.85,
+   "t": 110.35,
    "type": "typing",
    "dur": 0.5
   },
   {
-   "t": 98.75,
+   "t": 111.25,
    "type": "typing",
    "dur": 0.5
   },
   {
-   "t": 99.5,
+   "t": 112,
    "type": "scene",
-   "id": "dashboard",
-   "chapter": 5
+   "id": "dashboard"
   },
   {
-   "t": 99.5,
+   "t": 112,
    "type": "whoosh"
   },
   {
-   "t": 100.7,
+   "t": 113.2,
    "type": "typing",
    "dur": 0.5
   },
   {
-   "t": 103.75,
+   "t": 115.45,
    "type": "whoosh"
   },
   {
-   "t": 108,
+   "t": 119,
    "type": "scene",
-   "id": "lifecycle",
-   "chapter": 5
+   "id": "lifecycle"
   },
   {
-   "t": 108.3,
+   "t": 119.3,
    "type": "typing",
-   "dur": 0.7
+   "dur": 0.5999999999999999
   },
   {
-   "t": 109.7,
+   "t": 120.6,
    "type": "typing",
-   "dur": 0.9000000000000001
+   "dur": 0.8
   },
   {
-   "t": 115,
+   "t": 125,
    "type": "scene",
-   "id": "current",
-   "chapter": 5
+   "id": "current"
   },
   {
-   "t": 117.4,
+   "t": 127.3,
    "type": "pass"
   },
   {
-   "t": 121.1,
+   "t": 130.8,
    "type": "pass"
   },
   {
-   "t": 123.2,
+   "t": 132.8,
    "type": "pass"
   },
   {
-   "t": 125.5,
+   "t": 135,
    "type": "scene",
-   "id": "fee",
-   "chapter": 6
+   "id": "fee"
   },
   {
-   "t": 125.8,
+   "t": 135.3,
    "type": "typing",
-   "dur": 1
+   "dur": 0.8999999999999999
   },
   {
-   "t": 127.85,
+   "t": 137.15,
    "type": "typing",
-   "dur": 0.6000000000000001
+   "dur": 0.5500000000000003
   },
   {
-   "t": 130.3,
-   "type": "typing",
-   "dur": 0.7999999999999998
-  },
-  {
-   "t": 133,
-   "type": "scene",
-   "id": "interaction",
-   "chapter": 6
-  },
-  {
-   "t": 133.3,
-   "type": "typing",
-   "dur": 1.9999999999999998
-  },
-  {
-   "t": 139.5,
-   "type": "scene",
-   "id": "share",
-   "chapter": 7
-  },
-  {
-   "t": 139.8,
-   "type": "typing",
-   "dur": 0.7
-  },
-  {
-   "t": 142.65,
+   "t": 139.35,
    "type": "typing",
    "dur": 0.7000000000000002
   },
   {
-   "t": 144.3,
+   "t": 141.5,
+   "type": "scene",
+   "id": "interaction"
+  },
+  {
+   "t": 141.8,
+   "type": "typing",
+   "dur": 1.5
+  },
+  {
+   "t": 144.7,
+   "type": "pass"
+  },
+  {
+   "t": 147,
+   "type": "scene",
+   "id": "share"
+  },
+  {
+   "t": 147.3,
+   "type": "typing",
+   "dur": 0.5999999999999999
+  },
+  {
+   "t": 149.65,
+   "type": "typing",
+   "dur": 0.6000000000000001
+  },
+  {
+   "t": 151.1,
    "type": "typing",
    "dur": 0.5
   },
   {
-   "t": 148,
-   "type": "scene",
-   "id": "api",
-   "chapter": 7
-  },
-  {
-   "t": 148.25,
-   "type": "typing",
-   "dur": 0.8999999999999999
-  },
-  {
-   "t": 150.6,
-   "type": "typing",
-   "dur": 0.8999999999999999
-  },
-  {
-   "t": 153.5,
-   "type": "scene",
-   "id": "evidence",
-   "chapter": 7
-  },
-  {
-   "t": 153.8,
-   "type": "tick"
-  },
-  {
-   "t": 153.9,
-   "type": "tick"
-  },
-  {
    "t": 154,
-   "type": "tick"
+   "type": "scene",
+   "id": "api"
   },
   {
-   "t": 154.1,
-   "type": "tick"
-  },
-  {
-   "t": 154.2,
-   "type": "tick"
-  },
-  {
-   "t": 154.3,
-   "type": "tick"
-  },
-  {
-   "t": 154.4,
-   "type": "tick"
-  },
-  {
-   "t": 154.9,
+   "t": 154.25,
    "type": "typing",
-   "dur": 0.6999999999999997
+   "dur": 0.8
   },
   {
-   "t": 160,
+   "t": 156.4,
+   "type": "typing",
+   "dur": 0.8000000000000003
+  },
+  {
+   "t": 159,
    "type": "scene",
-   "id": "personas",
-   "chapter": 8
+   "id": "boundaries"
   },
   {
-   "t": 160.35,
+   "t": 159.45,
    "type": "tick"
   },
   {
-   "t": 160.49,
+   "t": 159.61,
    "type": "tick"
   },
   {
-   "t": 160.63,
+   "t": 159.77,
    "type": "tick"
   },
   {
-   "t": 160.77,
+   "t": 159.93,
    "type": "tick"
   },
   {
-   "t": 160.91,
-   "type": "tick"
-  },
-  {
-   "t": 167,
+   "t": 166,
    "type": "scene",
-   "id": "boundaries",
-   "chapter": 8
+   "id": "vision"
   },
   {
-   "t": 173,
+   "t": 166.3,
+   "type": "whoosh"
+  },
+  {
+   "t": 172,
    "type": "scene",
-   "id": "end",
-   "chapter": 8
+   "id": "end"
   },
   {
-   "t": 173.1,
+   "t": 172.1,
    "type": "boom"
   }
  ]

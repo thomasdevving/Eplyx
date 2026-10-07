@@ -150,3 +150,24 @@ export function mark(term, overlay, text, opts) {
   const el = h('div', { class: 'tmark' }); overlay.append(el);
   return (p) => termMark(term, el, text, p, opts);
 }
+
+/** Persona tag + scenario title + "what Eplyx does" paragraph. */
+export function scenario(root, { x, y, w = 560, persona, title, does = '', size = 'md', doesY = null }) {
+  const tag = h('div', { class: 'abs persona', style: { left: x + 'px', top: y + 'px' } }, h('b', {}, persona));
+  root.append(tag);
+  const tb = titleBlock(root, { x, y: y + 44, w, title, size });
+  let d = null, dw = [];
+  if (does) {
+    d = h('div', { class: 'does', style: { left: x + 'px', top: (doesY ?? y + (size === 'sm' ? 190 : 230)) + 'px', width: w + 'px' } });
+    d.append(h('strong', {}, 'What Eplyx does'));
+    const p = h('span'); dw = splitWords(p, does, 'w'); d.append(p);
+    root.append(d);
+  }
+  return {
+    update(lt, { at = 0 } = {}) {
+      put(tag, { y: (1 - seg(lt, at, at + .6, ease.outQuint)) * 14, o: seg(lt, at, at + .45) });
+      tb.update(lt, { at: at + .05 });
+      if (d) { d.style.borderTopColor = `rgba(231,221,255,${(.22 * seg(lt, at + .5, at + 1.1)).toFixed(3)})`; d.firstChild.style.opacity = seg(lt, at + .55, at + .95); riseWords(dw, lt, at + .65, { stagger: .012, dur: .6 }); }
+    },
+  };
+}
