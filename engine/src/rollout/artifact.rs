@@ -253,6 +253,27 @@ pub fn readable(analysis: &Analysis) -> Result<String> {
             .clone()
             .unwrap_or_else(|| "none (not qualified)".into())
     )?;
+    if let (Some(plan), Some(f)) = (&r.preparation, &r.programdata_preflight) {
+        writeln!(
+            t,
+            "## ProgramData preparation\n\nDeclared: `{}`. Preflight (derived, no VM): `{}`. ProgramData `{}`: account {} bytes = {}-byte header + {} executable bytes; candidate {} bytes; at least {} additional bytes required.{}\n",
+            serde_json::to_string(plan)?,
+            word(f.status),
+            f.programdata_address,
+            f.programdata_account_len,
+            f.programdata_metadata_len,
+            f.executable_capacity_bytes,
+            f.candidate.len,
+            f.minimum_additional_bytes_required,
+            f.funding
+                .as_ref()
+                .map(|x| format!(
+                    " Declared extension: rent funding {} lamports from the assumed payer, fee {} lamports.",
+                    x.required_funding_lamports, x.transaction_fee_lamports
+                ))
+                .unwrap_or_default()
+        )?;
+    }
     let cap = &r.preflight.capacity;
     writeln!(
         t,
@@ -275,6 +296,18 @@ pub fn readable(analysis: &Analysis) -> Result<String> {
         word(r.anchors.installed_overlay.status),
         r.anchors.installed_overlay.reason.clone().unwrap_or_default()
     )?;
+    if let Some(a) = &r.anchors.extension_only {
+        // Appended after the table's blank line; v1 reports never carry it.
+        writeln!(
+            t,
+            "Extension-only control (S0 → ExtendProgram → DepositSol vs S0 → DepositSol): `{}`{}\n",
+            word(a.status),
+            a.reason
+                .as_ref()
+                .map(|x| format!(" ({x})"))
+                .unwrap_or_default()
+        )?;
+    }
     writeln!(
         t,
         "## Scenarios\n\nEach scenario starts from S0 `{}`.\n",

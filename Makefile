@@ -5,7 +5,7 @@
 SHELL := /bin/bash
 CARGO := cargo
 
-.PHONY: all build programs compare report fixtures impact-fixtures governance-fixtures test test-artifacts test-engine test-programs fmt fmt-check lint lint-public lint-programs test-public regression clean demo-replay demo-discovery demo-mainnet-replay demo-token2022-upgrade demo-cpi-mainnet-replay memo-candidate token2022-candidate stake-pool-candidate stake-pool-config-candidate stake-pool-rollout-candidate migration-candidate
+.PHONY: all build programs compare report fixtures impact-fixtures governance-fixtures test test-artifacts test-engine test-programs fmt fmt-check lint lint-public lint-programs test-public regression clean demo-replay demo-discovery demo-mainnet-replay demo-token2022-upgrade demo-cpi-mainnet-replay memo-candidate token2022-candidate stake-pool-candidate stake-pool-config-candidate stake-pool-rollout-candidate stake-pool-oversized-rollout-candidate migration-candidate
 
 all: compare
 
@@ -60,6 +60,7 @@ fmt:
 	$(CARGO) fmt --all --manifest-path programs/fixture-stake-pool-candidate/Cargo.toml
 	$(CARGO) fmt --all --manifest-path programs/fixture-stake-pool-config-candidate/Cargo.toml
 	$(CARGO) fmt --all --manifest-path programs/fixture-stake-pool-rollout-candidate/Cargo.toml
+	$(CARGO) fmt --all --manifest-path programs/fixture-stake-pool-oversized-rollout-candidate/Cargo.toml
 
 fmt-check:
 	$(CARGO) fmt --all --manifest-path programs/eplyx-token-migration/Cargo.toml -- --check
@@ -70,6 +71,7 @@ fmt-check:
 	$(CARGO) fmt --all --manifest-path programs/fixture-stake-pool-candidate/Cargo.toml -- --check
 	$(CARGO) fmt --all --manifest-path programs/fixture-stake-pool-config-candidate/Cargo.toml -- --check
 	$(CARGO) fmt --all --manifest-path programs/fixture-stake-pool-rollout-candidate/Cargo.toml -- --check
+	$(CARGO) fmt --all --manifest-path programs/fixture-stake-pool-oversized-rollout-candidate/Cargo.toml -- --check
 
 lint: lint-programs
 	$(CARGO) clippy --all-targets -- -D warnings
@@ -107,6 +109,8 @@ lint-programs:
 		--all-targets -- -D warnings
 	$(CARGO) clippy --manifest-path programs/fixture-stake-pool-rollout-candidate/Cargo.toml \
 		--all-targets -- -D warnings
+	$(CARGO) clippy --manifest-path programs/fixture-stake-pool-oversized-rollout-candidate/Cargo.toml \
+		--all-targets -- -D warnings
 
 clean:
 	$(CARGO) clean
@@ -116,6 +120,7 @@ clean:
 	$(CARGO) clean --manifest-path programs/fixture-stake-pool-candidate/Cargo.toml
 	$(CARGO) clean --manifest-path programs/fixture-stake-pool-config-candidate/Cargo.toml
 	$(CARGO) clean --manifest-path programs/fixture-stake-pool-rollout-candidate/Cargo.toml
+	$(CARGO) clean --manifest-path programs/fixture-stake-pool-oversized-rollout-candidate/Cargo.toml
 	$(CARGO) clean --manifest-path programs/eplyx-token-migration/Cargo.toml
 	rm -rf artifacts report.json
 
@@ -155,6 +160,10 @@ stake-pool-config-candidate:
 ## test-artifacts, because the engine executes the tracked, hash-pinned bytes).
 stake-pool-rollout-candidate:
 	./scripts/build-stake-pool-rollout-candidate.sh
+
+## Re-check the tracked oversized rollout counterexample (Linux x86_64 only).
+stake-pool-oversized-rollout-candidate:
+	./scripts/build-stake-pool-oversized-rollout-candidate.sh
 
 migration-candidate:
 	./scripts/build-migration-candidate.sh

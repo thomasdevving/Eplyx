@@ -389,6 +389,16 @@ upstream release. Do not edit `executor.rs`, `replay.rs`, `parameter_change/`,
 `interaction.rs` or the lockfiles for it: their bytes are committed into
 existing receipts. See `docs/rollout-rehearsal.md`.
 
+Step 16B adds an explicitly declared ProgramData preparation (`--plan`,
+input v2): `rollout preflight` (no VM) and the loader's own `ExtendProgram`
+before Upgrade, verified byte for byte with rent funding reconciled. Eplyx
+never inserts an extension. ExtendProgram redeploys and sets ProgramData's
+slot, so the unchanged visibility rule applies after it too. The oversized
+counterexample (`programs/fixture-stake-pool-oversized-rollout-candidate`) is
+the only candidate that needs it. v1 artifacts bind the Step 16A source
+(`STEP_16A_*_SOURCE_SHA256`) and must keep reducing to identical bytes: do not
+change v1 output paths in `rollout/mod.rs`.
+
 ### Governance binding (Phase G1)
 
 `governance::verify_squads_upgrade` binds one Squads V4 vault transaction to a

@@ -16,7 +16,13 @@
 //!
 //! The report is a pure reduction of retained executions: verification repeats
 //! the reduction without a VM, reproduction re-executes every step.
+//!
+//! Step 16B (input v2) adds an explicitly declared ProgramData preparation
+//! (`preparation`): a read-only capacity preflight and, when declared, the
+//! loader's own `ExtendProgram` before the Upgrade. Input v1 analyses keep
+//! their Step 16A semantics and bytes.
 pub mod artifact;
+pub mod preparation;
 pub mod world;
 
 use std::collections::{BTreeMap, BTreeSet};
@@ -28,6 +34,7 @@ use solana_address::Address;
 use solana_instruction::{account_meta::AccountMeta, Instruction};
 use solana_message::Message;
 
+use preparation::{Preparation, ProgramDataPreflight};
 pub use solana_program_runtime::program_cache_entry::DELAY_VISIBILITY_SLOT_OFFSET;
 use world::{AccountStore, Entry, Execution, State, STATE_VERSION};
 
@@ -48,6 +55,17 @@ use crate::{
 pub const INPUT_VERSION: &str = "eplyx-rollout-rehearsal-input-v1";
 pub const REVISION: &str = "eplyx-rollout-rehearsal-v1";
 pub const REPORT_SCHEMA: &str = "eplyx-rollout-rehearsal-report-v1";
+pub const INPUT_VERSION_V2: &str = "eplyx-rollout-rehearsal-input-v2";
+pub const REVISION_V2: &str = "eplyx-rollout-rehearsal-v2";
+pub const REPORT_SCHEMA_V2: &str = "eplyx-rollout-rehearsal-report-v2";
+/// Reviewed Step 16A source commitments (commit 0e90d79). A v1 artifact that
+/// binds exactly these is reduced and reproduced by this build's v1 code path,
+/// which preserves Step 16A's semantics and report bytes; any other source
+/// commitment that is not this build's own is refused.
+pub const STEP_16A_ROLLOUT_SOURCE_SHA256: &str =
+    "d7229bb3b05f327337f4d690bd24ca552c6348074dad2db3927e73d41c2b7106";
+pub const STEP_16A_WORLD_SOURCE_SHA256: &str =
+    "d7a5be6315932a1216fecebb7084e0f7d568c0f55a7c3382a4855184462d4b78";
 pub const SCENARIO_VERSION: &str = "eplyx-rollout-scenario-v1";
 /// The constructed rollout counterexample (programs/fixture-stake-pool-rollout-
 /// candidate). Not an upstream release; qualified only for this contract.
@@ -56,6 +74,14 @@ pub const CANDIDATE_SHA256: &str =
 pub const CANDIDATE_LEN: u64 = 134_320;
 pub const CANDIDATE_PROFILE: &str = "constructed-rollout-stricter-sol-deposit-fee-v1";
 pub const SAME_CODE_PROFILE: &str = "same-code-historical-v1";
+/// The constructed oversized rollout counterexample (programs/fixture-stake-
+/// pool-oversized-rollout-candidate): the counterexample's behaviour plus
+/// read-only ballast, larger than the retained ProgramData capacity.
+pub const OVERSIZED_CANDIDATE_SHA256: &str =
+    "329092d75f7116266f40bf61050ed74ce407483619f4bbb9e27b72474019c7c4";
+pub const OVERSIZED_CANDIDATE_LEN: u64 = 1_146_384;
+pub const OVERSIZED_CANDIDATE_PROFILE: &str =
+    "constructed-oversized-rollout-stricter-sol-deposit-fee-v1";
 const TOKEN_SHA: &str = "8190d3f7ceb6cb7a7a8d8924bff89f9f611e15ce1f806f2b6237f3311a98f697";
 /// Declared mainnet-beta EpochSchedule: fixed-length epochs, no warmup. The
 /// retained schema-1 Clock carries epoch 0 and is never rewritten; this is the
@@ -70,6 +96,14 @@ const LIMITS: &[&str] = &[
     "Only Clock.slot advances, by exactly the loader's visibility offset; Clock.epoch, timestamps and other sysvars keep the retained schema-1 values. No ExtendProgram, Squads, governance, migration or other rollout step is executed.",
     "Configuration and upgrade transaction fees are excluded from user-action economics. Aliased token roles are counted once. Read-only verification establishes internal consistency, not independent proof that a VM ran; reproduction reruns the VM.",
 ];
+const LIMITS_V2: &[&str] = &[
+    "Bounded rollout rehearsal under one retained Stake Pool world and explicit signer assumptions. Not a mainnet deployment, governance approval, proof that any authority possesses keys, exact validator-bank equivalence, generic transaction sequencing or complete protocol release safety.",
+    "Candidates are constructed rollout counterexamples, not upstream releases, not production candidates and not intended for deployment.",
+    "S0's Program and ProgramData envelopes are reconstructed from retained evidence (program ID, loader, deployment slot, ELF bytes with padding); their lamports are the default rent-exempt minimum and their upgrade authority is a simulation key. The Buffer holding the candidate is assumed to have been written beforehand.",
+    "Signature verification and recent-blockhash age are disabled locally; signer privileges are checked by the loader and the program. The upgrade authority, upgrade payer, extension payer, manager and configuration payer are simulation assumptions.",
+    "ExtendProgram runs only when the declared preparation includes it; Eplyx never inserts or resizes on its own. Both ExtendProgram and Upgrade redeploy the program and set ProgramData's slot, so each is followed by the same explicit next-slot visibility transition. Only Clock.slot advances; Clock.epoch, timestamps and other sysvars keep the retained schema-1 values. No Squads, governance, migration or other rollout step is executed.",
+    "The preflight is arithmetic over retained bytes; only the loader's execution establishes that an extension or upgrade happened. Extension funding, extension fee, upgrade spill and fee, configuration fee and the user-action fee are reconciled separately and never enter user-action economics. Aliased token roles are counted once. Read-only verification establishes internal consistency, not independent proof that a VM ran; reproduction reruns the VM.",
+];
 const METRICS: &[&str] = &[
     "recipient_account_credit_raw",
     "manager_fee_account_credit_raw",
@@ -83,7 +117,7 @@ const METRICS: &[&str] = &[
     "action_transaction_fee_lamports",
 ];
 
-fn simulated(byte: u8) -> String {
+pub(crate) fn simulated(byte: u8) -> String {
     bs58::encode([byte; 32]).into_string()
 }
 /// Assumed upgrade authority written into S0's ProgramData and the Buffer.
@@ -113,9 +147,20 @@ pub struct Input {
     pub parameter: ChangeSpec,
     pub historical: s::Input,
     pub candidate: s::ProgramEvidence,
+    /// Step 16B: the declared ProgramData preparation. Absent on v1 inputs,
+    /// which therefore keep their exact Step 16A bytes and identity.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub preparation: Option<Preparation>,
 }
 
 impl Input {
+    /// The same input with an explicitly declared ProgramData preparation
+    /// (input v2). `Preparation::None` is a declaration too.
+    pub fn with_preparation(mut self, preparation: Preparation) -> Self {
+        self.preparation = Some(preparation);
+        self
+    }
+
     pub fn new(
         upgrade: &ChangeSpec,
         parameter: &ChangeSpec,
@@ -153,6 +198,7 @@ impl Input {
                 elf: candidate,
             },
             historical,
+            preparation: None,
         })
     }
 }
@@ -164,6 +210,7 @@ pub enum StepKind {
     SetFee,
     Upgrade,
     AdvanceToVisibleSlot,
+    ExtendProgram,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
@@ -174,6 +221,10 @@ pub enum ScenarioName {
     ConfigControl,
     OrderA,
     OrderB,
+    /// v2: the declared rollout without its ProgramData preparation.
+    UpgradeWithoutPreparation,
+    /// v2: ExtendProgram alone, then the retained action under V1.
+    PreparationControl,
     /// Only through [`Prepared::run_sequence`]: a bounded sequence of the same
     /// supported step kinds, used to examine the model's own guards.
     Probe,
@@ -188,8 +239,59 @@ impl ScenarioName {
             Self::ConfigControl => &[SetFee, DepositSol],
             Self::OrderA => &[Upgrade, AdvanceToVisibleSlot, SetFee, DepositSol],
             Self::OrderB => &[SetFee, Upgrade, AdvanceToVisibleSlot, DepositSol],
+            Self::UpgradeWithoutPreparation => &[Upgrade, AdvanceToVisibleSlot, DepositSol],
+            Self::PreparationControl => &[ExtendProgram, AdvanceToVisibleSlot, DepositSol],
             Self::Probe => &[],
         }
+    }
+}
+
+/// The scenario set for an input. v1 and v2 without an extension: the five
+/// Step 16A scenarios. v2 with a declared extension: every Upgrade is preceded
+/// by ExtendProgram and its visibility transition, plus the missing-extension
+/// and extension-only controls.
+pub fn scenario_plan(preparation: Option<&Preparation>) -> Vec<(ScenarioName, Vec<StepKind>)> {
+    use StepKind::*;
+    match preparation {
+        Some(Preparation::ExtendProgram { .. }) => {
+            let prepared = |rest: &[StepKind]| {
+                let mut steps = vec![ExtendProgram, AdvanceToVisibleSlot];
+                steps.extend_from_slice(rest);
+                steps
+            };
+            vec![
+                (ScenarioName::Control, vec![DepositSol]),
+                (
+                    ScenarioName::UpgradeWithoutPreparation,
+                    ScenarioName::UpgradeWithoutPreparation.steps().to_vec(),
+                ),
+                (
+                    ScenarioName::PreparationControl,
+                    ScenarioName::PreparationControl.steps().to_vec(),
+                ),
+                (
+                    ScenarioName::UpgradeControl,
+                    prepared(&[Upgrade, AdvanceToVisibleSlot, DepositSol]),
+                ),
+                (ScenarioName::ConfigControl, vec![SetFee, DepositSol]),
+                (
+                    ScenarioName::OrderA,
+                    prepared(&[Upgrade, AdvanceToVisibleSlot, SetFee, DepositSol]),
+                ),
+                (
+                    ScenarioName::OrderB,
+                    vec![
+                        SetFee,
+                        ExtendProgram,
+                        AdvanceToVisibleSlot,
+                        Upgrade,
+                        AdvanceToVisibleSlot,
+                        DepositSol,
+                    ],
+                ),
+            ]
+        }
+        _ => SCENARIOS.iter().map(|n| (*n, n.steps().to_vec())).collect(),
     }
 }
 
@@ -241,17 +343,76 @@ pub struct Prepared {
     upgrade_message: Message,
     deposit_message: Message,
     v1: Vec<u8>,
+    /// v2 only: the declared preparation; v1 analyses have none.
+    pub preparation: Option<Preparation>,
+    /// Always computed (no VM); bound into identity and report only for v2.
+    pub programdata_preflight: ProgramDataPreflight,
+    extension_message: Option<Message>,
+    pub scenarios: Vec<(ScenarioName, Vec<StepKind>)>,
+    source: SourceIdentity,
 }
 
-fn runtime() -> Value {
-    json!({
+/// The analyzer source a contract commits to.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct SourceIdentity {
+    pub rollout: String,
+    pub world: String,
+    pub preparation: String,
+}
+
+impl SourceIdentity {
+    pub fn current() -> Self {
+        Self {
+            rollout: replay::hash_bytes(include_bytes!("mod.rs")),
+            world: replay::hash_bytes(include_bytes!("world.rs")),
+            preparation: replay::hash_bytes(include_bytes!("preparation.rs")),
+        }
+    }
+
+    /// The identity a retained contract states, if this build may reduce and
+    /// reproduce it: its own source, or for v1 exactly the reviewed Step 16A
+    /// commitments (whose v1 code path this build preserves).
+    pub fn retained(contract: &Value) -> Result<Self> {
+        let current = Self::current();
+        let runtime = &contract["runtime"];
+        let rollout = runtime["rollout_source_sha256"]
+            .as_str()
+            .unwrap_or_default();
+        let world = runtime["world_source_sha256"].as_str().unwrap_or_default();
+        if contract["version"] == INPUT_VERSION
+            && rollout == STEP_16A_ROLLOUT_SOURCE_SHA256
+            && world == STEP_16A_WORLD_SOURCE_SHA256
+        {
+            return Ok(Self {
+                rollout: rollout.into(),
+                world: world.into(),
+                preparation: current.preparation,
+            });
+        }
+        let preparation_matches = contract["version"] == INPUT_VERSION
+            || runtime["preparation_source_sha256"].as_str() == Some(current.preparation.as_str());
+        ensure!(
+            rollout == current.rollout && world == current.world && preparation_matches,
+            "rollout analyzer source identity is neither this build's nor the reviewed Step 16A commitment"
+        );
+        Ok(current)
+    }
+}
+
+fn runtime(v2: bool, source: &SourceIdentity) -> Value {
+    let mut value = json!({
         "backend": "LiteSVM 0.16",
         "profile": "LiteSVM::new mainnet features; sigverify=false; blockhash_check=false; fresh VM per step",
-        "revision": REVISION,
+        "revision": if v2 { REVISION_V2 } else { REVISION },
         "shared_parameter_runtime": s::runtime(),
-        "rollout_source_sha256": replay::hash_bytes(include_bytes!("mod.rs")),
-        "world_source_sha256": replay::hash_bytes(include_bytes!("world.rs")),
-    })
+        "rollout_source_sha256": source.rollout,
+        "world_source_sha256": source.world,
+    });
+    if v2 {
+        value["preparation_source_sha256"] = json!(source.preparation);
+        value["rent"] = preparation::rent_identity();
+    }
+    value
 }
 
 pub fn visibility_contract() -> Value {
@@ -263,6 +424,14 @@ pub fn visibility_contract() -> Value {
         "epoch_schedule": {"slots_per_epoch": MAINNET_SLOTS_PER_EPOCH, "warmup": false, "source": "declared mainnet-beta schedule"},
         "epoch_boundary": "a transition whose source and target slots lie in different epochs is refused as unsupported_rollout_clock_transition",
     })
+}
+
+/// v2: the same rule, stated for both loader transitions that redeploy.
+pub fn visibility_contract_v2() -> Value {
+    let mut v = visibility_contract();
+    v["rule"] = json!("an Upgrade or ExtendProgram executed at slot N (both redeploy the program and set ProgramData's slot to N) is callable from slot N + DELAY_VISIBILITY_SLOT_OFFSET");
+    v["loader_same_slot_guard"] = json!("the loader itself refuses Upgrade or ExtendProgram while ProgramData's slot equals Clock.slot");
+    v
 }
 
 /// The explicit next-slot transition. Pure; refused rather than approximated.
@@ -365,6 +534,12 @@ impl Prepared {
     /// scope are errors; an upgrade that cannot be installed (capacity, an
     /// unqualified candidate) is a typed blocker the report carries.
     pub fn new(input: Input) -> Result<Self> {
+        Self::with_source(input, SourceIdentity::current())
+    }
+
+    /// Admission under a stated analyzer source identity: this build's own,
+    /// or a retained contract's reviewed prior one ([`SourceIdentity::retained`]).
+    pub fn with_source(input: Input, source: SourceIdentity) -> Result<Self> {
         ensure!(
             canonical::document(&input)?.len() as u64 <= crate::lifecycle::artifact::MAX_BYTES,
             "rollout input exceeds local byte bound"
@@ -560,6 +735,13 @@ impl Prepared {
             (upgrade_authority(), system_account(1_000_000, 0)),
             (upgrade_payer(), system_account(10_000_000, u64::MAX)),
         ];
+        let mut installation = installation.to_vec();
+        if let Some(Preparation::ExtendProgram { .. }) = &input.preparation {
+            installation.push((
+                preparation::extension_payer(),
+                system_account(preparation::EXTENSION_PAYER_LAMPORTS, u64::MAX),
+            ));
+        }
         for (address, account) in installation {
             ensure!(
                 accounts
@@ -597,10 +779,17 @@ impl Prepared {
             && input.candidate.elf.len() as u64 == CANDIDATE_LEN
         {
             Some(CANDIDATE_PROFILE.to_string())
+        } else if input.candidate.elf_sha256 == OVERSIZED_CANDIDATE_SHA256
+            && input.candidate.elf.len() as u64 == OVERSIZED_CANDIDATE_LEN
+        {
+            Some(OVERSIZED_CANDIDATE_PROFILE.to_string())
         } else {
             None
         };
-        let upgrade_blocker = if !capacity.sufficient {
+        let v2 = input.preparation.is_some();
+        // v1 keeps Step 16A's static capacity blocker. v2 evaluates capacity
+        // against the ProgramData each Upgrade actually receives.
+        let upgrade_blocker = if !v2 && !capacity.sufficient {
             Some(Blocker {
                 reason: "programdata_capacity_insufficient".into(),
                 detail: format!(
@@ -616,12 +805,43 @@ impl Prepared {
         } else {
             None
         };
+        let programdata_preflight = preparation::preflight(
+            &record.program_id,
+            &world::account_id(
+                s0.account(&store, &record.program_id)?
+                    .context("S0 Program")?,
+            )?,
+            &programdata,
+            &pd_account,
+            &input.candidate.elf,
+            input.preparation.as_ref().unwrap_or(&Preparation::None),
+            match s0.accounts.get(&preparation::extension_payer()) {
+                Some(Entry::Present { account_sha256 }) => {
+                    store
+                        .get(account_sha256)
+                        .context("extension payer")?
+                        .lamports
+                }
+                _ => 0,
+            },
+        )?;
+        let extension_message = match &input.preparation {
+            Some(Preparation::ExtendProgram { additional_bytes }) => {
+                preparation::extend_message(&record.program_id, *additional_bytes)?
+            }
+            _ => None,
+        };
         let preflight = Preflight {
             capacity,
             candidate_profile,
             upgrade_blocker,
         };
         let mut prepared = Self {
+            preparation: input.preparation.clone(),
+            programdata_preflight,
+            extension_message,
+            scenarios: scenario_plan(input.preparation.as_ref()),
+            source,
             contract: Value::Null,
             analysis_input_id: String::new(),
             s0,
@@ -641,9 +861,23 @@ impl Prepared {
         ] {
             prepared.keys_known(&prepared.s0, message)?;
         }
+        if let Some(message) = &prepared.extension_message {
+            prepared.keys_known(&prepared.s0, message)?;
+        }
         prepared.contract = prepared.build_contract()?;
-        prepared.analysis_input_id = canonical::digest(&(INPUT_VERSION, &prepared.contract))?;
+        prepared.analysis_input_id = canonical::digest(&(
+            if prepared.is_v2() {
+                INPUT_VERSION_V2
+            } else {
+                INPUT_VERSION
+            },
+            &prepared.contract,
+        ))?;
         Ok(prepared)
+    }
+
+    pub fn is_v2(&self) -> bool {
+        self.preparation.is_some()
     }
 
     fn build_contract(&self) -> Result<Value> {
@@ -658,10 +892,11 @@ impl Prepared {
         upgrade.metadata = Default::default();
         let mut parameter = self.input.parameter.clone();
         parameter.metadata = Default::default();
-        Ok(json!({
-            "version": INPUT_VERSION,
-            "execution_revision": REVISION,
-            "question": QUESTION,
+        let v2 = self.is_v2();
+        let mut contract = json!({
+            "version": if v2 { INPUT_VERSION_V2 } else { INPUT_VERSION },
+            "execution_revision": if v2 { REVISION_V2 } else { REVISION },
+            "question": if v2 { QUESTION_V2 } else { QUESTION },
             "upgrade_change_spec_id": self.input.upgrade.id()?,
             "parameter_change_spec_id": self.input.parameter.id()?,
             "proposals": {"upgrade": upgrade, "parameter": parameter},
@@ -687,7 +922,11 @@ impl Prepared {
             "candidate": {
                 "artifact": ExecutableArtifact::of(&self.input.candidate.elf),
                 "profile": self.preflight.candidate_profile,
-                "origin": "constructed rollout counterexample; not upstream release; not intended for deployment",
+                "origin": if self.preflight.candidate_profile.as_deref() == Some(OVERSIZED_CANDIDATE_PROFILE) {
+                    "constructed oversized rollout counterexample; not upstream release; not production candidate; not intended for deployment"
+                } else {
+                    "constructed rollout counterexample; not upstream release; not intended for deployment"
+                },
             },
             "buffer": {"address": buffer_address(), "account_sha256": account_sha(&buffer_address())?, "authority": upgrade_authority()},
             "config_account": s::pool(record)?.address,
@@ -695,14 +934,25 @@ impl Prepared {
             "action": s::action_commitment(&self.input.historical, record)?,
             "upgrade_message": ProbeMessage::from(&self.upgrade_message),
             "dependencies": self.dependencies.iter().map(|p| json!({"program_id": p.program_id.to_string(), "loader": p.loader.to_string(), "elf": ExecutableArtifact::of(&p.bytes)})).collect::<Vec<_>>(),
-            "runtime": runtime(),
+            "runtime": runtime(v2, &self.source),
             "clock": record.clock,
-            "visibility": visibility_contract(),
-            "assumptions": assumptions(),
-            "scenarios": SCENARIOS.iter().map(|n| json!({"name": n, "steps": n.steps()})).collect::<Vec<_>>(),
+            "visibility": if v2 { visibility_contract_v2() } else { visibility_contract() },
+            "assumptions": if v2 { assumptions_v2(self.extension_message.is_some()) } else { assumptions() },
+            "scenarios": self.scenarios.iter().map(|(n, steps)| json!({"name": n, "steps": steps})).collect::<Vec<_>>(),
             "closure": self.s0.closure(),
             "metrics": METRICS,
-        }))
+        });
+        if v2 {
+            contract["preparation"] = json!(self.preparation);
+            contract["programdata_preflight"] = json!(self.programdata_preflight);
+            contract["extension_message"] =
+                json!(self.extension_message.as_ref().map(ProbeMessage::from));
+            contract["extension_payer"] = json!(self
+                .extension_message
+                .as_ref()
+                .map(|_| preparation::extension_payer()));
+        }
+        Ok(contract)
     }
 
     /// Every message key is a declared world account, a pinned dependency, a
@@ -745,6 +995,9 @@ impl Prepared {
     pub fn dependencies(&self) -> &[LoadedProgram] {
         &self.dependencies
     }
+    pub fn extension_message(&self) -> Option<&Message> {
+        self.extension_message.as_ref()
+    }
 
     /// Run a bounded sequence of supported step kinds from S0 in fresh VMs.
     /// The five scenarios are the only sequences analysis declares; this
@@ -786,6 +1039,17 @@ impl Prepared {
 pub enum Variant {
     Declared,
     Signer { address: String, signs: bool },
+}
+
+pub const QUESTION_V2: &str = "Can the declared program upgrade be installed into the current ProgramData, with an explicitly declared ExtendProgram where needed, and does changing the order of that installation and the qualified SetFee(SolDeposit) change the final retained DepositSol outcome?";
+
+fn assumptions_v2(extension: bool) -> Value {
+    let mut v = assumptions();
+    if !extension {
+        return v;
+    }
+    v.as_array_mut().expect("assumption list").push(json!({"id": "extension_payer_assumed", "address": preparation::extension_payer(), "origin": "assumed_simulation_only", "role": "ExtendProgram fee payer and rent funder", "signer": true, "key_possession_established": false, "propagated_to_user_action": false}));
+    v
 }
 
 pub const QUESTION: &str = "Does changing the order of an actual installed program upgrade and the qualified SetFee(SolDeposit) configuration change alter the final retained DepositSol outcome?";
@@ -890,6 +1154,10 @@ pub struct Anchors {
     /// added directly) of the same V2 bytes over S0's retained action.
     pub overlay_execution: Option<ExecutionResult>,
     pub overlay_unavailable: Option<String>,
+    /// v2 with a declared extension: S0 -> ExtendProgram -> DepositSol under
+    /// V1 against S0 -> DepositSol.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub extension_only: Option<Anchor>,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -898,6 +1166,9 @@ pub enum ComparisonStatus {
     NoOrderEffectObserved,
     RolloutOrderEffectObserved,
     RolloutNotEstablished,
+    /// v2: the declared rollout cannot install the candidate (ProgramData
+    /// capacity), so the order comparison was never reached.
+    RolloutPreconditionMissing,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -946,6 +1217,13 @@ pub struct Comparison {
     pub final_action_metrics: BTreeMap<String, MetricContrast>,
     pub established: Vec<String>,
     pub unavailable: Vec<String>,
+    /// v2: capacity prerequisite, as derived and as executed.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub prerequisite: Option<Value>,
+    /// v2: the order-B configuration carried byte for byte through the
+    /// ProgramData preparation and the upgrade.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub inherited_configuration: Option<Value>,
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
@@ -972,6 +1250,11 @@ pub struct Report {
     pub comparison: Comparison,
     pub limitations: Vec<String>,
     pub evidence: EvidenceIndex,
+    /// v2: the declared ProgramData preparation and its read-only preflight.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub preparation: Option<Preparation>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub programdata_preflight: Option<ProgramDataPreflight>,
     pub report_sha256: String,
 }
 
@@ -1133,6 +1416,20 @@ fn record(index: usize, step: StepKind, outcome: StepOutcome) -> StepRecord {
     }
 }
 
+struct CapacityBlock {
+    reason: &'static str,
+    detail: String,
+    derived: Value,
+}
+
+impl CapacityBlock {
+    fn into_record(self, mut r: StepRecord) -> StepRecord {
+        r.outcome = StepOutcome::Unsupported;
+        r.derived = self.derived;
+        r.because(self.reason, self.detail)
+    }
+}
+
 impl StepRecord {
     fn because(mut self, reason: &str, detail: impl ToString) -> Self {
         self.reason = Some(reason.into());
@@ -1165,7 +1462,13 @@ pub fn installed_program(
     );
     let decoded = loader::decode_programdata(&pd.data)?;
     let bytes = &decoded.bytes;
-    let identity = if bytes == v1 {
+    let prefix_padded = |code: &[u8]| {
+        bytes.len() >= code.len()
+            && bytes[..code.len()] == *code
+            && bytes[code.len()..].iter().all(|b| *b == 0)
+    };
+    // Exact V1, or V1 followed by the zero bytes an ExtendProgram appends.
+    let identity = if prefix_padded(v1) {
         "historical_v1"
     } else if bytes.len() >= candidate.len()
         && bytes[..candidate.len()] == *candidate
@@ -1458,8 +1761,11 @@ impl<'a> Runner<'a> {
                 },
             );
         }
+        // ExtendProgram reads the Program/ProgramData relationship itself; the
+        // loader, not a pre-read here, judges an inconsistent one.
         let installed = match installed {
-            Ok(i) => i,
+            Ok(i) => Some(i),
+            Err(_) if kind == StepKind::ExtendProgram => None,
             Err(e) => {
                 r.outcome = StepOutcome::EvidenceGap;
                 return Ok((r.because("installed_program_unreadable", e), None));
@@ -1481,6 +1787,19 @@ impl<'a> Runner<'a> {
                 Some(&self.p.plan.message.account_keys[0]),
             ),
             (StepKind::DepositSol, _) => self.p.deposit_message.clone(),
+            (StepKind::ExtendProgram, _) => match &self.p.extension_message {
+                Some(message) => message.clone(),
+                None => {
+                    r.outcome = StepOutcome::Unsupported;
+                    return Ok((
+                        r.because(
+                            "programdata_size_overflow",
+                            "the declared additional_bytes is not a u32 and cannot be encoded as ExtendProgram",
+                        ),
+                        None,
+                    ));
+                }
+            },
             (StepKind::AdvanceToVisibleSlot, _) => unreachable!(),
         };
         if let Err(e) = self.p.keys_known(state, &message) {
@@ -1496,8 +1815,16 @@ impl<'a> Runner<'a> {
                     r.derived = json!({"capacity": self.p.preflight.capacity});
                     return Ok((r.because(&b.reason, &b.detail), None));
                 }
+                let installed = installed.as_ref().context("installed program")?;
+                if self.p.is_v2() {
+                    if let Some(blocked) = self.capacity_blocker(state, installed)? {
+                        return Ok((blocked.into_record(r), None));
+                    }
+                }
             }
+            StepKind::ExtendProgram => {}
             StepKind::SetFee | StepKind::DepositSol => {
+                let installed = installed.as_ref().context("installed program")?;
                 if state.clock.slot < installed.visible_from_slot {
                     r.outcome = StepOutcome::Unsupported;
                     r.derived = json!({"installed_program": installed});
@@ -1576,6 +1903,7 @@ impl<'a> Runner<'a> {
             StepKind::Upgrade => self.verify_upgrade(state, &after, &x, variant),
             StepKind::SetFee => self.verify_config(state, &after, &x, variant),
             StepKind::DepositSol => self.verify_deposit(state, &after, &x),
+            StepKind::ExtendProgram => self.verify_extension(state, &after, &x),
             StepKind::AdvanceToVisibleSlot => unreachable!(),
         };
         let (outcome, reason, detail, derived) = verdict;
@@ -1650,6 +1978,215 @@ impl<'a> Runner<'a> {
             _ => {}
         }
         Ok(())
+    }
+
+    /// v2: the candidate against the ProgramData this Upgrade receives. No
+    /// VM runs and nothing is resized when it does not fit.
+    fn capacity_blocker(
+        &self,
+        state: &State,
+        installed: &InstalledProgram,
+    ) -> Result<Option<CapacityBlock>> {
+        let required = self.p.input.candidate.elf.len() as u64;
+        if required <= installed.capacity_bytes {
+            return Ok(None);
+        }
+        let s0_capacity = self.p.preflight.capacity.capacity_bytes;
+        let extended = installed.capacity_bytes > s0_capacity;
+        let pd = state
+            .account(&self.accounts, &installed.programdata_address)?
+            .context("ProgramData absent")?;
+        Ok(Some(CapacityBlock {
+            reason: if extended {
+                "declared_extension_insufficient"
+            } else {
+                "programdata_extension_required"
+            },
+            detail: format!(
+                "candidate needs {required} executable bytes; ProgramData {} holds {} after its header{}. At least {} additional bytes are required. Upgrade is not attempted and ProgramData is never resized implicitly.",
+                installed.programdata_address,
+                installed.capacity_bytes,
+                if extended { " after the declared extension" } else { "" },
+                required - installed.capacity_bytes
+            ),
+            derived: json!({
+                "programdata_address": installed.programdata_address,
+                "programdata_account_sha256": world::account_id(pd)?,
+                "programdata_account_len": pd.data.len(),
+                "executable_capacity_bytes": installed.capacity_bytes,
+                "required_bytes": required,
+                "additional_bytes_required": required - installed.capacity_bytes,
+                "s0_executable_capacity_bytes": s0_capacity,
+                "extended_in_this_scenario": extended,
+            }),
+        }))
+    }
+
+    /// The loader's ExtendProgram, checked byte for byte: only ProgramData and
+    /// the payer change; the account grows by exactly `additional_bytes` of
+    /// zeros; the installed executable bytes are untouched (V1 stays V1);
+    /// funding and fee reconcile separately.
+    fn verify_extension(
+        &self,
+        before: &State,
+        after: &State,
+        x: &Execution,
+    ) -> (StepOutcome, Option<String>, Option<String>, Value) {
+        let result = (|| -> Result<(StepOutcome, Option<String>, Option<String>, Value)> {
+            let payer = preparation::extension_payer();
+            let n = self
+                .p
+                .preparation
+                .as_ref()
+                .and_then(Preparation::additional_bytes)
+                .context("no declared extension")?;
+            let pd = self.p.preflight.capacity.programdata_address.clone();
+            let pd_before = before
+                .account(&self.accounts, &pd)?
+                .context("ProgramData before")?;
+            if !x.success {
+                verify_rollback(
+                    before,
+                    after,
+                    &self.accounts,
+                    &payer,
+                    x.transaction_fee_lamports,
+                )?;
+                let error = x.error.clone().unwrap_or_default();
+                let reason = if x.logs.iter().any(|l| l.contains("insufficient lamports")) {
+                    "extension_funding_insufficient"
+                } else if error.contains("InvalidRealloc") {
+                    "programdata_size_overflow"
+                } else {
+                    "extend_program_rejected"
+                };
+                return Ok((
+                    StepOutcome::Rejected,
+                    Some(reason.into()),
+                    Some(error),
+                    json!({
+                        "origin": "simulated_extend_program_execution",
+                        "rollback_verified": true,
+                        "programdata_unchanged": true,
+                        "extension_transaction_fee_lamports": x.transaction_fee_lamports.to_string(),
+                        "declared_additional_bytes": n.to_string(),
+                    }),
+                ));
+            }
+            ensure!(x.error.is_none(), "successful ExtendProgram with error");
+            let installed_before = self.installed(before)?;
+            let changed = world::changed(before, after);
+            ensure!(
+                changed.iter().all(|a| *a == pd || *a == payer) && changed.contains(&pd),
+                "ExtendProgram changed accounts other than ProgramData and its payer: {changed:?}"
+            );
+            let pd_after = after
+                .account(&self.accounts, &pd)?
+                .context("ProgramData after")?;
+            let old = loader::decode_programdata(&pd_before.data)?;
+            let new = loader::decode_programdata(&pd_after.data)?;
+            let old_len = pd_before.data.len() as u64;
+            ensure!(
+                pd_after.data.len() as u64 == old_len + n
+                    && pd_after.owner == pd_before.owner
+                    && !pd_after.executable
+                    && pd_after.rent_epoch == pd_before.rent_epoch
+                    && new.deploy_slot == before.clock.slot
+                    && new.upgrade_authority == old.upgrade_authority
+                    && new.bytes[..old.bytes.len()] == old.bytes[..]
+                    && new.bytes[old.bytes.len()..].iter().all(|b| *b == 0),
+                "ProgramData is not the old header authority and bytes followed by exactly the declared zero bytes, at the new slot"
+            );
+            let minimum = preparation::minimum_balance(old_len + n).context("rent minimum")?;
+            let funding = minimum.saturating_sub(pd_before.lamports);
+            ensure!(
+                pd_after.lamports == pd_before.lamports + funding,
+                "ProgramData lamports are not exactly the rent-exempt minimum for the new length"
+            );
+            let payer_before = before.account(&self.accounts, &payer)?.context("payer")?;
+            let payer_after = after
+                .account(&self.accounts, &payer)?
+                .context("payer after")?;
+            let mut expected = payer_before.clone();
+            expected.lamports = payer_before
+                .lamports
+                .checked_sub(funding)
+                .and_then(|l| l.checked_sub(x.transaction_fee_lamports))
+                .context("payer cannot cover funding and fee")?;
+            ensure!(
+                *payer_after == expected,
+                "payer debit is not exactly rent funding plus fee"
+            );
+            // Funding is one System transfer CPI from the payer, and nothing else.
+            let inner: Vec<_> = x
+                .inner_instructions
+                .iter()
+                .flat_map(|g| &g.instructions)
+                .collect();
+            let keys = &x.message.account_keys;
+            if funding > 0 {
+                let mut data = 2u32.to_le_bytes().to_vec();
+                data.extend_from_slice(&funding.to_le_bytes());
+                ensure!(
+                    inner.len() == 1
+                        && keys
+                            .get(usize::from(inner[0].program_id_index))
+                            .map(String::as_str)
+                            == Some(adapter::SYSTEM_PROGRAM_ID)
+                        && inner[0]
+                            .accounts
+                            .iter()
+                            .map(|i| keys.get(usize::from(*i)).cloned())
+                            .collect::<Option<Vec<_>>>()
+                            == Some(vec![payer.clone(), pd.clone()])
+                        && inner[0].data == data,
+                    "funding is not exactly one System transfer from the payer to ProgramData"
+                );
+            } else {
+                ensure!(inner.is_empty(), "unfunded extension made a CPI");
+            }
+            let installed = self.installed(after)?;
+            ensure!(
+                installed.identity == installed_before.identity,
+                "ExtendProgram changed the installed executable identity"
+            );
+            Ok((
+                StepOutcome::Verified,
+                None,
+                None,
+                json!({
+                    "origin": "simulated_extend_program_execution",
+                    "loader_instruction": "ExtendProgram { additional_bytes } (official interface builder)",
+                    "declared_additional_bytes": n.to_string(),
+                    "programdata_account_len_before": old_len,
+                    "programdata_account_len_after": pd_after.data.len(),
+                    "executable_capacity_before": old.bytes.len(),
+                    "executable_capacity_after": new.bytes.len(),
+                    "preserved_executable_sha256": replay::hash_bytes(&old.bytes),
+                    "appended_zero_bytes": n.to_string(),
+                    "deploy_slot_before": old.deploy_slot.to_string(),
+                    "deploy_slot_after": new.deploy_slot.to_string(),
+                    "upgrade_authority_unchanged": true,
+                    "programdata_lamports_before": pd_before.lamports.to_string(),
+                    "programdata_lamports_after": pd_after.lamports.to_string(),
+                    "minimum_balance_after": minimum.to_string(),
+                    "funding_lamports": funding.to_string(),
+                    "payer": {"address": payer, "origin": "assumed_simulation_only", "lamports_before": payer_before.lamports.to_string(), "lamports_after": payer_after.lamports.to_string()},
+                    "extension_transaction_fee_lamports": x.transaction_fee_lamports.to_string(),
+                    "programdata_account_sha256_after": world::account_id(pd_after)?,
+                    "installed_program": installed,
+                    "candidate_installed": false,
+                }),
+            ))
+        })();
+        result.unwrap_or_else(|e| {
+            (
+                StepOutcome::ReconciliationFailed,
+                Some("extend_program_post_state_mismatch".into()),
+                Some(format!("{e:#}")),
+                Value::Null,
+            )
+        })
     }
 
     fn verify_upgrade(
@@ -2051,6 +2588,95 @@ fn installed_overlay_anchor(
     })
 }
 
+/// v2: ProgramData extension alone must not change the installed V1's
+/// behaviour for the retained action.
+fn extension_only_anchor(
+    p: &Prepared,
+    evidence: &Evidence,
+    control: &ScenarioReport,
+    preparation_control: &ScenarioReport,
+) -> Result<Anchor> {
+    fn executed<'a>(
+        s: &'a ScenarioReport,
+        evidence: &'a Evidence,
+    ) -> Option<(&'a StepRecord, &'a Execution)> {
+        deposit_step(s)
+            .filter(|r| r.execution_id.is_some())
+            .map(|r| (r, &evidence.executions[r.execution_id.as_ref().unwrap()]))
+    }
+    let (Some((base_step, base)), Some((ext_step, ext))) = (
+        executed(control, evidence),
+        executed(preparation_control, evidence),
+    ) else {
+        let blocked = preparation_control
+            .steps
+            .iter()
+            .find(|r| r.outcome != StepOutcome::Verified);
+        return Ok(Anchor {
+            status: AnchorStatus::NotEstablished,
+            reason: Some("extension_only_action_not_executed".into()),
+            detail: json!({"blocking_step": blocked}),
+        });
+    };
+    let record = &p.input.historical.record;
+    let a = action_result(record, base, &evidence.accounts)?;
+    let b = action_result(record, ext, &evidence.accounts)?;
+    let mut mismatches = Vec::new();
+    let mut check = |field: &str, equal: bool| {
+        if !equal {
+            mismatches.push(field.to_string());
+        }
+    };
+    check("success", a.success == b.success);
+    check("error", a.error == b.error);
+    check("transaction_fee", a.fee == b.fee);
+    check("compute_units", a.compute_units == b.compute_units);
+    check("logs", a.logs == b.logs);
+    check("cpi_shape", a.cpi_calls == b.cpi_calls);
+    check("watched_post_state", a.accounts == b.accounts);
+    check(
+        "reconciliation",
+        base_step.derived["reconciliation"].is_object()
+            && base_step.derived["reconciliation"] == ext_step.derived["reconciliation"],
+    );
+    let pre = |r: &StepRecord| -> Result<Vec<Option<AccountSnapshot>>> {
+        let state = evidence
+            .states
+            .get(r.before_state_id.as_ref().context("before")?)
+            .context("pre-action state")?;
+        record
+            .accounts
+            .iter()
+            .map(|x| Ok(state.account(&evidence.accounts, &x.address)?.cloned()))
+            .collect()
+    };
+    check("pre_action_accounts", pre(base_step)? == pre(ext_step)?);
+    let v1 = |r: &StepRecord| {
+        r.installed_program_after
+            .as_ref()
+            .is_some_and(|i| i.identity == "historical_v1")
+    };
+    check("effective_executable", v1(base_step) && v1(ext_step));
+    let matched = mismatches.is_empty();
+    Ok(Anchor {
+        status: if matched {
+            AnchorStatus::Matched
+        } else {
+            AnchorStatus::Failed
+        },
+        reason: (!matched).then(|| "extension_behavior_mismatch".into()),
+        detail: json!({
+            "contract": "S0 -> ExtendProgram -> visibility -> DepositSol must equal S0 -> DepositSol for the retained action: the effective executable stays V1 (extended with zero bytes)",
+            "compared": ["success","error","transaction_fee","compute_units","logs","cpi_shape","watched_post_state","reconciliation","pre_action_accounts","effective_executable"],
+            "not_compared": "ProgramData length, lamports and slot, the extension payer and Clock.slot legitimately differ",
+            "mismatches": mismatches,
+            "baseline_execution_id": base_step.execution_id,
+            "extended_execution_id": ext_step.execution_id,
+            "extended_installed_program": ext_step.installed_program_after,
+        }),
+    })
+}
+
 fn quantity(step: Option<&StepRecord>, metric: &str) -> Quantity {
     match step {
         Some(s) if s.outcome == StepOutcome::Verified => {
@@ -2091,11 +2717,13 @@ fn established_result(step: &StepRecord) -> Value {
         StepKind::Upgrade => step.derived["installed_program"]["executable_sha256"].clone(),
         StepKind::SetFee => step.derived["verified_pool_sha256"].clone(),
         StepKind::DepositSol => step.derived["reconciliation"].clone(),
+        StepKind::ExtendProgram => step.derived["programdata_account_sha256_after"].clone(),
         StepKind::AdvanceToVisibleSlot => Value::Null,
     }
 }
 
 fn compare(
+    p: &Prepared,
     anchors: &Anchors,
     scenarios: &[ScenarioReport],
     evidence: &Evidence,
@@ -2137,11 +2765,17 @@ fn compare(
             _ => false,
         })
     };
-    let controls = [
+    let mut controls = vec![
         ScenarioName::Control,
         ScenarioName::UpgradeControl,
         ScenarioName::ConfigControl,
     ];
+    if scenarios
+        .iter()
+        .any(|s| s.name == ScenarioName::PreparationControl)
+    {
+        controls.push(ScenarioName::PreparationControl);
+    }
     let mut unavailable = Vec::new();
     if anchors.baseline_world_fidelity.status != AnchorStatus::Matched {
         unavailable.push("baseline world fidelity anchor (S0 -> DepositSol) not matched".into());
@@ -2151,6 +2785,14 @@ fn compare(
             "installed-V2 versus overlay-V2 anchor: {}",
             anchors.installed_overlay.reason.clone().unwrap_or_default()
         ));
+    }
+    if let Some(anchor) = &anchors.extension_only {
+        if anchor.status != AnchorStatus::Matched {
+            unavailable.push(format!(
+                "extension-only anchor: {}",
+                anchor.reason.clone().unwrap_or_default()
+            ));
+        }
     }
     for c in controls {
         let s = get(c)?;
@@ -2219,7 +2861,43 @@ fn compare(
     let first_divergence = step_contrasts.iter().find(|c| c.differs).cloned();
     let mut established =
         vec!["every step's typed outcome, before/after state and execution identity".to_string()];
-    let (status, finding, statement) = if !unavailable.is_empty() {
+    let precondition =
+        if p.is_v2() && anchors.baseline_world_fidelity.status == AnchorStatus::Matched {
+            get(ScenarioName::UpgradeControl)?
+                .steps
+                .iter()
+                .find(|r| r.step == StepKind::Upgrade)
+                .filter(|r| {
+                    matches!(
+                        r.reason.as_deref(),
+                        Some("programdata_extension_required" | "declared_extension_insufficient")
+                    )
+                })
+                .cloned()
+        } else {
+            None
+        };
+    let (status, finding, statement) = if let Some(blocked) = &precondition {
+        let missing = blocked.derived["additional_bytes_required"]
+            .as_u64()
+            .unwrap_or_default();
+        let declared = p
+            .preparation
+            .as_ref()
+            .and_then(Preparation::additional_bytes);
+        (
+            ComparisonStatus::RolloutPreconditionMissing,
+            Some(format!("rollout/precondition/{}", blocked.reason.clone().unwrap_or_default())),
+            match declared {
+                Some(n) => format!(
+                    "The declared ProgramData extension of {n} bytes executed, but the retained ProgramData is still too small for the candidate: at least {missing} additional bytes are required. Upgrade was not attempted and no downstream configuration or action ran."
+                ),
+                None => format!(
+                    "The declared rollout cannot install the candidate because the retained ProgramData account is too small. At least {missing} additional bytes are required."
+                ),
+            },
+        )
+    } else if !unavailable.is_empty() {
         (
             ComparisonStatus::RolloutNotEstablished,
             None,
@@ -2242,8 +2920,13 @@ fn compare(
                 ComparisonStatus::RolloutOrderEffectObserved,
                 Some("rollout/order/configuration_installation_outcome_differs".to_string()),
                 format!(
-                    "Under the pinned world and explicit signer assumptions, changing rollout order changed whether the proposed fee configuration could be installed: SetFee was {} in order A (upgrade first) and {} in order B (configuration first).",
-                    word(d.order_a), word(d.order_b)
+                    "Under the pinned world and explicit signer assumptions, changing rollout order changed whether the proposed fee configuration could be installed: SetFee was {} in order A (upgrade first) and {} in order B (configuration first).{}",
+                    word(d.order_a), word(d.order_b),
+                    if p.is_v2() {
+                        inherited_clause(p, &inherited_configuration(p, b, evidence)?)?
+                    } else {
+                        String::new()
+                    }
                 ),
             ),
             StepKind::Upgrade => (
@@ -2284,7 +2967,17 @@ fn compare(
             ));
         }
     }
+    let (prerequisite, inherited_configuration) = if p.is_v2() {
+        (
+            Some(prerequisite(p, scenarios)),
+            inherited_configuration(p, b, evidence)?,
+        )
+    } else {
+        (None, None)
+    };
     Ok(Comparison {
+        prerequisite,
+        inherited_configuration,
         status,
         finding,
         statement,
@@ -2316,13 +3009,106 @@ fn compare(
     })
 }
 
+/// v2: what the preflight derived, and what each declared path actually did.
+fn prerequisite(p: &Prepared, scenarios: &[ScenarioReport]) -> Value {
+    let upgrade = |n: ScenarioName| {
+        scenarios
+            .iter()
+            .find(|s| s.name == n)
+            .and_then(|s| s.steps.iter().find(|r| r.step == StepKind::Upgrade))
+            .map(|r| json!({"outcome": r.outcome, "reason": r.reason, "capacity": r.derived}))
+    };
+    let f = &p.programdata_preflight;
+    json!({
+        "origin": "derived preflight plus executed scenarios",
+        "s0_executable_capacity_bytes": f.executable_capacity_bytes,
+        "candidate_bytes": f.candidate.len,
+        "minimum_additional_bytes_required": f.minimum_additional_bytes_required,
+        "declared_preparation": p.preparation,
+        "preflight_status": f.status,
+        "without_preparation": upgrade(ScenarioName::UpgradeWithoutPreparation),
+        "declared_rollout": upgrade(ScenarioName::UpgradeControl),
+    })
+}
+
+/// v2: in order B, the pool SetFee produced, compared byte for byte at every
+/// later world up to the final action's input.
+fn inherited_configuration(
+    p: &Prepared,
+    order_b: &ScenarioReport,
+    evidence: &Evidence,
+) -> Result<Option<Value>> {
+    let pool = s::pool(&p.input.historical.record)?.address.clone();
+    let Some(k) = order_b
+        .steps
+        .iter()
+        .find(|r| r.step == StepKind::SetFee && r.outcome == StepOutcome::Verified)
+    else {
+        return Ok(None);
+    };
+    let entry = |id: &Option<String>| -> Result<Entry> {
+        evidence
+            .states
+            .get(id.as_ref().context("state id")?)
+            .context("retained state")?
+            .accounts
+            .get(&pool)
+            .cloned()
+            .context("pool outside closure")
+    };
+    let installed = entry(&k.after_state_id)?;
+    let mut carried = Vec::new();
+    let mut identical = true;
+    for r in order_b.steps.iter().skip(k.index + 1) {
+        let Some(id) = (if r.step == StepKind::DepositSol {
+            &r.before_state_id
+        } else {
+            &r.after_state_id
+        })
+        .as_ref() else {
+            identical = false;
+            break;
+        };
+        let current = entry(&Some(id.clone()))?;
+        identical &= current == installed;
+        carried.push(json!({
+            "step": r.step,
+            "index": r.index,
+            "state": if r.step == StepKind::DepositSol { "final_action_input" } else { "after" },
+            "pool": current,
+        }));
+    }
+    let reached_action = deposit_step(order_b).is_some_and(|r| r.before_state_id.is_some());
+    Ok(Some(json!({
+        "pool": pool,
+        "set_fee_step": k.index,
+        "pool_after_set_fee": installed,
+        "carried_through": carried,
+        "identical_until_final_action": identical && reached_action,
+        "origin": "byte comparison of retained order-B states",
+    })))
+}
+
+fn inherited_clause(p: &Prepared, inherited: &Option<Value>) -> Result<String> {
+    let (_, fee) = s::values(&p.input.parameter)?;
+    Ok(match inherited {
+        Some(v) if v["identical_until_final_action"] == true => format!(
+            " SetFee({}/{}) was accepted before the upgrade and rejected after it, while the configuration installed before the upgrade remained byte-identical through the ProgramData preparation and the upgrade and was applied by the final DepositSol.",
+            fee.numerator, fee.denominator
+        ),
+        _ => String::new(),
+    })
+}
+
 // ---------------------------------------------------------------------------
 // Assembly, verification and reproduction
 // ---------------------------------------------------------------------------
 
 fn assemble(p: &Prepared, source: &mut dyn Source) -> Result<(Report, Evidence)> {
+    let v2 = p.is_v2();
     let mut runner = Runner::new(p, source);
-    let control = runner.scenario(ScenarioName::Control, ScenarioName::Control.steps(), None)?;
+    let (control_name, control_steps) = &p.scenarios[0];
+    let control = runner.scenario(*control_name, control_steps, None)?;
     let baseline = baseline_anchor(&control);
     let gate = (baseline.status != AnchorStatus::Matched).then_some(
         "baseline_world_fidelity_failed: S0 -> DepositSol did not reproduce the retained outcome",
@@ -2333,10 +3119,11 @@ fn assemble(p: &Prepared, source: &mut dyn Source) -> Result<(Report, Evidence)>
         None
     };
     let mut scenarios = vec![control];
-    for name in &SCENARIOS[1..] {
-        scenarios.push(runner.scenario(*name, name.steps(), gate)?);
+    for (name, steps) in &p.scenarios[1..] {
+        scenarios.push(runner.scenario(*name, steps, gate)?);
     }
     let evidence = runner.evidence();
+    let by_name = |n: ScenarioName| scenarios.iter().find(|s| s.name == n);
     let installed_overlay = if p.preflight.upgrade_blocker.is_some() {
         Anchor {
             status: AnchorStatus::NotEstablished,
@@ -2348,7 +3135,21 @@ fn assemble(p: &Prepared, source: &mut dyn Source) -> Result<(Report, Evidence)>
             detail: Value::Null,
         }
     } else {
-        installed_overlay_anchor(p, &evidence, &scenarios[1], &overlay)?
+        installed_overlay_anchor(
+            p,
+            &evidence,
+            by_name(ScenarioName::UpgradeControl).context("upgrade control")?,
+            &overlay,
+        )?
+    };
+    let extension_only = match by_name(ScenarioName::PreparationControl) {
+        Some(prepared) => Some(extension_only_anchor(
+            p,
+            &evidence,
+            &scenarios[0],
+            prepared,
+        )?),
+        None => None,
     };
     let anchors = Anchors {
         baseline_world_fidelity: baseline,
@@ -2361,22 +3162,36 @@ fn assemble(p: &Prepared, source: &mut dyn Source) -> Result<(Report, Evidence)>
             Some(Attempt::Unavailable(e)) => Some(e.clone()),
             _ => None,
         },
+        extension_only,
     };
-    let comparison = compare(&anchors, &scenarios, &evidence)?;
+    let comparison = compare(p, &anchors, &scenarios, &evidence)?;
     let mut report = Report {
-        schema: REPORT_SCHEMA.into(),
-        question: QUESTION.into(),
+        schema: if v2 { REPORT_SCHEMA_V2 } else { REPORT_SCHEMA }.into(),
+        question: if v2 { QUESTION_V2 } else { QUESTION }.into(),
         analysis_input_id: p.analysis_input_id.clone(),
         upgrade_change_spec_id: p.input.upgrade.id()?,
         parameter_change_spec_id: p.input.parameter.id()?,
         preflight: p.preflight.clone(),
-        visibility: visibility_contract(),
-        assumptions: assumptions(),
+        visibility: if v2 {
+            visibility_contract_v2()
+        } else {
+            visibility_contract()
+        },
+        assumptions: if v2 {
+            assumptions_v2(p.extension_message.is_some())
+        } else {
+            assumptions()
+        },
         anchors,
         scenarios,
         comparison,
-        limitations: LIMITS.iter().map(|s| s.to_string()).collect(),
+        limitations: if v2 { LIMITS_V2 } else { LIMITS }
+            .iter()
+            .map(|s| s.to_string())
+            .collect(),
         evidence: evidence.index(),
+        preparation: p.preparation.clone(),
+        programdata_preflight: v2.then(|| p.programdata_preflight.clone()),
         report_sha256: String::new(),
     };
     report.report_sha256 = report_digest(&report)?;
@@ -2393,7 +3208,32 @@ pub fn report_digest(report: &Report) -> Result<String> {
 
 /// Execute all five scenarios in fresh VMs from retained bytes.
 pub fn analyse(input: &Input) -> Result<Analysis> {
-    let p = Prepared::new(input.clone())?;
+    analyse_with_source(input, SourceIdentity::current())
+}
+
+/// Analysis under a stated source identity: this build's own, or for a v1
+/// input exactly the reviewed Step 16A commitment, whose v1 code path this
+/// build preserves. Reproduction of a retained artifact uses its own.
+pub fn analyse_with_source(input: &Input, source: SourceIdentity) -> Result<Analysis> {
+    let stated = json!({
+        "version": if input.preparation.is_some() { INPUT_VERSION_V2 } else { INPUT_VERSION },
+        "runtime": {
+            "rollout_source_sha256": source.rollout,
+            "world_source_sha256": source.world,
+            "preparation_source_sha256": source.preparation,
+        },
+    });
+    ensure!(
+        SourceIdentity::retained(&stated)? == source,
+        "rollout analyzer source identity is neither this build's nor the reviewed Step 16A commitment"
+    );
+    let p = Prepared::with_source(input.clone(), source)?;
+    if let Some(Preparation::ExtendProgram { additional_bytes }) = &p.preparation {
+        ensure!(
+            p.extension_message.is_some(),
+            "programdata_size_overflow: declared additional_bytes {additional_bytes} is not a u32 and cannot be encoded as ExtendProgram; the declared plan is not executable as declared"
+        );
+    }
     let mut source = VmSource { prepared: &p };
     let (report, evidence) = assemble(&p, &mut source)?;
     Ok(Analysis {
@@ -2408,7 +3248,10 @@ pub fn analyse(input: &Input) -> Result<Analysis> {
 /// seal: the analysis these executions actually support. Missing objects are
 /// carried as unavailable, never repaired.
 pub fn reduce(analysis: &Analysis) -> Result<Analysis> {
-    let p = Prepared::new(analysis.input.clone())?;
+    let p = Prepared::with_source(
+        analysis.input.clone(),
+        SourceIdentity::retained(&analysis.contract)?,
+    )?;
     let mut source = RetainedSource {
         report: &analysis.report,
         evidence: &analysis.evidence,
@@ -2467,7 +3310,10 @@ pub fn verify(analysis: &Analysis) -> Result<()> {
 /// report and evidence must be identical.
 pub fn reproduce(analysis: &Analysis) -> Result<Analysis> {
     verify(analysis)?;
-    let again = analyse(&analysis.input)?;
+    let again = analyse_with_source(
+        &analysis.input,
+        SourceIdentity::retained(&analysis.contract)?,
+    )?;
     if again != *analysis {
         bail!("offline rollout reproduction differs from the retained analysis");
     }

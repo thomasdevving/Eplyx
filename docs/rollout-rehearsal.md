@@ -109,9 +109,10 @@ A rejection must roll back everything except the payer's fee. It is
 Before any upgrade, the candidate's length is compared with ProgramData's
 capacity. If it does not fit, every Upgrade step is `unsupported` with
 `programdata_capacity_insufficient`, carrying the ProgramData address, account
-digest, capacity and required length. Nothing is resized and `ExtendProgram` is
-never executed: the finding is that this declared rollout cannot execute until
-ProgramData is extended. A candidate with no compiled rollout profile is
+digest, capacity and required length. Nothing is resized and a v1 analysis never
+executes `ExtendProgram`: the finding is that this declared rollout cannot
+execute until ProgramData is extended. Declaring that extension is input v2 —
+see [ProgramData preparation and ExtendProgram](#programdata-preparation-and-extendprogram). A candidate with no compiled rollout profile is
 likewise `candidate_not_qualified` and never installed. Steps that need no
 upgrade still run.
 
@@ -274,6 +275,164 @@ requires byte-identical report and evidence. No provider, network, bundle or
 checkout is involved; the test suite runs it inside a private network
 namespace. Runtime differences are not waived.
 
+## ProgramData preparation and ExtendProgram
+
+A loader-v3 program's bytes live in its ProgramData account: a 45-byte header
+(`UpgradeableLoaderState::ProgramData { slot, upgrade_authority }`) followed by
+the **executable capacity** that `Upgrade` overwrites. `Upgrade` never resizes
+that account, so a candidate longer than the capacity cannot be installed until
+`ExtendProgram` grows it. Four lengths are kept distinct: the account data length
+(1,080,509 for the retained Stake Pool), the header (45), the executable
+capacity (1,080,464, all of it the retained V1 including padding) and the
+candidate ELF length.
+
+The rehearsal **diagnoses** a missing extension; the **declared rollout decides**
+whether to include one. A computed minimum is presentation and never turns a
+plan without an extension into one with it.
+
+### The declared plan (input v2)
+
+`eplyx rollout analyse --plan plan.json` reads a small strict document:
+
+```json
+{"schema_version": 1, "programdata_preparation": {"kind": "none"}}
+{"schema_version": 1, "programdata_preparation": {"kind": "extend_program", "additional_bytes": "65920"}}
+```
+
+`additional_bytes` is a canonical decimal string; unknown fields, other kinds,
+numbers and non-canonical strings are refused. A plan makes the analysis input
+`eplyx-rollout-rehearsal-input-v2`: the identity additionally binds the declared
+preparation, the preflight, the rent identity, the exact ExtendProgram message
+and the extension payer assumption, besides everything v1 binds. Without
+`--plan` the analysis is the unchanged v1 family above. No ChangeSpec kind is
+added: preparation is rollout setup, not a protocol proposal.
+
+### Preflight
+
+`eplyx rollout preflight` (same inputs, optional `--plan`) executes no VM and
+writes nothing. From the retained world and the candidate it reports the
+Program and ProgramData identities, loader, account length, header length,
+executable capacity, the installed executable, the candidate, whether it fits,
+the exact `minimum_additional_bytes_required`, and for a declared extension the
+extended lengths, surplus or shortfall and the rent funding
+(`max(1, (128 + new_len) × 6960) − current lamports`, from the same `Rent` as
+the runtime sysvar) against the assumed payer. Status is one of
+`ready_without_extension`, `extension_required`,
+`declared_extension_sufficient`, `declared_extension_insufficient` or
+`extension_unsupported` (`zero_extension`, `below_minimum_extension`,
+`programdata_size_overflow`). It is setup evidence — arithmetic over retained
+bytes — and never states that an extension executed.
+
+### The pinned loader's ExtendProgram
+
+Established from `solana-bpf-loader-program 4.2.2` (`common_extend_program`,
+`check_authority = false`) and the official `solana-loader-v3-interface 8.0.1`
+builder, under LiteSVM 0.16's mainnet features:
+
+- accounts: ProgramData (writable), Program (writable), System program, payer
+  (writable, signer). **No upgrade-authority signature is read.**
+- `additional_bytes` is a `u32`; `0` is `InvalidInstructionData`; a new length
+  above 10 MiB is `InvalidRealloc`; SIMD-0431 (active) requires at least
+  10,240 bytes unless the extension exactly fills the remaining headroom.
+- an immutable program, a Program↔ProgramData mismatch or a same-slot repeat is
+  refused.
+- if `max(1, rent(new_len))` exceeds the current balance, the difference is
+  transferred from the payer by one System CPI.
+- the account grows with zero bytes, the **existing executable is redeployed**
+  and ProgramData's slot becomes `Clock.slot`.
+
+That last point matters: like `Upgrade`, `ExtendProgram` redeploys, so the
+loader refuses an `Upgrade` in the same slot ("Program was deployed in this block
+already") and the Step 16A visibility rule — callable from `deploy_slot + 1` —
+applies after the extension too. The rule is unchanged; it is driven by
+ProgramData's slot, which the loader rewrites. Every extension is therefore
+followed by the same explicit `advance_to_visible_slot` transition.
+
+The rehearsal executes the official instruction through the loader and then
+verifies byte for byte: only ProgramData and the payer changed; the account grew
+by exactly the declared bytes, all zero; the header keeps its authority and takes
+the new slot; the installed V1 bytes are identical (V1 stays the effective
+executable; no candidate bytes are installed); ProgramData holds exactly the
+rent-exempt minimum for its new length; the payer paid exactly that funding plus
+the 5,000-lamport fee; funding was exactly one System transfer. A rejection must
+leave ProgramData untouched with only the fee charged: `extend_program_rejected`,
+`extension_funding_insufficient` or `programdata_size_overflow`; a post-state that
+does not reconcile is `extend_program_post_state_mismatch`. The upgrade payer's
+spill, the extension funding, every transaction fee and the user action are
+reconciled separately.
+
+### Scenarios with a declared extension
+
+| Scenario | Steps |
+| --- | --- |
+| Control (P0) | DepositSol |
+| Upgrade without preparation (P1) | Upgrade → advance → DepositSol |
+| Preparation control (P2) | ExtendProgram → advance → DepositSol |
+| Upgrade control (P3) | ExtendProgram → advance → Upgrade → advance → DepositSol |
+| Config control | SetFee → DepositSol |
+| Order A (P4) | ExtendProgram → advance → Upgrade → advance → SetFee → DepositSol |
+| Order B (P5) | SetFee → ExtendProgram → advance → Upgrade → advance → DepositSol |
+
+With `none`, the five v1 scenarios run. Each Upgrade is admitted against the
+ProgramData it actually receives: when the candidate does not fit, it is
+`unsupported` with `programdata_extension_required` (no extension in that
+scenario) or `declared_extension_insufficient` (an executed extension was too
+small), carrying the current capacity, the requirement and the missing bytes.
+No impossible Upgrade is executed and nothing is extended implicitly. An
+extension that succeeded stays in the world: the rollout is a sequence of
+transactions, not an atomic one.
+
+Anchors: the Step 16A baseline-fidelity and installed-vs-overlay anchors, plus
+the **extension-only anchor** — P2's DepositSol must equal P0's in outcome, fee,
+compute units, logs, CPI shape, watched post-state, reconciliation and effective
+executable (V1). A difference is `extension_behavior_mismatch`.
+
+If the declared rollout's Upgrade is blocked by capacity, the status is
+`rollout_precondition_missing`. In order B the report retains, byte for byte,
+the pool SetFee produced at each later world up to the final action's input
+(`inherited_configuration`).
+
+### Qualified results
+
+The [oversized counterexample](../programs/fixture-stake-pool-oversized-rollout-candidate/README.md)
+(`329092d7…c7c4`, 1,146,384 bytes) has the counterexample's behaviour plus
+read-only ballast; it needs exactly **65,920** more bytes.
+
+| Declared plan | Result |
+| --- | --- |
+| `none` | `rollout_precondition_missing`: "The declared rollout cannot install the candidate because the retained ProgramData account is too small. At least 65920 additional bytes are required." No ProgramData byte changes anywhere. |
+| `extend_program` 65,919 | ExtendProgram verified (ProgramData 1,146,428 bytes, retained); Upgrade `declared_extension_insufficient`, 1 byte short; nothing downstream; `rollout_precondition_missing` |
+| `extend_program` 65,920 | ExtendProgram verified: ProgramData 1,080,509 → 1,146,429 bytes, lamports 7,521,233,520 → 7,980,036,720 (458,803,200 funding), payer −458,808,200 including the fee. Extension-only anchor matched (V1 DepositSol identical at slot +1). Upgrade at slot +1 installs the candidate filling the capacity exactly; installed-vs-overlay anchor matched. `rollout_order_effect_observed` |
+| `extend_program` 86,400 | same, with 20,480 bytes of zero capacity after the candidate; identical user-action results |
+| `0`, `4096`, 10 MiB | loader rejection (`InvalidInstructionData`, `InvalidArgument`, `InvalidRealloc`), ProgramData untouched, fee only |
+| above `u32::MAX` | refused: not encodable as ExtendProgram |
+
+With the 65,920-byte extension, order A's SetFee(1/100) is rejected under V2
+(`FeeTooHigh`, rollback verified) and its DepositSol is not executed; in order B
+SetFee(1/100) is accepted under V1, the resulting pool is byte-identical through
+the extension and the upgrade, and V2's DepositSol applies it: recipient
+753,375,157, manager fee account 7,609,851, mint and pool-token supply
++760,985,008, reserve and pool total lamports +822,000,000, funding payer debit
+822,014,000 (action fee 14,000); referral unavailable (aliased).
+
+### Evidence and compatibility
+
+The artifact carries the plan, the preflight, the ExtendProgram message and
+execution, complete before/after ProgramData, payer evidence and every state;
+identical bytes are stored once. `verify` (0 VMs) rebuilds the v2 identity and
+preflight and reduces the extension, upgrade, transitions, configuration,
+action and comparison again; a tampered plan, preflight, resized ProgramData,
+payer delta, upgrade input or scenario chain fails. `reproduce` reruns every
+step offline.
+
+Step 16A artifacts keep working unchanged. Their contract commits the Step 16A
+analyzer source (`mod.rs` `d7229bb3…`, `world.rs` `d7a5be63…`); this build accepts
+exactly that commitment for input v1, reduces and reproduces it through its
+preserved v1 code path, and reaches the identical report bytes and identities
+(analysis input `ffafb0ad…`, report `74454af9…`). Any other source commitment
+that is not the build's own is refused. New v1 analyses bind the current
+source, as interaction receipts do.
+
 ## Limitations
 
 - One retained world, one record, one action and one fixed configuration
@@ -286,6 +445,7 @@ namespace. Runtime differences are not waived.
   modelled; LiteSVM 0.16 with its mainnet feature set is the backend.
 - The candidate is a constructed counterexample, not an upstream release, and
   its identity is qualified on Linux x86_64 only (the bytes are tracked).
-- Not executed: `ExtendProgram`, `Write`/`InitializeBuffer`, Squads or other
-  governance messages, migrations, multiple candidates, arbitrary step
-  sequences, live acquisition, hosted routes, valuation.
+- Not executed: automatic or repeated `ExtendProgram`, `ExtendProgramChecked`,
+  `Write`/`InitializeBuffer`, Squads or other governance messages, migrations,
+  multiple candidates, arbitrary step sequences, live acquisition, hosted
+  routes, valuation.
