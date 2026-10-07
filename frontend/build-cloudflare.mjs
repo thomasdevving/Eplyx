@@ -15,7 +15,10 @@ const pages = [
   'start', 'cli', 'token-transitions', 'analyse', 'projects',
   'legal', 'privacy', 'cookies', 'terms', 'contact', 'licenses',
 ];
-const routes = pages.flatMap(page => [`/${page}`, `/${page}/`]);
-routes.push('/projects/:id', '/projects/:id/', '/runs/:id', '/runs/:id/');
-await writeFile(new URL('_redirects', output), `${routes.map(route => `${route} /index.html 200`).join('\n')}\n`);
+const routes = [...pages.map(page => `/${page}`), '/projects/:id', '/runs/:id'];
+const redirects = routes.flatMap(route => [
+  `${route}/ ${route} 301`,
+  `${route} / 200`,
+]);
+await writeFile(new URL('_redirects', output), `${redirects.join('\n')}\n`);
 console.log('Prepared Cloudflare routing and response headers.');
