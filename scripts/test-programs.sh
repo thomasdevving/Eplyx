@@ -31,6 +31,9 @@ cargo test --manifest-path "$ROOT/programs/fixture-stake-pool-config-candidate/C
 echo "==> testing fixture-stake-pool-rollout-candidate"
 cargo test --manifest-path "$ROOT/programs/fixture-stake-pool-rollout-candidate/Cargo.toml"
 
+echo "==> testing fixture-stake-pool-oversized-rollout-candidate"
+cargo test --manifest-path "$ROOT/programs/fixture-stake-pool-oversized-rollout-candidate/Cargo.toml"
+
 for MIGRATION_FEATURE in reference defect-deadline-inclusive defect-fee-ceiling; do
   echo "==> testing eplyx-token-migration [$MIGRATION_FEATURE]"
   if [ "$MIGRATION_FEATURE" = reference ]; then

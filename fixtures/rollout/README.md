@@ -1,8 +1,11 @@
-# Rollout rehearsal fixture
+# Rollout rehearsal fixtures
 
-`fixture_stake_pool_rollout_v2.so` is the constructed rollout counterexample
-built from `programs/fixture-stake-pool-rollout-candidate` — not an upstream
-release and not intended for deployment. `fixture_stake_pool_rollout_v2.build.json`
-is the receipt of the qualified build. `scripts/build-stake-pool-rollout-candidate.sh`
-reproduces both and fails unless the rebuilt ELF equals these bytes. See
-[the rollout rehearsal](../../docs/rollout-rehearsal.md).
+Constructed counterexamples, not upstream releases, not production candidates
+and not intended for deployment. Each `.so` has its qualified build receipt
+beside it, and its build script fails unless the rebuilt ELF equals these bytes.
+See [the rollout rehearsal](../../docs/rollout-rehearsal.md).
+
+| File | Source | Rebuild |
+| --- | --- | --- |
+| `fixture_stake_pool_rollout_v2.so` (`64612be0…`, 134,320 bytes) | `programs/fixture-stake-pool-rollout-candidate` | `scripts/build-stake-pool-rollout-candidate.sh` |
+| `fixture_stake_pool_oversized_rollout_v2.so` (`329092d7…`, 1,146,384 bytes) | `programs/fixture-stake-pool-oversized-rollout-candidate` | `scripts/build-stake-pool-oversized-rollout-candidate.sh` |

@@ -34,6 +34,29 @@ pub enum Command {
         /// New artifact directory; an existing path is never overwritten.
         #[arg(long)]
         out: PathBuf,
+        /// Versioned ProgramData preparation plan (`programdata_preparation`
+        /// `none` or `extend_program`). Present: input v2; absent: Step 16A v1.
+        #[arg(long)]
+        plan: Option<PathBuf>,
+        #[arg(long, value_enum, default_value = "text")]
+        format: Format,
+    },
+    /// Read-only ProgramData capacity preflight from the retained world and
+    /// candidate. Executes no VM and writes nothing.
+    Preflight {
+        #[arg(long)]
+        upgrade: PathBuf,
+        #[arg(long)]
+        parameter: PathBuf,
+        #[arg(long)]
+        bundle: PathBuf,
+        #[arg(long)]
+        record_id: String,
+        #[arg(long)]
+        candidate: PathBuf,
+        /// Declared plan to evaluate; absent evaluates `none`.
+        #[arg(long)]
+        plan: Option<PathBuf>,
         #[arg(long, value_enum, default_value = "text")]
         format: Format,
     },
@@ -66,6 +89,7 @@ pub fn run(command: Command) -> Result<ExitCode> {
 fn format_of(command: &Command) -> Format {
     match command {
         Command::Analyse { format, .. }
+        | Command::Preflight { format, .. }
         | Command::Verify { format, .. }
         | Command::Reproduce { format, .. } => *format,
     }
@@ -97,6 +121,51 @@ pub fn worker(encoded: &str) -> Result<ExitCode> {
     }
 }
 
+fn bounded(path: PathBuf, limit: u64) -> Result<Vec<u8>> {
+    ensure!(
+        std::fs::symlink_metadata(&path)?.len() <= limit,
+        "rollout input exceeds existing local bound"
+    );
+    artifact::read(path)
+}
+
+fn input(
+    upgrade: PathBuf,
+    parameter: PathBuf,
+    bundle: PathBuf,
+    record_id: &str,
+    candidate: PathBuf,
+    plan: Option<PathBuf>,
+) -> Result<rollout::Input> {
+    let upgrade = ChangeSpec::parse(&bounded(
+        upgrade,
+        eplyx_engine::migration::input::MAX_CHANGE_BYTES,
+    )?)?;
+    let parameter = ChangeSpec::parse(&bounded(
+        parameter,
+        eplyx_engine::migration::input::MAX_CHANGE_BYTES,
+    )?)?;
+    let bundle = eplyx_engine::bundle::CiBundle::open(bundle)?;
+    let historical =
+        eplyx_engine::parameter_change::stake_pool::Input::from_bundle(&bundle, record_id)?;
+    let input = rollout::Input::new(
+        &upgrade,
+        &parameter,
+        historical,
+        bounded(candidate, eplyx_engine::migration::input::MAX_PROGRAM_BYTES)?,
+    )?;
+    Ok(match plan {
+        Some(path) => input.with_preparation(
+            rollout::preparation::Plan::parse(&bounded(
+                path,
+                eplyx_engine::migration::input::MAX_CHANGE_BYTES,
+            )?)?
+            .programdata_preparation,
+        ),
+        None => input,
+    })
+}
+
 fn execute(command: Command) -> Result<serde_json::Value> {
     let (analysis, operation, vm) = match command {
         Command::Analyse {
@@ -106,38 +175,40 @@ fn execute(command: Command) -> Result<serde_json::Value> {
             record_id,
             candidate,
             out,
+            plan,
             ..
         } => {
             ensure!(!out.exists(), "output directory must be fresh");
-            let bounded = |path: PathBuf, limit: u64| -> Result<Vec<u8>> {
-                ensure!(
-                    std::fs::symlink_metadata(&path)?.len() <= limit,
-                    "rollout input exceeds existing local bound"
-                );
-                artifact::read(path)
-            };
-            let upgrade = ChangeSpec::parse(&bounded(
-                upgrade,
-                eplyx_engine::migration::input::MAX_CHANGE_BYTES,
-            )?)?;
-            let parameter = ChangeSpec::parse(&bounded(
-                parameter,
-                eplyx_engine::migration::input::MAX_CHANGE_BYTES,
-            )?)?;
-            let bundle = eplyx_engine::bundle::CiBundle::open(bundle)?;
-            let historical = eplyx_engine::parameter_change::stake_pool::Input::from_bundle(
-                &bundle, &record_id,
-            )?;
-            let input = rollout::Input::new(
-                &upgrade,
-                &parameter,
-                historical,
-                bounded(candidate, eplyx_engine::migration::input::MAX_PROGRAM_BYTES)?,
-            )?;
+            let input = input(upgrade, parameter, bundle, &record_id, candidate, plan)?;
             let analysis = rollout::analyse(&input)?;
             rollout::artifact::save(&analysis, &out)?;
             let vm = rollout::vm_executions(&analysis.report);
             (analysis, "analysed", vm)
+        }
+        Command::Preflight {
+            upgrade,
+            parameter,
+            bundle,
+            record_id,
+            candidate,
+            plan,
+            ..
+        } => {
+            let declared = plan.is_some();
+            let input = input(upgrade, parameter, bundle, &record_id, candidate, plan)?;
+            let prepared = rollout::Prepared::new(input)?;
+            return Ok(serde_json::json!({
+                "operation": "preflight",
+                "origin": "derived from retained world and candidate; no VM executed; not an analytical result",
+                "plan_declared": declared,
+                "upgrade_change_spec_id": prepared.input.upgrade.id()?,
+                "parameter_change_spec_id": prepared.input.parameter.id()?,
+                "candidate_profile": prepared.preflight.candidate_profile,
+                "programdata_preflight": prepared.programdata_preflight,
+                "rent": rollout::preparation::rent_identity(),
+                "offline": true,
+                "vm_executions": 0,
+            }));
         }
         Command::Verify { artifact, .. } => (rollout::artifact::load(&artifact)?, "verified", 0),
         Command::Reproduce { artifact, .. } => {
@@ -168,6 +239,9 @@ fn execute(command: Command) -> Result<serde_json::Value> {
             "steps": s.steps.iter().map(|x| serde_json::json!({"step": x.step, "outcome": x.outcome, "reason": x.reason})).collect::<Vec<_>>(),
         })).collect::<Vec<_>>(),
         "first_divergence": r.comparison.first_divergence,
+        "preparation": r.preparation,
+        "preflight_status": r.programdata_preflight.as_ref().map(|f| f.status),
+        "anchor_extension_only": r.anchors.extension_only.as_ref().map(|a| a.status),
         "offline": true,
         "vm_executions": vm,
     }))
