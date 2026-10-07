@@ -5,6 +5,12 @@ The production branch is `main`; pushes trigger an automatic build and deploymen
 Only the generated `dist/` directory is published. The Rust API, database,
 credentials and evidence bundles are not part of this static deployment.
 
+The first production deployment was published on 8 October 2026 (Amsterdam time),
+from commit `3c8965f`, with deployment ID
+`49130259-cbbc-4c58-9d49-a48ef3f24e2e`. Both `https://eplyx.dev` and
+`https://www.eplyx.dev` are active with SSL enabled. The Pages fallback address is
+`https://eplyx.pages.dev`.
+
 ## Build settings
 
 | Setting | Value |
@@ -30,6 +36,12 @@ Set `EPLYX_API_URL` as a Pages build variable to change it. Browser requests
 require the API's `EPLYX_ALLOWED_ORIGINS` to include the public website origin;
 static hosting does not change that API configuration. Workspace links open
 the API's own origin.
+
+At deployment verification, the API did not return `Access-Control-Allow-Origin`
+for a preflight from `https://eplyx.dev`. Before using authenticated API requests
+from the new site, add `https://eplyx.dev` and `https://www.eplyx.dev` to
+`EPLYX_ALLOWED_ORIGINS`, preserving its existing entries, and deploy that API
+configuration. The public pages and saved demo report work independently of it.
 
 ## Routing and caching
 
