@@ -1,17 +1,21 @@
-# Full regression suite on every pull request and every push to main.
+# Regression suite on every pull request and every push to main: the
+# *public tier*, everything a clean checkout can build and run.
 #
-# Every suite the repository documents runs here, and none of them skips:
-# the cloud suites fail without Postgres, so this workflow starts a loopback
-# scratch cluster rather than leaving them out. Rust jobs run on macos-15
-# because the hash-pinned SBF candidates are only qualified on Darwin arm64
-# (see scripts/build-stake-pool-config-candidate.sh); the Node-only checks run
-# on Linux.
+# Some fixtures are kept out of git on purpose (historical captures with
+# provider-origin fields; see fixtures/lifecycle/README.md). The tests that
+# read them are recorded in scripts/private-fixture-tests.json, listed in every
+# run's summary, and run by `make regression` on a machine with the payloads
+# imported. Nothing else is skipped: a stale exclusion fails the run, and a new
+# test needing a payload fails until it is recorded. The cloud suites still
+# run against a loopback scratch Postgres. Rust jobs run on macos-15 because
+# the hash-pinned SBF candidates are only qualified on Darwin arm64 (see
+# scripts/build-stake-pool-config-candidate.sh); Node-only checks run on Linux.
 #
 #   programs   build every SBF artefact once, hash-checked, shared below
-#   rust-lint  rustfmt and clippy -D warnings across host and every program
-#   rust-test  program unit tests + the whole workspace, Postgres included
-#   browser    report contract; dashboard, cloud (Postgres), public and
-#              governance browser suites
+#   rust-lint  rustfmt; clippy -D warnings over every program and public target
+#   rust-test  program unit tests + the workspace public tier, Postgres included
+#   browser    report contract; dashboard, public and governance browser suites
+#              (the cloud browser suite needs private payloads)
 #   frontend   page render tests, governance contract, submit client
 #
 name: Regression
@@ -81,8 +85,8 @@ jobs:
           key: lint
       - name: rustfmt
         run: make fmt-check
-      - name: clippy
-        run: make lint
+      - name: clippy (public tier)
+        run: make lint-public
 
   rust-test:
     needs: programs
@@ -108,8 +112,12 @@ jobs:
       - name: Program unit tests
         run: make test-programs
 
-      - name: Workspace tests (engine, server, cloud)
-        run: cargo test --locked --workspace
+      - name: Workspace tests, public tier (engine, server, cloud)
+        run: python3 scripts/public-tier.py test
+
+      - name: List what the public tier does not run
+        if: always()
+        run: python3 scripts/public-tier.py summary
 
       - name: Stop Postgres
         if: always()
@@ -138,13 +146,6 @@ jobs:
       - name: Build the binaries the browser suites serve
         run: cargo build --locked -p eplyx-engine -p eplyx-server --bins
 
-      - name: Start a scratch Postgres
-        run: |
-          brew list postgresql@17 >/dev/null 2>&1 || brew install postgresql@17
-          echo "$(brew --prefix postgresql@17)/bin" >> "$GITHUB_PATH"
-          export PATH="$(brew --prefix postgresql@17)/bin:$PATH"
-          scripts/scratch-postgres.sh start "$RUNNER_TEMP/pg" | sed 's/^export //' >> "$GITHUB_ENV"
-
       # Runs `eplyx compare` over the built artefacts, then checks its JSON
       # from outside Rust.
       - name: Report JSON contract
@@ -153,8 +154,9 @@ jobs:
       # The runner image ships Google Chrome, which every config targets.
       - name: Dashboard browser suite
         run: pnpm test:dashboard
-      - name: Cloud browser suite
-        run: pnpm test:cloud
+      # pnpm test:cloud seeds its service from private payloads
+      # (fixtures/lifecycle/main-t7, fixtures/current/sta, the catalogue
+      # capture); it runs in make regression.
       - name: Public site browser suite
         run: pnpm test:public
       - name: Governance trail browser suite
@@ -173,10 +175,6 @@ jobs:
           path: ${{ steps.traces.outputs.dir }}/eplyx-*-browser-results
           if-no-files-found: ignore
           retention-days: 7
-
-      - name: Stop Postgres
-        if: always()
-        run: scripts/scratch-postgres.sh stop "$RUNNER_TEMP/pg"
 
   frontend:
     runs-on: ubuntu-latest

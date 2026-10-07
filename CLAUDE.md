@@ -99,8 +99,11 @@ eplyx governance squads acquire --multisig M --transaction-index N --store DIR -
 eplyx governance squads attest --change-spec bound.json --binding matched-g1.json --artifacts DIR --rpc-url URL --format json
 ```
 
-Operations (see `docs/operations.md`): `.github/workflows/ci.yml` runs every
-suite above on each PR; `GET /v1/projects/{p}/setup` is the guided first-check
+Operations (see `docs/operations.md`): `.github/workflows/ci.yml` runs the
+public tier on each PR (`make lint-public`, `make test-public`: everything a
+clean checkout can run; tests needing the git-ignored fixture payloads are
+recorded in `scripts/private-fixture-tests.json`), and `make regression` runs
+every suite locally before merging; `GET /v1/projects/{p}/setup` is the guided first-check
 checklist; `GET /v1/ops` / `eplyx-server admin ops` the queue view;
 `scripts/eplyx-backup.sh` backs up and restores volume + Postgres together and
 `eplyx-server admin verify-volume` checks a restore.
