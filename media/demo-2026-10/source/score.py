@@ -74,10 +74,10 @@ def lp_fast(x, cutoff):
 scenes = timeline["scenes"]
 cues = timeline["cues"]
 start_of = {s["id"]: s["at"] for s in scenes}
-GROOVE_IN = start_of["channels"]
-BREAK_IN = start_of["personas"]
+GROOVE_IN = start_of["who"]
+BREAK_IN = start_of["boundaries"]
 END_IN = start_of["end"]
-SOFT_IN = 5.3
+SOFT_IN = 4.4
 
 # ── harmony: Dm9 – Bbmaj7 – F/A – Csus, two bars each ───────────────────────
 chords = [[50, 57, 60, 64, 65], [46, 53, 57, 62, 65], [45, 53, 57, 60, 64], [48, 55, 60, 62, 67]]
@@ -157,7 +157,7 @@ while beat_t < DUR:
     if in_groove:
         for s16 in range(4):
             hat(beat_t + s16 * BEAT / 4, 1.0 if s16 == 2 else 0.55, open_=(s16 == 2 and b % 4 == 3))
-        if b % 2 == 1 and beat_t > start_of["concept"]:
+        if b % 2 == 1 and beat_t > start_of["website"]:
             clap(beat_t)
     if outro and b % 4 == 0 and beat_t < END_IN + 1:
         kick(beat_t, 1.0)
@@ -284,7 +284,7 @@ for c in cues:
             tt += rng.uniform(0.045, 0.085)
             k += 1
 
-boom(SOFT_IN, 0.7)  # the hero shrinks into its window
+
 
 # ── master ─────────────────────────────────────────────────────────────────
 mix = np.stack([L[: int(DUR * SR)], R[: int(DUR * SR)]], 1)

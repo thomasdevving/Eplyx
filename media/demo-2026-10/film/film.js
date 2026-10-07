@@ -1,7 +1,7 @@
 // Film runtime: background, HUD, scene scheduling, transitions, preview player
 // and the deterministic export entry point window.renderAt(t).
 import { W, H, FPS, clamp, lerp, seg, ease, h, put, rand } from './core.js';
-import { scenes, chapters } from './scenes.js';
+import { scenes } from './scenes.js';
 
 const MARK = {
   crescent: 'M355 68C316 26 265 10 219 11 124 9 44 69 18 152 4 197 8 242 17 270c3 10 12 11 26 9 30-3 63-19 87-43-14-35-11-65 5-95 22-42 58-76 99-93 44-18 86-7 121 20Z',
@@ -47,16 +47,9 @@ const hudBrand = h('div', { class: 'hud__brand', html: `${markSVG()}<span>Eplyx<
 const hudChips = h('div', { class: 'hud__chip' });
 const chipChannel = h('span', { class: 'chip' }); const chipCase = h('span', { class: 'chip chip--solid' });
 hudChips.append(chipChannel, chipCase);
-const rail = h('div', { class: 'hud__rail' });
-const railSegs = chapters.map(c => { const s = h('div', { class: 'rail__seg' }, h('span')); rail.append(s); return s; });
 const caption = h('div', { class: 'hud__caption' });
-hud.append(hudBrand, hudChips, rail, caption);
+hud.append(hudBrand, hudChips, caption);
 
-function chapterBounds(i) {
-  const list = scenes.filter(s => s.chapter === i);
-  return list.length ? [list[0].at, list.at(-1).end] : [0, 0];
-}
-const bounds = chapters.map((_, i) => chapterBounds(i));
 
 function updateHud(t, scene) {
   const show = scene.hud !== false;
@@ -65,14 +58,12 @@ function updateHud(t, scene) {
   const anyHud = scenes.some(s => s.hud !== false && t >= s.at - .3 && t < s.end + .3);
   hudBrand.style.opacity = (anyHud ? 1 : 0) * (scene.hud === false ? seg(t, scene.at + .3, scene.at - .2) : 1);
   const ch = scene.channel, uc = scene.usecase;
-  const chText = ch ? `<i></i>Channel <b>${String(ch[0]).padStart(2, '0')}</b> · ${ch[1]}` : '';
-  const ucText = uc ? `Use case <b>${String(uc[0]).padStart(2, '0')}</b> · ${uc[1]}` : '';
+  const chText = ch ? `<i></i><b>${ch[1]}</b>` : '';
+  const ucText = uc ? `${uc[1]}` : '';
   if (chipChannel.dataset.v !== chText) { chipChannel.innerHTML = chText; chipChannel.dataset.v = chText; }
   if (chipCase.dataset.v !== ucText) { chipCase.innerHTML = ucText; chipCase.dataset.v = ucText; }
   chipChannel.style.display = ch ? '' : 'none'; chipCase.style.display = uc ? '' : 'none';
   put(hudChips, { y: (1 - o) * -16, o });
-  rail.style.opacity = anyHud ? .9 : 0;
-  railSegs.forEach((s, i) => { const [a, b] = bounds[i]; s.firstChild.style.transform = `scaleX(${clamp((t - a) / (b - a)).toFixed(4)})`; });
   const cap = scene.caption || '';
   if (caption.dataset.v !== cap) { caption.textContent = cap; caption.dataset.v = cap; }
   caption.style.opacity = o * (cap ? 1 : 0);

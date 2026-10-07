@@ -1,62 +1,64 @@
-# Eplyx — product demo film (October 2026)
+# Eplyx product demo film (October 2026)
 
-**[output/eplyx-demo.mp4](output/eplyx-demo.mp4)** · 2:58 · 1920 × 1080 · 30 fps · H.264 + AAC stereo · −14 LUFS
+**[output/eplyx-demo.mp4](output/eplyx-demo.mp4)** · 2:57 · 1920 × 1080 · 30 fps · H.264 + AAC stereo · −14 LUFS
 
-A three-minute walkthrough of the live product: all eight channels and all ten
-use cases, built from recordings of the real binaries and services at commit
-`b53734b`. It is meant for YouTube, Loom or Vimeo uploads (under three minutes).
+A three-minute film of the live product for YouTube, Loom or Vimeo. It explains
+the problem, what Eplyx is and how it works, who it is for, and then follows one
+person per scenario: who they are, what situation they are in, what Eplyx does
+for them and what they get back. Together the scenarios cover all eight channels
+and all ten use cases. Every terminal and browser image is a recording of the
+real binaries and services at commit `b53734b`.
 
-## Chapters
+## Story
 
-| Time | Scene | Channel | Use case |
-| --- | --- | --- | --- |
-| 0:00 | The homepage intro and hero (recorded), the promise | 01 Public website | — |
-| 0:11 | One engine, eight ways in, ten questions | all | all |
-| 0:16 | `/start` question chooser, `/runs/demo` saved report | 01 Public website | — |
-| 0:25 | Same transaction, same state, two builds | 02 Local CLI | 01 Program upgrade |
-| 0:29 | `bundle verify`, control `ci check` (exit 0), regression (exit 1) | 02 Local CLI | 01 Program upgrade |
-| 0:40 | `expected-changes.toml` → expected 2, still `undeclarable_change` | 02 Local CLI | 02 Declared changes |
-| 0:48 | Exit codes 0–5 as the gate, the repo's own workflow | 04 CI gate · offline | 01 Program upgrade |
-| 0:53 | `eplyx-server admin` + operator console setup checklist | 07 Operator console | 10 Share & manage |
-| 1:01 | `eplyx-submit.sh` → HTTP 202 → exit 1, hosted report, PR comment | 05 CI gate · hosted | 01 Program upgrade |
-| 1:11 | **Live** `governance squads verify` on a real Squads V4 proposal | 02 Local CLI | 03 Governance binding |
-| 1:19 | **Live** `versions upgrades/resolve`, `historical acquire`, replay | 02 Local CLI | 09 Historical research |
-| 1:29 | `doctor`, `migration analyse/search/reproduce/gate/plan` | 02 Local CLI | 04 Token migration |
-| 1:39 | `eplyx dashboard`: failed run, stress matrix, run comparison | 03 Local dashboard | 04 Token migration |
-| 1:48 | `lifecycle analyse` + its dashboard page | 02 Local CLI · 03 | 05 Lifecycle change |
-| 1:55 | **Live** PYUSD observation, offline Transfer and candidate checks | 06 Cloud workspace | 06 Current state |
-| 2:05 | `parameter analyse`: 1% SOL deposit fee on a real DepositSol | 02 Local CLI | 07 Fee parameter |
-| 2:13 | `interaction analyse`: does the code change the fee effect? | 02 Local CLI | 08 Upgrade × fee |
-| 2:19 | `login` (browser device approval) · `link` · `sync` → workspace runs | 06 Cloud workspace | 10 Share & manage |
-| 2:28 | `curl` `/setup` and `/runs` | 08 HTTP API | 10 Share & manage |
-| 2:33 | Evidence pipeline; the synthetic 141-fixture method demo | 02 Local CLI | — |
-| 2:40 | Five roles and their routes | — | — |
-| 2:47 | Boundaries | — | — |
-| 2:53 | End card | — | — |
+| Time | Who | Situation | Channel | Use case |
+| --- | --- | --- | --- | --- |
+| 0:00 | | You know what you changed in the code, but not what it will do to real users | | |
+| 0:10 | | How Eplyx works: a simulation rebuilt from real mainnet data, old and new side by side | | |
+| 0:26 | | Who it is for | | |
+| 0:32 | Anyone | Start with your question on the website, or open a saved report | Public website | |
+| 0:39 | Protocol developer | You are about to ship a new build | Local CLI | Program upgrade |
+| 0:53 | Protocol developer | Some changes are on purpose | Local CLI | Declared changes |
+| 1:00 | Protocol developer | In CI, the exit code is the gate | CI gate, offline | Program upgrade |
+| 1:05 | Platform team | Set it up once; CI can never move the baseline | Operator console | Share and manage |
+| 1:13 | Protocol developer | Every pull request, checked automatically | CI gate, hosted | Program upgrade |
+| 1:23 | Multisig signer | You are asked to approve a program upgrade (**live**) | Local CLI | Governance binding |
+| 1:32 | Security team | Something changed on mainnet: what ran, and can you replay it (**live**) | Local CLI | Historical research |
+| 1:42 | Token issuer | You are moving holders to a new token | Local CLI | Token migration |
+| 1:52 | Token issuer | Review the rehearsal in the local dashboard | Local dashboard | Token migration |
+| 1:59 | Risk team | A deadline moves: what does it mean for holders | Local CLI | Lifecycle change |
+| 2:05 | Holder or market maker | Can this account still move today (**live**) | Cloud workspace | Current state |
+| 2:15 | Protocol team | You want to raise the deposit fee to 1% | Local CLI | Fee change |
+| 2:21 | Protocol team | And new code ships at the same time | Local CLI | Upgrade and fee together |
+| 2:27 | The whole team | Share local results in one workspace | Cloud workspace | Share and manage |
+| 2:34 | Your tooling | Everything is also an API | HTTP API | Share and manage |
+| 2:39 | | What a result claims, and what it does not | | |
+| 2:46 | | Before an on-chain change reaches users, simulate its real consequences first | | |
 
 YouTube chapter list (paste into the description):
 
 ```text
-0:00 Eplyx — know what changes
-0:16 Public website
-0:25 Program upgrade check (CLI)
-0:40 Declared changes
-0:48 Offline CI gate
-0:53 Operator console
-1:01 Hosted CI gate + PR comment
-1:11 Squads governance binding (live)
-1:19 Historical research (live)
-1:29 Token migration rehearsal
-1:39 Local dashboard
-1:48 Lifecycle change
-1:55 Current state in the cloud workspace (live)
-2:05 Fee parameter change
-2:13 Upgrade × fee interaction
-2:19 Sync to the workspace
-2:28 HTTP API
-2:33 Building the evidence
-2:40 Who uses what
-2:47 Boundaries
+0:00 The problem
+0:10 How Eplyx works
+0:26 Who it is for
+0:32 Try it in the browser
+0:39 Checking a new program build
+0:53 Declaring intended changes
+1:00 The CI gate
+1:05 Setting it up once
+1:13 Every pull request, checked
+1:23 Approving a Squads upgrade (live)
+1:32 Replaying mainnet history (live)
+1:42 Rehearsing a token migration
+1:52 The local dashboard
+1:59 A lifecycle change
+2:05 Can this account still move? (live)
+2:15 A fee change
+2:21 Code and fee together
+2:27 Sharing results
+2:34 The API
+2:39 What a result claims
+2:46 The vision
 ```
 
 ## What is real
