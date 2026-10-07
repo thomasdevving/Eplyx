@@ -18,8 +18,10 @@ mod capabilities;
 mod checks;
 mod governance_checks;
 mod health;
+mod ops;
 mod projects;
 mod runs;
+mod setup;
 mod tokens;
 
 use analytical_checks::*;
@@ -30,9 +32,11 @@ use capabilities::*;
 use checks::*;
 use governance_checks::*;
 use health::*;
+use ops::*;
 pub(crate) use projects::project_for;
 use projects::*;
 use runs::*;
+use setup::*;
 use tokens::*;
 
 use std::sync::Arc;
@@ -187,6 +191,7 @@ pub fn router(state: Shared) -> Router {
         .merge(crate::hosted::interaction::router())
         .route("/health", get(health))
         .route("/ready", get(ready))
+        .route("/v1/ops", get(get_ops))
         .route("/v1/adapters", get(list_adapters))
         .route("/v1/projects", post(create_project).get(list_projects))
         .route("/v1/projects/{project_id}", get(get_project))
@@ -194,6 +199,7 @@ pub fn router(state: Shared) -> Router {
             "/v1/projects/{project_id}/capabilities",
             get(get_project_capabilities),
         )
+        .route("/v1/projects/{project_id}/setup", get(get_project_setup))
         .route(
             "/v1/projects/{project_id}/workspace-binding",
             post(assign_workspace),

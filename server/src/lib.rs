@@ -9,6 +9,7 @@ pub mod api;
 pub mod artifacts;
 pub mod config;
 pub mod ids;
+pub mod ops;
 pub mod project;
 pub mod registry;
 pub mod storage;

@@ -52,6 +52,8 @@ cargo run -p eplyx-engine -- reproduce newly-liquidatable      # a regression gr
 pnpm install && pnpm verify:report                             # JSON contract check
 pnpm check:frontend                                            # page render tests (incl. P3, G1)
 pnpm verify:governance                                         # G1 identities, reproduced outside Rust
+eval "$(scripts/scratch-postgres.sh start)"                    # loopback Postgres for cloud suites
+python3 scripts/test_eplyx_submit.py && python3 scripts/test_eplyx_pr_comment.py
 python3 scripts/measure-adapter-duplication.py \
   engine/src/protocol/stake_pool.rs engine/src/protocol/token2022.rs "overlap"   # Phase U1 control
 ```
@@ -97,6 +99,12 @@ eplyx governance squads acquire --multisig M --transaction-index N --store DIR -
 eplyx governance squads attest --change-spec bound.json --binding matched-g1.json --artifacts DIR --rpc-url URL --format json
 ```
 
+Operations (see `docs/operations.md`): `.github/workflows/ci.yml` runs every
+suite above on each PR; `GET /v1/projects/{p}/setup` is the guided first-check
+checklist; `GET /v1/ops` / `eplyx-server admin ops` the queue view;
+`scripts/eplyx-backup.sh` backs up and restores volume + Postgres together and
+`eplyx-server admin verify-volume` checks a restore.
+
 Governance exit codes: 0 matched, 1 stale artefact / different proposal /
 authority mismatch, 2 unverifiable, 4 unsupported proposal.
 
@@ -132,6 +140,10 @@ corpus → executor → diff → interpret → impact → cluster → shrink →
 - **Protocol-aware**: `corpus`, `interpret`, `impact`, `cluster`, `shrink`. Everything that understands positions, health factors and liquidation lives here.
 
 As of Phase 7 the seam **is a trait**: `protocol::ProtocolAdapter` owns which transactions a program can replay exactly, what its accounts mean, which programs and accounts it reaches, how an archived snapshot is proved against validator metadata, and what an execution difference means economically. `protocol::token2022` and `protocol::stake_pool` are the implementations. Phase 8 added `supports_cpi`, `dependency_programs`, `required_accounts` and `summarize`, all with defaults that leave an older adapter behaving exactly as before — `supports_cpi` defaults to `false` on purpose, so an adapter proved without CPI keeps the narrower guarantee. The fixture protocol and the bounded Phase 6 Memo path predate the trait and keep their inline contracts in `replay::validate`; new protocols arrive as adapters, not as another branch there. As of Phase U1 the generic half of what adapters used to do lives in `evidence/` (measurement and proof) and `standard_programs/` (layouts the runtime or a pinned dependency defines) — see `docs/universal-evidence-layer.md`. `corpus`, `interpret`, `impact`, `cluster` and `shrink` stay fixture-lending-specific. They are not reached by adapter records **because the generic diff takes its decoder as an argument**: `replay` passes `FieldDecoder::None` for any record an adapter owns, and `FieldDecoder::FixtureLending` only for the fixture and pre-adapter paths that define that layout. This was not always true — the diff used to dispatch on a leading discriminator byte, and a real stake-pool account (first byte `1`, 611 bytes) decoded as a synthetic `Market`, was compared over 86 bytes, and reported identical while `total_lamports` at offset 258 changed. Never infer a layout from bytes alone: an adapter record's economics come from `ProtocolAdapter::interpret`, and the report suppresses the position/USD block for them.
+
+The `eplyx` binary's handlers live in `engine/src/cli_*.rs` beside `main.rs`
+(clap definitions and dispatch only); the HTTP surface is `server/src/api/`, one
+module per responsibility, with routes in `api/mod.rs`.
 
 `shrink` re-enters `executor` to run candidate states — it sits above execution, never inside it.
 

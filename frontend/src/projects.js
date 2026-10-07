@@ -13,6 +13,8 @@ import {
   fetchProjectCapabilities, capabilityFor, canSubmitCapability,
   projectCapabilitiesHTML, capabilityFailureHTML,
 } from './capabilities.js';
+import { fetchProjectSetup, projectSetupHTML } from './setup.js';
+import { parseOps, opsHTML } from './ops.js';
 
 const STATUS_LABEL = {
   setup: 'No active bundle',
@@ -63,8 +65,13 @@ export function attachProjects(navigate) {
 
   async function load() {
     try {
-      const { projects } = await api('/v1/projects');
-      body.innerHTML = projects.length ? list(projects) : empty();
+      const [{ projects }, ops] = await Promise.all([
+        api('/v1/projects'),
+        // Optional: an older service has no /v1/ops, and the console works
+        // without it.
+        api('/v1/ops').then(parseOps).catch(() => null),
+      ]);
+      body.innerHTML = (projects.length ? list(projects) : empty()) + (ops ? opsSection(ops) : '');
       body.querySelectorAll('[data-open]').forEach(row =>
         row.addEventListener('click', () => navigate(`/projects/${row.dataset.open}`)));
       body.querySelector('#first-project')?.addEventListener('click', () => renderCreate(body, navigate));
@@ -78,6 +85,13 @@ export function attachProjects(navigate) {
   }
   return () => {};
 }
+
+const opsSection = ops => `
+  <section class="console-section" id="operations">
+    <h2>Operations</h2>
+    <p class="console-note">The run queue, waiting and execution times, worker failures and retries, read from the durable run records.</p>
+    ${opsHTML(ops)}
+  </section>`;
 
 function list(projects) {
   return `<div class="project-list">${projects.map(project => `
@@ -208,15 +222,18 @@ export function attachProject(projectId, navigate) {
 
   async function load() {
     try {
-      const [detail, bundles, runs, capabilityResult] = await Promise.all([
+      const [detail, bundles, runs, capabilityResult, setupResult] = await Promise.all([
         api(`/v1/projects/${projectId}`),
         api(`/v1/projects/${projectId}/bundles`),
         api(`/v1/projects/${projectId}/runs?limit=10`),
         fetchProjectCapabilities(projectId, api)
           .then(capabilities => ({ capabilities }))
           .catch(error => ({ error })),
+        fetchProjectSetup(projectId, api)
+          .then(setup => ({ setup }))
+          .catch(error => ({ error })),
       ]);
-      body.innerHTML = detail_view(detail, bundles.bundles, runs.runs, issued, verified, capabilityResult);
+      body.innerHTML = detail_view(detail, bundles.bundles, runs.runs, issued, verified, capabilityResult, setupResult);
       wire();
     } catch (error) {
       body.innerHTML = failure(error, 'this project');
@@ -293,7 +310,7 @@ export function attachProject(projectId, navigate) {
   return () => {};
 }
 
-function detail_view(detail, bundles, runs, issued, verified, capabilityResult) {
+function detail_view(detail, bundles, runs, issued, verified, capabilityResult, setupResult = {}) {
   const project = detail.project;
   const capabilities = capabilityResult.capabilities;
   const upgrade = capabilityFor(capabilities, 'program_upgrade');
@@ -308,6 +325,12 @@ function detail_view(detail, bundles, runs, issued, verified, capabilityResult) 
     </div>
 
     ${project.speaks_semantics ? '' : `<div class="callout callout--quiet">This build reads no semantics for this program. Checks run, and report no semantic coverage — Eplyx saying it did not look, not that nothing is wrong.</div>`}
+
+    ${setupResult.setup ? `<section class="console-section" id="first-check">
+      <h2>First upgrade check</h2>
+      <p class="console-note">What this project still needs before a pull request can be checked, in order, and who can supply it.</p>
+      ${projectSetupHTML(setupResult.setup)}
+    </section>` : ''}
 
     <section class="console-section">
       <h2>Analysis availability</h2>

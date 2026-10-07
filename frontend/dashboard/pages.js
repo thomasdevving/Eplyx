@@ -6,7 +6,7 @@ import {
  esc, pill, gatePill, tone, words, sentence, raw, count, short, addr, ident, copy, ago, when, exact,
  utc, kv, panel, empty, commandLine, tile, meter, invariantName, scopeText, GATE, GATE_SHORT, isRaw,
 } from './ui.js';
-import { BASE, API, CLOUD, DEMO } from './env.js';
+import { BASE, API, CLOUD, DEMO, PROJECT } from './env.js';
 import {
  isMigration, migrationTiles, migrationRunCells, migrationRunDetail, migrationProduction, migrationWhy,
  migrationCounterexampleDetail, migrationBoundary, migrationFailure,
@@ -168,10 +168,30 @@ function value(v) {
  return /^[A-Z][A-Za-z]+$/.test(v) ? pill(v) : esc(v);
 }
 
+// A hosted project with a program upgrade target gets the service's guided
+// checklist until its first check reaches a verdict. Optional: any failure,
+// or a project without an upgrade target, simply leaves it out.
+async function upgradeSetup() {
+ if (!CLOUD || DEMO || !PROJECT) return '';
+ try {
+  const { fetchProjectSetup, projectSetupHTML } = await import('/assets/setup.js');
+  const setup = await fetchProjectSetup(PROJECT, async path => {
+   const response = await fetch(path, { headers:{ Accept:'application/json' }, credentials:'same-origin' });
+   if (!response.ok) throw new Error(`setup unavailable (${response.status})`);
+   return response.json();
+  });
+  const target = setup.steps.find(step => step.id === 'upgrade_target');
+  if (setup.first_check_complete || !target || target.status === 'todo') return '';
+  return panel({ title:'First upgrade check', body:projectSetupHTML(setup) });
+ } catch {
+  return '';
+ }
+}
+
 export async function overview({ project }) {
- if (!project.stats?.runs) return { title:'Overview', html:firstRunGuide(project) };
+ if (!project.stats?.runs) return { title:'Overview', html:`${await upgradeSetup()}${firstRunGuide(project)}` };
  const latest = project.latest;
- if (!latest) return { title:'Overview', html:`${firstRunGuide(project)}${panel({ title:'Unfinished runs', body:runsTable(project.recent_runs) })}` };
+ if (!latest) return { title:'Overview', html:`${await upgradeSetup()}${firstRunGuide(project)}${panel({ title:'Unfinished runs', body:runsTable(project.recent_runs) })}` };
  const detail = await api(`/api/runs/${latest.id}`);
  if (!isMigration(detail)) return analyticalOverview(detail, project, { runsTable, evidenceBlock });
  let comparison = null;

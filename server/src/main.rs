@@ -114,6 +114,17 @@ enum AdminCommand {
         #[arg(long)]
         bundle: String,
     },
+    /// Queue depth, waiting and execution times, worker failures, retries and
+    /// startup recoveries, read from the run records on this volume.
+    Ops {
+        #[arg(long, default_value_t = 24)]
+        window_hours: u64,
+    },
+    /// Check a (restored) data directory: every bundle opens, every candidate
+    /// verifies, every reported run still holds its report and change spec.
+    /// With EPLYX_DATABASE_URL set, also compare Postgres workspace mappings
+    /// with the projects on the volume. Exits 1 on any disagreement.
+    VerifyVolume,
 }
 
 fn main() -> Result<()> {
@@ -158,6 +169,11 @@ fn main() -> Result<()> {
                 if !ids.is_empty() {
                     eprintln!("{} run(s) {what}: {}", ids.len(), ids.join(", "));
                 }
+            }
+            // An operational record only: failing to write it must not keep
+            // the service down.
+            if let Err(error) = eplyx_server::ops::record_recovery(&registry, &recovery, swept) {
+                eprintln!("could not record the startup recovery: {error:#}");
             }
             serve(config, registry, recovery.requeued)
         }
@@ -245,6 +261,40 @@ fn admin(command: AdminCommand, registry: &Registry) -> Result<()> {
                 "  eplyx-server admin activate-bundle --project {project} --bundle {}",
                 bundle.bundle_id
             );
+        }
+        AdminCommand::Ops { window_hours } => {
+            // No server is running in this process, so the worker gauge is
+            // unknown rather than zero.
+            let workers = eplyx_server::ops::Workers {
+                max_concurrent_runs: Config::from_env()
+                    .map(|config| config.max_concurrent_runs)
+                    .unwrap_or_default(),
+                busy: 0,
+            };
+            let snapshot =
+                eplyx_server::ops::snapshot(registry, window_hours.max(1) * 3600, workers);
+            println!("{}", serde_json::to_string_pretty(&snapshot)?);
+        }
+        AdminCommand::VerifyVolume => {
+            // Only the database is needed here, not the public URL a serving
+            // identity configuration also requires.
+            let database_url = std::env::var("EPLYX_DATABASE_URL")
+                .ok()
+                .filter(|url| !url.trim().is_empty());
+            let mapped = match database_url {
+                Some(url) => Some(
+                    tokio::runtime::Builder::new_current_thread()
+                        .enable_all()
+                        .build()?
+                        .block_on(eplyx_server::ops::identity_project_ids(&url))?,
+                ),
+                None => None,
+            };
+            let check = eplyx_server::ops::verify_volume(registry, mapped.as_deref());
+            println!("{}", serde_json::to_string_pretty(&check)?);
+            if !check.ok() {
+                std::process::exit(1);
+            }
         }
         AdminCommand::ActivateBundle { project, bundle } => {
             let updated = registry.activate_bundle(&project, &bundle)?;

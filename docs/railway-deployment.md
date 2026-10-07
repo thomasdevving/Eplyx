@@ -90,7 +90,10 @@ older binary may still lack these routes. Without a session, the identity API
 should require authentication; a storage-unavailable response needs investigation.
 
 Accepted checks return an asynchronous run. The durable queue retains inputs,
-attempts and completed outputs and reconciles interrupted work on restart. Follow
+attempts and completed outputs and reconciles interrupted work on restart. The
+operator-only `GET /v1/ops` shows queue depth, waiting and execution times,
+worker failures, retries and startup recoveries; back up the volume and Postgres
+together with `scripts/eplyx-backup.sh` (see [Operations](operations.md)). Follow
 the returned run link or poll its state before reading the verdict. Submission,
 worker failure and candidate regression are different outcomes.
 
