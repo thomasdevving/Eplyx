@@ -1,0 +1,14 @@
+[
+ {
+  "cmd": "eplyx bundle verify --bundle .eplyx/bundle",
+  "exit": 0
+ },
+ {
+  "cmd": "eplyx ci check --bundle .eplyx/bundle --candidate .eplyx/bundle/binaries/current.so",
+  "exit": 0
+ },
+ {
+  "cmd": "eplyx ci check --bundle .eplyx/bundle --candidate target/deploy/fixture_stake_pool_v2.so",
+  "exit": 1
+ }
+]

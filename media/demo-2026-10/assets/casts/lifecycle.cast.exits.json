@@ -1,0 +1,10 @@
+[
+ {
+  "cmd": "eplyx change lifecycle --scenario inputs/scenario.json --out change.json",
+  "exit": 0
+ },
+ {
+  "cmd": "eplyx lifecycle analyse --snapshot inputs/snapshot.json --scenario inputs/scenario.json --change-spec change.json --at 2026-09-28T00:00:00Z --record ~/token-migration",
+  "exit": 0
+ }
+]

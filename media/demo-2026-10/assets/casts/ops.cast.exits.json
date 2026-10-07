@@ -1,0 +1,10 @@
+[
+ {
+  "cmd": "eplyx-server admin list-projects",
+  "exit": 0
+ },
+ {
+  "cmd": "eplyx-server admin ops | jq -c '.workers, .queue, .outcomes, .execution'",
+  "exit": 0
+ }
+]

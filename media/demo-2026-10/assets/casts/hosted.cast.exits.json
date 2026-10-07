@@ -1,0 +1,10 @@
+[
+ {
+  "cmd": "export EPLYX_TOKEN=\"$(cat ~/ci-token | grep -o \"eplyx_[A-Za-z0-9_]*\" | head -1)\"",
+  "exit": 0
+ },
+ {
+  "cmd": "scripts/eplyx-submit.sh --api http://127.0.0.1:4390 --project proj_01M4B1Q0E9N4443PTJYZM7S76W --candidate target/deploy/fixture_stake_pool_v2.so --expectations .eplyx/expected-changes.toml --summary summary.md",
+  "exit": 1
+ }
+]

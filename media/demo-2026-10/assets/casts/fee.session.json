@@ -1,0 +1,28 @@
+{
+ "cwd": "/home/demo/stake-pool-program",
+ "prompt": "~/stake-pool-program",
+ "cols": 100,
+ "rows": 30,
+ "steps": [
+  {
+   "cmd": "eplyx parameter analyse --change proposals/deposit-fee-1pct.json --bundle .eplyx/bundle --record-id mainnet-spl-stake-pool-151010f709e113e7 --out fee-report.json",
+   "expect": 0,
+   "after": 1
+  },
+  {
+   "cmd": "jq '.findings[0], .proposed.reconciliation.manager_fee_account_credit_raw' fee-report.json",
+   "expect": 0,
+   "after": 1
+  },
+  {
+   "cmd": "eplyx parameter reproduce --change proposals/deposit-fee-1pct.json --report fee-report.json",
+   "expect": 0,
+   "after": 1.4
+  }
+ ],
+ "path": [
+  "/home/user/Eplyx/target/release"
+ ],
+ "home": "/home/demo",
+ "title": "fee"
+}

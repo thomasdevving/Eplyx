@@ -1,0 +1,18 @@
+[
+ {
+  "cmd": "eplyx-server admin list-projects",
+  "exit": 0
+ },
+ {
+  "cmd": "eplyx-server admin register-bundle --project proj_01M4B1Q0E9N4443PTJYZM7S76W --path stake-pool-program/.eplyx/bundle",
+  "exit": 0
+ },
+ {
+  "cmd": "eplyx-server admin activate-bundle --project proj_01M4B1Q0E9N4443PTJYZM7S76W --bundle bndl_01M4B1Q8YPNX093E7EWGSF9Y1J",
+  "exit": 0
+ },
+ {
+  "cmd": "eplyx-server admin create-token --project proj_01M4B1Q0E9N4443PTJYZM7S76W --label github-actions > ci-token",
+  "exit": 0
+ }
+]

@@ -1,0 +1,14 @@
+[
+ {
+  "cmd": "eplyx login --server http://127.0.0.1:4390 --no-open",
+  "exit": 0
+ },
+ {
+  "cmd": "eplyx link --project proj_01M4B1Q0EGK82ZZNQRAHX9X5HG",
+  "exit": 0
+ },
+ {
+  "cmd": "eplyx sync",
+  "exit": 0
+ }
+]

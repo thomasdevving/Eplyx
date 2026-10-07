@@ -1,0 +1,6 @@
+[
+ {
+  "cmd": "eplyx compare --no-minimize | head -27",
+  "exit": 0
+ }
+]

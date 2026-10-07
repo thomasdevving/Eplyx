@@ -1,0 +1,18 @@
+{
+ "cwd": "/home/user/Eplyx",
+ "prompt": "~/eplyx",
+ "cols": 100,
+ "rows": 30,
+ "steps": [
+  {
+   "cmd": "eplyx compare --no-minimize | head -27",
+   "expect": 0,
+   "after": 1.6
+  }
+ ],
+ "path": [
+  "/home/user/Eplyx/target/release"
+ ],
+ "home": "/home/demo",
+ "title": "synthetic"
+}

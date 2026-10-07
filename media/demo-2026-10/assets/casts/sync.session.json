@@ -1,0 +1,33 @@
+{
+ "cwd": "/home/demo/token-migration",
+ "prompt": "~/token-migration",
+ "cols": 100,
+ "rows": 24,
+ "env": {
+  "EPLYX_CONFIG_DIR": "/home/demo/.config/eplyx"
+ },
+ "steps": [
+  {
+   "cmd": "eplyx login --server http://127.0.0.1:4390 --no-open",
+   "expect": 0,
+   "timeout": 120,
+   "after": 0.8
+  },
+  {
+   "cmd": "eplyx link --project proj_01M4B1Q0EGK82ZZNQRAHX9X5HG",
+   "expect": 0,
+   "after": 0.8
+  },
+  {
+   "cmd": "eplyx sync",
+   "expect": 0,
+   "timeout": 120,
+   "after": 1.5
+  }
+ ],
+ "path": [
+  "/home/user/Eplyx/target/release"
+ ],
+ "home": "/home/demo",
+ "title": "sync"
+}

@@ -1,0 +1,36 @@
+{
+ "cwd": "/home/demo",
+ "prompt": "operator@eplyx",
+ "cols": 100,
+ "rows": 26,
+ "env": {
+  "EPLYX_DATA_DIR": "/srv/eplyx-demo/volume"
+ },
+ "steps": [
+  {
+   "cmd": "eplyx-server admin list-projects",
+   "expect": 0,
+   "after": 1
+  },
+  {
+   "cmd": "eplyx-server admin register-bundle --project proj_01M4B1Q0E9N4443PTJYZM7S76W --path stake-pool-program/.eplyx/bundle",
+   "expect": 0,
+   "after": 1
+  },
+  {
+   "cmd": "eplyx-server admin activate-bundle --project proj_01M4B1Q0E9N4443PTJYZM7S76W --bundle {{grab:bndl_[A-Z0-9]+}}",
+   "expect": 0,
+   "after": 1
+  },
+  {
+   "cmd": "eplyx-server admin create-token --project proj_01M4B1Q0E9N4443PTJYZM7S76W --label github-actions > ci-token",
+   "expect": 0,
+   "after": 1
+  }
+ ],
+ "path": [
+  "/home/user/Eplyx/target/release"
+ ],
+ "home": "/home/demo",
+ "title": "operator"
+}

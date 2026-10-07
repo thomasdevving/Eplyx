@@ -1,0 +1,10 @@
+[
+ {
+  "cmd": "grep -v '^#' .eplyx/expected-changes.toml | grep -v '^$'",
+  "exit": 0
+ },
+ {
+  "cmd": "eplyx ci check --bundle .eplyx/bundle --candidate target/deploy/fixture_stake_pool_v2.so --expectations .eplyx/expected-changes.toml",
+  "exit": 1
+ }
+]

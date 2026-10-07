@@ -1,0 +1,22 @@
+[
+ {
+  "cmd": "eplyx versions upgrades --program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb --start-slot 420000000 --end-slot 430000000 --output .",
+  "exit": 0
+ },
+ {
+  "cmd": "eplyx historical acquire --signature 3omP6iKrk9jcFfjURFo76biHedNpXVJcK16jBxX3AUyqTQ4zr3ZHW5kpdue18TpVvBhjhkybEFUkhd4ivw4TaN2n --program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb --output .",
+  "exit": 0
+ },
+ {
+  "cmd": "eplyx versions resolve --program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb --slot 427147035 --output . --out v2.so",
+  "exit": 0
+ },
+ {
+  "cmd": "eplyx compare --corpus corpus.json --v1 token-2022-mainnet-v1.so --v2 v2.so | head -16",
+  "exit": 0
+ },
+ {
+  "cmd": "eplyx compare --corpus corpus.json --v1 token-2022-mainnet-v1.so --v2 ~/candidates/fixture_token2022_v2.so | sed -n 10,22p",
+  "exit": 0
+ }
+]

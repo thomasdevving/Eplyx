@@ -1,0 +1,26 @@
+{
+ "cwd": "/home/demo/stake-pool-program",
+ "prompt": "~/stake-pool-program",
+ "cols": 100,
+ "rows": 30,
+ "env": {
+  "EPLYX_TOKEN": "<redacted>"
+ },
+ "steps": [
+  {
+   "cmd": "curl -s -H \"authorization: Bearer $EPLYX_TOKEN\" http://127.0.0.1:4390/v1/projects/proj_01M4B1Q0E9N4443PTJYZM7S76W/setup | jq -r '.steps[] | \"\\(.status)\\t\\(.title)\"'",
+   "expect": 0,
+   "after": 1
+  },
+  {
+   "cmd": "curl -s -H \"authorization: Bearer $EPLYX_TOKEN\" http://127.0.0.1:4390/v1/projects/proj_01M4B1Q0E9N4443PTJYZM7S76W/runs | jq '.runs[0] | {run_id, status, exit_code, candidate_sha256}'",
+   "expect": 0,
+   "after": 1.4
+  }
+ ],
+ "path": [
+  "/home/user/Eplyx/target/release"
+ ],
+ "home": "/home/demo",
+ "title": "api"
+}

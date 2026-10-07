@@ -44,6 +44,12 @@ def main():
         "COLUMNS": str(cols),
         "LINES": str(rows),
     }
+    # The sandbox reaches the internet only through its egress proxy; pass the
+    # proxy and CA settings through (they are not printed by any command).
+    for k in ("HTTPS_PROXY", "https_proxy", "NO_PROXY", "no_proxy", "SSL_CERT_FILE",
+              "SSL_CERT_DIR", "CURL_CA_BUNDLE", "REQUESTS_CA_BUNDLE", "NODE_EXTRA_CA_CERTS"):
+        if os.environ.get(k):
+            env[k] = os.environ[k]
     env.update(spec.get("env", {}))
     label = spec.get("prompt", "~")
     # Violet path, lavender arrow; the OSC marker reports $? and is invisible.
@@ -63,6 +69,7 @@ def main():
 
     start = time.monotonic()
     events = []
+    live = open(out_path + ".live", "w")
     pending = b""
     exits = []
 
@@ -98,7 +105,9 @@ def main():
                 keep, cleaned = cleaned[cut:], cleaned[:cut]
             pending = keep
             if cleaned:
-                events.append([now(), "o", cleaned.decode("utf-8", "replace")])
+                text = cleaned.decode("utf-8", "replace")
+                events.append([now(), "o", text])
+                live.write(text); live.flush()
             if seen:
                 # Drain the rest of the prompt that follows the marker.
                 deadline = min(deadline, time.monotonic() + 0.15)
@@ -134,13 +143,33 @@ def main():
             events.append([now(), "m", step["marker"]])
             continue
         cmd = step["cmd"]
+        # {{grab:REGEX}} types the last match of REGEX in the output so far,
+        # the way an operator copies an id that the previous command printed.
+        def grab(m):
+            seen = "".join(e[2] for e in events if e[1] == "o")
+            found = re.findall(m.group(1), seen)
+            if not found:
+                raise SystemExit(f"nothing to grab for {m.group(1)}")
+            return found[-1]
+        cmd = re.sub(r"\{\{grab:([^}]+)\}\}", grab, cmd)
         events.append([now(), "m", "type " + cmd])
+        speed = step.get("speed", spec.get("speed", 1.0))
         for ch in cmd:
             os.write(fd, ch.encode())
-            pump(0.028 + rng.random() * 0.03 if ch != " " else 0.05)
+            pump((0.028 + rng.random() * 0.03 if ch != " " else 0.05) / speed)
         pump(0.35)
         events.append([now(), "m", "run"])
         os.write(fd, b"\r")
+        if step.get("hold"):
+            # A long-running command (a server): record its output for `hold`
+            # seconds, then stop it with Ctrl-C as a user would.
+            pump(step["hold"])
+            events.append([now(), "m", "interrupt"])
+            os.write(fd, b"\x03")
+            wait_prompt(10)
+            exits.append({"cmd": cmd, "exit": "interrupted"})
+            pump(step.get("after", 0.4))
+            continue
         code = wait_prompt(step.get("timeout", 600))
         exits.append({"cmd": cmd, "exit": code})
         events.append([now(), "m", f"exit {code}"])

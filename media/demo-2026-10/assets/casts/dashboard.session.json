@@ -1,0 +1,17 @@
+{
+ "cwd": "/home/demo/token-migration",
+ "prompt": "~/token-migration",
+ "cols": 100,
+ "rows": 12,
+ "steps": [
+  {
+   "cmd": "eplyx dashboard --no-open --port 4185",
+   "hold": 3
+  }
+ ],
+ "path": [
+  "/home/user/Eplyx/target/release"
+ ],
+ "home": "/home/demo",
+ "title": "dashboard"
+}

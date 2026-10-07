@@ -1,0 +1,53 @@
+{
+ "cwd": "/home/demo/token-migration",
+ "prompt": "~/token-migration",
+ "cols": 100,
+ "rows": 30,
+ "steps": [
+  {
+   "cmd": "eplyx doctor",
+   "expect": 0,
+   "after": 1
+  },
+  {
+   "cmd": "eplyx migration analyse",
+   "expect": 0,
+   "after": 1.2
+  },
+  {
+   "cmd": "cp ~/builds/migration-deadline-defect.so target/deploy/migration.so",
+   "expect": 0,
+   "after": 0.4
+  },
+  {
+   "cmd": "eplyx migration search",
+   "expect": 0,
+   "after": 1.2
+  },
+  {
+   "cmd": "eplyx migration reproduce $(basename .eplyx/counterexamples/cx_* .json)",
+   "expect": 0,
+   "after": 1
+  },
+  {
+   "cmd": "RUN=$(eplyx runs --json | jq -r '.runs | max_by(.timestamp).run_id')",
+   "expect": 0,
+   "after": 0.3
+  },
+  {
+   "cmd": "eplyx migration gate --run $RUN --policy strict",
+   "expect": 1,
+   "after": 1
+  },
+  {
+   "cmd": "eplyx migration plan --run $RUN --out unsigned.json",
+   "expect": 0,
+   "after": 1.2
+  }
+ ],
+ "path": [
+  "/home/user/Eplyx/target/release"
+ ],
+ "home": "/home/demo",
+ "title": "migration"
+}

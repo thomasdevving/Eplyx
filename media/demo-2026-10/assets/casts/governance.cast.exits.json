@@ -1,0 +1,6 @@
+[
+ {
+  "cmd": "eplyx governance squads verify --change-spec bound.json --rpc-url https://api.mainnet-beta.solana.com",
+  "exit": 0
+ }
+]
