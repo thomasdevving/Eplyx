@@ -9,14 +9,18 @@ import { finishIntro } from './intro.js';
 import { attachCoreParallax } from './core-scene.js';
 import { attachShell } from './shell.js';
 import { LegalPage, legalTitle } from './legal.js';
+import { attachLandingMotion } from './landing-motion.js';
 
 const app = document.querySelector('#app');
 let revealObserver;
 let disposeCoreScene;
 let disposeReport;
+let disposeLandingMotion;
 
 function route() {
   revealObserver?.disconnect();
+  disposeLandingMotion?.();
+  disposeLandingMotion = undefined;
   disposeCoreScene?.();
   disposeCoreScene = undefined;
   // Leaving a run page stops the polling; the run itself is unaffected.
@@ -34,9 +38,13 @@ function route() {
   else if (path.startsWith('/projects/')) app.innerHTML = ProjectPage(decodeURIComponent(path.slice(10)));
   else if (path.startsWith('/runs/')) app.innerHTML = ReportPage(decodeURIComponent(path.slice(6)));
   else app.innerHTML = LandingPage();
-  if (location.hash && path !== '/start') requestAnimationFrame(() => document.querySelector(location.hash)?.scrollIntoView());
+  if (location.hash && path !== '/start') requestAnimationFrame(() => document.getElementById(decodeFragment(location.hash.slice(1)))?.scrollIntoView());
   else window.scrollTo(0, 0);
   attachPage(path);
+}
+
+function decodeFragment(fragment) {
+  try { return decodeURIComponent(fragment); } catch { return fragment; }
 }
 
 function navigate(path) {
@@ -51,7 +59,7 @@ function decorate() {
     if (url.origin !== location.origin || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     if (url.pathname === location.pathname && url.hash) return;
     event.preventDefault();
-    navigate(url.pathname + url.hash);
+    navigate(url.pathname + url.search + url.hash);
   }));
   attachShell();
   attachCommandCopy();
@@ -75,6 +83,7 @@ function attachPage(path) {
   }
   if (path === '/') {
     disposeCoreScene = attachCoreParallax();
+    disposeLandingMotion = attachLandingMotion();
     finishIntro();
   }
   if (path === '/start') attachStart();

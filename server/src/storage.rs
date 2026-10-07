@@ -233,16 +233,19 @@ impl Storage {
         use std::io::Write;
         let parent = path.parent().context("a stored file has a directory")?;
         std::fs::create_dir_all(parent)?;
-        let temporary = path.with_extension("tmp");
-        {
-            let mut file = std::fs::File::create(&temporary)
-                .with_context(|| format!("writing {}", temporary.display()))?;
-            file.write_all(bytes)
-                .with_context(|| format!("writing {}", temporary.display()))?;
-            file.sync_all()
-                .with_context(|| format!("syncing {}", temporary.display()))?;
-        }
-        std::fs::rename(&temporary, path)
+        // A fixed sibling such as `report.tmp` collides both for concurrent
+        // writers and for distinct files (`report.json` and `report.md`).
+        let mut temporary = tempfile::NamedTempFile::new_in(parent)
+            .with_context(|| format!("staging {}", path.display()))?;
+        temporary
+            .write_all(bytes)
+            .with_context(|| format!("writing {}", path.display()))?;
+        temporary
+            .as_file()
+            .sync_all()
+            .with_context(|| format!("syncing {}", path.display()))?;
+        temporary
+            .persist(path)
             .with_context(|| format!("renaming into {}", path.display()))?;
         crate::artifacts::sync_directory(parent);
         Ok(())

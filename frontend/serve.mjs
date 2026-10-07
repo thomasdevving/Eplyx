@@ -34,14 +34,25 @@ const types = {
 const neverCache = new Set(['/public/runtime-config.js']);
 
 createServer(async (request, response) => {
-  const url = new URL(request.url, 'http://localhost');
+  if (request.method !== 'GET' && request.method !== 'HEAD') {
+    response.writeHead(405, { Allow: 'GET, HEAD' });
+    return response.end('Method not allowed');
+  }
+  let requested;
+  try {
+    const rawPath = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
+    if (rawPath.includes('\0')) throw new Error('Invalid path');
+    requested = normalize(rawPath).replace(/^(\.\.(\/|\\|$))+/, '');
+  } catch {
+    response.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8' });
+    return response.end('Invalid request path');
+  }
   // `/health` matches what the API answers on, so one healthcheck path in the
   // platform config covers both services and neither needs its own config file.
-  if (url.pathname === '/health' || url.pathname === '/healthz') {
+  if (requested === '/health' || requested === '/healthz') {
     response.writeHead(200, { 'Content-Type': 'application/json' });
     return response.end('{"status":"ok"}');
   }
-  const requested = normalize(decodeURIComponent(url.pathname)).replace(/^(\.\.(\/|\\|$))+/, '');
   let file = join(root, requested);
   try {
     if ((await stat(file)).isDirectory()) file = join(file, 'index.html');

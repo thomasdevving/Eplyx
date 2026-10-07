@@ -874,18 +874,44 @@ pnpm install && pnpm verify:report
 
 ## Testing
 
+The full Rust suite includes PostgreSQL-backed cloud tests. Set
+`EPLYX_CLOUD_TEST_DATABASE_URL` to a disposable local PostgreSQL server whose user
+can create databases; each cloud test creates and removes its own database.
+Missing database configuration fails explicitly.
+
 ```bash
+# Build the required SBF candidates, test the standalone programs, then run
+# the host workspace. Requires the pinned SBF toolchain described above.
+export EPLYX_CLOUD_TEST_DATABASE_URL=postgresql://localhost/postgres
 make test
+
+# Rerun the host suite once candidate artifacts are present.
+cargo test --workspace --locked
+
+# Frontend checks and real-browser regression suites.
+pnpm check:frontend
+pnpm test:frontend-runtime
+pnpm test:public
+pnpm test:dashboard
+pnpm test:cloud
+
+# Formatting, linting and independent report verification.
+make fmt-check
+make lint
+pnpm verify:report
+pnpm verify:governance
 ```
 
-- **40 unit tests**: 5 in the shared interface crate, 35 in the engine (corpus,
-  diff, interpreter, impact aggregation, clustering, shrinking, fixed-point
-  money, hex codec).
-- **7 program tests per build flavour**, run twice (V1 and V2) - these assert
-  the seeded regression exists and is confined to fractional collateral.
-- **39 end-to-end differential tests** that execute real bytecode.
+Browser tests use installed Google Chrome by default, or a Chromium executable
+selected with `EPLYX_CHROME=/absolute/path/to/chromium`.
+Cloud browser tests also use the PostgreSQL URL above.
 
-The end-to-end suite covers the seven properties this phase had to demonstrate:
+The suites cover the shared interface, execution and evidence storage, protocol
+semantics, migrations and lifecycle analysis, hosted workers and authorization,
+and the public, local-dashboard and cloud browser flows. Concurrency regressions
+exercise immutable writes, token revocation and a busy database connection pool.
+
+The original differential suite still protects these core properties:
 
 1. `v1_matches_the_reference_implementation` - V1's on-chain math agrees with an
    independent host-side implementation for every state the corpus reaches,

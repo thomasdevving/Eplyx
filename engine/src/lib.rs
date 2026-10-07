@@ -43,6 +43,7 @@ pub mod expectations;
 pub mod governance;
 pub mod hexfmt;
 pub mod historical;
+mod immutable;
 pub mod impact;
 pub mod ingest;
 pub mod interpret;

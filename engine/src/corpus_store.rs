@@ -105,22 +105,11 @@ impl CorpusStore {
         );
         let bytes = canonical(record)?;
         let path = self.record_path(&record.id);
-        if path.exists() {
-            let existing =
-                std::fs::read(&path).with_context(|| format!("reading {}", path.display()))?;
-            if existing == bytes {
-                return Ok(Insert::AlreadyPresent);
-            }
-            anyhow::bail!(
-                "observation {} already exists with different content; historical records are \
-                 immutable. Stored sha256 {}, offered sha256 {}",
-                record.id,
-                hash_bytes(&existing),
-                hash_bytes(&bytes)
-            );
-        }
-        std::fs::write(&path, &bytes).with_context(|| format!("writing {}", path.display()))?;
-        Ok(Insert::Added)
+        Ok(if crate::immutable::write_once(&path, &bytes)? {
+            Insert::Added
+        } else {
+            Insert::AlreadyPresent
+        })
     }
 
     /// Insert a schema-2 observation into the same immutable record store.
@@ -135,16 +124,11 @@ impl CorpusStore {
         }
         let bytes = serde_json::to_vec(record)?;
         let path = self.record_path(&record.id);
-        if path.exists() {
-            let existing = std::fs::read(&path)?;
-            anyhow::ensure!(
-                existing == bytes,
-                "observation ID already exists with different content"
-            );
-            return Ok(Insert::AlreadyPresent);
-        }
-        std::fs::write(path, bytes)?;
-        Ok(Insert::Added)
+        Ok(if crate::immutable::write_once(&path, &bytes)? {
+            Insert::Added
+        } else {
+            Insert::AlreadyPresent
+        })
     }
 
     pub fn load_v2(&self) -> Result<Vec<ReplayObservationV2>> {

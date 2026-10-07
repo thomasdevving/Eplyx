@@ -628,13 +628,25 @@ impl Registry {
     /// Record that a token was used. Best effort: a failure here must never
     /// turn a successful request into a rejected one.
     pub fn note_token_use(&self, token: &ProjectToken) {
+        let _guard = self
+            .transitions
+            .lock()
+            .unwrap_or_else(|held| held.into_inner());
         let Ok(path) = self
             .storage
             .project_token_path(&token.project_id, &token.token_id)
         else {
             return;
         };
-        let mut updated = token.clone();
+        // The caller may have authenticated before a concurrent revocation.
+        // Re-read under the same lock as revoke_token; never persist that stale
+        // snapshot over the authoritative credential state.
+        let Ok(mut updated) = self.storage.read_json::<ProjectToken>(&path) else {
+            return;
+        };
+        if updated.is_revoked() {
+            return;
+        }
         updated.last_used_at_unix_seconds = Some(crate::project::now_unix_seconds());
         let _ = self.storage.write_json(&path, &updated);
     }

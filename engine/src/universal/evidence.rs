@@ -93,25 +93,7 @@ impl EvidenceStore {
             sha256: hash_bytes(bytes),
         };
         let path = self.path(&reference)?;
-        fs::create_dir_all(path.parent().expect("evidence category directory"))?;
-        match fs::OpenOptions::new()
-            .write(true)
-            .create_new(true)
-            .open(&path)
-        {
-            Ok(mut file) => {
-                use std::io::Write;
-                file.write_all(bytes)?;
-                file.sync_all()?;
-            }
-            Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => {
-                ensure!(
-                    self.get(&reference)? == bytes,
-                    "existing evidence object differs from content hash"
-                );
-            }
-            Err(error) => return Err(error.into()),
-        }
+        crate::immutable::write_once(&path, bytes)?;
         Ok(reference)
     }
 

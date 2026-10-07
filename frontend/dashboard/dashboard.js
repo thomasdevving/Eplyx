@@ -99,20 +99,24 @@ function shell(project) {
 }
 
 let token = 0;
+let disposeView;
 async function route({ focus = false } = {}) {
  const current = ++token;
+ disposeView?.();
+ disposeView = undefined;
  const path = localPath();
  const query = new URLSearchParams(location.search);
  let project;
  try {
   project = await pages.api('/api/project');
  } catch (error) {
+  if (current !== token) return;
   app.innerHTML = `<main id="main" class="fatal">${empty(CLOUD ? `This workspace project could not be loaded: ${error.message}` : `The dashboard could not read this project's .eplyx/ store: ${error.message}`)}</main>`;
   return;
  }
  if (current !== token) return;
  app.innerHTML = shell(project);
- if (CLOUD && !DEMO) cloudPages().then(m => m.attachSwitcher(app, project)).catch(() => {});
+ if (CLOUD && !DEMO) cloudPages().then(m => { if (current === token) return m.attachSwitcher(app, project); }).catch(() => {});
  const main = app.querySelector('main');
  const match = ROUTES.map(([pattern, page]) => [path.match(pattern), page]).find(([m]) => m);
  try {
@@ -124,8 +128,9 @@ async function route({ focus = false } = {}) {
   document.title = `${view.title} — Eplyx`;
   const crumbs = [[project.project?.name ?? 'Project', '/'], ...(view.crumbs ?? (view.title === 'Overview' ? [] : [[view.title]]))];
   app.querySelector('[data-crumbs]').innerHTML = crumbs.map(([label, href], n) => href && n < crumbs.length - 1 ? `<a href="${esc(`${BASE}${href}`)}" data-link>${esc(label)}</a>` : `<span>${esc(label)}</span>`).join('<span class="crumbs__sep" aria-hidden="true">/</span>');
-  view.attach?.(main);
+  disposeView = view.attach?.(main);
  } catch (error) {
+  if (current !== token) return;
   main.innerHTML = `<div class="page-head"><h1>Unavailable.</h1></div>${empty(error.message)}`;
   document.title = 'Unavailable — Eplyx';
  }

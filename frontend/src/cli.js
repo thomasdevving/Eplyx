@@ -73,9 +73,11 @@ export function attachCommandCopy() {
     button.addEventListener('click', async () => {
       const code = document.getElementById(button.dataset.copyCommand);
       const feedback = button.closest('.command-block').querySelector('.command-feedback');
+      const block = button.closest('.command-block');
       try {
         await navigator.clipboard.writeText(code.textContent);
         feedback.textContent = 'Commands copied.';
+        block.dataset.copyState = 'copied';
       } catch {
         const selection = window.getSelection();
         const range = document.createRange();
@@ -84,6 +86,7 @@ export function attachCommandCopy() {
         selection.addRange(range);
         code.parentElement.focus();
         feedback.textContent = 'Copy unavailable. Commands selected; use your keyboard to copy.';
+        block.dataset.copyState = 'selected';
       }
     });
   });

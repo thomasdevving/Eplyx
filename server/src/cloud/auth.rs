@@ -407,6 +407,7 @@ pub async fn signup(
     )
     .await?;
     tx.commit().await?;
+    drop(client);
     let cookie = start_session(&state, &user_id).await?;
     let mut response = (
         StatusCode::CREATED,
@@ -460,6 +461,9 @@ pub async fn login(
             &[&email],
         )
         .await?;
+    // Password verification and session creation must not reserve a database
+    // connection. With a busy pool, asking for a second one can deadlock login.
+    drop(client);
     let (hash, found) = match &row {
         Some(row) => (row.get::<_, String>(2), true),
         None => (DUMMY_HASH.clone(), false),

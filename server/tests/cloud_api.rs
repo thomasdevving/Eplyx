@@ -15,6 +15,47 @@ fn workspace_of(signup: &Value) -> String {
 }
 
 #[test]
+fn signup_and_login_release_the_database_connection_before_starting_a_session() {
+    let server = Server::start();
+    // A busy pool can leave just one connection available. Neither endpoint
+    // should hold that connection while requesting another for the session.
+    let runtime = tokio::runtime::Runtime::new().unwrap();
+    let _busy_connections = runtime.block_on(async {
+        let pool = &server.state.identity.as_ref().unwrap().db;
+        let mut connections = Vec::new();
+        for _ in 0..15 {
+            connections.push(pool.get().await.unwrap());
+        }
+        connections
+    });
+    let browser = reqwest::blocking::Client::builder()
+        .cookie_store(true)
+        .timeout(std::time::Duration::from_secs(10))
+        .build()
+        .unwrap();
+    for (path, request, status) in [
+        (
+            "/v1/auth/signup",
+            json!({"email":"pool@example.com","password":"correct horse battery","name":"Pool test"}),
+            201,
+        ),
+        (
+            "/v1/auth/login",
+            json!({"email":"pool@example.com","password":"correct horse battery"}),
+            200,
+        ),
+    ] {
+        let response = browser
+            .post(server.url(path))
+            .header("origin", &server.base)
+            .json(&request)
+            .send()
+            .unwrap();
+        assert_eq!(response.status(), status, "{path}");
+    }
+}
+
+#[test]
 fn unauthenticated_and_forged_credentials_are_rejected() {
     let server = Server::start();
     let anonymous = reqwest::blocking::Client::new();

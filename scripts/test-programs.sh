@@ -25,6 +25,9 @@ for FLAVOUR in "" "--features reference"; do
   cargo test --manifest-path "$ROOT/programs/fixture-stake-pool-candidate/Cargo.toml" $FLAVOUR
 done
 
+echo "==> testing fixture-stake-pool-config-candidate"
+cargo test --manifest-path "$ROOT/programs/fixture-stake-pool-config-candidate/Cargo.toml"
+
 for MIGRATION_FEATURE in reference defect-deadline-inclusive defect-fee-ceiling; do
   echo "==> testing eplyx-token-migration [$MIGRATION_FEATURE]"
   if [ "$MIGRATION_FEATURE" = reference ]; then
