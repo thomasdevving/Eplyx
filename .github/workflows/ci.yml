@@ -1,0 +1,202 @@
+# Full regression suite on every pull request and every push to main.
+#
+# Every suite the repository documents runs here, and none of them skips:
+# the cloud suites fail without Postgres, so this workflow starts a loopback
+# scratch cluster rather than leaving them out. Rust jobs run on macos-15
+# because the hash-pinned SBF candidates are only qualified on Darwin arm64
+# (see scripts/build-stake-pool-config-candidate.sh); the Node-only checks run
+# on Linux.
+#
+#   programs   build every SBF artefact once, hash-checked, shared below
+#   rust-lint  rustfmt and clippy -D warnings across host and every program
+#   rust-test  program unit tests + the whole workspace, Postgres included
+#   browser    report contract; dashboard, cloud (Postgres), public and
+#              governance browser suites
+#   frontend   page render tests, governance contract, submit client
+#
+name: Regression
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: regression-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  CARGO_TERM_COLOR: always
+  # Every Rust step resolves against the committed lockfiles.
+  CARGO_NET_RETRY: "5"
+
+jobs:
+  programs:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache the SBF builder and platform-tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/cargo-build-sbf
+            ~/.cache/solana
+          key: sbf-4.4.0-${{ runner.os }}-${{ runner.arch }}-v1.54-v1.57
+
+      - name: Install the pinned SBF build tool
+        run: |
+          command -v cargo-build-sbf >/dev/null 2>&1 \
+            || cargo install cargo-build-sbf --version 4.4.0 --locked
+          cargo-build-sbf --version
+
+      # build-stake-pool-config-candidate.sh builds --offline against the
+      # cached platform-tools, so its dependencies are fetched first.
+      - name: Fetch program dependencies
+        run: |
+          for manifest in programs/*/Cargo.toml; do
+            cargo fetch --locked --manifest-path "$manifest"
+          done
+
+      - name: Build and hash-check every SBF artefact
+        run: make test-artifacts
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sbf-artifacts
+          path: artifacts/
+          if-no-files-found: error
+          retention-days: 3
+
+  rust-lint:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: lint
+      - name: rustfmt
+        run: make fmt-check
+      - name: clippy
+        run: make lint
+
+  rust-test:
+    needs: programs
+    runs-on: macos-15
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: test
+      - uses: actions/download-artifact@v4
+        with:
+          name: sbf-artifacts
+          path: artifacts/
+
+      - name: Start a scratch Postgres
+        run: |
+          brew list postgresql@17 >/dev/null 2>&1 || brew install postgresql@17
+          echo "$(brew --prefix postgresql@17)/bin" >> "$GITHUB_PATH"
+          export PATH="$(brew --prefix postgresql@17)/bin:$PATH"
+          scripts/scratch-postgres.sh start "$RUNNER_TEMP/pg" | sed 's/^export //' >> "$GITHUB_ENV"
+
+      - name: Program unit tests
+        run: make test-programs
+
+      - name: Workspace tests (engine, server, cloud)
+        run: cargo test --locked --workspace
+
+      - name: Stop Postgres
+        if: always()
+        run: scripts/scratch-postgres.sh stop "$RUNNER_TEMP/pg"
+
+  browser:
+    needs: programs
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: browser
+      - uses: actions/download-artifact@v4
+        with:
+          name: sbf-artifacts
+          path: artifacts/
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build the binaries the browser suites serve
+        run: cargo build --locked -p eplyx-engine -p eplyx-server --bins
+
+      - name: Start a scratch Postgres
+        run: |
+          brew list postgresql@17 >/dev/null 2>&1 || brew install postgresql@17
+          echo "$(brew --prefix postgresql@17)/bin" >> "$GITHUB_PATH"
+          export PATH="$(brew --prefix postgresql@17)/bin:$PATH"
+          scripts/scratch-postgres.sh start "$RUNNER_TEMP/pg" | sed 's/^export //' >> "$GITHUB_ENV"
+
+      # Runs `eplyx compare` over the built artefacts, then checks its JSON
+      # from outside Rust.
+      - name: Report JSON contract
+        run: pnpm verify:report
+
+      # The runner image ships Google Chrome, which every config targets.
+      - name: Dashboard browser suite
+        run: pnpm test:dashboard
+      - name: Cloud browser suite
+        run: pnpm test:cloud
+      - name: Public site browser suite
+        run: pnpm test:public
+      - name: Governance trail browser suite
+        run: pnpm test:governance-browser
+
+      # Playwright writes under os.tmpdir(), which is not RUNNER_TEMP.
+      - name: Locate failure traces
+        if: failure()
+        id: traces
+        run: echo "dir=$(node -p 'require("os").tmpdir()')" >> "$GITHUB_OUTPUT"
+      - name: Keep failure traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-results
+          path: ${{ steps.traces.outputs.dir }}/eplyx-*-browser-results
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Stop Postgres
+        if: always()
+        run: scripts/scratch-postgres.sh stop "$RUNNER_TEMP/pg"
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Page render tests
+        run: pnpm check:frontend
+      - name: Static server and session runtime tests
+        run: pnpm test:frontend-runtime
+      - name: Governance identities outside Rust
+        run: pnpm verify:governance
+      - name: Legal pages
+        run: pnpm check:legal
+      - name: Hosted submit client and PR comment
+        run: |
+          python3 scripts/test_eplyx_submit.py
+          python3 scripts/test_eplyx_pr_comment.py

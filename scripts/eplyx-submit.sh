@@ -108,7 +108,32 @@ except (ValueError, KeyError, StopIteration, AssertionError, TypeError):
 ' "$PROJECT") || { echo "unreadable capability response" >&2; exit 70; }
 if [ "$PREFLIGHT" != ready ]; then
   echo "program_upgrade is not ready: $PREFLIGHT; no candidate uploaded" >&2
-  if [ -n "$SUMMARY" ]; then printf '## Eplyx — project not ready\n\n%s\n\nNo candidate was uploaded.\n' "$PREFLIGHT" >"$SUMMARY"; fi
+  if [ -n "$SUMMARY" ]; then
+    printf '## Eplyx — project not ready\n\n%s\n\nNo candidate was uploaded.\n' "$PREFLIGHT" >"$SUMMARY"
+    # The guided checklist, when the service offers one. Best effort: an older
+    # service without /setup still gets the capability reasons above.
+    SETUP=$(curl_auth -fsS --connect-timeout 10 --max-time 30 \
+      "$API/v1/projects/$PROJECT/setup" 2>/dev/null) && \
+      printf '%s' "$SETUP" | python3 -c '
+import json, sys
+try:
+    setup = json.load(sys.stdin)
+    if setup.get("project_id") != sys.argv[1]:
+        sys.exit(0)
+    mark = {"done": "done", "attention": "done (see note)", "in_progress": "in progress",
+            "todo": "**to do**", "blocked": "blocked", "optional": "optional"}
+    out = ["", "### Setup checklist", "", "| step | status | next action |", "|---|---|---|"]
+    for step in setup["steps"]:
+        action = next(iter(step.get("actions") or []), None)
+        text = ""
+        if action and step["status"] not in ("done", "in_progress"):
+            text = action["label"] + (" (`" + action["command"] + "`)" if action.get("command") else "")
+        out.append("| {} | {} | {} |".format(step["title"], mark.get(step["status"], step["status"]), text.replace("|", "\\|")))
+    print("\n".join(out))
+except Exception:
+    pass
+' "$PROJECT" >>"$SUMMARY"
+  fi
   exit 76
 fi
 
@@ -319,6 +344,13 @@ if report_path and run.get("report_available"):
             out += ["", "### Known limitations of this corpus", ""]
             for limit in limits:
                 out.append(f"- **{limit.get('code')}** — {limit.get('detail')}")
+        out += ["", "### Reproduce", "",
+                "The hosted `report.json` is byte-identical to a local check over the same three inputs:", "",
+                "```bash",
+                f"# bundle sha256 {run.get('bundle_sha256')}, candidate sha256 {run.get('candidate_sha256')}",
+                "eplyx ci check --bundle <that bundle> --candidate <that candidate> "
+                "[--expectations .eplyx/expected-changes.toml] --format json",
+                "```"]
         out += ["", "A pass means no disallowed difference was observed in the replay coverage "
                     "this bundle represents. It is not a statement that the candidate is safe, "
                     "nor that the corpus is representative of production traffic."]

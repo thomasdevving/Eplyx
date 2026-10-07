@@ -44,6 +44,38 @@ async fn admin(sql: &str) {
     client.batch_execute(sql).await.expect(sql);
 }
 
+/// A fresh, empty database on the test server; returns its name.
+pub fn create_database() -> String {
+    let database = format!(
+        "eplyx_test_{}_{}_{}",
+        std::process::id(),
+        NEXT.fetch_add(1, Ordering::Relaxed),
+        chrono::Utc::now().timestamp_micros()
+    );
+    tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap()
+        .block_on(admin(&format!("CREATE DATABASE {database}")));
+    database
+}
+
+/// The URL of a database on the test server.
+pub fn database_url(name: &str) -> String {
+    with_database(&admin_url(), name)
+}
+
+/// Drop a database `create_database` made that no server owns.
+pub fn drop_database(name: &str) {
+    tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap()
+        .block_on(admin(&format!(
+            "DROP DATABASE IF EXISTS {name} WITH (FORCE)"
+        )));
+}
+
 pub struct Server {
     pub base: String,
     database: String,
@@ -58,18 +90,22 @@ impl Server {
     }
 
     pub fn start_with(configure: impl FnOnce(&mut eplyx_server::cloud::IdentityConfig)) -> Self {
-        let database = format!(
-            "eplyx_test_{}_{}_{}",
-            std::process::id(),
-            NEXT.fetch_add(1, Ordering::Relaxed),
-            chrono::Utc::now().timestamp_micros()
-        );
+        let database = create_database();
+        Self::start_over(tempfile::tempdir().unwrap(), database, configure)
+    }
+
+    /// A service over an existing volume and database, e.g. a restored backup.
+    /// The server owns both from here on and drops the database with itself.
+    pub fn start_over(
+        volume: tempfile::TempDir,
+        database: String,
+        configure: impl FnOnce(&mut eplyx_server::cloud::IdentityConfig),
+    ) -> Self {
         let runtime = tokio::runtime::Builder::new_multi_thread()
             .worker_threads(4)
             .enable_all()
             .build()
             .unwrap();
-        runtime.block_on(admin(&format!("CREATE DATABASE {database}")));
         let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
         let port = listener.local_addr().unwrap().port();
         let base = format!("http://127.0.0.1:{port}");
@@ -81,7 +117,6 @@ impl Server {
         };
         configure(&mut config);
         listener.set_nonblocking(true).unwrap();
-        let volume = tempfile::tempdir().unwrap();
         let state = runtime.block_on(async {
             std::sync::Arc::new(eplyx_server::api::AppState {
                 observation: None,
@@ -144,6 +179,14 @@ impl Server {
 
     pub fn url(&self, path: &str) -> String {
         format!("{}{path}", self.base)
+    }
+
+    pub fn volume(&self) -> &Path {
+        self._volume.path()
+    }
+
+    pub fn database_url(&self) -> String {
+        with_database(&admin_url(), &self.database)
     }
 
     /// Run SQL against this test's database (to prove DB-level guarantees).

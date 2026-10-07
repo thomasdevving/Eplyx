@@ -132,6 +132,11 @@ impl Storage {
         self.root.join("projects")
     }
 
+    /// Operational records: what startup recovery did. Never read by a run.
+    pub fn ops_root(&self) -> PathBuf {
+        self.root.join("ops")
+    }
+
     pub fn project_dir(&self, project_id: &str) -> Result<PathBuf> {
         checked(project_id, "project id")?;
         Ok(self.projects_root().join(project_id))

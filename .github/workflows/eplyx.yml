@@ -7,7 +7,8 @@
 # pull requests are measured against, so a passing run never moves the
 # baseline — promoting a build is an operator action taken elsewhere.
 #
-# There is no GitHub App and no operator token. One secret and two variables:
+# There is no GitHub App and no operator token. The job's own GITHUB_TOKEN
+# posts one result comment on the pull request. One secret and two variables:
 #
 #   EPLYX_API_URL     repository variable: hosted API/public origin
 #   EPLYX_PROJECT_ID  repository variable: project to measure against
@@ -25,6 +26,8 @@ on:
 
 permissions:
   contents: read
+  # Only to keep one result comment on the pull request up to date.
+  pull-requests: write
 
 jobs:
   upgrade-check:
@@ -88,6 +91,24 @@ jobs:
             eplyx-report.md
             eplyx-summary.md
           if-no-files-found: warn
+
+      # One comment per pull request, updated on every push. It needs write
+      # access to pull requests; a fork's read-only token only produces a
+      # warning, and the gate result below is unaffected either way.
+      - name: Comment the result on the pull request
+        if: always() && github.event_name == 'pull_request'
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python3 scripts/eplyx-pr-comment.py \
+            --repo "$GITHUB_REPOSITORY" \
+            --pr "${{ github.event.pull_request.number }}" \
+            --summary eplyx-summary.md \
+            --exit-code "${{ steps.eplyx.outputs.exit || '70' }}" \
+            --project "${{ vars.EPLYX_PROJECT_ID }}" \
+            --sha "${{ github.event.pull_request.head.sha }}" \
+            --run-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
 
       # The job's result is the gate's result. 0-5 are Eplyx's own exit codes;
       # 75 means execution produced no verdict; 76 means project setup blocked

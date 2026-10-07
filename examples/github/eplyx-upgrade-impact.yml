@@ -1,5 +1,6 @@
 # Copy to a protocol repository after replacing the marked team build command
-# and candidate path. Copy scripts/eplyx-submit.sh from Eplyx as well.
+# and candidate path. Copy scripts/eplyx-submit.sh and scripts/eplyx-pr-comment.py
+# from Eplyx as well.
 # GitHub repository secret: EPLYX_TOKEN (project token)
 # GitHub repository variables: EPLYX_API_URL, EPLYX_PROJECT_ID
 name: Eplyx upgrade check
@@ -7,6 +8,7 @@ on:
   pull_request:
 permissions:
   contents: read
+  pull-requests: write
 jobs:
   upgrade-check:
     runs-on: ubuntu-latest
@@ -27,11 +29,36 @@ jobs:
             --project "$EPLYX_PROJECT_ID" \
             --candidate target/deploy/YOUR_PROGRAM.so \
             --report-json eplyx-report.json \
+            --report-md eplyx-report.md \
             --summary eplyx-summary.md
           echo "exit=$?" >> "$GITHUB_OUTPUT"
       - name: Show Eplyx result
         if: always()
         run: cat eplyx-summary.md >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || true
+      - name: Upload the evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eplyx-evidence
+          path: |
+            eplyx-report.json
+            eplyx-report.md
+            eplyx-summary.md
+          if-no-files-found: warn
+      - name: Comment the result on the pull request
+        if: always() && github.event_name == 'pull_request'
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python3 scripts/eplyx-pr-comment.py \
+            --repo "$GITHUB_REPOSITORY" \
+            --pr "${{ github.event.pull_request.number }}" \
+            --summary eplyx-summary.md \
+            --exit-code "${{ steps.eplyx.outputs.exit || '70' }}" \
+            --project "${{ vars.EPLYX_PROJECT_ID }}" \
+            --sha "${{ github.event.pull_request.head.sha }}" \
+            --run-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
       - name: Enforce existing Eplyx gate
         if: always()
         run: exit "${{ steps.eplyx.outputs.exit || '70' }}"

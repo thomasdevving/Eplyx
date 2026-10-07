@@ -38,6 +38,13 @@ class Handler(BaseHTTPRequestHandler):
                 "kind": "program_upgrade", "status": "ready" if ready else "not_ready",
                 "can_submit": ready, "missing": [] if ready else [{
                     "code": "active_bundle_missing", "action": "Activate a replay bundle."}]}]})
+        if self.path == "/v1/projects/proj_test/setup":
+            return self.answer(200, {"project_id": "proj_test", "steps": [
+                {"id": "bundle_registered", "title": "Replay evidence registered", "status": "done",
+                 "actions": []},
+                {"id": "bundle_active", "title": "Baseline activated", "status": "todo",
+                 "actions": [{"label": "Activate the reviewed bundle", "actor": "operator",
+                              "command": "eplyx-server admin activate-bundle --project proj_test --bundle bndl_1"}]}]})
         if self.path == "/v1/runs/run_test":
             state["polls"] += 1
             if state["mode"] == "poll_error":
@@ -124,6 +131,8 @@ class ClientContract(unittest.TestCase):
             self.assertIn("bundle-test", summary)
             self.assertIn("https://eplyx.example/p/proj_test/runs/run_test", summary)
             self.assertIn("PASS within", summary)
+            self.assertIn("### Reproduce", summary)
+            self.assertIn("eplyx ci check --bundle", summary)
             self.assertNotIn(TOKEN, result.stdout + result.stderr + summary)
             self.assertEqual(self.state["submits"], 1)
 
@@ -139,7 +148,11 @@ class ClientContract(unittest.TestCase):
         blocked = self.run_client("not_ready")
         self.assertEqual(blocked.returncode, 76, blocked.stderr)
         self.assertEqual(self.state["submits"], 0)
-        self.assertIn("active_bundle_missing", (self.dir / "summary.md").read_text())
+        summary = (self.dir / "summary.md").read_text()
+        self.assertIn("active_bundle_missing", summary)
+        self.assertIn("### Setup checklist", summary)
+        self.assertIn("| Baseline activated | **to do** | Activate the reviewed bundle "
+                      "(`eplyx-server admin activate-bundle --project proj_test --bundle bndl_1`) |", summary)
         unauthorized = self.run_client(token="wrong")
         self.assertEqual(unauthorized.returncode, 70)
         self.assertEqual(self.state["submits"], 0)

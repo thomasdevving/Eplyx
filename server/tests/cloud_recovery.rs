@@ -225,3 +225,223 @@ fn legacy_projects_require_operator_assignment_and_both_token_stores_share_owner
         404
     );
 }
+
+/// Backing up the volume and Postgres together, and restoring them together,
+/// gives back the same service: sign-in, workspace access, the project token
+/// and the byte-identical report. Restoring a database newer than the volume
+/// is detected and named rather than served.
+#[test]
+fn files_and_postgres_restore_together_and_a_mismatched_pair_is_refused() {
+    use std::process::Command;
+    const PROGRAM: &str = "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy";
+    let script = eplyx_engine::repo_root().join("scripts/eplyx-backup.sh");
+    let server_binary = env!("CARGO_BIN_EXE_eplyx-server");
+    let scratch = tempfile::tempdir().unwrap();
+
+    // ---- a service with real history
+    let original = Server::start();
+    let (browser, account) = original.signup("restore-owner@example.com");
+    let workspace = account["workspace_id"].as_str().unwrap().to_owned();
+    let project = original.create_project(&browser, &workspace, "Restore me");
+    let configured = Project::new(
+        &project,
+        "Restore me",
+        PROGRAM,
+        eplyx_server::project::AdapterId::for_program(PROGRAM),
+    )
+    .unwrap();
+    let storage = original.state.registry.storage();
+    storage
+        .write_json(
+            &storage.project_dir(&project).unwrap().join("project.json"),
+            &configured,
+        )
+        .unwrap();
+    let registered = original
+        .state
+        .registry
+        .register_bundle(&configured, std::path::Path::new("../deploy/bundle"), None)
+        .unwrap();
+    original
+        .state
+        .registry
+        .activate_bundle(&project, &registered.bundle_id)
+        .unwrap();
+    let (code, issued) = status(
+        browser
+            .post(original.url(&format!("/v1/projects/{project}/tokens")))
+            .json(&json!({"label": "ci"}))
+            .send()
+            .unwrap(),
+    );
+    assert_eq!(code, 201, "{issued}");
+    let ci_token = issued["token"].as_str().unwrap().to_owned();
+    let candidate = std::fs::read("../deploy/bundle/binaries/current.so").unwrap();
+    let mut body = b"--restore-boundary\r\nContent-Disposition: form-data; name=\"candidate\"; filename=\"candidate.so\"\r\nContent-Type: application/octet-stream\r\n\r\n".to_vec();
+    body.extend(candidate);
+    body.extend_from_slice(b"\r\n--restore-boundary--\r\n");
+    let (code, accepted) = status(
+        bearer(&ci_token)
+            .post(original.url(&format!("/v1/projects/{project}/checks")))
+            .header(
+                "content-type",
+                "multipart/form-data; boundary=restore-boundary",
+            )
+            .body(body)
+            .send()
+            .unwrap(),
+    );
+    assert_eq!(code, 202, "{accepted}");
+    let run_id = accepted["run_id"].as_str().unwrap().to_owned();
+    for _ in 0..600 {
+        if original
+            .state
+            .registry
+            .load_run(&run_id)
+            .unwrap()
+            .status
+            .is_terminal()
+        {
+            break;
+        }
+        std::thread::sleep(std::time::Duration::from_millis(100));
+    }
+    let report = bearer(&ci_token)
+        .get(original.url(&format!("/v1/runs/{run_id}/report.json")))
+        .send()
+        .unwrap();
+    assert_eq!(report.status(), 200);
+    let report = report.bytes().unwrap();
+
+    // ---- back up both halves
+    let backup = scratch.path().join("backup");
+    let out = Command::new("bash")
+        .arg(&script)
+        .args(["backup", "--data-dir"])
+        .arg(original.volume())
+        .args(["--database-url", &original.database_url(), "--out"])
+        .arg(&backup)
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "{}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+
+    // The world moves on after the backup: a second project, mapped in Postgres.
+    let later = original.create_project(&browser, &workspace, "After the backup");
+    let later_dump = scratch.path().join("later.dump");
+    let dumped = Command::new("pg_dump")
+        .args(["--format=custom", "--no-owner", "--no-privileges", "--file"])
+        .arg(&later_dump)
+        .arg(original.database_url())
+        .status()
+        .unwrap();
+    assert!(dumped.success());
+
+    // ---- restore both into fresh stores
+    let volume = tempfile::tempdir().unwrap();
+    let restored_database = create_database();
+    let out = Command::new("bash")
+        .arg(&script)
+        .args(["restore", "--from"])
+        .arg(&backup)
+        .arg("--data-dir")
+        .arg(volume.path())
+        .args(["--database-url", &database_url(&restored_database)])
+        .env("EPLYX_SERVER", server_binary)
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "{}\n{}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr)
+    );
+    let check: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    assert_eq!(check["problems"], json!([]));
+    assert_eq!(check["identity_projects"], 1);
+    assert_eq!(check["reports_checked"], 1);
+
+    // A restore never runs over the store it would replace.
+    let refused = Command::new("bash")
+        .arg(&script)
+        .args(["restore", "--from"])
+        .arg(&backup)
+        .arg("--data-dir")
+        .arg(volume.path())
+        .args(["--database-url", &database_url(&restored_database)])
+        .output()
+        .unwrap();
+    assert_eq!(refused.status.code(), Some(2));
+
+    let restored = Server::start_over(volume, restored_database, |_| {});
+    let session = restored.browser();
+    let login = session
+        .post(restored.url("/v1/auth/login"))
+        .json(&json!({"email": "restore-owner@example.com", "password": "correct horse battery"}))
+        .send()
+        .unwrap();
+    assert_eq!(login.status(), 200);
+    let (code, listed) = status(session.get(restored.url("/v1/projects")).send().unwrap());
+    assert_eq!(code, 200, "{listed}");
+    let listed = listed.to_string();
+    assert!(listed.contains(&project), "{listed}");
+    assert!(!listed.contains(&later), "{listed}");
+    let again = bearer(&ci_token)
+        .get(restored.url(&format!("/v1/runs/{run_id}/report.json")))
+        .send()
+        .unwrap();
+    assert_eq!(again.status(), 200);
+    assert_eq!(
+        again.bytes().unwrap(),
+        report,
+        "the report survives byte for byte"
+    );
+    let (code, setup) = status(
+        bearer(&ci_token)
+            .get(restored.url(&format!("/v1/projects/{project}/setup")))
+            .send()
+            .unwrap(),
+    );
+    assert_eq!(code, 200, "{setup}");
+    assert_eq!(setup["ready_for_first_check"], true);
+
+    // ---- a database newer than the volume is named, not served
+    let mismatched_volume = tempfile::tempdir().unwrap();
+    let untar = Command::new("tar")
+        .arg("-C")
+        .arg(mismatched_volume.path())
+        .arg("-xf")
+        .arg(backup.join("volume.tar"))
+        .status()
+        .unwrap();
+    assert!(untar.success());
+    let newer = create_database();
+    let loaded = Command::new("pg_restore")
+        .args([
+            "--no-owner",
+            "--no-privileges",
+            "--exit-on-error",
+            "--dbname",
+        ])
+        .arg(database_url(&newer))
+        .arg(&later_dump)
+        .status()
+        .unwrap();
+    assert!(loaded.success());
+    let verdict = Command::new(server_binary)
+        .args(["admin", "verify-volume"])
+        .env("EPLYX_DATA_DIR", mismatched_volume.path())
+        .env("EPLYX_DATABASE_URL", database_url(&newer))
+        .output()
+        .unwrap();
+    drop_database(&newer);
+    assert_eq!(verdict.status.code(), Some(1));
+    let verdict: serde_json::Value = serde_json::from_slice(&verdict.stdout).unwrap();
+    assert!(
+        verdict["problems"].to_string().contains(&later),
+        "{verdict}"
+    );
+}

@@ -125,3 +125,21 @@
 
 /* Retained interaction entry remains readable beside the upgrade report. */
 .interaction-parent { color: var(--text); }
+
+/* Guided first upgrade check, rendered by /assets/setup.js. */
+.setup__headline { margin: 0 0 12px; color: var(--text); font: 600 14px var(--display); }
+.setup-steps { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.setup-step { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; padding: 12px 14px; border: 1px solid var(--line); border-left: 4px solid var(--line-2); border-radius: 8px; background: var(--panel-2); }
+.setup-step__index { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--line-2); color: var(--text-2); font-size: 11px; }
+.setup-step header { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.setup-step header strong { font-family: var(--display); }
+.setup-step header span { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
+.setup-step p { margin: 6px 0 0; color: var(--text-2); font-size: 12.5px; }
+.setup-step--done, .setup-step--attention { border-left-color: var(--pos); }
+.setup-step--todo { border-left-color: var(--pending); }
+.setup-step--in_progress { border-left-color: var(--violet); }
+.setup-step.is-next { background: color-mix(in srgb, var(--pending) 8%, var(--panel-2)); }
+.setup-actions { display: grid; gap: 6px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 12.5px; }
+.setup-actions li { display: grid; gap: 2px; padding-top: 6px; border-top: 1px solid var(--line); }
+.setup-actions small { color: var(--muted); }
+.setup-actions code { overflow-wrap: anywhere; font-family: var(--mono); font-size: 12px; }

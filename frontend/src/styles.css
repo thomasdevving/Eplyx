@@ -931,3 +931,34 @@ a:focus-visible, button:focus-visible, pre:focus-visible { outline:2px solid var
   .workflow-steps li::after { animation: none !important; transform: none !important; }
   .product-grid .text-link span, .cli-preview .button > span, .evidence-example .result-summary > a > span { transform: none !important; }
 }
+
+/* Guided first upgrade check (server-authored /setup). */
+.setup__headline { margin: 0 0 14px; font: 500 14px var(--font-heading); }
+.setup-steps { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.setup-step { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 12px; padding: 14px 16px; border: 1px solid rgba(255,255,255,.12); border-left: 3px solid #8d85a0; border-radius: 5px; background: rgba(255,255,255,.03); }
+.setup-step__index { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,.08); font-size: 11px; }
+.setup-step header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.setup-step header strong { font: 600 13px/1.35 var(--font-heading); }
+.setup-step header span { flex-shrink: 0; color: rgba(255,255,255,.56); font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.setup-step p { margin: 8px 0 0; color: rgba(255,255,255,.6); font-size: 11px; line-height: 1.55; }
+.setup-step--done, .setup-step--attention { border-left-color: #5ec79b; }
+.setup-step--attention header span, .setup-step--todo header span { color: #f2c996; }
+.setup-step--todo { border-left-color: #e58b3c; }
+.setup-step--in_progress { border-left-color: #9c68ff; }
+.setup-step.is-next { background: rgba(229,139,60,.07); }
+.setup-actions { display: grid; gap: 6px; margin: 10px 0 0; padding: 0; list-style: none; }
+.setup-actions li { display: grid; gap: 3px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,.09); font-size: 11px; }
+.setup-actions small { color: rgba(255,255,255,.45); font-size: 10px; }
+.setup-actions code { overflow-wrap: anywhere; color: #d9c2ff; font-size: 10px; }
+
+/* Operator view of the run queue (/v1/ops). */
+.ops-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.ops-metrics article { display: grid; gap: 4px; padding: 12px 14px; border: 1px solid rgba(255,255,255,.12); border-radius: 5px; }
+.ops-metrics span { color: rgba(255,255,255,.45); font-size: 10px; }
+.ops-metrics b { font: 500 17px var(--font-heading); }
+.ops-metrics small { color: rgba(255,255,255,.45); font-size: 10px; }
+.ops h3 { margin: 18px 0 8px; font: 500 14px var(--font-heading); }
+.ops-failures { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.ops-failures li { display: grid; gap: 3px; padding: 10px 12px; border-left: 3px solid #e58b3c; background: rgba(229,139,60,.07); border-radius: 4px; font-size: 11px; }
+.ops-failures code { overflow-wrap: anywhere; color: #d9c2ff; font-size: 10px; }
+.ops-failures small { color: rgba(255,255,255,.55); overflow-wrap: anywhere; }

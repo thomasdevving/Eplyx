@@ -12,6 +12,7 @@ installation. Neither route covers every Solana program or account.
 | Install the CLI and run a first check | [Getting started](getting-started.md) | Rust/native build tools, or an actually published macOS arm64 archive; the example also needs its separately built SBF fixture. |
 | Check a proposed program build | [Upgrade example](../examples/stake-pool-upgrade/README.md), [CI contract](phase-10-hosted-ci.md) | Compiled candidate and validated retained bundle. |
 | Automate a hosted upgrade check | [Pilot onboarding](pilot-onboarding.md) | Configured service, project, active bundle and project token. |
+| See what a project still needs, comment results on PRs, watch the queue, back up and restore | [Operations](operations.md) | Operator token for the queue view; `pg_dump`/`pg_restore` for backups. |
 | Rehearse a token migration | [Token migration](token-migration.md) | Proposal, state and exact compatible candidate. Prepared browser files are supported within the documented shape. |
 | Compare declared lifecycle terms | [Lifecycle](lifecycle.md) | Immutable snapshot and explicit policy/times. Execution remains a separate question. |
 | Check a transfer, exit or withdrawal | [Current-state analysis](current-state-analysis.md) | Exact account/path inputs and retained state/code; new acquisition needs configured provider access. |
