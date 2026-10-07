@@ -2,7 +2,7 @@
 // The release check deliberately distinguishes supplied facts from open items.
 export const LEGAL_CONFIG = Object.freeze({
   brand: 'Eplyx',
-  email: 'eplyxcontact@gmail.com',
+  email: 'contact@eplyx.dev',
   country: 'Netherlands',
   hostingCountry: null,
   scope: 'Free information website and demonstration reports',

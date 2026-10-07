@@ -5,12 +5,12 @@ Prepared 1 October 2026 for the current free information website and demonstrati
 ## Supplied and verified facts
 
 - Public name: **Eplyx**. Operator based in the Netherlands; visitors worldwide.
-- Contact and privacy requests: **eplyxcontact@gmail.com**.
+- Contact and privacy requests: **contact@eplyx.dev**, forwarded by Cloudflare Email Routing to the verified **eplyxcontact@gmail.com** inbox.
 - Hosting update, 8 October 2026: the operator selected **Cloudflare** for `eplyx.dev`. The deployment uses its global static asset network; the earlier Netherlands-only hosting statement no longer applies. Subprocessors, access locations and contractual arrangements remain unverified.
 - Current public offering: free information and demos; no analytics, advertising or payments.
 - Frontend review: assets and fonts self-hosted, no tracking SDK, no cookie set by public information pages. The decorative intro uses page memory only.
 - The operator requested that an address be omitted for now. No address, registry number or legal identity has been invented. This does not decide whether a disclosure is legally required.
-- Mail is handled through Gmail. A Netherlands hosting location does not establish that email or provider access stays in the Netherlands/EEA.
+- Mail to the domain passes through Cloudflare Email Routing and is handled through Gmail. A Netherlands hosting location does not establish that email or provider access stays in the Netherlands/EEA.
 
 The site now links to `/legal`, `/privacy`, `/cookies`, `/terms`, `/contact` and `/licenses` from its footer. Notices are in English to match the site. They visibly remain drafts while required operator details are incomplete.
 

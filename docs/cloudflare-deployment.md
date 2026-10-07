@@ -53,3 +53,10 @@ report, JavaScript and font assets, and a 404 for a missing asset.
 
 The website notices record Cloudflare hosting without promising Netherlands-only
 processing. Other unresolved operator details remain visible in the notices.
+
+## Domain email
+
+`contact@eplyx.dev` forwards through Cloudflare Email Routing to the verified
+`eplyxcontact@gmail.com` inbox. The rule is enabled; Cloudflare manages the
+required MX, SPF and DKIM DNS records. The catch-all is disabled. This is free
+inbound forwarding, not an outbound mailbox.
