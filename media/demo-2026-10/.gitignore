@@ -7,3 +7,5 @@ output/*.jpg
 output/*.png
 output/score.wav
 output/*-master.mp4
+# The full-quality master (~150 MB) exceeds GitHub's file limit; output/eplyx-demo.mp4 is the committed upload version.
+output/eplyx-demo-video.mp4
