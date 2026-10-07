@@ -1,0 +1,9 @@
+# Review frames, test segments and the uncompressed master/score are rebuilt
+# by source/render.mjs and source/score.py.
+output/stills/
+output/seg/
+output/segment.mp4
+output/*.jpg
+output/*.png
+output/score.wav
+output/*-master.mp4

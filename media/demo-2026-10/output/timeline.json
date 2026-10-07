@@ -1,0 +1,667 @@
+{
+ "duration": 178,
+ "scenes": [
+  {
+   "id": "intro",
+   "at": 0,
+   "end": 11,
+   "chapter": 0
+  },
+  {
+   "id": "channels",
+   "at": 11,
+   "end": 16.5,
+   "chapter": 0
+  },
+  {
+   "id": "website",
+   "at": 16.5,
+   "end": 25,
+   "chapter": 1
+  },
+  {
+   "id": "concept",
+   "at": 25,
+   "end": 29.5,
+   "chapter": 2
+  },
+  {
+   "id": "upgrade",
+   "at": 29.5,
+   "end": 40.5,
+   "chapter": 2
+  },
+  {
+   "id": "expectations",
+   "at": 40.5,
+   "end": 48,
+   "chapter": 2
+  },
+  {
+   "id": "gate",
+   "at": 48,
+   "end": 53,
+   "chapter": 2
+  },
+  {
+   "id": "operator",
+   "at": 53,
+   "end": 61.5,
+   "chapter": 3
+  },
+  {
+   "id": "hosted",
+   "at": 61.5,
+   "end": 71,
+   "chapter": 3
+  },
+  {
+   "id": "governance",
+   "at": 71,
+   "end": 79,
+   "chapter": 4
+  },
+  {
+   "id": "history",
+   "at": 79,
+   "end": 89.5,
+   "chapter": 4
+  },
+  {
+   "id": "migration",
+   "at": 89.5,
+   "end": 99.5,
+   "chapter": 5
+  },
+  {
+   "id": "dashboard",
+   "at": 99.5,
+   "end": 108,
+   "chapter": 5
+  },
+  {
+   "id": "lifecycle",
+   "at": 108,
+   "end": 115,
+   "chapter": 5
+  },
+  {
+   "id": "current",
+   "at": 115,
+   "end": 125.5,
+   "chapter": 5
+  },
+  {
+   "id": "fee",
+   "at": 125.5,
+   "end": 133,
+   "chapter": 6
+  },
+  {
+   "id": "interaction",
+   "at": 133,
+   "end": 139.5,
+   "chapter": 6
+  },
+  {
+   "id": "share",
+   "at": 139.5,
+   "end": 148,
+   "chapter": 7
+  },
+  {
+   "id": "api",
+   "at": 148,
+   "end": 153.5,
+   "chapter": 7
+  },
+  {
+   "id": "evidence",
+   "at": 153.5,
+   "end": 160,
+   "chapter": 7
+  },
+  {
+   "id": "personas",
+   "at": 160,
+   "end": 167,
+   "chapter": 8
+  },
+  {
+   "id": "boundaries",
+   "at": 167,
+   "end": 173,
+   "chapter": 8
+  },
+  {
+   "id": "end",
+   "at": 173,
+   "end": 178,
+   "chapter": 8
+  }
+ ],
+ "cues": [
+  {
+   "t": 0,
+   "type": "scene",
+   "id": "intro",
+   "chapter": 0
+  },
+  {
+   "t": 5.3,
+   "type": "whoosh"
+  },
+  {
+   "t": 8.6,
+   "type": "tick"
+  },
+  {
+   "t": 8.82,
+   "type": "tick"
+  },
+  {
+   "t": 9.04,
+   "type": "tick"
+  },
+  {
+   "t": 11,
+   "type": "scene",
+   "id": "channels",
+   "chapter": 0
+  },
+  {
+   "t": 11.1,
+   "type": "boom"
+  },
+  {
+   "t": 11.7,
+   "type": "tick"
+  },
+  {
+   "t": 11.82,
+   "type": "tick"
+  },
+  {
+   "t": 11.94,
+   "type": "tick"
+  },
+  {
+   "t": 12.06,
+   "type": "tick"
+  },
+  {
+   "t": 12.18,
+   "type": "tick"
+  },
+  {
+   "t": 12.3,
+   "type": "tick"
+  },
+  {
+   "t": 12.42,
+   "type": "tick"
+  },
+  {
+   "t": 12.54,
+   "type": "tick"
+  },
+  {
+   "t": 16.5,
+   "type": "scene",
+   "id": "website",
+   "chapter": 1
+  },
+  {
+   "t": 16.6,
+   "type": "whoosh"
+  },
+  {
+   "t": 21.25,
+   "type": "whoosh"
+  },
+  {
+   "t": 25,
+   "type": "scene",
+   "id": "concept",
+   "chapter": 2
+  },
+  {
+   "t": 25.25,
+   "type": "tick"
+  },
+  {
+   "t": 25.9,
+   "type": "tick"
+  },
+  {
+   "t": 26,
+   "type": "tick"
+  },
+  {
+   "t": 27.1,
+   "type": "tick"
+  },
+  {
+   "t": 29.5,
+   "type": "scene",
+   "id": "upgrade",
+   "chapter": 2
+  },
+  {
+   "t": 29.8,
+   "type": "typing",
+   "dur": 0.8999999999999999
+  },
+  {
+   "t": 32.6,
+   "type": "typing",
+   "dur": 0.9500000000000002
+  },
+  {
+   "t": 33.9,
+   "type": "pass"
+  },
+  {
+   "t": 35.45,
+   "type": "typing",
+   "dur": 0.9500000000000002
+  },
+  {
+   "t": 37.2,
+   "type": "fail"
+  },
+  {
+   "t": 40.5,
+   "type": "scene",
+   "id": "expectations",
+   "chapter": 2
+  },
+  {
+   "t": 40.75,
+   "type": "typing",
+   "dur": 0.8
+  },
+  {
+   "t": 43.6,
+   "type": "typing",
+   "dur": 0.9999999999999996
+  },
+  {
+   "t": 46.5,
+   "type": "fail"
+  },
+  {
+   "t": 48,
+   "type": "scene",
+   "id": "gate",
+   "chapter": 2
+  },
+  {
+   "t": 48.5,
+   "type": "tick"
+  },
+  {
+   "t": 48.6,
+   "type": "tick"
+  },
+  {
+   "t": 48.7,
+   "type": "tick"
+  },
+  {
+   "t": 48.8,
+   "type": "tick"
+  },
+  {
+   "t": 48.9,
+   "type": "tick"
+  },
+  {
+   "t": 49,
+   "type": "tick"
+  },
+  {
+   "t": 53,
+   "type": "scene",
+   "id": "operator",
+   "chapter": 3
+  },
+  {
+   "t": 53.35,
+   "type": "typing",
+   "dur": 0.6999999999999998
+  },
+  {
+   "t": 55.4,
+   "type": "typing",
+   "dur": 0.6999999999999997
+  },
+  {
+   "t": 57.4,
+   "type": "typing",
+   "dur": 0.7000000000000002
+  },
+  {
+   "t": 61.5,
+   "type": "scene",
+   "id": "hosted",
+   "chapter": 3
+  },
+  {
+   "t": 61.8,
+   "type": "typing",
+   "dur": 0.5
+  },
+  {
+   "t": 62.85,
+   "type": "typing",
+   "dur": 1.1
+  },
+  {
+   "t": 65.15,
+   "type": "fail"
+  },
+  {
+   "t": 67.1,
+   "type": "whoosh"
+  },
+  {
+   "t": 71,
+   "type": "scene",
+   "id": "governance",
+   "chapter": 4
+  },
+  {
+   "t": 71.3,
+   "type": "typing",
+   "dur": 1.2
+  },
+  {
+   "t": 73.5,
+   "type": "pass"
+  },
+  {
+   "t": 79,
+   "type": "scene",
+   "id": "history",
+   "chapter": 4
+  },
+  {
+   "t": 79.3,
+   "type": "typing",
+   "dur": 0.8999999999999999
+  },
+  {
+   "t": 81.7,
+   "type": "typing",
+   "dur": 1
+  },
+  {
+   "t": 84.3,
+   "type": "typing",
+   "dur": 0.7999999999999998
+  },
+  {
+   "t": 86.55,
+   "type": "typing",
+   "dur": 0.7000000000000002
+  },
+  {
+   "t": 89.05,
+   "type": "typing",
+   "dur": 0.8000000000000007
+  },
+  {
+   "t": 89.5,
+   "type": "scene",
+   "id": "migration",
+   "chapter": 5
+  },
+  {
+   "t": 89.75,
+   "type": "typing",
+   "dur": 0.35
+  },
+  {
+   "t": 90.6,
+   "type": "fail"
+  },
+  {
+   "t": 91.05,
+   "type": "typing",
+   "dur": 0.44999999999999996
+  },
+  {
+   "t": 93.05,
+   "type": "typing",
+   "dur": 0.5000000000000004
+  },
+  {
+   "t": 94.15,
+   "type": "typing",
+   "dur": 0.4500000000000002
+  },
+  {
+   "t": 95.05,
+   "type": "fail"
+  },
+  {
+   "t": 96.1,
+   "type": "typing",
+   "dur": 0.5999999999999996
+  },
+  {
+   "t": 97.85,
+   "type": "typing",
+   "dur": 0.5
+  },
+  {
+   "t": 98.75,
+   "type": "typing",
+   "dur": 0.5
+  },
+  {
+   "t": 99.5,
+   "type": "scene",
+   "id": "dashboard",
+   "chapter": 5
+  },
+  {
+   "t": 99.5,
+   "type": "whoosh"
+  },
+  {
+   "t": 100.7,
+   "type": "typing",
+   "dur": 0.5
+  },
+  {
+   "t": 103.75,
+   "type": "whoosh"
+  },
+  {
+   "t": 108,
+   "type": "scene",
+   "id": "lifecycle",
+   "chapter": 5
+  },
+  {
+   "t": 108.3,
+   "type": "typing",
+   "dur": 0.7
+  },
+  {
+   "t": 109.7,
+   "type": "typing",
+   "dur": 0.9000000000000001
+  },
+  {
+   "t": 115,
+   "type": "scene",
+   "id": "current",
+   "chapter": 5
+  },
+  {
+   "t": 117.4,
+   "type": "pass"
+  },
+  {
+   "t": 121.1,
+   "type": "pass"
+  },
+  {
+   "t": 123.2,
+   "type": "pass"
+  },
+  {
+   "t": 125.5,
+   "type": "scene",
+   "id": "fee",
+   "chapter": 6
+  },
+  {
+   "t": 125.8,
+   "type": "typing",
+   "dur": 1
+  },
+  {
+   "t": 127.85,
+   "type": "typing",
+   "dur": 0.6000000000000001
+  },
+  {
+   "t": 130.3,
+   "type": "typing",
+   "dur": 0.7999999999999998
+  },
+  {
+   "t": 133,
+   "type": "scene",
+   "id": "interaction",
+   "chapter": 6
+  },
+  {
+   "t": 133.3,
+   "type": "typing",
+   "dur": 1.9999999999999998
+  },
+  {
+   "t": 139.5,
+   "type": "scene",
+   "id": "share",
+   "chapter": 7
+  },
+  {
+   "t": 139.8,
+   "type": "typing",
+   "dur": 0.7
+  },
+  {
+   "t": 142.65,
+   "type": "typing",
+   "dur": 0.7000000000000002
+  },
+  {
+   "t": 144.3,
+   "type": "typing",
+   "dur": 0.5
+  },
+  {
+   "t": 148,
+   "type": "scene",
+   "id": "api",
+   "chapter": 7
+  },
+  {
+   "t": 148.25,
+   "type": "typing",
+   "dur": 0.8999999999999999
+  },
+  {
+   "t": 150.6,
+   "type": "typing",
+   "dur": 0.8999999999999999
+  },
+  {
+   "t": 153.5,
+   "type": "scene",
+   "id": "evidence",
+   "chapter": 7
+  },
+  {
+   "t": 153.8,
+   "type": "tick"
+  },
+  {
+   "t": 153.9,
+   "type": "tick"
+  },
+  {
+   "t": 154,
+   "type": "tick"
+  },
+  {
+   "t": 154.1,
+   "type": "tick"
+  },
+  {
+   "t": 154.2,
+   "type": "tick"
+  },
+  {
+   "t": 154.3,
+   "type": "tick"
+  },
+  {
+   "t": 154.4,
+   "type": "tick"
+  },
+  {
+   "t": 154.9,
+   "type": "typing",
+   "dur": 0.6999999999999997
+  },
+  {
+   "t": 160,
+   "type": "scene",
+   "id": "personas",
+   "chapter": 8
+  },
+  {
+   "t": 160.35,
+   "type": "tick"
+  },
+  {
+   "t": 160.49,
+   "type": "tick"
+  },
+  {
+   "t": 160.63,
+   "type": "tick"
+  },
+  {
+   "t": 160.77,
+   "type": "tick"
+  },
+  {
+   "t": 160.91,
+   "type": "tick"
+  },
+  {
+   "t": 167,
+   "type": "scene",
+   "id": "boundaries",
+   "chapter": 8
+  },
+  {
+   "t": 173,
+   "type": "scene",
+   "id": "end",
+   "chapter": 8
+  },
+  {
+   "t": 173.1,
+   "type": "boom"
+  }
+ ]
+}
