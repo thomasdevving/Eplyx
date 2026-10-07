@@ -148,7 +148,7 @@ every recorded frame at its original timestamp (H.264 4:4:4, CRF 14) with the
 pointer log; `pack-clips.mjs pack` rebuilds it from raw captures.
 
 `output/eplyx-demo.mp4` is a two-pass 3.9 Mbit/s encode of the CRF 16 master
-(SSIM 0.996 against the master), kept under GitHub's 100 MB file limit.
+(SSIM 0.998 against the master), kept under GitHub's 100 MB file limit.
 
 `film/index.html` is the editable composition; open it through `render.mjs`'s
 server layout (film at `/`, clips at `/clips/`) to scrub with the player.
