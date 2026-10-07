@@ -1,0 +1,47 @@
+{
+ "cwd": "/home/demo/history",
+ "prompt": "~/history",
+ "cols": 100,
+ "rows": 30,
+ "speed": 1.6,
+ "env": {
+  "SOLANA_RPC_URL": "https://solana-mainnet.g.alchemy.com/v2/docs-demo",
+  "SOLANA_RPC_ORIGIN": "https://www.alchemy.com"
+ },
+ "steps": [
+  {
+   "cmd": "eplyx versions upgrades --program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb --start-slot 420000000 --end-slot 430000000 --output .",
+   "expect": 0,
+   "timeout": 180,
+   "after": 1
+  },
+  {
+   "cmd": "eplyx historical acquire --signature 3omP6iKrk9jcFfjURFo76biHedNpXVJcK16jBxX3AUyqTQ4zr3ZHW5kpdue18TpVvBhjhkybEFUkhd4ivw4TaN2n --program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb --output .",
+   "expect": 0,
+   "timeout": 300,
+   "after": 1,
+   "speed": 3
+  },
+  {
+   "cmd": "eplyx versions resolve --program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb --slot 427147035 --output . --out v2.so",
+   "expect": 0,
+   "timeout": 180,
+   "after": 1
+  },
+  {
+   "cmd": "eplyx compare --corpus corpus.json --v1 token-2022-mainnet-v1.so --v2 v2.so | head -16",
+   "expect": 0,
+   "after": 1.2
+  },
+  {
+   "cmd": "eplyx compare --corpus corpus.json --v1 token-2022-mainnet-v1.so --v2 ~/candidates/fixture_token2022_v2.so | sed -n 10,22p",
+   "expect": 0,
+   "after": 1.5
+  }
+ ],
+ "path": [
+  "/home/user/Eplyx/target/release"
+ ],
+ "home": "/home/demo",
+ "title": "history"
+}

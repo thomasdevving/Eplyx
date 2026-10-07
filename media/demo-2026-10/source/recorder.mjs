@@ -12,7 +12,7 @@ export const CHROME = process.env.EPLYX_CHROME || '/opt/pw-browsers/chromium-119
 export async function launch() {
   return chromium.launch({
     executablePath: CHROME,
-    args: ['--enable-unsafe-swiftshader', '--use-angle=swiftshader', '--disable-gpu-vsync', '--hide-scrollbars'],
+    args: ['--enable-unsafe-swiftshader', '--use-angle=swiftshader', '--disable-gpu-vsync', '--hide-scrollbars', '--disable-background-networking', '--disable-component-update', '--no-default-browser-check'],
   });
 }
 
@@ -114,8 +114,8 @@ export class Clip {
   }
   async wheel(dy, label, ms = 900) {
     if (label) this.mark(label);
-    const steps = Math.round(ms / 30);
-    for (let i = 0; i < steps; i++) { await this.page.mouse.wheel(0, dy / steps); await this.page.waitForTimeout(30); }
+    await this.page.evaluate(dy => window.scrollBy({ top: dy, behavior: 'smooth' }), dy);
+    await this.page.waitForTimeout(ms);
   }
   async close(meta = {}) {
     await this.page.waitForTimeout(400);

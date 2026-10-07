@@ -1,0 +1,6 @@
+[
+ {
+  "cmd": "eplyx interaction analyse --upgrade proposals/config-upgrade.json --parameter proposals/deposit-fee-1pct.json --bundle .eplyx/bundle --record-id mainnet-spl-stake-pool-151010f709e113e7 --candidate target/deploy/fixture_stake_pool_config_v2.so --out interaction | jq '{status, fee_effect_on_v1: .recipient_effects.parameter_v1.value, fee_effect_on_v2: .recipient_effects.parameter_v2.value, interaction: .recipient_effects.interaction.value}'",
+  "exit": 0
+ }
+]

@@ -1,0 +1,26 @@
+{
+ "cwd": "/home/demo",
+ "prompt": "operator@eplyx",
+ "cols": 100,
+ "rows": 26,
+ "env": {
+  "EPLYX_DATA_DIR": "/srv/eplyx-demo/volume"
+ },
+ "steps": [
+  {
+   "cmd": "eplyx-server admin list-projects",
+   "expect": 0,
+   "after": 1
+  },
+  {
+   "cmd": "eplyx-server admin ops | jq -c '.workers, .queue, .outcomes, .execution'",
+   "expect": 0,
+   "after": 1.6
+  }
+ ],
+ "path": [
+  "/home/user/Eplyx/target/release"
+ ],
+ "home": "/home/demo",
+ "title": "ops"
+}

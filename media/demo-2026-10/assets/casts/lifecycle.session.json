@@ -1,0 +1,23 @@
+{
+ "cwd": "/home/demo/lifecycle",
+ "prompt": "~/lifecycle",
+ "cols": 100,
+ "rows": 32,
+ "steps": [
+  {
+   "cmd": "eplyx change lifecycle --scenario inputs/scenario.json --out change.json",
+   "expect": 0,
+   "after": 0.8
+  },
+  {
+   "cmd": "eplyx lifecycle analyse --snapshot inputs/snapshot.json --scenario inputs/scenario.json --change-spec change.json --at 2026-09-28T00:00:00Z --record ~/token-migration",
+   "expect": 0,
+   "after": 1.6
+  }
+ ],
+ "path": [
+  "/home/user/Eplyx/target/release"
+ ],
+ "home": "/home/demo",
+ "title": "lifecycle"
+}

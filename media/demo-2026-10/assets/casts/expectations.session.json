@@ -1,0 +1,23 @@
+{
+ "cwd": "/home/demo/stake-pool-program",
+ "prompt": "~/stake-pool-program",
+ "cols": 100,
+ "rows": 30,
+ "steps": [
+  {
+   "cmd": "grep -v '^#' .eplyx/expected-changes.toml | grep -v '^$'",
+   "expect": 0,
+   "after": 1
+  },
+  {
+   "cmd": "eplyx ci check --bundle .eplyx/bundle --candidate target/deploy/fixture_stake_pool_v2.so --expectations .eplyx/expected-changes.toml",
+   "expect": 1,
+   "after": 1.5
+  }
+ ],
+ "path": [
+  "/home/user/Eplyx/target/release"
+ ],
+ "home": "/home/demo",
+ "title": "expectations"
+}

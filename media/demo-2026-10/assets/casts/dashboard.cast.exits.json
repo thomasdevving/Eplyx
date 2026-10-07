@@ -1,0 +1,6 @@
+[
+ {
+  "cmd": "eplyx dashboard --no-open --port 4185",
+  "exit": "interrupted"
+ }
+]

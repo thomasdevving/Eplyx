@@ -1,0 +1,19 @@
+{
+ "cwd": "/home/demo/squads",
+ "prompt": "~/squads",
+ "cols": 100,
+ "rows": 30,
+ "steps": [
+  {
+   "cmd": "eplyx governance squads verify --change-spec bound.json --rpc-url https://api.mainnet-beta.solana.com",
+   "expect": 0,
+   "timeout": 120,
+   "after": 1.8
+  }
+ ],
+ "path": [
+  "/home/user/Eplyx/target/release"
+ ],
+ "home": "/home/demo",
+ "title": "governance"
+}

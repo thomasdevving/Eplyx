@@ -1,0 +1,34 @@
+[
+ {
+  "cmd": "eplyx doctor",
+  "exit": 0
+ },
+ {
+  "cmd": "eplyx migration analyse",
+  "exit": 0
+ },
+ {
+  "cmd": "cp ~/builds/migration-deadline-defect.so target/deploy/migration.so",
+  "exit": 0
+ },
+ {
+  "cmd": "eplyx migration search",
+  "exit": 0
+ },
+ {
+  "cmd": "eplyx migration reproduce $(basename .eplyx/counterexamples/cx_* .json)",
+  "exit": 0
+ },
+ {
+  "cmd": "RUN=$(eplyx runs --json | jq -r '.runs | max_by(.timestamp).run_id')",
+  "exit": 0
+ },
+ {
+  "cmd": "eplyx migration gate --run $RUN --policy strict",
+  "exit": 1
+ },
+ {
+  "cmd": "eplyx migration plan --run $RUN --out unsigned.json",
+  "exit": 0
+ }
+]
