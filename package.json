@@ -11,6 +11,8 @@
   "scripts": {
     "dev": "node frontend/dev-server.mjs",
     "build": "node frontend/build.mjs",
+    "build:cloudflare": "node frontend/build-cloudflare.mjs",
+    "preview:cloudflare": "pnpm build:cloudflare && npx wrangler@4.148.0 pages dev dist",
     "check:legal": "node frontend/legal-check.mjs",
     "check:legal:release": "node frontend/legal-check.mjs --production",
     "check:frontend": "node frontend/check.mjs && node frontend/content.test.mjs && node frontend/report.test.mjs && node frontend/console.test.mjs && node frontend/setup.test.mjs && node frontend/capabilities.test.mjs && node frontend/migration.test.mjs && node frontend/migration-order.test.mjs && node frontend/interaction.test.mjs && node frontend/lifecycle.test.mjs && node frontend/parameter.test.mjs && node frontend/change.test.mjs && node frontend/analysis.test.mjs && node frontend/governance.test.mjs && node frontend/dashboard.test.mjs && node --test frontend/tests/catalogue-import.test.mjs && node frontend/cloud.test.mjs",
