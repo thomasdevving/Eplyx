@@ -12,6 +12,7 @@ mod cli_local;
 mod cli_parameter;
 mod cli_path;
 mod cli_qualification;
+mod cli_rollout;
 
 use std::path::PathBuf;
 static LONG_VERSION: std::sync::LazyLock<String> =
@@ -49,6 +50,13 @@ enum Command {
     },
     #[command(hide = true)]
     InteractionWorker { encoded: String },
+    /// Rehearse a bounded installed program upgrade and configuration rollout order.
+    Rollout {
+        #[command(subcommand)]
+        command: cli_rollout::Command,
+    },
+    #[command(hide = true)]
+    RolloutWorker { encoded: String },
     /// Analyze one active Token-2022 transfer-fee parameter counterfactual.
     Parameter {
         #[command(subcommand)]
@@ -949,6 +957,8 @@ fn run() -> Result<ExitCode> {
         Command::Controlled { command } => cli_historical::controlled(command),
         Command::Interaction { command } => cli_interaction::run(command),
         Command::InteractionWorker { encoded } => cli_interaction::worker(&encoded),
+        Command::Rollout { command } => cli_rollout::run(command),
+        Command::RolloutWorker { encoded } => cli_rollout::worker(&encoded),
         Command::Parameter { command } => cli_parameter::run(command),
         Command::ParameterWorker { encoded } => cli_parameter::worker(&encoded),
         Command::Generate(args) => cli_compare::generate(args),
