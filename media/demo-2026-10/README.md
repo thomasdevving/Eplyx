@@ -1,6 +1,6 @@
 # Eplyx — product demo film (October 2026)
 
-**[output/eplyx-demo-video.mp4](output/eplyx-demo-video.mp4)** · 2:58 · 1920 × 1080 · 30 fps · H.264 + AAC stereo · −14 LUFS
+**[output/eplyx-demo.mp4](output/eplyx-demo.mp4)** · 2:58 · 1920 × 1080 · 30 fps · H.264 + AAC stereo · −14 LUFS
 
 A three-minute walkthrough of the live product: all eight channels and all ten
 use cases, built from recordings of the real binaries and services at commit
@@ -137,7 +137,7 @@ samples); typing clicks are placed on the recorded typing intervals.
    repository; session files keep tokens masked.
 4. `node source/build-casts.mjs`, `node source/render.mjs --stills 30,60` to
    review, `python3 source/score.py`, then
-   `EPLYX_AUDIO=output/score.wav node source/render.mjs`.
+   `EPLYX_AUDIO=output/score.wav node source/render.mjs` (writes the master `output/eplyx-demo-video.mp4`; the committed `output/eplyx-demo.mp4` is its upload encode).
 
 `film/index.html` is the editable composition; open it through `render.mjs`'s
 server layout (film at `/`, clips at `/clips/`) to scrub with the player.
