@@ -20,10 +20,10 @@ if (mode === 'pack') {
     const meta = JSON.parse(readFileSync(join(dir, c, 'clip.json'), 'utf8'));
     const list = meta.frames.map((f, i) => {
       const next = meta.frames[i + 1]?.t ?? f.t + 1 / 30;
-      return `file '${join(dir, c, f.file)}'\nduration ${Math.max(0.001, next - f.t).toFixed(4)}`;
+      return `file '${join(dir, c, f.file)}'\nduration ${Math.max(0.001, next - f.t).toFixed(6)}`;
     }).join('\n') + `\nfile '${join(dir, c, meta.frames.at(-1).file)}'\n`;
     const listFile = join(dir, c, 'frames.txt'); writeFileSync(listFile, list);
-    run('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', listFile, '-fps_mode', 'vfr', '-c:v', 'libx264', '-preset', 'slow', '-crf', '14', '-pix_fmt', 'yuv444p', '-movflags', '+faststart', join(store, c + '.mp4')]);
+    run('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', listFile, '-fps_mode', 'passthrough', '-video_track_timescale', '90000', '-c:v', 'libx264', '-preset', 'slow', '-crf', '14', '-pix_fmt', 'yuv444p', '-movflags', '+faststart', join(store, c + '.mp4')]);
     writeFileSync(join(store, c + '.json'), JSON.stringify({ ...meta, frames: meta.frames.map(f => ({ t: f.t })) }));
     console.log('packed', c, meta.frames.length, 'frames');
   }

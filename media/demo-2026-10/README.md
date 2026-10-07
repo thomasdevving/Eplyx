@@ -139,5 +139,14 @@ samples); typing clicks are placed on the recorded typing intervals.
    review, `python3 source/score.py`, then
    `EPLYX_AUDIO=output/score.wav node source/render.mjs` (writes the master `output/eplyx-demo-video.mp4`; the committed `output/eplyx-demo.mp4` is its upload encode).
 
+To re-render from this directory alone (no services, no recordings), restore the
+browser footage first: `node source/pack-clips.mjs unpack /tmp/eplyx-clips` and
+then `EPLYX_CLIPS=/tmp/eplyx-clips node source/render.mjs …`. `assets/web/` keeps
+every recorded frame at its original timestamp (H.264 4:4:4, CRF 14) with the
+pointer log; `pack-clips.mjs pack` rebuilds it from raw captures.
+
+`output/eplyx-demo.mp4` is a two-pass 3.9 Mbit/s encode of the CRF 16 master
+(SSIM 0.996 against the master), kept under GitHub's 100 MB file limit.
+
 `film/index.html` is the editable composition; open it through `render.mjs`'s
 server layout (film at `/`, clips at `/clips/`) to scrub with the player.
