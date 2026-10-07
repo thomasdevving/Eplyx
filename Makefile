@@ -5,7 +5,7 @@
 SHELL := /bin/bash
 CARGO := cargo
 
-.PHONY: all build programs compare report fixtures impact-fixtures governance-fixtures test test-artifacts test-engine test-programs fmt fmt-check lint clean demo-replay demo-discovery demo-mainnet-replay demo-token2022-upgrade demo-cpi-mainnet-replay memo-candidate token2022-candidate stake-pool-candidate stake-pool-config-candidate migration-candidate
+.PHONY: all build programs compare report fixtures impact-fixtures governance-fixtures test test-artifacts test-engine test-programs fmt fmt-check lint lint-public lint-programs test-public regression clean demo-replay demo-discovery demo-mainnet-replay demo-token2022-upgrade demo-cpi-mainnet-replay memo-candidate token2022-candidate stake-pool-candidate stake-pool-config-candidate migration-candidate
 
 all: compare
 
@@ -69,8 +69,23 @@ fmt-check:
 	$(CARGO) fmt --all --manifest-path programs/fixture-stake-pool-candidate/Cargo.toml -- --check
 	$(CARGO) fmt --all --manifest-path programs/fixture-stake-pool-config-candidate/Cargo.toml -- --check
 
-lint:
+lint: lint-programs
 	$(CARGO) clippy --all-targets -- -D warnings
+
+## The public tier (GitHub CI): every target a clean checkout can build.
+## Targets that read the deliberately ignored fixture payloads are listed in
+## scripts/private-fixture-suites.txt and run only in `make regression`.
+lint-public: lint-programs
+	python3 scripts/public-tier.py clippy
+
+test-public:
+	python3 scripts/public-tier.py test
+
+## The full local gate: every suite, including the private-fixture ones.
+regression:
+	./scripts/regression.sh
+
+lint-programs:
 	$(CARGO) clippy --manifest-path programs/eplyx-token-migration/Cargo.toml --all-targets -- -D warnings
 	$(CARGO) clippy --manifest-path programs/eplyx-token-migration/Cargo.toml --features defect-deadline-inclusive --all-targets -- -D warnings
 	$(CARGO) clippy --manifest-path programs/eplyx-token-migration/Cargo.toml --features defect-fee-ceiling --all-targets -- -D warnings

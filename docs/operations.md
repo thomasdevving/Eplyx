@@ -1,46 +1,65 @@
 # Operating Eplyx: regression CI, first checks, pull requests and recovery
 
 This guide covers five operational surfaces added together: the repository's own
-regression workflow, the guided path to a project's first upgrade check, the
+regression tiers, the guided path to a project's first upgrade check, the
 pull-request comment, the operator view of the run queue, and joint backup and
 restore of files and Postgres. None of them adds analysis. Each one projects
 records the service already holds.
 
 ## Repository regression CI
 
-`.github/workflows/ci.yml` runs on every pull request and every push to `main`.
-Nothing in it skips. The cloud suites need Postgres, so the workflow starts a
-loopback scratch cluster instead of leaving them out.
+Two tiers, and neither skips anything silently.
+
+**GitHub (public tier).** `.github/workflows/ci.yml` runs on every pull request
+and every push to `main`, on a clean checkout. Some fixtures are kept out of git
+on purpose: historical captures with provider-origin fields, imported locally by
+`scripts/import-*-fixtures.py` (see `fixtures/lifecycle/README.md`). On a clean
+checkout, 8 engine test targets do not compile and 246 other tests fail, by
+design. They are recorded in `scripts/private-fixture-tests.json`. Everything else
+runs, including the Postgres cloud suites:
 
 | Job | Runner | What it runs |
 | --- | --- | --- |
 | `programs` | macos-15 | `make test-artifacts`: every SBF artefact, hash-checked, uploaded once for the jobs below |
-| `rust-lint` | macos-15 | `make fmt-check`, `make lint` |
-| `rust-test` | macos-15 | `make test-programs`, `cargo test --locked --workspace` (engine, server, cloud/Postgres) |
-| `browser` | macos-15 | `pnpm verify:report`, then the dashboard, cloud (Postgres), public-site and governance-trail browser suites |
+| `rust-lint` | macos-15 | `make fmt-check`; `make lint-public` (clippy over every program and every public target) |
+| `rust-test` | macos-15 | `make test-programs`, then `scripts/public-tier.py test` (workspace, Postgres included), then the list of what it did not run |
+| `browser` | macos-15 | `pnpm verify:report`, then the dashboard, public-site and governance-trail browser suites |
 | `frontend` | ubuntu | `check:frontend`, `test:frontend-runtime`, `verify:governance`, `check:legal`, the submit and PR-comment client tests |
 
-The Rust jobs run on macOS because the pinned stake-pool candidates are only
-qualified on Darwin arm64.
+The cloud browser suite seeds its service from private payloads, so it runs only
+locally. The Rust jobs run on macOS because the pinned stake-pool candidates are
+only qualified on Darwin arm64.
 
-To get the same Postgres locally:
+`scripts/public-tier.py` keeps the exclusions honest:
+
+- A recorded target or test that no longer exists fails the run.
+- A new test that needs a payload fails the public tier until it is recorded.
+  Re-record from a clean checkout (one without the payloads), e.g. a fresh
+  `git worktree`:
+
+```bash
+python3 scripts/public-tier.py record --checkout <clean checkout>
+```
+
+**Locally (full gate).** `make regression` runs every suite, private payloads and
+the cloud browser suite included. It is what has to pass before a change lands on
+`main`. It stops with the import command when a payload family is missing. It
+also starts a scratch Postgres when `EPLYX_CLOUD_TEST_DATABASE_URL` is unset, and
+falls back to Playwright's Chromium when Google Chrome is absent.
+
+The scratch Postgres can also be started on its own:
 
 ```bash
 eval "$(scripts/scratch-postgres.sh start)"
 ```
 
 ```bash
-cargo test --workspace
-```
-
-```bash
 scripts/scratch-postgres.sh stop
 ```
 
-The script creates a trust-auth cluster under `$TMPDIR/eplyx-scratch-postgres`.
-It listens on `127.0.0.1:54329` only, with no Unix socket. It exports
-`EPLYX_CLOUD_TEST_DATABASE_URL`, which `make test-cloud` and the cloud browser
-suite read.
+It is a trust-auth cluster under `$TMPDIR/eplyx-scratch-postgres`. It listens on
+`127.0.0.1:54329` only, with no Unix socket, and exports
+`EPLYX_CLOUD_TEST_DATABASE_URL`.
 
 ## Guided first upgrade check
 
