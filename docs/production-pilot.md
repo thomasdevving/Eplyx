@@ -50,10 +50,14 @@ compiling anything; and `deploy/README.md` instructed an operator to run
 
 ## What is deployed
 
+The public endpoints below were updated on 8 October 2026 after the domain
+migration. The remaining deployment details describe the September pilot;
+see [Cloudflare deployment](cloudflare-deployment.md) for current routing.
+
 | | |
 |---|---|
-| API | `https://upgrade-impactreport-check-production.up.railway.app` |
-| Frontend | `https://eplyx-frontend-production.up.railway.app` |
+| API | `https://eplyx.dev` |
+| Frontend | `https://eplyx.dev`, workspace at `/workspace` |
 | Volume | `/data`, its own device, holding `projects/`, `bundles/`, `runs/` |
 | Replicas | 1 — the registry is a directory, so a second would fork the state |
 | API variables | `EPLYX_OPERATOR_TOKEN`, `EPLYX_ALLOWED_ORIGINS`, `EPLYX_DATA_DIR`, `PORT` |
