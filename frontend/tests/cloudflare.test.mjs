@@ -1,12 +1,34 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import worker from '../cloudflare/worker.js';
+import { writeRuntimeConfig } from '../runtime-config.mjs';
+import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 const env = {
   EPLYX_UPSTREAM_ORIGIN: 'https://internal.example',
   EPLYX_PUBLIC_ORIGIN: 'https://eplyx.dev',
   ASSETS: { fetch: async () => new Response('static') },
 };
+
+test('explicit same-origin configuration also works in local Pages previews', async t => {
+  const directory = await mkdtemp(join(tmpdir(), 'eplyx-proxy-config-'));
+  const previous = process.env.EPLYX_API_URL;
+  t.after(async () => {
+    if (previous === undefined) delete process.env.EPLYX_API_URL;
+    else process.env.EPLYX_API_URL = previous;
+    delete globalThis.EPLYX_API_URL;
+    delete globalThis.location;
+    await rm(directory, { recursive: true, force: true });
+  });
+  process.env.EPLYX_API_URL = '/';
+  assert.equal(await writeRuntimeConfig(directory), '/');
+  assert.match(await readFile(join(directory, 'runtime-config.js'), 'utf8'), /EPLYX_API_URL = "\/"/);
+  globalThis.EPLYX_API_URL = '/';
+  globalThis.location = { hostname: '127.0.0.1' };
+  assert.equal((await import('../src/session.js?pages-preview')).API_BASE, '');
+});
 
 test('workspace proxy preserves requests, cookies, origin checks and response security', async t => {
   t.mock.method(globalThis, 'fetch', async (request, options) => {
