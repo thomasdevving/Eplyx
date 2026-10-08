@@ -80,6 +80,17 @@ report, JavaScript and font assets, and a 404 for a missing asset. Also verify
 write rejection and generated CLI/project links. Use an isolated local database
 for account creation and session tests, never production test users.
 
+Verified live on 8 October 2026 after deployment of `d749e9b`: workspace,
+login, signup, device approval and workspace assets return 200 on `eplyx.dev`;
+unauthenticated workspace/session APIs return JSON 401; the legacy workspace
+path and `www` workspace redirect to `https://eplyx.dev/workspace`.
+The runtime configuration uses `/`, private responses use `no-store`, and the
+workspace displays `eplyx login --server https://eplyx.dev`. Empty login requests
+from the public origin reach input validation (422), while a foreign origin is
+rejected (403). Signup, login, session cookies, project navigation, logout and
+CLI device URLs were also exercised against an isolated local database through
+the real Pages runtime and Rust backend. No production test account was created.
+
 The website notices record Cloudflare hosting without promising Netherlands-only
 processing. Other unresolved operator details remain visible in the notices.
 
