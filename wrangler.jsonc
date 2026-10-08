@@ -1,5 +1,9 @@
 {
   "name": "eplyx",
   "compatibility_date": "2026-10-01",
-  "pages_build_output_dir": "./dist"
+  "pages_build_output_dir": "./dist",
+  "vars": {
+    "EPLYX_UPSTREAM_ORIGIN": "https://upgrade-impactreport-check-production.up.railway.app",
+    "EPLYX_PUBLIC_ORIGIN": "https://eplyx.dev"
+  }
 }

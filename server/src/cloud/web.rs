@@ -100,6 +100,8 @@ pub fn router() -> Router<Shared> {
         .route("/login", get(cloud_shell))
         .route("/signup", get(cloud_shell))
         .route("/device", get(cloud_shell))
+        .route("/workspace", get(cloud_shell))
+        .route("/workspace/", get(cloud_shell))
         .route("/workspaces", get(cloud_shell))
         .route("/workspaces/{*rest}", get(cloud_shell))
 }
