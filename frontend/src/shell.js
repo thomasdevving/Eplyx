@@ -2,12 +2,12 @@ import { Logo } from './brand.js';
 import { API_BASE } from './session.js';
 
 export function workspaceHref() {
-  if (!API_BASE) return '/workspaces';
+  if (!API_BASE) return '/workspace';
   try {
     const url = new URL(API_BASE);
-    if (url.protocol === 'https:' || url.protocol === 'http:') return `${url.origin}/workspaces`;
+    if (url.protocol === 'https:' || url.protocol === 'http:') return `${url.origin}/workspace`;
   } catch { /* Invalid configuration must not create an executable link. */ }
-  return '/workspaces';
+  return '/workspace';
 }
 
 export function Header({ light = false } = {}) {

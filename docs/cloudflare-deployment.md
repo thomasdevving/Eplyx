@@ -2,8 +2,9 @@
 
 The public frontend is built from `thomasdevving/Eplyx` using Cloudflare Pages.
 The production branch is `main`; pushes trigger an automatic build and deployment.
-Only the generated `dist/` directory is published. The Rust API, database,
-credentials and evidence bundles are not part of this static deployment.
+The generated `dist/` directory includes public assets and a Pages Function that
+proxies the hosted workspace. The Rust API, database, credentials and evidence
+bundles remain on the existing backend; they are not uploaded as static assets.
 
 The first production deployment was published on 8 October 2026 (Amsterdam time),
 from commit `3c8965f`, with deployment ID
@@ -30,20 +31,27 @@ Connect the Cloudflare Workers and Pages GitHub app to this repository, then
 create a Pages project with these settings. Add both custom domains through
 Pages so Cloudflare provisions their DNS records and TLS certificates.
 
-`frontend/build-cloudflare.mjs` preserves the existing public API URL:
-`https://upgrade-impactreport-check-production.up.railway.app`.
-Set `EPLYX_API_URL` as a Pages build variable to change it. Browser requests
-require the API's `EPLYX_ALLOWED_ORIGINS` to include the public website origin;
-static hosting does not change that API configuration. Workspace links open
-the API's own origin.
+## Public workspace and API
 
-The API service `@upgrade-impact/report-check` in Railway's `friendly-bravery`
-production environment was redeployed on 8 October 2026 with
-`https://eplyx.dev` and `https://www.eplyx.dev` added to `EPLYX_ALLOWED_ORIGINS`.
-The existing Railway frontend origin and `http://localhost:4173` were preserved.
-Live preflight checks passed for all four origins; an unknown origin received
-no allow-origin header. Requests without authentication still returned 401,
-with the correct CORS header for each Eplyx domain, and `/health` returned OK.
+All browser-facing entry points use `https://eplyx.dev`. The workspace opens at
+`/workspace`, login/signup/device approval stay on this origin, and project pages
+use `/p/:id`. The old `/workspaces` path redirects to `/workspace`. Workspace
+pages on `www` or Pages preview domains redirect to the canonical apex domain so
+login sessions use one origin.
+
+`frontend/build-cloudflare.mjs` forces same-origin runtime configuration (`/`).
+The internal backend address exists only in the server-side
+`EPLYX_UPSTREAM_ORIGIN` binding in `wrangler.jsonc`. The worker forwards workspace
+HTML/assets and `/v1/*` requests, streaming bodies and preserving cookies,
+authorization and the original Origin header. It never follows backend redirects
+with credentials and rewrites backend Location URLs to the public domain.
+
+In Railway's `friendly-bravery` project, the `@upgrade-impact/report-check`
+production service must use `EPLYX_PUBLIC_URL=https://eplyx.dev`. This setting
+controls cookie-write origin validation and generated CLI/project URLs. Keep
+`EPLYX_ALLOWED_ORIGINS` configured for the two Eplyx domains where needed by
+bearer-authenticated requests. Session cookies remain HttpOnly, Secure and
+SameSite=Strict; authentication and membership checks stay on the backend.
 
 ## Routing and caching
 
@@ -52,18 +60,25 @@ including project and report URLs. The bundled `404.html` prevents missing
 assets and API paths from receiving the application shell with status 200.
 `_headers` retains `nosniff` and `no-referrer`, prevents framing, and requires
 asset revalidation. Runtime configuration uses `Cache-Control: no-store`.
+`_routes.json` limits Function invocations to workspace and API paths. Proxied
+responses always use `no-store` and retain the backend security headers; private
+workspace responses must never enter an asset cache.
 
 ## Local verification
 
 ```sh
 pnpm check:frontend
+pnpm test:frontend-runtime
 pnpm test:public
 pnpm preview:cloudflare
 ```
 
 `EPLYX_CHROME` can select an installed Chromium binary for the browser suite.
 After publishing, verify HTTPS on both domains, direct page loads, the demo
-report, JavaScript and font assets, and a 404 for a missing asset.
+report, JavaScript and font assets, and a 404 for a missing asset. Also verify
+`/workspace`, `/login`, same-origin `/v1/auth/me`, login/logout cookies, cross-site
+write rejection and generated CLI/project links. Use an isolated local database
+for account creation and session tests, never production test users.
 
 The website notices record Cloudflare hosting without promising Netherlands-only
 processing. Other unresolved operator details remain visible in the notices.

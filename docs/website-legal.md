@@ -40,7 +40,7 @@ Public facts and unresolved review items live in `frontend/src/legal-config.js`;
 
 Keep this inventory current even if a specific formal register exemption applies. It helps explain and evidence the actual processing. Do not put requesters' personal details in this public repository.
 
-Optional developer tools use `eplyx-operator-token` in session storage, `eplyx-last-project` in local storage and `eplyx-detail` in the separate dashboard. The separate hosted service uses the `eplyx_session` login cookie and request-retry session keys. Their triggers and lifetimes are disclosed on `/cookies`. Before offering accounts/uploads as part of the public release, complete a separate service inventory covering credentials, project/source evidence, backups, processors, access controls, deletion, notices and applicable terms. Apply secure cookies and HTTPS in production. Static-site documentation does not make those services ready.
+Optional developer tools use `eplyx-operator-token` in session storage, `eplyx-last-project` in local storage and `eplyx-detail` in the separate dashboard. The hosted service is now reachable at `/workspace` on `eplyx.dev`, with Cloudflare proxying account, project and API requests to Railway. It uses the `eplyx_session` login cookie on this domain and request-retry session keys. Their triggers and lifetimes are disclosed on `/cookies`. Before offering accounts/uploads as part of the public release, complete a separate service inventory covering credentials, project/source evidence, backups, processors, access controls, deletion, notices and applicable terms. Apply secure cookies and HTTPS in production. Static-site documentation does not make those services ready.
 
 ## Privacy request procedure
 

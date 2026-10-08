@@ -66,7 +66,7 @@ const localPath = () => (location.pathname.startsWith(BASE) ? location.pathname.
 function cloudSidebar(project) {
  const ws = project.context?.cloud?.workspace;
  if (DEMO) return `<div class="sidebar__project"><span class="eyebrow">Public demo</span><strong>${esc(project.project?.name ?? 'Demo project')}</strong><span class="muted">Published read-only by this server’s operator.</span></div>`;
- return `<div class="sidebar__project"><span class="eyebrow">${esc(ws?.name ?? 'Workspace')}</span><label class="switcher"><span class="sr-only">Project</span><select data-project-switch><option>${esc(project.project?.name ?? 'Project')}</option></select></label><a class="muted" href="/" >All workspaces</a></div>`;
+ return `<div class="sidebar__project"><span class="eyebrow">${esc(ws?.name ?? 'Workspace')}</span><label class="switcher"><span class="sr-only">Project</span><select data-project-switch><option>${esc(project.project?.name ?? 'Project')}</option></select></label><a class="muted" href="/workspace" >All workspaces</a></div>`;
 }
 
 function shell(project) {
