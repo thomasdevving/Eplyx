@@ -37,11 +37,13 @@ require the API's `EPLYX_ALLOWED_ORIGINS` to include the public website origin;
 static hosting does not change that API configuration. Workspace links open
 the API's own origin.
 
-At deployment verification, the API did not return `Access-Control-Allow-Origin`
-for a preflight from `https://eplyx.dev`. Before using authenticated API requests
-from the new site, add `https://eplyx.dev` and `https://www.eplyx.dev` to
-`EPLYX_ALLOWED_ORIGINS`, preserving its existing entries, and deploy that API
-configuration. The public pages and saved demo report work independently of it.
+The API service `@upgrade-impact/report-check` in Railway's `friendly-bravery`
+production environment was redeployed on 8 October 2026 with
+`https://eplyx.dev` and `https://www.eplyx.dev` added to `EPLYX_ALLOWED_ORIGINS`.
+The existing Railway frontend origin and `http://localhost:4173` were preserved.
+Live preflight checks passed for all four origins; an unknown origin received
+no allow-origin header. Requests without authentication still returned 401,
+with the correct CORS header for each Eplyx domain, and `/health` returned OK.
 
 ## Routing and caching
 
