@@ -1,13 +1,15 @@
 # Eplyx product demo film (October 2026)
 
-**[output/eplyx-demo.mp4](output/eplyx-demo.mp4)** · 2:57 · 1920 × 1080 · 30 fps · H.264 + AAC stereo · −14 LUFS
+**[output/eplyx-demo.mp4](output/eplyx-demo.mp4)** · 2:59 · 1920 × 1080 · 30 fps · H.264 + AAC stereo · −14 LUFS
 
 A three-minute film of the live product for YouTube, Loom or Vimeo. It explains
 the problem, what Eplyx is and how it works, who it is for, and then follows one
 person per scenario: who they are, what situation they are in, what Eplyx does
 for them and what they get back. Together the scenarios cover all eight channels
 and all ten use cases. Every terminal and browser image is a recording of the
-real binaries and services at commit `b53734b`.
+real binaries and services at commit `b53734b`, except the hosted-RPC access step
+and the Squads verification, which were recorded with `ff297cc` (branch
+`claude/wizardly-tesla-b6cooi`, the password-gated hosted Solana RPC).
 
 ## Story
 
@@ -21,19 +23,20 @@ real binaries and services at commit `b53734b`.
 | 0:53 | Protocol developer | Some changes are on purpose | Local CLI | Declared changes |
 | 1:00 | Protocol developer | In CI, the exit code is the gate | CI gate, offline | Program upgrade |
 | 1:05 | Platform team | Set it up once; CI can never move the baseline | Operator console | Share and manage |
-| 1:13 | Protocol developer | Every pull request, checked automatically | CI gate, hosted | Program upgrade |
-| 1:23 | Multisig signer | You are asked to approve a program upgrade (**live**) | Local CLI | Governance binding |
-| 1:32 | Security team | Something changed on mainnet: what ran, and can you replay it (**live**) | Local CLI | Historical research |
-| 1:42 | Token issuer | You are moving holders to a new token | Local CLI | Token migration |
-| 1:52 | Token issuer | Review the rehearsal in the local dashboard | Local dashboard | Token migration |
-| 1:59 | Risk team | A deadline moves: what does it mean for holders | Local CLI | Lifecycle change |
-| 2:05 | Holder or market maker | Can this account still move today (**live**) | Cloud workspace | Current state |
-| 2:15 | Protocol team | You want to raise the deposit fee to 1% | Local CLI | Fee change |
-| 2:21 | Protocol team | And new code ships at the same time | Local CLI | Upgrade and fee together |
-| 2:27 | The whole team | Share local results in one workspace | Cloud workspace | Share and manage |
-| 2:34 | Your tooling | Everything is also an API | HTTP API | Share and manage |
-| 2:39 | | What a result claims, and what it does not | | |
-| 2:46 | | Before an on-chain change reaches users, simulate its real consequences first | | |
+| 1:12 | Protocol developer | Every pull request, checked automatically | CI gate, hosted | Program upgrade |
+| 1:21 | Every developer | No RPC to set up: one password unlocks the Eplyx hosted RPC | Local CLI | |
+| 1:27 | Multisig signer | You are asked to approve a program upgrade (**live**, through the hosted RPC) | Local CLI | Governance binding |
+| 1:36 | Security team | Something changed on mainnet: what ran, and can you replay it (**live**) | Local CLI | Historical research |
+| 1:46 | Token issuer | You are moving holders to a new token | Local CLI | Token migration |
+| 1:56 | Token issuer | Review the rehearsal in the local dashboard | Local dashboard | Token migration |
+| 2:03 | Risk team | A deadline moves: what does it mean for holders | Local CLI | Lifecycle change |
+| 2:09 | Holder or market maker | Can this account still move today (**live**) | Cloud workspace | Current state |
+| 2:19 | Protocol team | You want to raise the deposit fee to 1% | Local CLI | Fee change |
+| 2:25 | Protocol team | And new code ships at the same time | Local CLI | Upgrade and fee together |
+| 2:31 | The whole team | Share local results in one workspace | Cloud workspace | Share and manage |
+| 2:38 | Your tooling | Everything is also an API | HTTP API | Share and manage |
+| 2:43 | | What a result claims, and what it does not | | |
+| 2:49 | | Before an on-chain change reaches users, simulate its real consequences first | | |
 
 YouTube chapter list (paste into the description):
 
@@ -46,19 +49,20 @@ YouTube chapter list (paste into the description):
 0:53 Declaring intended changes
 1:00 The CI gate
 1:05 Setting it up once
-1:13 Every pull request, checked
-1:23 Approving a Squads upgrade (live)
-1:32 Replaying mainnet history (live)
-1:42 Rehearsing a token migration
-1:52 The local dashboard
-1:59 A lifecycle change
-2:05 Can this account still move? (live)
-2:15 A fee change
-2:21 Code and fee together
-2:27 Sharing results
-2:34 The API
-2:39 What a result claims
-2:46 The vision
+1:12 Every pull request, checked
+1:21 No RPC to set up, one password
+1:27 Approving a Squads upgrade (live)
+1:36 Replaying mainnet history (live)
+1:46 Rehearsing a token migration
+1:56 The local dashboard
+2:03 A lifecycle change
+2:09 Can this account still move? (live)
+2:19 A fee change
+2:25 Code and fee together
+2:31 Sharing results
+2:38 The API
+2:43 What a result claims
+2:49 The vision
 ```
 
 ## What is real
@@ -68,7 +72,8 @@ graphics frame, label and point at those recordings; they never stand in for one
 
 - **Terminals** are real interactive `bash` sessions in a pseudo-terminal
   (`source/pty_record.py`). Each command was typed into the shell, executed by the
-  release binaries built from `b53734b`, and every output byte and exit code was
+  release binaries built from `b53734b` (`ff297cc` for the `access` and
+  `governance` sessions), and every output byte and exit code was
   stored as an asciicast (`assets/casts/*.cast`). The film replays those bytes
   through xterm.js. Two edits are applied and nothing else: idle gaps longer than
   0.45 s are shortened (`source/build-casts.mjs`), and typing/output are played
@@ -88,16 +93,31 @@ graphics frame, label and point at those recordings; they never stand in for one
   `fixture_stake_pool_v2.so` `3193eabd…`, `fixture_stake_pool_config_v2.so`
   `a664f74b…`, `eplyx_token_migration.so` `e5db6948…`.
 
-### Live mainnet reads (7 October 2026)
+### Hosted RPC and access password (11 October 2026)
 
-- `governance squads verify` on the committed G1.1 witness (Squads #1 of
-  `8fJvcw…`) via `api.mainnet-beta.solana.com`: `matched` at slot 454,211,406
+- `eplyx access` (built from `ff297cc`) was run against a local `eplyx-server`
+  of the same commit standing in for eplyx.dev, selected with `EPLYX_URL` in the
+  session environment; the output names that loopback address. The server had
+  `EPLYX_RPC_URL` set to `api.mainnet-beta.solana.com` and
+  `EPLYX_ACCESS_PASSWORD` set from a file outside the repository. The recorder
+  types the password into the hidden prompt from that file
+  (`answer` in `source/sessions.mjs`); `eplyx access` turns echo off, and the
+  recorder refuses to keep a cast that contains it.
+
+### Live mainnet reads
+
+- 11 October 2026: `governance squads verify` on the committed G1.1 witness
+  (Squads #1 of `8fJvcw…`) with no `--rpc-url` and no `SOLANA_RPC_URL`, read
+  through the hosted RPC relay above: `matched` at slot 455,689,745
   (finalized). A match is a statement at that slot.
-- `versions upgrades/resolve` and `historical acquire` of the real PYUSD
-  TransferChecked `3omP6i…` through the archive endpoint the repository's own
-  demo script uses (`solana-mainnet.g.alchemy.com/v2/docs-demo`). The real
-  Token-2022 upgrade replays with no behavioural difference; the last replay
-  uses the constructed `fixture_token2022_v2.so` regression.
+- 7 October 2026: `versions upgrades/resolve` and `historical acquire` of the
+  real PYUSD TransferChecked `3omP6i…` through the archive endpoint the
+  repository's own demo script uses (`solana-mainnet.g.alchemy.com/v2/docs-demo`),
+  configured as the session's own `SOLANA_RPC_URL`. These reads need exact-slot
+  account history, which the public RPC behind the demo relay does not serve, so
+  this scene was not re-recorded through the relay; its caption says so. The
+  real Token-2022 upgrade replays with no behavioural difference; the last
+  replay uses the constructed `fixture_token2022_v2.so` regression.
 - Hosted current-state observation of PYUSD for one public owner (the largest
   holder account at capture time) via the public RPC. The Transfer and candidate
   checks then ran offline in the local VM. Nothing was signed or sent; signing
@@ -131,6 +151,10 @@ samples); typing clicks are placed on the recorded typing intervals.
    public frontend (`EPLYX_API_URL=http://127.0.0.1:4390 PORT=4173 node
    frontend/dev-server.mjs`). The film's run used
    `EPLYX_OBSERVATION_RPC_URL`/`EPLYX_GOVERNANCE_RPC_URL` set to the public RPC.
+   For the `access` and `governance` sessions, run `eplyx-server` built from
+   `ff297cc` with `EPLYX_RPC_URL` and `EPLYX_ACCESS_PASSWORD` set, put the
+   password in `/srv/eplyx-demo/access-password` (mode 600), and point
+   `EPLYX_RPC_BIN` at that build's `target/release`.
 3. `source/setup-home.sh /home/demo`, `node source/seed-workspace.mjs`, then
    record in this order: `node source/sessions.mjs operator`, `capture-web.mjs
    console`, `sessions.mjs upgrade expectations hosted api`, the browser clips,

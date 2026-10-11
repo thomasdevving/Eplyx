@@ -14,6 +14,9 @@ const repo = join(here, '../../..');
 const seed = JSON.parse(readFileSync('/srv/eplyx-demo/seed.json', 'utf8'));
 const API = seed.base, P = seed.upgradeProject, T = seed.transitionsProject;
 const bin = [join(repo, 'target/release')];
+// The hosted-RPC sessions use the build of the branch that added it.
+const rpcBin = [process.env.EPLYX_RPC_BIN || '/home/user/eplyx-rpc/target/release'];
+const PASSWORD_FILE = '/srv/eplyx-demo/access-password';
 const D = '/home/demo';
 const TOKEN = (() => { try { return (readFileSync(`${D}/ci-token`, 'utf8').match(/eplyx_[A-Za-z0-9_]+/) || [''])[0]; } catch { return ''; } })();
 const SIG = '3omP6iKrk9jcFfjURFo76biHedNpXVJcK16jBxX3AUyqTQ4zr3ZHW5kpdue18TpVvBhjhkybEFUkhd4ivw4TaN2n';
@@ -43,8 +46,15 @@ export const sessions = {
     { cmd: `curl -s -H "authorization: Bearer $EPLYX_TOKEN" ${API}/v1/projects/${P}/setup | jq -r '.steps[] | "\\(.status)\\t\\(.title)"'`, expect: 0, after: 1 },
     { cmd: `curl -s -H "authorization: Bearer $EPLYX_TOKEN" ${API}/v1/projects/${P}/runs | jq '.runs[0] | {run_id, status, exit_code, candidate_sha256}'`, expect: 0, after: 1.4 },
   ] },
-  governance: { cwd: `${D}/squads`, prompt: '~/squads', cols: 100, rows: 30, steps: [
-    { cmd: 'eplyx governance squads verify --change-spec bound.json --rpc-url https://api.mainnet-beta.solana.com', expect: 0, timeout: 120, after: 1.8 },
+  // No RPC of the developer's own: one password unlocks the Eplyx hosted RPC.
+  // EPLYX_URL points the CLI at the local eplyx-server standing in for
+  // eplyx.dev; the password is typed into the hidden prompt from a file.
+  access: { cwd: D, prompt: '~', cols: 104, rows: 16, path: rpcBin, env: { EPLYX_URL: API }, steps: [
+    { cmd: 'eplyx access', answer: { wait: 'Eplyx access password: ', file: PASSWORD_FILE }, expect: 0, timeout: 60, after: 1 },
+    { cmd: 'eplyx access --status', expect: 0, timeout: 60, after: 1.4 },
+  ] },
+  governance: { cwd: `${D}/squads`, prompt: '~/squads', cols: 100, rows: 30, path: rpcBin, steps: [
+    { cmd: 'eplyx governance squads verify --change-spec bound.json', expect: 0, timeout: 180, after: 1.8 },
   ] },
   history: { cwd: `${D}/history`, prompt: '~/history', cols: 100, rows: 30, speed: 1.6,
     env: { SOLANA_RPC_URL: 'https://solana-mainnet.g.alchemy.com/v2/docs-demo', SOLANA_RPC_ORIGIN: 'https://www.alchemy.com' }, steps: [
@@ -101,12 +111,12 @@ if (names.length) {
     const s = structuredClone(sessions[name]);
     if (!s) throw new Error('unknown session ' + name);
     for (const st of s.steps) if (st.cmd) st.cmd = st.cmd.replace(/\{\{(\w+)\}\}/g, (_, k) => { if (!vars[k]) throw new Error('missing var ' + k); return vars[k]; });
-    const spec = { ...s, path: bin, home: D, title: name };
+    const spec = { ...s, path: s.path || bin, home: D, title: name };
     // The recorder reads the real spec from scratch storage; the copy kept
     // next to the cast has credentials masked.
     const file = join('/srv/eplyx-demo', `${name}.session.json`);
     writeFileSync(file, JSON.stringify(spec, null, 1), { mode: 0o600 });
-    const masked = { ...spec, env: Object.fromEntries(Object.entries(spec.env || {}).map(([k, v]) => [k, /TOKEN|SECRET|KEY/.test(k) ? '<redacted>' : v])) };
+    const masked = { ...spec, env: Object.fromEntries(Object.entries(spec.env || {}).map(([k, v]) => [k, /TOKEN|SECRET|KEY|PASSWORD/.test(k) ? '<redacted>' : v])) };
     writeFileSync(join(out, `${name}.session.json`), JSON.stringify(masked, null, 1));
     const r = spawnSync('python3', [join(here, 'pty_record.py'), file, join(out, `${name}.cast`)], { stdio: 'inherit' });
     if (r.status !== 0) { console.error(`session ${name} failed`); process.exit(1); }

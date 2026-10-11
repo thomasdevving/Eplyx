@@ -3,17 +3,18 @@
  "prompt": "~/squads",
  "cols": 100,
  "rows": 30,
+ "path": [
+  "/home/user/eplyx-rpc/target/release"
+ ],
  "steps": [
   {
-   "cmd": "eplyx governance squads verify --change-spec bound.json --rpc-url https://api.mainnet-beta.solana.com",
+   "cmd": "eplyx governance squads verify --change-spec bound.json",
    "expect": 0,
-   "timeout": 120,
+   "timeout": 180,
    "after": 1.8
   }
  ],
- "path": [
-  "/home/user/Eplyx/target/release"
- ],
  "home": "/home/demo",
- "title": "governance"
+ "title": "governance",
+ "env": {}
 }

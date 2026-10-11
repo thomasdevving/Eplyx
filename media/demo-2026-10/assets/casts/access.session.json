@@ -1,0 +1,32 @@
+{
+ "cwd": "/home/demo",
+ "prompt": "~",
+ "cols": 104,
+ "rows": 16,
+ "path": [
+  "/home/user/eplyx-rpc/target/release"
+ ],
+ "env": {
+  "EPLYX_URL": "http://127.0.0.1:4390"
+ },
+ "steps": [
+  {
+   "cmd": "eplyx access",
+   "answer": {
+    "wait": "Eplyx access password: ",
+    "file": "/srv/eplyx-demo/access-password"
+   },
+   "expect": 0,
+   "timeout": 60,
+   "after": 1
+  },
+  {
+   "cmd": "eplyx access --status",
+   "expect": 0,
+   "timeout": 60,
+   "after": 1.4
+  }
+ ],
+ "home": "/home/demo",
+ "title": "access"
+}

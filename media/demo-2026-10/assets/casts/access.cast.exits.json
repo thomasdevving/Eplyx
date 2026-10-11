@@ -1,0 +1,10 @@
+[
+ {
+  "cmd": "eplyx access",
+  "exit": 0
+ },
+ {
+  "cmd": "eplyx access --status",
+  "exit": 0
+ }
+]

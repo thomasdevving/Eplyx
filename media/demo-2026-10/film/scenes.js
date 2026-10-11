@@ -195,7 +195,7 @@ export const scenes = [
     } },
 
   // ── Channel 7: the platform team sets it up once ───────────────────────
-  { id: 'operator', dur: 8, channel: CH.ops, usecase: UC.share, bg: 'violet', caption: 'eplyx-server admin on the service volume · operator console at /projects',
+  { id: 'operator', dur: 7.5, channel: CH.ops, usecase: UC.share, bg: 'violet', caption: 'eplyx-server admin on the service volume · operator console at /projects',
     async build(root) {
       const T = await termWindow(root, { cast: 'operator', x: 70, y: 360, w: 930, cols: 100, rows: 21, title: 'operator · eplyx-server admin' });
       const B = await webWindow(root, { clip: 'console', x: 1040, y: 250, w: 820, url: '127.0.0.1:4173/projects' });
@@ -216,7 +216,7 @@ export const scenes = [
     } },
 
   // ── Channel 5: every pull request, checked by the hosted service ────────
-  { id: 'hosted', dur: 10, channel: CH.hosted, usecase: UC.upgrade, bg: 'violet', caption: 'scripts/eplyx-submit.sh against a local eplyx-server · PR comment composed by scripts/eplyx-pr-comment.py, nothing posted',
+  { id: 'hosted', dur: 9, channel: CH.hosted, usecase: UC.upgrade, bg: 'violet', caption: 'scripts/eplyx-submit.sh against a local eplyx-server · PR comment composed by scripts/eplyx-pr-comment.py, nothing posted',
     async build(root) {
       const T = await termWindow(root, { cast: 'hosted', x: 70, y: 330, w: 900, cols: 100, rows: 18, title: 'GitHub Actions step · eplyx-submit.sh' });
       const B = await webWindow(root, { clip: 'hosted', x: 1010, y: 150, w: 850, url: '127.0.0.1:4390/p/stake-pool-upgrades/runs/run_01M4B1V5…' });
@@ -242,8 +242,31 @@ export const scenes = [
       };
     } },
 
+  // ── Setup: no RPC of your own, one password ───────────────────────────
+  { id: 'access', dur: 6, channel: CH.cli, bg: 'ink', caption: 'Real terminal recording · eplyx access against a local eplyx-server standing in for eplyx.dev · the password is typed into a hidden prompt',
+    async build(root) {
+      const T = await termWindow(root, { cast: 'access', x: 70, y: 540, w: 1780, cols: 104, rows: 9, title: 'eplyx · ~' });
+      const sc = scenario(root, { x: 80, y: 120, w: 880, persona: 'Every developer', title: 'No RPC to set up.\n*One password.', size: 'sm',
+        does: 'Eplyx brings its own read-only connection to Solana mainnet. Unlock it once with your access password, and every command that reads the chain just works.', doesY: 320 });
+      const n = note(root, { x: 1120, y: 300, w: 700, title: 'Nothing else to configure.', body: 'No provider account, no API key, no SOLANA_RPC_URL. Bringing your own RPC still works and always wins.' });
+      const P = plan(T.term, .3, [{ type: .6, out: 1.5, hold: .9 }, { type: .8, out: .4, hold: 2 }]);
+      const a = P.at;
+      const m1 = mark(T.term, T.term.overlay, 'Access granted.', { tone: 'green' });
+      const m2 = mark(T.term, T.term.overlay, 'Unlocked:', { tone: 'violet' });
+      return {
+        prepare: lt => T.term.prepare(P.map(lt)),
+        update(lt) {
+          enter(T.win, lt, .1, { dy: 60 }); sc.update(lt, { at: 0 });
+          T.term.update();
+          m1(seg(lt, a[0].outEnd + .3, a[0].outEnd + .7)); m2(seg(lt, a[1].outEnd + .2, a[1].outEnd + .6));
+          slide(n, lt, a[0].outEnd + .6, { dx: 0, dy: 14 });
+        },
+        cues: () => [...typing(P.at), { t: a[0].outEnd + .3, type: 'pass' }],
+      };
+    } },
+
   // ── Scenario: a multisig signer, live ──────────────────────────────────
-  { id: 'governance', dur: 9, channel: CH.cli, usecase: UC.gov, bg: 'ink', caption: 'Live read of a real Squads V4 proposal through the public mainnet RPC · read-only · Eplyx never signs',
+  { id: 'governance', dur: 9, channel: CH.cli, usecase: UC.gov, bg: 'ink', caption: 'Live read of a real Squads V4 proposal through the Eplyx hosted RPC (local relay, public mainnet RPC behind it) · no --rpc-url · read-only, never signs',
     async build(root) {
       const T = await termWindow(root, { cast: 'governance', x: 70, y: 150, w: 1100, cols: 100, rows: 30, title: 'eplyx · ~/squads' });
       const lv = live(root, 1240, 118);
@@ -252,7 +275,7 @@ export const scenes = [
       const eq = h('div', { class: 'abs eqcard', style: { left: '1240px', top: '560px' } },
         h('div', {}, h('small', {}, 'Analysed build'), h('code', {}, 'b10c1c93…0761d')), h('b', {}, '='), h('div', {}, h('small', {}, 'Bytes in the proposal'), h('code', {}, 'b10c1c93…0761d')));
       root.append(eq);
-      const n = note(root, { x: 1240, y: 700, w: 610, title: 'Matched at slot 454,211,406.', body: 'Only another vault transaction can change those bytes, so re-verify right before you approve.' });
+      const n = note(root, { x: 1240, y: 700, w: 610, title: 'Matched at slot 455,689,745.', body: 'Only another vault transaction can change those bytes, so re-verify right before you approve.' });
       const P = plan(T.term, .3, [{ type: 1.2, out: .5, hold: 6 }]);
       const m1 = mark(T.term, T.term.overlay, 'Result:     matched', { tone: 'green' });
       const m2 = mark(T.term, T.term.overlay, 'Observed:', { tone: 'violet', span: 40 });
@@ -270,7 +293,7 @@ export const scenes = [
     } },
 
   // ── Scenario: a security team investigating, live ──────────────────────
-  { id: 'history', dur: 10, channel: CH.cli, usecase: UC.hist, bg: 'ink', caption: 'Live archive RPC · a real PYUSD TransferChecked and a real Token-2022 upgrade · the last replay uses a constructed regression build',
+  { id: 'history', dur: 10, channel: CH.cli, usecase: UC.hist, bg: 'ink', caption: 'Live archive reads through a separately configured archive provider (exact-slot history needs one behind Eplyx) · real PYUSD transfer and Token-2022 upgrade · last replay uses a constructed build',
     async build(root) {
       const T = await termWindow(root, { cast: 'history', x: 70, y: 310, w: 1100, cols: 100, rows: 26, title: 'eplyx · ~/history' });
       const tag = h('div', { class: 'abs persona', style: { left: '80px', top: '118px' } }, h('b', {}, 'Security team')); root.append(tag);
@@ -368,7 +391,7 @@ export const scenes = [
     } },
 
   // ── Scenario + Channel 6: current state, live, in the cloud workspace ──
-  { id: 'current', dur: 10, channel: CH.cloud, usecase: UC.cur, bg: 'violet', caption: 'Live mainnet observation of PYUSD for one public owner (public RPC) · the checks run offline in the local VM',
+  { id: 'current', dur: 9.5, channel: CH.cloud, usecase: UC.cur, bg: 'violet', caption: 'Live mainnet observation of PYUSD for one public owner, read by the Eplyx service · the checks run offline in the local VM',
     async build(root) {
       const A = await webWindow(root, { clip: 'current', x: 80, y: 150, w: 1300, url: '127.0.0.1:4390/p/token-transitions/analyse' });
       const B = await webWindow(root, { clip: 'current2', x: 80, y: 150, w: 1300, url: '127.0.0.1:4390/p/token-transitions/analyse?observation=obs_0c8d…' });
@@ -484,7 +507,7 @@ export const scenes = [
     } },
 
   // ── Honest boundaries ───────────────────────────────────────────────────
-  { id: 'boundaries', dur: 7, bg: 'ink',
+  { id: 'boundaries', dur: 6, bg: 'ink',
     async build(root) {
       const tb = titleBlock(root, { x: 80, y: 130, w: 1700, kicker: 'Honest about coverage', title: 'What a result claims, *and what it does not.', size: 'sm' });
       const items = [['Deep coverage today', 'SPL Stake Pool deposits and withdrawals and Token-2022 transfers, plus narrow Kamino and Memo paths.'],
@@ -496,7 +519,7 @@ export const scenes = [
     } },
 
   // ── Vision ──────────────────────────────────────────────────────────────
-  { id: 'vision', dur: 6, hud: false, bg: 'violet',
+  { id: 'vision', dur: 5.5, hud: false, bg: 'violet',
     async build(root) {
       const l1 = h('div', { class: 'abs hook', style: { top: '400px' } }); const w1 = splitWords(l1, 'Before an on-chain change reaches users,', 'w');
       const l2 = h('div', { class: 'abs hook', style: { top: '492px' } }); const w2 = splitWords(l2, 'simulate its real consequences first.', 'w');
@@ -506,7 +529,7 @@ export const scenes = [
     } },
 
   // ── End card ────────────────────────────────────────────────────────────
-  { id: 'end', dur: 5, hud: false, bg: 'violet',
+  { id: 'end', dur: 4.5, hud: false, bg: 'violet',
     async build(root) {
       const mk = h('div', { class: 'abs endmark', html: window.markSVG('endmark__svg') }); root.append(mk);
       const word = h('div', { class: 'abs endword' }, 'Eplyx'); root.append(word);

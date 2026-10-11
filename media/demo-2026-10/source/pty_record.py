@@ -160,6 +160,28 @@ def main():
         pump(0.35)
         events.append([now(), "m", "run"])
         os.write(fd, b"\r")
+        if step.get("answer"):
+            # Answer a hidden prompt (a password) the way a person would: wait
+            # for it, then type the secret read from a file outside the
+            # repository. The program turns echo off first, so the secret is
+            # never in the output; it is never in the spec or the cast either.
+            ans = step["answer"]
+            pat = re.compile(ans["wait"])
+            end = time.monotonic() + 30
+            while not pat.search("".join(e[2] for e in events if e[1] == "o")[-500:]):
+                if time.monotonic() > end:
+                    raise SystemExit(f"prompt {ans['wait']!r} never appeared")
+                pump(0.1)
+            pump(ans.get("delay", 0.7))
+            secret = open(ans["file"]).read().strip()
+            events.append([now(), "m", "answer"])
+            for ch in secret:
+                os.write(fd, ch.encode())
+                pump((0.05 + rng.random() * 0.04) / speed)
+            pump(0.3)
+            os.write(fd, b"\r")
+            if secret in "".join(e[2] for e in events if e[1] == "o"):
+                raise SystemExit("the secret was echoed; refusing to keep this recording")
         if step.get("hold"):
             # A long-running command (a server): record its output for `hold`
             # seconds, then stop it with Ctrl-C as a user would.
