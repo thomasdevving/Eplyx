@@ -77,9 +77,11 @@ operation. Existing API-only deployments can omit identity and observation setti
 | `EPLYX_DATABASE_URL` | Optional private Postgres identity connection |
 | `EPLYX_PUBLIC_URL` | Canonical service origin for browser/device flows |
 | `EPLYX_SIGNUP_CODE` | Optional invitation gate for account creation |
-| `EPLYX_OBSERVATION_RPC_URL` | Dedicated bounded read-only current-state provider |
+| `EPLYX_RPC_URL` | The one Solana provider the service holds: served to CLIs as the [hosted RPC](hosted-rpc.md), and the default for the two below |
+| `EPLYX_ACCESS_PASSWORD` | Password that unlocks the hosted RPC (`eplyx access`); the relay is off without it |
+| `EPLYX_OBSERVATION_RPC_URL` | Dedicated bounded read-only current-state provider (defaults to `EPLYX_RPC_URL`) |
 | `EPLYX_MIGRATION_CANDIDATE` | Optional path to the exact registered reference SBF |
-| `EPLYX_GOVERNANCE_RPC_URL` | Separate existing governance observation provider |
+| `EPLYX_GOVERNANCE_RPC_URL` | Separate existing governance observation provider (defaults to `EPLYX_RPC_URL`) |
 
 The Postgres connector uses a private transport (`NoTls`); place it on a trusted
 private network or behind an appropriately protected tunnel. Browser traffic needs

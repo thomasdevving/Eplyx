@@ -5,6 +5,11 @@
 //! elsewhere, never on the path of a pull request. Governance and current-state observation use separate optional read-only
 //! providers in the parent service. Every analysis worker receives a cleared
 //! environment and retained bytes; no run reads either provider.
+//!
+//! `EPLYX_RPC_URL` is the one Solana provider an operator connects: it serves
+//! developers' CLIs through the password-gated hosted RPC (`/v1/rpc`, with
+//! `EPLYX_ACCESS_PASSWORD`), and is the default for governance and observation
+//! when their dedicated variables are unset.
 
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use std::path::PathBuf;
@@ -46,10 +51,29 @@ pub struct Config {
     pub max_expectation_bytes: usize,
     pub max_bundle_bytes: usize,
     pub max_concurrent_runs: usize,
-    /// JSON-RPC endpoint for governance verification (`EPLYX_GOVERNANCE_RPC_URL`).
-    /// Absent by default, which turns that one endpoint off. Transport
-    /// configuration only: never written to a record, report or response.
+    /// JSON-RPC endpoint for governance verification (`EPLYX_GOVERNANCE_RPC_URL`,
+    /// else `EPLYX_RPC_URL`). Absent by default, which turns that one endpoint
+    /// off. Transport configuration only: never written to a record, report or
+    /// response.
     pub governance_rpc_url: Option<String>,
+    /// The hosted Solana RPC developers use instead of a provider of their
+    /// own: `EPLYX_RPC_URL` behind `EPLYX_ACCESS_PASSWORD`. Present only when
+    /// both are set; otherwise `/v1/rpc` is off, never open.
+    pub hosted_rpc: Option<HostedRpc>,
+}
+
+#[derive(Clone)]
+pub struct HostedRpc {
+    /// The operator's provider, possibly carrying its API key.
+    pub upstream: String,
+    /// The access password developers unlock it with.
+    pub password: String,
+}
+
+impl std::fmt::Debug for HostedRpc {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("HostedRpc(redacted)")
+    }
 }
 
 fn var<T: std::str::FromStr>(name: &str, fallback: T) -> Result<T>
@@ -87,6 +111,31 @@ fn bind_address() -> Result<SocketAddr> {
     }
 }
 
+fn nonempty(name: &str) -> Option<String> {
+    std::env::var(name)
+        .ok()
+        .map(|value| value.trim().to_string())
+        .filter(|value| !value.is_empty())
+}
+
+/// `EPLYX_RPC_URL` and `EPLYX_ACCESS_PASSWORD`, validated without ever
+/// printing either.
+fn hosted_rpc() -> Result<Option<HostedRpc>> {
+    let upstream = nonempty("EPLYX_RPC_URL");
+    if let Some(url) = &upstream {
+        eplyx_engine::ingest::rpc::HttpRpc::new(url.clone())
+            .map_err(|_| anyhow::anyhow!("EPLYX_RPC_URL must be an http(s) URL"))?;
+    }
+    let password = nonempty("EPLYX_ACCESS_PASSWORD");
+    if let Some(password) = &password {
+        eplyx_engine::cloud::access::validate_password(password)
+            .context("EPLYX_ACCESS_PASSWORD")?;
+    }
+    Ok(upstream
+        .zip(password)
+        .map(|(upstream, password)| HostedRpc { upstream, password }))
+}
+
 impl Config {
     pub fn from_env() -> Result<Self> {
         Ok(Self {
@@ -113,10 +162,9 @@ impl Config {
             )?,
             max_bundle_bytes: var("EPLYX_MAX_BUNDLE_BYTES", DEFAULT_MAX_BUNDLE_BYTES)?,
             max_concurrent_runs: var("EPLYX_MAX_CONCURRENT_RUNS", DEFAULT_MAX_CONCURRENT_RUNS)?,
-            governance_rpc_url: std::env::var("EPLYX_GOVERNANCE_RPC_URL")
-                .ok()
-                .map(|url| url.trim().to_string())
-                .filter(|url| !url.is_empty()),
+            governance_rpc_url: nonempty("EPLYX_GOVERNANCE_RPC_URL")
+                .or_else(|| nonempty("EPLYX_RPC_URL")),
+            hosted_rpc: hosted_rpc()?,
         })
     }
 }

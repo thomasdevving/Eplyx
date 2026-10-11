@@ -178,10 +178,9 @@ impl Request {
         }
     }
 }
+/// SOLANA_RPC_URL, else the Eplyx hosted RPC.
 fn provider() -> Result<eplyx_engine::ingest::rpc::HttpRpc> {
-    eplyx_engine::ingest::rpc::HttpRpc::new(
-        std::env::var("SOLANA_RPC_URL").context("SOLANA_RPC_URL is required for capture")?,
-    )
+    eplyx_engine::cloud::access::resolve(None, &["SOLANA_RPC_URL"])?.transport()
 }
 fn read_text(input: &std::path::Path) -> Result<String> {
     Ok(String::from_utf8(artifact::read(input)?)?)
