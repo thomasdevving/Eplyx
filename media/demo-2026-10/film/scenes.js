@@ -47,42 +47,6 @@ export const scenes = [
       };
     } },
 
-  // ── How it works ────────────────────────────────────────────────────────
-  { id: 'how', dur: 16, bg: 'ink', caption: 'Example from the film: the SPL Stake Pool program, 10 retained mainnet transactions and a constructed regression build',
-    async build(root) {
-      const tb = titleBlock(root, { x: 110, y: 120, w: 1700, kicker: 'How Eplyx works', title: 'A simulation of your protocol, *rebuilt from real mainnet data.', size: 'sm' });
-      const colA = h('div', { class: 'hw-col', style: { left: '110px' } });
-      colA.innerHTML = `<div class="hw-head"><b>1</b>Real on-chain data</div>` + [['Transactions', '10 real mainnet transactions'], ['Accounts', 'exact state before and after'], ['Programs', 'the binary that actually ran'], ['Dependencies', 'pinned to the version live at that slot']].map(([a, b]) => `<div class="hw-row">${a}<span>${b}</span></div>`).join('');
-      const colB = h('div', { class: 'hw-col', style: { left: '700px' } });
-      colB.innerHTML = `<div class="hw-head"><b>2</b>Rebuilt in isolated Solana VMs</div>
-        <div class="hw-vm"><small>Today</small><strong>The program that ran on mainnet</strong><code>ec2dfefa…d7e1</code><div class="tx"><i>DepositSol</i><i>WithdrawSol ×9</i></div></div>
-        <div class="hw-vm hw-vm--b"><small>Proposed</small><strong>Your change</strong><code>3193eabd…b099</code><div class="tx"><i>DepositSol</i><i>WithdrawSol ×9</i></div></div>
-        <div class="hw-head" style="margin-top:6px"><b>3</b>The same user actions, replayed in both</div>`;
-      const colC = h('div', { class: 'hw-col', style: { left: '1330px' } });
-      colC.innerHTML = `<div class="hw-head"><b>4</b>What actually changes</div>
-        <div class="hw-res">Withdrawals that used to succeed <em>now revert</em><span>9 of 9 replayed withdrawals</span></div>
-        <div class="hw-res">The depositor receives <em>1 bp fewer</em> pool tokens<span>measured on the real deposit</span></div>
-        <div class="hw-res">Anything else that differs<span>named, or flagged as unexplained</span></div>`;
-      const a1 = h('div', { class: 'hw-arrow', style: { left: '610px' } }), a2 = h('div', { class: 'hw-arrow', style: { left: '1245px' } });
-      const foot = h('div', { class: 'abs hw-foot', html: '<b>5 · Reproducible.</b> Every input is pinned by hash, so anyone can rerun the analysis offline and get the same result.' });
-      root.append(colA, a1, colB, a2, colC, foot);
-      const rowsA = [...colA.children], vms = [...colB.querySelectorAll('.hw-vm')], txs = [...colB.querySelectorAll('.tx i')], head3 = colB.lastElementChild, headB = colB.firstElementChild, rowsC = [...colC.children];
-      return {
-        update(lt) {
-          tb.update(lt, { at: .1 });
-          rowsA.forEach((el, i) => slide(el, lt, .8 + i * .22, { dx: 0, dy: 14 }));
-          put(a1, { o: seg(lt, 3.4, 3.8), sx: seg(lt, 3.4, 3.9, ease.out), origin: '0 50%' });
-          slide(headB, lt, 3.7, { dx: 0, dy: 12 }); vms.forEach((el, i) => slide(el, lt, 4.0 + i * .3, { dx: 0, dy: 18 }));
-          slide(head3, lt, 6.4, { dx: 0, dy: 10 });
-          txs.forEach((el, i) => { const t0 = 6.8 + (i % 2) * .25; put(el, { o: seg(lt, t0, t0 + .3), x: (1 - seg(lt, t0, t0 + .6, ease.outQuint)) * -30 }); });
-          put(a2, { o: seg(lt, 8.8, 9.2), sx: seg(lt, 8.8, 9.3, ease.out), origin: '0 50%' });
-          rowsC.forEach((el, i) => slide(el, lt, 9.2 + i * .55, { dx: 0, dy: 14 }));
-          put(foot, { o: seg(lt, 12.4, 13), y: (1 - seg(lt, 12.4, 13.2, ease.outQuint)) * 12 });
-        },
-        cues: () => [.8, 1.02, 1.24, 1.46, 4.0, 4.3, 6.8, 7.05, 9.2, 9.75, 10.3].map(t => ({ t, type: 'tick' })).concat([{ t: 12.4, type: 'pass' }]),
-      };
-    } },
-
   // ── Who it is for ───────────────────────────────────────────────────────
   { id: 'who', dur: 6, bg: 'violet',
     async build(root) {
@@ -95,6 +59,34 @@ export const scenes = [
       ];
       const cols = people.map(([icon, who, what, routes], i) => { const el = h('div', { class: 'who', style: { left: 110 + i * 430 + 'px' }, html: `${ICON[icon]}<strong>${who}</strong><p>${what}</p><em>${routes}</em>` }); root.append(el); return el; });
       return { update(lt) { tb.update(lt, { at: 0 }); cols.forEach((el, i) => slide(el, lt, .6 + i * .18, { dx: 0, dy: 24 })); }, cues: () => people.map((_, i) => ({ t: .6 + i * .18, type: 'tick' })) };
+    } },
+
+  // ── How it works ────────────────────────────────────────────────────────
+  { id: 'how', dur: 8, bg: 'ink', caption: 'The example that follows: the SPL Stake Pool program, 10 retained mainnet transactions and a constructed regression build',
+    async build(root) {
+      const tb = titleBlock(root, { x: 110, y: 130, w: 1700, kicker: 'How Eplyx works', title: 'Your change, replayed against *real mainnet usage.', size: 'sm' });
+      const steps = [
+        ['1', 'Real mainnet usage', 'Real transactions and the exact account state around them.'],
+        ['2', 'Today\u2019s program and your change', 'Rebuilt side by side in isolated Solana VMs.'],
+        ['3', 'What changes for users', 'The same actions replayed in both, every difference measured.'],
+      ].map(([n, k, v], i) => { const el = h('div', { class: 'who', style: { left: 110 + i * 580 + 'px', top: '360px', width: '520px' }, html: `<em class="hw-n">${n}</em><strong>${k}</strong><p>${v}</p>` }); root.append(el); return el; });
+      const demo = h('div', { class: 'abs hw-demo' });
+      demo.append(h('div', { class: 'live' }, h('i'), 'LIVE PRODUCT DEMO'));
+      const line = h('div', { class: 'hw-demo__line' }); const words = splitWords(line, 'What follows is the live product.', 'w');
+      words.slice(3).forEach(w => w.classList.add('grad'));
+      demo.append(line, h('p', {}, 'Every terminal and browser window is a real recording of Eplyx: the CLI, the website and the cloud workspace. No mock-ups.'));
+      root.append(demo);
+      const sub = demo.lastElementChild, tag = demo.firstElementChild;
+      return {
+        update(lt) {
+          tb.update(lt, { at: .05 });
+          steps.forEach((el, i) => slide(el, lt, .55 + i * .3, { dx: 0, dy: 20 }));
+          put(tag, { o: seg(lt, 3.0, 3.4), y: (1 - seg(lt, 3.0, 3.6, ease.outQuint)) * 10 });
+          riseWords(words, lt, 3.2, { stagger: .05 });
+          put(sub, { o: seg(lt, 4.1, 4.6), y: (1 - seg(lt, 4.1, 4.8, ease.outQuint)) * 10 });
+        },
+        cues: () => [.55, .85, 1.15].map(t => ({ t, type: 'tick' })).concat([{ t: 3.0, type: 'whoosh' }]),
+      };
     } },
 
   // ── Channel 1: the public website ───────────────────────────────────────

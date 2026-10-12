@@ -227,3 +227,10 @@ body { font-family: var(--body); color: var(--paper); -webkit-font-smoothing: an
 #ui { position: fixed; left: 0; right: 0; bottom: 0; display: flex; gap: 12px; align-items: center; padding: 10px 16px; background: rgba(10, 5, 20, .9); color: #fff; font: 13px var(--body); z-index: 10; }
 #ui input { flex: 1; }
 .export #ui { display: none; }
+
+/* How it works: the hand-over into the live product */
+.who .hw-n { display: block; margin: 0 0 14px; font: 700 15px/1 var(--mono); font-style: normal; letter-spacing: 0; color: var(--lilac); }
+.hw-demo { left: 110px; top: 690px; width: 1700px; }
+.hw-demo .live { margin-bottom: 22px; }
+.hw-demo__line { font: 650 44px/1.12 var(--head); letter-spacing: -.025em; color: #fff; }
+.hw-demo p { margin: 14px 0 0; font: 400 22px/1.45 var(--body); color: rgba(236, 230, 247, .78); }

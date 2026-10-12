@@ -1,11 +1,13 @@
 # Eplyx product demo film (October 2026)
 
-**[output/eplyx-demo.mp4](output/eplyx-demo.mp4)** · 2:59 · 1920 × 1080 · 30 fps · H.264 + AAC stereo · −14 LUFS
+**[output/eplyx-demo.mp4](output/eplyx-demo.mp4)** · 2:51 · 1920 × 1080 · 30 fps · H.264 + AAC stereo · −14 LUFS
 
-A three-minute film of the live product for YouTube, Loom or Vimeo. It explains
-the problem, what Eplyx is and how it works, who it is for, and then follows one
-person per scenario: who they are, what situation they are in, what Eplyx does
-for them and what they get back. Together the scenarios cover all eight channels
+A demo of the live product for YouTube, Loom or Vimeo (under three minutes):
+not a slide deck and not a code walkthrough. Twenty-four seconds set up the
+problem, who it is for and how Eplyx works, ending on an explicit hand-over:
+what follows is the live product. From there the film follows one person per
+scenario: who they are, what situation they are in, what Eplyx does for them
+and what they get back. Together the scenarios cover all eight channels
 and all ten use cases. Every terminal and browser image is a recording of the
 real binaries and services at commit `b53734b`, except the hosted-RPC access step
 and the Squads verification, which were recorded on 12 October 2026 with a CLI
@@ -17,53 +19,53 @@ against the live eplyx.dev.
 | Time | Who | Situation | Channel | Use case |
 | --- | --- | --- | --- | --- |
 | 0:00 | | You know what you changed in the code, but not what it will do to real users | | |
-| 0:10 | | How Eplyx works: a simulation rebuilt from real mainnet data, old and new side by side | | |
-| 0:26 | | Who it is for | | |
-| 0:32 | Anyone | Start with your question on the website, or open a saved report | Public website | |
-| 0:39 | Protocol developer | You are about to ship a new build | Local CLI | Program upgrade |
-| 0:53 | Protocol developer | Some changes are on purpose | Local CLI | Declared changes |
-| 1:00 | Protocol developer | In CI, the exit code is the gate | CI gate, offline | Program upgrade |
-| 1:05 | Platform team | Set it up once; CI can never move the baseline | Operator console | Share and manage |
-| 1:12 | Protocol developer | Every pull request, checked automatically | CI gate, hosted | Program upgrade |
-| 1:21 | Every developer | No RPC to set up: one password unlocks the Eplyx hosted RPC | Local CLI | |
-| 1:27 | Multisig signer | You are asked to approve a program upgrade (**live**, through the hosted RPC) | Local CLI | Governance binding |
-| 1:36 | Security team | Something changed on mainnet: what ran, and can you replay it (**live**) | Local CLI | Historical research |
-| 1:46 | Token issuer | You are moving holders to a new token | Local CLI | Token migration |
-| 1:56 | Token issuer | Review the rehearsal in the local dashboard | Local dashboard | Token migration |
-| 2:03 | Risk team | A deadline moves: what does it mean for holders | Local CLI | Lifecycle change |
-| 2:09 | Holder or market maker | Can this account still move today (**live**) | Cloud workspace | Current state |
-| 2:19 | Protocol team | You want to raise the deposit fee to 1% | Local CLI | Fee change |
-| 2:25 | Protocol team | And new code ships at the same time | Local CLI | Upgrade and fee together |
-| 2:31 | The whole team | Share local results in one workspace | Cloud workspace | Share and manage |
-| 2:38 | Your tooling | Everything is also an API | HTTP API | Share and manage |
-| 2:43 | | What a result claims, and what it does not | | |
-| 2:49 | | Before an on-chain change reaches users, simulate its real consequences first | | |
+| 0:10 | | Who it is for | | |
+| 0:16 | | How Eplyx works, then the hand-over: what follows is the live product | | |
+| 0:24 | Anyone | Start with your question on the website, or open a saved report | Public website | |
+| 0:31 | Protocol developer | You are about to ship a new build | Local CLI | Program upgrade |
+| 0:45 | Protocol developer | Some changes are on purpose | Local CLI | Declared changes |
+| 0:52 | Protocol developer | In CI, the exit code is the gate | CI gate, offline | Program upgrade |
+| 0:57 | Platform team | Set it up once; CI can never move the baseline | Operator console | Share and manage |
+| 1:05 | Protocol developer | Every pull request, checked automatically | CI gate, hosted | Program upgrade |
+| 1:14 | Every developer | No RPC to set up: one password unlocks the Eplyx hosted RPC | Local CLI | |
+| 1:20 | Multisig signer | You are asked to approve a program upgrade (**live**, through the hosted RPC) | Local CLI | Governance binding |
+| 1:29 | Security team | Something changed on mainnet: what ran, and can you replay it (**live**) | Local CLI | Historical research |
+| 1:39 | Token issuer | You are moving holders to a new token | Local CLI | Token migration |
+| 1:49 | Token issuer | Review the rehearsal in the local dashboard | Local dashboard | Token migration |
+| 1:56 | Risk team | A deadline moves: what does it mean for holders | Local CLI | Lifecycle change |
+| 2:02 | Holder or market maker | Can this account still move today (**live**) | Cloud workspace | Current state |
+| 2:11 | Protocol team | You want to raise the deposit fee to 1% | Local CLI | Fee change |
+| 2:18 | Protocol team | And new code ships at the same time | Local CLI | Upgrade and fee together |
+| 2:23 | The whole team | Share local results in one workspace | Cloud workspace | Share and manage |
+| 2:30 | Your tooling | Everything is also an API | HTTP API | Share and manage |
+| 2:35 | | What a result claims, and what it does not | | |
+| 2:41 | | Before an on-chain change reaches users, simulate its real consequences first | | |
 
 YouTube chapter list (paste into the description):
 
 ```text
 0:00 The problem
-0:10 How Eplyx works
-0:26 Who it is for
-0:32 Try it in the browser
-0:39 Checking a new program build
-0:53 Declaring intended changes
-1:00 The CI gate
-1:05 Setting it up once
-1:12 Every pull request, checked
-1:21 No RPC to set up, one password
-1:27 Approving a Squads upgrade (live)
-1:36 Replaying mainnet history (live)
-1:46 Rehearsing a token migration
-1:56 The local dashboard
-2:03 A lifecycle change
-2:09 Can this account still move? (live)
-2:19 A fee change
-2:25 Code and fee together
-2:31 Sharing results
-2:38 The API
-2:43 What a result claims
-2:49 The vision
+0:10 Who it is for
+0:16 How Eplyx works
+0:24 Try it in the browser
+0:31 Checking a new program build
+0:45 Declaring intended changes
+0:52 The CI gate
+0:57 Setting it up once
+1:05 Every pull request, checked
+1:14 No RPC to set up, one password
+1:20 Approving a Squads upgrade (live)
+1:29 Replaying mainnet history (live)
+1:39 Rehearsing a token migration
+1:49 The local dashboard
+1:56 A lifecycle change
+2:02 Can this account still move? (live)
+2:11 A fee change
+2:18 Code and fee together
+2:23 Sharing results
+2:30 The API
+2:35 What a result claims
+2:41 The vision
 ```
 
 ## What is real
