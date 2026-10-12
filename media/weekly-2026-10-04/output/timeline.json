@@ -1,0 +1,213 @@
+{
+ "duration": 60,
+ "scenes": [
+  {
+   "id": "intro",
+   "at": 0,
+   "end": 5.5
+  },
+  {
+   "id": "live",
+   "at": 5.5,
+   "end": 14.5
+  },
+  {
+   "id": "access",
+   "at": 14.5,
+   "end": 22.5
+  },
+  {
+   "id": "rollout",
+   "at": 22.5,
+   "end": 36.5
+  },
+  {
+   "id": "ci",
+   "at": 36.5,
+   "end": 47
+  },
+  {
+   "id": "hardening",
+   "at": 47,
+   "end": 55
+  },
+  {
+   "id": "outro",
+   "at": 55,
+   "end": 60
+  }
+ ],
+ "cues": [
+  {
+   "t": 0,
+   "type": "scene",
+   "id": "intro"
+  },
+  {
+   "t": 0.5,
+   "type": "typing",
+   "dur": 0.8
+  },
+  {
+   "t": 1.9,
+   "type": "tick"
+  },
+  {
+   "t": 2.04,
+   "type": "tick"
+  },
+  {
+   "t": 2.1799999999999997,
+   "type": "tick"
+  },
+  {
+   "t": 2.32,
+   "type": "tick"
+  },
+  {
+   "t": 2.46,
+   "type": "tick"
+  },
+  {
+   "t": 5.5,
+   "type": "scene",
+   "id": "live"
+  },
+  {
+   "t": 5.7,
+   "type": "whoosh"
+  },
+  {
+   "t": 6.4,
+   "type": "tick"
+  },
+  {
+   "t": 6.5600000000000005,
+   "type": "tick"
+  },
+  {
+   "t": 6.72,
+   "type": "tick"
+  },
+  {
+   "t": 14.5,
+   "type": "scene",
+   "id": "access"
+  },
+  {
+   "t": 14.9,
+   "type": "typing",
+   "dur": 0.6
+  },
+  {
+   "t": 17.3,
+   "type": "pass"
+  },
+  {
+   "t": 18.45,
+   "type": "typing",
+   "dur": 0.7999999999999998
+  },
+  {
+   "t": 22.5,
+   "type": "scene",
+   "id": "rollout"
+  },
+  {
+   "t": 22.9,
+   "type": "typing",
+   "dur": 1.4
+  },
+  {
+   "t": 25.55,
+   "type": "typing",
+   "dur": 1.2000000000000002
+  },
+  {
+   "t": 27.75,
+   "type": "fail"
+  },
+  {
+   "t": 28.35,
+   "type": "pass"
+  },
+  {
+   "t": 30.1,
+   "type": "typing",
+   "dur": 0.9000000000000004
+  },
+  {
+   "t": 36.5,
+   "type": "scene",
+   "id": "ci"
+  },
+  {
+   "t": 37,
+   "type": "typing",
+   "dur": 1
+  },
+  {
+   "t": 37.3,
+   "type": "tick"
+  },
+  {
+   "t": 37.5,
+   "type": "tick"
+  },
+  {
+   "t": 37.7,
+   "type": "tick"
+  },
+  {
+   "t": 37.9,
+   "type": "tick"
+  },
+  {
+   "t": 39.9,
+   "type": "typing",
+   "dur": 1.0000000000000004
+  },
+  {
+   "t": 47,
+   "type": "scene",
+   "id": "hardening"
+  },
+  {
+   "t": 47.3,
+   "type": "typing",
+   "dur": 0.5999999999999999
+  },
+  {
+   "t": 47.7,
+   "type": "tick"
+  },
+  {
+   "t": 47.9,
+   "type": "tick"
+  },
+  {
+   "t": 48.1,
+   "type": "tick"
+  },
+  {
+   "t": 49.75,
+   "type": "typing",
+   "dur": 1.1
+  },
+  {
+   "t": 55,
+   "type": "scene",
+   "id": "outro"
+  },
+  {
+   "t": 55.1,
+   "type": "boom"
+  }
+ ],
+ "music": {
+  "groove": "live",
+  "break": "outro",
+  "end": "outro",
+  "clap": "access"
+ }
+}

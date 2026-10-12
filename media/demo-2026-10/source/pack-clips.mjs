@@ -10,9 +10,10 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 const here = dirname(fileURLToPath(import.meta.url));
-const store = join(here, '../assets/web');
+// EPLYX_MEDIA / EPLYX_PACK_CLIPS: another film folder and its clip names.
+const store = join(process.env.EPLYX_MEDIA || join(here, '..'), 'assets/web');
 const [, , mode, dir] = process.argv;
-const CLIPS = ['hero-full', 'start', 'demo', 'console', 'hosted', 'dashboard', 'dashboard2', 'dashboard3', 'current', 'current2', 'device', 'workspace'];
+const CLIPS = process.env.EPLYX_PACK_CLIPS ? process.env.EPLYX_PACK_CLIPS.split(',') : ['hero-full', 'start', 'demo', 'console', 'hosted', 'dashboard', 'dashboard2', 'dashboard3', 'current', 'current2', 'device', 'workspace'];
 const run = (cmd, args) => { const r = spawnSync(cmd, args, { stdio: ['ignore', 'inherit', 'inherit'] }); if (r.status !== 0) throw new Error(cmd + ' failed'); };
 if (mode === 'pack') {
   mkdirSync(store, { recursive: true });

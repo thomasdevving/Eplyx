@@ -1,0 +1,10 @@
+[
+ {
+  "cmd": "ls server/src/api/",
+  "exit": 0
+ },
+ {
+  "cmd": "git show --stat=90 --format='%h %s' 9c61e32 -- server/src/api.rs engine/src/main.rs",
+  "exit": 0
+ }
+]

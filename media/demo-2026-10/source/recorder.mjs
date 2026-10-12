@@ -9,16 +9,18 @@ import { join } from 'node:path';
 
 export const CHROME = process.env.EPLYX_CHROME || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 
-export async function launch() {
+// `opts` passes through to Playwright (for example a proxy for live pages).
+export async function launch(opts = {}) {
   return chromium.launch({
     executablePath: CHROME,
     args: ['--enable-unsafe-swiftshader', '--use-angle=swiftshader', '--disable-gpu-vsync', '--hide-scrollbars', '--disable-background-networking', '--disable-component-update', '--no-default-browser-check'],
+    ...opts,
   });
 }
 
 export class Clip {
-  constructor(browser, dir, name, { width = 1440, height = 900, scale = 1.5, storageState, quality = 90, extraContext = {} } = {}) {
-    Object.assign(this, { browser, dir, name, width, height, scale, storageState, quality, extraContext });
+  constructor(browser, dir, name, { width = 1440, height = 900, scale = 1.5, storageState, quality = 90, extraContext = {}, hosts = ['127.0.0.1', 'localhost'] } = {}) {
+    Object.assign(this, { browser, dir, name, width, height, scale, storageState, quality, extraContext, hosts });
     this.frames = [];
     this.events = [];
     this.pointer = { x: width * 0.72, y: height * 0.78 };
@@ -33,10 +35,13 @@ export class Clip {
       ...(this.storageState ? { storageState: this.storageState } : {}),
       ...this.extraContext,
     });
-    // Only loopback services are part of the demo; anything else is refused.
+    // Only the named hosts are part of a clip (loopback services by default);
+    // anything else is refused and logged.
     await this.context.route('**/*', r => {
       const host = new URL(r.request().url()).hostname;
-      return ['127.0.0.1', 'localhost'].includes(host) ? r.continue() : r.abort();
+      if (this.hosts.includes(host)) return r.continue();
+      console.log(`[${this.name}] refused ${host}`);
+      return r.abort();
     });
     this.page = await this.context.newPage();
     this.page.setDefaultTimeout(60000);

@@ -1,0 +1,14 @@
+[
+ {
+  "cmd": "eplyx rollout analyse --upgrade proposals/rollout-upgrade.json --parameter proposals/deposit-fee-1pct.json --bundle .eplyx/bundle --record-id mainnet-spl-stake-pool-151010f709e113e7 --candidate target/deploy/fixture_stake_pool_rollout_v2.so --out rollout > rollout.json",
+  "exit": 0
+ },
+ {
+  "cmd": "jq -r '.scenarios[] | \"\\(.name + \" \" * (17 - (.name | length)))\\(.steps | map(\"\\(.step) \\(.outcome)\") | join(\"  \u2192  \"))\"' rollout.json",
+  "exit": 0
+ },
+ {
+  "cmd": "grep -E '^(Status|Under)' rollout/report.md | fold -s -w 118",
+  "exit": 0
+ }
+]

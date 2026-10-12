@@ -4,14 +4,19 @@ timeline (output/timeline.json): scene starts, typing intervals, pass/fail
 verdicts, transitions.
 
     python3 score.py  ->  ../output/score.wav (48 kHz stereo)
+
+EPLYX_MEDIA points at another film folder with the same output/ layout (a
+weekly update); its timeline may name the scenes the music follows under
+"music" (groove, break, end, clap).
 """
 import json
+import os
 import wave
 from pathlib import Path
 
 import numpy as np
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(os.environ.get("EPLYX_MEDIA") or Path(__file__).resolve().parents[1])
 timeline = json.loads((ROOT / "output/timeline.json").read_text())
 DUR = timeline["duration"]
 SR = 48000
@@ -74,9 +79,10 @@ def lp_fast(x, cutoff):
 scenes = timeline["scenes"]
 cues = timeline["cues"]
 start_of = {s["id"]: s["at"] for s in scenes}
-GROOVE_IN = start_of["who"]
-BREAK_IN = start_of["boundaries"]
-END_IN = start_of["end"]
+music = {"groove": "who", "break": "boundaries", "end": "end", "clap": "website", **(timeline.get("music") or {})}
+GROOVE_IN = start_of[music["groove"]]
+BREAK_IN = start_of[music["break"]]
+END_IN = start_of[music["end"]]
 SOFT_IN = 4.4
 
 # ── harmony: Dm9 – Bbmaj7 – F/A – Csus, two bars each ───────────────────────
@@ -157,7 +163,7 @@ while beat_t < DUR:
     if in_groove:
         for s16 in range(4):
             hat(beat_t + s16 * BEAT / 4, 1.0 if s16 == 2 else 0.55, open_=(s16 == 2 and b % 4 == 3))
-        if b % 2 == 1 and beat_t > start_of["website"]:
+        if b % 2 == 1 and beat_t > start_of[music["clap"]]:
             clap(beat_t)
     if outro and b % 4 == 0 and beat_t < END_IN + 1:
         kick(beat_t, 1.0)

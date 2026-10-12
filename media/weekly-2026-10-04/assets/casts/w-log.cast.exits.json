@@ -1,0 +1,6 @@
+[
+ {
+  "cmd": "git log --oneline --no-decorate --no-merges --since=2026-10-04 origin/main",
+  "exit": 0
+ }
+]

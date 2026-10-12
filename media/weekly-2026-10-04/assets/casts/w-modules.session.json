@@ -1,0 +1,23 @@
+{
+ "cwd": "/home/user/eplyx-rpc",
+ "prompt": "~/eplyx",
+ "cols": 100,
+ "rows": 14,
+ "steps": [
+  {
+   "cmd": "ls server/src/api/",
+   "expect": 0,
+   "after": 0.8
+  },
+  {
+   "cmd": "git show --stat=90 --format='%h %s' 9c61e32 -- server/src/api.rs engine/src/main.rs",
+   "expect": 0,
+   "after": 1.4
+  }
+ ],
+ "path": [
+  "/home/user/eplyx-rpc/target/release"
+ ],
+ "home": "/home/demo",
+ "title": "w-modules"
+}

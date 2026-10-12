@@ -1,0 +1,18 @@
+{
+ "cwd": "/home/user/Eplyx",
+ "prompt": "~/eplyx",
+ "cols": 100,
+ "rows": 22,
+ "steps": [
+  {
+   "cmd": "git log --oneline --no-decorate --no-merges --since=2026-10-04 origin/main",
+   "expect": 0,
+   "after": 1.6
+  }
+ ],
+ "path": [
+  "/home/user/eplyx-rpc/target/release"
+ ],
+ "home": "/home/demo",
+ "title": "w-log"
+}

@@ -5,7 +5,10 @@ import { readFileSync, writeFileSync, readdirSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 const here = dirname(fileURLToPath(import.meta.url));
-const src = join(here, '../assets/casts'), out = join(here, '../film/casts');
+// EPLYX_MEDIA points at another film folder (for example a weekly update)
+// that keeps the same assets/casts → film/casts layout.
+const media = process.env.EPLYX_MEDIA || join(here, '..');
+const src = join(media, 'assets/casts'), out = join(media, 'film/casts');
 mkdirSync(out, { recursive: true });
 const MAX_GAP = 0.45;
 for (const f of readdirSync(src).filter(f => f.endsWith('.cast'))) {
