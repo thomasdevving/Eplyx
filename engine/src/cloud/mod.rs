@@ -1,4 +1,6 @@
-//! Optional hosted identity and sync. Analysis and replay never read credentials.
+//! Optional hosted identity, sync and RPC access. Analysis and replay never
+//! read credentials.
+pub mod access;
 pub mod client;
 pub mod commands;
 pub mod contract;

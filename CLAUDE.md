@@ -90,7 +90,15 @@ eplyx change program-upgrade --program <ID> --candidate cand.so [--store DIR] --
 eplyx ci check --bundle .eplyx/bundle --change-spec change.json (--artifacts DIR | --candidate cand.so)
 ```
 
-Governance binding (G1; read-only, needs `--rpc-url` or `SOLANA_RPC_URL`):
+Hosted RPC: developers bring no provider. `eplyx access` saves the access
+password; every chain-reading command resolves `--rpc-url`/flag, then
+`SOLANA_RPC_URL` (or its archive/block siblings), then the password-gated
+read-only relay `POST /v1/rpc` on `https://eplyx.dev` (`cloud::access`). The
+server relays to `EPLYX_RPC_URL` only when `EPLYX_ACCESS_PASSWORD` is also set;
+`EPLYX_RPC_URL` is also the default observation/governance provider. Workers
+still get an empty environment. See `docs/hosted-rpc.md`.
+
+Governance binding (G1; read-only, uses the hosted RPC or `--rpc-url`/`SOLANA_RPC_URL`):
 
 ```bash
 eplyx governance squads bind   --multisig M --transaction-index N --change-spec analysed.json --out bound.json

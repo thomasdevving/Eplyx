@@ -20,6 +20,7 @@ mod governance_checks;
 mod health;
 mod ops;
 mod projects;
+mod rpc;
 mod runs;
 mod setup;
 mod tokens;
@@ -190,6 +191,7 @@ pub fn router(state: Shared) -> Router {
         .merge(crate::hosted::order::router())
         .merge(crate::hosted::interaction::router())
         .route("/health", get(health))
+        .route("/v1/rpc", post(rpc::relay))
         .route("/ready", get(ready))
         .route("/v1/ops", get(get_ops))
         .route("/v1/adapters", get(list_adapters))

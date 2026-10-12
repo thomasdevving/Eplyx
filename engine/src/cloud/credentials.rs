@@ -86,37 +86,12 @@ fn guard_parent(file: &Path) -> Result<()> {
     Ok(())
 }
 pub fn load_from(file: &Path) -> Result<Credentials> {
-    guard_parent(file)?;
-    let meta = match fs::symlink_metadata(file) {
-        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
-            return Ok(Credentials {
-                schema_version: 1,
-                ..Credentials::default()
-            })
-        }
-        Err(error) => return Err(error.into()),
-        Ok(meta) => meta,
+    let Some(bytes) = read_private(file, "run `chmod 600` on it or `eplyx logout`")? else {
+        return Ok(Credentials {
+            schema_version: 1,
+            ..Credentials::default()
+        });
     };
-    ensure!(
-        !meta.file_type().is_symlink() && meta.is_file(),
-        "{} must be a regular file",
-        file.display()
-    );
-    ensure!(meta.len() <= LIMIT, "credentials file is too large");
-    #[cfg(unix)]
-    {
-        use std::os::unix::fs::PermissionsExt;
-        ensure!(
-            meta.permissions().mode() & 0o077 == 0,
-            "{} is readable by other users; run `chmod 600` on it or `eplyx logout`",
-            file.display()
-        );
-    }
-    let mut bytes = Vec::new();
-    fs::File::open(file)?
-        .take(LIMIT + 1)
-        .read_to_end(&mut bytes)?;
-    ensure!(bytes.len() as u64 <= LIMIT, "credentials file is too large");
     let credentials: Credentials =
         serde_json::from_slice(&bytes).context("invalid Eplyx credentials file")?;
     ensure!(
@@ -126,6 +101,45 @@ pub fn load_from(file: &Path) -> Result<Credentials> {
     Ok(credentials)
 }
 
+/// Read an owner-only file in the Eplyx config directory. `None` when it does
+/// not exist; refused when it is a symlink, too large, or readable by others.
+/// `remedy` completes the permission error.
+pub(crate) fn read_private(file: &Path, remedy: &str) -> Result<Option<Vec<u8>>> {
+    guard_parent(file)?;
+    let meta = match fs::symlink_metadata(file) {
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+        Err(error) => return Err(error.into()),
+        Ok(meta) => meta,
+    };
+    ensure!(
+        !meta.file_type().is_symlink() && meta.is_file(),
+        "{} must be a regular file",
+        file.display()
+    );
+    ensure!(meta.len() <= LIMIT, "{} is too large", file.display());
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        ensure!(
+            meta.permissions().mode() & 0o077 == 0,
+            "{} is readable by other users; {remedy}",
+            file.display()
+        );
+    }
+    #[cfg(not(unix))]
+    let _ = remedy;
+    let mut bytes = Vec::new();
+    fs::File::open(file)?
+        .take(LIMIT + 1)
+        .read_to_end(&mut bytes)?;
+    ensure!(
+        bytes.len() as u64 <= LIMIT,
+        "{} is too large",
+        file.display()
+    );
+    Ok(Some(bytes))
+}
+
 pub fn save(credentials: &Credentials) -> Result<PathBuf> {
     let file = path()?;
     save_to(&file, credentials)?;
@@ -133,6 +147,12 @@ pub fn save(credentials: &Credentials) -> Result<PathBuf> {
 }
 
 pub fn save_to(file: &Path, credentials: &Credentials) -> Result<()> {
+    write_private(file, &serde_json::to_vec_pretty(credentials)?)
+}
+
+/// Atomically replace an owner-only file in the Eplyx config directory,
+/// creating the directory owner-only if needed. Never follows a symlink.
+pub(crate) fn write_private(file: &Path, bytes: &[u8]) -> Result<()> {
     guard_parent(file)?;
     let dir = file.parent().context("credentials path has no parent")?;
     if !dir.exists() {
@@ -156,7 +176,7 @@ pub fn save_to(file: &Path, credentials: &Credentials) -> Result<()> {
             .as_file()
             .set_permissions(fs::Permissions::from_mode(0o600))?;
     }
-    temporary.write_all(&serde_json::to_vec_pretty(credentials)?)?;
+    temporary.write_all(bytes)?;
     temporary.as_file().sync_all()?;
     temporary.persist(file).map_err(|e| e.error)?;
     if let Ok(parent) = fs::File::open(dir) {

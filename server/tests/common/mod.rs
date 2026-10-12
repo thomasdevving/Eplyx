@@ -321,6 +321,7 @@ pub fn test_config() -> Config {
         max_bundle_bytes: 192 * 1024 * 1024,
         max_concurrent_runs: 2,
         governance_rpc_url: None,
+        hosted_rpc: None,
     }
 }
 

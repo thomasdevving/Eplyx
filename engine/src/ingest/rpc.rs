@@ -58,6 +58,7 @@ impl RpcProvider for RetryingRpc<'_> {
 pub struct HttpRpc {
     url: String,
     origin: Option<String>,
+    bearer: Option<String>,
     response_limit: usize,
     timeout_seconds: u64,
 }
@@ -73,6 +74,7 @@ impl HttpRpc {
         Ok(Self {
             url,
             origin: None,
+            bearer: None,
             response_limit: DEFAULT_RESPONSE_LIMIT,
             timeout_seconds: 30,
         })
@@ -112,9 +114,27 @@ impl HttpRpc {
         self.origin = Some(origin);
         Ok(self)
     }
-}
-impl RpcProvider for HttpRpc {
-    fn call(&self, method: &str, params: Value) -> Result<Value> {
+
+    /// Send `Authorization: Bearer <secret>`, as the Eplyx hosted RPC requires.
+    /// Like the URL, the secret travels over curl's stdin only and never
+    /// appears in process arguments, a cache key or an error.
+    pub fn with_bearer(mut self, secret: &str) -> Result<Self> {
+        anyhow::ensure!(
+            !secret.is_empty()
+                && secret.len() <= 512
+                && secret
+                    .bytes()
+                    .all(|b| b.is_ascii_graphic() && b != b'"' && b != b'\\'),
+            "invalid RPC bearer credential"
+        );
+        self.bearer = Some(secret.to_owned());
+        Ok(self)
+    }
+
+    /// One request, returning the validated JSON-RPC envelope as the endpoint
+    /// sent it: `result` or `error`, uninterpreted. [`RpcProvider::call`] is
+    /// this plus the interpretation; a relay needs the envelope itself.
+    pub fn envelope(&self, method: &str, params: Value) -> Result<Value> {
         // Pass URL and JSON over stdin: API tokens never appear in process args,
         // persisted cache keys or error diagnostics. curl provides system TLS.
         let body = json!({"jsonrpc":"2.0", "id":1, "method":method, "params":params}).to_string();
@@ -126,14 +146,18 @@ impl RpcProvider for HttpRpc {
         if let Some(origin) = &self.origin {
             config.push_str(&format!("header = \"Origin: {origin}\"\n"));
         }
+        if let Some(secret) = &self.bearer {
+            config.push_str(&format!("header = \"Authorization: Bearer {secret}\"\n"));
+        }
         config.push_str(&format!("data = \"{escaped}\"\n"));
         let mut child = Command::new("curl")
             .args([
                 "--disable",
                 "--silent",
-                "--fail",
                 "--max-time",
                 &self.timeout_seconds.to_string(),
+                "--write-out",
+                "\n%{http_code}",
                 "--config",
                 "-",
             ])
@@ -152,9 +176,10 @@ impl RpcProvider for HttpRpc {
             let _ = child.wait();
             bail!("RPC request write failed (endpoint redacted)");
         }
+        // The body plus the status line `--write-out` appends.
         let bytes = read_limited(
             child.stdout.take().context("curl stdout")?,
-            self.response_limit,
+            self.response_limit + STATUS_SUFFIX,
         );
         if bytes.is_err() {
             let _ = child.kill();
@@ -165,11 +190,85 @@ impl RpcProvider for HttpRpc {
             status.success(),
             "RPC transport failed for {method} (endpoint redacted)"
         );
-        let response: Value = serde_json::from_slice(&bytes).context("invalid RPC JSON")?;
+        let (body, http) = split_status(&bytes)
+            .with_context(|| format!("RPC transport failed for {method} (endpoint redacted)"))?;
+        anyhow::ensure!(
+            body.len() <= self.response_limit,
+            "RPC response exceeds observation byte budget"
+        );
+        if !(200..300).contains(&http) {
+            if self.bearer.is_some() && http == 401 {
+                bail!(
+                    "the Eplyx hosted RPC rejected the access password; run `eplyx access` again"
+                );
+            }
+            // The Eplyx hosted RPC explains a refusal; a provider's own error
+            // page is never echoed.
+            let detail = self
+                .bearer
+                .as_ref()
+                .and_then(|_| serde_json::from_slice::<Value>(body).ok())
+                .and_then(|value| value["error"].as_str().map(str::to_owned))
+                .filter(|text| {
+                    text.len() <= 300
+                        && !text.contains("://")
+                        && !text.chars().any(char::is_control)
+                });
+            return Err(HttpStatusError {
+                method: method.to_owned(),
+                status: http,
+                detail,
+            }
+            .into());
+        }
+        let response: Value = serde_json::from_slice(body).context("invalid RPC JSON")?;
         anyhow::ensure!(
             response["jsonrpc"] == "2.0" && response["id"] == 1,
             "invalid RPC envelope"
         );
+        Ok(response)
+    }
+}
+
+/// An endpoint answered with a non-success HTTP status. Typed so a relay can
+/// tell a provider's rate limit from an outage.
+#[derive(Debug)]
+pub struct HttpStatusError {
+    pub method: String,
+    pub status: u16,
+    /// The Eplyx hosted RPC's own explanation, when it gave one.
+    pub detail: Option<String>,
+}
+
+impl std::fmt::Display for HttpStatusError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "RPC transport failed for {} (HTTP {}, endpoint redacted)",
+            self.method, self.status
+        )?;
+        match &self.detail {
+            Some(detail) => write!(f, ": {detail}"),
+            None => Ok(()),
+        }
+    }
+}
+
+impl std::error::Error for HttpStatusError {}
+
+/// `\n` and at most three status digits.
+const STATUS_SUFFIX: usize = 4;
+
+/// Separate the status `--write-out` appended from the response body.
+fn split_status(bytes: &[u8]) -> Option<(&[u8], u16)> {
+    let at = bytes.iter().rposition(|b| *b == b'\n')?;
+    let status = std::str::from_utf8(&bytes[at + 1..]).ok()?.parse().ok()?;
+    Some((&bytes[..at], status))
+}
+
+impl RpcProvider for HttpRpc {
+    fn call(&self, method: &str, params: Value) -> Result<Value> {
+        let response = self.envelope(method, params)?;
         if response.get("error").is_some() {
             bail!(
                 "RPC {method} returned error code {:?}",
@@ -316,6 +415,24 @@ mod tests {
             calls: Mutex::new(vec![]),
             result,
         }
+    }
+
+    #[test]
+    fn the_http_status_is_split_from_the_body() {
+        assert_eq!(
+            split_status(b"{\"result\":1}\n200"),
+            Some((&b"{\"result\":1}"[..], 200))
+        );
+        assert_eq!(
+            split_status(b"line\nline\n401"),
+            Some((&b"line\nline"[..], 401))
+        );
+        assert_eq!(split_status(b"\n000"), Some((&b""[..], 0)));
+        assert_eq!(split_status(b"no status"), None);
+        assert!(HttpRpc::new("https://rpc.example".into())
+            .unwrap()
+            .with_bearer("has space")
+            .is_err());
     }
 
     #[test]

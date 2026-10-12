@@ -700,7 +700,7 @@ pub fn doctor(config_path: &Path, format: Format) -> ExitCode {
                 rows.push((true,"Project config      eplyx.toml (token_migration_v1)".into()));
                 let base=store(&root,Some(&c.project.name))?;
                 rows.extend(config::doctor_lines(&root,&c,&base));
-                rows.push((true,if c.uses_rpc(){"RPC: set SOLANA_RPC_URL for read-only capture; provider was not contacted"}else{"RPC not needed: the state is a synthetic fixture"}.into()));
+                rows.push((true,if c.uses_rpc(){"RPC: Eplyx hosted RPC after `eplyx access`, or your own SOLANA_RPC_URL, for read-only capture; provider was not contacted"}else{"RPC not needed: the state is a synthetic fixture"}.into()));
             },
             Err(error)=> rows.push((false,format!("Project config      {error:#}; run `eplyx init --migration` for a template"))),
         }

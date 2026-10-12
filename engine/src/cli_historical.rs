@@ -4,13 +4,13 @@ use super::{
     VersionsResolveArgs, VersionsUpgradesArgs,
 };
 use anyhow::{Context, Result};
+use eplyx_engine::cloud::access::{self, Endpoint};
 use std::path::PathBuf;
 use std::process::ExitCode;
 
-fn endpoint(explicit: Option<String>) -> Result<String> {
-    explicit
-        .or_else(|| std::env::var("SOLANA_RPC_URL").ok())
-        .context("provide --rpc-url or SOLANA_RPC_URL")
+/// An explicit flag, then SOLANA_RPC_URL, then the Eplyx hosted RPC.
+fn endpoint(explicit: Option<String>) -> Result<Endpoint> {
+    access::resolve(explicit, &["SOLANA_RPC_URL"])
 }
 
 /// Build a cached archive transport. The endpoint namespaces the cache by hash
@@ -21,13 +21,11 @@ fn archive_transport(
     Box<dyn eplyx_engine::ingest::rpc::RpcProvider>,
     std::path::PathBuf,
 )> {
-    use eplyx_engine::ingest::rpc::{HttpRpc, OfflineRpc, RpcProvider};
-    let url = args
-        .archive_rpc_url
-        .clone()
-        .or_else(|| std::env::var("SOLANA_ARCHIVE_RPC_URL").ok())
-        .or_else(|| std::env::var("SOLANA_RPC_URL").ok())
-        .context("provide --archive-rpc-url, SOLANA_ARCHIVE_RPC_URL or SOLANA_RPC_URL")?;
+    use eplyx_engine::ingest::rpc::{OfflineRpc, RpcProvider};
+    let endpoint = access::resolve(
+        args.archive_rpc_url.clone(),
+        &["SOLANA_ARCHIVE_RPC_URL", "SOLANA_RPC_URL"],
+    )?;
     let origin = args
         .rpc_origin
         .clone()
@@ -36,11 +34,11 @@ fn archive_transport(
         .output
         .join("cache")
         .join("accounts")
-        .join(eplyx_engine::replay::hash_bytes(url.as_bytes()));
+        .join(eplyx_engine::replay::hash_bytes(endpoint.url().as_bytes()));
     let transport: Box<dyn RpcProvider> = if args.offline {
         Box::new(OfflineRpc)
     } else {
-        let rpc = HttpRpc::new(url)?;
+        let rpc = endpoint.transport()?;
         match origin {
             Some(origin) => Box::new(rpc.with_origin(origin)?),
             None => Box::new(rpc),
@@ -139,21 +137,22 @@ pub(crate) fn versions_upgrades(args: VersionsUpgradesArgs) -> Result<ExitCode> 
 pub(crate) fn historical_acquire(args: HistoricalAcquireArgs) -> Result<ExitCode> {
     use eplyx_engine::{
         historical::HistoricalStateProvider,
-        ingest::rpc::{HttpRpc, OfflineRpc, RpcProvider},
+        ingest::rpc::{OfflineRpc, RpcProvider},
     };
-    let transaction_url = endpoint(args.transaction_rpc_url)?;
-    let archive_url = args
+    let transaction_endpoint = endpoint(args.transaction_rpc_url)?;
+    let archive_endpoint = args
         .archive_rpc_url
         .or_else(|| std::env::var("SOLANA_ARCHIVE_RPC_URL").ok())
-        .unwrap_or_else(|| transaction_url.clone());
+        .map(Endpoint::own)
+        .unwrap_or_else(|| transaction_endpoint.clone());
     let origin = args
         .rpc_origin
         .or_else(|| std::env::var("SOLANA_RPC_ORIGIN").ok());
-    let transport = |url: String| -> Result<Box<dyn RpcProvider>> {
+    let transport = |endpoint: &Endpoint| -> Result<Box<dyn RpcProvider>> {
         if args.offline {
             return Ok(Box::new(OfflineRpc));
         }
-        let rpc = HttpRpc::new(url)?;
+        let rpc = endpoint.transport()?;
         Ok(match origin.clone() {
             Some(origin) => Box::new(rpc.with_origin(origin)?),
             None => Box::new(rpc),
@@ -161,13 +160,14 @@ pub(crate) fn historical_acquire(args: HistoricalAcquireArgs) -> Result<ExitCode
     };
     let explicit_block_source =
         args.block_rpc_url.is_some() || std::env::var("SOLANA_BLOCK_RPC_URL").is_ok();
-    let block_url = args
+    let block_endpoint = args
         .block_rpc_url
         .or_else(|| std::env::var("SOLANA_BLOCK_RPC_URL").ok())
-        .unwrap_or_else(|| transaction_url.clone());
-    let transaction_transport = transport(transaction_url.clone())?;
-    let archive_transport = transport(archive_url.clone())?;
-    let block_transport = transport(block_url.clone())?;
+        .map(Endpoint::own)
+        .unwrap_or_else(|| transaction_endpoint.clone());
+    let transaction_transport = transport(&transaction_endpoint)?;
+    let archive_transport = transport(&archive_endpoint)?;
+    let block_transport = transport(&block_endpoint)?;
     // Retry sits inside the cache: a cache hit never consumes retry budget, and
     // a shared public endpoint's rate limiting does not abort an acquisition
     // that is otherwise complete.
@@ -191,19 +191,23 @@ pub(crate) fn historical_acquire(args: HistoricalAcquireArgs) -> Result<ExitCode
         provider: &transaction_retrying,
         root: cache
             .join("transactions")
-            .join(eplyx_engine::replay::hash_bytes(transaction_url.as_bytes())),
+            .join(eplyx_engine::replay::hash_bytes(
+                transaction_endpoint.url().as_bytes(),
+            )),
     };
     let archive_rpc = eplyx_engine::ingest::CachedRpc {
         provider: &archive_retrying,
         root: cache
             .join("accounts")
-            .join(eplyx_engine::replay::hash_bytes(archive_url.as_bytes())),
+            .join(eplyx_engine::replay::hash_bytes(
+                archive_endpoint.url().as_bytes(),
+            )),
     };
     let block_rpc = eplyx_engine::ingest::CachedRpc {
         provider: &block_retrying,
-        root: cache
-            .join("blocks")
-            .join(eplyx_engine::replay::hash_bytes(block_url.as_bytes())),
+        root: cache.join("blocks").join(eplyx_engine::replay::hash_bytes(
+            block_endpoint.url().as_bytes(),
+        )),
     };
     let start = std::time::Instant::now();
     // Screening reads a whole block, which is megabytes. Spend it where the
@@ -367,11 +371,11 @@ fn render_dependencies(record: &eplyx_engine::replay::ReplayRecord) {
 }
 pub(crate) fn ingest_command(args: IngestArgs) -> Result<ExitCode> {
     let start = std::time::Instant::now();
-    let url = endpoint(args.rpc_url)?;
+    let endpoint = endpoint(args.rpc_url)?;
     // Endpoint namespace prevents cache reuse across networks without storing
     // credentials. Changing credentials creates a new transport cache.
-    let namespace = eplyx_engine::replay::hash_bytes(url.as_bytes());
-    let rpc = eplyx_engine::ingest::rpc::HttpRpc::new(url)?;
+    let namespace = eplyx_engine::replay::hash_bytes(endpoint.url().as_bytes());
+    let rpc = endpoint.transport()?;
     let cached = eplyx_engine::ingest::CachedRpc {
         provider: &rpc,
         root: args.cache.join(namespace),
@@ -397,9 +401,9 @@ pub(crate) fn discover_command(args: DiscoverArgs) -> Result<ExitCode> {
     anyhow::ensure!(args.limit > 0, "--limit must be positive");
     anyhow::ensure!(args.concurrency > 0, "--concurrency must be positive");
     let overall = std::time::Instant::now();
-    let url = endpoint(args.rpc_url)?;
-    let namespace = eplyx_engine::replay::hash_bytes(url.as_bytes());
-    let mut rpc = eplyx_engine::ingest::rpc::HttpRpc::new(url)?;
+    let endpoint = endpoint(args.rpc_url)?;
+    let namespace = eplyx_engine::replay::hash_bytes(endpoint.url().as_bytes());
+    let mut rpc = endpoint.transport()?;
     if let Some(origin) = args
         .rpc_origin
         .clone()
@@ -497,7 +501,7 @@ pub(crate) fn rpc_inspect(
     program: Option<String>,
     format: Format,
 ) -> Result<ExitCode> {
-    let rpc = eplyx_engine::ingest::rpc::HttpRpc::new(endpoint(rpc_url)?)?;
+    let rpc = endpoint(rpc_url)?.transport()?;
     use eplyx_engine::ingest::rpc::RpcProvider;
     let genesis_hash = rpc.call("getGenesisHash", serde_json::json!([]))?;
     let first_available_block = rpc.call("getFirstAvailableBlock", serde_json::json!([]))?;

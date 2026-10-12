@@ -404,6 +404,7 @@ struct Plan {
 fn local_secrets(env: &Env, stored: &Credentials) -> Vec<String> {
     let mut secrets: Vec<String> = stored.servers.values().map(|e| e.token.clone()).collect();
     secrets.extend(env.token.clone());
+    secrets.extend(super::access::known_passwords());
     secrets
 }
 
