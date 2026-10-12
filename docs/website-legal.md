@@ -5,12 +5,12 @@ Prepared 1 October 2026 for the current free information website and demonstrati
 ## Supplied and verified facts
 
 - Public name: **Eplyx**. Operator based in the Netherlands; visitors worldwide.
-- Contact and privacy requests: **eplyxcontact@gmail.com**.
-- Hosting location: **Netherlands**, supplied by the operator. Provider, subprocessors, access locations and contract are not yet known.
+- Contact and privacy requests: **contact@eplyx.dev**, forwarded by Cloudflare Email Routing to the verified **eplyxcontact@gmail.com** inbox.
+- Hosting update, 8 October 2026: the operator selected **Cloudflare** for `eplyx.dev`. The deployment uses its global static asset network; the earlier Netherlands-only hosting statement no longer applies. Subprocessors, access locations and contractual arrangements remain unverified.
 - Current public offering: free information and demos; no analytics, advertising or payments.
 - Frontend review: assets and fonts self-hosted, no tracking SDK, no cookie set by public information pages. The decorative intro uses page memory only.
 - The operator requested that an address be omitted for now. No address, registry number or legal identity has been invented. This does not decide whether a disclosure is legally required.
-- Mail is handled through Gmail. A Netherlands hosting location does not establish that email or provider access stays in the Netherlands/EEA.
+- Mail to the domain passes through Cloudflare Email Routing and is handled through Gmail. A Netherlands hosting location does not establish that email or provider access stays in the Netherlands/EEA.
 
 The site now links to `/legal`, `/privacy`, `/cookies`, `/terms`, `/contact` and `/licenses` from its footer. Notices are in English to match the site. They visibly remain drafts while required operator details are incomplete.
 
@@ -34,13 +34,13 @@ Public facts and unresolved review items live in `frontend/src/legal-config.js`;
 
 | Activity | People/data | Purpose and proposed basis | Recipients and locations | Retention/action |
 | --- | --- | --- | --- | --- |
-| Site delivery/security | Visitors; IP address, HTTP request headers, any provider logs | Deliver/protect the site; proposed legitimate interests, assessment pending | Hosting provider unknown; operator states NL hosting; access/subprocessors unverified | Confirm actual logging, configure necessary retention and deletion |
+| Site delivery/security | Visitors; IP address, HTTP request headers, any provider logs | Deliver/protect the site; proposed legitimate interests, assessment pending | Cloudflare global network; access/subprocessors and contractual arrangements unverified | Confirm actual logging, configure necessary retention and deletion |
 | Email correspondence | Senders; address, name, message, attachments | Respond to enquiries; proposed legitimate interests, assessment pending; legal obligation where a rights request requires handling | Eplyx operator and Google Gmail; arrangements/transfers pending | Define and apply purpose-based deletion, with documented exceptions |
 | Demo publication | People identifiable from retained blockchain references, if any | Show evidence examples; provenance, necessity and lawful publication basis pending | Public website recipients worldwide | Review corpus, minimise data, define review/removal process |
 
 Keep this inventory current even if a specific formal register exemption applies. It helps explain and evidence the actual processing. Do not put requesters' personal details in this public repository.
 
-Optional developer tools use `eplyx-operator-token` in session storage, `eplyx-last-project` in local storage and `eplyx-detail` in the separate dashboard. The separate hosted service uses the `eplyx_session` login cookie and request-retry session keys. Their triggers and lifetimes are disclosed on `/cookies`. Before offering accounts/uploads as part of the public release, complete a separate service inventory covering credentials, project/source evidence, backups, processors, access controls, deletion, notices and applicable terms. Apply secure cookies and HTTPS in production. Static-site documentation does not make those services ready.
+Optional developer tools use `eplyx-operator-token` in session storage, `eplyx-last-project` in local storage and `eplyx-detail` in the separate dashboard. The hosted service is now reachable at `/workspace` on `eplyx.dev`, with Cloudflare proxying account, project and API requests to Railway. It uses the `eplyx_session` login cookie on this domain and request-retry session keys. Their triggers and lifetimes are disclosed on `/cookies`. Before offering accounts/uploads as part of the public release, complete a separate service inventory covering credentials, project/source evidence, backups, processors, access controls, deletion, notices and applicable terms. Apply secure cookies and HTTPS in production. Static-site documentation does not make those services ready.
 
 ## Privacy request procedure
 

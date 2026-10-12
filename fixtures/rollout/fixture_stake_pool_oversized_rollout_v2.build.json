@@ -1,0 +1,50 @@
+{
+  "arch": "v0",
+  "build_script": {
+    "len": 4523,
+    "sha256": "191367af91da1319131ecae07d46df64622b8ab8e1c07f673e0d86e931d03c25"
+  },
+  "cargo_build_sbf": "4.0.0",
+  "elf": {
+    "len": 1146384,
+    "sha256": "329092d75f7116266f40bf61050ed74ce407483619f4bbb9e27b72474019c7c4"
+  },
+  "files": {
+    "Cargo.lock": {
+      "len": 67759,
+      "sha256": "5a09698c86d2e4f3aaf6efdce3261937873b95edb66c5a7dc8f94d89666de306"
+    },
+    "Cargo.toml": {
+      "len": 850,
+      "sha256": "350fbd2d78cd97349599abe7feca4df75a5f56f862b505aada2cb743ef227948"
+    },
+    "LICENSE": {
+      "len": 9136,
+      "sha256": "048838ecab23173fe6db9b3a4f5d9e2f5480b8692dfca556fed4aa039ca06bc8"
+    },
+    "NOTICE": {
+      "len": 1139,
+      "sha256": "180894c60aa7094dc72bbbe25492a4f916830363c574d8b6bbce93930bc92269"
+    },
+    "src/lib.rs": {
+      "len": 11005,
+      "sha256": "11c6af3e167b72617024c2a28bf1dd9dd115ccadc2838c2dc18fe22a9835a340"
+    }
+  },
+  "fresh_target_and_output": true,
+  "host": {
+    "machine": "x86_64",
+    "system": "Linux"
+  },
+  "offline": true,
+  "origin": "constructed oversized rollout counterexample; not upstream release; not production candidate; not intended for deployment",
+  "platform_tools": "v1.54",
+  "platform_tools_revisions": {
+    "len": 240,
+    "sha256": "c33d3fa3cae3d9ece4ea08bc8e51a754041286a351067bc3afd2635595619895"
+  },
+  "public_dependency_and_tool_caches_reused": true,
+  "rustc": "1.89.0-dev",
+  "schema": "eplyx-stake-pool-oversized-rollout-fixture-build-v1",
+  "source_only_staging": true
+}

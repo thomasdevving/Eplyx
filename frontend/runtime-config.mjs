@@ -10,7 +10,10 @@ import { join } from 'node:path';
  */
 export async function writeRuntimeConfig(directory) {
   await mkdir(directory, { recursive: true });
-  const url = (process.env.EPLYX_API_URL ?? '').trim().replace(/\/$/, '');
+  const configured = (process.env.EPLYX_API_URL ?? '').trim();
+  // Preserve an explicit same-origin choice, including in a local Pages
+  // preview, where an empty/unconfigured value uses the developer API default.
+  const url = configured === '/' ? '/' : configured.replace(/\/$/, '');
   await writeFile(
     join(directory, 'runtime-config.js'),
     `// Generated. Set EPLYX_API_URL when building or serving.\nglobalThis.EPLYX_API_URL = ${JSON.stringify(url)};\n`

@@ -7,13 +7,9 @@ use anyhow::{Context, Result};
 use std::path::PathBuf;
 use std::process::ExitCode;
 
+/// `--rpc-url`, then SOLANA_RPC_URL, then the Eplyx hosted RPC.
 fn squads_rpc(args: &SquadsChainArgs) -> Result<eplyx_engine::ingest::rpc::HttpRpc> {
-    let url = args
-        .rpc_url
-        .clone()
-        .or_else(|| std::env::var("SOLANA_RPC_URL").ok())
-        .context("--rpc-url or SOLANA_RPC_URL is required")?;
-    eplyx_engine::ingest::rpc::HttpRpc::new(url)
+    eplyx_engine::cloud::access::resolve(args.rpc_url.clone(), &["SOLANA_RPC_URL"])?.transport()
 }
 
 fn squads_commitment(args: &SquadsChainArgs) -> eplyx_engine::governance::Commitment {

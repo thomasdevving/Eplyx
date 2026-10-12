@@ -12,6 +12,7 @@ mod cli_local;
 mod cli_parameter;
 mod cli_path;
 mod cli_qualification;
+mod cli_rollout;
 
 use std::path::PathBuf;
 static LONG_VERSION: std::sync::LazyLock<String> =
@@ -49,6 +50,13 @@ enum Command {
     },
     #[command(hide = true)]
     InteractionWorker { encoded: String },
+    /// Rehearse a bounded installed program upgrade and configuration rollout order.
+    Rollout {
+        #[command(subcommand)]
+        command: cli_rollout::Command,
+    },
+    #[command(hide = true)]
+    RolloutWorker { encoded: String },
     /// Analyze one active Token-2022 transfer-fee parameter counterfactual.
     Parameter {
         #[command(subcommand)]
@@ -67,6 +75,23 @@ enum Command {
     Logout {
         #[arg(long)]
         server: Option<String>,
+    },
+    /// Unlock the Eplyx hosted Solana RPC with your access password, so chain
+    /// commands need no RPC provider of your own. Verifies, then saves it
+    /// owner-only. `EPLYX_ACCESS_PASSWORD` works without saving anything.
+    Access {
+        /// The Eplyx service; defaults to EPLYX_URL, then https://eplyx.dev.
+        #[arg(long)]
+        server: Option<String>,
+        /// Read the password from standard input instead of prompting.
+        #[arg(long)]
+        password_stdin: bool,
+        /// Check whether the hosted RPC is unlocked and answering.
+        #[arg(long, conflicts_with_all = ["forget", "password_stdin"])]
+        status: bool,
+        /// Remove the saved password.
+        #[arg(long, conflicts_with_all = ["status", "password_stdin", "server"])]
+        forget: bool,
     },
     /// Link a local store to a private hosted project.
     Link {
@@ -308,7 +333,8 @@ struct ListArgs {
 struct IngestArgs {
     #[arg(long)]
     program: String,
-    /// Falls back to SOLANA_RPC_URL; endpoint is never persisted in reports.
+    /// Falls back to SOLANA_RPC_URL, then the Eplyx hosted RPC (`eplyx access`);
+    /// endpoint is never persisted in reports.
     #[arg(long)]
     rpc_url: Option<String>,
     #[arg(long)]
@@ -324,7 +350,8 @@ struct IngestArgs {
 struct DiscoverArgs {
     #[arg(long)]
     program: String,
-    /// Falls back to SOLANA_RPC_URL; never persisted.
+    /// Falls back to SOLANA_RPC_URL, then the Eplyx hosted RPC (`eplyx access`);
+    /// never persisted.
     #[arg(long)]
     rpc_url: Option<String>,
     /// Origin header for endpoints with an allowlist. Falls back to
@@ -370,7 +397,8 @@ struct HistoricalAcquireArgs {
     /// System-transfer/Memo contract is used.
     #[arg(long)]
     program: Option<String>,
-    /// Standard transaction-history RPC; falls back to SOLANA_RPC_URL.
+    /// Standard transaction-history RPC; falls back to SOLANA_RPC_URL, then the
+    /// Eplyx hosted RPC (`eplyx access`).
     #[arg(long)]
     transaction_rpc_url: Option<String>,
     /// Slot-addressable account archive; falls back to SOLANA_ARCHIVE_RPC_URL,
@@ -411,7 +439,7 @@ enum VersionsCommand {
 #[derive(Parser)]
 struct ArchiveArgs {
     /// Slot-addressable account archive; falls back to SOLANA_ARCHIVE_RPC_URL,
-    /// then SOLANA_RPC_URL.
+    /// then SOLANA_RPC_URL, then the Eplyx hosted RPC (`eplyx access`).
     #[arg(long)]
     archive_rpc_url: Option<String>,
     /// Optional Origin header for allowlisted demo endpoints; never persisted.
@@ -595,7 +623,8 @@ struct SquadsAttestArgs {
 
 #[derive(Parser)]
 struct SquadsChainArgs {
-    /// JSON-RPC endpoint; falls back to SOLANA_RPC_URL. Never persisted.
+    /// JSON-RPC endpoint; falls back to SOLANA_RPC_URL, then the Eplyx hosted
+    /// RPC (`eplyx access`). Never persisted.
     #[arg(long)]
     rpc_url: Option<String>,
     #[arg(long, value_enum, default_value_t = CommitmentArg::Finalized)]
@@ -801,6 +830,17 @@ fn run() -> Result<ExitCode> {
         Command::Logout { server } => Ok(ExitCode::from(eplyx_engine::cloud::commands::logout(
             server.as_deref(),
         )?)),
+        Command::Access {
+            server,
+            password_stdin,
+            status,
+            forget,
+        } => Ok(ExitCode::from(eplyx_engine::cloud::access::command(
+            server.as_deref(),
+            password_stdin,
+            status,
+            forget,
+        )?)),
         Command::Link {
             server,
             project,
@@ -949,6 +989,8 @@ fn run() -> Result<ExitCode> {
         Command::Controlled { command } => cli_historical::controlled(command),
         Command::Interaction { command } => cli_interaction::run(command),
         Command::InteractionWorker { encoded } => cli_interaction::worker(&encoded),
+        Command::Rollout { command } => cli_rollout::run(command),
+        Command::RolloutWorker { encoded } => cli_rollout::worker(&encoded),
         Command::Parameter { command } => cli_parameter::run(command),
         Command::ParameterWorker { encoded } => cli_parameter::worker(&encoded),
         Command::Generate(args) => cli_compare::generate(args),

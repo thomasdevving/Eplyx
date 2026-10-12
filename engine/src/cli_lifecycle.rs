@@ -86,15 +86,12 @@ pub fn execute(command: LifecycleCommand) -> Result<ExitCode> {
 }
 fn execute_inner(mut command: LifecycleCommand) -> Result<ExitCode> {
     if let LifecycleCommand::Snapshot { asset, out } = command {
-        use eplyx_engine::{
-            ingest::rpc::HttpRpc,
-            lifecycle::{LifecycleStateSource, SolanaTokenAssetSource},
-        };
+        use eplyx_engine::lifecycle::{LifecycleStateSource, SolanaTokenAssetSource};
         anyhow::ensure!(!out.exists(), "snapshot output already exists");
         let asset = expansion::load(&asset)?;
-        let provider = HttpRpc::new(
-            std::env::var("SOLANA_RPC_URL").context("SOLANA_RPC_URL is required for capture")?,
-        )?;
+        // SOLANA_RPC_URL, else the Eplyx hosted RPC.
+        let provider =
+            eplyx_engine::cloud::access::resolve(None, &["SOLANA_RPC_URL"])?.transport()?;
         let snapshot = SolanaTokenAssetSource { rpc: provider }.capture(asset)?;
         snapshot.save(&out)?;
         println!("Captured {} token accounts.", snapshot.entities.len());

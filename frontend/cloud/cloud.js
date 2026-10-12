@@ -16,7 +16,7 @@ async function call(method, path, body) {
  return data;
 }
 const me = () => call('GET', '/v1/auth/me').catch(error => { if (error.status === 401) return null; throw error; });
-const nextPath = () => { const next = new URLSearchParams(location.search).get('next'); try { const url = new URL(next || '/', location.origin); return next?.startsWith('/') && !next.includes('\\') && url.origin === location.origin ? url.pathname + url.search + url.hash : '/'; } catch { return '/'; } };
+const nextPath = () => { const next = new URLSearchParams(location.search).get('next'); try { const url = new URL(next || '/workspace', location.origin); return next?.startsWith('/') && !next.includes('\\') && url.origin === location.origin ? url.pathname + url.search + url.hash : '/workspace'; } catch { return '/workspace'; } };
 
 function frame(body, user) {
  return `<div class="cloud">
@@ -140,7 +140,7 @@ async function route() {
   if (path === '/signup') return signup();
   const user = (await me())?.user ?? null;
   if (path === '/device') return device(user);
-  if (path === '/' || path === '/workspaces') return user ? home(user) : landing();
+  if (path === '/' || path === '/workspace' || path === '/workspaces') return user ? home(user) : landing();
   app.innerHTML = frame(`<div class="page-head"><h1>Not found</h1></div>${empty('This page does not exist in the Eplyx cloud workspace.')}`, user);
  } catch (error) {
   app.innerHTML = frame(`<div class="page-head"><h1>Unavailable</h1></div>${empty(error.message)}`, null);

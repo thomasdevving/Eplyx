@@ -136,6 +136,7 @@ impl Server {
                     max_bundle_bytes: 192 * 1024 * 1024,
                     max_concurrent_runs: 2,
                     governance_rpc_url: None,
+                    hosted_rpc: None,
                 },
                 registry: eplyx_server::registry::Registry::new(
                     eplyx_server::storage::Storage::open(volume.path()).unwrap(),

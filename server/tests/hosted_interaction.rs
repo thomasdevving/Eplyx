@@ -492,8 +492,12 @@ async fn authorization_explicit_selection_unsupported_inputs_and_same_code_parti
     let (code,accepted)=h.post_json(&path,&token,json!({"request_key":"same-code-hosted-key","record_id":RECORD,"parameter_change_spec":p})).await;
     assert_eq!(code, StatusCode::ACCEPTED, "{accepted}");
     let child = accepted["run_id"].as_str().unwrap();
+    // The same-code profile still executes all six VM stages in the isolated
+    // debug worker. Allow the same bounded budget as other VM-backed hosted
+    // suites rather than the harness's 30-second wait for ordinary checks.
     assert_eq!(
-        h.wait_until(child, RunStatus::is_terminal).await,
+        h.wait_until_timeout(child, RunStatus::is_terminal, 120)
+            .await,
         RunStatus::Completed
     );
     let (_, wrong_parent) = h
@@ -535,7 +539,8 @@ async fn authorization_explicit_selection_unsupported_inputs_and_same_code_parti
     assert_eq!(code, StatusCode::ACCEPTED, "{accepted}");
     let child = accepted["run_id"].as_str().unwrap();
     assert_eq!(
-        h.wait_until(child, RunStatus::is_terminal).await,
+        h.wait_until_timeout(child, RunStatus::is_terminal, 120)
+            .await,
         RunStatus::Completed
     );
     let (_, result) = h

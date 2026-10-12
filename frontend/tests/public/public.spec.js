@@ -20,7 +20,7 @@ for (const width of [1440, 390, 320]) {
       await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
       await expect(page).toHaveTitle(/— Eplyx$/);
       await expect(page.getByRole('complementary', { name: 'Notice status' })).toContainText('Draft');
-      if (path !== '/licenses') await expect(page.locator('main a[href="mailto:eplyxcontact@gmail.com"]')).not.toHaveCount(0);
+      if (path !== '/licenses') await expect(page.locator('main a[href="mailto:contact@eplyx.dev"]')).not.toHaveCount(0);
       expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
       await page.reload();
       await expect(page.getByRole('navigation', { name: 'Legal documents' }).getByRole('link', { name: label, exact: true })).toHaveAttribute('aria-current', 'page');
@@ -139,9 +139,9 @@ test('workspace links use the configured service instead of the static-site orig
   }));
   await page.goto('/cli');
   await expect(page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: 'Workspace' }))
-    .toHaveAttribute('href', 'https://api.example.test/workspaces');
+    .toHaveAttribute('href', 'https://api.example.test/workspace');
   await expect(page.locator('#sync').getByRole('link', { name: 'Open workspace' }))
-    .toHaveAttribute('href', 'https://api.example.test/workspaces');
+    .toHaveAttribute('href', 'https://api.example.test/workspace');
 });
 
 test('public routes retain the existing demo and analysis pages', async ({ page }) => {
@@ -286,7 +286,7 @@ test('workflow deep links, keyboard choice and configured workspace navigation',
   await page.goto('/start#paths');
   await expect(page.locator('#start-paths')).toBeVisible();
   await expect(page.locator('#start-paths').getByRole('link', { name: 'Open workspace' }))
-    .toHaveAttribute('href', 'https://api.example.test/workspaces');
+    .toHaveAttribute('href', 'https://api.example.test/workspace');
   await page.getByRole('radio', { name: /Current token path/ }).focus();
   await page.keyboard.press('ArrowUp');
   await expect(page.getByRole('radio', { name: /Lifecycle terms/ })).toBeChecked();

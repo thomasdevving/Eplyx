@@ -152,7 +152,8 @@ pub struct ObservedSource<'a, P, E> {
 }
 
 /// Validate, capture (mainnet state only), bind and evaluate a migration package.
-/// Mainnet state is read through `SOLANA_RPC_URL`; a fixture reads no RPC.
+/// Mainnet state is read through `SOLANA_RPC_URL`, else the Eplyx hosted RPC;
+/// a fixture reads no RPC.
 pub fn run(
     package_dir: &Path,
     output: &Path,
@@ -171,14 +172,14 @@ pub fn run(
             None,
         );
     }
-    let url = std::env::var("SOLANA_RPC_URL")
-        .context("mainnet state requires SOLANA_RPC_URL (read-only)")?;
+    let endpoint = crate::cloud::access::resolve(None, &["SOLANA_RPC_URL"])?;
     let budget = StressBudget::from_env();
     budget.validate()?;
-    let population = HttpSolanaRpc::new(url.clone())?
+    let population = endpoint
+        .transport()?
         .with_response_limit(usize::try_from(budget.max_response_bytes)?)?
         .with_timeout(budget.population_timeout_seconds)?;
-    let execution = HttpSolanaRpc::new(url)?;
+    let execution = endpoint.transport()?;
     run_with(
         package_dir,
         output,

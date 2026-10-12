@@ -1,0 +1,326 @@
+{
+ "about": "Tests that read fixture payloads kept out of git on purpose. GitHub CI (the public tier) does not run them; make regression does. Regenerate with scripts/public-tier.py record --checkout <clean checkout>.",
+ "browser": [
+  "test:cloud"
+ ],
+ "targets": {
+  "eplyx-engine": {
+   "current_execution": [
+    "availability_uses_engine_boundaries_without_granting_proof",
+    "changed_discovery_source_requires_reconfirmation",
+    "current_cli_is_deterministic_isolated_and_refuses_overwrite",
+    "current_market_executes_and_reconciles_one_exact_route_offline",
+    "current_proof_requires_actual_execution_and_replays_identically",
+    "current_request_cannot_import_claimed_proof_or_custom_programs",
+    "deterministic_actual_vm_failure_is_failed_with_rollback",
+    "exact_account_amount_run_and_fixture_bindings",
+    "legacy_transfer_uses_deployed_legacy_code_and_another_mint",
+    "market_minimum_failure_and_missing_bin_are_distinct",
+    "missing_capture_never_promotes_to_proven",
+    "no_supported_pool_is_bounded_and_never_global_absence",
+    "route_budget_and_selected_failure_cannot_trigger_fallback",
+    "unsupported_frozen_paused_hook_confidential_and_authority_never_execute"
+   ],
+   "current_observations": "all",
+   "current_preflight": [
+    "another_decoded_account_in_same_wallet_does_not_inherit_proof",
+    "candidate_plan::a_proven_candidate_plan_makes_candidate_readiness_ready_and_nothing_else",
+    "candidate_plan::a_refreshed_run_cannot_inherit_candidate_conversion_proof",
+    "candidate_plan::candidate_evidence_is_exact_to_its_run_plan_program_and_result",
+    "candidate_plan::mobility_evidence_can_never_stand_in_for_a_candidate_conversion",
+    "candidate_plan::no_supplied_plan_leaves_conversion_untested_and_full_transition_incomplete",
+    "current_mobility_never_proves_official_conversion",
+    "entity_ready_never_becomes_population_ready",
+    "exact_failed_market_is_not_globally_blocked_by_entity_preset",
+    "proposed_provenance_never_becomes_issuer_assertion",
+    "refreshed_run_and_other_entity_reject_existing_proof",
+    "request_boundaries_and_offline_canonical_replay",
+    "saved_phase7_proof_cannot_enter_missing_current_checks",
+    "scenario_digest_cannot_reuse_readiness",
+    "successor_is_independently_inspected_and_never_issuer_verified",
+    "unavailable_current_check_is_indeterminate_not_failure_or_readiness",
+    "unchanged_current_bytes_at_all_proposed_times"
+   ],
+   "execution_probe": "all",
+   "lib": [
+    "lifecycle::frozen::selection::pipeline::tests::a_class_sample_never_proves_its_peers",
+    "lifecycle::frozen::selection::pipeline::tests::current_capture_cannot_be_labeled_a_historical_bank",
+    "lifecycle::frozen::selection::pipeline::tests::distinct_accounts_with_one_authority_stay_distinct",
+    "lifecycle::frozen::selection::pipeline::tests::execution_never_rewrites_expected_selection_gains",
+    "lifecycle::frozen::selection::pipeline::tests::failed_indeterminate_unsupported_and_controls_gain_nothing",
+    "lifecycle::frozen::selection::pipeline::tests::independent_swaps_are_maxima_never_summed_capacity",
+    "lifecycle::frozen::selection::pipeline::tests::official_transition_and_redemption_cannot_inherit_swap_or_transfer",
+    "lifecycle::frozen::selection::pipeline::tests::result_bindings_preserve_immutable_preexecution_plan",
+    "lifecycle::frozen::selection::pipeline::tests::second_venue_has_no_brand_or_first_venue_inheritance",
+    "lifecycle::frozen::selection::pipeline::tests::smaller_repeated_points_and_larger_points_add_only_difference",
+    "lifecycle::notice::tests::altered_deadline_without_regeneration_is_rejected",
+    "lifecycle::notice::tests::alternate_destination_and_assertion_limits_are_preserved",
+    "lifecycle::notice::tests::changed_economic_semantics_cannot_reuse_frozen_proofs",
+    "lifecycle::notice::tests::changed_mint_or_provenance_is_rejected",
+    "lifecycle::notice::tests::deadline_keeps_exact_provenance",
+    "lifecycle::notice::tests::demo_time_never_becomes_issuer_assertion",
+    "lifecycle::notice::tests::independent_raw_chain_confirms_both_mints",
+    "lifecycle::notice::tests::issuer_mint_never_verifies_itself",
+    "lifecycle::notice::tests::issuer_wording_never_proves_official_transition",
+    "lifecycle::notice::tests::manual_scenario_or_binding_tampering_fails",
+    "lifecycle::notice::tests::missing_chain_artifact_cannot_grant_identity",
+    "lifecycle::notice::tests::missing_required_deadline_fails",
+    "lifecycle::notice::tests::ordering_and_irrelevant_markup_preserve_semantics",
+    "lifecycle::notice::tests::scenario_generation_is_deterministic",
+    "lifecycle::notice::tests::script_strings_cannot_supply_notice_fields",
+    "lifecycle::notice::tests::source_digest_mismatch_is_rejected",
+    "lifecycle::notice::tests::strict_event_and_config_parsing_rejects_unknown_fields",
+    "lifecycle::notice::tests::successor_mint_keeps_exact_provenance",
+    "lifecycle::notice::tests::unknown_mechanism_stays_unknown",
+    "lifecycle::notice::tests::unrelated_data_never_infers_conversion_ratio",
+    "lifecycle::notice::tests::wrong_successor_chain_identity_is_rejected",
+    "lifecycle::resolution::tests::direct_holder_withdrawal_is_not_applicable",
+    "lifecycle::resolution::tests::entity_proof_does_not_inherit",
+    "lifecycle::resolution::tests::evidence_and_discovery_input_order_do_not_change_resolution",
+    "lifecycle::resolution::tests::exact_scope_fees_banks_and_control_points_are_preserved",
+    "lifecycle::resolution::tests::failed_evidence_never_becomes_proven",
+    "lifecycle::resolution::tests::generic_logic_has_no_asset_issuer_or_target_literals",
+    "lifecycle::resolution::tests::indeterminate_evidence_never_becomes_proven",
+    "lifecycle::resolution::tests::local_assumed_signer_never_becomes_possession",
+    "lifecycle::resolution::tests::malformed_discovery_and_unbound_claims_fail_closed",
+    "lifecycle::resolution::tests::market_exit_cannot_prove_redemption",
+    "lifecycle::resolution::tests::matrix_rows_roundtrip_with_strict_status_parsing",
+    "lifecycle::resolution::tests::not_tested_never_becomes_proven",
+    "lifecycle::resolution::tests::projection_rejects_claimed_success_without_vm_or_reconciliation",
+    "lifecycle::resolution::tests::transfer_cannot_prove_official_transition",
+    "lifecycle::resolution::tests::unsupported_is_not_failed_or_nonexistent",
+    "lifecycle::resolution::tests::venue_proof_does_not_inherit",
+    "migration::authority_resolution::tests::exact_spl_multisig_resolution_never_fabricates_approvals",
+    "migration::authority_resolution::tests::frozen_plan_and_offline_resolution_preserve_non_wallet_boundaries",
+    "migration::authority_resolution::tests::refreshed_population_rejects_prior_resolution_plan",
+    "migration::authority_resolution::tests::resolved_pool_never_proves_peer_accounts",
+    "migration::authority_resolution::tests::second_asset_uses_same_selector_and_never_inherits_first_asset_control",
+    "migration::fixture::tests::builds_legacy_and_token_2022_state_with_real_programs",
+    "path::token_transfer::tests::deployed_token_2022_transfer_executes_and_fees_reconcile",
+    "path::token_transfer::tests::destination_must_be_real_distinct_and_same_mint",
+    "path::token_transfer::tests::insufficient_input_is_a_precondition_rejection",
+    "path::token_transfer::tests::missing_withheld_fee_fails_exact_reconciliation",
+    "path::token_transfer::tests::paused_mint_and_active_hook_without_extra_accounts_are_rejected",
+    "path::token_transfer::tests::real_program_failure_rolls_back_watched_tokens_and_mint",
+    "path::token_transfer::tests::token_transfer_replay_is_identical",
+    "path::token_transfer::tests::wrong_mint_authority_and_frozen_source_are_rejected"
+   ],
+   "lifecycle_cli": [
+    "lifecycle_analysis_is_bound_deterministic_and_does_not_inherit_parent_secrets"
+   ],
+   "lifecycle_consequence": "all",
+   "lifecycle_counterfactual": [
+    "altered_inputs_and_semantics_fail_regeneration",
+    "balances_never_change",
+    "canonical_json_roundtrip_is_byte_deterministic",
+    "deadline_uses_exact_policy_status",
+    "different_worlds_are_non_comparable",
+    "historical_execution_evidence_is_immutable",
+    "holder_requires_transition_after_event",
+    "lifecycle_crosses_transition_boundary",
+    "mutated_snapshot_input_is_rejected_by_pinned_identity",
+    "official_transition_never_inherits_proof",
+    "offline_cli_reproduces_canonical_report",
+    "population_counts_are_derived_and_proof_scope_is_preserved",
+    "readiness_changes_only_with_policy_and_applicability",
+    "same_production_digest_before_and_after",
+    "scenario_order_is_deterministic",
+    "transfer_stays_proven",
+    "vault_semantics_change_without_byte_changes",
+    "withdrawal_stays_proven",
+    "zero_balance_never_becomes_public_exposure"
+   ],
+   "lifecycle_coverage": "all",
+   "lifecycle_exposure": "all",
+   "lifecycle_kind": "all",
+   "lifecycle_notice": [
+    "notice_cannot_bypass_existing_readiness_requirements",
+    "offline_cli_replays_portably_and_protects_outputs"
+   ],
+   "lifecycle_readiness": [
+    "cli_gate_codes_portability_canonical_output_and_digest_protection",
+    "offline_existing_evidence_reproduces_published_report_and_boundaries",
+    "stale_or_mismatched_policy_scope_is_incomplete_and_signer_is_conditional"
+   ],
+   "lifecycle_resolution": [
+    "cli_is_portable_canonical_offline_and_protects_outputs",
+    "discovery_artifact_tampering_and_unknown_boundaries_are_rejected",
+    "public_offline_replay_reproduces_and_roundtrips_saved_matrix",
+    "published_successor_and_bounded_chain_sample_are_real_but_not_transition_proof",
+    "replay_rejects_rehashed_fabricated_execution_before_resolution"
+   ],
+   "lifecycle_snapshot": "all",
+   "migration_account": [
+    "exact_current_candidate_replays_with_unchanged_source_and_no_official_claim",
+    "final_drift_and_unavailable_clock_never_adjust_or_execute",
+    "typed_terms_refuse_forged_status_program_and_other_wallet_account"
+   ],
+   "migration_capture": [
+    "a_bounded_capture_reports_uninspected_holders_as_unverifiable",
+    "a_non_mainnet_provider_is_refused",
+    "mainnet_state_is_captured_read_only_rebuilt_and_replayed_offline"
+   ],
+   "migration_cases": [
+    "case_a_legacy_to_legacy",
+    "case_b_legacy_to_token_2022_with_destination_transfer_fee",
+    "case_c_token_2022_supported_extension_subset_with_escrow",
+    "case_d_insufficient_destination_reserve",
+    "case_e_rounding_boundary",
+    "case_f_frozen_and_unsupported_holders",
+    "case_g_authority_mismatch",
+    "case_h_unsupported_token_2022_extension_semantics",
+    "defect_counterexample_is_reproducible_from_the_saved_search"
+   ],
+   "migration_current": [
+    "current_findings_feed_the_main_migration_gate_and_replay_offline",
+    "every_selected_case_executes_at_its_full_final_balance_and_replays",
+    "executable_shape_drift_qualifies_discovery_coverage",
+    "final_coherence_retry_is_monotonic_bounded_and_never_replaces_source",
+    "frozen_selection_and_capture_tampering_fail_offline_replay",
+    "full_at_final_capture_reports_bucket_drift_without_rewriting_selection",
+    "healthy_observed_waves_make_no_counterexample_or_peer_claim",
+    "lamports_only_change_keeps_final_bytes_and_executes",
+    "missing_zero_frozen_authority_and_program_drift_never_execute_a_peer",
+    "observed_waves_freeze_before_capture_keep_failures_and_replay",
+    "population_pointer_names_original_row_after_provider_reordering",
+    "refreshed_population_cannot_inherit_frozen_selection",
+    "unavailable_final_capture_stays_selected_and_indeterminate",
+    "underfunded_final_amount_fails_in_vm_with_exact_rollback"
+   ],
+   "migration_demo": [
+    "spacex_demo_is_a_token_migration_v1_example_over_frozen_state"
+   ],
+   "migration_exact_amount": [
+    "explicit_amount_executes_against_unchanged_balance_and_changes_proposal_identity"
+   ],
+   "migration_order": [
+    "duplicate_foreign_source_candidate_and_unsupported_funding_fail_closed",
+    "external_signer_declaration_without_authority_evidence_is_not_executable",
+    "fixed_clock_window_and_clock_account_mismatch",
+    "identities_bind_bytes_absence_units_order_clock_world_candidate_and_programs",
+    "missing_authority_unknown_absence_and_dependency_fail_closed",
+    "population_shortfall_is_not_inherited_and_labels_do_not_identify",
+    "saved_binding_tampering_cannot_be_repaired_from_live_state",
+    "saved_intermediate_byte_and_existence_tampering_fails_even_with_rehashed_cas",
+    "shared_reserve_effect_solos_handoff_creation_rollback_and_offline_reproduction",
+    "solo_economic_mismatch_never_becomes_an_ordering_finding",
+    "sufficient_reserve_control"
+   ],
+   "migration_package": [
+    "insufficient_reserve_blocks_under_every_policy_with_a_machine_readable_reason",
+    "preflight_writes_structured_evidence_and_replays_offline_byte_for_byte"
+   ],
+   "migration_rehearsal": [
+    "legacy_to_legacy_burn_and_reserve_transfer_reconciles_exactly",
+    "mint_to_requires_the_migration_authority_and_never_assumes_issuer_authority",
+    "sequential_rehearsal_exposes_cumulative_reserve_shortfall",
+    "token_2022_escrow_and_reserve_transfer_model_transfer_fees_exactly"
+   ],
+   "migration_search": [
+    "defects_become_minimal_reproducible_derived_counterexamples",
+    "reference_candidate_has_no_counterexample_within_the_recorded_domain",
+    "underfunded_population_yields_observed_counterexamples_and_an_exact_reserve_boundary"
+   ],
+   "migration_stress": [
+    "defective_candidates_are_caught_from_their_bytes",
+    "reference_candidate_behaves_as_specified_across_the_matrix"
+   ],
+   "parameter_cases": [
+    "concurrent_case_set_and_search_keep_caller_owned_budgets",
+    "duplicates_do_not_become_distinct_by_renaming_or_amount",
+    "genuine_selected_cases_and_complete_offline_repeat",
+    "identities_ignore_labels_locations_order_of_preparation_and_json_formatting",
+    "repeated_analysis_preserves_single_case_reports_and_result_identity",
+    "tampered_references_contract_manifest_reports_and_summary_are_rejected",
+    "wrong_target_stale_state_unsupported_and_missing_capture_fail_before_execution"
+   ],
+   "parameter_change": [
+    "corrupted_withheld_balance_cannot_emit_economic_findings_even_with_resealed_report",
+    "exhaustive_preservation_endpoints_and_unknown_or_malformed_tlv_fail_closed",
+    "frozen_token2022_report_identity_and_runtime_remain_reproducible",
+    "local_cli_durable_store_reader_reproduction_and_overwrite_boundary",
+    "mandatory_stale_expectations_prevent_execution_and_pending_does_not_warp_clock",
+    "no_op_and_tiny_rounded_transfer_are_successful_controls",
+    "official_tlv_field_isolation_survives_ordering_and_padding",
+    "retained_deployed_elf_pair_and_offline_reproduction",
+    "spec_identity_and_invalid_contracts",
+    "synthetic_fee_cap_rounding_endpoints_and_actual_failure_rollback_use_real_vm",
+    "tampered_capture_derived_program_clock_accounts_spec_and_report_fail_closed"
+   ],
+   "parameter_search": [
+    "cli_portable_worker_empty_environment_and_selected_witness",
+    "deterministic_bounded_queue_rounding_caps_original_and_overflow",
+    "explicit_prior_runtime_receipt_compatibility_and_unknown_source_rejection",
+    "labelled_cap_non_monotone_and_actual_overflow_rejection_search_controls",
+    "no_witness_controls_completion_exhaustion_and_independent_vm_budget",
+    "parent_and_single_dimension_provenance_fail_closed",
+    "real_retained_search_witness_fresh_pairs_offline_reproduction_and_budget",
+    "rejection_rollback_reconciliation_and_unavailable_do_not_invent_zero_loss",
+    "resealed_cross_object_tampering_order_coverage_minimum_and_predicate_rejected",
+    "schema_canonical_exact_quantities_and_explicit_supported_bounds"
+   ],
+   "protocol_position": "all",
+   "rollout_assumptions": [
+    "accrued_protocol_fees_and_destination_withheld_fees_are_distinct",
+    "actual_analysis_cli_exit_zero_is_not_readiness_authorization",
+    "analysis_completion_zero_never_authorizes_the_stub",
+    "blocked_and_unaccepted_candidates_never_run_the_stub",
+    "candidate_and_evidence_ordering_is_canonical",
+    "demo_order_is_deterministic_and_only_positive_control_runs",
+    "different_entity_amount_venue_bank_range_fraction_and_signer_never_inherit_proof",
+    "exact_required_failed_route_is_blocked",
+    "historical_artifact_bytes_are_preserved",
+    "incomplete_assurance_never_runs_the_stub",
+    "malformed_and_verification_failure_cli_inputs_never_run_stub",
+    "missing_official_execution_never_becomes_failed",
+    "narrow_policy_never_authorizes_additional_supported_actions",
+    "narrowly_ready_positive_control_creates_only_a_temporary_marker",
+    "offline_candidate_cli_codes_portability_and_output_protection",
+    "original_optional_route_policy_and_result_remain_identical",
+    "pre_event_never_bypasses_future_target_requirements",
+    "principal_removal_never_establishes_complete_exit",
+    "tampering_omitted_requirements_and_wrong_target_are_invalid",
+    "transfer_never_establishes_official_conversion",
+    "truthful_principal_removal_is_accepted_and_narrowly_ready",
+    "valid_claim_without_cited_execution_is_not_established"
+   ]
+  },
+  "eplyx-server": {
+   "change_identity": [
+    "lifecycle_index_has_an_asset_without_an_executable_or_upgrade_target"
+   ],
+   "hosted_analysis": [
+    "captured_program_recipes_require_exact_portable_bytes_and_execute_offline"
+   ],
+   "hosted_catalogue": [
+    "retained_first_party_bytes_keep_nine_canonical_mints_and_original_source_identity",
+    "versions_are_immutable_and_references_cannot_bind_another_mint"
+   ],
+   "hosted_interaction": [
+    "durable_distinct_fixture_recovery_download_and_tampering"
+   ],
+   "hosted_observation": [
+    "candidate_and_proposed_scenario_keep_exact_evidence_separate_and_retry_without_rpc",
+    "candidate_scenario_and_stress_reject_injected_execution_and_invalid_scope_before_rpc",
+    "forged_program_status_provider_and_cross_focus_are_refused_before_observation",
+    "observation_is_immutable_project_scoped_and_refresh_never_inherits_execution",
+    "typed_transfer_executes_exact_frozen_bytes_in_offline_child"
+   ],
+   "hosted_order": [
+    "asynchronous_order_effect_portability_occurrences_and_no_rpc",
+    "eligible_parent_auth_selection_and_narrow_schema",
+    "evidence_gap_after_acceptance_and_typed_handoff_failure_are_preserved",
+    "no_effect_and_unestablished_are_completed_analyses",
+    "parent_binding_and_portable_tampering_fail_closed_without_regeneration",
+    "restart_requeues_child_with_exact_parent_references"
+   ],
+   "hosted_parameter": [
+    "authenticated_offline_consequence_index_projection_reproduction_and_restart",
+    "cross_project_unauthenticated_wrong_kind_and_arbitrary_inputs_are_refused",
+    "durable_queue_recovery_preserves_exact_inputs_without_provider",
+    "eligibility_is_authoritative_offline_narrow_and_project_authorized",
+    "no_consequence_and_stale_expectations_are_durable_factual_results"
+   ]
+  }
+ }
+}

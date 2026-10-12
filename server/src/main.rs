@@ -314,6 +314,7 @@ fn serve(config: Config, registry: Registry, requeued: Vec<String>) -> Result<()
     runtime.block_on(async move {
         let bind = config.bind;
         let concurrency = config.max_concurrent_runs;
+        let hosted_rpc = config.hosted_rpc.is_some();
         let governance = match &config.governance_rpc_url {
             Some(url) => Some(
                 Arc::new(eplyx_engine::ingest::rpc::HttpRpc::new(url.clone())?)
@@ -321,9 +322,11 @@ fn serve(config: Config, registry: Registry, requeued: Vec<String>) -> Result<()
             ),
             None => None,
         };
-        let mut observation = match std::env::var("EPLYX_OBSERVATION_RPC_URL")
-            .ok()
-            .filter(|v| !v.trim().is_empty())
+        // The one provider an operator connects (`EPLYX_RPC_URL`) also serves
+        // observation unless a dedicated one is named.
+        let mut observation = match ["EPLYX_OBSERVATION_RPC_URL", "EPLYX_RPC_URL"]
+            .iter()
+            .find_map(|name| std::env::var(name).ok().filter(|v| !v.trim().is_empty()))
         {
             Some(url) => Some(eplyx_server::hosted::observation::Service::new(Arc::new(
                 eplyx_engine::ingest::rpc::HttpRpc::new(url)?
@@ -367,6 +370,14 @@ fn serve(config: Config, registry: Registry, requeued: Vec<String>) -> Result<()
         // The data directory is printed; nothing else about the configuration
         // is, and no credential exists in this process to print.
         eprintln!("eplyx-server listening on {bind}, {concurrency} concurrent run(s)");
+        eprintln!(
+            "hosted Solana RPC (/v1/rpc): {}",
+            if hosted_rpc {
+                "on"
+            } else {
+                "off (needs EPLYX_RPC_URL and EPLYX_ACCESS_PASSWORD)"
+            }
+        );
         axum::serve(listener, api::router(state))
             .with_graceful_shutdown(async {
                 let _ = tokio::signal::ctrl_c().await;
