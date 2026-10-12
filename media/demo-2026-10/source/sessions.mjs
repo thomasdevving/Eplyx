@@ -15,8 +15,7 @@ const seed = JSON.parse(readFileSync('/srv/eplyx-demo/seed.json', 'utf8'));
 const API = seed.base, P = seed.upgradeProject, T = seed.transitionsProject;
 const bin = [join(repo, 'target/release')];
 // The hosted-RPC sessions use the build of the branch that added it.
-const rpcBin = [process.env.EPLYX_RPC_BIN || '/home/user/eplyx-rpc/target/release'];
-const PASSWORD_FILE = '/srv/eplyx-demo/access-password';
+const rpcBin = [process.env.EPLYX_RPC_BIN || join(repo, 'target/release')];
 const D = '/home/demo';
 const TOKEN = (() => { try { return (readFileSync(`${D}/ci-token`, 'utf8').match(/eplyx_[A-Za-z0-9_]+/) || [''])[0]; } catch { return ''; } })();
 const SIG = '3omP6iKrk9jcFfjURFo76biHedNpXVJcK16jBxX3AUyqTQ4zr3ZHW5kpdue18TpVvBhjhkybEFUkhd4ivw4TaN2n';
@@ -47,10 +46,11 @@ export const sessions = {
     { cmd: `curl -s -H "authorization: Bearer $EPLYX_TOKEN" ${API}/v1/projects/${P}/runs | jq '.runs[0] | {run_id, status, exit_code, candidate_sha256}'`, expect: 0, after: 1.4 },
   ] },
   // No RPC of the developer's own: one password unlocks the Eplyx hosted RPC.
-  // EPLYX_URL points the CLI at the local eplyx-server standing in for
-  // eplyx.dev; the password is typed into the hidden prompt from a file.
-  access: { cwd: D, prompt: '~', cols: 104, rows: 16, path: rpcBin, env: { EPLYX_URL: API }, steps: [
-    { cmd: 'eplyx access', answer: { wait: 'Eplyx access password: ', file: PASSWORD_FILE }, expect: 0, timeout: 60, after: 1 },
+  // The CLI talks to its default, the live https://eplyx.dev; the password is
+  // typed into the hidden prompt from the recorder's own environment, which
+  // the recorded shell never receives.
+  access: { cwd: D, prompt: '~', cols: 104, rows: 16, path: rpcBin, steps: [
+    { cmd: 'eplyx access', answer: { wait: 'Eplyx access password: ', env: 'EPLYX_ACCESS_PASSWORD' }, expect: 0, timeout: 60, after: 1 },
     { cmd: 'eplyx access --status', expect: 0, timeout: 60, after: 1.4 },
   ] },
   governance: { cwd: `${D}/squads`, prompt: '~/squads', cols: 100, rows: 30, path: rpcBin, steps: [

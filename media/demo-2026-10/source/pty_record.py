@@ -162,9 +162,11 @@ def main():
         os.write(fd, b"\r")
         if step.get("answer"):
             # Answer a hidden prompt (a password) the way a person would: wait
-            # for it, then type the secret read from a file outside the
-            # repository. The program turns echo off first, so the secret is
-            # never in the output; it is never in the spec or the cast either.
+            # for it, then type the secret read from the recorder's own
+            # environment (`env`) or a file outside the repository (`file`).
+            # The recorded shell never receives that variable. The program
+            # turns echo off first, so the secret is never in the output; it
+            # is never in the spec or the cast either.
             ans = step["answer"]
             pat = re.compile(ans["wait"])
             end = time.monotonic() + 30
@@ -173,7 +175,12 @@ def main():
                     raise SystemExit(f"prompt {ans['wait']!r} never appeared")
                 pump(0.1)
             pump(ans.get("delay", 0.7))
-            secret = open(ans["file"]).read().strip()
+            if ans.get("env"):
+                secret = os.environ.get(ans["env"], "").strip()
+                if not secret:
+                    raise SystemExit(f"{ans['env']} is not set for the recorder")
+            else:
+                secret = open(ans["file"]).read().strip()
             events.append([now(), "m", "answer"])
             for ch in secret:
                 os.write(fd, ch.encode())

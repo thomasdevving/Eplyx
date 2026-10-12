@@ -8,8 +8,9 @@ person per scenario: who they are, what situation they are in, what Eplyx does
 for them and what they get back. Together the scenarios cover all eight channels
 and all ten use cases. Every terminal and browser image is a recording of the
 real binaries and services at commit `b53734b`, except the hosted-RPC access step
-and the Squads verification, which were recorded with `ff297cc` (branch
-`claude/wizardly-tesla-b6cooi`, the password-gated hosted Solana RPC).
+and the Squads verification, which were recorded on 12 October 2026 with a CLI
+built from `d7326cc` (main's password-gated hosted Solana RPC, `323b9c5`)
+against the live eplyx.dev.
 
 ## Story
 
@@ -72,7 +73,7 @@ graphics frame, label and point at those recordings; they never stand in for one
 
 - **Terminals** are real interactive `bash` sessions in a pseudo-terminal
   (`source/pty_record.py`). Each command was typed into the shell, executed by the
-  release binaries built from `b53734b` (`ff297cc` for the `access` and
+  release binaries built from `b53734b` (`d7326cc` for the `access` and
   `governance` sessions), and every output byte and exit code was
   stored as an asciicast (`assets/casts/*.cast`). The film replays those bytes
   through xterm.js. Two edits are applied and nothing else: idle gaps longer than
@@ -93,29 +94,32 @@ graphics frame, label and point at those recordings; they never stand in for one
   `fixture_stake_pool_v2.so` `3193eabd…`, `fixture_stake_pool_config_v2.so`
   `a664f74b…`, `eplyx_token_migration.so` `e5db6948…`.
 
-### Hosted RPC and access password (11 October 2026)
+### Hosted RPC and access password (12 October 2026)
 
-- `eplyx access` (built from `ff297cc`) was run against a local `eplyx-server`
-  of the same commit standing in for eplyx.dev, selected with `EPLYX_URL` in the
-  session environment; the output names that loopback address. The server had
-  `EPLYX_RPC_URL` set to `api.mainnet-beta.solana.com` and
-  `EPLYX_ACCESS_PASSWORD` set from a file outside the repository. The recorder
-  types the password into the hidden prompt from that file
-  (`answer` in `source/sessions.mjs`); `eplyx access` turns echo off, and the
-  recorder refuses to keep a cast that contains it.
+- `eplyx access` (CLI built from `d7326cc`, which carries main's hosted RPC
+  from `323b9c5`) was run against its default server, the live
+  `https://eplyx.dev`, with no `EPLYX_URL` set. The provider behind the
+  deployed relay is the operator's and is not named here. The recorder types
+  the password into the hidden prompt from its own `EPLYX_ACCESS_PASSWORD`
+  (`answer.env` in `source/sessions.mjs`); the recorded shell never receives
+  that variable, `eplyx access` turns echo off, and the recorder refuses to keep
+  a cast that contains the password. Every cast, session file and film cast was
+  scanned for it afterwards with zero hits.
 
 ### Live mainnet reads
 
-- 11 October 2026: `governance squads verify` on the committed G1.1 witness
+- 12 October 2026: `governance squads verify` on the committed G1.1 witness
   (Squads #1 of `8fJvcw…`) with no `--rpc-url` and no `SOLANA_RPC_URL`, read
-  through the hosted RPC relay above: `matched` at slot 455,689,745
-  (finalized). A match is a statement at that slot.
+  through the Eplyx hosted RPC on eplyx.dev using the access saved by the
+  `access` session: `matched` at slot 455,986,845 (finalized), proposal status
+  Active. A match is a statement at that slot.
 - 7 October 2026: `versions upgrades/resolve` and `historical acquire` of the
   real PYUSD TransferChecked `3omP6i…` through the archive endpoint the
   repository's own demo script uses (`solana-mainnet.g.alchemy.com/v2/docs-demo`),
   configured as the session's own `SOLANA_RPC_URL`. These reads need exact-slot
-  account history, which the public RPC behind the demo relay does not serve, so
-  this scene was not re-recorded through the relay; its caption says so. The
+  account history. On 12 October 2026 the provider behind eplyx.dev refused
+  `versions resolve` at slot 427,147,035 (JSON-RPC `-32099`), so this scene was
+  not re-recorded through the hosted RPC; its caption says so. The
   real Token-2022 upgrade replays with no behavioural difference; the last
   replay uses the constructed `fixture_token2022_v2.so` regression.
 - Hosted current-state observation of PYUSD for one public owner (the largest
@@ -151,10 +155,11 @@ samples); typing clicks are placed on the recorded typing intervals.
    public frontend (`EPLYX_API_URL=http://127.0.0.1:4390 PORT=4173 node
    frontend/dev-server.mjs`). The film's run used
    `EPLYX_OBSERVATION_RPC_URL`/`EPLYX_GOVERNANCE_RPC_URL` set to the public RPC.
-   For the `access` and `governance` sessions, run `eplyx-server` built from
-   `ff297cc` with `EPLYX_RPC_URL` and `EPLYX_ACCESS_PASSWORD` set, put the
-   password in `/srv/eplyx-demo/access-password` (mode 600), and point
-   `EPLYX_RPC_BIN` at that build's `target/release`.
+   The `access` and `governance` sessions use the live eplyx.dev: run
+   `sessions.mjs access governance` with `EPLYX_ACCESS_PASSWORD` set in the
+   recorder's environment and no `~/.config/eplyx/access.json` in the demo
+   home. `EPLYX_RPC_BIN` overrides the CLI build they use (default: this
+   checkout's `target/release`).
 3. `source/setup-home.sh /home/demo`, `node source/seed-workspace.mjs`, then
    record in this order: `node source/sessions.mjs operator`, `capture-web.mjs
    console`, `sessions.mjs upgrade expectations hosted api`, the browser clips,

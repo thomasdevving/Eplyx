@@ -243,7 +243,7 @@ export const scenes = [
     } },
 
   // ── Setup: no RPC of your own, one password ───────────────────────────
-  { id: 'access', dur: 6, channel: CH.cli, bg: 'ink', caption: 'Real terminal recording · eplyx access against a local eplyx-server standing in for eplyx.dev · the password is typed into a hidden prompt',
+  { id: 'access', dur: 6, channel: CH.cli, bg: 'ink', caption: 'Real terminal recording · eplyx access against the live eplyx.dev · the password is typed into a hidden prompt',
     async build(root) {
       const T = await termWindow(root, { cast: 'access', x: 70, y: 540, w: 1780, cols: 104, rows: 9, title: 'eplyx · ~' });
       const sc = scenario(root, { x: 80, y: 120, w: 880, persona: 'Every developer', title: 'No RPC to set up.\n*One password.', size: 'sm',
@@ -266,7 +266,7 @@ export const scenes = [
     } },
 
   // ── Scenario: a multisig signer, live ──────────────────────────────────
-  { id: 'governance', dur: 9, channel: CH.cli, usecase: UC.gov, bg: 'ink', caption: 'Live read of a real Squads V4 proposal through the Eplyx hosted RPC (local relay, public mainnet RPC behind it) · no --rpc-url · read-only, never signs',
+  { id: 'governance', dur: 9, channel: CH.cli, usecase: UC.gov, bg: 'ink', caption: 'Live read of a real Squads V4 proposal through the Eplyx hosted RPC on eplyx.dev · no --rpc-url · read-only, never signs',
     async build(root) {
       const T = await termWindow(root, { cast: 'governance', x: 70, y: 150, w: 1100, cols: 100, rows: 30, title: 'eplyx · ~/squads' });
       const lv = live(root, 1240, 118);
@@ -275,7 +275,7 @@ export const scenes = [
       const eq = h('div', { class: 'abs eqcard', style: { left: '1240px', top: '560px' } },
         h('div', {}, h('small', {}, 'Analysed build'), h('code', {}, 'b10c1c93…0761d')), h('b', {}, '='), h('div', {}, h('small', {}, 'Bytes in the proposal'), h('code', {}, 'b10c1c93…0761d')));
       root.append(eq);
-      const n = note(root, { x: 1240, y: 700, w: 610, title: 'Matched at slot 455,689,745.', body: 'Only another vault transaction can change those bytes, so re-verify right before you approve.' });
+      const n = note(root, { x: 1240, y: 700, w: 610, title: 'Matched at slot 455,986,845.', body: 'Only another vault transaction can change those bytes, so re-verify right before you approve.' });
       const P = plan(T.term, .3, [{ type: 1.2, out: .5, hold: 6 }]);
       const m1 = mark(T.term, T.term.overlay, 'Result:     matched', { tone: 'green' });
       const m2 = mark(T.term, T.term.overlay, 'Observed:', { tone: 'violet', span: 40 });
