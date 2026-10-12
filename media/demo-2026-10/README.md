@@ -1,6 +1,6 @@
 # Eplyx product demo film (October 2026)
 
-**[output/eplyx-demo.mp4](output/eplyx-demo.mp4)** · 2:51 · 1920 × 1080 · 30 fps · H.264 + AAC stereo · −14 LUFS
+**[output/eplyx-demo.mp4](output/eplyx-demo.mp4)** · 2:51 · 1920 × 1080 · 30 fps · H.264 + AAC stereo · −14.6 LUFS
 
 A demo of the live product for YouTube, Loom or Vimeo (under three minutes):
 not a slide deck and not a code walkthrough. Twenty-four seconds set up the
