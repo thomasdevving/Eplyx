@@ -62,7 +62,11 @@ export const scenes = [
       ], { w: 620 });
       const at = label => B.foot.mark(label);
       const L = at('loaded'), I = at('install'), Tp = at('top'), Ws = at('workspace'), WL = at('workspace loaded'), E = B.foot.meta.frames.at(-1).t;
-      const ct = lt => pw(lt, [[0, L - .4], [.6, L + .1], [1.2, I], [5.4, Tp - .7], [6.9, Ws], [7.4, WL], [9, E]]);
+      // Blank loading frames are cut: the clip starts at the first painted frame of
+      // /cli and jumps from the click to the first painted frame of /workspace.
+      const painted = B.foot.meta.frames.find(f => f.t > WL + 1).t;
+      const first = B.foot.meta.frames.find(f => f.t > L).t;
+      const ct = lt => pw(lt, [[0, first], [1.2, I], [5.4, Tp - .7], [6.9, Ws], [7.15, Ws + .5], [7.151, painted], [9, E]]);
       return {
         async prepare(lt) { await B.foot.prepare(ct(lt)); },
         update(lt) {

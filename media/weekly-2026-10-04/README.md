@@ -72,3 +72,9 @@ rollout candidate in `target/deploy/` and `proposals/rollout-upgrade.json`
 --candidate target/deploy/fixture_stake_pool_rollout_v2.so`). The live clip is
 kept in `assets/web/` (`pack-clips.mjs` format) so the film can be re-rendered
 without the network.
+
+`output/eplyx-weekly-2026-10-04.mp4` is a two-pass 3.6 Mbit/s encode (SSIM
+0.998, −13.9 LUFS) of the CRF 14 master. After the first full render the live
+scene was re-rendered on its own (`--range 5.5,14.5`), to cut the blank
+page-load frames, and spliced into that master frame-exactly; nothing else
+changed.
